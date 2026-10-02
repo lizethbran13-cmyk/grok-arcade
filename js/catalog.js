@@ -12,7 +12,9 @@ GA.MAIN_GAMES = [
   { id: 'surfers', name: 'Grok Surfers', desc: 'An endless runner. Dodge, jump and grab coins.',
     url: 'https://lizethbran13-cmyk.github.io/grok-surfers/', color: '#fb923c', color2: '#facc15' },
   { id: 'fc', name: 'Grok FC', desc: 'Fast arcade soccer. Pass, shoot, score!',
-    url: 'https://lizethbran13-cmyk.github.io/grok-fc/', color: '#22c55e', color2: '#ffffff' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-fc/', color: '#22c55e', color2: '#ffffff' },
+  { id: 'brawl', name: 'Grok Brawl', desc: 'A 3D arena fighter. Punch, combo and unleash supers!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-brawl/', color: '#ff3d6e', color2: '#ffe14d' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },

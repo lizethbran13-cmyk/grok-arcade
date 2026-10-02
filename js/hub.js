@@ -6,6 +6,7 @@
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
+  var MAIN_X0 = -15.6, MAIN_STEP = 3.2; // 7 main cabinets centred in the main hall (x -18..6)
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -130,12 +131,12 @@
   function U_rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
 
   function buildSigns() {
-    var s1 = sign('MAIN GAMES\nLizeth\'s Grok games', 7, 1.5, '#3ff0ff'); s1.position.set(-6.5, 3.75, ROOM.minZ + 0.03); scene.add(s1);
+    var s1 = sign('MAIN GAMES\nLizeth\'s Grok games', 7, 1.5, '#3ff0ff'); s1.position.set(-6, 3.75, ROOM.minZ + 0.03); scene.add(s1);
     var s2 = sign('BONUS ZONE\nNew mini games - earn tickets!', 7, 1.5, '#ff4fd8'); s2.position.set(ROOM.maxX - 0.03, 3.75, 0); s2.rotation.y = -Math.PI / 2; scene.add(s2);
     var s3 = sign('BONUS ZONE  >', 4.6, 1.2, '#ff4fd8'); s3.position.set(DIV_X - 0.23, 4.1, 0); s3.rotation.y = -Math.PI / 2; scene.add(s3);
     var s3b = sign('< MAIN GAMES', 4.6, 1.2, '#3ff0ff'); s3b.position.set(DIV_X + 0.23, 4.1, 0); s3b.rotation.y = Math.PI / 2; scene.add(s3b);
     var s4 = sign('GROK ARCADE', 7, 1.4, '#ffe14d'); s4.position.set(ROOM.minX + 0.03, 3.4, 0); s4.rotation.y = Math.PI / 2; scene.add(s4);
-    decal('MAIN GAMES', 7, 1.6, '#3ff0ff', -6.5, -7.2, 0, 'walk up to a cabinet to play');
+    decal('MAIN GAMES', 7, 1.6, '#3ff0ff', -6, -7.2, 0, 'walk up to a cabinet to play');
     decal('BONUS ZONE', 6.4, 1.5, '#ff4fd8', 11.6, 0, Math.PI / 2, 'mini games - best scores saved');
     decal('BONUS  >>', 3.2, 1.1, '#ff4fd8', 3.2, 0, 0);
     // center logo rug
@@ -315,6 +316,31 @@
         if (ph2 > 0.85) { g.font = font(26); g.textAlign = 'center'; g.fillStyle = '#fde047'; g.fillText('GOAL!', w / 2, 40); }
         break;
       }
+      case 'brawl': {
+        var gb = g.createLinearGradient(0, 0, 0, h); gb.addColorStop(0, '#1a0638'); gb.addColorStop(1, '#4a0f4f'); g.fillStyle = gb; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#2a1458'; for (i = 0; i < 9; i++) { var tb = 26 + ((i * 29) % 34); g.fillRect(i * 22, h - 34 - tb, 18, tb); }
+        g.fillStyle = '#ffe14d'; for (i = 0; i < 24; i++) if ((i * 7 + Math.floor(t * 2)) % 5) g.fillRect((i * 37) % 190 + 3, h - 50 - ((i * 13) % 40), 2, 2);
+        g.fillStyle = '#ff4fd8'; g.fillRect(0, h - 34, w, 2); g.fillStyle = '#23104a'; g.fillRect(0, h - 32, w, 32);
+        var cyc = (t * 1.6) % 2, hitter = cyc < 1 ? 0 : 1, ph3 = cyc % 1, reach = Math.max(0, Math.sin(Math.min(1, ph3 * 2.2) * Math.PI));
+        function fighter(fx, dir, body, head, atk, hurt) {
+          var bx2 = fx - (hurt ? dir * 4 : 0), gy2 = h - 34;
+          g.fillStyle = '#111'; g.fillRect(bx2 - 9, gy2 - 16, 7, 16); g.fillRect(bx2 + 2, gy2 - 16, 7, 16);
+          g.fillStyle = body; g.fillRect(bx2 - 11, gy2 - 40, 22, 25);
+          g.fillStyle = head; g.fillRect(bx2 - 9, gy2 - 58, 18, 18); g.fillStyle = '#fff'; g.fillRect(bx2 + dir * 2, gy2 - 52, 4, 4);
+          g.fillStyle = body; g.fillRect(bx2 + dir * 8 - (dir < 0 ? 8 + atk * 22 : 0), gy2 - 37, 8 + atk * 22, 7);
+          g.fillStyle = '#ffd9b8'; g.fillRect(bx2 + dir * (12 + atk * 22) - 4, gy2 - 39, 9, 10);
+        }
+        var lx = w * 0.36, rx = w * 0.64;
+        fighter(lx, 1, '#ff4a2e', '#ffb07a', hitter === 0 ? reach : 0, hitter === 1 && reach > 0.6);
+        fighter(rx, -1, '#22d3ee', '#fde047', hitter === 1 ? reach : 0, hitter === 0 && reach > 0.6);
+        if (reach > 0.75) { var sx3 = hitter === 0 ? rx - 12 : lx + 12, sy3 = h - 70; g.fillStyle = '#fff59a'; g.beginPath(); for (i = 0; i < 10; i++) { var ang = i * Math.PI / 5, rr = i % 2 ? 6 : 15; g.lineTo(sx3 + Math.cos(ang) * rr, sy3 + Math.sin(ang) * rr); } g.fill(); }
+        var hp1 = 0.35 + 0.6 * (0.5 + 0.5 * Math.cos(t * 0.4)), hp2 = 0.3 + 0.6 * (0.5 + 0.5 * Math.sin(t * 0.33));
+        g.fillStyle = '#000'; g.fillRect(6, 8, 76, 8); g.fillRect(w - 82, 8, 76, 8);
+        g.fillStyle = '#ffe14d'; g.fillRect(7, 9, 74 * hp1, 6); g.fillRect(w - 7 - 74 * hp2, 9, 74 * hp2, 6);
+        g.font = font(16); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText(String(60 - Math.floor(t * 3) % 60), w / 2, 18);
+        if (Math.floor(t * 0.5) % 4 === 0) { g.font = font(30); g.fillStyle = '#ff3d6e'; g.fillText('FIGHT!', w / 2, 52); }
+        break;
+      }
       case 'snake': {
         g.fillStyle = '#150a33'; g.fillRect(0, 0, w, h); var cs = 12;
         for (i = 0; i < 9; i++) { var pp = (t * 8 - i) , k = ((pp % 40) + 40) % 40, sx2, sy2;
@@ -408,7 +434,7 @@
     grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = grd; g.fillRect(0, 0, 128, 128);
     glowTex = canvasTex(gc);
     // main games: along the north wall, facing south
-    GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', -15 + i * 3.4, ROOM.minZ + 0.6, 0); });
+    GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
     GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -8 + i * 4, -Math.PI / 2); });
   }
