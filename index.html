@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#140a2b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Grok Arcade - a cozy neon 3D game hub.">
+<title>Grok Arcade</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="scene" aria-label="Grok Arcade 3D hub"></canvas>
+
+<div id="hud" class="hidden">
+  <div id="tickets" title="Tickets earned in the Bonus Zone"><span class="tkIcon">TICKETS</span> <b id="ticketCount">0</b></div>
+  <div id="areaLabel">MAIN GAMES</div>
+  <div id="topRight">
+    <button id="muteBtn" class="hudBtn" aria-label="Toggle sound">
+      <svg viewBox="0 0 24 24" width="26" height="26"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><g id="muteWaves" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"><path d="M16 9c1.2 1.6 1.2 4.4 0 6"/><path d="M18.5 6.5c2.6 3 2.6 8 0 11"/></g><g id="muteX" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M16 9l5 6M21 9l-5 6"/></g></svg>
+    </button>
+    <button id="menuBtn" class="hudBtn menuBtn" aria-label="Open quick menu">MENU</button>
+  </div>
+  <div id="prompt" class="hidden">
+    <div class="pTag" id="pTag">MAIN GAME</div>
+    <div class="pName" id="pName">Game</div>
+    <div class="pDesc" id="pDesc">Description</div>
+    <div class="pKey" id="pKey">Press <kbd>E</kbd> or <kbd>Enter</kbd> to play</div>
+  </div>
+  <button id="playBtn" class="hidden" aria-label="Play">&#9654; PLAY</button>
+  <div id="joy"><div id="joyKnob"></div></div>
+  <div id="hint">WASD / arrows to walk &middot; drag mouse or Q/E to look &middot; M for menu</div>
+</div>
+
+<div id="menu" class="hidden" role="dialog" aria-label="Quick menu">
+  <div class="menuPanel">
+    <div class="menuHead">
+      <div class="menuTitle">GROK ARCADE <span>Quick Menu</span></div>
+      <button id="menuClose" class="xBtn" aria-label="Close menu">&#10005;</button>
+    </div>
+    <div class="menuScroll" id="menuScroll">
+      <h2 class="secTitle main">Main Games</h2>
+      <div class="grid" id="gridMain"></div>
+      <h2 class="secTitle bonus">Bonus Mini Games <small>play right here &middot; earn tickets</small></h2>
+      <div class="grid" id="gridBonus"></div>
+      <div class="menuFoot">
+        <button id="menuMute" class="pill">Sound: ON</button>
+        <button id="menuHome" class="pill">Teleport to entrance</button>
+        <div class="help" id="helpText"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="mg" class="hidden">
+  <div id="mgTop">
+    <button id="mgBack" class="mgBack" aria-label="Back to hub">&#10005; <span>BACK</span></button>
+    <div id="mgTitle">Game</div>
+    <div id="mgScore"><div>SCORE <b id="mgScoreVal">0</b></div><div class="best">BEST <b id="mgBestVal">0</b></div></div>
+  </div>
+  <canvas id="mgCanvas"></canvas>
+  <div id="mgPad">
+    <button data-k="ArrowUp" class="up" aria-label="Up">&#9650;</button>
+    <button data-k="ArrowLeft" class="left" aria-label="Left">&#9664;</button>
+    <button data-k="ArrowRight" class="right" aria-label="Right">&#9654;</button>
+    <button data-k="ArrowDown" class="down" aria-label="Down">&#9660;</button>
+  </div>
+  <div id="mgReady" class="mgPanel">
+    <div class="mgCard">
+      <div class="mgName" id="mgReadyName">Game</div>
+      <div class="mgHow" id="mgReadyHow">How to play</div>
+      <div class="mgBestLine" id="mgReadyBest">Best: 0</div>
+      <button class="bigBtn" id="mgStart">TAP TO START</button>
+    </div>
+  </div>
+  <div id="mgOver" class="mgPanel hidden">
+    <div class="mgCard">
+      <div class="mgName">GAME OVER</div>
+      <div class="mgNew hidden" id="mgNew">NEW BEST!</div>
+      <div class="mgStats"><div>Score<b id="mgOverScore">0</b></div><div>Best<b id="mgOverBest">0</b></div></div>
+      <div class="mgTix" id="mgTix">+1 ticket</div>
+      <div class="mgBtns"><button class="bigBtn" id="mgAgain">PLAY AGAIN</button><button class="bigBtn alt" id="mgExit">BACK TO HUB</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="title">
+  <div class="titleInner">
+    <div class="logo"><span class="l1">GROK</span><span class="l2">ARCADE</span></div>
+    <div class="sub">A cozy neon game hub &middot; made for Lizeth</div>
+    <button id="startBtn" class="bigBtn startBtn">TAP TO ENTER</button>
+    <div class="titleHelp" id="titleHelp"></div>
+  </div>
+</div>
+
+<div id="fade"></div>
+
+<script src="three.min.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/minigames.js"></script>
+<script src="js/games-bonus.js"></script>
+<script src="js/hub.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
