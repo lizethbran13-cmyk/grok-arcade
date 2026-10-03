@@ -26,7 +26,8 @@ GA.BONUS_GAMES = [
   { id: 'stack', name: 'Stack Tower', desc: 'Tap to drop blocks and build the tallest tower.', color: '#ff7a3d', color2: '#3ff0ff' },
   { id: 'wires', name: 'Gary\'s Wire Rush', desc: 'Drag each wire to its matching socket before time runs out. Don\'t cross them!', color: '#ffd23b', color2: '#4ade80' },
   { id: 'penalty', name: 'Penalty Kick', desc: 'Tap or swipe to aim, beat the goalie. 5 shots, tickets for goals!', color: '#3bff7a', color2: '#ffffff' },
-  { id: 'fetch', name: 'Candy\'s Fetch', desc: 'Tap to make Candy the schnauzer jump for tennis balls. Hop over bushes!', color: '#c7ccd4', color2: '#d7ff3b' }
+  { id: 'fetch', name: 'Candy\'s Fetch', desc: 'Tap to make Candy the schnauzer jump for tennis balls. Hop over bushes!', color: '#c7ccd4', color2: '#d7ff3b' },
+  { id: 'ratmaze', name: 'Rat Maze Dash', desc: 'Pick Luna, Pi-rat or Snowie and race through the maze for seeds & cheese. Dodge the cat!', color: '#ffb347', color2: '#b18cff' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };

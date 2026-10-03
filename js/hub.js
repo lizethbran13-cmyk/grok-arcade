@@ -155,7 +155,7 @@
     g.strokeStyle = '#ffe14d'; g.lineWidth = 10; g.strokeRect(8, 8, W - 16, H - 16);
     neonText(g, 'BEST SCORES', W / 2, 62, 58, '#ffe14d');
     GA.BONUS_GAMES.forEach(function (gm, i) {
-      var nB = GA.BONUS_GAMES.length, y = (nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
+      var nB = GA.BONUS_GAMES.length, y = (nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
       g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.fillText(String(GA.getBest(gm.id)), W - 50, y);
     });
     d.tex.needsUpdate = true;
@@ -404,6 +404,18 @@
         g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#ff4fd8'; g.fillText('CANDY!', w / 2 + 30, 24);
         break;
       }
+      case 'ratmaze': {
+        g.fillStyle = '#140a2b'; g.fillRect(0, 0, w, h);
+        var mz = ['#########', '#...#...#', '#.#...#.#', '#.#.#.#.#', '#.......#', '#########'], ts = Math.floor(Math.min(w / 9, (h - 22) / 6)), mox = (w - ts * 9) / 2, moy = 2;
+        for (y = 0; y < 6; y++) for (x = 0; x < 9; x++) { if (mz[y][x] === '#') { g.fillStyle = '#5b2fa8'; g.fillRect(mox + x * ts, moy + y * ts, ts, ts); } else if ((x + y + Math.floor(t * 2)) % 9 !== 0) { g.fillStyle = '#e9d8a6'; g.fillRect(mox + x * ts + ts / 2 - 2, moy + y * ts + ts / 2 - 2, 4, 4); } }
+        var lap = (t * 2.2) % 14, rxm = lap < 7 ? 1 + lap : 8 - (lap - 7) * 1, rym = 4;
+        g.fillStyle = '#ffd23b'; g.beginPath(); g.moveTo(mox + 7.5 * ts - 6, moy + 1.5 * ts + 5); g.lineTo(mox + 7.5 * ts + 6, moy + 1.5 * ts + 5); g.lineTo(mox + 7.5 * ts + 6, moy + 1.5 * ts - 5); g.closePath(); g.fill();
+        if (GA.drawRat) GA.drawRat(g, ['luna', 'pirat', 'snowie'][Math.floor(t / 6.4) % 3], mox + (Math.min(7, Math.max(1, rxm)) + 0.5) * ts, moy + (rym + 0.5) * ts - 4, ts * 0.95, false);
+        var cxm = mox + (1.5 + ((t * 1.6) % 6)) * ts, cym = moy + 1.5 * ts; g.fillStyle = '#f59e0b'; g.beginPath(); g.arc(cxm, cym, ts * 0.42, 0, 7); g.fill();
+        g.beginPath(); g.moveTo(cxm - ts * 0.4, cym - ts * 0.1); g.lineTo(cxm - ts * 0.3, cym - ts * 0.55); g.lineTo(cxm - ts * 0.05, cym - ts * 0.35); g.fill(); g.beginPath(); g.moveTo(cxm + ts * 0.4, cym - ts * 0.1); g.lineTo(cxm + ts * 0.3, cym - ts * 0.55); g.lineTo(cxm + ts * 0.05, cym - ts * 0.35); g.fill();
+        g.fillStyle = '#4ade80'; g.fillRect(cxm - ts * 0.22, cym - ts * 0.1, 4, 4); g.fillRect(cxm + ts * 0.12, cym - ts * 0.1, 4, 4);
+        break;
+      }
       case 'party': {
         var gpp = g.createLinearGradient(0, 0, 0, h); gpp.addColorStop(0, '#ffb3e6'); gpp.addColorStop(1, '#8ee8ff'); g.fillStyle = gpp; g.fillRect(0, 0, w, h);
         var spc = ['#3b82f6', '#ef4444', '#22c55e', '#facc15', '#a855f7'];
@@ -478,7 +490,7 @@
     // main games: along the north wall, facing south
     GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    var nb = GA.BONUS_GAMES.length, stepB = nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
+    var nb = GA.BONUS_GAMES.length, stepB = nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
     GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2); });
   }
 
