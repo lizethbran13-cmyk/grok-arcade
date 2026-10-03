@@ -11,7 +11,7 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-voxels/', color: '#a855f7', color2: '#22d3ee' },
   { id: 'surfers', name: 'Grok Surfers', desc: 'An endless runner. Dodge, jump and grab coins.',
     url: 'https://lizethbran13-cmyk.github.io/grok-surfers/', color: '#fb923c', color2: '#facc15' },
-  { id: 'fc', name: 'Grok FC', desc: 'Fast arcade soccer. Pass, shoot, score!',
+  { id: 'fc', mp: true, name: 'Grok FC', desc: 'Fast arcade soccer. 1 v 1 online: pass, shoot, score!',
     url: 'https://lizethbran13-cmyk.github.io/grok-fc/', color: '#22c55e', color2: '#ffffff' },
   { id: 'brawl', mp: true, name: 'Grok Brawl', desc: 'A 3D arena fighter. Punch, combo and unleash supers!',
     url: 'https://lizethbran13-cmyk.github.io/grok-brawl/', color: '#ff3d6e', color2: '#ffe14d' }
@@ -22,7 +22,8 @@ GA.BONUS_GAMES = [
   { id: 'jet', name: 'Grok Jet', desc: 'Tap to flap your jet through the neon gaps.', color: '#ffe14d', color2: '#ff4fd8' },
   { id: 'rats', name: 'Whack-a-Rat', desc: 'Boop Luna, Pi-rat & Snowie before they hide!', color: '#ff8fd0', color2: '#ffffff' },
   { id: 'stack', name: 'Stack Tower', desc: 'Tap to drop blocks and build the tallest tower.', color: '#ff7a3d', color2: '#3ff0ff' },
-  { id: 'wires', name: 'Gary\'s Wire Rush', desc: 'Drag each wire to its matching socket before time runs out. Don\'t cross them!', color: '#ffd23b', color2: '#4ade80' }
+  { id: 'wires', name: 'Gary\'s Wire Rush', desc: 'Drag each wire to its matching socket before time runs out. Don\'t cross them!', color: '#ffd23b', color2: '#4ade80' },
+  { id: 'penalty', name: 'Penalty Kick', desc: 'Tap or swipe to aim, beat the goalie. 5 shots, tickets for goals!', color: '#3bff7a', color2: '#ffffff' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };

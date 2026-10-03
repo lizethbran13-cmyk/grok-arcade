@@ -155,7 +155,7 @@
     g.strokeStyle = '#ffe14d'; g.lineWidth = 10; g.strokeRect(8, 8, W - 16, H - 16);
     neonText(g, 'BEST SCORES', W / 2, 62, 58, '#ffe14d');
     GA.BONUS_GAMES.forEach(function (gm, i) {
-      var n6 = GA.BONUS_GAMES.length > 5, y = (n6 ? 128 : 140) + i * (n6 ? 64 : 70); g.font = font(n6 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
+      var nB = GA.BONUS_GAMES.length, y = (nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
       g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.fillText(String(GA.getBest(gm.id)), W - 50, y);
     });
     d.tex.needsUpdate = true;
@@ -383,6 +383,14 @@
         if (done >= 4) { g.font = font(22); g.textAlign = 'center'; g.fillStyle = '#ffe14d'; g.fillText('FIXED!', w / 2, h / 2); }
         break;
       }
+      case 'penalty': {
+        g.fillStyle = '#156d30'; g.fillRect(0, 0, w, h); g.fillStyle = '#0a1630'; g.fillRect(0, 0, w, h * 0.35);
+        g.strokeStyle = '#fff'; g.lineWidth = 5; g.strokeRect(w * 0.18, h * 0.18, w * 0.64, h * 0.32);
+        var kx = w / 2 + Math.sin(t * 2.4) * w * 0.18; g.fillStyle = '#ffe14d'; g.fillRect(kx - 8, h * 0.3, 16, h * 0.2);
+        var e = (t * 0.8) % 1, bx = w / 2 + (w * 0.26) * e * (Math.floor(t * 0.8) % 2 ? 1 : -1), by = h * 0.82 - e * h * 0.5;
+        g.fillStyle = '#fff'; g.beginPath(); g.arc(bx, by, 9 - e * 4, 0, 7); g.fill();
+        break;
+      }
       case 'stack': {
         g.fillStyle = '#1e1036'; g.fillRect(0, 0, w, h); var n = Math.floor(t * 1.5) % 9;
         for (i = 0; i <= n; i++) { var ww = 90 - i * 4; g.fillStyle = 'hsl(' + (200 + i * 15) + ',85%,55%)'; g.fillRect(w / 2 - ww / 2 + (i === n ? Math.sin(t * 4) * 40 : 0), h - 12 - i * 12, ww, 11); }
@@ -447,7 +455,7 @@
     // main games: along the north wall, facing south
     GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    var nb = GA.BONUS_GAMES.length, stepB = nb > 5 ? 3.6 : 4;
+    var nb = GA.BONUS_GAMES.length, stepB = nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
     GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2); });
   }
 
