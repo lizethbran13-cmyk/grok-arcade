@@ -318,43 +318,58 @@ function bind() {
   document.querySelectorAll("[data-go]").forEach((node) => {
     node.addEventListener("click", () => {
       const go = node.dataset.go;
-      if (go === "cases") state.screen = "cases";
-      if (go === "title") state.screen = "title";
-      if (go === "case") {
-        state.caseId = node.dataset.id;
-        state.found = [];
-        state.talked = {};
-        state.notes = [];
-        state.accusation = { who: "", motive: "", method: "" };
-        state.screen = "desk";
-        state.tab = "brief";
-      }
-      if (go === "desk") state.screen = "desk";
-      if (go === "clue") {
-        const id = node.dataset.id;
-        if (!state.found.includes(id)) state.found.push(id);
-      }
-      if (go === "ask") {
-        const person = node.dataset.person;
-        const idx = Number(node.dataset.idx);
-        state.talked[person] = state.talked[person] || [];
-        if (!state.talked[person].includes(idx)) state.talked[person].push(idx);
-        state.lastAsk = { person, idx };
-      }
-      if (go === "accuse") state.screen = "accuse";
-      if (go === "file") fileAccusation();
-      render();
+      if (go === "hub") return leaveHub();
+      act(actionFrom(node));
     });
   });
   document.querySelectorAll("[data-field]").forEach((node) => {
     node.addEventListener("change", () => {
-      state.accusation[node.dataset.field] = node.value;
+      act({ type: "field", field: node.dataset.field, value: node.value });
     });
   });
 }
 
+function actionFrom(node) {
+  const go = node.dataset.go;
+  if (go === "cases") return { type: "screen", screen: "cases" };
+  if (go === "title") return { type: "screen", screen: "title" };
+  if (go === "desk") return { type: "screen", screen: "desk" };
+  if (go === "accuse") return { type: "screen", screen: "accuse" };
+  if (go === "tab") return { type: "tab", tab: node.dataset.tab };
+  if (go === "case") return { type: "case", id: node.dataset.id };
+  if (go === "clue") return { type: "clue", id: node.dataset.id };
+  if (go === "ask") return { type: "ask", person: node.dataset.person, idx: Number(node.dataset.idx) };
+  if (go === "file") return { type: "file" };
+  return { type: "noop" };
+}
+
+function applyAction(a) {
+  if (!a || a.type === "noop") return;
+  if (a.type === "screen") state.screen = a.screen;
+  if (a.type === "tab") state.tab = a.tab;
+  if (a.type === "case") {
+    state.caseId = a.id;
+    state.found = [];
+    state.talked = {};
+    state.notes = [];
+    state.accusation = { who: "", motive: "", method: "" };
+    state.screen = "desk";
+    state.tab = "brief";
+  }
+  if (a.type === "clue" && !state.found.includes(a.id)) state.found.push(a.id);
+  if (a.type === "ask") {
+    state.talked[a.person] = state.talked[a.person] || [];
+    if (!state.talked[a.person].includes(a.idx)) state.talked[a.person].push(a.idx);
+    state.lastAsk = { person: a.person, idx: a.idx };
+  }
+  if (a.type === "field") state.accusation[a.field] = a.value;
+  if (a.type === "file") fileAccusation();
+  if (a.type === "sync") Object.assign(state, a.state);
+}
+
 function fileAccusation() {
   const c = currentCase();
+  if (!c) return;
   const a = state.accusation;
   const ok = a.who === c.culprit && a.motive === c.motive && a.method === c.method;
   state.solved[c.id] = ok ? "closed" : "miss";
@@ -374,6 +389,7 @@ function title() {
   const closed = Object.values(state.solved).filter((v) => v === "closed").length;
   el(`
     <div class="shell">
+      ${coopBar()}
       <div class="mast">
         <div>
           <div class="brand">Bureau of Unfinished Signals</div>
@@ -381,7 +397,7 @@ function title() {
         </div>
         <div class="stat">${closed} / ${CASES.length} cases closed</div>
       </div>
-      <p class="sub">A short detective desk. Read the brief, pull the clues, ask the questions that matter, then file who, why, and how. Guessing is allowed. Being right is better.</p>
+      <p class="sub">${net ? "Co-op desk. Clues, questions, and the accusation are shared with everyone in the room." : "A short detective desk. Read the brief, pull the clues, ask the questions that matter, then file who, why, and how. Guessing is allowed. Being right is better."}</p>
       <div class="row" style="margin-top:22px">
         <button class="btn" data-go="cases">Open the case file</button>
       </div>
@@ -402,6 +418,7 @@ function cases() {
   }).join("");
   el(`
     <div class="shell">
+      ${coopBar()}
       <div class="mast">
         <div>
           <div class="brand">Grok Detect</div>
@@ -422,6 +439,7 @@ function desk() {
     .join("");
   el(`
     <div class="shell">
+      ${coopBar()}
       <div class="mast">
         <div>
           <div class="brand">${c.district}</div>
@@ -505,6 +523,7 @@ function accuse() {
     .join("");
   el(`
     <div class="shell">
+      ${coopBar()}
       <div class="mast">
         <div>
           <div class="brand">Accusation</div>
@@ -532,6 +551,7 @@ function result() {
   const ok = state.lastResult;
   el(`
     <div class="shell">
+      ${coopBar()}
       <div class="panel">
         <div class="brand">Bureau stamp</div>
         <h2 class="verdict ${ok ? "good" : "bad"}">${ok ? "Case closed." : "Wrong file."}</h2>
@@ -549,4 +569,111 @@ function result() {
   `);
 }
 
+function coopBar() {
+  if (!net) return "";
+  const names = (net.players || []).map((p) => p.name).join(", ") || "connecting";
+  const status = net.ready ? (net.room && net.room.isHost ? "host" : "joined") : "connecting";
+  return `<div class="coop"><span>Room <b>${net.code}</b> · ${status} · ${names}</span><button type="button" data-go="hub">Back to lobby</button></div>`;
+}
+
+function snapshot() {
+  return {
+    screen: state.screen,
+    caseId: state.caseId,
+    found: state.found.slice(),
+    talked: JSON.parse(JSON.stringify(state.talked)),
+    notes: state.notes.slice(),
+    accusation: Object.assign({}, state.accusation),
+    solved: Object.assign({}, state.solved),
+    tab: state.tab,
+    lastResult: state.lastResult,
+    lastAsk: state.lastAsk
+  };
+}
+
+function act(a) {
+  if (!net) {
+    applyAction(a);
+    render();
+    return;
+  }
+  if (!net.room || !net.room.opened) return;
+  if (net.room.isHost) {
+    applyAction(a);
+    publish();
+    render();
+  } else net.room.send({ t: "act", a: a });
+}
+
+function publish() {
+  if (!net || !net.room || !net.room.isHost) return;
+  net.room.broadcast({ t: "state", state: snapshot() }, { self: true });
+}
+
+function leaveHub() {
+  const q = new URLSearchParams(location.search);
+  const back = (window.GN && GN.hubUrl()) || "https://lizethbran13-cmyk.github.io/grok-arcade/";
+  const params = new URLSearchParams();
+  ["mp", "code", "name", "color", "pid", "slot"].forEach((k) => {
+    if (q.get(k)) params.set(k, q.get(k));
+  });
+  if (net && net.room) net.room.markNavigating();
+  location.href = back + (back.indexOf("?") >= 0 ? "&" : "?") + params.toString();
+}
+
+const net = (function () {
+  const q = new URLSearchParams(location.search);
+  const mode = q.get("mp");
+  if ((mode !== "host" && mode !== "join") || !window.GN) return null;
+  return {
+    mode: mode,
+    code: q.get("code"),
+    ready: false,
+    room: null,
+    players: []
+  };
+})();
+
+function bootNet() {
+  if (!net) return;
+  net.room = GN.createRoom({
+    role: net.mode,
+    code: net.code,
+    name: new URLSearchParams(location.search).get("name") || "Detective",
+    color: new URLSearchParams(location.search).get("color") || "#d4a24c",
+    pid: new URLSearchParams(location.search).get("pid") || undefined,
+    slot: new URLSearchParams(location.search).get("slot") || undefined,
+    rejoin: true
+  });
+  net.room.on("open", function () {
+    net.ready = true;
+    net.players = net.room.players();
+    if (net.room.isHost) publish();
+    render();
+  });
+  net.room.on("join", function () {
+    net.players = net.room.players();
+    if (net.room.isHost) publish();
+    render();
+  });
+  net.room.on("players", function (list) {
+    net.players = list || net.room.players();
+    render();
+  });
+  net.room.on("message", function (d, from) {
+    if (!d) return;
+    if (d.t === "act" && net.room.isHost) {
+      applyAction(d.a);
+      publish();
+      render();
+    }
+    if (d.t === "state" && d.state) {
+      applyAction({ type: "sync", state: d.state });
+      render();
+    }
+  });
+  net.room.start();
+}
+
+bootNet();
 render();

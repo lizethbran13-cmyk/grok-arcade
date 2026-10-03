@@ -191,3 +191,24 @@ label { display: block; font-size: 13px; letter-spacing: 0.08em; text-transform:
   font-size: 13px;
   color: var(--slate);
 }
+.coop {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  background: #1c1916;
+  color: #f4ead6;
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+.coop b { color: #d4a24c; }
+.coop button {
+  border: 0;
+  background: #f4ead6;
+  color: #1c1916;
+  border-radius: 999px;
+  padding: 8px 12px;
+}
