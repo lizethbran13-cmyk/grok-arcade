@@ -17,6 +17,9 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-brawl/', color: '#ff3d6e', color2: '#ffe14d' },
   { id: 'party', mp: true, name: 'Grok Land Party', desc: 'A party board game! Roll dice, collect stars, win mini games with friends.',
     url: 'https://lizethbran13-cmyk.github.io/grok-land-party/', color: '#ff6bd6', color2: '#ffe14d' }
+},
+  { id: 'detect', name: 'Grok Detect', desc: 'A detective desk. Pull clues, question suspects, file who, why, and how.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/detect/', color: '#d4a24c', color2: '#2fa89a' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
