@@ -61,11 +61,20 @@
     drop: function () { tone(220, 0.08, 'square', 0.12, 160); },
     perfect: function () { tone(784, 0.08, 'square', 0.1); tone(1175, 0.14, 'square', 0.1, 0, 0.06); },
     lose: function () { [392, 330, 262, 196].forEach(function (f, i) { tone(f, 0.18, 'square', 0.1, 0, i * 0.12); }); },
+    zap: function () { noise(0.55, 0.35); tone(110, 0.5, 'sawtooth', 0.2, 55); tone(1900, 0.18, 'square', 0.08, 260); },
+    buzz: function () { tone(92, 0.65, 'sawtooth', 0.18); tone(95, 0.65, 'square', 0.09); },
+    powerdown: function () { tone(440, 1.3, 'sawtooth', 0.12, 38); noise(0.3, 0.12, 0.2); },
+    powerup: function () { tone(60, 1.0, 'sawtooth', 0.09, 480); [523, 784, 1046].forEach(function (f, i) { tone(f, 0.14, 'square', 0.09, 0, 0.9 + i * 0.08); }); },
+    fixed: function () { [659, 880, 1175, 1568].forEach(function (f, i) { tone(f, 0.12, 'square', 0.1, 0, i * 0.07); }); },
+    wire: function () { tone(1200, 0.05, 'square', 0.08); tone(1800, 0.06, 'square', 0.06, 0, 0.04); },
+    spark: function () { noise(0.07, 0.05); },
+    talk: function () { for (var i = 0; i < 4; i++) tone(260 + Math.random() * 160, 0.05, 'square', 0.05, 0, i * 0.07); },
     best: function () { [784, 988, 1175, 1568].forEach(function (f, i) { tone(f, 0.14, 'square', 0.1, 0, i * 0.09); }); }
   };
   GA.Audio = {
     unlock: function () { var c = ensure(); if (c && c.state === 'suspended') c.resume(); },
-    play: function (name) { if (!ctx || muted) return; var f = SFX[name]; if (f) { try { f(); } catch (e) {} } },
+    log: [],
+    play: function (name) { GA.Audio.log.push(name); if (GA.Audio.log.length > 60) GA.Audio.log.shift(); if (!ctx || muted) return; var f = SFX[name]; if (f) { try { f(); } catch (e) {} } },
     isMuted: function () { return muted; },
     setMuted: function (m) {
       muted = !!m; GA.store.set('muted', muted);

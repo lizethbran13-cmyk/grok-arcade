@@ -155,7 +155,7 @@
     g.strokeStyle = '#ffe14d'; g.lineWidth = 10; g.strokeRect(8, 8, W - 16, H - 16);
     neonText(g, 'BEST SCORES', W / 2, 62, 58, '#ffe14d');
     GA.BONUS_GAMES.forEach(function (gm, i) {
-      var y = 140 + i * 70; g.font = font(42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
+      var n6 = GA.BONUS_GAMES.length > 5, y = (n6 ? 128 : 140) + i * (n6 ? 64 : 70); g.font = font(n6 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
       g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.fillText(String(GA.getBest(gm.id)), W - 50, y);
     });
     d.tex.needsUpdate = true;
@@ -231,7 +231,7 @@
 
     // plants
     plant(ROOM.minX + 0.8, ROOM.minZ + 0.8, 1.1); plant(ROOM.minX + 0.8, ROOM.maxZ - 0.8, 1.1);
-    plant(DIV_X - 0.9, ROOM.maxZ - 0.8, 1); plant(DIV_X + 0.9, ROOM.maxZ - 0.8, 1); plant(ROOM.maxX - 0.8, ROOM.maxZ - 0.8, 1.1);
+    plant(DIV_X - 0.9, ROOM.maxZ - 0.8, 1); plant(DIV_X + 0.9, ROOM.maxZ - 0.8, 1); plant(ROOM.maxX - 2.4, ROOM.maxZ - 0.7, 1.0);
     plant(DIV_X - 0.9, -DOOR - 0.7, 0.8); plant(DIV_X - 0.9, DOOR + 0.7, 0.8);
 
     // bonus-zone stools / bean bags
@@ -372,6 +372,17 @@
         }
         break;
       }
+      case 'wires': {
+        g.fillStyle = '#0d1a2b'; g.fillRect(0, 0, w, h);
+        var wc = ['#ff3b4f', '#3ba7ff', '#ffd23b', '#3bff7a'], ord = [2, 0, 3, 1], done = Math.floor(t * 1.2) % 6;
+        for (i = 0; i < 4; i++) {
+          var ly = 22 + i * 26, ry = 22 + ord[i] * 26;
+          g.fillStyle = wc[i]; g.fillRect(8, ly - 7, 22, 14); g.fillRect(w - 30, 22 + i * 26 - 7, 22, 14);
+          if (i < done) { var ry2 = 22 + ord.indexOf(i) * 26; g.strokeStyle = wc[i]; g.lineWidth = 5; g.beginPath(); g.moveTo(30, ly); g.bezierCurveTo(w / 2, ly, w / 2, ry2, w - 30, ry2); g.stroke(); }
+        }
+        if (done >= 4) { g.font = font(22); g.textAlign = 'center'; g.fillStyle = '#ffe14d'; g.fillText('FIXED!', w / 2, h / 2); }
+        break;
+      }
       case 'stack': {
         g.fillStyle = '#1e1036'; g.fillRect(0, 0, w, h); var n = Math.floor(t * 1.5) % 9;
         for (i = 0; i <= n; i++) { var ww = 90 - i * 4; g.fillStyle = 'hsl(' + (200 + i * 15) + ',85%,55%)'; g.fillRect(w / 2 - ww / 2 + (i === n ? Math.sin(t * 4) * 40 : 0), h - 12 - i * 12, ww, 11); }
@@ -436,7 +447,279 @@
     // main games: along the north wall, facing south
     GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -8 + i * 4, -Math.PI / 2); });
+    var nb = GA.BONUS_GAMES.length, stepB = nb > 5 ? 3.6 : 4;
+    GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2); });
+  }
+
+  /* ---------- multiplayer antenna ---------- */
+  var ANT = { x: 1.4, z: -3.4 };
+  function buildAntenna() {
+    var grp = new T.Group(); grp.position.set(ANT.x, 0, ANT.z); grp.rotation.y = 0.35; scene.add(grp);
+    var cyan = '#3ff0ff', pink = '#ff4fd8', yel = '#ffe14d';
+    // base platform with neon trim
+    mesh(cyl(1.0, 1.15, 0.36, 24), lam('#2b1a5e'), 0, 0.18, 0, grp);
+    var trim = mesh(new T.TorusGeometry(1.08, 0.05, 8, 40), basic(cyan), 0, 0.37, 0, grp); trim.rotation.x = Math.PI / 2;
+    var trim2 = mesh(new T.TorusGeometry(1.16, 0.04, 8, 40), basic(pink), 0, 0.08, 0, grp); trim2.rotation.x = Math.PI / 2;
+    // lattice tower (wireframe) around a solid mast
+    var lat = new T.Mesh(new T.CylinderGeometry(0.1, 0.62, 3.9, 4, 7, true), new T.MeshBasicMaterial({ color: cyan, wireframe: true }));
+    lat.position.set(0, 0.36 + 1.95, 0); grp.add(lat);
+    var lat2 = new T.Mesh(new T.CylinderGeometry(0.08, 0.5, 3.9, 4, 7, true), new T.MeshBasicMaterial({ color: pink, wireframe: true }));
+    lat2.position.copy(lat.position); lat2.rotation.y = Math.PI / 4; grp.add(lat2);
+    mesh(cyl(0.06, 0.12, 4.1, 8), lam('#c7b8ff'), 0, 0.36 + 2.05, 0, grp);
+    // dish + spike + glowing orb on top
+    var dish = mesh(new T.SphereGeometry(0.42, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2.6), new T.MeshLambertMaterial({ color: '#e9e2ff', side: T.DoubleSide }), 0, 3.0, 0.22, grp);
+    dish.rotation.x = -Math.PI / 2 - 0.35;
+    mesh(cyl(0.02, 0.02, 0.45, 6), basic(yel), 0, 3.0, 0.42, grp).rotation.x = Math.PI / 2 - 0.35;
+    mesh(cyl(0.015, 0.03, 0.55, 6), basic('#ffffff'), 0, 4.62, 0, grp);
+    var orb = mesh(sph(0.24, 16), new T.MeshBasicMaterial({ color: pink }), 0, 4.42, 0, grp);
+    var halo = new T.Sprite(new T.SpriteMaterial({ map: glowTex, color: pink, transparent: true, depthWrite: false, blending: T.AdditiveBlending }));
+    halo.position.set(0, 4.42, 0); halo.scale.set(1.6, 1.6, 1); grp.add(halo);
+    // blinking lights on the legs
+    var blinks = [];
+    for (var i = 0; i < 4; i++) { var a = i * Math.PI / 2 + Math.PI / 4, b = mesh(sph(0.06, 8), basic(i % 2 ? yel : cyan), Math.cos(a) * 0.36, 2.2, Math.sin(a) * 0.36, grp); blinks.push(b); }
+    // expanding signal rings
+    var rings = [];
+    for (i = 0; i < 3; i++) {
+      var rm = new T.MeshBasicMaterial({ color: i % 2 ? pink : cyan, transparent: true, opacity: 0.8, depthWrite: false, blending: T.AdditiveBlending, side: T.DoubleSide });
+      var rg = mesh(new T.TorusGeometry(0.35, 0.025, 6, 40), rm, 0, 4.42, 0, grp); rg.rotation.x = Math.PI / 2; rings.push(rg);
+    }
+    // sign board (double sided) and a floor decal
+    var sg = sign('MULTIPLAYER\nPlay with friends online', 2.8, 0.85, cyan, { col2: yel });
+    sg.position.set(0, 1.55, 0.68); grp.add(sg);
+    var sgb = sg.clone(); sgb.rotation.y = Math.PI; sgb.position.z = 0.66; grp.add(sgb);
+    mesh(box(0.06, 0.9, 0.06), lam('#c7b8ff'), -1.2, 0.9, 0.67, grp); mesh(box(0.06, 0.9, 0.06), lam('#c7b8ff'), 1.2, 0.9, 0.67, grp);
+    var dec = decal('ONLINE', 2.6, 0.9, cyan, 0, 0, 0, '2-3 players \u00b7 own phones'); scene.remove(dec); dec.position.set(0, 0.02, 1.75); grp.add(dec);
+    var gm = new T.MeshBasicMaterial({ map: glowTex, color: cyan, transparent: true, opacity: 0.35, depthWrite: false, blending: T.AdditiveBlending });
+    var glow = mesh(plane(3.6, 3.6), gm, 0, 0.03, 0, grp); glow.rotation.x = -Math.PI / 2; glow.renderOrder = 2;
+    ANT.p = { grp: grp, orb: orb, halo: halo, rings: rings, blinks: blinks, dish: dish, lat: lat, lat2: lat2 };
+    buildBrokenFx(grp);
+    anims.push(function (t) {
+      if (ANT.broken) return;
+      orb.scale.setScalar(1 + Math.sin(t * 5) * 0.12); halo.material.opacity = 0.7 + Math.sin(t * 5) * 0.3;
+      lat.rotation.y = t * 0.15; lat2.rotation.y = Math.PI / 4 - t * 0.12;
+      rings.forEach(function (r, k) { var ph = (t * 0.55 + k / 3) % 1; r.scale.setScalar(1 + ph * 6); r.material.opacity = 0.85 * (1 - ph); });
+      blinks.forEach(function (b, k) { b.visible = Math.sin(t * 6 + k * 1.7) > -0.2; });
+    });
+    addSolid(ANT.x - 1.0, ANT.x + 1.0, ANT.z - 1.0, ANT.z + 1.0);
+    grp.updateMatrixWorld(true);
+    var dir = new T.Vector3(Math.sin(grp.rotation.y), 0, Math.cos(grp.rotation.y));
+    var cab = { game: { id: 'mp', name: 'Multiplayer Antenna', desc: 'Host or join a room and play with friends on their own phones (2-3 players).', color: cyan },
+      kind: 'mp', id: 'mp', group: grp, x: ANT.x, z: ANT.z, rot: grp.rotation.y, front: { x: ANT.x, z: ANT.z }, dir: dir, glow: gm, nextDraw: Infinity, r: 2.25 };
+    cabinets.push(cab);
+  }
+
+
+  /* ---------- broken antenna FX (sparks, smoke, flicker, OUT OF ORDER sign) ---------- */
+  var sparks = [], smokes = [], sparkT = 0, sparkLight = null, shakeT = 0, brokenT = 0;
+  function buildBrokenFx(grp) {
+    var bx = ANT.bx = new T.Group(); bx.visible = false; grp.add(bx);
+    var c = mkCanvas(512, 256), g = c.getContext('2d');
+    g.fillStyle = '#d91e2a'; g.fillRect(0, 0, 512, 256);
+    function stripes(y, h) { g.save(); g.beginPath(); g.rect(0, y, 512, h); g.clip(); for (var i = -2; i < 16; i++) { g.fillStyle = i % 2 ? '#ffd400' : '#141414'; g.beginPath(); g.moveTo(i * 40, y + h); g.lineTo(i * 40 + 40, y + h); g.lineTo(i * 40 + 40 + h, y); g.lineTo(i * 40 + h, y); g.closePath(); g.fill(); } g.restore(); }
+    stripes(0, 38); stripes(218, 38);
+    neonText(g, 'OUT OF ORDER', 256, 112, 74, '#ffffff', 480);
+    g.font = font(30); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#ffe14d'; g.fillText('Ask Gary from IT!', 256, 178);
+    var mat = new T.MeshBasicMaterial({ map: canvasTex(c), side: T.DoubleSide });
+    var s1 = mesh(plane(2.1, 1.05), mat, 0.15, 1.6, 0.74, bx); s1.rotation.z = -0.13;
+    var s2 = mesh(plane(2.1, 1.05), mat, -0.1, 1.6, 0.6, bx); s2.rotation.y = Math.PI; s2.rotation.z = 0.1;
+    mesh(box(0.5, 0.07, 0.01), basic('#e5e7eb'), -0.75, 2.12, 0.75, bx).rotation.z = 0.5;
+    mesh(box(0.5, 0.07, 0.01), basic('#e5e7eb'), 1.0, 2.0, 0.75, bx).rotation.z = -0.6;
+    var sm = new T.MeshBasicMaterial({ color: '#fff3a0' });
+    for (var i = 0; i < 40; i++) { var sp = mesh(box(0.05, 0.05, 0.05), sm, 0, -10, 0, grp); sp.userData.keepLit = true; sparks.push({ m: sp, life: 0, vx: 0, vy: 0, vz: 0 }); }
+    var scv = mkCanvas(64, 64), sg = scv.getContext('2d'), grd = sg.createRadialGradient(32, 32, 2, 32, 32, 30);
+    grd.addColorStop(0, 'rgba(90,90,100,0.9)'); grd.addColorStop(1, 'rgba(90,90,100,0)'); sg.fillStyle = grd; sg.fillRect(0, 0, 64, 64);
+    var stex = canvasTex(scv);
+    for (i = 0; i < 12; i++) { var spr = new T.Sprite(new T.SpriteMaterial({ map: stex, transparent: true, depthWrite: false, opacity: 0 })); spr.position.set(0, -10, 0); grp.add(spr); smokes.push({ s: spr, ph: i / 12, dx: (Math.random() - 0.5) * 0.8 }); }
+    sparkLight = new T.PointLight('#bfefff', 0, 5); sparkLight.position.set(0, 3.0, 0.4); grp.add(sparkLight);
+  }
+  function burst(n, col, x, y, z, power) {
+    var k = 0;
+    for (var i = 0; i < sparks.length && k < n; i++) {
+      var s = sparks[i]; if (s.life > 0) continue; k++;
+      s.life = 0.45 + Math.random() * 0.5; s.m.position.set(x, y, z); s.m.material.color.set(col || '#fff3a0');
+      var a = Math.random() * Math.PI * 2, p = (power || 1) * (1 + Math.random() * 2.2);
+      s.vx = Math.cos(a) * p; s.vz = Math.sin(a) * p; s.vy = 1 + Math.random() * 2.5 * (power || 1);
+    }
+  }
+  function setBroken(b) {
+    ANT.broken = b; var p = ANT.p; if (!p) return;
+    ANT.bx.visible = b;
+    p.rings.forEach(function (r) { r.visible = !b; });
+    p.orb.material.color.set(b ? '#ff2a2a' : '#ff4fd8'); if (p.orb.material.userData._dim) p.orb.material.userData._dim.copy(p.orb.material.color);
+    p.dish.rotation.z = b ? 0.55 : 0; p.dish.position.y = b ? 2.85 : 3.0;
+    p.lat.rotation.z = b ? 0.04 : 0;
+    if (!b) { sparkLight.intensity = 0; smokes.forEach(function (s) { s.s.material.opacity = 0; }); burst(26, '#3ff0ff', 0, 4.42, 0, 1.4); p.halo.material.opacity = 1; p.blinks.forEach(function (bl) { bl.visible = true; }); }
+  }
+  function updateBroken(dt) {
+    var p = ANT.p; if (!p) return;
+    for (var i = 0; i < sparks.length; i++) {
+      var s = sparks[i]; if (s.life <= 0) continue;
+      s.life -= dt; s.vy -= 9 * dt; s.m.position.x += s.vx * dt; s.m.position.y += s.vy * dt; s.m.position.z += s.vz * dt;
+      s.m.scale.setScalar(Math.max(0.2, s.life * 2)); if (s.life <= 0 || s.m.position.y < 0.05) { s.life = 0; s.m.position.y = -10; }
+    }
+    if (!ANT.broken) return;
+    brokenT += dt; sparkT -= dt;
+    if (sparkT <= 0) { sparkT = 0.35 + Math.random() * 1.1; burst(6 + Math.floor(Math.random() * 8), Math.random() < 0.5 ? '#fff3a0' : '#9fe8ff', 0, 2.95, 0.35, 1); sparkLight.intensity = 2.5; if (Hub.onSpark && Math.hypot(P.x - ANT.x, P.z - ANT.z) < 7) Hub.onSpark(); }
+    sparkLight.intensity *= Math.pow(0.002, dt);
+    // flickering orb + halo, red blinking legs
+    var fl = Math.random() < 0.18 ? 0.05 : 0.6 + Math.random() * 0.4;
+    p.halo.material.opacity = fl; p.orb.scale.setScalar(0.8 + fl * 0.25);
+    p.blinks.forEach(function (b, k) { b.visible = Math.random() < 0.5; });
+    smokes.forEach(function (sm) {
+      var ph = (brokenT * 0.42 + sm.ph) % 1;
+      sm.s.position.set(sm.dx * ph, 3.0 + ph * 2.2, 0.2 + ph * 0.3); sm.s.scale.setScalar(0.4 + ph * 1.5); sm.s.material.opacity = 0.55 * (1 - ph) * Math.min(1, ph * 6);
+    });
+  }
+
+  /* ---------- Gary from IT (NPC) ---------- */
+  var GARY = { x: -1.0, z: 11.35, face: Math.PI, state: 'desk', path: [], seg: 0, t: 0, needed: false, cbFixed: null, cbDone: null, phase: 0 };
+  var GDESK = { x: -1.0, z: 11.35 };
+  function textSprite(text, w, h, bg, fg, px) {
+    var c = mkCanvas(512, Math.round(512 * h / w)), g = c.getContext('2d');
+    g.fillStyle = bg; U_rr(g, 6, 6, c.width - 12, c.height - 12, c.height * 0.35); g.fill();
+    g.strokeStyle = '#ffffff'; g.lineWidth = 6; g.stroke();
+    g.font = font(px); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = fg; g.fillText(text, c.width / 2, c.height / 2 + 2);
+    var sp = new T.Sprite(new T.SpriteMaterial({ map: canvasTex(c), transparent: true, depthTest: false })); sp.scale.set(w, h, 1); sp.renderOrder = 10; sp.userData.keepLit = true;
+    return sp;
+  }
+  function buildGary() {
+    // IT help desk next to the prize counter
+    var dg = new T.Group(); dg.position.set(-1.0, 0, 10.6); dg.rotation.y = Math.PI; scene.add(dg);
+    mesh(box(1.7, 0.08, 0.75), lam('#8b5a2b'), 0, 0.78, 0, dg);
+    mesh(box(1.66, 0.7, 0.06), lam('#6b4220'), 0, 0.4, 0.34, dg);
+    [-0.8, 0.8].forEach(function (x) { mesh(box(0.06, 0.74, 0.7), lam('#6b4220'), x, 0.37, 0, dg); });
+    var monG = new T.Group(); monG.position.set(0.5, 0, 0); monG.rotation.y = 0.45; dg.add(monG); mesh(box(0.7, 0.45, 0.05), basic('#0b0f1a'), 0, 1.12, -0.1, monG); mesh(box(0.08, 0.3, 0.08), lam('#333'), 0, 0.92, -0.12, monG);
+    var mon = mkCanvas(128, 80), mg = mon.getContext('2d'); mg.fillStyle = '#04121f'; mg.fillRect(0, 0, 128, 80); mg.font = font(16); mg.fillStyle = '#4ade80'; mg.textAlign = 'center'; mg.fillText('IT', 64, 46);
+    var mb = mesh(plane(0.6, 0.38), new T.MeshBasicMaterial({ map: canvasTex(mon) }), 0, 1.12, -0.13, monG); mb.rotation.y = Math.PI;
+    mesh(box(0.5, 0.03, 0.18), lam('#222'), 0.3, 0.83, 0.12, dg);
+    mesh(box(0.25, 0.32, 0.25), lam('#9ca3af'), -0.62, 0.98, -0.1, dg);
+    var sgn = sign('IT HELP DESK\nAsk Gary!', 2.6, 0.8, '#4ade80'); sgn.position.set(-1.0, 2.9, ROOM.maxZ - 0.03); sgn.rotation.y = Math.PI; scene.add(sgn);
+    addSolid(-1.9, -0.1, 10.2, ROOM.maxZ);
+    dg.updateMatrixWorld(true);
+    // Gary himself
+    var root = GARY.root = new T.Group(); scene.add(root);
+    var body = new T.Group(); root.add(body); GARY.body = body;
+    var shirt = lam('#14b8a6'), skin = lam('#f1c7a0'), pants = lam('#c8a165'), dark = basic('#1b1030'), hair = lam('#6b5a4a');
+    GARY.legL = new T.Group(); GARY.legR = new T.Group(); GARY.legL.position.set(-0.14, 0.62, 0); GARY.legR.position.set(0.14, 0.62, 0); body.add(GARY.legL); body.add(GARY.legR);
+    [GARY.legL, GARY.legR].forEach(function (l) { mesh(box(0.22, 0.52, 0.24), pants, 0, -0.28, 0, l); mesh(box(0.25, 0.12, 0.34), lam('#3b2a1a'), 0, -0.57, 0.04, l); });
+    mesh(box(0.64, 0.66, 0.44), shirt, 0, 0.95, 0.02, body);
+    mesh(box(0.66, 0.08, 0.46), lam('#5b4a3a'), 0, 0.64, 0.02, body);
+    mesh(box(0.03, 0.34, 0.01), basic('#2563eb'), -0.08, 1.08, 0.25, body); mesh(box(0.03, 0.34, 0.01), basic('#2563eb'), 0.08, 1.08, 0.25, body);
+    mesh(box(0.16, 0.2, 0.02), basic('#ffffff'), 0, 0.88, 0.25, body);
+    mesh(box(0.2, 0.1, 0.02), basic('#0f766e'), 0.18, 1.1, 0.24, body);
+    // polo collar + button placket + pens in the pocket (pocket protector!)
+    [-1, 1].forEach(function (sd) { var cl = mesh(box(0.2, 0.05, 0.14), lam('#f8fafc'), sd * 0.11, 1.27, 0.17, body); cl.rotation.set(0.5, 0, sd * -0.45); });
+    mesh(box(0.07, 0.16, 0.015), lam('#0d9488'), 0, 1.19, 0.245, body); mesh(box(0.025, 0.025, 0.01), basic('#f8fafc'), 0, 1.22, 0.255, body); mesh(box(0.025, 0.025, 0.01), basic('#f8fafc'), 0, 1.15, 0.255, body);
+    [['#ef4444', 0.13], ['#2563eb', 0.18], ['#111827', 0.23]].forEach(function (pn) { mesh(box(0.025, 0.12, 0.025), lam(pn[0]), pn[1], 1.16, 0.25, body); });
+    GARY.armL = new T.Group(); GARY.armR = new T.Group(); GARY.armL.position.set(-0.4, 1.2, 0); GARY.armR.position.set(0.4, 1.2, 0); body.add(GARY.armL); body.add(GARY.armR);
+    [GARY.armL, GARY.armR].forEach(function (a) { mesh(box(0.17, 0.3, 0.19), shirt, 0, -0.12, 0, a); mesh(box(0.14, 0.24, 0.15), skin, 0, -0.36, 0, a); mesh(sph(0.09, 8), skin, 0, -0.5, 0, a); });
+    var wrench = GARY.wrench = new T.Group(); wrench.position.set(0, -0.56, 0.08); GARY.armR.add(wrench); wrench.visible = false;
+    mesh(box(0.05, 0.05, 0.42), lam('#cbd5e1'), 0, 0, 0.18, wrench); mesh(box(0.14, 0.05, 0.08), lam('#cbd5e1'), 0, 0, 0.4, wrench);
+    // coffee mug in the left hand (at the desk) - white with a green 'IT' stripe
+    var mugG = GARY.mug = new T.Group(); mugG.position.set(0, -0.56, 0.1); GARY.armL.add(mugG);
+    var mugC = mesh(cyl(0.085, 0.075, 0.17, 14), lam('#f8fafc'), 0, 0, 0, mugG); mugC.rotation.x = Math.PI / 2;
+    var mugS = mesh(cyl(0.088, 0.088, 0.045, 14), lam('#22c55e'), 0, 0.03, 0, mugG); mugS.rotation.x = Math.PI / 2;
+    var mugH = mesh(new T.TorusGeometry(0.045, 0.015, 6, 12), lam('#f8fafc'), 0.095, 0, 0, mugG); mugH.rotation.x = Math.PI / 2;
+    mesh(cyl(0.07, 0.07, 0.01, 12), lam('#4a2c17'), 0, 0, 0, mugG).rotation.x = Math.PI / 2;
+    // red toolbox in the left hand (when heading out for a repair)
+    var tb = GARY.toolbox = new T.Group(); tb.position.set(0, -0.62, 0); GARY.armL.add(tb); tb.visible = false;
+    mesh(box(0.42, 0.2, 0.18), lam('#dc2626'), 0, -0.14, 0, tb); mesh(box(0.43, 0.04, 0.19), lam('#991b1b'), 0, -0.05, 0, tb);
+    mesh(box(0.2, 0.03, 0.03), lam('#1f2937'), 0, 0.02, 0, tb); [-0.09, 0.09].forEach(function (x) { mesh(box(0.03, 0.07, 0.03), lam('#1f2937'), x, -0.02, 0, tb); });
+    mesh(box(0.06, 0.04, 0.01), lam('#facc15'), 0, -0.1, 0.095, tb);
+    var head = new T.Group(); head.position.set(0, 1.56, 0); body.add(head); GARY.head = head;
+    mesh(sph(0.29, 16), skin, 0, 0, 0, head);
+    var hr = mesh(new T.TorusGeometry(0.24, 0.08, 8, 20, Math.PI * 1.3), hair, 0, 0.02, -0.04, head); hr.rotation.set(Math.PI / 2, 0, -Math.PI * 0.15 + Math.PI);
+    [[-0.08, 0.27, 0.05, 0.3], [0.03, 0.29, 0.02, -0.2], [0.12, 0.26, 0.04, -0.5]].forEach(function (t) { var tf = mesh(box(0.1, 0.12, 0.1), hair, t[0], t[1], t[2], head); tf.rotation.z = t[3]; }); // messy tuft
+    var beard = mesh(sph(0.24, 12), hair, 0, -0.14, 0.08, head); beard.scale.set(1.05, 0.62, 0.8);
+    mesh(box(0.14, 0.04, 0.03), lam('#c98d6b'), 0, -0.07, 0.28, head);
+    [-0.11, 0.11].forEach(function (x) { mesh(box(0.15, 0.11, 0.02), dark, x, 0.04, 0.29, head); mesh(box(0.11, 0.07, 0.01), basic('#bfe9ff'), x, 0.04, 0.302, head); });
+    mesh(box(0.08, 0.025, 0.02), dark, 0, 0.06, 0.29, head);
+    var tag = GARY.tag = textSprite('GARY FROM IT', 1.3, 0.3, '#0f766e', '#ffffff', 64); tag.position.set(0, 2.2, 0); root.add(tag);
+    var bub = GARY.bubble = textSprite('!', 0.42, 0.42, '#ffe14d', '#1b1030', 150); bub.position.set(0, 2.7, 0); root.add(bub); bub.visible = false;
+    var sc = mkCanvas(64, 64), sg = sc.getContext('2d'), grd = sg.createRadialGradient(32, 32, 4, 32, 32, 30);
+    grd.addColorStop(0, 'rgba(0,0,0,0.55)'); grd.addColorStop(1, 'rgba(0,0,0,0)'); sg.fillStyle = grd; sg.fillRect(0, 0, 64, 64);
+    var sh = mesh(plane(1.1, 1.1), new T.MeshBasicMaterial({ map: canvasTex(sc), transparent: true, depthWrite: false }), 0, 0.03, 0, root); sh.rotation.x = -Math.PI / 2;
+    root.scale.setScalar(1.05);
+    // emergency light over the help desk (only during a power cut)
+    GARY.emerg = new T.PointLight('#ff3b3b', 0, 9); GARY.emerg.position.set(-1.0, 3.6, 10.2); scene.add(GARY.emerg);
+    var gm = new T.MeshBasicMaterial({ map: glowTex, color: '#4ade80', transparent: true, opacity: 0.3, depthWrite: false, blending: T.AdditiveBlending });
+    var glow = mesh(plane(2.2, 1.8), gm, 0, 0.025, 1.45, dg); glow.rotation.x = -Math.PI / 2; glow.renderOrder = 2;
+    var front = new T.Vector3(0, 0, 1.75).applyMatrix4(dg.matrixWorld);
+    GARY.cab = { game: { id: 'gary', name: 'Gary from IT', desc: 'Your friendly IT Manager.', color: '#4ade80' }, kind: 'npc', id: 'gary', group: dg, x: -1.0, z: 10.6, rot: Math.PI, front: front, dir: new T.Vector3(0, 0, -1), glow: gm, nextDraw: Infinity, r: 1.9 };
+    cabinets.push(GARY.cab);
+    placeGary();
+  }
+  function placeGary() { GARY.root.position.set(GARY.x, 0, GARY.z); GARY.root.rotation.y = GARY.face; }
+  function garyGo(onFixed, onDone) {
+    if (GARY.state !== 'desk') return false;
+    GARY.cbFixed = onFixed; GARY.cbDone = onDone;
+    GARY.path = [[-2.35, 11.3], [-2.35, 9.3], [ANT.x + 2.0, ANT.z + 1.9], [ANT.x + 1.45, ANT.z - 0.1]]; GARY.seg = 0; GARY.state = 'walk'; GARY.cab.disabled = true;
+    return true;
+  }
+  function updateGary(dt) {
+    if (!GARY.root) return;
+    var G = GARY, moving = false, SPEED = 4.2;
+    if (G.state === 'walk' || G.state === 'return') {
+      var tgt = G.path[G.seg], dx = tgt[0] - G.x, dz = tgt[1] - G.z, d = Math.hypot(dx, dz), stp = SPEED * dt;
+      if (d <= stp) { G.x = tgt[0]; G.z = tgt[1]; G.seg++; } else { G.x += dx / d * stp; G.z += dz / d * stp; }
+      if (d > 0.01) { var want = Math.atan2(dx, dz), dA = ((want - G.face + Math.PI * 3) % (Math.PI * 2)) - Math.PI; G.face += dA * Math.min(1, dt * 12); }
+      moving = true;
+      if (G.seg >= G.path.length) {
+        if (G.state === 'walk') { G.state = 'fix'; G.t = 0; G.wrench.visible = true; }
+        else { G.state = 'desk'; G.face = Math.PI; G.cab.disabled = false; if (G.cbDone) { var cd = G.cbDone; G.cbDone = null; cd(); } }
+      }
+    } else if (G.state === 'fix') {
+      G.t += dt; var wantF = Math.atan2(ANT.x - G.x, ANT.z - G.z), dF = ((wantF - G.face + Math.PI * 3) % (Math.PI * 2)) - Math.PI; G.face += dF * Math.min(1, dt * 8);
+      G.armR.rotation.x = -1.6 + Math.sin(G.t * 16) * 0.5; G.armL.rotation.x = -0.6;
+      G.body.position.y = -0.12; G.legL.rotation.x = -0.5; G.legR.rotation.x = 0.3;
+      if (Math.floor(G.t * 8) !== Math.floor((G.t - dt) * 8)) burst(3, '#ffe14d', ANT.x - G.x > 0 ? -0.1 : 0.1, 1.4 + Math.random() * 1.5, 0.75, 0.6);
+      if (G.t >= 2.6) {
+        G.state = 'cheer'; G.t = 0; G.wrench.visible = false;
+        if (G.cbFixed) { var cf = G.cbFixed; G.cbFixed = null; cf(); }
+      }
+    } else if (G.state === 'cheer') {
+      G.t += dt; G.armR.rotation.x = G.armL.rotation.x = Math.PI - 0.3 + Math.sin(G.t * 12) * 0.2; G.body.position.y = Math.abs(Math.sin(G.t * 9)) * 0.12;
+      G.legL.rotation.x = G.legR.rotation.x = 0;
+      if (G.t > 0.9) { G.state = 'return'; G.path = [[ANT.x + 2.0, ANT.z + 1.9], [-2.35, 9.3], [-2.35, 11.3], [GDESK.x, GDESK.z]]; G.seg = 0; }
+    }
+    if (G.state === 'desk') {
+      // typing at the computer
+      G.phase += dt; var sip = Math.max(0, Math.sin(G.phase * 0.9) - 0.75) * 4; G.armL.rotation.x = -1.0 - sip * 0.9; G.armL.rotation.z = 0.25; G.armR.rotation.x = -1.2 + Math.cos(G.phase * 13) * 0.08;
+      G.legL.rotation.x = G.legR.rotation.x = 0; G.body.position.y = 0; G.head.rotation.y = Math.sin(G.phase * 0.5) * 0.3;
+      if (G.needed) { G.head.rotation.y = 0; G.armR.rotation.x = Math.PI - 0.2 + Math.sin(G.phase * 8) * 0.3; }
+    } else if (moving) {
+      G.phase += dt * 11; var sw = Math.sin(G.phase) * 0.7;
+      G.legL.rotation.x = sw; G.legR.rotation.x = -sw; G.armL.rotation.x = -sw * 0.8; G.armR.rotation.x = sw * 0.8; G.body.position.y = Math.abs(Math.sin(G.phase)) * 0.05; G.head.rotation.y = 0;
+    }
+    G.mug.visible = G.state === 'desk'; G.toolbox.visible = !G.mug.visible; if (G.state !== 'desk') G.armL.rotation.z = 0;
+    G.bubble.visible = G.needed && G.state === 'desk';
+    if (G.bubble.visible) G.bubble.position.y = 2.7 + Math.sin(time * 4) * 0.08;
+    placeGary();
+    if (G.emerg) G.emerg.intensity = powerTarget < 0.5 ? 1.6 + Math.sin(time * 5) * 0.8 : 0;
+  }
+
+  /* ---------- power (arcade shutdown / restore) ---------- */
+  var LIGHTS = [], powerK = 1, powerTarget = 1, dimList = null, CLEAR_ON = new T.Color('#140a2b'), CLEAR_OFF = new T.Color('#030108'), tmpC = new T.Color();
+  function collectDim() {
+    dimList = [];
+    scene.traverse(function (o) {
+      if (!o.material || o.userData.keepLit) return;
+      (Array.isArray(o.material) ? o.material : [o.material]).forEach(function (m) {
+        if ((m.isMeshBasicMaterial || m.isSpriteMaterial) && m.color && !m.userData._dim) { m.userData._dim = m.color.clone(); dimList.push(m); }
+      });
+    });
+  }
+  function applyPower() {
+    if (!dimList) { if (powerK >= 1) return; collectDim(); }
+    var k = powerK, flick = (powerK > 0.02 && powerK < 0.98 && Math.random() < 0.3) ? 0.4 : 1, f = (0.16 + 0.84 * k) * flick;
+    LIGHTS.forEach(function (l) { l[0].intensity = l[1] * (0.18 + 0.82 * k) * flick; });
+    dimList.forEach(function (m) { m.color.copy(m.userData._dim).multiplyScalar(f); });
+    tmpC.copy(CLEAR_OFF).lerp(CLEAR_ON, k); renderer.setClearColor(tmpC); if (scene.fog) scene.fog.color.copy(tmpC);
+  }
+  function updatePower(dt) {
+    if (powerK === powerTarget) return;
+    powerK = powerTarget > powerK ? Math.min(powerTarget, powerK + dt / 1.4) : Math.max(powerTarget, powerK - dt / 1.1);
+    applyPower();
   }
 
   /* ---------- player character ---------- */
@@ -590,7 +873,7 @@
     var best = null, bd = 1e9;
     if (enabled) cabinets.forEach(function (c) {
       var dx = P.x - c.front.x, dz = P.z - c.front.z, d = Math.hypot(dx, dz);
-      if (d < 1.45 && d < bd) { bd = d; best = c; }
+      if (!c.disabled && d < (c.r || 1.45) && d < bd) { bd = d; best = c; }
     });
     if (best !== near) { near = best; if (Hub.onNear) Hub.onNear(near); }
     cabinets.forEach(function (c) { var o = c === near ? 0.8 + Math.sin(time * 6) * 0.2 : 0.3; c.glow.opacity += (o - c.glow.opacity) * Math.min(1, dt * 8); });
@@ -610,16 +893,22 @@
     C.cur += (want - C.cur) * Math.min(1, dt * (want < C.cur ? 20 : 4));
     camera.position.set(tx + bx * C.cur, ty + by * C.cur, tz + bz * C.cur);
     camera.lookAt(tx, ty + 0.25 - 0.3 * C.nb, tz);
+    if (Hub._cam) { camera.position.set(Hub._cam[0], Hub._cam[1], Hub._cam[2]); camera.lookAt(Hub._cam[3], Hub._cam[4], Hub._cam[5]); }
+    if (shakeT > 0) { shakeT -= dt; camera.position.x += (Math.random() - 0.5) * shakeT * 0.6; camera.position.y += (Math.random() - 0.5) * shakeT * 0.6; }
 
     // attract screens (throttled, near ones faster)
     var now = time;
     cabinets.forEach(function (c) {
+      if (!c.sctx) return;
+      if (powerK < 0.5) { if (!c.offDrawn) { c.offDrawn = true; c.sctx.fillStyle = '#000'; c.sctx.fillRect(0, 0, c.w, c.h); c.stex.needsUpdate = true; } return; }
+      c.offDrawn = false;
       if (now < c.nextDraw) return;
       var d = Math.hypot(P.x - c.x, P.z - c.z);
       c.nextDraw = now + (d < 9 ? 1 / 15 : d < 16 ? 1 / 6 : 0.5);
       attract(c.id, c.sctx, c.w, c.h, now, c); c.stex.needsUpdate = true;
     });
     for (var i = 0; i < anims.length; i++) anims[i](time);
+    updateBroken(dt); updateGary(dt); updatePower(dt);
 
     // area label
     var inBonus = P.x > DIV_X;
@@ -653,10 +942,11 @@
     scene = new T.Scene();
     scene.fog = new T.Fog('#140a2b', 22, 48);
     camera = new T.PerspectiveCamera(58, 1, 0.1, 80);
-    scene.add(new T.HemisphereLight('#d8ccff', '#4a2a6e', 0.85));
-    scene.add(new T.AmbientLight('#ffffff', 0.25));
+    var hl = new T.HemisphereLight('#d8ccff', '#4a2a6e', 0.85), al = new T.AmbientLight('#ffffff', 0.25);
+    scene.add(hl); scene.add(al);
     var dl = new T.DirectionalLight('#ffffff', 0.55); dl.position.set(-4, 10, 6); scene.add(dl);
-    buildRoom(); buildSigns(); buildDecor(); buildCabinets(); buildPlayer(); setupInput();
+    LIGHTS = [[hl, 0.85], [al, 0.25], [dl, 0.55]];
+    buildRoom(); buildSigns(); buildDecor(); buildCabinets(); buildAntenna(); buildGary(); buildPlayer(); setupInput();
     // restore position when coming back from a main game
     var saved = null; try { saved = JSON.parse(sessionStorage.getItem('grokArcade.pos') || 'null'); } catch (e) {}
     if (saved && isFinite(saved.x) && isFinite(saved.z)) { P.x = saved.x; P.z = saved.z; P.face = saved.face || 0; Hub._startYaw = saved.yaw || 0; }
@@ -680,7 +970,22 @@
   Hub.home = function () { P.x = SPAWN.x; P.z = SPAWN.z; P.face = Math.PI; C.yaw = 0; };
   Hub.state = function () { return { x: +P.x.toFixed(2), z: +P.z.toFixed(2), face: +P.face.toFixed(2), yaw: +C.yaw.toFixed(2), near: near ? near.id : null, enabled: enabled, paused: paused, calls: renderer.info.render.calls, tris: renderer.info.render.triangles }; };
   Hub.setPlayer = function (x, z) { P.x = x; P.z = z; };
+  Hub.debugCam = function (a) { Hub._cam = a || null; }; // [px,py,pz, lx,ly,lz] or null
+  Hub.garyPos = function () { return { x: GARY.x, z: GARY.z, face: GARY.face, state: GARY.state }; };
   Hub.cameraYaw = function (y) { if (y != null) C.yaw = y; return C.yaw; };
   Hub.renderer = function () { return renderer; };
+  Hub.setAntennaBroken = function (b) { setBroken(!!b); };
+  Hub.antennaBroken = function () { return !!ANT.broken; };
+  Hub.setPower = function (on, instant) { powerTarget = on ? 1 : 0; if (instant) { powerK = powerTarget; applyPower(); } };
+  Hub.power = function () { return { target: powerTarget, k: +powerK.toFixed(2) }; };
+  Hub.shake = function (s) { shakeT = Math.max(shakeT, s || 0.6); };
+  Hub.garyGo = function (onFixed, onDone) { return garyGo(onFixed, onDone); };
+  Hub.garyNeeded = function (b) { GARY.needed = !!b; };
+  Hub.gary = function () { return { state: GARY.state, x: +GARY.x.toFixed(2), z: +GARY.z.toFixed(2), needed: GARY.needed }; };
+  Hub.garyScreen = function () {
+    if (!camera || !GARY.root) return null; var v = new T.Vector3(GARY.x, 2.0, GARY.z).project(camera);
+    var w = window.innerWidth, h = window.innerHeight, behind = v.z > 1;
+    return { x: (v.x * 0.5 + 0.5) * w, y: (-v.y * 0.5 + 0.5) * h, on: !behind && v.x > -1 && v.x < 1 && v.y > -1 && v.y < 1, behind: behind, dist: Math.hypot(P.x - GARY.x, P.z - GARY.z) };
+  };
   Hub.ROOM = ROOM; Hub.DIV_X = DIV_X;
 })();

@@ -41,6 +41,8 @@
       <button id="menuClose" class="xBtn" aria-label="Close menu">&#10005;</button>
     </div>
     <div class="menuScroll" id="menuScroll">
+      <h2 class="secTitle mpSec">Multiplayer <small>play with friends on their own phones</small></h2>
+      <div class="grid" id="gridMp"></div>
       <h2 class="secTitle main">Main Games</h2>
       <div class="grid" id="gridMain"></div>
       <h2 class="secTitle bonus">Bonus Mini Games <small>play right here &middot; earn tickets</small></h2>
@@ -86,6 +88,52 @@
   </div>
 </div>
 
+<div id="mp" class="hidden" role="dialog" aria-label="Multiplayer lobby">
+  <div class="mpPanel">
+    <div class="mpHead">
+      <div class="mpTitle"><span class="mpAnt" aria-hidden="true"></span>MULTIPLAYER <span>2-3 players &middot; own phones</span></div>
+      <button id="mpClose" class="xBtn" aria-label="Close lobby">&#10005;</button>
+    </div>
+    <div class="mpBody" id="mpBody">
+      <section id="mpS1" class="mpSec">
+        <label class="mpLbl" for="mpName">YOUR NAME</label>
+        <input id="mpName" class="mpInput" maxlength="12" autocomplete="off" spellcheck="false" enterkeyhint="done" placeholder="Your name">
+        <div class="mpLbl">YOUR COLOR</div>
+        <div id="mpColors" class="mpColors"></div>
+        <div class="mpChoice">
+          <button id="mpHostBtn" class="mpBig host"><b>HOST</b><small>Start a room and get a code</small></button>
+          <button id="mpJoinBtn" class="mpBig join"><b>JOIN</b><small>Type a friend&#39;s code</small></button>
+        </div>
+        <div class="mpNote">Everyone plays on their own phone. Host shares a 5-letter code, friends type it in.</div>
+      </section>
+      <section id="mpS2" class="mpSec hidden">
+        <label class="mpLbl" for="mpCode">TYPE THE HOST&#39;S CODE</label>
+        <input id="mpCode" class="mpCode" maxlength="5" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="go" placeholder="ABCDE">
+        <div id="mpJoinErr" class="mpErr hidden" role="alert"><b></b><span></span></div>
+        <div class="mpRow"><button id="mpJoinGo" class="bigBtn">JOIN ROOM</button><button id="mpJoinBack" class="bigBtn alt">BACK</button></div>
+      </section>
+      <section id="mpS3" class="mpSec hidden">
+        <div class="mpCodeBox"><div class="mpLbl">ROOM CODE</div><div id="mpCodeShow" class="mpCodeShow">-----</div><div class="mpHint" id="mpCodeHint">Tell your friends this code</div></div>
+        <div class="mpLbl">PLAYERS <span id="mpCount" class="mpCount">1/3</span></div>
+        <div id="mpPlayers" class="mpPlayers"></div>
+        <div class="mpLbl">GAME <span id="mpGameHint" class="mpSmall">host picks</span></div>
+        <div id="mpGames" class="mpGames"></div>
+        <div id="mpFmtRow" class="mpFmtRow hidden"><span class="mpLbl">BRAWL MODE</span><button id="mpFmt1" class="mpFmt on" aria-pressed="true">1 VS 1</button><button id="mpFmt3" class="mpFmt" aria-pressed="false">3P FREE-FOR-ALL</button><small id="mpFmtHint" class="mpSmall"></small></div>
+        <div id="mpStatus" class="mpStatus" role="status"></div>
+        <div class="mpRow"><button id="mpReady" class="bigBtn">I&#39;M READY</button><button id="mpStartBtn" class="bigBtn go">START &#9654;</button><button id="mpLeave" class="bigBtn alt">LEAVE</button></div>
+      </section>
+      <section id="mpS4" class="mpSec hidden">
+        <div class="mpErrBig" role="alert"><b id="mpErrT">Oops</b><span id="mpErrM"></span></div>
+        <div class="mpRow"><button id="mpErrOk" class="bigBtn">OK</button></div>
+      </section>
+      <section id="mpS5" class="mpSec hidden">
+        <div class="mpWait"><div class="mpSpin"></div><b id="mpWaitT">Connecting&hellip;</b><span id="mpWaitM"></span></div>
+        <div class="mpRow"><button id="mpWaitCancel" class="bigBtn alt">CANCEL</button></div>
+      </section>
+    </div>
+  </div>
+</div>
+
 <div id="title">
   <div class="titleInner">
     <div class="logo"><span class="l1">GROK</span><span class="l2">ARCADE</span></div>
@@ -102,7 +150,12 @@
 <script src="js/audio.js"></script>
 <script src="js/minigames.js"></script>
 <script src="js/games-bonus.js"></script>
+<script src="js/game-wires.js"></script>
+<script src="peerjs.min.js"></script>
+<script src="js/grok-net.js"></script>
 <script src="js/hub.js"></script>
+<script src="js/lobby.js"></script>
+<script src="js/fix.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

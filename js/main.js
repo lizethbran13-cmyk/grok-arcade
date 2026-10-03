@@ -14,6 +14,7 @@
   /* ---------- launching ---------- */
   GA.launchMain = function (game) {
     if (launching) return;
+    if (GA.Fix && GA.Fix.powerOut()) { closeMenu(true); GA.Fix.noPower(); return; }
     launching = true;
     GA.lastLaunch = game.url;
     GA.Hub.savePos();
@@ -25,12 +26,17 @@
   };
   GA.openBonus = function (id) {
     closeMenu(true);
+    if (GA.Fix && GA.Fix.powerOut()) { GA.Fix.noPower(); return; }
     GA.Hub.setPaused(true);
     hidePrompt();
     GA.MG.open(id);
   };
   GA.interact = function (cab) {
-    if (!cab || menuIsOpen || GA.MG.isOpen()) return;
+    if (!cab || menuIsOpen || GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || GA.Fix.isOpen()) return;
+    if (cab.kind === 'npc') { GA.Fix.talk(); return; }
+    if (cab.kind === 'mp' && GA.Fix.blocksHost()) { hidePrompt(); GA.Fix.openRepair(); return; }
+    if (GA.Fix.powerOut()) { GA.Fix.noPower(cab); return; }
+    if (cab.kind === 'mp') { hidePrompt(); GA.MP.open(); return; }
     if (cab.kind === 'main') GA.launchMain(cab.game); else GA.openBonus(cab.id);
   };
   GA.onMiniClose = function () {
@@ -43,8 +49,29 @@
 
   /* ---------- prompt ---------- */
   function showPrompt(cab) {
-    if (!cab || !started || GA.MG.isOpen()) { hidePrompt(); return; }
-    var bonus = cab.kind === 'bonus';
+    if (!cab || !started || GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || (GA.Fix && GA.Fix.isOpen())) { hidePrompt(); return; }
+    var bonus = cab.kind === 'bonus', mp = cab.kind === 'mp';
+    var special = null;
+    if (cab.kind === 'npc') special = { tag: 'IT HELP DESK', name: 'Gary from IT', desc: GA.Fix.blocksHost() ? (GA.Fix.powerOut() ? 'The power is out! Gary can turn it back on and fix the antenna.' : 'The Multiplayer Antenna is broken. Ask Gary to fix it!') : 'Your friendly IT Manager. Say hi!', btn: 'TALK', key: 'talk to Gary', cls: 'npc' };
+    else if (mp && GA.Fix.blocksHost()) special = { tag: GA.Fix.powerOut() ? 'NO POWER' : 'OUT OF ORDER', name: cab.game.name, desc: 'Hosting is offline until it\u2019s fixed. Get Gary from IT or fix the wires. Joining a friend with a code still works.', btn: isTouch ? 'FIX /<br>JOIN' : 'FIX / JOIN', key: 'see repair options', cls: 'broken' };
+    else if (GA.Fix.powerOut()) special = { tag: 'NO POWER', name: cab.game.name, desc: 'The arcade lost power. Ask Gary from IT (IT Help Desk by the prize counter) to turn it back on.', btn: 'NO POWER', key: 'check', cls: 'broken' };
+    $('prompt').classList.remove('npc', 'broken');
+    if (special) {
+      $('prompt').classList.remove('mp', 'bonus'); $('prompt').classList.add(special.cls);
+      $('pTag').textContent = special.tag; $('pName').textContent = special.name; $('pDesc').textContent = special.desc;
+      $('playBtn').innerHTML = special.btn; $('playBtn').classList.remove('mpBtn'); $('playBtn').setAttribute('data-game', cab.id); $('playBtn').removeAttribute('data-href');
+      $('pKey').innerHTML = 'Press <kbd>E</kbd> or <kbd>Enter</kbd> to ' + special.key;
+      $('prompt').classList.remove('hidden'); $('playBtn').classList.remove('hidden'); document.body.classList.add('near'); return;
+    }
+    $('prompt').classList.toggle('mp', mp);
+    $('playBtn').innerHTML = mp ? (isTouch ? 'PLAY<br>ONLINE' : '&#9654; PLAY ONLINE') : '&#9654; PLAY';
+    $('playBtn').classList.toggle('mpBtn', mp);
+    $('pKey').innerHTML = mp ? 'Press <kbd>E</kbd> or <kbd>Enter</kbd> to open the lobby' : 'Press <kbd>E</kbd> or <kbd>Enter</kbd> to play';
+    if (mp) {
+      $('pTag').textContent = 'MULTIPLAYER'; $('pName').textContent = cab.game.name; $('pDesc').textContent = cab.game.desc;
+      $('prompt').classList.remove('hidden'); $('playBtn').classList.remove('hidden'); $('playBtn').setAttribute('data-game', 'mp'); $('playBtn').removeAttribute('data-href');
+      document.body.classList.add('near'); return;
+    }
     $('prompt').classList.toggle('bonus', bonus);
     $('pTag').textContent = bonus ? 'BONUS MINI GAME' : 'MAIN GAME';
     $('pName').textContent = cab.game.name;
@@ -77,8 +104,17 @@
     go.addEventListener('click', function () { GA.Hub.teleport(g.id); closeMenu(); GA.Audio.play('near'); });
     return d;
   }
+  function mpCard() {
+    var d = document.createElement('div'); d.className = 'card mpCard'; d.style.setProperty('--c', '#3ff0ff'); d.setAttribute('data-game', 'mp');
+    d.innerHTML = '<div class="cName">Multiplayer Antenna</div><div class="cDesc">Host or join a room and play Brawl, Grid, Land, Voxels or Sky with friends on their own phones (2-3 players).</div>' +
+      '<div class="cBtns"><button class="bPlay bMp" id="menuMpOpen">&#9654; OPEN LOBBY</button><button class="bGo" id="menuMpGo">GO TO</button></div>';
+    d.querySelector('.bPlay').addEventListener('click', function () { GA.Audio.unlock(); closeMenu(true); GA.MP.open(); });
+    d.querySelector('.bGo').addEventListener('click', function () { GA.Hub.teleport('mp'); closeMenu(); GA.Audio.play('near'); });
+    return d;
+  }
   function buildMenu() {
     var gm = $('gridMain'), gb = $('gridBonus');
+    $('gridMp').appendChild(mpCard());
     GA.MAIN_GAMES.forEach(function (g) { gm.appendChild(card(g, false)); });
     GA.BONUS_GAMES.forEach(function (g) { gb.appendChild(card(g, true)); });
     $('helpText').innerHTML = isTouch
@@ -92,7 +128,7 @@
     $('menuMute').textContent = 'Sound: ' + (GA.Audio.isMuted() ? 'OFF' : 'ON');
   }
   function openMenu() {
-    if (!started || GA.MG.isOpen()) return;
+    if (!started || GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || GA.Fix.isOpen()) return;
     refreshMenu(); menuIsOpen = true; $('menu').classList.remove('hidden'); GA.Hub.clearInput(); GA.Audio.play('menu');
     $('menuScroll').scrollTop = 0;
   }
@@ -117,6 +153,8 @@
 
   function init() {
     GA.MG.init();
+    GA.MP.init();
+    GA.onMpClose = function () { showPrompt(GA.Hub.near()); };
     buildMenu();
     setTickets(GA.getTickets());
     $('hint').textContent = isTouch ? 'Left: move  \u00b7  Right: drag to look  \u00b7  Walk up to a cabinet!' : 'WASD / arrows to walk \u00b7 drag mouse or Q/E to look \u00b7 E/Enter to play \u00b7 M for menu';
@@ -124,6 +162,8 @@
       ? 'Joystick on the left to walk &middot; drag on the right to look<br>Walk up to a cabinet and press <b>PLAY</b> &middot; <b>MENU</b> lists every game'
       : '<b>WASD</b> / arrows to walk &middot; drag mouse or <b>Q</b>/<b>E</b> to look<br><b>E</b> or <b>Enter</b> to play &middot; <b>M</b> or <b>Tab</b> for the quick menu';
     GA.Hub.init($('scene'));
+    GA.Fix.init();
+    GA.Fix.onChange = function () { showPrompt(GA.Hub.near()); };
     GA.Hub.onNear = function (cab) { if (cab) GA.Audio.play('near'); showPrompt(cab); };
     GA.Hub.onArea = function (bonus) { var a = $('areaLabel'); a.textContent = bonus ? 'BONUS ZONE' : 'MAIN GAMES'; a.classList.toggle('bonus', bonus); };
 
@@ -139,7 +179,7 @@
     $('menuHome').addEventListener('click', function () { GA.Hub.home(); closeMenu(); });
 
     window.addEventListener('keydown', function (e) {
-      if (GA.MG.isOpen()) return;
+      if (GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || GA.Fix.isOpen()) return;
       if (!started) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); start(); } return; }
       var k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
       if (k === 'm' || k === 'Tab') { e.preventDefault(); if (menuIsOpen) closeMenu(); else openMenu(); }
@@ -148,6 +188,9 @@
     // block pinch-zoom / double-tap zoom on iOS
     document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
     document.addEventListener('dblclick', function (e) { e.preventDefault(); });
+    // coming back from an online game: skip the title and reopen the lobby room
+    var prm = window.GrokNet && GrokNet.params();
+    if (prm) { start(); GA.MP.resume(prm); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
