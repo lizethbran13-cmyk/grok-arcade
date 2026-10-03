@@ -14,7 +14,9 @@ GA.MAIN_GAMES = [
   { id: 'fc', mp: true, name: 'Grok FC', desc: 'Fast arcade soccer. 1 v 1 online: pass, shoot, score!',
     url: 'https://lizethbran13-cmyk.github.io/grok-fc/', color: '#22c55e', color2: '#ffffff' },
   { id: 'brawl', mp: true, name: 'Grok Brawl', desc: 'A 3D arena fighter. Punch, combo and unleash supers!',
-    url: 'https://lizethbran13-cmyk.github.io/grok-brawl/', color: '#ff3d6e', color2: '#ffe14d' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-brawl/', color: '#ff3d6e', color2: '#ffe14d' },
+  { id: 'party', mp: true, name: 'Grok Land Party', desc: 'A party board game! Roll dice, collect stars, win mini games with friends.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-land-party/', color: '#ff6bd6', color2: '#ffe14d' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -23,7 +25,8 @@ GA.BONUS_GAMES = [
   { id: 'rats', name: 'Whack-a-Rat', desc: 'Boop Luna, Pi-rat & Snowie before they hide!', color: '#ff8fd0', color2: '#ffffff' },
   { id: 'stack', name: 'Stack Tower', desc: 'Tap to drop blocks and build the tallest tower.', color: '#ff7a3d', color2: '#3ff0ff' },
   { id: 'wires', name: 'Gary\'s Wire Rush', desc: 'Drag each wire to its matching socket before time runs out. Don\'t cross them!', color: '#ffd23b', color2: '#4ade80' },
-  { id: 'penalty', name: 'Penalty Kick', desc: 'Tap or swipe to aim, beat the goalie. 5 shots, tickets for goals!', color: '#3bff7a', color2: '#ffffff' }
+  { id: 'penalty', name: 'Penalty Kick', desc: 'Tap or swipe to aim, beat the goalie. 5 shots, tickets for goals!', color: '#3bff7a', color2: '#ffffff' },
+  { id: 'fetch', name: 'Candy\'s Fetch', desc: 'Tap to make Candy the schnauzer jump for tennis balls. Hop over bushes!', color: '#c7ccd4', color2: '#d7ff3b' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };

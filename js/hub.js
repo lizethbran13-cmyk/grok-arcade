@@ -6,7 +6,7 @@
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
-  var MAIN_X0 = -15.6, MAIN_STEP = 3.2; // 7 main cabinets centred in the main hall (x -18..6)
+  var MAIN_STEP = GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -155,7 +155,7 @@
     g.strokeStyle = '#ffe14d'; g.lineWidth = 10; g.strokeRect(8, 8, W - 16, H - 16);
     neonText(g, 'BEST SCORES', W / 2, 62, 58, '#ffe14d');
     GA.BONUS_GAMES.forEach(function (gm, i) {
-      var nB = GA.BONUS_GAMES.length, y = (nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
+      var nB = GA.BONUS_GAMES.length, y = (nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
       g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.fillText(String(GA.getBest(gm.id)), W - 50, y);
     });
     d.tex.needsUpdate = true;
@@ -391,6 +391,29 @@
         g.fillStyle = '#fff'; g.beginPath(); g.arc(bx, by, 9 - e * 4, 0, 7); g.fill();
         break;
       }
+      case 'fetch': {
+        var gf = g.createLinearGradient(0, 0, 0, h); gf.addColorStop(0, '#7fd3ff'); gf.addColorStop(1, '#c9f0ff'); g.fillStyle = gf; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#5cc85a'; g.fillRect(0, h - 30, w, 30); g.fillStyle = '#e8c98f'; g.fillRect(0, h - 32, w, 4);
+        var bxf = w - ((t * 90) % (w + 40)), byf = h - 80 - Math.sin(t * 4) * 4; g.fillStyle = '#d7ff3b'; g.beginPath(); g.arc(bxf, byf, 8, 0, 7); g.fill();
+        var hop = Math.max(0, Math.sin(t * 3)) * 34, dxf = 56, dyf = h - 32 - hop;
+        g.fillStyle = '#5d6168'; g.fillRect(dxf - 16, dyf - 12, 5, 12); g.fillRect(dxf + 10, dyf - 12, 5, 12);
+        g.fillStyle = '#7b8088'; g.fillRect(dxf - 20, dyf - 28, 40, 18); g.fillRect(dxf + 12, dyf - 44, 20, 18);
+        g.fillStyle = '#eceef2'; g.fillRect(dxf + 26, dyf - 32, 12, 9); g.fillRect(dxf + 14, dyf - 42, 12, 3);
+        g.fillStyle = '#4e5259'; g.fillRect(dxf + 12, dyf - 50, 6, 8); g.fillRect(dxf - 26, dyf - 36, 6, 10);
+        g.fillStyle = '#111'; g.fillRect(dxf + 22, dyf - 38, 3, 3); g.fillRect(dxf + 34, dyf - 36, 4, 4);
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#ff4fd8'; g.fillText('CANDY!', w / 2 + 30, 24);
+        break;
+      }
+      case 'party': {
+        var gpp = g.createLinearGradient(0, 0, 0, h); gpp.addColorStop(0, '#ffb3e6'); gpp.addColorStop(1, '#8ee8ff'); g.fillStyle = gpp; g.fillRect(0, 0, w, h);
+        var spc = ['#3b82f6', '#ef4444', '#22c55e', '#facc15', '#a855f7'];
+        for (i = 0; i < 8; i++) { var sxp = 18 + i * 22, syp = h * 0.62 + Math.sin(i * 0.9) * 22; g.fillStyle = spc[i % 5]; g.beginPath(); g.arc(sxp, syp, 9, 0, 7); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 2; g.stroke(); }
+        var pi2 = Math.floor(t * 1.5) % 8, pxp = 18 + pi2 * 22, pyp = h * 0.62 + Math.sin(pi2 * 0.9) * 22 - 16 - Math.abs(Math.sin(t * 4.7)) * 8;
+        g.fillStyle = '#f97316'; g.fillRect(pxp - 6, pyp - 8, 12, 14); g.fillStyle = '#fff'; g.fillRect(pxp - 3, pyp - 5, 3, 3); g.fillRect(pxp + 2, pyp - 5, 3, 3);
+        g.save(); g.translate(w - 34, 34); g.rotate(t * 2); g.fillStyle = '#fff'; g.fillRect(-13, -13, 26, 26); g.fillStyle = '#111'; g.beginPath(); g.arc(-6, -6, 3, 0, 7); g.arc(6, 6, 3, 0, 7); g.arc(0, 0, 3, 0, 7); g.fill(); g.restore();
+        g.fillStyle = '#ffe14d'; g.font = font(26); g.textAlign = 'center'; g.fillText('\u2605', 30 + Math.sin(t * 2) * 6, 30);
+        break;
+      }
       case 'stack': {
         g.fillStyle = '#1e1036'; g.fillRect(0, 0, w, h); var n = Math.floor(t * 1.5) % 9;
         for (i = 0; i <= n; i++) { var ww = 90 - i * 4; g.fillStyle = 'hsl(' + (200 + i * 15) + ',85%,55%)'; g.fillRect(w / 2 - ww / 2 + (i === n ? Math.sin(t * 4) * 40 : 0), h - 12 - i * 12, ww, 11); }
@@ -455,7 +478,7 @@
     // main games: along the north wall, facing south
     GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    var nb = GA.BONUS_GAMES.length, stepB = nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
+    var nb = GA.BONUS_GAMES.length, stepB = nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
     GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2); });
   }
 
