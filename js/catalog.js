@@ -5,7 +5,7 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-sky/', color: '#38bdf8', color2: '#fde047' },
   { id: 'land', mp: true, name: 'Grok Land', desc: 'A 3D platformer adventure across 8 worlds.',
     url: 'https://lizethbran13-cmyk.github.io/grok-land/', color: '#4ade80', color2: '#f97316' },
-  { id: 'grid', mp: true, name: 'Grok Grid', desc: 'F1-style racing on 6 tracks. Go for pole!',
+  { id: 'grid', mp: true, name: 'Grok Grid', desc: 'F1-style racing on 8 tracks, now with easier steering. Go for pole!',
     url: 'https://lizethbran13-cmyk.github.io/grok-grid/', color: '#f43f5e', color2: '#ffffff' },
   { id: 'voxels', mp: true, name: 'Grok Voxels', desc: 'A blocky voxel shooter. Aim, blast, survive.',
     url: 'https://lizethbran13-cmyk.github.io/grok-voxels/', color: '#a855f7', color2: '#22d3ee' },
