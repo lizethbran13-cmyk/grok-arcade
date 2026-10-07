@@ -7,7 +7,8 @@
   var menuIsOpen = false, started = false, launching = false;
 
   GA.UI = { menuOpen: function () { return menuIsOpen; } };
-  function pzOpen() { return !!(GA.PZ && GA.PZ.isOpen()); }
+  function pzOpen() { return !!(GA.PZ && GA.PZ.isOpen()) || !!(GA.PV && GA.PV.isOpen()); }
+  function hm() { return GA.HubMP && GA.HubMP.active() ? GA.HubMP : null; }
 
   function setTickets(n) { $('ticketCount').textContent = n; }
   GA.onTickets = function (n) { setTickets(n); };
@@ -41,6 +42,12 @@
     if (cab.kind === 'mp' && GA.Fix.blocksHost()) { hidePrompt(); GA.Fix.openRepair(); return; }
     if (GA.Fix.powerOut()) { GA.Fix.noPower(cab); return; }
     if (cab.kind === 'mp') { hidePrompt(); GA.MP.open(); return; }
+    if (cab.kind === 'main' && hm()) {
+      var mode = hm().cabinetMode(cab);
+      if (mode === 'launch') { hidePrompt(); GA.HubMP.launch(cab.id); return; }
+      if (mode === 'suggest') { GA.HubMP.suggest(cab.id); return; }
+      if (mode === 'solo') { if (GA.Fix && GA.Fix.toast) GA.Fix.toast(cab.game.name + ' is a solo game. Leave the room (tap the room code at the top) to play it.', 3600); GA.Audio.play('buzz'); return; }
+    }
     if (cab.kind === 'main') GA.launchMain(cab.game); else GA.openBonus(cab.id);
   };
   GA.onMiniClose = function () {
@@ -61,7 +68,7 @@
     else if (cab.kind === 'npc') special = { tag: 'IT HELP DESK', name: 'Gary from IT', desc: GA.Fix.blocksHost() ? (GA.Fix.powerOut() ? 'The power is out! Gary can turn it back on and fix the antenna.' : 'The Multiplayer Antenna is broken. Ask Gary to fix it!') : 'Your friendly IT Manager. Say hi!', btn: 'TALK', key: 'talk to Gary', cls: 'npc' };
     else if (mp && GA.Fix.blocksHost()) special = { tag: GA.Fix.powerOut() ? 'NO POWER' : 'OUT OF ORDER', name: cab.game.name, desc: 'Hosting is offline until it\u2019s fixed. Get Gary from IT or fix the wires. Joining a friend with a code still works.', btn: isTouch ? 'FIX /<br>JOIN' : 'FIX / JOIN', key: 'see repair options', cls: 'broken' };
     else if (GA.Fix.powerOut()) special = { tag: 'NO POWER', name: cab.game.name, desc: 'The arcade lost power. Ask Gary from IT (IT Help Desk by the prize counter) to turn it back on.', btn: 'NO POWER', key: 'check', cls: 'broken' };
-    $('prompt').classList.remove('npc', 'broken', 'prize', 'gallery'); $('playBtn').classList.remove('pzPlay', 'galPlay');
+    $('prompt').classList.remove('npc', 'broken', 'prize', 'gallery', 'together'); $('playBtn').classList.remove('pzPlay', 'galPlay', 'togBtn'); chalBtn(false);
     if (special) {
       $('prompt').classList.remove('mp', 'bonus'); $('prompt').classList.add(special.cls);
       $('pTag').textContent = special.tag; $('pName').textContent = special.name; $('pDesc').textContent = special.desc;
@@ -80,6 +87,19 @@
     }
     $('prompt').classList.toggle('bonus', bonus);
     $('pTag').textContent = bonus ? 'BONUS MINI GAME' : 'MAIN GAME';
+    var tm = hm() && !bonus ? hm().cabinetMode(cab) : null;
+    if (tm) {
+      var host = GA.HubMP.room().players().find(function (p) { return p.host; });
+      $('prompt').classList.add('together'); $('playBtn').classList.add('togBtn');
+      $('pTag').textContent = tm === 'launch' ? 'PLAY TOGETHER' : tm === 'suggest' ? 'ASK THE HOST' : 'SOLO ONLY';
+      $('pName').textContent = cab.game.name;
+      $('pDesc').textContent = tm === 'launch' ? 'Takes everyone in your room into ' + cab.game.name + ' online.' : tm === 'suggest' ? (host ? host.name : 'The host') + ' picks the game. Suggest this one and they can say yes!' : 'This one has no online mode. Leave the room to play it solo.';
+      $('playBtn').innerHTML = tm === 'launch' ? (isTouch ? 'PLAY<br>ALL' : '&#9654; PLAY TOGETHER') : tm === 'suggest' ? 'SUGGEST' : (isTouch ? 'SOLO<br>ONLY' : 'SOLO ONLY');
+      $('pKey').innerHTML = 'Press <kbd>E</kbd> or <kbd>Enter</kbd> to ' + (tm === 'launch' ? 'start it for everyone' : tm === 'suggest' ? 'suggest it' : 'see why');
+      $('prompt').classList.remove('hidden'); $('playBtn').classList.remove('hidden'); $('playBtn').setAttribute('data-game', cab.id); $('playBtn').removeAttribute('data-href');
+      document.body.classList.add('near'); return;
+    }
+    if (bonus && hm() && GA.HubMP.withFriends()) chalBtn(true, cab.id);
     $('pName').textContent = cab.game.name;
     $('pDesc').textContent = cab.game.desc + (bonus ? '  Best: ' + GA.getBest(cab.id) : '');
     $('prompt').classList.remove('hidden');
@@ -88,7 +108,14 @@
     if (!bonus) $('playBtn').setAttribute('data-href', cab.game.url); else $('playBtn').removeAttribute('data-href');
     document.body.classList.add('near');
   }
+  function chalBtn(on, id) {
+    var b = $('chalBtn');
+    if (!b) { if (!on) return; b = document.createElement('button'); b.id = 'chalBtn'; b.className = 'hidden'; b.innerHTML = '&#9876; CHALLENGE'; b.setAttribute('aria-label', 'Challenge your friends to this game');
+      b.addEventListener('pointerdown', function (e) { e.stopPropagation(); }); b.addEventListener('click', function () { GA.Audio.unlock(); GA.HubMP.challenge(b.getAttribute('data-game')); }); $('hud').appendChild(b); }
+    b.classList.toggle('hidden', !on); if (id) b.setAttribute('data-game', id);
+  }
   function hidePrompt() {
+    chalBtn(false);
     $('prompt').classList.add('hidden'); $('playBtn').classList.add('hidden');
     document.body.classList.remove('near');
   }
@@ -132,7 +159,7 @@
     var gm = $('gridMain'), gb = $('gridBonus');
     var ph = document.createElement('h2'); ph.className = 'secTitle pzSec'; ph.innerHTML = 'Prizes &amp; Achievements <small>spend tickets &middot; see your trophies</small>';
     var pgd = document.createElement('div'); pgd.className = 'grid'; pgd.id = 'gridPrize'; pgd.appendChild(pzCard('prizes')); pgd.appendChild(pzCard('gallery'));
-    var mainTitle = document.querySelector('#menuScroll .secTitle.main'); if (mainTitle) { mainTitle.parentNode.insertBefore(ph, mainTitle); mainTitle.parentNode.insertBefore(pgd, mainTitle); }
+    var mainTitle = document.querySelector('#menuScroll .secTitle.main'); if (mainTitle) { mainTitle.parentNode.insertBefore(ph, mainTitle); mainTitle.parentNode.insertBefore(pgd, mainTitle); if (GA.Carry) GA.Carry.buildMenu(mainTitle); }
     $('gridMp').appendChild(mpCard());
     GA.MAIN_GAMES.forEach(function (g) { gm.appendChild(card(g, false)); });
     GA.BONUS_GAMES.forEach(function (g) { gb.appendChild(card(g, true)); });
@@ -148,7 +175,7 @@
   }
   function openMenu() {
     if (!started || GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || GA.Fix.isOpen() || pzOpen()) return;
-    refreshMenu(); menuIsOpen = true; $('menu').classList.remove('hidden'); GA.Hub.clearInput(); GA.Audio.play('menu');
+    refreshMenu(); if (GA.Carry) GA.Carry.renderMenu(); menuIsOpen = true; $('menu').classList.remove('hidden'); GA.Hub.clearInput(); GA.Audio.play('menu');
     $('menuScroll').scrollTop = 0;
   }
   function closeMenu(silent) {
@@ -156,6 +183,7 @@
     menuIsOpen = false; $('menu').classList.add('hidden'); if (!silent) GA.Audio.play('click');
   }
   GA.UI.openMenu = openMenu; GA.UI.closeMenu = closeMenu;
+  GA.UI.refreshPrompt = function () { if (started) showPrompt(GA.Hub.near()); };
 
   /* ---------- start ---------- */
   function start() {
@@ -182,6 +210,7 @@
       ? 'Joystick on the left to walk &middot; drag on the right to look<br>Walk up to a cabinet and press <b>PLAY</b> &middot; <b>MENU</b> lists every game'
       : '<b>WASD</b> / arrows to walk &middot; drag mouse or <b>Q</b>/<b>E</b> to look<br><b>E</b> or <b>Enter</b> to play &middot; <b>M</b> or <b>Tab</b> for the quick menu';
     GA.Hub.init($('scene'));
+    if (GA.Carry) GA.Carry.apply();
     GA.Fix.init();
     GA.Fix.onChange = function () { showPrompt(GA.Hub.near()); };
     GA.Hub.onNear = function (cab) { if (cab) GA.Audio.play('near'); showPrompt(cab); };

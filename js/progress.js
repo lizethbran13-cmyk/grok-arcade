@@ -48,7 +48,8 @@
     jet: [10, 'Ace Pilot', 'Fly through 10 gaps in Grok Jet', '\uD83D\uDE80'], rats: [20, 'Rat Booper', 'Score 20 in Whack-a-Rat', '\uD83D\uDC00'],
     stack: [15, 'Skyscraper', 'Stack 15 blocks in Stack Tower', '\uD83C\uDFD7\uFE0F'], wires: [30, 'Gary\u2019s Apprentice', 'Score 30 in Gary\u2019s Wire Rush', '\uD83D\uDD0C'],
     penalty: [6, 'Top Bins', 'Score 6 in Penalty Kick', '\u26BD'], fetch: [15, 'Good Girl, Candy!', 'Score 15 in Candy\u2019s Fetch', '\uD83D\uDC15'],
-    ratmaze: [150, 'Maze Master', 'Score 150 in Rat Maze Dash', '\uD83E\uDDC0'], slice: [40, 'Neon Ninja', 'Score 40 in Neon Slice', '\uD83C\uDF49']
+    ratmaze: [150, 'Maze Master', 'Score 150 in Rat Maze Dash', '\uD83E\uDDC0'], slice: [40, 'Neon Ninja', 'Score 40 in Neon Slice', '\uD83C\uDF49'],
+    skee: [250, 'Skee-Ball Wizard', 'Score 250 in Skee-Ball', '\uD83C\uDFB3']
   };
   var A = [
     { id: 'first_ticket', cat: 'Tickets', icon: '\uD83C\uDF9F\uFE0F', name: 'First Ticket!', desc: 'Earn your first ticket in the Bonus Zone', p: function () { return [st.earned, 1]; } },
@@ -84,6 +85,12 @@
   });
   A.push({ id: 'slice_combo', cat: 'High Scores', icon: '\uD83D\uDD2A', name: 'Combo Chef', desc: 'Slice 4 fruits with one swipe in Neon Slice', p: function () { return [ev('sliceCombo'), 4]; } });
   A.push({ id: 'slice_clean', cat: 'High Scores', icon: '\uD83E\uDDFC', name: 'Clean Cut', desc: 'Score 20 in Neon Slice without dropping a fruit', p: function () { return [ev('sliceClean'), 20]; } });
+  A.push({ id: 'skee_100', cat: 'High Scores', icon: '\uD83D\uDCAF', name: 'Hundred Club', desc: 'Sink a Skee-Ball in a 100 pocket', p: function () { return [ev('skee100') ? 1 : 0, 1]; } });
+  A.push({ id: 'view3d', cat: 'Prizes', icon: '\uD83D\uDD0D', name: 'Up Close', desc: 'Look at a prize or medal in 3D view', p: function () { return [ev('view3d') ? 1 : 0, 1]; } });
+  A.push({ id: 'carry', cat: 'Prizes', icon: '\u270B', name: 'Show-Off', desc: 'Carry a prize around the arcade', p: function () { return [ev('carry') ? 1 : 0, 1]; } });
+  A.push({ id: 'hat_on', cat: 'Prizes', icon: '\uD83E\uDDE2', name: 'Hat Day', desc: 'Wear a hat from the Prize Counter', p: function () { return [ev('wearHat') ? 1 : 0, 1]; } });
+  A.push({ id: 'hub_friends', cat: 'Antenna', icon: '\uD83D\uDC6F', name: 'Arcade Buddies', desc: 'Walk around the arcade with a friend in your room', p: function () { return [ev('hubFriends') ? 1 : 0, 1]; } });
+  A.push({ id: 'battle_win', cat: 'Antenna', icon: '\u2694\uFE0F', name: 'Arcade Rival', desc: 'Win a Bonus Zone battle against a friend', p: function () { return [ev('battleWin') ? 1 : 0, 1]; } });
   GA.ACHIEVEMENTS = A;
 
   function prog(a) { var r = a.p(); return { cur: Math.min(r[0] || 0, r[1]), goal: r[1] }; }

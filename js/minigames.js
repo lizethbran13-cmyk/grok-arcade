@@ -35,6 +35,8 @@
     if (inst && inst.resize) inst.resize();
   }
 
+  var hooks = { open: [], start: [], over: [], close: [] };
+  function fire(k) { var a = Array.prototype.slice.call(arguments, 1); hooks[k].forEach(function (f) { try { f.apply(null, a); } catch (e) { if (window.console) console.warn(e); } }); }
   function register(def) { defs[def.id] = def; order.push(def.id); }
 
   function open(id) {
@@ -59,6 +61,7 @@
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(loop);
     GA.Audio.play('open');
+    fire('open', id);
     return true;
   }
 
@@ -69,6 +72,7 @@
     el.classList.add('hidden');
     el.classList.remove('pad');
     cur = null; inst = null; pointers = {};
+    if (id) fire('close', id);
     if (!silent) { GA.Audio.play('menu'); if (GA.onMiniClose) GA.onMiniClose(id); }
   }
 
@@ -82,6 +86,7 @@
     state = 'play';
     if (inst.start) inst.start();
     GA.Audio.play('click');
+    fire('start', cur.id);
   }
 
   function gameOver() {
@@ -94,6 +99,7 @@
     var total = GA.addTickets(tix);
     if (GA.Prog) GA.Prog.onGameOver(id, score, isNew);
     if (GA.onTickets) GA.onTickets(total);
+    fire('over', id, score);
     var tok = ++overToken;
     setTimeout(function () {
       if (tok !== overToken || state !== 'over') return;
@@ -215,6 +221,7 @@
     current: function () { return cur ? cur.id : null; },
     inst: function () { return inst; },
     list: function () { return order.slice(); },
-    init: init, U: U
+    init: init, U: U, hooks: hooks,
+    score: function () { return score; }
   };
 })();

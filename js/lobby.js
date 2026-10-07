@@ -48,7 +48,9 @@
   MP.room = function () { return room; };
 
   /* ---------- room lifecycle ---------- */
+  function carryNow() { return GA.Carry ? GA.Carry.get() : null; }
   function wireRoom(r) {
+    if (GA.HubMP) GA.HubMP.attach(r);
     r.on('open', function () { if (r !== room) return; joining = false; show('s3'); render(); snd(r.isHost ? 'start' : 'launch'); if (GA.Prog) GA.Prog.event('room'); });
     r.on('players', function () { if (r === room) render(); });
     r.on('meta', function () { if (r === room) render(); });
@@ -61,6 +63,7 @@
     r.on('message', function (d) { if (r !== room || !d) return; if (d.t === 'go') go(d); });
     r.on('error', function (e) {
       if (r !== room) return;
+      if (GA.HubMP) GA.HubMP.detach();
       room = null; joining = false;
       if (!openFlag) MP.open();
       if (screen === 's2' || (screen === 's5' && !r.isHost && !r.opts.rejoin && (e.code === 'notfound' || e.code === 'full' || e.code === 'p2p'))) {
@@ -72,7 +75,7 @@
   function host() {
     saveProfile();
     if (GA.Fix && GA.Fix.blocksHost()) { GA.Fix.openRepair({ fromLobby: true }); return; }
-    room = GN.createRoom({ role: 'host', autoCode: true, name: prof.name, color: prof.color, pid: GN.pid() });
+    room = GN.createRoom({ role: 'host', autoCode: true, name: prof.name, color: prof.color, pid: GN.pid(), state: { carry: carryNow() } });
     wireRoom(room);
     room.setMeta({ game: GA.store.get('mp.lastGame', 'brawl') });
     $('mpWaitT').textContent = 'Opening a room\u2026'; $('mpWaitM').textContent = ''; show('s5');
@@ -84,16 +87,16 @@
     var err = $('mpJoinErr');
     if (code.length !== GN.CODE_LEN) { err.classList.remove('hidden'); err.querySelector('b').textContent = 'Code is ' + GN.CODE_LEN + ' letters'; err.querySelector('span').textContent = 'Ask the host for the code on their screen.'; err.setAttribute('data-error', 'short'); return; }
     err.classList.add('hidden'); saveProfile(); joining = true;
-    room = GN.createRoom({ role: 'join', code: code, name: prof.name, color: prof.color, pid: GN.pid(), state: { ready: false } });
+    room = GN.createRoom({ role: 'join', code: code, name: prof.name, color: prof.color, pid: GN.pid(), state: { ready: false, carry: carryNow() } });
     wireRoom(room);
     $('mpWaitT').textContent = 'Joining ' + code + '\u2026'; $('mpWaitM').textContent = ''; show('s5');
     room.start();
   }
-  function leave() { if (room) { var r = room; room = null; r.leave(); } joining = false; show('s1'); snd('click'); }
+  function leave() { if (GA.HubMP) GA.HubMP.detach(); if (room) { var r = room; room = null; r.leave(); } joining = false; show('s1'); snd('click'); }
   // rejoin the room after coming back from a game (URL has ?mp=...)
   MP.resume = function (prm) {
     prof = { name: prm.name, color: prm.color }; GN.saveProfile(prm.name, prm.color); $('mpName').value = prm.name; syncColors();
-    room = GN.createRoom({ role: prm.mode, code: prm.code, name: prm.name, color: prm.color, pid: prm.pid, slot: prm.slot, rejoin: true, state: { ready: false } });
+    room = GN.createRoom({ role: prm.mode, code: prm.code, name: prm.name, color: prm.color, pid: prm.pid, slot: prm.slot, rejoin: true, state: prm.mode === 'host' ? { carry: carryNow() } : { ready: false, carry: carryNow() } });
     wireRoom(room);
     if (room.isHost) room.setMeta({ game: GA.store.get('mp.lastGame', 'brawl') });
     MP.open(); $('mpWaitT').textContent = 'Back to the lobby\u2026'; $('mpWaitM').textContent = 'Room ' + prm.code; show('s5');
@@ -108,13 +111,18 @@
     list.forEach(function (p) {
       var ready = p.host || p.ready;
       h += '<div class="mpP" style="--c:' + GN.cleanColor(p.color) + '" data-pid="' + GN.esc(p.pid) + '"><span class="dot"></span><span class="nm">' + GN.esc(p.name) +
-        (p.host ? '<span class="tg">HOST</span>' : '') + (p.pid === me ? '<span class="tg">YOU</span>' : '') + '</span>' +
+        (p.host ? '<span class="tg">HOST</span>' : '') + (p.pid === me ? '<span class="tg">YOU</span>' : '') + carryIcons(p) + '</span>' +
         (!p.host && room.isHost ? '<span class="ms">' + (p.ping | 0) + ' ms</span>' : (p.pid === me && !p.host ? '<span class="ms">' + (room.ping | 0) + ' ms</span>' : '')) +
         '<span class="rd' + (ready ? ' ok' : '') + '">' + (ready ? 'READY \u2713' : 'NOT READY') + '</span></div>';
     });
     for (var i = list.length; i < room.max; i++) h += '<div class="mpP empty">' + (i === 1 ? 'Waiting for a friend\u2026' : 'Open seat (optional)') + '</div>';
     wrap.innerHTML = h;
     $('mpCount').textContent = list.length + '/' + room.max;
+  }
+  function carryIcons(p) {
+    var c = (p.state && p.state.carry) || {}, h = '';
+    ['hand', 'head'].forEach(function (k) { var id = c[k]; if (id && GA.findPrize(id) && GA.PrizeArt) h += '<img class="mpCarry" data-carry="' + GN.esc(id) + '" alt="' + GN.esc(GA.findPrize(id).name) + '" title="' + GN.esc(GA.findPrize(id).name) + '" src="' + GA.PrizeArt.url(id, 64) + '">'; });
+    return h;
   }
   function renderGames() {
     var wrap = $('mpGames'), cur = (room.meta() || {}).game || 'brawl';
@@ -124,7 +132,7 @@
         b.innerHTML = '<b></b><small></small>'; b.querySelector('b').textContent = g.name; b.querySelector('small').textContent = g.desc;
         b.addEventListener('click', function () {
           if (!room) return;
-          if (!room.isHost) { flashStatus('Only the host picks the game'); return; }
+          if (!room.isHost) { if (GA.HubMP && GA.HubMP.suggest(g.id)) flashStatus('You suggested ' + g.name + ' to the host'); else flashStatus('Only the host picks the game'); return; }
           room.setMeta({ game: g.id }); GA.store.set('mp.lastGame', g.id); snd('click');
         });
         wrap.appendChild(b);
@@ -132,7 +140,7 @@
     }
     Array.prototype.forEach.call(wrap.children, function (b) { b.classList.toggle('on', b.getAttribute('data-game') === cur); b.setAttribute('aria-pressed', b.getAttribute('data-game') === cur ? 'true' : 'false'); });
     wrap.classList.toggle('locked', !room.isHost);
-    $('mpGameHint').textContent = room.isHost ? 'you pick' : 'host picks';
+    $('mpGameHint').textContent = room.isHost ? 'you pick' : 'host picks \u00b7 tap one to suggest it';
     // Brawl only: 1v1 (default) or 3-player free-for-all (needs 3 players)
     var m = room.meta() || {}, isBrawl = cur === 'brawl', n = room.players().length, fmt = m.fmt === 'ffa' && n >= 3 ? 'ffa' : '1v1';
     $('mpFmtRow').classList.toggle('hidden', !isBrawl);
@@ -174,6 +182,15 @@
     var g = gameById((room.meta() || {}).game);
     room.broadcast({ t: 'go', game: g.id, n: list.length, fmt: g.id === 'brawl' ? curFmt() : undefined }, { self: true });
   }
+  // host: take everyone in the room straight into a game (used from the cabinets in the hub)
+  MP.launch = function (id) {
+    if (!room || !room.isHost || !room.opened) return false;
+    var g = GA.mpGames().find(function (x) { return x.id === id; }); if (!g) return false;
+    room.setMeta({ game: g.id }); GA.store.set('mp.lastGame', g.id);
+    var list = room.players();
+    room.broadcast({ t: 'go', game: g.id, n: list.length, fmt: g.id === 'brawl' ? curFmt() : undefined }, { self: true });
+    return true;
+  };
   function go(d) {
     if (going || !room) return;
     var g = gameById(d.game), me = room.me(); if (!g || !me) return;
@@ -210,6 +227,10 @@
     $('mpStartBtn').addEventListener('click', start);
     $('mpFmt1').addEventListener('click', function () { setFmt('1v1'); });
     $('mpFmt3').addEventListener('click', function () { setFmt('ffa'); });
+    var wk = document.createElement('div'); wk.className = 'mpWalk';
+    wk.innerHTML = '<button id="mpWalk" class="bigBtn alt">\uD83D\uDEB6 WALK THE ARCADE TOGETHER</button><small>See each other in the arcade. The host starts a game from any cabinet, friends can suggest one. Challenge each other in the Bonus Zone!</small>';
+    $('mpS3').insertBefore(wk, $('mpStatus'));
+    $('mpWalk').addEventListener('click', function () { snd('click'); MP.close(); });
     // keep game keys (WASD, E, M) from reaching the hub while typing / in the lobby
     $('mp').addEventListener('keydown', function (e) { e.stopPropagation(); if (e.key === 'Escape') MP.close(); });
     window.addEventListener('pageshow', function (e) { if (e.persisted) { going = false; $('fade').classList.remove('on'); } });

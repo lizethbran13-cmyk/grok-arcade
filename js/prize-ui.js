@@ -26,7 +26,7 @@
     $('pzYes').addEventListener('click', doRedeem);
     $('pzConfirm').addEventListener('click', function (e) { if (e.target === $('pzConfirm')) hideConfirm(); });
     window.addEventListener('keydown', function (e) {
-      if (!openWhat) return;
+      if (!openWhat || (GA.PV && GA.PV.isOpen())) return;
       if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (pending) hideConfirm(); else close(); }
       else if (e.key === 'Enter' && pending) { e.preventDefault(); doRedeem(); }
     }, true);
@@ -57,12 +57,13 @@
         '<div class="pzImg"><img alt="" src="' + GA.PrizeArt.url(p.id, 160) + '"></div>' +
         '<div class="pzName">' + esc(p.name) + '</div><div class="pzDesc">' + esc(p.desc) + '</div>' +
         '<div class="pzPrice">' + TIX + ' ' + p.price + '</div>' +
-        (own ? '<button class="pzBtn own" disabled>\u2714 OWNED</button>'
+        (own ? '<button class="pzBtn own" data-view="' + p.id + '">\u2714 OWNED \u00b7 VIEW 3D</button>'
           : can ? '<button class="pzBtn buy" data-buy="' + p.id + '">REDEEM</button>'
             : '<button class="pzBtn need" disabled>NEED ' + (p.price - have) + ' MORE</button>') + '</div>';
     });
     $('pzScroll').innerHTML = h + '</div>';
     Array.prototype.forEach.call($('pzScroll').querySelectorAll('[data-buy]'), function (b) { b.addEventListener('click', function () { askRedeem(b.getAttribute('data-buy')); }); });
+    wire3d(); Array.prototype.forEach.call($('pzScroll').querySelectorAll('[data-view]'), function (b) { b.addEventListener('click', function () { if (GA.PV) GA.PV.open(b.getAttribute('data-view'), GA.Prog.ownedIds()); }); });
     var c = GA.Prog.counts();
     $('pzFoot').innerHTML = '<span>Collected <b>' + c.prizes + '/' + c.prizeTotal + '</b> prizes</span><button class="pill" id="pzToGallery">\uD83C\uDFC6 VIEW GALLERY</button>';
     $('pzToGallery').addEventListener('click', function () { snd('click'); renderGallery('shelves'); $('pzScroll').scrollTop = 0; });
@@ -102,12 +103,13 @@
         h += '<div class="shelfBlock"><div class="shelfLbl">' + cat.icon + ' ' + esc(cat.name) + ' <small>' + n + '/' + ps.length + '</small></div><div class="shelf">';
         ps.forEach(function (p) {
           var own = GA.Prog.owns(p.id);
-          h += '<div class="slot' + (own ? ' owned' : '') + '" data-slot="' + p.id + '" title="' + esc(p.name) + '"><img alt="" src="' + GA.PrizeArt.url(p.id, 140, !own) + '">' +
+          var on = own && GA.Carry && GA.Carry.isOn(p.id);
+          h += '<div class="slot' + (own ? ' owned' : '') + (on ? ' carried' : '') + '" data-slot="' + p.id + '" title="' + esc(p.name) + '"' + (own ? ' role="button" tabindex="0" aria-label="View ' + esc(p.name) + ' in 3D"' : '') + '><img alt="" src="' + GA.PrizeArt.url(p.id, 140, !own) + '">' + (own ? '<span class="slot3d">' + (on ? (GA.Prize3D.isHat(p.id) ? '\uD83E\uDDE2' : '\u270B') : '3D') + '</span>' : '') +
             (own ? '<span class="slotName">' + esc(p.name.replace(/ Plush$/, '')) + '</span>' : '<span class="slotQ">?</span><span class="slotName dim">' + TIX + ' ' + p.price + '</span>') + '</div>';
         });
         h += '</div><div class="shelfEdge"></div></div>';
       });
-      $('pzFoot').innerHTML = '<span>' + (c.prizes ? 'Nice collection!' : 'Your shelves are empty. Redeem tickets at the Prize Counter!') + '</span><button class="pill" id="pzToCounter">\uD83C\uDF9F\uFE0F PRIZE COUNTER</button>';
+      $('pzFoot').innerHTML = '<span>' + (c.prizes ? 'Tap a prize to see it in 3D and carry it!' : 'Your shelves are empty. Redeem tickets at the Prize Counter!') + '</span><button class="pill" id="pzToCounter">\uD83C\uDF9F\uFE0F PRIZE COUNTER</button>';
     } else {
       var list = GA.Prog.list(), cats = [];
       list.forEach(function (a) { if (cats.indexOf(a.cat) < 0) cats.push(a.cat); });
@@ -116,16 +118,29 @@
         h += '<div class="achCat">' + esc(cat) + '</div><div class="achGrid">';
         list.filter(function (a) { return a.cat === cat; }).sort(function (x, y) { return (y.unlocked - x.unlocked); }).forEach(function (a) {
           var pct = Math.round(a.cur / a.goal * 100);
-          h += '<div class="ach' + (a.unlocked ? ' on' : '') + '" data-ach="' + a.id + '"><div class="achIco" aria-hidden="true">' + (a.unlocked ? a.icon : '\uD83D\uDD12') + '</div><div class="achTxt"><b>' + esc(a.name) + '</b><span>' + esc(a.desc) + '</span>' +
+          h += '<div class="ach' + (a.unlocked ? ' on' : '') + (a.unlocked && GA.Carry && GA.Carry.isOn('ach:' + a.id) ? ' worn' : '') + '" data-ach="' + a.id + '"' + (a.unlocked ? ' role="button" tabindex="0" aria-label="View ' + esc(a.name) + ' medal in 3D"' : '') + '><div class="achIco" aria-hidden="true">' + (a.unlocked ? a.icon : '\uD83D\uDD12') + '</div><div class="achTxt"><b>' + esc(a.name) + '</b><span>' + esc(a.desc) + '</span>' +
             (a.unlocked ? '<em>\u2714 Unlocked ' + new Date(a.at).toLocaleDateString() + '</em>' : (a.goal > 1 ? '<div class="achProg"><i style="width:' + pct + '%"></i><small>' + a.cur + ' / ' + a.goal + '</small></div>' : '<em class="lk">Locked</em>')) + '</div></div>';
         });
         h += '</div>';
       });
-      $('pzFoot').innerHTML = '<span>Achievements save on this device.</span><button class="pill" id="pzToCounter">\uD83C\uDF9F\uFE0F PRIZE COUNTER</button>';
+      $('pzFoot').innerHTML = '<span>Tap an unlocked achievement to see its 3D medal.</span><button class="pill" id="pzToCounter">\uD83C\uDF9F\uFE0F PRIZE COUNTER</button>';
     }
     $('pzScroll').innerHTML = h;
+    wire3d();
     $('pzToCounter').addEventListener('click', function () { snd('click'); renderCounter(); $('pzScroll').scrollTop = 0; });
   }
+
+  /* ---------- tap to view in 3D ---------- */
+  function wire3d() {
+    if (!GA.PV) return;
+    var sc = $('pzScroll'), owned = GA.Prog.ownedIds(), meds = GA.Prog.list().filter(function (a) { return a.unlocked; }).map(function (a) { return 'ach:' + a.id; });
+    function hook(elm, id, list) { function go(e) { if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return; e.preventDefault(); GA.PV.open(id, list); } elm.addEventListener('click', go); elm.addEventListener('keydown', go); }
+    Array.prototype.forEach.call(sc.querySelectorAll('.slot.owned'), function (d) { hook(d, d.getAttribute('data-slot'), owned); });
+    Array.prototype.forEach.call(sc.querySelectorAll('.ach.on'), function (d) { hook(d, 'ach:' + d.getAttribute('data-ach'), meds); });
+    Array.prototype.forEach.call(sc.querySelectorAll('.pzCard.owned .pzImg'), function (d) { var id = d.parentNode.getAttribute('data-prize'); d.classList.add('can3d'); hook(d, id, owned); });
+  }
+  if (GA.PV) GA.PV.onClose = function () { if (openWhat === 'gallery') { var y = $('pzScroll').scrollTop; renderGallery(gtab); $('pzScroll').scrollTop = y; } };
+  Z.rerender = function () { if (openWhat === 'gallery') renderGallery(gtab); else if (openWhat === 'counter') renderCounter(); };
 
   /* ---------- open / close ---------- */
   function show() {
