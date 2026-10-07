@@ -6,7 +6,7 @@
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
-  var MAIN_STEP = GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
+  var MAIN_STEP = GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -304,6 +304,19 @@
         for (i = 0; i < 6; i++) { var p = ((i / 6 + t * 0.6) % 1), py = 20 + p * p * (h - 20), sc = 0.2 + p; g.fillStyle = '#facc15'; g.beginPath(); g.arc(w / 2 + (i % 3 - 1) * 30 * sc, py, 4 * sc + 1, 0, 7); g.fill(); }
         var lane = Math.floor(t * 0.8) % 3 - 1, jy = Math.abs(Math.sin(t * 3)) * 10;
         x = w / 2 + lane * 36; g.fillStyle = '#2563eb'; g.fillRect(x - 7, h - 40 - jy, 14, 18); g.fillStyle = '#fcd34d'; g.fillRect(x - 6, h - 52 - jy, 12, 12); g.fillStyle = '#111'; g.fillRect(x - 7, h - 22 - jy, 5, 8); g.fillRect(x + 2, h - 22 - jy, 5, 8);
+        break;
+      }
+      case 'detective': {
+        g.fillStyle = '#2a1d46'; g.fillRect(0, 0, w, h);
+        for (i = 0; i < 6; i++) for (var dj = 0; dj < 5; dj++) { g.fillStyle = (i + dj) % 2 ? '#3b2a63' : '#33245a'; g.fillRect(i * w / 6, dj * h / 5, w / 6, h / 5); }
+        var dpx = [[30, 30], [w - 40, 40], [40, h - 40], [w - 50, h - 36], [w / 2, 26]];
+        dpx.forEach(function (q, k) { g.fillStyle = '#ffd23f'; g.beginPath(); g.arc(q[0], q[1], 9, 0, 7); g.fill(); g.fillStyle = '#3a2400'; g.font = font(14); g.textAlign = 'center'; g.fillText('?', q[0], q[1] + 5); });
+        var gx = w / 2 + Math.cos(t * 0.9) * w * 0.3, gy = h / 2 + Math.sin(t * 1.3) * h * 0.22;
+        var near2 = dpx.some(function (q) { return Math.hypot(q[0] - gx, q[1] - gy) < 26; });
+        g.fillStyle = near2 ? 'rgba(255,240,150,.55)' : 'rgba(191,233,255,.35)'; g.beginPath(); g.arc(gx, gy, 20, 0, 7); g.fill();
+        g.strokeStyle = '#ffd23f'; g.lineWidth = 6; g.beginPath(); g.arc(gx, gy, 20, 0, 7); g.stroke();
+        g.lineWidth = 8; g.lineCap = 'round'; g.beginPath(); g.moveTo(gx + 14, gy + 14); g.lineTo(gx + 30, gy + 30); g.stroke(); g.lineCap = 'butt';
+        if (near2) { g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#ffd23f'; g.fillText('CLUE!', w / 2, h - 10); }
         break;
       }
       case 'fc': {
