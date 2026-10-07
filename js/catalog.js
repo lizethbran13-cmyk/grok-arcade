@@ -11,7 +11,7 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-voxels/', color: '#a855f7', color2: '#22d3ee' },
   { id: 'surfers', name: 'Grok Surfers', desc: 'An endless runner. Dodge, jump and grab coins.',
     url: 'https://lizethbran13-cmyk.github.io/grok-surfers/', color: '#fb923c', color2: '#facc15' },
-  { id: 'fc', mp: true, name: 'Grok FC', desc: 'Fast arcade soccer. 1 v 1 online: pass, shoot, score!',
+  { id: 'fc', mp: true, name: 'Grok FC', desc: '3D soccer, 5 stadiums, Dream Team. 1 v 1 or co-op online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-fc/', color: '#22c55e', color2: '#ffffff' },
   { id: 'brawl', mp: true, name: 'Grok Brawl', desc: 'A 3D arena fighter. Punch, combo and unleash supers!',
     url: 'https://lizethbran13-cmyk.github.io/grok-brawl/', color: '#ff3d6e', color2: '#ffe14d' },
