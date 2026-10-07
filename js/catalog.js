@@ -1,7 +1,7 @@
 /* Grok Arcade - game catalog */
 window.GA = window.GA || {};
 GA.MAIN_GAMES = [
-  { id: 'sky', mp: true, name: 'Grok Sky', desc: 'Fly a voxel airliner over cities and famous places.',
+  { id: 'sky', mp: true, name: 'Grok Sky', desc: 'Fly real planes, from a Cessna to the A380, across 10 cities with friends. Then ride Starship to the Moon and Mars!',
     url: 'https://lizethbran13-cmyk.github.io/grok-sky/', color: '#38bdf8', color2: '#fde047' },
   { id: 'land', mp: true, name: 'Grok Land', desc: 'A 3D platformer adventure across 8 worlds.',
     url: 'https://lizethbran13-cmyk.github.io/grok-land/', color: '#4ade80', color2: '#f97316' },
