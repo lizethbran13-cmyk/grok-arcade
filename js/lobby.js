@@ -33,7 +33,7 @@
     GA.Hub.setPaused(true);
     $('mp').classList.remove('hidden');
     if (GA.Fix) GA.Fix.lobbyBanner();
-    snd('menu');
+    snd('menu'); if (GA.Prog) GA.Prog.event('antenna');
     if (room && !room.destroyed) { show(room.opened ? 's3' : 's5'); render(); }
     else { room = null; show('s1'); }
   };
@@ -49,7 +49,7 @@
 
   /* ---------- room lifecycle ---------- */
   function wireRoom(r) {
-    r.on('open', function () { if (r !== room) return; joining = false; show('s3'); render(); snd(r.isHost ? 'start' : 'launch'); });
+    r.on('open', function () { if (r !== room) return; joining = false; show('s3'); render(); snd(r.isHost ? 'start' : 'launch'); if (GA.Prog) GA.Prog.event('room'); });
     r.on('players', function () { if (r === room) render(); });
     r.on('meta', function () { if (r === room) render(); });
     r.on('ping', function () { if (r === room && screen === 's3') renderPlayers(); });
@@ -177,7 +177,7 @@
   function go(d) {
     if (going || !room) return;
     var g = gameById(d.game), me = room.me(); if (!g || !me) return;
-    going = true; room.markNavigating();
+    going = true; room.markNavigating(); if (GA.Prog) GA.Prog.onLaunch(g.id);
     var url = GN.buildUrl(GA.gameUrl(g), { mode: room.isHost ? 'host' : 'join', code: room.code, name: me.name, color: me.color, pid: room.pid, slot: me.slot, n: d.n, hub: hubParam() }, d.fmt === 'ffa' ? { fmt: 'ffa' } : null);
     MP.lastUrl = url;
     $('mpStatus').textContent = 'Starting ' + g.name + '\u2026';

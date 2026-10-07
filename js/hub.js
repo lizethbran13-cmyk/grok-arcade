@@ -155,7 +155,7 @@
     g.strokeStyle = '#ffe14d'; g.lineWidth = 10; g.strokeRect(8, 8, W - 16, H - 16);
     neonText(g, 'BEST SCORES', W / 2, 62, 58, '#ffe14d');
     GA.BONUS_GAMES.forEach(function (gm, i) {
-      var nB = GA.BONUS_GAMES.length, y = (nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
+      var nB = GA.BONUS_GAMES.length, y = (nB > 9 ? 106 : nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 9 ? 40 : nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 9 ? 28 : nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
       g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.fillText(String(GA.getBest(gm.id)), W - 50, y);
     });
     d.tex.needsUpdate = true;
@@ -167,7 +167,7 @@
     neonText(g, 'TICKETS: ' + GA.getTickets(), W / 2, H * 0.72, 60, '#ffe14d');
     d.tex.needsUpdate = true;
   }
-  Hub.refreshBoards = function () { scoreBoardDraw(); ticketDraw(); };
+  Hub.refreshBoards = function () { scoreBoardDraw(); ticketDraw(); stockDraw(); galleryDraw(); };
 
   function plant(x, z, s) {
     s = s || 1;
@@ -178,7 +178,63 @@
     addSolid(x - 0.45 * s, x + 0.45 * s, z - 0.45 * s, z + 0.45 * s);
   }
 
+  /* ---------- prize stock shelves + Achievement Gallery (dynamic canvas textures) ---------- */
+  function stockDraw() {
+    var d = dynTex.stock; if (!d || !GA.PrizeArt) return; var g = d.ctx, W = d.c.width, H = d.c.height;
+    g.clearRect(0, 0, W, H);
+    var left = GA.PRIZES.filter(function (p) { return !(GA.Prog && GA.Prog.owns(p.id)); }).sort(function (a, b) { return b.price - a.price; }).slice(0, 21);
+    var rows = [H, H - 0.8 / 2.13 * H, H - 1.55 / 2.13 * H], sz = 112;
+    left.forEach(function (p, i) { var r = Math.floor(i / 7), k = i % 7, x = 30 + k * 140 + (r % 2) * 28; g.drawImage(GA.PrizeArt.icon(p.id, 128), x, rows[r] - sz - 4, sz, sz); });
+    if (!left.length) neonText(g, 'SOLD OUT!', W / 2, H / 2, 90, '#ffe14d');
+    d.tex.needsUpdate = true;
+  }
+  function galleryDraw() {
+    var d = dynTex.gallery; if (!d || !GA.PrizeArt || !GA.Prog) return; var g = d.ctx, W = d.c.width, H = d.c.height, c = GA.Prog.counts();
+    var bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#1d0f45'); bg.addColorStop(1, '#2a1260'); g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    g.strokeStyle = '#3ff0ff'; g.lineWidth = 8; g.strokeRect(4, 4, W - 8, H - 8);
+    neonText(g, 'PRIZES ' + c.prizes + '/' + c.prizeTotal + '    ACHIEVEMENTS ' + c.ach + '/' + c.achTotal, W / 2, 44, 40, '#ffe14d', W - 60);
+    var top = 84, rowH = (H - top - 8) / 3, per = Math.ceil(GA.PRIZES.length / 3), cw = (W - 30) / per, sz = Math.min(cw - 6, rowH - 22);
+    for (var r = 0; r < 3; r++) {
+      var by = top + (r + 1) * rowH;
+      var sh = g.createLinearGradient(0, by - 14, 0, by); sh.addColorStop(0, '#8b5a2b'); sh.addColorStop(1, '#4a2c12'); g.fillStyle = sh; g.fillRect(12, by - 14, W - 24, 12);
+      g.fillStyle = '#3ff0ff'; g.fillRect(12, by - 3, W - 24, 3);
+    }
+    GA.PRIZES.forEach(function (p, i) {
+      var r = Math.floor(i / per), k = i % per, x = 15 + k * cw + (cw - sz) / 2, y = top + (r + 1) * rowH - 14 - sz;
+      if (GA.Prog.owns(p.id)) g.drawImage(GA.PrizeArt.icon(p.id, 128), x, y, sz, sz);
+      else { g.globalAlpha = 0.5; g.drawImage(GA.PrizeArt.icon(p.id, 128, true), x, y, sz, sz); g.globalAlpha = 1; g.font = font(40); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = 'rgba(255,255,255,0.35)'; g.fillText('?', x + sz / 2, y + sz * 0.55); }
+    });
+    d.tex.needsUpdate = true;
+  }
+  var GAL = { x: ROOM.minX, z: -6, w: 5.6 };
+  function buildGallery() {
+    var grp = new T.Group(); grp.position.set(GAL.x + 0.5, 0, GAL.z); grp.rotation.y = Math.PI / 2; scene.add(grp);
+    // cabinet body + back panel
+    mesh(box(GAL.w + 0.4, 3.5, 0.5), lam('#2b1a55'), 0, 1.85, -0.3, grp);
+    mesh(box(GAL.w + 0.4, 0.5, 0.95), lam('#4a2a86'), 0, 0.25, 0, grp);
+    var gc = mkCanvas(1024, 560); dynTex.gallery = { c: gc, ctx: gc.getContext('2d'), tex: canvasTex(gc) };
+    mesh(plane(GAL.w, GAL.w * 560 / 1024), new T.MeshBasicMaterial({ map: dynTex.gallery.tex }), 0, 0.55 + GAL.w * 560 / 1024 / 2, -0.04, grp);
+    galleryDraw();
+    // glass + neon frame
+    var glass = new T.MeshBasicMaterial({ color: '#9ff7ff', transparent: true, opacity: 0.1, depthWrite: false });
+    mesh(box(GAL.w, 3.0, 0.04), glass, 0, 2.05, 0.4, grp);
+    var cy = basic('#3ff0ff'), pk = basic('#ff4fd8');
+    mesh(box(GAL.w + 0.3, 0.08, 0.08), cy, 0, 3.6, 0.42, grp); mesh(box(GAL.w + 0.3, 0.08, 0.08), pk, 0, 0.52, 0.48, grp);
+    [-1, 1].forEach(function (sd) { mesh(box(0.08, 3.1, 0.08), sd < 0 ? pk : cy, sd * (GAL.w / 2 + 0.15), 2.05, 0.42, grp); });
+    var sg = sign('ACHIEVEMENT GALLERY', GAL.w, 0.66, '#3ff0ff', { col2: '#ffe14d' }); sg.position.set(0, 4.05, -0.04); grp.add(sg);
+    var dc = decal('GALLERY', 3.0, 0.95, '#3ff0ff', 0, 0, 0, 'prizes + achievements'); scene.remove(dc); dc.position.set(0, 0.02, 1.9); dc.rotation.z = 0; grp.add(dc);
+    // two little trophy pedestals
+    [-1].forEach(function (sd) { mesh(cyl(0.22, 0.26, 0.9, 10), lam('#4a2a86'), sd * (GAL.w / 2 + 0.55), 0.45, 0.1, grp); mesh(cyl(0.12, 0.06, 0.3, 10), basic('#ffe14d'), sd * (GAL.w / 2 + 0.55), 1.05, 0.1, grp); mesh(sph(0.09, 8), basic('#ffe14d'), sd * (GAL.w / 2 + 0.55), 1.25, 0.1, grp); });
+    var gm = new T.MeshBasicMaterial({ map: glowTex, color: '#3ff0ff', transparent: true, opacity: 0.3, depthWrite: false, blending: T.AdditiveBlending });
+    var gl = mesh(plane(3.6, 1.8), gm, 0, 0.025, 1.45, grp); gl.rotation.x = -Math.PI / 2; gl.renderOrder = 2;
+    addSolid(ROOM.minX, GAL.x + 1.05, GAL.z - GAL.w / 2 - 0.2, GAL.z + GAL.w / 2 + 0.85);
+    grp.updateMatrixWorld(true);
+    cabinets.push({ game: { id: 'gallery', name: 'Achievement Gallery', desc: 'See your prizes and achievements.', color: '#3ff0ff' }, kind: 'gallery', id: 'gallery', group: grp, x: GAL.x + 0.5, z: GAL.z, rot: Math.PI / 2,
+      front: new T.Vector3(0, 0, 1.75).applyMatrix4(grp.matrixWorld), dir: new T.Vector3(1, 0, 0), glow: gm, nextDraw: Infinity, r: 2.1 });
+  }
+
   function buildDecor() {
+    ensureGlow();
     // Prize counter (south wall, main hall)
     var px = -6, pz = ROOM.maxZ - 1.6;
     mesh(box(6, 1.1, 1), lam('#7c3aed'), px, 0.55, pz);
@@ -190,15 +246,25 @@
     mesh(box(6.4, 2.4, 0.5), lam('#2b1a55'), px, 1.2, ROOM.maxZ - 0.25);
     [0.75, 1.55, 2.3].forEach(function (y) { mesh(box(6.4, 0.06, 0.55), basic('#3ff0ff'), px, y - 0.32, ROOM.maxZ - 0.3); });
     var cols = ['#ff4fd8', '#3ff0ff', '#ffe14d', '#4ade80', '#fb923c', '#a78bfa', '#f8fafc'];
-    for (var r = 0; r < 3; r++) for (var i = 0; i < 7; i++) {
-      var y = [0.75, 1.55, 2.3][r] - 0.32 + 0.22, x = px - 2.7 + i * 0.9 + (r % 2) * 0.2;
-      var m = mesh(sph(0.2, 10), lam(cols[(i + r * 2) % cols.length]), x, y, ROOM.maxZ - 0.35);
-      if ((i + r) % 3 === 0) { mesh(sph(0.08, 6), lam(cols[(i + r * 2) % cols.length]), x - 0.13, y + 0.17, ROOM.maxZ - 0.35); mesh(sph(0.08, 6), lam(cols[(i + r * 2) % cols.length]), x + 0.13, y + 0.17, ROOM.maxZ - 0.35); }
-    }
+    // the prizes still in stock stand on the shelves (redeemed ones move to the Achievement Gallery)
+    var skc = mkCanvas(1024, 352); dynTex.stock = { c: skc, ctx: skc.getContext('2d'), tex: canvasTex(skc) };
+    var skm = mesh(plane(6.2, 2.13), new T.MeshBasicMaterial({ map: dynTex.stock.tex, transparent: true, depthWrite: false }), px, 0.43 + 2.13 / 2, ROOM.maxZ - 0.36); skm.rotation.y = Math.PI; skm.renderOrder = 2;
+    stockDraw();
+    // the counter itself is interactive: walk up to it to redeem tickets
+    var pg = new T.Group(); pg.position.set(px, 0, pz); pg.rotation.y = Math.PI; scene.add(pg);
+    var pgm = new T.MeshBasicMaterial({ map: glowTex, color: '#ffe14d', transparent: true, opacity: 0.3, depthWrite: false, blending: T.AdditiveBlending });
+    var pgl = mesh(plane(3.4, 1.8), pgm, 0, 0.025, 1.45, pg); pgl.rotation.x = -Math.PI / 2; pgl.renderOrder = 2;
+    var bell = mesh(cyl(0.12, 0.16, 0.1, 12), basic('#ffe14d'), px + 2.2, 1.23, pz - 0.2); mesh(sph(0.04, 6), basic('#ffffff'), px + 2.2, 1.32, pz - 0.2);
+    decal('PRIZES', 3.2, 1.0, '#ffe14d', px, pz - 1.75, Math.PI, 'redeem tickets here');
+    pg.updateMatrixWorld(true);
+    cabinets.push({ game: { id: 'prizes', name: 'Prize Counter', desc: 'Redeem your tickets for prizes.', color: '#ffe14d' }, kind: 'prize', id: 'prizes', group: pg, x: px, z: pz, rot: Math.PI,
+      front: new T.Vector3(0, 0, 1.75).applyMatrix4(pg.matrixWorld), dir: new T.Vector3(0, 0, -1), glow: pgm, nextDraw: Infinity, r: 2.0 });
     // ticket display sign (dynamic)
     var c = mkCanvas(1024, 300); dynTex.tickets = { c: c, ctx: c.getContext('2d'), tex: canvasTex(c) };
     var ts = mesh(plane(5, 1.46), new T.MeshBasicMaterial({ map: dynTex.tickets.tex }), px, 3.35, ROOM.maxZ - 0.03); ts.rotation.y = Math.PI;
     ticketDraw();
+
+    buildGallery();
 
     // Best scores board in the bonus zone (north wall)
     var c2 = mkCanvas(768, 520); dynTex.scores = { c: c2, ctx: c2.getContext('2d'), tex: canvasTex(c2) };
@@ -246,7 +312,7 @@
     anims.push(function (t) { tor.rotation.y = t * 0.8; tor.rotation.x = Math.sin(t * 0.5) * 0.4; oct.rotation.y = -t * 1.2; oct.position.y = 3.4 + Math.sin(t * 1.5) * 0.12; star.rotation.y = t; star.rotation.x = t * 0.6; star.position.y = 3.6 + Math.sin(t * 2) * 0.15; });
 
     // wall posters
-    var p1 = sign('INSERT FUN', 2.4, 0.8, '#4ade80'); p1.position.set(ROOM.minX + 0.03, 2.2, -6); p1.rotation.y = Math.PI / 2; scene.add(p1);
+    var p1 = sign('INSERT FUN', 2.4, 0.8, '#4ade80'); p1.position.set(ROOM.minX + 0.03, 1.85, 0); p1.rotation.y = Math.PI / 2; scene.add(p1);
     var p2 = sign('HIGH SCORE\nLIZETH', 2.2, 1.0, '#fb923c'); p2.position.set(ROOM.minX + 0.03, 2.2, 8.6); p2.rotation.y = Math.PI / 2; scene.add(p2);
     var p3 = sign('LUNA  PI-RAT  SNOWIE\nofficial arcade rats', 3.4, 1.0, '#ff8fd0'); p3.position.set(15, 2.4, ROOM.maxZ - 0.03); p3.rotation.y = Math.PI; scene.add(p3);
     // little rat portrait poster
@@ -439,6 +505,16 @@
         g.fillStyle = '#ffe14d'; g.font = font(26); g.textAlign = 'center'; g.fillText('\u2605', 30 + Math.sin(t * 2) * 6, 30);
         break;
       }
+      case 'slice': {
+        var gs = g.createLinearGradient(0, 0, 0, h); gs.addColorStop(0, '#12062e'); gs.addColorStop(1, '#2a0c4a'); g.fillStyle = gs; g.fillRect(0, 0, w, h);
+        var fc = ['#2fd47a', '#ff9a2e', '#ff4fd8', '#b8ff3b'], cyc = (t * 0.9) % 1;
+        for (i = 0; i < 3; i++) { var ph4 = (cyc + i / 3) % 1, fx = w * (0.25 + i * 0.25), fy = h - Math.sin(ph4 * Math.PI) * h * 0.75; g.fillStyle = fc[i]; g.shadowColor = fc[i]; g.shadowBlur = 8;
+          if (ph4 > 0.5 && i === 1) { g.beginPath(); g.arc(fx - 6, fy, 11, Math.PI * 0.5, Math.PI * 1.5); g.fill(); g.beginPath(); g.arc(fx + 6, fy + 4, 11, -Math.PI * 0.5, Math.PI * 0.5); g.fill(); }
+          else { g.beginPath(); g.arc(fx, fy, 11, 0, 7); g.fill(); } g.shadowBlur = 0; }
+        var sx4 = w * 0.2 + ((t * 1.3) % 1) * w * 0.6; g.strokeStyle = '#3ff0ff'; g.lineWidth = 4; g.lineCap = 'round'; g.beginPath(); g.moveTo(sx4 - 40, h * 0.3 + 20); g.lineTo(sx4, h * 0.3); g.stroke();
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#3ff0ff'; g.fillText('SLICE!', w / 2, 22);
+        break;
+      }
       case 'stack': {
         g.fillStyle = '#1e1036'; g.fillRect(0, 0, w, h); var n = Math.floor(t * 1.5) % 9;
         for (i = 0; i <= n; i++) { var ww = 90 - i * 4; g.fillStyle = 'hsl(' + (200 + i * 15) + ',85%,55%)'; g.fillRect(w / 2 - ww / 2 + (i === n ? Math.sin(t * 4) * 40 : 0), h - 12 - i * 12, ww, 11); }
@@ -495,15 +571,19 @@
     attract(game.id, sg, 192, 144, Math.random() * 10, cab); stex.needsUpdate = true;
     return cab;
   }
-  function buildCabinets() {
-    cabBodyMat = lam('#1c1236');
+  function ensureGlow() {
+    if (glowTex) return glowTex;
     var gc = mkCanvas(128, 128), g = gc.getContext('2d'), grd = g.createRadialGradient(64, 64, 4, 64, 64, 62);
     grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = grd; g.fillRect(0, 0, 128, 128);
-    glowTex = canvasTex(gc);
+    return (glowTex = canvasTex(gc));
+  }
+  function buildCabinets() {
+    cabBodyMat = lam('#1c1236');
+    ensureGlow();
     // main games: along the north wall, facing south
     GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    var nb = GA.BONUS_GAMES.length, stepB = nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
+    var nb = GA.BONUS_GAMES.length, stepB = nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
     GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2); });
   }
 

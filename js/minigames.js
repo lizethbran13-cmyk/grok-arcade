@@ -92,6 +92,7 @@
     var tix = Math.max(1, Math.floor(score / (cur.ticketDiv || 1)));
     if (score <= 0) tix = 1;
     var total = GA.addTickets(tix);
+    if (GA.Prog) GA.Prog.onGameOver(id, score, isNew);
     if (GA.onTickets) GA.onTickets(total);
     var tok = ++overToken;
     setTimeout(function () {

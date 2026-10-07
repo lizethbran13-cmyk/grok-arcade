@@ -117,13 +117,13 @@
   function talk() {
     var st = GA.Hub.gary();
     if (st.state !== 'desk') { say('One sec, I\u2019m on it!'); return; }
-    if (!S.broken && !S.powerOut) { say(IDLE[Math.floor(Math.random() * IDLE.length)]); return; }
+    if (!S.broken && !S.powerOut) { say(IDLE[Math.floor(Math.random() * IDLE.length)]); if (GA.Prog) GA.Prog.event('garyChat'); return; }
     guideOn = false; $('garyArrow').classList.add('hidden');
     var out = S.powerOut;
     say(out ? 'Whoa, who crossed the wires?! Don\u2019t worry, I\u2019ve got this. Follow me!' : 'The antenna is acting up again? Classic. Be right there!', 3200);
     GA.Hub.garyGo(function () {
       // fixed!
-      S.broken = false; S.fixedBy = 'gary';
+      S.broken = false; S.fixedBy = 'gary'; if (GA.Prog) GA.Prog.event('garyFix');
       if (S.powerOut) { S.powerOut = false; GA.Hub.setPower(true); GA.Audio.play('powerup'); $('powerBanner').classList.add('hidden'); }
       save(); changed(); GA.Audio.play('fixed');
       say(out ? 'Power\u2019s back and the antenna is fixed. Maybe leave the wires to me next time!' : 'All fixed! Have fun playing online!', 4200);
@@ -209,7 +209,7 @@
   function endWires(why) {
     var w = wireState; if (!w || w.over) return; w.over = true;
     if (why === 'ok') {
-      GA.Audio.play('fixed'); S.broken = false; S.fixedBy = 'wires'; save();
+      GA.Audio.play('fixed'); S.broken = false; S.fixedBy = 'wires'; save(); if (GA.Prog) GA.Prog.event('wireFix');
       result('<div class="wrBig ok">ANTENNA FIXED!</div><p>Nice and fast. You can host a room now.</p>');
       setTimeout(function () { closeWires(); changed(); toast('Antenna fixed! Tap PLAY ONLINE to host.'); if (fromLobby) GA.MP.open(); }, 1300);
     } else if (why === 'timeout') {
@@ -224,7 +224,7 @@
     GA.Audio.play('zap'); GA.Audio.play('buzz');
     $('wCard').classList.add('shock'); $('zap').classList.remove('hidden');
     if (navigator.vibrate) try { navigator.vibrate([80, 40, 160]); } catch (e) {}
-    Fix._lastShock = { plug: WIRES[a].n, socket: WIRES[b].n };
+    Fix._lastShock = { plug: WIRES[a].n, socket: WIRES[b].n }; if (GA.Prog) GA.Prog.event('zapped');
     setTimeout(function () {
       $('zap').classList.add('hidden'); closeWires(); shutdown();
     }, 1300);

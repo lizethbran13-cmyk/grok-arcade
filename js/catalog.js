@@ -29,7 +29,8 @@ GA.BONUS_GAMES = [
   { id: 'wires', name: 'Gary\'s Wire Rush', desc: 'Drag each wire to its matching socket before time runs out. Don\'t cross them!', color: '#ffd23b', color2: '#4ade80' },
   { id: 'penalty', name: 'Penalty Kick', desc: 'Tap or swipe to aim, beat the goalie. 5 shots, tickets for goals!', color: '#3bff7a', color2: '#ffffff' },
   { id: 'fetch', name: 'Candy\'s Fetch', desc: 'Tap to make Candy the schnauzer jump for tennis balls. Hop over bushes!', color: '#c7ccd4', color2: '#d7ff3b' },
-  { id: 'ratmaze', name: 'Rat Maze Dash', desc: 'Pick Luna, Pi-rat or Snowie and race through the maze for seeds & cheese. Dodge the cat!', color: '#ffb347', color2: '#b18cff' }
+  { id: 'ratmaze', name: 'Rat Maze Dash', desc: 'Pick Luna, Pi-rat or Snowie and race through the maze for seeds & cheese. Dodge the cat!', color: '#ffb347', color2: '#b18cff' },
+  { id: 'slice', name: 'Neon Slice', desc: 'Swipe through flying neon fruit to slice it. Combos, golden stars, and watch out for bombs!', color: '#3ff0ff', color2: '#ff4fd8' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };

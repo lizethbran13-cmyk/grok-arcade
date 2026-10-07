@@ -7,6 +7,7 @@
   var menuIsOpen = false, started = false, launching = false;
 
   GA.UI = { menuOpen: function () { return menuIsOpen; } };
+  function pzOpen() { return !!(GA.PZ && GA.PZ.isOpen()); }
 
   function setTickets(n) { $('ticketCount').textContent = n; }
   GA.onTickets = function (n) { setTickets(n); };
@@ -17,6 +18,7 @@
     if (GA.Fix && GA.Fix.powerOut()) { closeMenu(true); GA.Fix.noPower(); return; }
     launching = true;
     GA.lastLaunch = game.url;
+    if (GA.Prog) GA.Prog.onLaunch(game.id);
     GA.Hub.savePos();
     GA.Audio.play('launch');
     $('fade').classList.add('on');
@@ -32,8 +34,10 @@
     GA.MG.open(id);
   };
   GA.interact = function (cab) {
-    if (!cab || menuIsOpen || GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || GA.Fix.isOpen()) return;
+    if (!cab || menuIsOpen || GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || GA.Fix.isOpen() || pzOpen()) return;
     if (cab.kind === 'npc') { GA.Fix.talk(); return; }
+    if (cab.kind === 'prize') { hidePrompt(); GA.PZ.openCounter(); return; }
+    if (cab.kind === 'gallery') { hidePrompt(); GA.PZ.openGallery(); return; }
     if (cab.kind === 'mp' && GA.Fix.blocksHost()) { hidePrompt(); GA.Fix.openRepair(); return; }
     if (GA.Fix.powerOut()) { GA.Fix.noPower(cab); return; }
     if (cab.kind === 'mp') { hidePrompt(); GA.MP.open(); return; }
@@ -49,17 +53,19 @@
 
   /* ---------- prompt ---------- */
   function showPrompt(cab) {
-    if (!cab || !started || GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || (GA.Fix && GA.Fix.isOpen())) { hidePrompt(); return; }
+    if (!cab || !started || GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || (GA.Fix && GA.Fix.isOpen()) || pzOpen()) { hidePrompt(); return; }
     var bonus = cab.kind === 'bonus', mp = cab.kind === 'mp';
     var special = null;
-    if (cab.kind === 'npc') special = { tag: 'IT HELP DESK', name: 'Gary from IT', desc: GA.Fix.blocksHost() ? (GA.Fix.powerOut() ? 'The power is out! Gary can turn it back on and fix the antenna.' : 'The Multiplayer Antenna is broken. Ask Gary to fix it!') : 'Your friendly IT Manager. Say hi!', btn: 'TALK', key: 'talk to Gary', cls: 'npc' };
+    if (cab.kind === 'prize') { var pc = GA.Prog ? GA.Prog.counts() : { prizes: 0, prizeTotal: 0 }; special = { tag: 'PRIZE COUNTER', name: 'Redeem Tickets', desc: 'You have ' + GA.getTickets() + ' tickets. Trade them for plushies, models, trophies and more! (' + pc.prizes + '/' + pc.prizeTotal + ' collected)', btn: 'PRIZES', key: 'browse prizes', cls: 'prize', pb: 'pzPlay' }; }
+    else if (cab.kind === 'gallery') { var gc = GA.Prog ? GA.Prog.counts() : { ach: 0, achTotal: 0, prizes: 0, prizeTotal: 0 }; special = { tag: 'ACHIEVEMENT GALLERY', name: 'Your Trophy Room', desc: 'Achievements ' + gc.ach + '/' + gc.achTotal + ' \u00b7 Prizes ' + gc.prizes + '/' + gc.prizeTotal + '. See your collection and what to unlock next!', btn: 'VIEW', key: 'open the gallery', cls: 'gallery', pb: 'galPlay' }; }
+    else if (cab.kind === 'npc') special = { tag: 'IT HELP DESK', name: 'Gary from IT', desc: GA.Fix.blocksHost() ? (GA.Fix.powerOut() ? 'The power is out! Gary can turn it back on and fix the antenna.' : 'The Multiplayer Antenna is broken. Ask Gary to fix it!') : 'Your friendly IT Manager. Say hi!', btn: 'TALK', key: 'talk to Gary', cls: 'npc' };
     else if (mp && GA.Fix.blocksHost()) special = { tag: GA.Fix.powerOut() ? 'NO POWER' : 'OUT OF ORDER', name: cab.game.name, desc: 'Hosting is offline until it\u2019s fixed. Get Gary from IT or fix the wires. Joining a friend with a code still works.', btn: isTouch ? 'FIX /<br>JOIN' : 'FIX / JOIN', key: 'see repair options', cls: 'broken' };
     else if (GA.Fix.powerOut()) special = { tag: 'NO POWER', name: cab.game.name, desc: 'The arcade lost power. Ask Gary from IT (IT Help Desk by the prize counter) to turn it back on.', btn: 'NO POWER', key: 'check', cls: 'broken' };
-    $('prompt').classList.remove('npc', 'broken');
+    $('prompt').classList.remove('npc', 'broken', 'prize', 'gallery'); $('playBtn').classList.remove('pzPlay', 'galPlay');
     if (special) {
       $('prompt').classList.remove('mp', 'bonus'); $('prompt').classList.add(special.cls);
       $('pTag').textContent = special.tag; $('pName').textContent = special.name; $('pDesc').textContent = special.desc;
-      $('playBtn').innerHTML = special.btn; $('playBtn').classList.remove('mpBtn'); $('playBtn').setAttribute('data-game', cab.id); $('playBtn').removeAttribute('data-href');
+      $('playBtn').innerHTML = special.btn; $('playBtn').classList.remove('mpBtn'); if (special.pb) $('playBtn').classList.add(special.pb); $('playBtn').setAttribute('data-game', cab.id); $('playBtn').removeAttribute('data-href');
       $('pKey').innerHTML = 'Press <kbd>E</kbd> or <kbd>Enter</kbd> to ' + special.key;
       $('prompt').classList.remove('hidden'); $('playBtn').classList.remove('hidden'); document.body.classList.add('near'); return;
     }
@@ -112,8 +118,21 @@
     d.querySelector('.bGo').addEventListener('click', function () { GA.Hub.teleport('mp'); closeMenu(); GA.Audio.play('near'); });
     return d;
   }
+  function pzCard(kind) {
+    var d = document.createElement('div'), gal = kind === 'gallery'; d.className = 'card pzMenuCard'; d.style.setProperty('--c', gal ? '#3ff0ff' : '#ffe14d'); d.setAttribute('data-game', kind);
+    d.innerHTML = '<div class="cName"></div><div class="cDesc"></div><div class="cBtns"><button class="bPlay"></button><button class="bGo">GO TO</button></div>';
+    d.querySelector('.cName').textContent = gal ? 'Achievement Gallery' : 'Prize Counter';
+    d.querySelector('.cDesc').textContent = gal ? 'Your prize shelves and every achievement, with progress toward the next ones.' : 'Trade your tickets for plushies, models, trophies and the Golden Joystick!';
+    d.querySelector('.bPlay').innerHTML = gal ? '&#127942; OPEN' : '&#127903; REDEEM';
+    d.querySelector('.bPlay').addEventListener('click', function () { GA.Audio.unlock(); closeMenu(true); if (gal) GA.PZ.openGallery(); else GA.PZ.openCounter(); });
+    d.querySelector('.bGo').addEventListener('click', function () { GA.Hub.teleport(gal ? 'gallery' : 'prizes'); closeMenu(); GA.Audio.play('near'); });
+    return d;
+  }
   function buildMenu() {
     var gm = $('gridMain'), gb = $('gridBonus');
+    var ph = document.createElement('h2'); ph.className = 'secTitle pzSec'; ph.innerHTML = 'Prizes &amp; Achievements <small>spend tickets &middot; see your trophies</small>';
+    var pgd = document.createElement('div'); pgd.className = 'grid'; pgd.id = 'gridPrize'; pgd.appendChild(pzCard('prizes')); pgd.appendChild(pzCard('gallery'));
+    var mainTitle = document.querySelector('#menuScroll .secTitle.main'); if (mainTitle) { mainTitle.parentNode.insertBefore(ph, mainTitle); mainTitle.parentNode.insertBefore(pgd, mainTitle); }
     $('gridMp').appendChild(mpCard());
     GA.MAIN_GAMES.forEach(function (g) { gm.appendChild(card(g, false)); });
     GA.BONUS_GAMES.forEach(function (g) { gb.appendChild(card(g, true)); });
@@ -128,7 +147,7 @@
     $('menuMute').textContent = 'Sound: ' + (GA.Audio.isMuted() ? 'OFF' : 'ON');
   }
   function openMenu() {
-    if (!started || GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || GA.Fix.isOpen()) return;
+    if (!started || GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || GA.Fix.isOpen() || pzOpen()) return;
     refreshMenu(); menuIsOpen = true; $('menu').classList.remove('hidden'); GA.Hub.clearInput(); GA.Audio.play('menu');
     $('menuScroll').scrollTop = 0;
   }
@@ -155,6 +174,7 @@
     GA.MG.init();
     GA.MP.init();
     GA.onMpClose = function () { showPrompt(GA.Hub.near()); };
+    if (GA.PZ) GA.PZ.onClose = function () { setTickets(GA.getTickets()); showPrompt(GA.Hub.near()); };
     buildMenu();
     setTickets(GA.getTickets());
     $('hint').textContent = isTouch ? 'Left: move  \u00b7  Right: drag to look  \u00b7  Walk up to a cabinet!' : 'WASD / arrows to walk \u00b7 drag mouse or Q/E to look \u00b7 E/Enter to play \u00b7 M for menu';
@@ -165,7 +185,7 @@
     GA.Fix.init();
     GA.Fix.onChange = function () { showPrompt(GA.Hub.near()); };
     GA.Hub.onNear = function (cab) { if (cab) GA.Audio.play('near'); showPrompt(cab); };
-    GA.Hub.onArea = function (bonus) { var a = $('areaLabel'); a.textContent = bonus ? 'BONUS ZONE' : 'MAIN GAMES'; a.classList.toggle('bonus', bonus); };
+    GA.Hub.onArea = function (bonus) { var a = $('areaLabel'); a.textContent = bonus ? 'BONUS ZONE' : 'MAIN GAMES'; a.classList.toggle('bonus', bonus); if (bonus && started && GA.Prog) GA.Prog.event('bonusZone'); };
 
     $('startBtn').addEventListener('click', start);
     $('title').addEventListener('click', function (e) { if (e.target === $('title')) start(); });
@@ -179,7 +199,7 @@
     $('menuHome').addEventListener('click', function () { GA.Hub.home(); closeMenu(); });
 
     window.addEventListener('keydown', function (e) {
-      if (GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || GA.Fix.isOpen()) return;
+      if (GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || GA.Fix.isOpen() || pzOpen()) return;
       if (!started) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); start(); } return; }
       var k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
       if (k === 'm' || k === 'Tab') { e.preventDefault(); if (menuIsOpen) closeMenu(); else openMenu(); }

@@ -41,7 +41,7 @@
       var inst = {
         reset: function () { layout(); shots = 0; results = []; shot = null; popT = 0; waitT = 0; endT = 0; aim = { x: G.x + G.w * 0.5, y: G.y + G.h * 0.5 }; resetKeeper(); sw = null; },
         resize: function () { layout(); resetKeeper(); },
-        debug: function () { return { shots: shots, results: results.slice(), goal: { x: G.x, y: G.y, w: G.w, h: G.h }, ball: { x: G.bx, y: G.by }, keeper: { x: keeper.x }, flying: !!(shot && !shot.done), aim: aim }; },
+        debug: function () { return { ready: !shot && waitT <= 0 && shots < 5, shots: shots, results: results.slice(), goal: { x: G.x, y: G.y, w: G.w, h: G.h }, ball: { x: G.bx, y: G.by }, keeper: { x: keeper.x }, flying: !!(shot && !shot.done), aim: aim }; },
         update: function (dt) {
           t += dt; if (popT > 0) popT -= dt;
           // idle keeper sways, diving keeper moves toward the guess

@@ -1,0 +1,148 @@
+/* Grok Arcade - progress: lifetime ticket stats, prize redemption, and the achievement system.
+   Everything lives in localStorage under grokArcade.prog (tickets stay in grokArcade.tickets).
+   Only things the arcade can really see are tracked: bonus game rounds + scores, hub actions, and main games LAUNCHED from the arcade. */
+(function () {
+  'use strict';
+  var P = GA.Prog = {};
+  var S = GA.store.get('prog', null), firstRun = !S;
+  S = S || {};
+  S.unlocked = S.unlocked || {}; S.owned = S.owned || {}; S.unseen = S.unseen || [];
+  var st = S.stats = S.stats || {};
+  st.earned = st.earned || 0; st.spent = st.spent || 0; st.rounds = st.rounds || 0; st.bests = st.bests || 0;
+  st.played = st.played || {}; st.launched = st.launched || {}; st.ev = st.ev || {};
+  if (firstRun) st.earned = Math.max(st.earned, GA.getTickets()); // tickets earned before achievements existed still count
+  function save() { GA.store.set('prog', S); }
+
+  /* ---------- tickets ---------- */
+  var rawAdd = GA.addTickets;
+  GA.addTickets = function (n) { var t = rawAdd(n); if (n > 0) { st.earned += n; save(); check(); } return t; };
+  GA.spendTickets = function (n) {
+    n = Math.floor(+n || 0); if (n <= 0) return false;
+    var have = GA.getTickets(); if (have < n) return false; // never overspend
+    GA.store.set('tickets', have - n); st.spent += n; save();
+    if (GA.onTickets) GA.onTickets(have - n);
+    return true;
+  };
+
+  /* ---------- prizes ---------- */
+  P.owns = function (id) { return !!S.owned[id]; };
+  P.ownedIds = function () { return GA.PRIZES.filter(function (p) { return S.owned[p.id]; }).map(function (p) { return p.id; }); };
+  P.redeem = function (id) {
+    var pr = GA.findPrize(id); if (!pr) return { ok: false, why: 'unknown' };
+    if (S.owned[id]) return { ok: false, why: 'owned' };
+    if (GA.getTickets() < pr.price) return { ok: false, why: 'tickets', need: pr.price - GA.getTickets() };
+    if (!GA.spendTickets(pr.price)) return { ok: false, why: 'tickets' };
+    S.owned[id] = Date.now(); save(); check();
+    if (GA.Hub && GA.Hub.refreshBoards) GA.Hub.refreshBoards();
+    return { ok: true, left: GA.getTickets() };
+  };
+  function nOwned(cat) { return GA.PRIZES.filter(function (p) { return S.owned[p.id] && (!cat || p.cat === cat); }).length; }
+  function nPrizes(cat) { return GA.PRIZES.filter(function (p) { return !cat || p.cat === cat; }).length; }
+
+  /* ---------- achievements ---------- */
+  function best(id) { return GA.getBest(id); }
+  function bonusPlayed() { return GA.BONUS_GAMES.filter(function (g) { return st.played[g.id] || best(g.id) > 0; }).length; }
+  function ev(k) { return st.ev[k] || 0; }
+  var HS = { // per-game high score goals (tuned to each game's scoring)
+    snake: [15, 'Long Snake', 'Score 15 in Grok Snake', '\uD83D\uDC0D'], bricks: [500, 'Brick Smasher', 'Score 500 in Brick Breaker', '\uD83E\uDDF1'],
+    jet: [10, 'Ace Pilot', 'Fly through 10 gaps in Grok Jet', '\uD83D\uDE80'], rats: [20, 'Rat Booper', 'Score 20 in Whack-a-Rat', '\uD83D\uDC00'],
+    stack: [15, 'Skyscraper', 'Stack 15 blocks in Stack Tower', '\uD83C\uDFD7\uFE0F'], wires: [30, 'Gary\u2019s Apprentice', 'Score 30 in Gary\u2019s Wire Rush', '\uD83D\uDD0C'],
+    penalty: [6, 'Top Bins', 'Score 6 in Penalty Kick', '\u26BD'], fetch: [15, 'Good Girl, Candy!', 'Score 15 in Candy\u2019s Fetch', '\uD83D\uDC15'],
+    ratmaze: [150, 'Maze Master', 'Score 150 in Rat Maze Dash', '\uD83E\uDDC0'], slice: [40, 'Neon Ninja', 'Score 40 in Neon Slice', '\uD83C\uDF49']
+  };
+  var A = [
+    { id: 'first_ticket', cat: 'Tickets', icon: '\uD83C\uDF9F\uFE0F', name: 'First Ticket!', desc: 'Earn your first ticket in the Bonus Zone', p: function () { return [st.earned, 1]; } },
+    { id: 'tickets_100', cat: 'Tickets', icon: '\uD83C\uDFAB', name: 'Ticket Collector', desc: 'Earn 100 tickets in total', p: function () { return [st.earned, 100]; } },
+    { id: 'tickets_500', cat: 'Tickets', icon: '\uD83D\uDCB0', name: 'Ticket Tycoon', desc: 'Earn 500 tickets in total', p: function () { return [st.earned, 500]; } },
+    { id: 'tickets_1000', cat: 'Tickets', icon: '\uD83D\uDC8E', name: 'Ticket Legend', desc: 'Earn 1,000 tickets in total', p: function () { return [st.earned, 1000]; } },
+    { id: 'window_shop', cat: 'Prizes', icon: '\uD83D\uDC40', name: 'Window Shopper', desc: 'Visit the Prize Counter', p: function () { return [ev('counter'), 1]; } },
+    { id: 'curator', cat: 'Prizes', icon: '\uD83D\uDDBC\uFE0F', name: 'Curator', desc: 'Visit the Achievement Gallery', p: function () { return [ev('gallery'), 1]; } },
+    { id: 'first_prize', cat: 'Prizes', icon: '\uD83C\uDF81', name: 'First Prize', desc: 'Redeem your first prize', p: function () { return [nOwned(), 1]; } },
+    { id: 'plush_3', cat: 'Prizes', icon: '\uD83E\uDDF8', name: 'Plush Pals', desc: 'Own 3 plushies', p: function () { return [nOwned('plush'), 3]; } },
+    { id: 'rat_pack', cat: 'Prizes', icon: '\uD83D\uDC2D', name: 'The Rat Pack', desc: 'Own the Luna, Pi-rat and Snowie plushies', p: function () { return [['pl_luna', 'pl_pirat', 'pl_snowie'].filter(function (k) { return S.owned[k]; }).length, 3]; } },
+    { id: 'plush_all', cat: 'Prizes', icon: '\uD83D\uDECF\uFE0F', name: 'Plush Paradise', desc: 'Collect every plushie', p: function () { return [nOwned('plush'), nPrizes('plush')]; } },
+    { id: 'spend_500', cat: 'Prizes', icon: '\uD83D\uDCB8', name: 'Big Spender', desc: 'Spend 500 tickets at the Prize Counter', p: function () { return [st.spent, 500]; } },
+    { id: 'half_shelf', cat: 'Prizes', icon: '\uD83D\uDDC4\uFE0F', name: 'Half-Full Shelves', desc: 'Own half of all the prizes', p: function () { return [nOwned(), Math.ceil(nPrizes() / 2)]; } },
+    { id: 'golden_joy', cat: 'Prizes', icon: '\uD83D\uDD79\uFE0F', name: 'Golden Gamer', desc: 'Win the legendary Golden Joystick', p: function () { return [S.owned.golden_joy ? 1 : 0, 1]; } },
+    { id: 'collection', cat: 'Prizes', icon: '\uD83D\uDC51', name: 'Completionist', desc: 'Own every single prize', p: function () { return [nOwned(), nPrizes()]; } },
+    { id: 'bonus_zone', cat: 'Arcade', icon: '\uD83D\uDEAA', name: 'Into the Bonus Zone', desc: 'Walk through the door into the Bonus Zone', p: function () { return [ev('bonusZone'), 1]; } },
+    { id: 'all_bonus', cat: 'Arcade', icon: '\uD83C\uDFAE', name: 'Bonus Explorer', desc: 'Play every bonus mini game cabinet', p: function () { return [bonusPlayed(), GA.BONUS_GAMES.length]; } },
+    { id: 'all_main', cat: 'Arcade', icon: '\uD83C\uDF0D', name: 'World Tour', desc: 'Launch every main game from the arcade', p: function () { return [GA.MAIN_GAMES.filter(function (g) { return st.launched[g.id]; }).length, GA.MAIN_GAMES.length]; } },
+    { id: 'rounds_25', cat: 'Arcade', icon: '\u23F1\uFE0F', name: 'Arcade Regular', desc: 'Play 25 bonus game rounds', p: function () { return [st.rounds, 25]; } },
+    { id: 'rounds_100', cat: 'Arcade', icon: '\uD83C\uDFC5', name: 'Arcade Legend', desc: 'Play 100 bonus game rounds', p: function () { return [st.rounds, 100]; } },
+    { id: 'record_10', cat: 'Arcade', icon: '\uD83D\uDCC8', name: 'Record Breaker', desc: 'Beat your own best score 10 times', p: function () { return [st.bests, 10]; } },
+    { id: 'antenna', cat: 'Antenna', icon: '\uD83D\uDCE1', name: 'On the Air', desc: 'Open the Multiplayer Antenna lobby', p: function () { return [ev('antenna'), 1]; } },
+    { id: 'room', cat: 'Antenna', icon: '\uD83E\uDD1D', name: 'Squad Up', desc: 'Host or join a multiplayer room', p: function () { return [ev('room'), 1]; } },
+    { id: 'gary_fix', cat: 'Antenna', icon: '\uD83D\uDD27', name: 'Call IT!', desc: 'Get Gary from IT to fix the antenna', p: function () { return [ev('garyFix'), 1]; } },
+    { id: 'wire_fix', cat: 'Antenna', icon: '\u26A1', name: 'Wire Wizard', desc: 'Fix the antenna wires yourself', p: function () { return [ev('wireFix'), 1]; } },
+    { id: 'zapped', cat: 'Antenna', icon: '\uD83D\uDE35', name: 'Shocking!', desc: 'Cross the wires and get zapped', p: function () { return [ev('zapped'), 1]; } },
+    { id: 'gary_chat', cat: 'Antenna', icon: '\u2615', name: 'Small Talk', desc: 'Chat with Gary when nothing is broken', p: function () { return [ev('garyChat'), 1]; } }
+  ];
+  GA.BONUS_GAMES.forEach(function (g) {
+    var h = HS[g.id]; if (!h) return;
+    A.push({ id: 'hs_' + g.id, cat: 'High Scores', icon: h[3], name: h[1], desc: h[2], game: g.id, p: function () { return [best(g.id), h[0]]; } });
+  });
+  A.push({ id: 'slice_combo', cat: 'High Scores', icon: '\uD83D\uDD2A', name: 'Combo Chef', desc: 'Slice 4 fruits with one swipe in Neon Slice', p: function () { return [ev('sliceCombo'), 4]; } });
+  A.push({ id: 'slice_clean', cat: 'High Scores', icon: '\uD83E\uDDFC', name: 'Clean Cut', desc: 'Score 20 in Neon Slice without dropping a fruit', p: function () { return [ev('sliceClean'), 20]; } });
+  GA.ACHIEVEMENTS = A;
+
+  function prog(a) { var r = a.p(); return { cur: Math.min(r[0] || 0, r[1]), goal: r[1] }; }
+  function check(silent) {
+    var fresh = [];
+    A.forEach(function (a) {
+      if (S.unlocked[a.id]) return;
+      var q = prog(a); if (q.goal > 0 && q.cur >= q.goal) { S.unlocked[a.id] = Date.now(); fresh.push(a.id); }
+    });
+    if (fresh.length) {
+      if (!silent) { S.unseen = S.unseen.concat(fresh); fresh.forEach(function () { }); }
+      save(); if (!silent) pump();
+      if (GA.Hub && GA.Hub.refreshBoards) try { GA.Hub.refreshBoards(); } catch (e) {}
+    }
+    return fresh;
+  }
+
+  /* ---------- events from the arcade ---------- */
+  P.event = function (k, v) {
+    if (v != null) st.ev[k] = Math.max(ev(k), +v || 0); else st.ev[k] = ev(k) + 1;
+    save(); check();
+  };
+  P.onGameOver = function (id, score, isNew) {
+    st.rounds++; st.played[id] = (st.played[id] || 0) + 1; if (isNew && score > 0) st.bests++;
+    save(); check();
+  };
+  P.onLaunch = function (id) { st.launched[id] = 1; save(); check(); };
+
+  /* ---------- unlock toasts (queued; unseen ones survive a page change) ---------- */
+  var toastEl = null, showing = false;
+  function pump() {
+    if (showing || !S.unseen.length || !document.body) return;
+    var id = S.unseen.shift(); save();
+    var a = A.find(function (x) { return x.id === id; }); if (!a) { pump(); return; }
+    if (!toastEl) { toastEl = document.createElement('div'); toastEl.id = 'achToast'; toastEl.setAttribute('role', 'status'); toastEl.setAttribute('aria-live', 'polite'); document.body.appendChild(toastEl); toastEl.addEventListener('click', function () { toastEl.classList.remove('on'); }); }
+    toastEl.innerHTML = '<div class="atIcon"></div><div class="atTxt"><small>ACHIEVEMENT UNLOCKED</small><b></b><span></span></div>';
+    toastEl.querySelector('.atIcon').textContent = a.icon; toastEl.querySelector('b').textContent = a.name; toastEl.querySelector('span').textContent = a.desc;
+    toastEl.setAttribute('data-ach', a.id);
+    showing = true; void toastEl.offsetWidth; toastEl.classList.add('on');
+    try { GA.Audio.play('best'); } catch (e) {}
+    P._lastToast = a.id; P._toasts = (P._toasts || 0) + 1;
+    setTimeout(function () { toastEl.classList.remove('on'); setTimeout(function () { showing = false; pump(); }, 380); }, 3000);
+  }
+
+  /* ---------- public reads (UI + tests) ---------- */
+  P.list = function () { return A.map(function (a) { var q = prog(a); return { id: a.id, cat: a.cat, icon: a.icon, name: a.name, desc: a.desc, cur: q.cur, goal: q.goal, unlocked: !!S.unlocked[a.id], at: S.unlocked[a.id] || 0 }; }); };
+  P.isUnlocked = function (id) { return !!S.unlocked[id]; };
+  P.counts = function () { return { ach: Object.keys(S.unlocked).filter(function (k) { return A.some(function (a) { return a.id === k; }); }).length, achTotal: A.length, prizes: nOwned(), prizeTotal: nPrizes() }; };
+  P.stats = function () { return JSON.parse(JSON.stringify(st)); };
+  P.check = check;
+
+  function init() {
+    var got = check(firstRun);
+    if (firstRun) {
+      save();
+      // wait until the player is in the hub (not on the title screen) before announcing
+      if (got.length) { var tries = 0, iv = setInterval(function () { var hud = document.getElementById('hud'); if (++tries > 240) clearInterval(iv); if (hud && !hud.classList.contains('hidden')) { clearInterval(iv); setTimeout(function () { if (GA.Fix && GA.Fix.toast) GA.Fix.toast('New: Achievements! You already unlocked ' + got.length + '. See them in the Achievement Gallery.', 4500); }, 1200); } }, 500); }
+    }
+    pump();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
