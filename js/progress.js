@@ -94,7 +94,7 @@
       var q = prog(a); if (q.goal > 0 && q.cur >= q.goal) { S.unlocked[a.id] = Date.now(); fresh.push(a.id); }
     });
     if (fresh.length) {
-      if (!silent) { S.unseen = S.unseen.concat(fresh); fresh.forEach(function () { }); }
+      if (!silent) { S.unseen = S.unseen.concat(fresh); }
       save(); if (!silent) pump();
       if (GA.Hub && GA.Hub.refreshBoards) try { GA.Hub.refreshBoards(); } catch (e) {}
     }
