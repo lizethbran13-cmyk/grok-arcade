@@ -457,5 +457,8 @@
   }
   var urls = {};
   function url(id, px, locked) { var k = id + ':' + px + ':' + (locked ? 1 : 0); if (!urls[k]) { try { urls[k] = icon(id, px, locked).toDataURL('image/png'); } catch (e) { urls[k] = ''; } } return urls[k]; }
-  GA.PrizeArt = { icon: icon, url: url, draw: function (g, id) { (DRAW[id] || function () {})(g); }, ids: Object.keys(DRAW) };
+  GA.PrizeArt = { icon: icon, url: url, draw: function (g, id) { (DRAW[id] || function () {})(g); }, ids: Object.keys(DRAW),
+    // extension point (claw machine prizes add their own art)
+    register: function (id, fn) { DRAW[id] = fn; GA.PrizeArt.ids = Object.keys(DRAW); },
+    H: { ball: ball, slab: slab, rr: rr, shadow: shadow, shine: shine, eye: eye, stitch: stitch, star: star, smile: smile, blush: blush, sparkle: sparkle, tag: tag, lt: lt, dk: dk, mix: mix, metal: metal, rgb: rgb } };
 })();

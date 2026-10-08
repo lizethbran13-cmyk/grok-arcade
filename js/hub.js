@@ -21,6 +21,7 @@
   var keys = {}, joy = { id: null, x: 0, y: 0, cx: 0, cy: 0 }, look = { id: null, x: 0, y: 0 }, mouse = { down: false, x: 0, y: 0 };
   var enabled = false, paused = false, titleMode = true, near = null, time = 0, lastT = 0, eTurnBlock = false;
   var ring;
+  var lock = false, camOv = null, camK = 0, camLast = null, tmpV = new T.Vector3(), tmpV2 = new T.Vector3(); // claw machine: locked walking + camera override
 
   /* ---------- helpers ---------- */
   var matCache = {}, geoCache = {};
@@ -30,11 +31,35 @@
   function plane(w, h) { var k = 'p' + w + ',' + h; return geoCache[k] || (geoCache[k] = new T.PlaneGeometry(w, h)); }
   function cyl(rt, rb, h, s) { var k = 'c' + rt + ',' + rb + ',' + h + ',' + s; return geoCache[k] || (geoCache[k] = new T.CylinderGeometry(rt, rb, h, s || 12)); }
   function sph(r, s) { var k = 's' + r + ',' + s; return geoCache[k] || (geoCache[k] = new T.SphereGeometry(r, s || 14, Math.max(6, Math.floor((s || 14) * 0.7)))); }
-  function mesh(geo, mat, x, y, z, parent) { var m = new T.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); (parent || scene).add(m); return m; }
+  function mesh(geo, mat, x, y, z, parent) { var m = new T.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); (parent || curPar || scene).add(m); return m; }
   function mkCanvas(w, h) { var c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
   function canvasTex(c) { var t = new T.CanvasTexture(c); t.anisotropy = 4; t.minFilter = T.LinearMipmapLinearFilter; return t; }
-  function addSolid(minX, maxX, minZ, maxZ) { solids.push({ minX: minX, maxX: maxX, minZ: minZ, maxZ: maxZ }); }
-  function addWall(minX, maxX, minY, maxY, minZ, maxZ) { walls.push({ minX: minX, maxX: maxX, minY: minY, maxY: maxY, minZ: minZ, maxZ: maxZ }); addSolid(minX, maxX, minZ, maxZ); }
+  function addSolid(minX, maxX, minZ, maxZ, name) { solids.push({ minX: minX, maxX: maxX, minZ: minZ, maxZ: maxZ, name: name || (curItem ? curItem.name : 'solid') }); }
+  function addWall(minX, maxX, minY, maxY, minZ, maxZ) { walls.push({ minX: minX, maxX: maxX, minY: minY, maxY: maxY, minZ: minZ, maxZ: maxZ }); addSolid(minX, maxX, minZ, maxZ, 'wall'); }
+  /* ---------- layout audit registry: every prop, cabinet, booth, counter and wall sign is registered with its real 3D bounds,
+     so Hub.audit() can check that nothing clips into anything else, covers a sign, or blocks a walkway / cabinet spot. ---------- */
+  var AUD = [], curPar = null, curItem = null;
+  function noAud(m) { m.userData.noAudit = true; return m; }
+  function boxOf(obj) {
+    obj.updateMatrixWorld(true); var bb = new T.Box3(), tmp = new T.Box3();
+    obj.traverse(function (o) {
+      if (!o.isMesh || !o.geometry) return;
+      for (var q = o; q; q = q.parent) if (q.userData.noAudit) return;
+      if (!o.geometry.boundingBox) o.geometry.computeBoundingBox();
+      tmp.copy(o.geometry.boundingBox).applyMatrix4(o.matrixWorld); bb.union(tmp);
+    });
+    return bb;
+  }
+  function regItem(name, kind, obj, extra) {
+    var b = boxOf(obj); if (b.isEmpty()) return null;
+    var it = { name: name, kind: kind, minX: b.min.x, maxX: b.max.x, minY: b.min.y, maxY: b.max.y, minZ: b.min.z, maxZ: b.max.z, obj: obj };
+    if (kind === 'sign') { var n = new T.Vector3(0, 0, 1).applyQuaternion(obj.getWorldQuaternion(new T.Quaternion())); it.nx = Math.round(n.x); it.nz = Math.round(n.z); }
+    if (extra) for (var k in extra) it[k] = extra[k];
+    AUD.push(it); return it;
+  }
+  function begin(name, kind) { var g = new T.Group(); g.name = name; scene.add(g); curPar = g; curItem = { name: name, kind: kind || 'prop', g: g }; return g; }
+  function end() { var c = curItem; curPar = null; curItem = null; return c ? regItem(c.name, c.kind, c.g) : null; }
+  function wallSign(name, m) { scene.add(m); regItem('sign:' + name, 'sign', m); return m; }
   function font(px, w) { return (w || 'bold') + ' ' + px + 'px "Trebuchet MS", system-ui, sans-serif'; }
   function fitText(ctx, s, maxW, px, w) { ctx.font = font(px, w); while (ctx.measureText(s).width > maxW && px > 10) { px -= 2; ctx.font = font(px, w); } return px; }
   function neonText(ctx, s, x, y, px, col, maxW) {
@@ -131,14 +156,14 @@
   function U_rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
 
   function buildSigns() {
-    var s1 = sign('MAIN GAMES\nLizeth\'s Grok games', 7, 1.5, '#3ff0ff'); s1.position.set(-6, 3.75, ROOM.minZ + 0.03); scene.add(s1);
-    var s2 = sign('BONUS ZONE\nNew mini games - earn tickets!', 7, 1.5, '#ff4fd8'); s2.position.set(ROOM.maxX - 0.03, 3.75, 0); s2.rotation.y = -Math.PI / 2; scene.add(s2);
-    var s3 = sign('BONUS ZONE  >', 4.6, 1.2, '#ff4fd8'); s3.position.set(DIV_X - 0.23, 4.1, 0); s3.rotation.y = -Math.PI / 2; scene.add(s3);
-    var s3b = sign('< MAIN GAMES', 4.6, 1.2, '#3ff0ff'); s3b.position.set(DIV_X + 0.23, 4.1, 0); s3b.rotation.y = Math.PI / 2; scene.add(s3b);
-    var s4 = sign('GROK ARCADE', 7, 1.4, '#ffe14d'); s4.position.set(ROOM.minX + 0.03, 3.4, 0); s4.rotation.y = Math.PI / 2; scene.add(s4);
-    decal('MAIN GAMES', 7, 1.6, '#3ff0ff', -6, -7.2, 0, 'walk up to a cabinet to play');
-    decal('BONUS ZONE', 6.4, 1.5, '#ff4fd8', 11.6, 0, Math.PI / 2, 'mini games - best scores saved');
-    decal('BONUS  >>', 3.2, 1.1, '#ff4fd8', 3.2, 0, 0);
+    var s1 = sign('MAIN GAMES\nLizeth\'s Grok games', 7, 1.5, '#3ff0ff'); s1.position.set(-6, 3.75, ROOM.minZ + 0.03); wallSign('MAIN GAMES', s1);
+    var s2 = sign('BONUS ZONE\nNew mini games - earn tickets!', 7, 1.5, '#ff4fd8'); s2.position.set(ROOM.maxX - 0.03, 3.75, 0); s2.rotation.y = -Math.PI / 2; wallSign('BONUS ZONE', s2);
+    var s3 = sign('BONUS ZONE  >', 4.6, 1.2, '#ff4fd8'); s3.position.set(DIV_X - 0.23, 4.1, 0); s3.rotation.y = -Math.PI / 2; wallSign('BONUS ZONE >', s3);
+    var s3b = sign('< MAIN GAMES', 4.6, 1.2, '#3ff0ff'); s3b.position.set(DIV_X + 0.23, 4.1, 0); s3b.rotation.y = Math.PI / 2; wallSign('< MAIN GAMES', s3b);
+    var s4 = sign('GROK ARCADE', 5.0, 1.0, '#ffe14d'); s4.position.set(ROOM.minX + 0.03, 3.4, 0.7); s4.rotation.y = Math.PI / 2; wallSign('GROK ARCADE', s4);
+    regItem('decal:MAIN GAMES', 'decal', decal('MAIN GAMES', 7, 1.6, '#3ff0ff', -6, -7.2, 0, 'walk up to a cabinet to play'));
+    regItem('decal:BONUS ZONE', 'decal', decal('BONUS ZONE', 6.4, 1.5, '#ff4fd8', 11.6, 0, Math.PI / 2, 'mini games - best scores saved'));
+    regItem('decal:BONUS >>', 'decal', decal('BONUS  >>', 3.2, 1.1, '#ff4fd8', 3.2, 0, 0));
     // center logo rug
     var c = mkCanvas(512, 512), g = c.getContext('2d');
     var grd = g.createRadialGradient(256, 256, 40, 256, 256, 250); grd.addColorStop(0, 'rgba(255,79,216,0.55)'); grd.addColorStop(0.7, 'rgba(63,240,255,0.25)'); grd.addColorStop(1, 'rgba(63,240,255,0)');
@@ -169,20 +194,21 @@
   }
   Hub.refreshBoards = function () { scoreBoardDraw(); ticketDraw(); stockDraw(); galleryDraw(); };
 
-  function plant(x, z, s) {
-    s = s || 1;
+  function plant(x, z, s, name) {
+    s = s || 1; begin(name || ('plant ' + x.toFixed(1) + ',' + z.toFixed(1)), 'plant');
     mesh(cyl(0.38 * s, 0.3 * s, 0.6 * s, 10), lam('#ff7a3d'), x, 0.3 * s, z);
     mesh(cyl(0.4 * s, 0.4 * s, 0.06, 10), basic('#ffe14d'), x, 0.6 * s, z);
     var leaf = lam('#2fd47a'), leaf2 = lam('#1fa860');
     mesh(sph(0.45 * s, 8), leaf, x, 1.0 * s, z); mesh(sph(0.32 * s, 8), leaf2, x + 0.25 * s, 1.35 * s, z + 0.1); mesh(sph(0.3 * s, 8), leaf, x - 0.2 * s, 1.45 * s, z - 0.12);
     addSolid(x - 0.45 * s, x + 0.45 * s, z - 0.45 * s, z + 0.45 * s);
+    end();
   }
 
   /* ---------- prize stock shelves + Achievement Gallery (dynamic canvas textures) ---------- */
   function stockDraw() {
     var d = dynTex.stock; if (!d || !GA.PrizeArt) return; var g = d.ctx, W = d.c.width, H = d.c.height;
     g.clearRect(0, 0, W, H);
-    var left = GA.PRIZES.filter(function (p) { return !(GA.Prog && GA.Prog.owns(p.id)); }).sort(function (a, b) { return b.price - a.price; }).slice(0, 21);
+    var left = GA.PRIZES.filter(function (p) { return !p.claw && !(GA.Prog && GA.Prog.owns(p.id)); }).sort(function (a, b) { return b.price - a.price; }).slice(0, 21);
     var rows = [H, H - 0.8 / 2.13 * H, H - 1.55 / 2.13 * H], sz = 112;
     left.forEach(function (p, i) { var r = Math.floor(i / 7), k = i % 7, x = 30 + k * 140 + (r % 2) * 28; g.drawImage(GA.PrizeArt.icon(p.id, 128), x, rows[r] - sz - 4, sz, sz); });
     if (!left.length) neonText(g, 'SOLD OUT!', W / 2, H / 2, 90, '#ffe14d');
@@ -222,13 +248,13 @@
     mesh(box(GAL.w + 0.3, 0.08, 0.08), cy, 0, 3.6, 0.42, grp); mesh(box(GAL.w + 0.3, 0.08, 0.08), pk, 0, 0.52, 0.48, grp);
     [-1, 1].forEach(function (sd) { mesh(box(0.08, 3.1, 0.08), sd < 0 ? pk : cy, sd * (GAL.w / 2 + 0.15), 2.05, 0.42, grp); });
     var sg = sign('ACHIEVEMENT GALLERY', GAL.w, 0.66, '#3ff0ff', { col2: '#ffe14d' }); sg.position.set(0, 4.05, -0.04); grp.add(sg);
-    var dc = decal('GALLERY', 3.0, 0.95, '#3ff0ff', 0, 0, 0, 'prizes + achievements'); scene.remove(dc); dc.position.set(0, 0.02, 1.9); dc.rotation.z = 0; grp.add(dc);
+    var dc = decal('GALLERY', 3.0, 0.95, '#3ff0ff', 0, 0, 0, 'prizes + achievements'); scene.remove(dc); dc.position.set(0, 0.02, 1.9); dc.rotation.z = 0; grp.add(dc); noAud(dc);
     // two little trophy pedestals
     [-1].forEach(function (sd) { mesh(cyl(0.22, 0.26, 0.9, 10), lam('#4a2a86'), sd * (GAL.w / 2 + 0.55), 0.45, 0.1, grp); mesh(cyl(0.12, 0.06, 0.3, 10), basic('#ffe14d'), sd * (GAL.w / 2 + 0.55), 1.05, 0.1, grp); mesh(sph(0.09, 8), basic('#ffe14d'), sd * (GAL.w / 2 + 0.55), 1.25, 0.1, grp); });
     var gm = new T.MeshBasicMaterial({ map: glowTex, color: '#3ff0ff', transparent: true, opacity: 0.3, depthWrite: false, blending: T.AdditiveBlending });
-    var gl = mesh(plane(3.6, 1.8), gm, 0, 0.025, 1.45, grp); gl.rotation.x = -Math.PI / 2; gl.renderOrder = 2;
-    addSolid(ROOM.minX, GAL.x + 1.05, GAL.z - GAL.w / 2 - 0.2, GAL.z + GAL.w / 2 + 0.85);
-    grp.updateMatrixWorld(true);
+    var gl = mesh(plane(3.6, 1.8), gm, 0, 0.025, 1.45, grp); gl.rotation.x = -Math.PI / 2; gl.renderOrder = 2; noAud(gl);
+    addSolid(ROOM.minX, GAL.x + 1.05, GAL.z - GAL.w / 2 - 0.2, GAL.z + GAL.w / 2 + 0.85, 'Achievement Gallery');
+    grp.updateMatrixWorld(true); regItem('Achievement Gallery', 'booth', grp, { minX: Math.max(ROOM.minX, boxOf(grp).min.x) }); regItem('decal:GALLERY', 'decal', dc);
     cabinets.push({ game: { id: 'gallery', name: 'Achievement Gallery', desc: 'See your prizes and achievements.', color: '#3ff0ff' }, kind: 'gallery', id: 'gallery', group: grp, x: GAL.x + 0.5, z: GAL.z, rot: Math.PI / 2,
       front: new T.Vector3(0, 0, 1.75).applyMatrix4(grp.matrixWorld), dir: new T.Vector3(1, 0, 0), glow: gm, nextDraw: Infinity, r: 2.1 });
   }
@@ -258,11 +284,11 @@
     mesh(cyl(0.08, 0.08, 0.2, 10), lam('#ffe14d'), -0.6, 1.15, 0.15, grp); mesh(cyl(0.015, 0.015, 0.3, 6), basic('#ff3d5a'), -0.62, 1.3, 0.15, grp); mesh(cyl(0.015, 0.015, 0.3, 6), basic('#4ade80'), -0.57, 1.3, 0.12, grp);
     [-1, 1].forEach(function (sd) { mesh(box(0.07, 2.9, 0.07), basic(sd < 0 ? '#ff4fd8' : cy), sd * 0.88, 1.45, 0.38, grp); });
     var sgn = sign('PATCH SUGGESTIONS', 2.6, 0.55, cy, { col2: '#ffe14d' }); sgn.position.set(0, 3.15, -0.1); grp.add(sgn);
-    var dc = decal('SUGGEST', 2.4, 0.8, cy, 0, 0, 0, 'bugs \u00b7 ideas \u00b7 balance'); scene.remove(dc); dc.position.set(0, 0.02, 1.7); dc.rotation.z = 0; grp.add(dc);
+    var dc = decal('SUGGEST', 2.4, 0.8, cy, 0, 0, 0, 'bugs \u00b7 ideas \u00b7 balance'); scene.remove(dc); dc.position.set(0, 0.02, 1.7); dc.rotation.z = 0; grp.add(dc); noAud(dc);
     var gm = new T.MeshBasicMaterial({ map: glowTex, color: cy, transparent: true, opacity: 0.3, depthWrite: false, blending: T.AdditiveBlending });
-    var gl = mesh(plane(2.6, 1.8), gm, 0, 0.025, 1.4, grp); gl.rotation.x = -Math.PI / 2; gl.renderOrder = 2;
-    addSolid(SBX - 0.95, SBX + 0.95, SBZ - 0.5, ROOM.maxZ);
-    grp.updateMatrixWorld(true);
+    var gl = mesh(plane(2.6, 1.8), gm, 0, 0.025, 1.4, grp); gl.rotation.x = -Math.PI / 2; gl.renderOrder = 2; noAud(gl);
+    addSolid(SBX - 0.95, SBX + 0.95, SBZ - 0.5, ROOM.maxZ, 'Suggestion Booth');
+    grp.updateMatrixWorld(true); regItem('Suggestion Booth', 'booth', grp); regItem('decal:SUGGEST', 'decal', dc);
     var last = -1; anims.push(function (t) { var k = Math.floor(t * 8); if (k === last) return; last = k; boothScreen(sg, 192, 144, t); stex.needsUpdate = true; });
     cabinets.push({ game: { id: 'suggest', name: 'Suggestion Booth', desc: 'Suggest patches and check the suggestion board.', color: cy }, kind: 'suggest', id: 'suggest', group: grp, x: SBX, z: SBZ, rot: Math.PI,
       front: new T.Vector3(0, 0, 1.6).applyMatrix4(grp.matrixWorld), dir: new T.Vector3(0, 0, -1), glow: gm, nextDraw: Infinity, r: 2.0 });
@@ -272,31 +298,34 @@
     ensureGlow();
     // Prize counter (south wall, main hall)
     var px = -6, pz = ROOM.maxZ - 1.6;
+    begin('Prize Counter', 'counter');
     mesh(box(6, 1.1, 1), lam('#7c3aed'), px, 0.55, pz);
     mesh(box(6.1, 0.08, 1.1), lam('#c084fc'), px, 1.14, pz);
     mesh(box(6, 0.08, 0.05), basic('#ffe14d'), px, 0.85, pz - 0.52);
     mesh(box(6, 0.08, 0.05), basic('#ff4fd8'), px, 0.3, pz - 0.52);
     addSolid(px - 3.05, px + 3.05, pz - 0.55, ROOM.maxZ);
+    var bell = mesh(cyl(0.12, 0.16, 0.1, 12), basic('#ffe14d'), px + 2.2, 1.23, pz - 0.2); mesh(sph(0.04, 6), basic('#ffffff'), px + 2.2, 1.32, pz - 0.2);
+    end();
     // shelves of plushies behind the counter
+    begin('Prize Shelves', 'counter');
     mesh(box(6.4, 2.4, 0.5), lam('#2b1a55'), px, 1.2, ROOM.maxZ - 0.25);
     [0.75, 1.55, 2.3].forEach(function (y) { mesh(box(6.4, 0.06, 0.55), basic('#3ff0ff'), px, y - 0.32, ROOM.maxZ - 0.3); });
-    var cols = ['#ff4fd8', '#3ff0ff', '#ffe14d', '#4ade80', '#fb923c', '#a78bfa', '#f8fafc'];
     // the prizes still in stock stand on the shelves (redeemed ones move to the Achievement Gallery)
     var skc = mkCanvas(1024, 352); dynTex.stock = { c: skc, ctx: skc.getContext('2d'), tex: canvasTex(skc) };
     var skm = mesh(plane(6.2, 2.13), new T.MeshBasicMaterial({ map: dynTex.stock.tex, transparent: true, depthWrite: false }), px, 0.43 + 2.13 / 2, ROOM.maxZ - 0.36); skm.rotation.y = Math.PI; skm.renderOrder = 2;
+    end();
     stockDraw();
     // the counter itself is interactive: walk up to it to redeem tickets
     var pg = new T.Group(); pg.position.set(px, 0, pz); pg.rotation.y = Math.PI; scene.add(pg);
     var pgm = new T.MeshBasicMaterial({ map: glowTex, color: '#ffe14d', transparent: true, opacity: 0.3, depthWrite: false, blending: T.AdditiveBlending });
     var pgl = mesh(plane(3.4, 1.8), pgm, 0, 0.025, 1.45, pg); pgl.rotation.x = -Math.PI / 2; pgl.renderOrder = 2;
-    var bell = mesh(cyl(0.12, 0.16, 0.1, 12), basic('#ffe14d'), px + 2.2, 1.23, pz - 0.2); mesh(sph(0.04, 6), basic('#ffffff'), px + 2.2, 1.32, pz - 0.2);
-    decal('PRIZES', 3.2, 1.0, '#ffe14d', px, pz - 1.75, Math.PI, 'redeem tickets here');
+    regItem('decal:PRIZES', 'decal', decal('PRIZES', 3.2, 1.0, '#ffe14d', px, pz - 1.75, Math.PI, 'redeem tickets here'));
     pg.updateMatrixWorld(true);
     cabinets.push({ game: { id: 'prizes', name: 'Prize Counter', desc: 'Redeem your tickets for prizes.', color: '#ffe14d' }, kind: 'prize', id: 'prizes', group: pg, x: px, z: pz, rot: Math.PI,
       front: new T.Vector3(0, 0, 1.75).applyMatrix4(pg.matrixWorld), dir: new T.Vector3(0, 0, -1), glow: pgm, nextDraw: Infinity, r: 2.0 });
     // ticket display sign (dynamic)
     var c = mkCanvas(1024, 300); dynTex.tickets = { c: c, ctx: c.getContext('2d'), tex: canvasTex(c) };
-    var ts = mesh(plane(5, 1.46), new T.MeshBasicMaterial({ map: dynTex.tickets.tex }), px, 3.35, ROOM.maxZ - 0.03); ts.rotation.y = Math.PI;
+    var ts = new T.Mesh(plane(5, 1.46), new T.MeshBasicMaterial({ map: dynTex.tickets.tex })); ts.position.set(px, 3.35, ROOM.maxZ - 0.03); ts.rotation.y = Math.PI; wallSign('PRIZE COUNTER tickets', ts);
     ticketDraw();
 
     buildGallery();
@@ -304,58 +333,59 @@
 
     // Best scores board in the bonus zone (north wall)
     var c2 = mkCanvas(768, 520); dynTex.scores = { c: c2, ctx: c2.getContext('2d'), tex: canvasTex(c2) };
-    var sb = mesh(plane(4.4, 3), new T.MeshBasicMaterial({ map: dynTex.scores.tex }), 11.6, 2.4, ROOM.minZ + 0.03);
+    var sb = new T.Mesh(plane(4.4, 3), new T.MeshBasicMaterial({ map: dynTex.scores.tex })); sb.position.set(11.6, 2.4, ROOM.minZ + 0.03); wallSign('BEST SCORES board', sb);
     scoreBoardDraw();
     // a ticket machine next to scoreboard
     var tmx = 8.0, tmz = ROOM.minZ + 0.6;
+    begin('Ticket Machine', 'prop');
     mesh(box(1.0, 1.8, 0.8), lam('#ff4fd8'), tmx, 0.9, tmz); mesh(plane(0.7, 0.5), basic('#ffe14d'), tmx, 1.3, tmz + 0.41);
     mesh(box(0.8, 0.12, 0.1), basic('#3ff0ff'), tmx, 0.7, tmz + 0.42);
     addSolid(tmx - 0.55, tmx + 0.55, ROOM.minZ, tmz + 0.45);
+    end();
 
-    // claw machine (main hall, near prize counter)
-    var cx = 1.8, cz = ROOM.maxZ - 1.4;
-    mesh(box(1.5, 1.0, 1.5), lam('#0ea5e9'), cx, 0.5, cz);
-    var glass = new T.MeshBasicMaterial({ color: '#9ff7ff', transparent: true, opacity: 0.18, depthWrite: false });
-    mesh(box(1.4, 1.3, 1.4), glass, cx, 1.65, cz);
-    mesh(box(1.5, 0.35, 1.5), lam('#ff4fd8'), cx, 2.47, cz);
-    for (var k = 0; k < 6; k++) mesh(sph(0.18, 8), lam(cols[k]), cx - 0.4 + (k % 3) * 0.4, 1.15, cz - 0.3 + Math.floor(k / 3) * 0.5);
-    var claw = mesh(cyl(0.03, 0.03, 0.6, 6), basic('#e5e7eb'), cx, 2.0, cz); var clawHead = mesh(sph(0.1, 8), basic('#ffe14d'), cx, 1.7, cz);
-    anims.push(function (t) { var ox = Math.sin(t * 0.7) * 0.4, oz = Math.cos(t * 0.5) * 0.4; claw.position.set(cx + ox, 2.0, cz + oz); clawHead.position.set(cx + ox, 1.7 + Math.sin(t * 1.3) * 0.1, cz + oz); });
-    var cs = sign('CLAW', 1.4, 0.34, '#ffe14d'); cs.position.set(cx, 2.47, cz - 0.76); cs.rotation.y = Math.PI; scene.add(cs);
-    addSolid(cx - 0.8, cx + 0.8, cz - 0.8, cz + 0.8);
+    // two real, playable claw machines (Easy + Tricky) by the prize counter (they replace the old decorative claw)
+    if (GA.Claw && GA.Claw.build) {
+      try { GA.Claw.build(api()); } catch (e) { if (window.console) console.warn('claw machines failed to build', e); }
+    }
 
     // comfy couch on the west wall
     var sx = ROOM.minX + 0.7, sz = 4;
+    begin('Couch', 'prop');
     mesh(box(1.0, 0.5, 3.2), lam('#db2777'), sx, 0.25, sz); mesh(box(0.35, 1.1, 3.2), lam('#be185d'), sx - 0.4, 0.55, sz);
     mesh(box(1.0, 0.75, 0.3), lam('#be185d'), sx, 0.38, sz - 1.6); mesh(box(1.0, 0.75, 0.3), lam('#be185d'), sx, 0.38, sz + 1.6);
     mesh(box(0.25, 0.4, 0.6), lam('#3ff0ff'), sx, 0.68, sz - 0.6); mesh(box(0.25, 0.4, 0.6), lam('#ffe14d'), sx, 0.68, sz + 0.7);
     addSolid(ROOM.minX, sx + 0.55, sz - 1.8, sz + 1.8);
+    end();
 
-    // plants
-    plant(ROOM.minX + 0.8, ROOM.minZ + 0.8, 1.1); plant(ROOM.minX + 0.8, ROOM.maxZ - 0.8, 1.1);
-    plant(DIV_X - 0.9, ROOM.maxZ - 0.8, 1); plant(DIV_X + 0.9, ROOM.maxZ - 0.8, 1); plant(ROOM.maxX - 2.4, ROOM.maxZ - 0.7, 1.0);
-    plant(DIV_X - 0.9, -DOOR - 0.7, 0.8); plant(DIV_X - 0.9, DOOR + 0.7, 0.8);
+    // plants (placed so none clip into a cabinet, booth or sign: the old NW one went through the Grok Sky cabinet,
+    // and the old bonus-zone one stood in front of the Official Arcade Rats poster)
+    plant(ROOM.minX + 0.8, 6.75, 1.0, 'plant W wall'); plant(ROOM.minX + 0.8, ROOM.maxZ - 0.8, 1.1, 'plant SW corner');
+    plant(DIV_X - 0.9, ROOM.maxZ - 0.8, 1, 'plant S door-main'); plant(DIV_X + 0.9, ROOM.maxZ - 0.8, 1, 'plant S door-bonus'); plant(11.5, ROOM.maxZ - 0.75, 1.0, 'plant bonus S wall');
+    plant(DIV_X - 0.9, -DOOR - 0.7, 0.8, 'plant door N'); plant(DIV_X - 0.9, DOOR + 0.7, 0.8, 'plant door S');
 
     // bonus-zone stools / bean bags
     [[10.5, 6.5, '#3ff0ff'], [12, 7.5, '#ffe14d'], [10.2, -6.5, '#a78bfa']].forEach(function (b) {
+      begin('bean bag ' + b[0] + ',' + b[1], 'prop');
       var m = mesh(sph(0.55, 12), lam(b[2]), b[0], 0.35, b[1]); m.scale.set(1, 0.65, 1); addSolid(b[0] - 0.5, b[0] + 0.5, b[1] - 0.5, b[1] + 0.5);
+      end();
     });
 
-    // floating neon shapes (cheap animated decor)
+    // floating neon shapes (cheap animated decor, up near the ceiling)
     var tor = mesh(new T.TorusGeometry(0.7, 0.08, 8, 32), basic('#ff4fd8'), -14.5, 3.4, 8.5);
     var oct = mesh(new T.OctahedronGeometry(0.45), basic('#3ff0ff'), -14.5, 3.4, 8.5);
     var star = mesh(new T.IcosahedronGeometry(0.35), basic('#ffe14d'), 12, 3.6, 0);
     anims.push(function (t) { tor.rotation.y = t * 0.8; tor.rotation.x = Math.sin(t * 0.5) * 0.4; oct.rotation.y = -t * 1.2; oct.position.y = 3.4 + Math.sin(t * 1.5) * 0.12; star.rotation.y = t; star.rotation.x = t * 0.6; star.position.y = 3.6 + Math.sin(t * 2) * 0.15; });
 
     // wall posters
-    var p1 = sign('INSERT FUN', 2.4, 0.8, '#4ade80'); p1.position.set(ROOM.minX + 0.03, 1.85, 0); p1.rotation.y = Math.PI / 2; scene.add(p1);
-    var p2 = sign('HIGH SCORE\nLIZETH', 2.2, 1.0, '#fb923c'); p2.position.set(ROOM.minX + 0.03, 2.2, 8.6); p2.rotation.y = Math.PI / 2; scene.add(p2);
-    var p3 = sign('LUNA  PI-RAT  SNOWIE\nofficial arcade rats', 3.4, 1.0, '#ff8fd0'); p3.position.set(15, 2.4, ROOM.maxZ - 0.03); p3.rotation.y = Math.PI; scene.add(p3);
+    var p1 = sign('INSERT FUN', 2.4, 0.8, '#4ade80'); p1.position.set(ROOM.minX + 0.03, 1.85, 0); p1.rotation.y = Math.PI / 2; wallSign('INSERT FUN poster', p1);
+    var p2 = sign('HIGH SCORE\nLIZETH', 2.2, 1.0, '#fb923c'); p2.position.set(ROOM.minX + 0.03, 2.2, 8.6); p2.rotation.y = Math.PI / 2; wallSign('HIGH SCORE poster', p2);
+    // the Official Arcade Rats sign + portrait (bonus zone, south wall; kept clear of the last bonus cabinet and the plant)
+    var RX = 14.4;
+    var p3 = sign('LUNA  PI-RAT  SNOWIE\nofficial arcade rats', 3.4, 1.0, '#ff8fd0'); p3.position.set(RX, 2.6, ROOM.maxZ - 0.03); p3.rotation.y = Math.PI; wallSign('Official Arcade Rats sign', p3);
     // little rat portrait poster
     var rc = mkCanvas(512, 256), rg = rc.getContext('2d'); rg.fillStyle = '#2a1150'; rg.fillRect(0, 0, 512, 256); rg.strokeStyle = '#ff8fd0'; rg.lineWidth = 10; rg.strokeRect(5, 5, 502, 246);
     if (GA.drawRat) { GA.drawRat(rg, 'luna', 100, 120, 130, false); GA.drawRat(rg, 'pirat', 256, 120, 130, false); GA.drawRat(rg, 'snowie', 412, 120, 130, false); }
-    var rp = mesh(plane(3.2, 1.6), new T.MeshBasicMaterial({ map: canvasTex(rc) }), 15, 1.0 + 0.3, ROOM.maxZ - 0.03); rp.rotation.y = Math.PI; rp.position.y = 1.2;
-    p3.position.y = 2.6;
+    var rp = new T.Mesh(plane(3.2, 1.6), new T.MeshBasicMaterial({ map: canvasTex(rc) })); rp.position.set(RX, 1.2, ROOM.maxZ - 0.03); rp.rotation.y = Math.PI; wallSign('Arcade Rats portrait', rp);
   }
 
   /* ---------- attract-mode screens ---------- */
@@ -673,13 +703,14 @@
     mesh(box(1.1, 0.06, 0.02), basic(col), 0, 0.35, 0.775, grp);
     // floor glow
     var gm = new T.MeshBasicMaterial({ map: glowTex, color: col, transparent: true, opacity: 0.35, depthWrite: false, blending: T.AdditiveBlending });
-    var glow = mesh(plane(2.0, 1.8), gm, 0, 0.025, 1.45, grp); glow.rotation.x = -Math.PI / 2; glow.renderOrder = 2;
+    var glow = mesh(plane(2.0, 1.8), gm, 0, 0.025, 1.45, grp); glow.rotation.x = -Math.PI / 2; glow.renderOrder = 2; noAud(glow);
 
     grp.updateMatrixWorld(true);
     // collider from rotated local bounds
     var pts = [[-0.72, -0.52], [0.72, -0.52], [-0.72, 0.95], [0.72, 0.95]].map(function (p) { return new T.Vector3(p[0], 0, p[1]).applyMatrix4(grp.matrixWorld); });
     addSolid(Math.min.apply(null, pts.map(function (p) { return p.x; })), Math.max.apply(null, pts.map(function (p) { return p.x; })),
-      Math.min.apply(null, pts.map(function (p) { return p.z; })), Math.max.apply(null, pts.map(function (p) { return p.z; })));
+      Math.min.apply(null, pts.map(function (p) { return p.z; })), Math.max.apply(null, pts.map(function (p) { return p.z; })), 'cabinet ' + game.name);
+    regItem('cabinet ' + game.name, 'cabinet', grp);
     var front = new T.Vector3(0, 0, 1.75).applyMatrix4(grp.matrixWorld);
     var dir = new T.Vector3(Math.sin(rot), 0, Math.cos(rot));
     var cab = { game: game, kind: kind, id: game.id, group: grp, x: x, z: z, rot: rot, front: front, dir: dir, sctx: sg, stex: stex, glow: gm, nextDraw: 0, w: 192, h: 144 };
@@ -740,9 +771,9 @@
     sg.position.set(0, 1.55, 0.68); grp.add(sg);
     var sgb = sg.clone(); sgb.rotation.y = Math.PI; sgb.position.z = 0.66; grp.add(sgb);
     mesh(box(0.06, 0.9, 0.06), lam('#c7b8ff'), -1.2, 0.9, 0.67, grp); mesh(box(0.06, 0.9, 0.06), lam('#c7b8ff'), 1.2, 0.9, 0.67, grp);
-    var dec = decal('ONLINE', 2.6, 0.9, cyan, 0, 0, 0, '2-3 players \u00b7 own phones'); scene.remove(dec); dec.position.set(0, 0.02, 1.75); grp.add(dec);
+    var dec = decal('ONLINE', 2.6, 0.9, cyan, 0, 0, 0, '2-3 players \u00b7 own phones'); scene.remove(dec); dec.position.set(0, 0.02, 1.75); grp.add(dec); noAud(dec);
     var gm = new T.MeshBasicMaterial({ map: glowTex, color: cyan, transparent: true, opacity: 0.35, depthWrite: false, blending: T.AdditiveBlending });
-    var glow = mesh(plane(3.6, 3.6), gm, 0, 0.03, 0, grp); glow.rotation.x = -Math.PI / 2; glow.renderOrder = 2;
+    var glow = mesh(plane(3.6, 3.6), gm, 0, 0.03, 0, grp); glow.rotation.x = -Math.PI / 2; glow.renderOrder = 2; noAud(glow);
     ANT.p = { grp: grp, orb: orb, halo: halo, rings: rings, blinks: blinks, dish: dish, lat: lat, lat2: lat2 };
     buildBrokenFx(grp);
     anims.push(function (t) {
@@ -752,11 +783,11 @@
       rings.forEach(function (r, k) { var ph = (t * 0.55 + k / 3) % 1; r.scale.setScalar(1 + ph * 6); r.material.opacity = 0.85 * (1 - ph); });
       blinks.forEach(function (b, k) { b.visible = Math.sin(t * 6 + k * 1.7) > -0.2; });
     });
-    addSolid(ANT.x - 1.0, ANT.x + 1.0, ANT.z - 1.0, ANT.z + 1.0);
-    grp.updateMatrixWorld(true);
+    addSolid(ANT.x - 1.0, ANT.x + 1.0, ANT.z - 1.0, ANT.z + 1.0, 'Multiplayer Antenna');
+    grp.updateMatrixWorld(true); regItem('Multiplayer Antenna', 'booth', grp); regItem('decal:ONLINE', 'decal', dec);
     var dir = new T.Vector3(Math.sin(grp.rotation.y), 0, Math.cos(grp.rotation.y));
     var cab = { game: { id: 'mp', name: 'Multiplayer Antenna', desc: 'Host or join a room and play with friends on their own phones (2-3 players).', color: cyan },
-      kind: 'mp', id: 'mp', group: grp, x: ANT.x, z: ANT.z, rot: grp.rotation.y, front: { x: ANT.x, z: ANT.z }, dir: dir, glow: gm, nextDraw: Infinity, r: 2.25 };
+      kind: 'mp', id: 'mp', group: grp, x: ANT.x, z: ANT.z, rot: grp.rotation.y, front: { x: ANT.x, z: ANT.z }, dir: dir, glow: gm, nextDraw: Infinity, r: 2.25, noStand: true };
     cabinets.push(cab);
   }
 
@@ -777,7 +808,7 @@
     mesh(box(0.5, 0.07, 0.01), basic('#e5e7eb'), -0.75, 2.12, 0.75, bx).rotation.z = 0.5;
     mesh(box(0.5, 0.07, 0.01), basic('#e5e7eb'), 1.0, 2.0, 0.75, bx).rotation.z = -0.6;
     var sm = new T.MeshBasicMaterial({ color: '#fff3a0' });
-    for (var i = 0; i < 40; i++) { var sp = mesh(box(0.05, 0.05, 0.05), sm, 0, -10, 0, grp); sp.userData.keepLit = true; sparks.push({ m: sp, life: 0, vx: 0, vy: 0, vz: 0 }); }
+    for (var i = 0; i < 40; i++) { var sp = mesh(box(0.05, 0.05, 0.05), sm, 0, -10, 0, grp); sp.userData.keepLit = true; noAud(sp); sparks.push({ m: sp, life: 0, vx: 0, vy: 0, vz: 0 }); }
     var scv = mkCanvas(64, 64), sg = scv.getContext('2d'), grd = sg.createRadialGradient(32, 32, 2, 32, 32, 30);
     grd.addColorStop(0, 'rgba(90,90,100,0.9)'); grd.addColorStop(1, 'rgba(90,90,100,0)'); sg.fillStyle = grd; sg.fillRect(0, 0, 64, 64);
     var stex = canvasTex(scv);
@@ -845,9 +876,9 @@
     var mb = mesh(plane(0.6, 0.38), new T.MeshBasicMaterial({ map: canvasTex(mon) }), 0, 1.12, -0.13, monG); mb.rotation.y = Math.PI;
     mesh(box(0.5, 0.03, 0.18), lam('#222'), 0.3, 0.83, 0.12, dg);
     mesh(box(0.25, 0.32, 0.25), lam('#9ca3af'), -0.62, 0.98, -0.1, dg);
-    var sgn = sign('IT HELP DESK\nAsk Gary!', 2.6, 0.8, '#4ade80'); sgn.position.set(-1.0, 2.9, ROOM.maxZ - 0.03); sgn.rotation.y = Math.PI; scene.add(sgn);
-    addSolid(-1.9, -0.1, 10.2, ROOM.maxZ);
-    dg.updateMatrixWorld(true);
+    var sgn = sign('IT HELP DESK\nAsk Gary!', 2.6, 0.8, '#4ade80'); sgn.position.set(-1.0, 2.9, ROOM.maxZ - 0.03); sgn.rotation.y = Math.PI; wallSign('IT HELP DESK', sgn);
+    addSolid(-1.9, -0.1, 10.2, ROOM.maxZ, 'IT Help Desk');
+    dg.updateMatrixWorld(true); regItem('IT Help Desk', 'booth', dg);
     // Gary himself
     var root = GARY.root = new T.Group(); scene.add(root);
     var body = new T.Group(); root.add(body); GARY.body = body;
@@ -895,7 +926,7 @@
     // emergency light over the help desk (only during a power cut)
     GARY.emerg = new T.PointLight('#ff3b3b', 0, 9); GARY.emerg.position.set(-1.0, 3.6, 10.2); scene.add(GARY.emerg);
     var gm = new T.MeshBasicMaterial({ map: glowTex, color: '#4ade80', transparent: true, opacity: 0.3, depthWrite: false, blending: T.AdditiveBlending });
-    var glow = mesh(plane(2.2, 1.8), gm, 0, 0.025, 1.45, dg); glow.rotation.x = -Math.PI / 2; glow.renderOrder = 2;
+    var glow = mesh(plane(2.2, 1.8), gm, 0, 0.025, 1.45, dg); glow.rotation.x = -Math.PI / 2; glow.renderOrder = 2; noAud(glow);
     var front = new T.Vector3(0, 0, 1.75).applyMatrix4(dg.matrixWorld);
     GARY.cab = { game: { id: 'gary', name: 'Gary from IT', desc: 'Your friendly IT Manager.', color: '#4ade80' }, kind: 'npc', id: 'gary', group: dg, x: -1.0, z: 10.6, rot: Math.PI, front: front, dir: new T.Vector3(0, 0, -1), glow: gm, nextDraw: Infinity, r: 1.9 };
     cabinets.push(GARY.cab);
@@ -1112,7 +1143,7 @@
   /* ---------- input ---------- */
   function setupInput() {
     window.addEventListener('keydown', function (e) {
-      if (!enabled || paused) return;
+      if (!enabled || paused || lock) return;
       var k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
       if (GA.UI && GA.UI.menuOpen()) return;
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].indexOf(k) >= 0) e.preventDefault();
@@ -1126,7 +1157,7 @@
     function resetJoy() { joy.x = joy.y = 0; if (joyEl) { joyEl.style.left = ''; joyEl.style.top = ''; joyEl.style.bottom = ''; } if (knob) knob.style.transform = ''; }
     Hub._resetJoy = resetJoy;
     canvas.addEventListener('pointerdown', function (e) {
-      if (!enabled || paused) return;
+      if (!enabled || paused || lock) return;
       if (e.pointerType === 'touch' || e.pointerType === 'pen') {
         if (!document.body.classList.contains('touch')) document.body.classList.add('touch');
         e.preventDefault();
@@ -1167,7 +1198,7 @@
   function update(dt) {
     time += dt;
     var mx = 0, my = 0;
-    if (enabled && !paused && !(GA.UI && GA.UI.menuOpen())) {
+    if (enabled && !paused && !lock && !(GA.UI && GA.UI.menuOpen())) {
       if (keys.w || keys.ArrowUp) my += 1; if (keys.s || keys.ArrowDown) my -= 1;
       if (keys.a || keys.ArrowLeft) mx -= 1; if (keys.d || keys.ArrowRight) mx += 1;
       if (keys.q) C.yaw += 2.2 * dt; if (keys.e && !eTurnBlock) C.yaw -= 2.2 * dt;
@@ -1198,11 +1229,11 @@
 
     // nearest cabinet
     var best = null, bd = 1e9;
-    if (enabled) cabinets.forEach(function (c) {
+    if (enabled && !lock) cabinets.forEach(function (c) {
       var dx = P.x - c.front.x, dz = P.z - c.front.z, d = Math.hypot(dx, dz);
       if (!c.disabled && d < (c.r || 1.45) && d < bd) { bd = d; best = c; }
     });
-    if (best !== near) { near = best; if (Hub.onNear) Hub.onNear(near); }
+    if (!lock && best !== near) { near = best; if (Hub.onNear) Hub.onNear(near); }
     cabinets.forEach(function (c) { var o = c === near ? 0.8 + Math.sin(time * 6) * 0.2 : 0.3; c.glow.opacity += (o - c.glow.opacity) * Math.min(1, dt * 8); });
 
     // camera
@@ -1220,6 +1251,16 @@
     C.cur += (want - C.cur) * Math.min(1, dt * (want < C.cur ? 20 : 4));
     camera.position.set(tx + bx * C.cur, ty + by * C.cur, tz + bz * C.cur);
     camera.lookAt(tx, ty + 0.25 - 0.3 * C.nb, tz);
+    // claw machine close-up: blend smoothly into / out of the machine's camera
+    if (camOv || camK > 0) {
+      if (camOv) { var ca = camOv(); if (ca) camLast = ca; }
+      camK += ((camOv ? 1 : 0) - camK) * Math.min(1, dt * 5); if (!camOv && camK < 0.01) camK = 0;
+      if (camLast && camK > 0) {
+        var k2 = camK * camK * (3 - 2 * camK);
+        tmpV.set(tx, ty + 0.25 - 0.3 * C.nb, tz);
+        camera.position.lerp(tmpV2.set(camLast[0], camLast[1], camLast[2]), k2); tmpV.lerp(tmpV2.set(camLast[3], camLast[4], camLast[5]), k2); camera.lookAt(tmpV);
+      }
+    }
     if (Hub._cam) { camera.position.set(Hub._cam[0], Hub._cam[1], Hub._cam[2]); camera.lookAt(Hub._cam[3], Hub._cam[4], Hub._cam[5]); }
     if (shakeT > 0) { shakeT -= dt; camera.position.x += (Math.random() - 0.5) * shakeT * 0.6; camera.position.y += (Math.random() - 0.5) * shakeT * 0.6; }
 
@@ -1259,6 +1300,58 @@
     camera.updateProjectionMatrix();
   }
 
+  /* ---------- extension API (claw machines build into the hub with the same helpers) ---------- */
+  function api() { return { T: T, scene: scene, mesh: mesh, box: box, cyl: cyl, sph: sph, plane: plane, lam: lam, basic: basic, sign: sign, decal: decal, mkCanvas: mkCanvas, canvasTex: canvasTex, neonText: neonText, font: font,
+    addSolid: addSolid, regItem: regItem, begin: begin, end: end, noAud: noAud, wallSign: wallSign, cabinets: cabinets, anims: anims, glowTex: glowTex, ROOM: ROOM, DIV_X: DIV_X, camera: function () { return camera; } }; }
+
+  /* ---------- layout audit ---------- */
+  Hub.audit = function () {
+    var EPS = 0.02, out = { items: AUD.length, overlaps: [], covered: [], decals: [], solidOverlaps: [], blockedSpots: [], unreachable: [], outside: [] };
+    function ov(a, b, pad) { pad = pad == null ? EPS : pad; return Math.min(a.maxX, b.maxX) - Math.max(a.minX, b.minX) > pad && Math.min(a.maxY, b.maxY) - Math.max(a.minY, b.minY) > pad && Math.min(a.maxZ, b.maxZ) - Math.max(a.minZ, b.minZ) > pad; }
+    function ov2(a, b, pad) { pad = pad == null ? EPS : pad; return Math.min(a.maxX, b.maxX) - Math.max(a.minX, b.minX) > pad && Math.min(a.maxZ, b.maxZ) - Math.max(a.minZ, b.minZ) > pad; }
+    var phys = AUD.filter(function (k) { return k.kind !== 'sign' && k.kind !== 'decal'; });
+    var signs = AUD.filter(function (k) { return k.kind === 'sign'; }), decals = AUD.filter(function (k) { return k.kind === 'decal'; });
+    var th = 0.4, H = ROOM.h;
+    var wallsA = [ { name: 'divider wall N', minX: DIV_X - th / 2, maxX: DIV_X + th / 2, minY: 0, maxY: H, minZ: ROOM.minZ, maxZ: -DOOR },
+      { name: 'divider wall S', minX: DIV_X - th / 2, maxX: DIV_X + th / 2, minY: 0, maxY: H, minZ: DOOR, maxZ: ROOM.maxZ },
+      { name: 'doorway lintel', minX: DIV_X - th / 2, maxX: DIV_X + th / 2, minY: 3.3, maxY: H, minZ: -DOOR, maxZ: DOOR } ];
+    // 1) physical things clipping into each other or into the divider wall
+    for (var i = 0; i < phys.length; i++) {
+      for (var j = i + 1; j < phys.length; j++) if (ov(phys[i], phys[j])) out.overlaps.push([phys[i].name, phys[j].name]);
+      wallsA.forEach(function (w) { if (ov(phys[i], w)) out.overlaps.push([phys[i].name, w.name]); });
+      var p0 = phys[i]; if (p0.minX < ROOM.minX - EPS || p0.maxX > ROOM.maxX + EPS || p0.minZ < ROOM.minZ - EPS || p0.maxZ > ROOM.maxZ + EPS || p0.maxY > ROOM.h) out.outside.push(p0.name);
+    }
+    // 2) wall signs / posters: overlapping each other, or something standing in front of them (within 1.2 m of the wall)
+    signs.forEach(function (sg, k) {
+      var a = { minX: sg.minX - 0.05, maxX: sg.maxX + 0.05, minY: sg.minY, maxY: sg.maxY, minZ: sg.minZ - 0.05, maxZ: sg.maxZ + 0.05 };
+      for (var m = k + 1; m < signs.length; m++) { var b = signs[m], bb = { minX: b.minX - 0.05, maxX: b.maxX + 0.05, minY: b.minY, maxY: b.maxY, minZ: b.minZ - 0.05, maxZ: b.maxZ + 0.05 }; if (ov(a, bb)) out.overlaps.push([sg.name, b.name]); }
+      var ex = { minX: a.minX, maxX: a.maxX, minY: a.minY, maxY: a.maxY, minZ: a.minZ, maxZ: a.maxZ }, D = 1.2;
+      if (sg.nx > 0) ex.maxX += D; else if (sg.nx < 0) ex.minX -= D; if (sg.nz > 0) ex.maxZ += D; else if (sg.nz < 0) ex.minZ -= D;
+      phys.forEach(function (p) { if (ov(ex, p)) out.covered.push([sg.name, p.name]); });
+    });
+    // 3) floor decals hidden under props
+    decals.forEach(function (d) { phys.forEach(function (p) { if (p.minY < 0.15 && ov2(d, p, 0.05)) out.decals.push([d.name, p.name]); }); });
+    // 4) collision boxes overlapping (two things claiming the same floor)
+    var sol = solids.filter(function (b) { return b.name !== 'wall'; });
+    for (i = 0; i < sol.length; i++) for (j = i + 1; j < sol.length; j++) if (sol[i].name !== sol[j].name && ov2(sol[i], sol[j], 0.01)) out.solidOverlaps.push([sol[i].name, sol[j].name]);
+    // 5) walkways: flood-fill the floor from the entrance; every cabinet / booth / counter spot must be reachable
+    var G = 0.1, nx = Math.round((ROOM.maxX - ROOM.minX) / G) + 1, nz = Math.round((ROOM.maxZ - ROOM.minZ) / G) + 1, free = new Uint8Array(nx * nz), seen = new Uint8Array(nx * nz);
+    function clear(x, z) { for (var q = 0; q < solids.length; q++) { var b = solids[q], cx = Math.max(b.minX, Math.min(x, b.maxX)), cz = Math.max(b.minZ, Math.min(z, b.maxZ)); if ((x - cx) * (x - cx) + (z - cz) * (z - cz) < (PR - 0.01) * (PR - 0.01)) return false; } return true; }
+    for (var a = 0; a < nx; a++) for (var b2 = 0; b2 < nz; b2++) free[a * nz + b2] = clear(ROOM.minX + a * G, ROOM.minZ + b2 * G) ? 1 : 0;
+    var si = Math.round((SPAWN.x - ROOM.minX) / G), sk = Math.round((SPAWN.z - ROOM.minZ) / G), qu = [si * nz + sk]; seen[qu[0]] = 1;
+    while (qu.length) { var c = qu.pop(), ci = Math.floor(c / nz), ck = c % nz; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) { var ni = ci + d[0], nk = ck + d[1]; if (ni < 0 || nk < 0 || ni >= nx || nk >= nz) return; var id = ni * nz + nk; if (!seen[id] && free[id]) { seen[id] = 1; qu.push(id); } }); }
+    var reach = 0; for (a = 0; a < seen.length; a++) reach += seen[a]; out.reachableCells = reach;
+    cabinets.forEach(function (cb) {
+      var f = cb.front, r = cb.r || 1.45, okSpot = false, i0 = Math.round((f.x - ROOM.minX) / G), k0 = Math.round((f.z - ROOM.minZ) / G), rr = Math.ceil(r / G);
+      for (var di = -rr; di <= rr && !okSpot; di++) for (var dk = -rr; dk <= rr && !okSpot; dk++) { var ii = i0 + di, kk = k0 + dk; if (ii < 0 || kk < 0 || ii >= nx || kk >= nz) continue; if (Math.hypot(di * G, dk * G) < r - 0.1 && seen[ii * nz + kk]) okSpot = true; }
+      if (!okSpot) out.unreachable.push(cb.id);
+      if (!clear(f.x, f.z) && !cb.noStand) out.blockedSpots.push(cb.id);
+    });
+    out.ok = !out.overlaps.length && !out.covered.length && !out.decals.length && !out.solidOverlaps.length && !out.unreachable.length && !out.outside.length;
+    return out;
+  };
+  Hub.auditItems = function () { return AUD.map(function (k) { return { name: k.name, kind: k.kind, box: [k.minX, k.maxX, k.minY, k.maxY, k.minZ, k.maxZ].map(function (v) { return +v.toFixed(2); }) }; }); };
+
   /* ---------- public API ---------- */
   Hub.init = function (cv) {
     canvas = cv;
@@ -1297,6 +1390,7 @@
   Hub.home = function () { P.x = SPAWN.x; P.z = SPAWN.z; P.face = Math.PI; C.yaw = 0; };
   Hub.state = function () { return { x: +P.x.toFixed(2), z: +P.z.toFixed(2), face: +P.face.toFixed(2), yaw: +C.yaw.toFixed(2), near: near ? near.id : null, enabled: enabled, paused: paused, calls: renderer.info.render.calls, tris: renderer.info.render.triangles }; };
   Hub.setPlayer = function (x, z) { P.x = x; P.z = z; };
+  Hub.setFace = function (f) { P.face = f; P.speed = 0; };
   Hub.setCarry = function (c) { if (me) dress(me, c); };
   Hub.carryState = function () { return me ? { hand: me.parts.carry.hand || null, head: me.parts.carry.head || null, neck: me.parts.carry.neck || null, handMeshes: me.parts.hand.children.length, capHidden: !me.parts.cap[0].visible, hatMeshes: me.parts.hatSlot.children.length } : null; };
   Hub.playerScreen = function () { return Hub.toScreen(P.x, 1.1, P.z); };
@@ -1318,5 +1412,8 @@
     var w = window.innerWidth, h = window.innerHeight, behind = v.z > 1;
     return { x: (v.x * 0.5 + 0.5) * w, y: (-v.y * 0.5 + 0.5) * h, on: !behind && v.x > -1 && v.x < 1 && v.y > -1 && v.y < 1, behind: behind, dist: Math.hypot(P.x - GARY.x, P.z - GARY.z) };
   };
+  Hub.setLock = function (b) { lock = !!b; keys = {}; joy.x = joy.y = 0; joy.id = null; look.id = null; if (Hub._resetJoy) Hub._resetJoy(); };
+  Hub.locked = function () { return lock; };
+  Hub.setCamOverride = function (fn) { camOv = fn || null; };
   Hub.ROOM = ROOM; Hub.DIV_X = DIV_X;
 })();

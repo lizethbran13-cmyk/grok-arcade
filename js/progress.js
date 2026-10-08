@@ -29,6 +29,7 @@
   P.ownedIds = function () { return GA.PRIZES.filter(function (p) { return S.owned[p.id]; }).map(function (p) { return p.id; }); };
   P.redeem = function (id) {
     var pr = GA.findPrize(id); if (!pr) return { ok: false, why: 'unknown' };
+    if (pr.claw) return { ok: false, why: 'claw' }; // claw prizes are only won in the claw machines
     if (S.owned[id]) return { ok: false, why: 'owned' };
     if (GA.getTickets() < pr.price) return { ok: false, why: 'tickets', need: pr.price - GA.getTickets() };
     if (!GA.spendTickets(pr.price)) return { ok: false, why: 'tickets' };
@@ -36,8 +37,20 @@
     if (GA.Hub && GA.Hub.refreshBoards) GA.Hub.refreshBoards();
     return { ok: true, left: GA.getTickets() };
   };
-  function nOwned(cat) { return GA.PRIZES.filter(function (p) { return S.owned[p.id] && (!cat || p.cat === cat); }).length; }
-  function nPrizes(cat) { return GA.PRIZES.filter(function (p) { return !cat || p.cat === cat; }).length; }
+  // no category = Prize Counter prizes only (claw-machine prizes have their own goals, so old goals don't move)
+  function nOwned(cat) { return GA.PRIZES.filter(function (p) { return S.owned[p.id] && (cat ? p.cat === cat : !p.claw); }).length; }
+  function nPrizes(cat) { return GA.PRIZES.filter(function (p) { return cat ? p.cat === cat : !p.claw; }).length; }
+  /* claw machine wins: the prize goes straight onto your gallery shelf (a repeat catch gives 2 bonus tickets instead) */
+  P.clawWin = function (id, machine) {
+    var pr = GA.findPrize(id); if (!pr || !pr.claw) return { ok: false };
+    var dupe = !!S.owned[id];
+    st.ev.clawWins = ev('clawWins') + 1; if (machine === 'tricky') st.ev.clawTricky = ev('clawTricky') + 1;
+    if (!dupe) S.owned[id] = Date.now();
+    save(); if (dupe) GA.addTickets(2); check();
+    if (GA.Hub && GA.Hub.refreshBoards) GA.Hub.refreshBoards();
+    return { ok: true, dupe: dupe };
+  };
+  P.clawPlay = function (machine) { st.ev.clawPlays = ev('clawPlays') + 1; save(); check(); };
 
   /* ---------- achievements ---------- */
   function best(id) { return GA.getBest(id); }
@@ -67,7 +80,7 @@
     { id: 'spend_500', cat: 'Prizes', icon: '\uD83D\uDCB8', name: 'Big Spender', desc: 'Spend 500 tickets at the Prize Counter', p: function () { return [st.spent, 500]; } },
     { id: 'half_shelf', cat: 'Prizes', icon: '\uD83D\uDDC4\uFE0F', name: 'Half-Full Shelves', desc: 'Own half of all the prizes', p: function () { return [nOwned(), Math.ceil(nPrizes() / 2)]; } },
     { id: 'golden_joy', cat: 'Prizes', icon: '\uD83D\uDD79\uFE0F', name: 'Golden Gamer', desc: 'Win the legendary Golden Joystick', p: function () { return [S.owned.golden_joy ? 1 : 0, 1]; } },
-    { id: 'collection', cat: 'Prizes', icon: '\uD83D\uDC51', name: 'Completionist', desc: 'Own every single prize', p: function () { return [nOwned(), nPrizes()]; } },
+    { id: 'collection', cat: 'Prizes', icon: '\uD83D\uDC51', name: 'Completionist', desc: 'Own every prize from the Prize Counter', p: function () { return [nOwned(), nPrizes()]; } },
     { id: 'bonus_zone', cat: 'Arcade', icon: '\uD83D\uDEAA', name: 'Into the Bonus Zone', desc: 'Walk through the door into the Bonus Zone', p: function () { return [ev('bonusZone'), 1]; } },
     { id: 'all_bonus', cat: 'Arcade', icon: '\uD83C\uDFAE', name: 'Bonus Explorer', desc: 'Play every bonus mini game cabinet', p: function () { return [bonusPlayed(), GA.BONUS_GAMES.length]; } },
     { id: 'all_main', cat: 'Arcade', icon: '\uD83C\uDF0D', name: 'World Tour', desc: 'Launch every main game from the arcade', p: function () { return [GA.MAIN_GAMES.filter(function (g) { return st.launched[g.id]; }).length, GA.MAIN_GAMES.length]; } },
@@ -95,6 +108,9 @@
   A.push({ id: 'spook_squad', cat: 'Prizes', icon: '\uD83D\uDC7B', name: 'Spook Squad', desc: 'Own the Goob, Shy Boo and Countess Waltzy plushies', p: function () { return [['pl_goob', 'pl_boo', 'pl_waltzy'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'vac_owner', cat: 'Prizes', icon: '\uD83C\uDF00', name: 'Who You Gonna Call?', desc: 'Win the Grok-Vac Replica', p: function () { return [S.owned.vac_replica ? 1 : 0, 1]; } });
   A.push({ id: 'designer', cat: 'Arcade', icon: '\uD83D\uDCA1', name: 'Game Designer', desc: 'Send your first patch suggestion from the Suggestion Booth', p: function () { return [ev('suggest') ? 1 : 0, 1]; } });
+  A.push({ id: 'claw_first', cat: 'Claw', icon: '\uD83E\uDE9D', name: 'Claw Catcher', desc: 'Win a prize from a claw machine', p: function () { return [ev('clawWins') ? 1 : 0, 1]; } });
+  A.push({ id: 'claw_tricky', cat: 'Claw', icon: '\uD83C\uDFAF', name: 'Steady Hands', desc: 'Win a prize from the Tricky Claw', p: function () { return [ev('clawTricky') ? 1 : 0, 1]; } });
+  A.push({ id: 'claw_10', cat: 'Claw', icon: '\uD83E\uDDF2', name: 'Claw Collector', desc: 'Collect 10 different claw machine prizes', p: function () { return [nOwned('claw'), 10]; } });
   A.push({ id: 'view3d', cat: 'Prizes', icon: '\uD83D\uDD0D', name: 'Up Close', desc: 'Look at a prize or medal in 3D view', p: function () { return [ev('view3d') ? 1 : 0, 1]; } });
   A.push({ id: 'carry', cat: 'Prizes', icon: '\u270B', name: 'Show-Off', desc: 'Carry a prize around the arcade', p: function () { return [ev('carry') ? 1 : 0, 1]; } });
   A.push({ id: 'hat_on', cat: 'Prizes', icon: '\uD83E\uDDE2', name: 'Hat Day', desc: 'Wear a hat from the Prize Counter', p: function () { return [ev('wearHat') ? 1 : 0, 1]; } });
@@ -147,7 +163,7 @@
   /* ---------- public reads (UI + tests) ---------- */
   P.list = function () { return A.map(function (a) { var q = prog(a); return { id: a.id, cat: a.cat, icon: a.icon, name: a.name, desc: a.desc, cur: q.cur, goal: q.goal, unlocked: !!S.unlocked[a.id], at: S.unlocked[a.id] || 0 }; }); };
   P.isUnlocked = function (id) { return !!S.unlocked[id]; };
-  P.counts = function () { return { ach: Object.keys(S.unlocked).filter(function (k) { return A.some(function (a) { return a.id === k; }); }).length, achTotal: A.length, prizes: nOwned(), prizeTotal: nPrizes() }; };
+  P.counts = function () { return { ach: Object.keys(S.unlocked).filter(function (k) { return A.some(function (a) { return a.id === k; }); }).length, achTotal: A.length, prizes: GA.PRIZES.filter(function (p) { return S.owned[p.id]; }).length, prizeTotal: GA.PRIZES.length, claw: nOwned('claw'), clawTotal: nPrizes('claw') }; };
   P.stats = function () { return JSON.parse(JSON.stringify(st)); };
   P.check = check;
 

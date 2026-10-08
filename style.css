@@ -479,3 +479,36 @@ body.touch #chalBtn{left:auto;transform:none;right:max(160px,calc(env(safe-area-
 .sbDel{margin-left:auto;width:34px;height:34px;border-radius:17px;border:1px solid rgba(255,255,255,.4);background:rgba(255,61,127,.25);color:#fff;font-size:15px}
 .sbCopyAgain{background:none;border:none;color:#7ff0ff;font-size:12px;text-decoration:underline;padding:4px}
 .sbEmpty{text-align:center;color:#cfc4f5;font-size:16px;padding:30px 10px}
+/* ---------- claw machines ---------- */
+body.clawOn #joy,body.clawOn #prompt,body.clawOn #playBtn,body.clawOn #hint,body.clawOn #topRight,body.clawOn #tickets{display:none!important}
+#clawUI{position:fixed;inset:0;z-index:41;pointer-events:none;--cc:#22d3ee;--cc2:#ffe14d;font-family:"Trebuchet MS",system-ui,sans-serif;color:#fff;-webkit-user-select:none;user-select:none}
+#clawUI>*{pointer-events:auto}
+#clawUI .clTop{position:absolute;left:max(8px,env(safe-area-inset-left));right:max(58px,calc(env(safe-area-inset-right) + 50px));top:max(8px,env(safe-area-inset-top));display:flex;gap:8px;align-items:center;justify-content:space-between;background:rgba(14,6,34,.92);border:2px solid var(--cc);border-radius:14px;padding:6px 10px;font-size:13px;pointer-events:none;box-shadow:0 0 14px var(--cc)}
+#clawUI .clTop b{color:var(--cc2);font-size:14px;flex:0 0 auto}
+#clInfo{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1 1 auto}
+#clTime{font-weight:900;font-size:18px;min-width:30px;text-align:right}#clTime.low{color:#ff5b6b}
+#clRadar{position:absolute;right:max(10px,env(safe-area-inset-right));top:calc(max(10px,env(safe-area-inset-top)) + 48px);width:120px;height:99px;border-radius:10px;border:2px solid var(--cc);pointer-events:none;display:none}
+#clPad{position:absolute;left:max(22px,env(safe-area-inset-left));bottom:max(30px,calc(env(safe-area-inset-bottom) + 20px));width:150px;height:150px;border-radius:50%;background:rgba(20,8,48,.55);border:3px solid var(--cc);touch-action:none;display:none}
+#clKnob{position:absolute;left:50%;top:50%;width:62px;height:62px;margin:-31px 0 0 -31px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--cc));box-shadow:0 0 14px var(--cc);pointer-events:none}
+.clArr{position:absolute;color:var(--cc);font-size:16px;pointer-events:none;opacity:.85}.clArr.u{left:50%;top:6px;transform:translateX(-50%)}.clArr.d{left:50%;bottom:6px;transform:translateX(-50%)}.clArr.l{left:8px;top:50%;transform:translateY(-50%)}.clArr.r{right:8px;top:50%;transform:translateY(-50%)}
+#clDrop{position:absolute;right:max(22px,env(safe-area-inset-right));bottom:max(40px,calc(env(safe-area-inset-bottom) + 30px));width:118px;height:118px;border-radius:50%;border:4px solid #fff;background:radial-gradient(circle at 35% 30%,#ff8a96,#e11d48);color:#fff;font-weight:900;font-size:24px;letter-spacing:1px;box-shadow:0 0 22px rgba(255,59,79,.8),inset 0 -6px 0 rgba(0,0,0,.25);touch-action:none;display:none}
+#clDrop:active{transform:scale(.94)}
+#clawUI.playing #clPad,#clawUI.playing #clDrop,#clawUI.playing #clRadar{display:block}
+#clExit{position:absolute;right:max(10px,env(safe-area-inset-right));top:max(8px,env(safe-area-inset-top));width:42px;height:42px;border-radius:50%;border:2px solid #fff;background:rgba(20,8,48,.85);color:#fff;font-size:20px;font-weight:900}
+.clCard{position:absolute;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(440px,calc(100vw - 20px));max-height:calc(100vh - 90px);overflow:auto;background:rgba(18,8,44,.95);border:3px solid var(--cc);border-radius:18px;padding:12px 14px;text-align:center;box-shadow:0 0 26px var(--cc)}
+.clT{font-size:22px;font-weight:900;color:var(--cc2)}.clT.win{font-size:26px}
+.clSub,.clHow{font-size:14px;color:#d9d0ff;margin:4px 0}.clHow{font-size:12px;opacity:.8}
+.clLine{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:8px 0}
+.clPz{position:relative;background:rgba(255,255,255,.07);border-radius:10px;padding:3px 2px;font-size:9px;line-height:1.1}
+.clPz img{width:100%;max-width:56px;display:block;margin:0 auto}.clPz span{display:block;color:#ddd}
+.clPz i{position:absolute;right:2px;top:1px;font-style:normal;color:#4ade80;font-weight:900;font-size:13px}
+.clPz.rare{background:rgba(255,225,77,.18);box-shadow:inset 0 0 0 1px #ffe14d}
+.clPz em,.clWin em{display:inline-block;font-style:normal;font-size:9px;font-weight:900;color:#1a0b33;background:#ffe14d;border-radius:6px;padding:0 4px;margin-top:1px}
+.clRot{font-size:13px;color:#7df9ff;font-weight:700}
+.clCost{font-size:16px;font-weight:900;color:#ffe14d;margin:6px 0 2px}
+.clNeed{font-size:13px;color:#ff9aa5;font-weight:700}
+.clWin{display:flex;flex-direction:column;align-items:center;gap:2px}.clWin img{width:120px;height:120px}.clWin b{font-size:18px}
+.clBtns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.clBtn{min-height:48px;padding:0 18px;border-radius:24px;border:3px solid #fff;background:linear-gradient(180deg,var(--cc2),#ff4fd8);color:#1a0b33;font-weight:900;font-size:16px;cursor:pointer}
+.clBtn.ghost{background:rgba(255,255,255,.1);color:#fff}
+.clBtn[disabled]{opacity:.45;cursor:default}

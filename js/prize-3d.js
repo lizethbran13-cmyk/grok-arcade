@@ -479,7 +479,7 @@
   }
 
   /* ---------- achievement medals ---------- */
-  var CAT_COL = { Tickets: ['#ffcf3a', '#ff4fd8', '#ffe14d'], Prizes: ['#ff9ad8', '#ff4fd8', '#3ff0ff'], Arcade: ['#7ff0ff', '#3ff0ff', '#a78bfa'], Antenna: ['#c4b5fd', '#a78bfa', '#4ade80'], 'High Scores': ['#ffb066', '#ff7a3d', '#ffe14d'] };
+  var CAT_COL = { Tickets: ['#ffcf3a', '#ff4fd8', '#ffe14d'], Prizes: ['#ff9ad8', '#ff4fd8', '#3ff0ff'], Arcade: ['#7ff0ff', '#3ff0ff', '#a78bfa'], Antenna: ['#c4b5fd', '#a78bfa', '#4ade80'], 'High Scores': ['#ffb066', '#ff7a3d', '#ffe14d'], Claw: ['#7df9ff', '#22d3ee', '#c084fc'] };
   function achById(id) { return (GA.ACHIEVEMENTS || []).find(function (a) { return a.id === id; }); }
   function medal(achId, locked) {
     var a = achById(achId) || { name: 'Achievement', icon: '\u2B50', cat: 'Arcade', desc: '' };
@@ -513,5 +513,8 @@
     return g;
   }
 
-  GA.Prize3D = { build: build, medal: medal, isHat: function (id) { return !!HATS[id]; }, ids: Object.keys(BUILD) };
+  GA.Prize3D = { build: build, medal: medal, isHat: function (id) { return !!HATS[id]; }, ids: Object.keys(BUILD),
+    // extension point (claw machine prizes add their own models)
+    register: function (id, fn) { BUILD[id] = fn; GA.Prize3D.ids = Object.keys(BUILD); },
+    H: { add: add, sph: sph, box: box, cyl: cyl, cone: cone, tor: tor, lam: lam, shiny: shiny, metal: metal, glow: glow, grp: grp, rot: rot, eyes: eyes, blush: blush, smile: smile, tag: tag, starGeo: starGeo, G: G } };
 })();
