@@ -451,3 +451,31 @@ body.touch #chalBtn{left:auto;transform:none;right:max(160px,calc(env(safe-area-
 .mpWalk{margin:10px 0 4px;text-align:center}
 .mpWalk .bigBtn{width:100%;font-size:18px;padding:0 10px}
 .mpWalk small{display:block;font-size:13px;color:#cfc4f5;margin-top:6px;line-height:1.3}
+
+/* Suggestion Booth */
+.sbPanel{border-color:#3ff0ff;box-shadow:0 0 40px rgba(63,240,255,.4);max-width:720px}
+.sbL{display:flex;flex-direction:column;gap:5px;font-size:15px;font-weight:bold;color:#cfc4f5;margin:0 0 12px}
+.sbL select,.sbL input,.sbL textarea{font:inherit;font-size:17px;font-weight:normal;color:#fff;background:rgba(0,0,0,.35);border:2px solid rgba(63,240,255,.55);border-radius:12px;padding:10px 12px;min-height:48px;width:100%;box-sizing:border-box}
+.sbL textarea{resize:vertical;min-height:100px}
+.sbL select option{color:#111}
+.sbTypes{display:flex;gap:8px;flex-wrap:wrap}
+.sbTypeBtn{flex:1;min-width:96px;height:52px;border-radius:26px;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.06);color:#fff;font-size:17px;font-weight:bold}
+.sbTypeBtn.on{background:linear-gradient(180deg,#45e7ff,#1890b8);border-color:#fff;box-shadow:0 0 14px rgba(63,240,255,.6)}
+.sbBtns{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 10px}.sbBtns .bigBtn{flex:1;min-width:140px;height:62px}
+.sbMsg{font-size:14px;color:#e9e2ff;background:rgba(255,255,255,.06);border-radius:12px;padding:10px 12px;line-height:1.35}
+.sbMsg.ok{border:2px solid #4ade80}.sbMsg.bad{border:2px solid #ff3d7f}.sbMsg.warn{border:2px solid #ffe14d;margin-bottom:10px}
+.sbMsg a{color:#7ff0ff}
+.sbCopyBox{width:100%;min-height:90px;margin-top:6px;background:rgba(0,0,0,.4);color:#fff;border-radius:8px;border:1px solid #3ff0ff}
+.sbBar{display:flex;align-items:center;gap:10px;margin-bottom:10px}.sbWhen{font-size:13px;color:#cfc4f5}
+.sbCounts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.sbItem{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:2px solid rgba(63,240,255,.35);border-radius:14px;padding:10px 12px;margin-bottom:9px}
+.sbTop{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sbSt{font-size:13px;font-weight:bold;padding:3px 9px;border-radius:12px;background:#334;color:#fff;white-space:nowrap}
+.sbSt.new{background:#7c3aed}.sbSt.work{background:#d97706}.sbSt.done{background:#16a34a}.sbSt.wont{background:#6b7280}.sbSt.sent{background:#0e7490}
+.sbGameTag{font-size:13px;font-weight:bold;color:#3ff0ff}.sbType{font-size:12px;color:#ffe14d}
+.sbTitle{font-size:17px;font-weight:bold;color:#fff;margin:5px 0 3px;line-height:1.25;word-break:break-word}
+.sbLast{font-size:13px;color:#cfc4f5;line-height:1.3;margin-bottom:3px;word-break:break-word}
+.sbMeta{font-size:12px;color:#a99cd6}.sbMeta a{color:#7ff0ff}.sbMeta.center{text-align:center;margin-top:6px}
+.sbDel{margin-left:auto;width:34px;height:34px;border-radius:17px;border:1px solid rgba(255,255,255,.4);background:rgba(255,61,127,.25);color:#fff;font-size:15px}
+.sbCopyAgain{background:none;border:none;color:#7ff0ff;font-size:12px;text-decoration:underline;padding:4px}
+.sbEmpty{text-align:center;color:#cfc4f5;font-size:16px;padding:30px 10px}

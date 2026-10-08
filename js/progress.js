@@ -92,6 +92,9 @@
   A.push({ id: 'park_streak', cat: 'High Scores', icon: '\uD83D\uDE97', name: 'Valet Legend', desc: 'Park 10 cars in a row in Parking Panic', p: function () { return [ev('park10') ? 1 : 0, 1]; } });
   A.push({ id: 'dash_team', cat: 'Prizes', icon: '\uD83D\uDCA8', name: 'Team Dash', desc: 'Own the Grok Dash Hero, Speedy and Floaty plushies', p: function () { return [['pl_dash', 'pl_speedy', 'pl_floaty'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'ring_lord', cat: 'Prizes', icon: '\uD83D\uDCAB', name: 'Lord of the Ring', desc: 'Win the Golden Ring Trophy', p: function () { return [S.owned.tr_ring ? 1 : 0, 1]; } });
+  A.push({ id: 'spook_squad', cat: 'Prizes', icon: '\uD83D\uDC7B', name: 'Spook Squad', desc: 'Own the Goob, Shy Boo and Countess Waltzy plushies', p: function () { return [['pl_goob', 'pl_boo', 'pl_waltzy'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
+  A.push({ id: 'vac_owner', cat: 'Prizes', icon: '\uD83C\uDF00', name: 'Who You Gonna Call?', desc: 'Win the Grok-Vac Replica', p: function () { return [S.owned.vac_replica ? 1 : 0, 1]; } });
+  A.push({ id: 'designer', cat: 'Arcade', icon: '\uD83D\uDCA1', name: 'Game Designer', desc: 'Send your first patch suggestion from the Suggestion Booth', p: function () { return [ev('suggest') ? 1 : 0, 1]; } });
   A.push({ id: 'view3d', cat: 'Prizes', icon: '\uD83D\uDD0D', name: 'Up Close', desc: 'Look at a prize or medal in 3D view', p: function () { return [ev('view3d') ? 1 : 0, 1]; } });
   A.push({ id: 'carry', cat: 'Prizes', icon: '\u270B', name: 'Show-Off', desc: 'Carry a prize around the arcade', p: function () { return [ev('carry') ? 1 : 0, 1]; } });
   A.push({ id: 'hat_on', cat: 'Prizes', icon: '\uD83E\uDDE2', name: 'Hat Day', desc: 'Wear a hat from the Prize Counter', p: function () { return [ev('wearHat') ? 1 : 0, 1]; } });

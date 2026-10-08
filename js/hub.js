@@ -6,7 +6,7 @@
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
-  var MAIN_STEP = GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
+  var MAIN_STEP = GA.MAIN_GAMES.length > 12 ? 1.78 : GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -233,6 +233,41 @@
       front: new T.Vector3(0, 0, 1.75).applyMatrix4(grp.matrixWorld), dir: new T.Vector3(1, 0, 0), glow: gm, nextDraw: Infinity, r: 2.1 });
   }
 
+
+  /* ---------- Suggestion Booth (south-west corner of the main hall) ---------- */
+  var SBX = -13.4, SBZ = ROOM.maxZ - 0.9;
+  function boothScreen(g, w, h, t) {
+    var gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#0c2a3a'); gr.addColorStop(1, '#13104a'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    g.save(); g.shadowColor = '#ffe14d'; g.shadowBlur = 10 + Math.sin(t * 3) * 6; g.fillStyle = '#ffe14d'; g.beginPath(); g.arc(w / 2, 46, 20, 0, 7); g.fill(); g.restore();
+    g.fillStyle = '#c9ced8'; g.fillRect(w / 2 - 9, 64, 18, 12); g.fillStyle = '#16101f'; g.fillRect(w / 2 - 9, 68, 18, 2);
+    g.font = font(17); g.textAlign = 'center'; g.fillStyle = '#7ff0ff'; g.fillText('BUG? IDEA?', w / 2, 98);
+    g.font = font(14); g.fillStyle = '#ffffff'; g.fillText(Math.floor(t) % 2 ? 'Tap to suggest!' : 'See the board!', w / 2, 120);
+  }
+  function buildBooth() {
+    var grp = new T.Group(); grp.position.set(SBX, 0, SBZ); grp.rotation.y = Math.PI; scene.add(grp);
+    var cy = '#3ff0ff';
+    mesh(box(1.7, 1.0, 0.8), lam('#1d4f6b'), 0, 0.5, 0, grp);
+    mesh(box(1.8, 0.08, 0.9), basic(cy), 0, 1.02, 0, grp);
+    mesh(box(1.5, 1.7, 0.3), lam('#163a52'), 0, 1.9, -0.25, grp);
+    mesh(box(1.3, 1.0, 0.04), basic('#05020c'), 0, 1.95, -0.09, grp);
+    var sc = mkCanvas(192, 144), sg = sc.getContext('2d'), stex = canvasTex(sc); stex.minFilter = T.LinearFilter; stex.generateMipmaps = false;
+    mesh(plane(1.2, 0.9), new T.MeshBasicMaterial({ map: stex }), 0, 1.95, -0.065, grp);
+    boothScreen(sg, 192, 144, 0); stex.needsUpdate = true;
+    // little suggestion box with a slot + pencil cup on the counter
+    mesh(box(0.42, 0.3, 0.32), lam('#ff4fd8'), 0.55, 1.2, 0.1, grp); mesh(box(0.26, 0.03, 0.05), basic('#16101f'), 0.55, 1.36, 0.1, grp);
+    mesh(cyl(0.08, 0.08, 0.2, 10), lam('#ffe14d'), -0.6, 1.15, 0.15, grp); mesh(cyl(0.015, 0.015, 0.3, 6), basic('#ff3d5a'), -0.62, 1.3, 0.15, grp); mesh(cyl(0.015, 0.015, 0.3, 6), basic('#4ade80'), -0.57, 1.3, 0.12, grp);
+    [-1, 1].forEach(function (sd) { mesh(box(0.07, 2.9, 0.07), basic(sd < 0 ? '#ff4fd8' : cy), sd * 0.88, 1.45, 0.38, grp); });
+    var sgn = sign('PATCH SUGGESTIONS', 2.6, 0.55, cy, { col2: '#ffe14d' }); sgn.position.set(0, 3.15, -0.1); grp.add(sgn);
+    var dc = decal('SUGGEST', 2.4, 0.8, cy, 0, 0, 0, 'bugs \u00b7 ideas \u00b7 balance'); scene.remove(dc); dc.position.set(0, 0.02, 1.7); dc.rotation.z = 0; grp.add(dc);
+    var gm = new T.MeshBasicMaterial({ map: glowTex, color: cy, transparent: true, opacity: 0.3, depthWrite: false, blending: T.AdditiveBlending });
+    var gl = mesh(plane(2.6, 1.8), gm, 0, 0.025, 1.4, grp); gl.rotation.x = -Math.PI / 2; gl.renderOrder = 2;
+    addSolid(SBX - 0.95, SBX + 0.95, SBZ - 0.5, ROOM.maxZ);
+    grp.updateMatrixWorld(true);
+    var last = -1; anims.push(function (t) { var k = Math.floor(t * 8); if (k === last) return; last = k; boothScreen(sg, 192, 144, t); stex.needsUpdate = true; });
+    cabinets.push({ game: { id: 'suggest', name: 'Suggestion Booth', desc: 'Suggest patches and check the suggestion board.', color: cy }, kind: 'suggest', id: 'suggest', group: grp, x: SBX, z: SBZ, rot: Math.PI,
+      front: new T.Vector3(0, 0, 1.6).applyMatrix4(grp.matrixWorld), dir: new T.Vector3(0, 0, -1), glow: gm, nextDraw: Infinity, r: 2.0 });
+  }
+
   function buildDecor() {
     ensureGlow();
     // Prize counter (south wall, main hall)
@@ -265,6 +300,7 @@
     ticketDraw();
 
     buildGallery();
+    buildBooth();
 
     // Best scores board in the bonus zone (north wall)
     var c2 = mkCanvas(768, 520); dynTex.scores = { c: c2, ctx: c2.getContext('2d'), tex: canvasTex(c2) };
@@ -547,6 +583,22 @@
         g.fillStyle = '#fff'; g.beginPath(); g.arc(hx3 + 5, hy3 - 3, 4.5, 0, 7); g.arc(hx3 - 3, hy3 - 3, 4.5, 0, 7); g.fill(); g.fillStyle = '#111'; g.beginPath(); g.arc(hx3 + 6, hy3 - 3, 2, 0, 7); g.arc(hx3 - 2, hy3 - 3, 2, 0, 7); g.fill();
         g.fillStyle = '#fff'; g.beginPath(); g.arc(hx3 + 18, hy3 + 2, 4.5, 0, 7); g.arc(hx3 - 17, hy3 + 4, 4.5, 0, 7); g.fill();
         g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#7c4dff'; g.fillText('GROK DASH', w / 2, 24);
+        break;
+      }
+      case 'spooks': {
+        var gs1 = g.createLinearGradient(0, 0, 0, h); gs1.addColorStop(0, '#1a0b3a'); gs1.addColorStop(1, '#3b1d6e'); g.fillStyle = gs1; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#fff6c8'; g.beginPath(); g.arc(w * 0.84, 40, 13, 0, 7); g.fill(); g.fillStyle = '#1a0b3a'; g.beginPath(); g.arc(w * 0.84 + 6, 36, 11, 0, 7); g.fill();
+        g.fillStyle = '#120726'; g.beginPath(); g.moveTo(16, h); g.lineTo(16, 70); g.lineTo(40, 48); g.lineTo(64, 70); g.lineTo(64, 58); g.lineTo(86, 40); g.lineTo(108, 58); g.lineTo(108, h); g.fill();
+        for (i = 0; i < 4; i++) { g.fillStyle = (Math.floor(t * 1.5 + i) % 3) ? '#ffd23f' : '#3a2466'; g.fillRect(26 + (i % 2) * 22, 80 + Math.floor(i / 2) * 22, 9, 11); }
+        var sw = Math.sin(t * 1.4) * 0.35, fx = w * 0.62, fy = h - 20;
+        g.save(); g.globalAlpha = 0.35; g.fillStyle = '#fffbd0'; g.beginPath(); g.moveTo(fx, fy); g.lineTo(fx + Math.cos(-2.1 + sw) * 140, fy + Math.sin(-2.1 + sw) * 140); g.lineTo(fx + Math.cos(-1.4 + sw) * 140, fy + Math.sin(-1.4 + sw) * 140); g.closePath(); g.fill(); g.restore();
+        var gx = w * 0.55 + Math.sin(t * 1.4) * 40, gy = 60 + Math.sin(t * 3) * 8;
+        g.save(); g.shadowColor = '#5dff8a'; g.shadowBlur = 16; g.fillStyle = '#5dff8a'; g.beginPath(); g.arc(gx, gy, 15, Math.PI, 0); g.lineTo(gx + 15, gy + 16);
+        for (i = 0; i < 3; i++) g.quadraticCurveTo(gx + 15 - i * 10 - 5, gy + 22, gx + 15 - (i + 1) * 10, gy + 16); g.closePath(); g.fill(); g.restore();
+        g.fillStyle = '#16101f'; g.beginPath(); g.arc(gx - 5, gy - 2, 3, 0, 7); g.arc(gx + 5, gy - 2, 3, 0, 7); g.fill(); g.beginPath(); g.ellipse(gx, gy + 7, 3, 2.5, 0, 0, 7); g.fill();
+        g.fillStyle = '#b06bff'; g.beginPath(); g.arc(fx, fy, 10, 0, 7); g.fill(); g.fillStyle = '#ff4fd8'; g.fillRect(fx - 11, fy - 13, 22, 5);
+        g.fillStyle = '#ffe14d'; g.fillRect(fx + 6, fy - 6, 14, 6);
+        g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#5dff8a'; g.fillText('GROK SPOOKS', w / 2, 24);
         break;
       }
       case 'parking': {

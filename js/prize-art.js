@@ -16,6 +16,9 @@
     { id: 'poster_brawl', cat: 'fun', name: 'Grok Brawl Poster', price: 30, desc: 'BLAZE vs VOLT, the big fight poster.' },
     { id: 'cap', cat: 'fun', name: 'Neon Arcade Cap', price: 35, desc: 'The pink cap with the cyan brim. Iconic.' },
     { id: 'propeller', cat: 'fun', name: 'Propeller Hat', price: 50, desc: 'Spins when you run. Probably.' },
+    { id: 'kc_flash', cat: 'fun', name: 'Ghost Flashlight Keychain', price: 25, desc: 'A tiny Grok Spooks flashlight. Click it and a little ghost glows!' },
+    { id: 'goo_jar', cat: 'fun', name: 'Glow Goo Jar', price: 30, desc: 'A jar of wobbly green goo that glows in the dark. Don\u2019t eat it.' },
+    { id: 'lava_lamp', cat: 'fun', name: 'Retro Lava Lamp', price: 45, desc: 'Pink and purple blobs float up and down forever. Very chill.' },
     { id: 'pl_luna', cat: 'plush', name: 'Luna Plush', price: 40, desc: 'Silver sweetheart rat plushie.' },
     { id: 'pl_pirat', cat: 'plush', name: 'Pi-rat Plush', price: 40, desc: 'One eye, big heart, extra soft.' },
     { id: 'pl_snowie', cat: 'plush', name: 'Snowie Plush', price: 40, desc: 'Snow-white speedster plushie.' },
@@ -25,6 +28,9 @@
     { id: 'pl_floaty', cat: 'plush', name: 'Floaty Plush', price: 65, desc: 'Grok Dash\u2019s floaty glider with the propeller ears.' },
     { id: 'pl_speedy', cat: 'plush', name: 'Speedy Plush', price: 65, desc: 'Grok Dash\u2019s red speedster. Gotta go fast!' },
     { id: 'pl_dash', cat: 'plush', name: 'Grok Dash Hero Plush', price: 80, desc: 'The hero of Grok Dash with floating hands, golden tuft and scarf.' },
+    { id: 'pl_goob', cat: 'plush', name: 'Goob Ghost Plush', price: 45, desc: 'The little green ghost from Grok Spooks. Squishy and only a bit spooky.' },
+    { id: 'pl_boo', cat: 'plush', name: 'Shy Boo Plush', price: 55, desc: 'A hidden Boo from Grok Manor, covering its face. Too shy to say hi!' },
+    { id: 'pl_waltzy', cat: 'plush', name: 'Countess Waltzy Plush', price: 90, desc: 'The dancing boss ghost of the Ballroom, with her golden tiara.' },
     { id: 'pl_blaze', cat: 'plush', name: 'BLAZE Plush', price: 75, desc: 'Grok Brawl\u2019s fire brawler.' },
     { id: 'pl_volt', cat: 'plush', name: 'VOLT Plush', price: 75, desc: 'Grok Brawl\u2019s lightning speedster.' },
     { id: 'pl_boulder', cat: 'plush', name: 'BOULDER Plush', price: 75, desc: 'Grok Brawl\u2019s stone titan.' },
@@ -36,6 +42,7 @@
     { id: 'gary_bobble', cat: 'model', name: 'Gary Bobblehead', price: 120, desc: 'Gary from IT. Nods yes to every question.' },
     { id: 'land_fig', cat: 'model', name: 'Grok Land Hero Figure', price: 150, desc: 'The hero of all 8 worlds on a grass block.' },
     { id: 'sky_plane', cat: 'model', name: 'Grok Sky Airliner Model', price: 180, desc: 'A shiny display model of your airliner.' },
+    { id: 'vac_replica', cat: 'model', name: 'Grok-Vac Replica', price: 220, desc: 'A full-size Grok-Vac 3000 on a stand, glowing ghost tank and all.' },
     { id: 'grid_car', cat: 'model', name: 'Grok Grid F1 Car Model', price: 200, desc: 'Pole-position racer on a display stand.' },
     { id: 'tr_bronze', cat: 'trophy', name: 'Bronze Trophy', price: 200, desc: 'A real arcade champion trophy.' },
     { id: 'tr_silver', cat: 'trophy', name: 'Silver Trophy', price: 300, desc: 'Shiny! Shows you mean business.' },
@@ -348,6 +355,77 @@
     g.strokeStyle = 'rgba(255,255,255,0.6)'; g.lineWidth = 2.5; g.beginPath(); g.ellipse(50, 38, 24, 27, 0, 3.6, 4.6); g.stroke();
     sparkle(g, 80, 16, 6); sparkle(g, 20, 26, 4); sparkle(g, 82, 58, 4);
   }
+
+  /* ---------- Grok Spooks prizes ---------- */
+  function ghostBody(g, col, x, y, s) {
+    var gr = g.createRadialGradient(x - 8 * s, y - 14 * s, 2, x, y, 36 * s); gr.addColorStop(0, lt(col, 0.75)); gr.addColorStop(0.5, col); gr.addColorStop(1, dk(col, 0.35));
+    g.fillStyle = gr; g.beginPath(); g.moveTo(x - 26 * s, y + 22 * s); g.lineTo(x - 26 * s, y - 4 * s);
+    g.bezierCurveTo(x - 26 * s, y - 40 * s, x + 26 * s, y - 40 * s, x + 26 * s, y - 4 * s); g.lineTo(x + 26 * s, y + 22 * s);
+    for (var i = 0; i < 4; i++) { var x0 = x + 26 * s - i * 13 * s; g.quadraticCurveTo(x0 - 3 * s, y + 30 * s, x0 - 6.5 * s, y + 22 * s); g.quadraticCurveTo(x0 - 10 * s, y + 14 * s, x0 - 13 * s, y + 22 * s); }
+    g.closePath(); g.fill();
+  }
+  function glowHalo(g, col, a) { var gl = g.createRadialGradient(50, 48, 4, 50, 48, 48); gl.addColorStop(0, 'rgba(' + rgb(col).join(',') + ',' + (a || 0.4) + ')'); gl.addColorStop(1, 'rgba(' + rgb(col).join(',') + ',0)'); g.fillStyle = gl; g.fillRect(0, 0, 100, 100); }
+  function plushGoob(g) {
+    glowHalo(g, '#5dff8a', 0.35); shadow(g, 50, 92, 28); ghostBody(g, '#5dff8a', 50, 58, 1);
+    ball(g, 22, 60, 7, 6, '#5dff8a'); ball(g, 78, 56, 7, 6, '#5dff8a', 0.4);
+    g.fillStyle = '#fff'; g.beginPath(); g.ellipse(41, 48, 7, 9, 0, 0, 7); g.ellipse(59, 48, 7, 9, 0, 0, 7); g.fill(); eye(g, 42, 49, 4); eye(g, 60, 49, 4);
+    g.fillStyle = '#3a1020'; g.beginPath(); g.ellipse(50, 62, 6, 5, 0, 0, 7); g.fill(); g.fillStyle = '#ff6b8a'; g.beginPath(); g.ellipse(50, 64.5, 3.5, 2.2, 0, 0, 7); g.fill();
+    blush(g, 33, 58); blush(g, 67, 58); shine(g, 38, 30, 8, 4, 0.45); tag(g, 66, 74);
+  }
+  function plushBoo(g) {
+    glowHalo(g, '#ffffff', 0.35); shadow(g, 50, 92, 30); ball(g, 50, 54, 30, 29, '#f4f2ff');
+    ball(g, 30, 30, 6, 9, '#e6e1ff', -0.6); ball(g, 70, 30, 6, 9, '#e6e1ff', 0.6);
+    g.fillStyle = '#ff7a9e'; g.beginPath(); g.moveTo(42, 66); g.quadraticCurveTo(50, 76, 58, 66); g.closePath(); g.fill();
+    g.fillStyle = '#fff'; [[44, 66], [56, 66]].forEach(function (q) { g.beginPath(); g.moveTo(q[0] - 2, q[1]); g.lineTo(q[0], q[1] + 4); g.lineTo(q[0] + 2, q[1]); g.fill(); });
+    ball(g, 36, 48, 11, 9, '#ffffff', 0.3); ball(g, 64, 48, 11, 9, '#ffffff', -0.3);
+    blush(g, 28, 60); blush(g, 72, 60); g.fillStyle = '#d0c8ff'; g.beginPath(); g.ellipse(50, 86, 10, 4, 0, 0, 7); g.fill();
+    shine(g, 38, 32, 8, 4, 0.5); tag(g, 70, 74);
+  }
+  function plushWaltzy(g) {
+    glowHalo(g, '#ff6bd6', 0.4); shadow(g, 50, 93, 32);
+    g.fillStyle = dk('#ff6bd6', 0.15); g.beginPath(); g.moveTo(22, 88); g.quadraticCurveTo(50, 60, 78, 88); g.closePath(); g.fill();
+    ghostBody(g, '#ff8fe0', 50, 60, 1.05);
+    ball(g, 20, 56, 7, 6, '#ff8fe0', -0.5); ball(g, 80, 52, 7, 6, '#ff8fe0', 0.5);
+    g.fillStyle = '#fff'; g.beginPath(); g.ellipse(41, 49, 6.5, 8.5, 0, 0, 7); g.ellipse(59, 49, 6.5, 8.5, 0, 0, 7); g.fill(); eye(g, 42, 50, 3.8); eye(g, 60, 50, 3.8);
+    g.strokeStyle = '#16101f'; g.lineWidth = 1.5; [[36, 41], [64, 41]].forEach(function (q, i) { g.beginPath(); g.moveTo(q[0], q[1]); g.lineTo(q[0] + (i ? 4 : -4), q[1] - 3); g.stroke(); });
+    smile(g, 50, 63, 6); blush(g, 33, 58); blush(g, 67, 58);
+    g.fillStyle = metal(g, 36, 64, '#ffcf3a'); g.beginPath(); g.moveTo(36, 30); g.lineTo(38, 20); g.lineTo(43, 26); g.lineTo(50, 15); g.lineTo(57, 26); g.lineTo(62, 20); g.lineTo(64, 30); g.closePath(); g.fill();
+    ball(g, 50, 23, 3, 3, '#3ff0ff'); ball(g, 50, 74, 6, 4, '#ffcf3a');
+    sparkle(g, 82, 18, 5); sparkle(g, 18, 26, 3.5); tag(g, 68, 76);
+  }
+  function vacReplica(g) {
+    standBase(g, '#3a2466', true);
+    slab(g, 30, 22, 34, 52, 8, '#5b6b8c');
+    var gl = g.createLinearGradient(36, 0, 58, 0); gl.addColorStop(0, '#2fbf5a'); gl.addColorStop(0.4, '#9dffb8'); gl.addColorStop(1, '#2fbf5a'); g.fillStyle = gl; rr(g, 36, 30, 22, 30, 6); g.fill();
+    ghostBody(g, '#ffffff', 47, 46, 0.25); g.fillStyle = '#16101f'; g.beginPath(); g.arc(45, 44, 1, 0, 7); g.arc(49, 44, 1, 0, 7); g.fill();
+    slab(g, 28, 18, 38, 8, 3, '#ffcf3a'); slab(g, 28, 68, 38, 7, 3, '#ffcf3a');
+    g.strokeStyle = '#2a2f3a'; g.lineWidth = 6; g.lineCap = 'round'; g.beginPath(); g.moveTo(64, 60); g.bezierCurveTo(80, 64, 84, 50, 78, 40); g.stroke();
+    slab(g, 72, 24, 12, 20, 4, '#9aa6c0'); ball(g, 78, 22, 7, 4, '#2a2f3a');
+    shine(g, 40, 34, 4, 8, 0.4); sparkle(g, 20, 20, 5); sparkle(g, 86, 60, 3.5);
+  }
+  function kcFlash(g) {
+    keyRing(g); g.save(); g.translate(50, 60); g.rotate(-0.35);
+    slab(g, -8, -8, 16, 34, 5, '#ff4fd8'); slab(g, -11, -18, 22, 12, 4, '#ffcf3a'); slab(g, -6, 2, 12, 5, 2, '#ffe14d');
+    g.restore();
+    var gl = g.createRadialGradient(40, 32, 2, 40, 32, 22); gl.addColorStop(0, 'rgba(255,250,200,0.9)'); gl.addColorStop(1, 'rgba(255,250,200,0)'); g.fillStyle = gl; g.beginPath(); g.arc(40, 32, 22, 0, 7); g.fill();
+    ghostBody(g, '#7dffb0', 30, 30, 0.32); g.fillStyle = '#16101f'; g.beginPath(); g.arc(28, 28, 1.4, 0, 7); g.arc(33, 28, 1.4, 0, 7); g.fill();
+  }
+  function gooJar(g) {
+    glowHalo(g, '#39ff6a', 0.45); shadow(g, 50, 92, 28);
+    g.fillStyle = 'rgba(200,255,220,0.25)'; rr(g, 26, 26, 48, 64, 12); g.fill();
+    var gr = g.createLinearGradient(0, 44, 0, 88); gr.addColorStop(0, '#9dffb8'); gr.addColorStop(1, '#1fbf4a'); g.fillStyle = gr; g.beginPath(); g.moveTo(28, 52); g.quadraticCurveTo(38, 44, 50, 52); g.quadraticCurveTo(62, 60, 72, 50); g.lineTo(72, 80); g.quadraticCurveTo(72, 88, 64, 88); g.lineTo(36, 88); g.quadraticCurveTo(28, 88, 28, 80); g.closePath(); g.fill();
+    ball(g, 40, 70, 4, 4, '#ccffd9'); ball(g, 58, 64, 3, 3, '#ccffd9'); ball(g, 52, 78, 2.5, 2.5, '#ccffd9');
+    eye(g, 44, 66, 3); eye(g, 56, 66, 3);
+    slab(g, 24, 18, 52, 12, 4, '#7c4dff'); g.strokeStyle = 'rgba(255,255,255,0.6)'; g.lineWidth = 2; g.beginPath(); g.moveTo(31, 34); g.lineTo(31, 80); g.stroke();
+  }
+  function lavaLamp(g) {
+    shadow(g, 50, 93, 24);
+    g.fillStyle = metal(g, 34, 66, '#b8c0d0'); g.beginPath(); g.moveTo(34, 92); g.lineTo(40, 74); g.lineTo(60, 74); g.lineTo(66, 92); g.closePath(); g.fill();
+    var gl = g.createLinearGradient(0, 22, 0, 74); gl.addColorStop(0, '#5b21b6'); gl.addColorStop(1, '#a78bfa'); g.fillStyle = gl; g.beginPath(); g.moveTo(44, 20); g.lineTo(56, 20); g.lineTo(64, 74); g.lineTo(36, 74); g.closePath(); g.fill();
+    ball(g, 50, 62, 9, 7, '#ff4fd8'); ball(g, 47, 44, 5, 7, '#ff6bd6'); ball(g, 53, 30, 3.5, 4, '#ff8fe0');
+    g.fillStyle = metal(g, 42, 58, '#b8c0d0'); g.beginPath(); g.moveTo(42, 22); g.lineTo(46, 10); g.lineTo(54, 10); g.lineTo(58, 22); g.closePath(); g.fill();
+    shine(g, 42, 46, 2, 14, 0.35);
+  }
   function goldenJoy(g) {
     var gl = g.createRadialGradient(50, 46, 4, 50, 46, 48); gl.addColorStop(0, 'rgba(255,214,64,0.55)'); gl.addColorStop(1, 'rgba(255,214,64,0)'); g.fillStyle = gl; g.fillRect(0, 0, 100, 100);
     joystick(g, 50, 86, 1.05, '#e6a817', '#ffd54a', '#ffcf3a', '#ffe680');
@@ -358,6 +436,7 @@
     kc_snake: kcSnake, kc_joy: kcJoy, poster_arcade: function (g) { poster(g, 'arcade'); }, poster_brawl: function (g) { poster(g, 'brawl'); }, cap: cap, propeller: propeller,
     pl_luna: function (g) { plushRat(g, 'luna'); }, pl_pirat: function (g) { plushRat(g, 'pirat'); }, pl_snowie: function (g) { plushRat(g, 'snowie'); },
     pl_invader: plushInvader, pl_candy: plushCandy, pl_brutus: plushBrutus, tr_ring: ringTrophy,
+    pl_goob: plushGoob, pl_boo: plushBoo, pl_waltzy: plushWaltzy, vac_replica: vacReplica, kc_flash: kcFlash, goo_jar: gooJar, lava_lamp: lavaLamp,
     pl_dash: function (g) { plushDash(g, 'grok'); }, pl_speedy: function (g) { plushDash(g, 'speedy'); }, pl_floaty: function (g) { plushDash(g, 'floaty'); },
     pl_blaze: function (g) { plushFighter(g, 'blaze'); }, pl_volt: function (g) { plushFighter(g, 'volt'); }, pl_boulder: function (g) { plushFighter(g, 'boulder'); },
     pl_nova: function (g) { plushFighter(g, 'nova'); }, pl_frost: function (g) { plushFighter(g, 'frost'); }, pl_sakura: function (g) { plushFighter(g, 'sakura'); }, pl_prime: function (g) { plushFighter(g, 'prime'); },

@@ -199,6 +199,88 @@
     return g;
   }
 
+
+  /* ---------- Grok Spooks prizes ---------- */
+  function ghostShape(par, col, s, glowy) {
+    var mat = glowy ? new T.MeshLambertMaterial({ color: col, emissive: new T.Color(col).multiplyScalar(0.35) }) : lam(col);
+    var g = grp(par, 0, 0, 0); add(g, sph(0.3 * s, 24), mat, 0, 0.55 * s, 0, 1, 1.05, 1);
+    add(g, cyl(0.3 * s, 0.33 * s, 0.32 * s, 24), mat, 0, 0.36 * s, 0);
+    for (var i = 0; i < 6; i++) { var a = i / 6 * Math.PI * 2; add(g, sph(0.08 * s, 10), mat, Math.cos(a) * 0.27 * s, 0.2 * s, Math.sin(a) * 0.27 * s); }
+    return g;
+  }
+  function goob() {
+    var g = new T.Group(), b = grp(g, 0, 0.05, 0); ghostShape(b, '#5dff8a', 1, true);
+    [-1, 1].forEach(function (sd) { add(b, sph(0.08, 12), lam('#5dff8a'), sd * 0.34, 0.45, 0.05, 1.2, 0.8, 0.8); });
+    eyes(b, 0.62, 0.27, 0.1, 0.05); var mo = add(b, sph(0.05, 12), lam('#3a1020'), 0, 0.48, 0.29, 1.2, 1, 0.4);
+    add(b, sph(0.025, 8), lam('#ff6b8a'), 0, 0.465, 0.31, 1.3, 0.7, 0.4); blush(b, 0.52, 0.26, 0.17); tag(b, 0.22, 0.3, -0.24);
+    g.userData.tick = function (t) { b.position.y = 0.05 + Math.sin(t * 2.2) * 0.04; b.rotation.z = Math.sin(t * 1.3) * 0.06; };
+    return g;
+  }
+  function boo() {
+    var g = new T.Group(), b = grp(g, 0, 0.08, 0), W = new T.MeshLambertMaterial({ color: '#f4f2ff', emissive: new T.Color('#5a5080') });
+    add(b, sph(0.32, 28), W, 0, 0.45, 0);
+    [-1, 1].forEach(function (sd) { var h = add(b, sph(0.1, 12), W, sd * 0.13, 0.52, 0.27, 1.1, 0.85, 0.6); rot(h, 0, 0, sd * 0.4); var e = add(b, cone(0.06, 0.14, 10), W, sd * 0.2, 0.74, -0.05); rot(e, 0, 0, -sd * 0.6); });
+    var mo = add(b, sph(0.08, 14), lam('#ff7a9e'), 0, 0.33, 0.27, 1.3, 0.7, 0.5);
+    [-1, 1].forEach(function (sd) { add(b, cone(0.02, 0.05, 6), lam('#ffffff'), sd * 0.04, 0.36, 0.32).rotation.x = Math.PI; });
+    blush(b, 0.42, 0.28, 0.22); add(b, cone(0.1, 0.22, 12), W, 0, 0.18, -0.2).rotation.x = -2.2; tag(b, 0.22, 0.3, -0.26);
+    g.userData.tick = function (t) { b.position.y = 0.08 + Math.sin(t * 1.8) * 0.05; b.rotation.y = Math.sin(t * 0.7) * 0.25; };
+    return g;
+  }
+  function waltzy() {
+    var g = new T.Group(), b = grp(g, 0, 0.04, 0); ghostShape(b, '#ff8fe0', 1.05, true);
+    add(b, cone(0.42, 0.3, 24), lam('#e04fbf'), 0, 0.17, 0);
+    [-1, 1].forEach(function (sd) { var a = add(b, sph(0.08, 12), lam('#ff8fe0'), sd * 0.36, 0.55 + sd * 0.06, 0.05, 1.2, 0.8, 0.8); });
+    eyes(b, 0.66, 0.29, 0.1, 0.048); smile(b, 0.52, 0.31, 0.06); blush(b, 0.56, 0.28, 0.18);
+    var tia = grp(b, 0, 0.88, 0); add(tia, cyl(0.13, 0.15, 0.05, 20), metal('#ffcf3a'), 0, 0, 0);
+    [-0.09, 0, 0.09].forEach(function (x, i) { add(tia, cone(0.035, i === 1 ? 0.13 : 0.09, 8), metal('#ffcf3a'), x, 0.07, 0.1); });
+    add(tia, sph(0.03, 10), glow('#3ff0ff'), 0, 0.03, 0.15);
+    add(b, sph(0.05, 12), metal('#ffcf3a'), 0, 0.3, 0.35); tag(b, 0.24, 0.32, -0.26);
+    g.userData.tick = function (t) { b.rotation.y = Math.sin(t * 1.2) * 0.5; b.position.y = 0.04 + Math.abs(Math.sin(t * 2.4)) * 0.05; };
+    return g;
+  }
+  function vacReplica() {
+    var g = new T.Group(); stand(g, '#3a2466', 0.8);
+    var v = grp(g, 0, 0.08, 0), body = shiny('#5b6b8c', 70), gold = metal('#ffcf3a');
+    add(v, box(0.42, 0.62, 0.28), body, 0, 0.42, -0.04);
+    add(v, box(0.46, 0.06, 0.32), gold, 0, 0.1, -0.04); add(v, box(0.46, 0.06, 0.32), gold, 0, 0.74, -0.04);
+    var tank = add(v, cyl(0.13, 0.13, 0.42, 20), new T.MeshLambertMaterial({ color: '#7dffb0', emissive: new T.Color('#1f9f4a'), transparent: true, opacity: 0.85 }), 0, 0.42, 0.13);
+    var gh = grp(v, 0, 0.4, 0.13); ghostShape(gh, '#ffffff', 0.22, true);
+    var hose = add(v, tor(0.2, 0.035, Math.PI * 1.1, 8, 24), lam('#2a2f3a'), 0.28, 0.5, 0.05); rot(hose, 0, Math.PI / 2, 0.2);
+    var noz = add(v, cyl(0.07, 0.04, 0.32, 14), shiny('#9aa6c0', 90), 0.34, 0.66, 0.24); rot(noz, 1.1, 0, 0);
+    add(v, cyl(0.075, 0.075, 0.03, 14), gold, 0.34, 0.74, 0.37).rotation.x = 1.1;
+    add(v, sph(0.035, 10), glow('#ff4fd8'), -0.13, 0.66, 0.11); add(v, sph(0.035, 10), glow('#3ff0ff'), -0.13, 0.58, 0.11);
+    g.userData.tick = function (t) { gh.rotation.y = t * 2; gh.position.y = 0.4 + Math.sin(t * 3) * 0.06; };
+    return g;
+  }
+  function kcFlash() {
+    var g = new T.Group(); keyRing(g, 0.92);
+    var f = grp(g, 0, 0.42, 0); rot(f, 0, 0, -0.3);
+    add(f, cyl(0.07, 0.07, 0.38, 16), shiny('#ff4fd8', 80), 0, 0, 0); add(f, cyl(0.11, 0.075, 0.12, 16), metal('#ffcf3a'), 0, 0.24, 0);
+    add(f, cyl(0.1, 0.1, 0.01, 16), glow('#fffbe0'), 0, 0.305, 0); add(f, box(0.05, 0.08, 0.03), lam('#ffe14d'), 0, 0.02, 0.07);
+    var gh = grp(g, -0.22, 0.72, 0.05); ghostShape(gh, '#7dffb0', 0.32, true);
+    g.userData.tick = function (t) { gh.position.y = 0.72 + Math.sin(t * 2.5) * 0.04; };
+    return g;
+  }
+  function gooJar() {
+    var g = new T.Group();
+    add(g, cyl(0.26, 0.26, 0.62, 28), new T.MeshPhongMaterial({ color: '#d8ffe6', transparent: true, opacity: 0.3, shininess: 120, specular: '#ffffff' }), 0, 0.33, 0);
+    var goo = add(g, cyl(0.24, 0.24, 0.42, 28), new T.MeshLambertMaterial({ color: '#39ff6a', emissive: new T.Color('#16a83a') }), 0, 0.23, 0);
+    eyes(g, 0.3, 0.24, 0.07, 0.035);
+    add(g, cyl(0.28, 0.28, 0.1, 28), shiny('#7c4dff', 60), 0, 0.68, 0);
+    var bub = []; for (var i = 0; i < 4; i++) bub.push(add(g, sph(0.03, 8), glow('#ccffd9'), 0, 0, 0));
+    g.userData.tick = function (t) { goo.scale.y = 1 + Math.sin(t * 2) * 0.04; bub.forEach(function (q, k) { var y = ((t * 0.25 + k * 0.25) % 1); q.position.set(Math.cos(k * 1.7) * 0.13, 0.05 + y * 0.38, Math.sin(k * 1.7) * 0.13); }); };
+    return g;
+  }
+  function lavaLamp() {
+    var g = new T.Group(), M = metal('#b8c0d0');
+    add(g, cyl(0.1, 0.2, 0.26, 20), M, 0, 0.13, 0);
+    add(g, cyl(0.07, 0.15, 0.55, 20), new T.MeshLambertMaterial({ color: '#8b5cf6', emissive: new T.Color('#3b1d8a'), transparent: true, opacity: 0.8 }), 0, 0.535, 0);
+    add(g, cyl(0.03, 0.08, 0.14, 20), M, 0, 0.88, 0);
+    var bl = [0.07, 0.05, 0.045].map(function (r) { return add(g, sph(r, 14), new T.MeshBasicMaterial({ color: '#ff4fd8' }), 0, 0.4, 0); });
+    g.userData.tick = function (t) { bl.forEach(function (q, k) { var y = 0.32 + (Math.sin(t * 0.6 + k * 2.1) * 0.5 + 0.5) * 0.4; q.position.set(Math.sin(t + k) * 0.02, y, 0); var sc = 1 + Math.sin(t * 1.3 + k) * 0.25; q.scale.set(sc, 1 / sc + 0.3, sc); }); };
+    return g;
+  }
+
   /* ---------- keychains, posters, hats ---------- */
   function keyRing(g, y) { add(g, tor(0.11, 0.015, 7, 8, 30), metal('#c9ced8'), 0, y, 0); for (var i = 0; i < 3; i++) { var l = add(g, tor(0.03, 0.009, 7, 6, 14), metal('#9aa1ad'), 0, y - 0.13 - i * 0.05, 0); if (i % 2) l.rotation.y = Math.PI / 2; } }
   function kcSnake() {
@@ -377,6 +459,7 @@
     kc_snake: kcSnake, kc_joy: kcJoy, poster_arcade: function () { return poster('arcade'); }, poster_brawl: function () { return poster('brawl'); }, cap: cap, propeller: propeller,
     pl_luna: function () { return rat('luna'); }, pl_pirat: function () { return rat('pirat'); }, pl_snowie: function () { return rat('snowie'); },
     pl_invader: invader, pl_candy: candy, pl_brutus: brutus, tr_ring: ringTrophy,
+    pl_goob: goob, pl_boo: boo, pl_waltzy: waltzy, vac_replica: vacReplica, kc_flash: kcFlash, goo_jar: gooJar, lava_lamp: lavaLamp,
     pl_dash: function () { return dashHero('grok'); }, pl_speedy: function () { return dashHero('speedy'); }, pl_floaty: function () { return dashHero('floaty'); },
     fc_ball: fcBall, gary_bobble: gary, land_fig: landFig, sky_plane: skyPlane, grid_car: gridCar,
     tr_bronze: function () { return trophy('#cd7f32'); }, tr_silver: function () { return trophy('#c0c7d0'); }, tr_gold: function () { return trophy('#ffcf3a', true); }, golden_joy: goldenJoy

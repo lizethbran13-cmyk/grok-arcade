@@ -7,7 +7,7 @@
   var menuIsOpen = false, started = false, launching = false;
 
   GA.UI = { menuOpen: function () { return menuIsOpen; } };
-  function pzOpen() { return !!(GA.PZ && GA.PZ.isOpen()) || !!(GA.PV && GA.PV.isOpen()); }
+  function pzOpen() { return !!(GA.PZ && GA.PZ.isOpen()) || !!(GA.PV && GA.PV.isOpen()) || !!(GA.SB && GA.SB.isOpen()); }
   function hm() { return GA.HubMP && GA.HubMP.active() ? GA.HubMP : null; }
 
   function setTickets(n) { $('ticketCount').textContent = n; }
@@ -39,6 +39,7 @@
     if (cab.kind === 'npc') { GA.Fix.talk(); return; }
     if (cab.kind === 'prize') { hidePrompt(); GA.PZ.openCounter(); return; }
     if (cab.kind === 'gallery') { hidePrompt(); GA.PZ.openGallery(); return; }
+    if (cab.kind === 'suggest') { hidePrompt(); GA.SB.open(); return; }
     if (cab.kind === 'mp' && GA.Fix.blocksHost()) { hidePrompt(); GA.Fix.openRepair(); return; }
     if (GA.Fix.powerOut()) { GA.Fix.noPower(cab); return; }
     if (cab.kind === 'mp') { hidePrompt(); GA.MP.open(); return; }
@@ -65,6 +66,7 @@
     var special = null;
     if (cab.kind === 'prize') { var pc = GA.Prog ? GA.Prog.counts() : { prizes: 0, prizeTotal: 0 }; special = { tag: 'PRIZE COUNTER', name: 'Redeem Tickets', desc: 'You have ' + GA.getTickets() + ' tickets. Trade them for plushies, models, trophies and more! (' + pc.prizes + '/' + pc.prizeTotal + ' collected)', btn: 'PRIZES', key: 'browse prizes', cls: 'prize', pb: 'pzPlay' }; }
     else if (cab.kind === 'gallery') { var gc = GA.Prog ? GA.Prog.counts() : { ach: 0, achTotal: 0, prizes: 0, prizeTotal: 0 }; special = { tag: 'ACHIEVEMENT GALLERY', name: 'Your Trophy Room', desc: 'Achievements ' + gc.ach + '/' + gc.achTotal + ' \u00b7 Prizes ' + gc.prizes + '/' + gc.prizeTotal + '. See your collection and what to unlock next!', btn: 'VIEW', key: 'open the gallery', cls: 'gallery', pb: 'galPlay' }; }
+    else if (cab.kind === 'suggest') special = { tag: 'SUGGESTION BOOTH', name: 'Patch Suggestions', desc: 'Found a bug or have an idea for any game? Send a suggestion, then check the board to see what\u2019s being worked on!', btn: 'SUGGEST', key: 'make a suggestion', cls: 'gallery', pb: 'galPlay' };
     else if (cab.kind === 'npc') special = { tag: 'IT HELP DESK', name: 'Gary from IT', desc: GA.Fix.blocksHost() ? (GA.Fix.powerOut() ? 'The power is out! Gary can turn it back on and fix the antenna.' : 'The Multiplayer Antenna is broken. Ask Gary to fix it!') : 'Your friendly IT Manager. Say hi!', btn: 'TALK', key: 'talk to Gary', cls: 'npc' };
     else if (mp && GA.Fix.blocksHost()) special = { tag: GA.Fix.powerOut() ? 'NO POWER' : 'OUT OF ORDER', name: cab.game.name, desc: 'Hosting is offline until it\u2019s fixed. Get Gary from IT or fix the wires. Joining a friend with a code still works.', btn: isTouch ? 'FIX /<br>JOIN' : 'FIX / JOIN', key: 'see repair options', cls: 'broken' };
     else if (GA.Fix.powerOut()) special = { tag: 'NO POWER', name: cab.game.name, desc: 'The arcade lost power. Ask Gary from IT (IT Help Desk by the prize counter) to turn it back on.', btn: 'NO POWER', key: 'check', cls: 'broken' };
@@ -155,10 +157,17 @@
     d.querySelector('.bGo').addEventListener('click', function () { GA.Hub.teleport(gal ? 'gallery' : 'prizes'); closeMenu(); GA.Audio.play('near'); });
     return d;
   }
+  function sbCard() {
+    var d = document.createElement('div'); d.className = 'card pzMenuCard'; d.style.setProperty('--c', '#3ff0ff'); d.setAttribute('data-game', 'suggest');
+    d.innerHTML = '<div class="cName">Suggestion Booth</div><div class="cDesc">Suggest patches (bugs, ideas, balance) for any game and check the Suggestion Board.</div><div class="cBtns"><button class="bPlay">&#128161; SUGGEST</button><button class="bGo">GO TO</button></div>';
+    d.querySelector('.bPlay').addEventListener('click', function () { GA.Audio.unlock(); closeMenu(true); GA.SB.open(); });
+    d.querySelector('.bGo').addEventListener('click', function () { GA.Hub.teleport('suggest'); closeMenu(); GA.Audio.play('near'); });
+    return d;
+  }
   function buildMenu() {
     var gm = $('gridMain'), gb = $('gridBonus');
-    var ph = document.createElement('h2'); ph.className = 'secTitle pzSec'; ph.innerHTML = 'Prizes &amp; Achievements <small>spend tickets &middot; see your trophies</small>';
-    var pgd = document.createElement('div'); pgd.className = 'grid'; pgd.id = 'gridPrize'; pgd.appendChild(pzCard('prizes')); pgd.appendChild(pzCard('gallery'));
+    var ph = document.createElement('h2'); ph.className = 'secTitle pzSec'; ph.innerHTML = 'Prizes, Achievements &amp; Suggestions <small>spend tickets &middot; see your trophies &middot; suggest patches</small>';
+    var pgd = document.createElement('div'); pgd.className = 'grid'; pgd.id = 'gridPrize'; pgd.appendChild(pzCard('prizes')); pgd.appendChild(pzCard('gallery')); pgd.appendChild(sbCard());
     var mainTitle = document.querySelector('#menuScroll .secTitle.main'); if (mainTitle) { mainTitle.parentNode.insertBefore(ph, mainTitle); mainTitle.parentNode.insertBefore(pgd, mainTitle); if (GA.Carry) GA.Carry.buildMenu(mainTitle); }
     $('gridMp').appendChild(mpCard());
     GA.MAIN_GAMES.forEach(function (g) { gm.appendChild(card(g, false)); });
