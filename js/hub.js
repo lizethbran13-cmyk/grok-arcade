@@ -6,7 +6,7 @@
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
-  var MAIN_STEP = GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
+  var MAIN_STEP = GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -155,7 +155,7 @@
     g.strokeStyle = '#ffe14d'; g.lineWidth = 10; g.strokeRect(8, 8, W - 16, H - 16);
     neonText(g, 'BEST SCORES', W / 2, 62, 58, '#ffe14d');
     GA.BONUS_GAMES.forEach(function (gm, i) {
-      var nB = GA.BONUS_GAMES.length, y = (nB > 11 ? 96 : nB > 10 ? 100 : nB > 9 ? 106 : nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 11 ? 34 : nB > 10 ? 37 : nB > 9 ? 40 : nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 11 ? 24 : nB > 10 ? 26 : nB > 9 ? 28 : nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
+      var nB = GA.BONUS_GAMES.length, y = (nB > 12 ? 92 : nB > 11 ? 96 : nB > 10 ? 100 : nB > 9 ? 106 : nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 12 ? 32 : nB > 11 ? 34 : nB > 10 ? 37 : nB > 9 ? 40 : nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 12 ? 22 : nB > 11 ? 24 : nB > 10 ? 26 : nB > 9 ? 28 : nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
       g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.fillText(String(GA.getBest(gm.id)), W - 50, y);
     });
     d.tex.needsUpdate = true;
@@ -525,6 +525,25 @@
         g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#d6336c'; g.fillText('SNACK STACK', w / 2, 22);
         break;
       }
+      case 'life': {
+        var gl1 = g.createLinearGradient(0, 0, 0, h); gl1.addColorStop(0, '#7dd3fc'); gl1.addColorStop(1, '#bae6fd'); g.fillStyle = gl1; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#86efac'; g.fillRect(0, h - 46, w, 46); g.fillStyle = '#4b5563'; g.fillRect(0, h - 30, w, 18);
+        g.fillStyle = '#fde68a'; g.fillRect(w * 0.12, h - 96, 60, 50); g.fillStyle = '#ef4444'; g.beginPath(); g.moveTo(w * 0.12 - 8, h - 96); g.lineTo(w * 0.12 + 30, h - 126); g.lineTo(w * 0.12 + 68, h - 96); g.fill();
+        g.fillStyle = '#7c3aed'; g.fillRect(w * 0.12 + 22, h - 72, 16, 26); g.fillStyle = '#fef08a'; g.fillRect(w * 0.12 + 6, h - 86, 12, 10); g.fillRect(w * 0.12 + 42, h - 86, 12, 10);
+        var cx2 = ((t * 60) % (w + 80)) - 40; g.fillStyle = '#ff4fd8'; g.fillRect(cx2 - 24, h - 36, 48, 16); g.fillStyle = '#111'; g.beginPath(); g.arc(cx2 - 14, h - 19, 5, 0, 7); g.arc(cx2 + 14, h - 19, 5, 0, 7); g.fill();
+        g.fillStyle = '#8b9099'; var dh = Math.abs(Math.sin(t * 4)) * 6; g.beginPath(); g.ellipse(w * 0.7, h - 54 - dh, 14, 9, 0, 0, 7); g.fill(); g.beginPath(); g.arc(w * 0.7 + 12, h - 62 - dh, 8, 0, 7); g.fill();
+        g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#0369a1'; g.fillText('GROK LIFE', w / 2, 24);
+        break;
+      }
+      case 'parking': {
+        g.fillStyle = '#4b5563'; g.fillRect(0, 0, w, h);
+        for (i = 0; i < 6; i++) { g.fillStyle = '#f8fafc'; g.fillRect(10 + i * (w - 20) / 5 - 2, 34, 4, 56); }
+        var pc = ['#ef4444', '#3b82f6', null, '#f59e0b', '#22c55e'];
+        for (i = 0; i < 5; i++) { var px2 = 10 + (i + 0.5) * (w - 20) / 5; if (pc[i]) { g.fillStyle = pc[i]; g.fillRect(px2 - 12, 42, 24, 38); } else { g.fillStyle = 'rgba(74,222,128,' + (0.4 + Math.sin(t * 6) * 0.2) + ')'; g.fillRect(px2 - 16, 38, 32, 48); } }
+        var my2 = h - 40 - ((t * 90) % (h - 90)), mx2 = 10 + 2.5 * (w - 20) / 5; g.fillStyle = '#ff4fd8'; g.fillRect(mx2 - 12, my2, 24, 38);
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#4ade80'; g.fillText('PARKING PANIC', w / 2, 22);
+        break;
+      }
       case 'pets': {
         var gq = g.createLinearGradient(0, 0, 0, h); gq.addColorStop(0, '#a8e6ff'); gq.addColorStop(1, '#ffd6f0'); g.fillStyle = gq; g.fillRect(0, 0, w, h);
         g.fillStyle = '#7ed36f'; g.fillRect(0, h - 34, w, 34);
@@ -614,7 +633,7 @@
     // main games: along the north wall, facing south
     GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    var nb = GA.BONUS_GAMES.length, stepB = nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
+    var nb = GA.BONUS_GAMES.length, stepB = nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
     GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2); });
   }
 

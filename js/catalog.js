@@ -20,7 +20,9 @@ GA.MAIN_GAMES = [
   { id: 'detective', mp: true, name: 'Grok Detective', desc: 'Explore 5 places, find clues, question suspects and catch the culprit. Co-op!',
     url: 'https://lizethbran13-cmyk.github.io/grok-detective/', color: '#ffd23f', color2: '#38bdf8' },
   { id: 'pets', mp: true, name: 'Grok Pets', desc: 'Adopt, cuddle and train 17 kinds of pets (Candy, Martina, Luna, Pi-rat & Snowie too!), decorate your home and play pet mini games with friends.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-pets/', color: '#ff6bd6', color2: '#ffd23f' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-pets/', color: '#ff6bd6', color2: '#ffd23f' },
+  { id: 'life', mp: true, name: 'Grok Life', desc: 'A cozy 3D life sim! Make a character, get a job, buy a house and a car, adopt pets (Candy, Martina, Luna, Pi-rat & Snowie!) and live in Maple Town with friends.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-life/', color: '#38bdf8', color2: '#ff6bd6' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -34,7 +36,8 @@ GA.BONUS_GAMES = [
   { id: 'ratmaze', name: 'Rat Maze Dash', desc: 'Pick Luna, Pi-rat or Snowie and race through the maze for seeds & cheese. Dodge the cat!', color: '#ffb347', color2: '#b18cff' },
   { id: 'slice', name: 'Neon Slice', desc: 'Swipe through flying neon fruit to slice it. Combos, golden stars, and watch out for bombs!', color: '#3ff0ff', color2: '#ff4fd8' },
   { id: 'skee', name: 'Skee-Ball', desc: 'The classic ticket game! Drag up to roll the ball into the rings. Corner pockets are 100, last ball is GOLDEN!', color: '#ffb020', color2: '#a78bfa' },
-  { id: 'snack', name: 'Snack Stack', desc: 'Catch falling pet snacks on your tray, keep the wobbly pile balanced and serve it to Candy & Luna. No chocolate!', color: '#ff8fd0', color2: '#ffd23b' }
+  { id: 'snack', name: 'Snack Stack', desc: 'Catch falling pet snacks on your tray, keep the wobbly pile balanced and serve it to Candy & Luna. No chocolate!', color: '#ff8fd0', color2: '#ffd23b' },
+  { id: 'parking', name: 'Parking Panic', desc: 'Your car slides along the street. Tap to zoom into the glowing empty parking spot. Don\'t bump the parked cars! A Grok Life game.', color: '#ff4fd8', color2: '#4ade80' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };
