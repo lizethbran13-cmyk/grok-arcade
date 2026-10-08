@@ -6,7 +6,7 @@
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
-  var MAIN_STEP = GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
+  var MAIN_STEP = GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -155,7 +155,7 @@
     g.strokeStyle = '#ffe14d'; g.lineWidth = 10; g.strokeRect(8, 8, W - 16, H - 16);
     neonText(g, 'BEST SCORES', W / 2, 62, 58, '#ffe14d');
     GA.BONUS_GAMES.forEach(function (gm, i) {
-      var nB = GA.BONUS_GAMES.length, y = (nB > 10 ? 100 : nB > 9 ? 106 : nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 10 ? 37 : nB > 9 ? 40 : nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 10 ? 26 : nB > 9 ? 28 : nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
+      var nB = GA.BONUS_GAMES.length, y = (nB > 11 ? 96 : nB > 10 ? 100 : nB > 9 ? 106 : nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 11 ? 34 : nB > 10 ? 37 : nB > 9 ? 40 : nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 11 ? 24 : nB > 10 ? 26 : nB > 9 ? 28 : nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
       g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.fillText(String(GA.getBest(gm.id)), W - 50, y);
     });
     d.tex.needsUpdate = true;
@@ -515,6 +515,27 @@
         g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#3ff0ff'; g.fillText('SLICE!', w / 2, 22);
         break;
       }
+      case 'snack': {
+        var gn = g.createLinearGradient(0, 0, 0, h); gn.addColorStop(0, '#ffe6f4'); gn.addColorStop(1, '#ffd0a8'); g.fillStyle = gn; g.fillRect(0, 0, w, h);
+        var trx = w / 2 + Math.sin(t * 1.6) * w * 0.25, tr = h - 40; g.fillStyle = '#fff'; g.strokeStyle = '#d6336c'; g.lineWidth = 3; g.fillRect(trx - 34, tr, 68, 8); g.strokeRect(trx - 34, tr, 68, 8);
+        var sc4 = ['#f5ecd7', '#ffd23b', '#ff9a3c', '#7cc8ff', '#ff8fd0'], nst = 1 + Math.floor(t * 1.2) % 6;
+        for (i = 0; i < nst; i++) { g.fillStyle = sc4[i % 5]; g.fillRect(trx - 16 + Math.sin(t * 3 + i) * i * 1.5, tr - 10 - i * 10, 32, 9); }
+        var fy2 = ((t * 70) % (h - 60)) + 10; g.fillStyle = '#ff8fd0'; g.beginPath(); g.arc(w * 0.3 + Math.sin(t) * 20, fy2, 8, 0, 7); g.fill();
+        g.fillStyle = '#6b3a1e'; g.fillRect(w * 0.72, (fy2 + 50) % (h - 60), 18, 12); g.strokeStyle = '#ff2d55'; g.lineWidth = 2; g.beginPath(); g.arc(w * 0.72 + 9, (fy2 + 50) % (h - 60) + 6, 12, 0, 7); g.stroke();
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#d6336c'; g.fillText('SNACK STACK', w / 2, 22);
+        break;
+      }
+      case 'pets': {
+        var gq = g.createLinearGradient(0, 0, 0, h); gq.addColorStop(0, '#a8e6ff'); gq.addColorStop(1, '#ffd6f0'); g.fillStyle = gq; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#7ed36f'; g.fillRect(0, h - 34, w, 34);
+        var hop2 = Math.abs(Math.sin(t * 3)) * 14, dx2 = w * 0.32, dy2 = h - 40 - hop2;
+        g.fillStyle = '#8b9099'; g.beginPath(); g.ellipse(dx2, dy2, 26, 16, 0, 0, 7); g.fill(); g.beginPath(); g.arc(dx2 + 22, dy2 - 16, 15, 0, 7); g.fill();
+        g.fillStyle = '#eceef2'; g.beginPath(); g.ellipse(dx2 + 30, dy2 - 8, 10, 7, 0, 0, 7); g.fill(); g.fillStyle = '#111'; g.beginPath(); g.arc(dx2 + 24, dy2 - 20, 2.5, 0, 7); g.arc(dx2 + 38, dy2 - 9, 3, 0, 7); g.fill();
+        g.fillStyle = '#c9a36b'; g.beginPath(); g.arc(w * 0.72, h - 44, 18, Math.PI, 0); g.fill(); g.fillStyle = '#a07a45'; g.beginPath(); g.arc(w * 0.72 + 20, h - 50, 7, 0, 7); g.fill();
+        for (i = 0; i < 3; i++) { var hy = (h - 70 - ((t * 30 + i * 25) % 60)); if (GA.MG && GA.MG.U) GA.MG.U.heart(g, dx2 + 10 + i * 14, hy, 14 + i * 2, '#ff4f8b'); }
+        g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#ff4fd8'; g.fillText('GROK PETS', w / 2, 24);
+        break;
+      }
       case 'skee': {
         var gk = g.createLinearGradient(0, 0, 0, h); gk.addColorStop(0, '#1a0838'); gk.addColorStop(1, '#3a1c0a'); g.fillStyle = gk; g.fillRect(0, 0, w, h);
         var rc = ['#4ade80', '#a78bfa', '#3ff0ff', '#ff4fd8', '#ffe14d'];
@@ -593,7 +614,7 @@
     // main games: along the north wall, facing south
     GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    var nb = GA.BONUS_GAMES.length, stepB = nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
+    var nb = GA.BONUS_GAMES.length, stepB = nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
     GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2); });
   }
 

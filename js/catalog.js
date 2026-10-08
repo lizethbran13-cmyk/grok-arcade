@@ -18,7 +18,9 @@ GA.MAIN_GAMES = [
   { id: 'party', mp: true, name: 'Grok Land Party', desc: 'A party board game! Roll dice, collect stars, win mini games with friends.',
     url: 'https://lizethbran13-cmyk.github.io/grok-land-party/', color: '#ff6bd6', color2: '#ffe14d' },
   { id: 'detective', mp: true, name: 'Grok Detective', desc: 'Explore 5 places, find clues, question suspects and catch the culprit. Co-op!',
-    url: 'https://lizethbran13-cmyk.github.io/grok-detective/', color: '#ffd23f', color2: '#38bdf8' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-detective/', color: '#ffd23f', color2: '#38bdf8' },
+  { id: 'pets', mp: true, name: 'Grok Pets', desc: 'Adopt, cuddle and train 17 kinds of pets (Candy, Martina, Luna, Pi-rat & Snowie too!), decorate your home and play pet mini games with friends.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-pets/', color: '#ff6bd6', color2: '#ffd23f' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -31,7 +33,8 @@ GA.BONUS_GAMES = [
   { id: 'fetch', name: 'Candy\'s Fetch', desc: 'Tap to make Candy the schnauzer jump for tennis balls. Hop over bushes!', color: '#c7ccd4', color2: '#d7ff3b' },
   { id: 'ratmaze', name: 'Rat Maze Dash', desc: 'Pick Luna, Pi-rat or Snowie and race through the maze for seeds & cheese. Dodge the cat!', color: '#ffb347', color2: '#b18cff' },
   { id: 'slice', name: 'Neon Slice', desc: 'Swipe through flying neon fruit to slice it. Combos, golden stars, and watch out for bombs!', color: '#3ff0ff', color2: '#ff4fd8' },
-  { id: 'skee', name: 'Skee-Ball', desc: 'The classic ticket game! Drag up to roll the ball into the rings. Corner pockets are 100, last ball is GOLDEN!', color: '#ffb020', color2: '#a78bfa' }
+  { id: 'skee', name: 'Skee-Ball', desc: 'The classic ticket game! Drag up to roll the ball into the rings. Corner pockets are 100, last ball is GOLDEN!', color: '#ffb020', color2: '#a78bfa' },
+  { id: 'snack', name: 'Snack Stack', desc: 'Catch falling pet snacks on your tray, keep the wobbly pile balanced and serve it to Candy & Luna. No chocolate!', color: '#ff8fd0', color2: '#ffd23b' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };
