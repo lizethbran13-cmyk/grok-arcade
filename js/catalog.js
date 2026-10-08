@@ -22,7 +22,9 @@ GA.MAIN_GAMES = [
   { id: 'pets', mp: true, name: 'Grok Pets', desc: 'Adopt, cuddle and train 17 kinds of pets (Candy, Martina, Luna, Pi-rat & Snowie too!), decorate your home and play pet mini games with friends.',
     url: 'https://lizethbran13-cmyk.github.io/grok-pets/', color: '#ff6bd6', color2: '#ffd23f' },
   { id: 'life', mp: true, name: 'Grok Life', desc: 'A cozy 3D life sim! Make a character, get a job, buy a house and a car, adopt pets (Candy, Martina, Luna, Pi-rat & Snowie!) and live in Maple Town with friends.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-life/', color: '#38bdf8', color2: '#ff6bd6' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-life/', color: '#38bdf8', color2: '#ff6bd6' },
+  { id: 'dash', mp: true, name: 'Grok Dash', desc: 'A speedy 2.5D platformer! Run loops, bounce on springs, glide and punch through 5 worlds with Grok, Speedy, Floaty & Candy. Free the critters, beat the bosses, co-op with friends!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-dash/', color: '#7c4dff', color2: '#ffd23f' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },

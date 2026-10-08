@@ -21,6 +21,10 @@
     { id: 'pl_snowie', cat: 'plush', name: 'Snowie Plush', price: 40, desc: 'Snow-white speedster plushie.' },
     { id: 'pl_invader', cat: 'plush', name: 'Grok Invaders Plush', price: 50, desc: 'The alien from Grok Invaders, now huggable.' },
     { id: 'pl_candy', cat: 'plush', name: 'Candy Plush', price: 60, desc: 'Candy the mini schnauzer, with her beard!' },
+    { id: 'pl_brutus', cat: 'plush', name: 'Brutus Plush', price: 55, desc: 'Brutus the bulldog. Tough guard dog, scared of squirrels.' },
+    { id: 'pl_floaty', cat: 'plush', name: 'Floaty Plush', price: 65, desc: 'Grok Dash\u2019s floaty glider with the propeller ears.' },
+    { id: 'pl_speedy', cat: 'plush', name: 'Speedy Plush', price: 65, desc: 'Grok Dash\u2019s red speedster. Gotta go fast!' },
+    { id: 'pl_dash', cat: 'plush', name: 'Grok Dash Hero Plush', price: 80, desc: 'The hero of Grok Dash with floating hands, golden tuft and scarf.' },
     { id: 'pl_blaze', cat: 'plush', name: 'BLAZE Plush', price: 75, desc: 'Grok Brawl\u2019s fire brawler.' },
     { id: 'pl_volt', cat: 'plush', name: 'VOLT Plush', price: 75, desc: 'Grok Brawl\u2019s lightning speedster.' },
     { id: 'pl_boulder', cat: 'plush', name: 'BOULDER Plush', price: 75, desc: 'Grok Brawl\u2019s stone titan.' },
@@ -36,6 +40,7 @@
     { id: 'tr_bronze', cat: 'trophy', name: 'Bronze Trophy', price: 200, desc: 'A real arcade champion trophy.' },
     { id: 'tr_silver', cat: 'trophy', name: 'Silver Trophy', price: 300, desc: 'Shiny! Shows you mean business.' },
     { id: 'tr_gold', cat: 'trophy', name: 'Gold Trophy', price: 450, desc: 'The big one. Almost.' },
+    { id: 'tr_ring', cat: 'trophy', name: 'Golden Ring Trophy', price: 350, desc: 'A giant spinning Grok Dash ring on a stand. Shiny!' },
     { id: 'golden_joy', cat: 'trophy', name: 'Golden Joystick', price: 750, desc: 'The legendary Golden Joystick. The ultimate prize!' }
   ];
   GA.findPrize = function (id) { return GA.PRIZES.find(function (p) { return p.id === id; }); };
@@ -304,6 +309,45 @@
     g.fillStyle = 'rgba(255,255,255,0.45)'; g.beginPath(); g.moveTo(30, 20); g.quadraticCurveTo(31, 42, 42, 52); g.quadraticCurveTo(34, 40, 34, 20); g.fill();
     if (big) { sparkle(g, 80, 14, 6); sparkle(g, 18, 46, 4); }
   }
+  /* ---------- Grok Dash prizes ---------- */
+  var DASHC = { grok: ['#7c4dff', '#ffd23f'], speedy: ['#ff3b3b', '#ffe14d'], floaty: ['#ff6bd6', '#7df9ff'] };
+  function plushDash(g, kind) {
+    var b = DASHC[kind][0], a = DASHC[kind][1];
+    shadow(g, 50, 91, 30);
+    ball(g, 36, 85, 11, 6, a); ball(g, 64, 85, 11, 6, a);
+    if (kind === 'speedy') { g.fillStyle = dk(b, 0.25); [[-1, 30], [1, 30], [-1, 48], [1, 48]].forEach(function (q) { g.beginPath(); g.moveTo(50 + q[0] * 18, q[1]); g.lineTo(50 + q[0] * 34, q[1] - 10); g.lineTo(50 + q[0] * 22, q[1] + 12); g.fill(); }); }
+    if (kind === 'floaty') { ball(g, 34, 20, 7, 17, a, -0.5); ball(g, 66, 20, 7, 17, a, 0.5); }
+    ball(g, 50, 52, 26, 26, b);
+    ball(g, 50, 62, 15, 11, lt(b, 0.55));
+    ball(g, 15, 58, 8, 8, '#ffffff'); ball(g, 85, 58, 8, 8, '#ffffff');
+    g.fillStyle = '#fff'; g.beginPath(); g.ellipse(42, 45, 7, 9, 0, 0, 7); g.ellipse(58, 45, 7, 9, 0, 0, 7); g.fill();
+    eye(g, 43, 46, 4); eye(g, 59, 46, 4);
+    blush(g, 34, 56); blush(g, 66, 56); smile(g, 50, 58, 5);
+    if (kind === 'grok') { ball(g, 46, 25, 5, 9, a, -0.4); ball(g, 53, 23, 5, 10, a, 0.2); slab(g, 26, 70, 48, 8, 4, a); slab(g, 60, 72, 9, 14, 3, a); }
+    if (kind === 'speedy') slab(g, 25, 31, 50, 6, 3, a);
+    shine(g, 40, 34, 8, 4, 0.4); tag(g, 66, 76);
+  }
+  function plushBrutus(g) {
+    var tan = '#d6a66a', cream = '#fff4e6', dkT = '#a8773f';
+    shadow(g, 50, 91, 34);
+    [26, 40, 60, 74].forEach(function (lx) { slab(g, lx - 5, 72, 10, 16, 4, tan); ball(g, lx, 87, 6, 3, cream); });
+    ball(g, 50, 70, 32, 17, tan); ball(g, 50, 74, 18, 10, cream);
+    ball(g, 32, 28, 8, 7, dkT, -0.6); ball(g, 68, 28, 8, 7, dkT, 0.6);
+    ball(g, 50, 44, 26, 23, tan);
+    ball(g, 50, 54, 17, 12, cream); ball(g, 38, 56, 8, 7, cream); ball(g, 62, 56, 8, 7, cream);
+    ball(g, 50, 47, 6, 4, '#2a1a10'); eye(g, 40, 38, 3.4); eye(g, 60, 38, 3.4);
+    g.fillStyle = '#fff'; [[44, 58], [56, 58]].forEach(function (q) { g.beginPath(); g.moveTo(q[0] - 2.5, q[1]); g.lineTo(q[0], q[1] - 6); g.lineTo(q[0] + 2.5, q[1]); g.fill(); });
+    slab(g, 28, 62, 44, 6, 3, '#e11d48'); ball(g, 50, 69, 3.5, 3.5, '#ffd23b');
+    shine(g, 42, 30, 8, 3, 0.35); tag(g, 70, 76);
+  }
+  function ringTrophy(g) {
+    var gl = g.createRadialGradient(50, 42, 4, 50, 42, 44); gl.addColorStop(0, 'rgba(255,214,64,0.45)'); gl.addColorStop(1, 'rgba(255,214,64,0)'); g.fillStyle = gl; g.fillRect(0, 0, 100, 100);
+    shadow(g, 50, 92, 30); slab(g, 24, 78, 52, 12, 3, '#5a3418'); slab(g, 44, 66, 12, 14, 2, '#ffcf3a');
+    var gr = g.createLinearGradient(20, 0, 80, 0); gr.addColorStop(0, '#b8860b'); gr.addColorStop(0.3, '#fff3b0'); gr.addColorStop(0.55, '#ffcf3a'); gr.addColorStop(1, '#a0700a');
+    g.strokeStyle = gr; g.lineWidth = 11; g.beginPath(); g.ellipse(50, 38, 24, 27, 0, 0, 7); g.stroke();
+    g.strokeStyle = 'rgba(255,255,255,0.6)'; g.lineWidth = 2.5; g.beginPath(); g.ellipse(50, 38, 24, 27, 0, 3.6, 4.6); g.stroke();
+    sparkle(g, 80, 16, 6); sparkle(g, 20, 26, 4); sparkle(g, 82, 58, 4);
+  }
   function goldenJoy(g) {
     var gl = g.createRadialGradient(50, 46, 4, 50, 46, 48); gl.addColorStop(0, 'rgba(255,214,64,0.55)'); gl.addColorStop(1, 'rgba(255,214,64,0)'); g.fillStyle = gl; g.fillRect(0, 0, 100, 100);
     joystick(g, 50, 86, 1.05, '#e6a817', '#ffd54a', '#ffcf3a', '#ffe680');
@@ -313,7 +357,8 @@
   var DRAW = {
     kc_snake: kcSnake, kc_joy: kcJoy, poster_arcade: function (g) { poster(g, 'arcade'); }, poster_brawl: function (g) { poster(g, 'brawl'); }, cap: cap, propeller: propeller,
     pl_luna: function (g) { plushRat(g, 'luna'); }, pl_pirat: function (g) { plushRat(g, 'pirat'); }, pl_snowie: function (g) { plushRat(g, 'snowie'); },
-    pl_invader: plushInvader, pl_candy: plushCandy,
+    pl_invader: plushInvader, pl_candy: plushCandy, pl_brutus: plushBrutus, tr_ring: ringTrophy,
+    pl_dash: function (g) { plushDash(g, 'grok'); }, pl_speedy: function (g) { plushDash(g, 'speedy'); }, pl_floaty: function (g) { plushDash(g, 'floaty'); },
     pl_blaze: function (g) { plushFighter(g, 'blaze'); }, pl_volt: function (g) { plushFighter(g, 'volt'); }, pl_boulder: function (g) { plushFighter(g, 'boulder'); },
     pl_nova: function (g) { plushFighter(g, 'nova'); }, pl_frost: function (g) { plushFighter(g, 'frost'); }, pl_sakura: function (g) { plushFighter(g, 'sakura'); }, pl_prime: function (g) { plushFighter(g, 'prime'); },
     fc_ball: fcBall, gary_bobble: garyBobble, land_fig: landFig, sky_plane: skyPlane, grid_car: gridCar,

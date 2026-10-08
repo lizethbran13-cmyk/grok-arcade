@@ -90,6 +90,8 @@
   A.push({ id: 'skee_100', cat: 'High Scores', icon: '\uD83D\uDCAF', name: 'Hundred Club', desc: 'Sink a Skee-Ball in a 100 pocket', p: function () { return [ev('skee100') ? 1 : 0, 1]; } });
   A.push({ id: 'snack_tower', cat: 'High Scores', icon: '\uD83C\uDF70', name: 'Tower of Treats', desc: 'Serve a pile of 10+ snacks in Snack Stack', p: function () { return [ev('snack10') ? 1 : 0, 1]; } });
   A.push({ id: 'park_streak', cat: 'High Scores', icon: '\uD83D\uDE97', name: 'Valet Legend', desc: 'Park 10 cars in a row in Parking Panic', p: function () { return [ev('park10') ? 1 : 0, 1]; } });
+  A.push({ id: 'dash_team', cat: 'Prizes', icon: '\uD83D\uDCA8', name: 'Team Dash', desc: 'Own the Grok Dash Hero, Speedy and Floaty plushies', p: function () { return [['pl_dash', 'pl_speedy', 'pl_floaty'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
+  A.push({ id: 'ring_lord', cat: 'Prizes', icon: '\uD83D\uDCAB', name: 'Lord of the Ring', desc: 'Win the Golden Ring Trophy', p: function () { return [S.owned.tr_ring ? 1 : 0, 1]; } });
   A.push({ id: 'view3d', cat: 'Prizes', icon: '\uD83D\uDD0D', name: 'Up Close', desc: 'Look at a prize or medal in 3D view', p: function () { return [ev('view3d') ? 1 : 0, 1]; } });
   A.push({ id: 'carry', cat: 'Prizes', icon: '\u270B', name: 'Show-Off', desc: 'Carry a prize around the arcade', p: function () { return [ev('carry') ? 1 : 0, 1]; } });
   A.push({ id: 'hat_on', cat: 'Prizes', icon: '\uD83E\uDDE2', name: 'Hat Day', desc: 'Wear a hat from the Prize Counter', p: function () { return [ev('wearHat') ? 1 : 0, 1]; } });

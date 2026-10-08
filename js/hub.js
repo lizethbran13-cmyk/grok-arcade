@@ -6,7 +6,7 @@
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
-  var MAIN_STEP = GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
+  var MAIN_STEP = GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -533,6 +533,20 @@
         var cx2 = ((t * 60) % (w + 80)) - 40; g.fillStyle = '#ff4fd8'; g.fillRect(cx2 - 24, h - 36, 48, 16); g.fillStyle = '#111'; g.beginPath(); g.arc(cx2 - 14, h - 19, 5, 0, 7); g.arc(cx2 + 14, h - 19, 5, 0, 7); g.fill();
         g.fillStyle = '#8b9099'; var dh = Math.abs(Math.sin(t * 4)) * 6; g.beginPath(); g.ellipse(w * 0.7, h - 54 - dh, 14, 9, 0, 0, 7); g.fill(); g.beginPath(); g.arc(w * 0.7 + 12, h - 62 - dh, 8, 0, 7); g.fill();
         g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#0369a1'; g.fillText('GROK LIFE', w / 2, 24);
+        break;
+      }
+      case 'dash': {
+        var gd1 = g.createLinearGradient(0, 0, 0, h); gd1.addColorStop(0, '#5ec8ff'); gd1.addColorStop(1, '#c4f1ff'); g.fillStyle = gd1; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#9be36b'; g.beginPath(); g.ellipse(w * 0.25, h - 30, 70, 40, 0, Math.PI, 0); g.fill(); g.beginPath(); g.ellipse(w * 0.8, h - 30, 60, 30, 0, Math.PI, 0); g.fill();
+        var off = (t * 80) % 24; for (i = -1; i < w / 12 + 1; i++) { g.fillStyle = i % 2 ? '#c27a3a' : '#a65f2a'; g.fillRect(i * 12 - off % 12, h - 26, 12, 26); }
+        g.fillStyle = '#4ade80'; g.fillRect(0, h - 32, w, 8);
+        g.strokeStyle = '#c27a3a'; g.lineWidth = 9; g.beginPath(); g.arc(w * 0.62, h - 62, 30, 0, 7); g.stroke(); g.strokeStyle = '#4ade80'; g.lineWidth = 3; g.beginPath(); g.arc(w * 0.62, h - 62, 26, 0, 7); g.stroke();
+        for (i = 0; i < 5; i++) { var rx3 = ((i * 44 - t * 90) % (w + 40) + w + 40) % (w + 40) - 20, ry3 = h - 52 - Math.sin(i * 1.3 + t) * 8; g.strokeStyle = '#ffd23f'; g.lineWidth = 3; g.beginPath(); g.ellipse(rx3, ry3, 4 + Math.abs(Math.sin(t * 4 + i)) * 3, 7, 0, 0, 7); g.stroke(); }
+        var hx3 = w * 0.28, hy3 = h - 48 - Math.abs(Math.sin(t * 5)) * 22;
+        g.fillStyle = '#7c4dff'; g.beginPath(); g.arc(hx3, hy3, 13, 0, 7); g.fill(); g.fillStyle = '#ffd23f'; g.beginPath(); g.moveTo(hx3 - 4, hy3 - 12); g.lineTo(hx3, hy3 - 22); g.lineTo(hx3 + 4, hy3 - 12); g.fill();
+        g.fillStyle = '#fff'; g.beginPath(); g.arc(hx3 + 5, hy3 - 3, 4.5, 0, 7); g.arc(hx3 - 3, hy3 - 3, 4.5, 0, 7); g.fill(); g.fillStyle = '#111'; g.beginPath(); g.arc(hx3 + 6, hy3 - 3, 2, 0, 7); g.arc(hx3 - 2, hy3 - 3, 2, 0, 7); g.fill();
+        g.fillStyle = '#fff'; g.beginPath(); g.arc(hx3 + 18, hy3 + 2, 4.5, 0, 7); g.arc(hx3 - 17, hy3 + 4, 4.5, 0, 7); g.fill();
+        g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#7c4dff'; g.fillText('GROK DASH', w / 2, 24);
         break;
       }
       case 'parking': {
