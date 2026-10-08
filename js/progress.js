@@ -107,6 +107,7 @@
   A.push({ id: 'ring_lord', cat: 'Prizes', icon: '\uD83D\uDCAB', name: 'Lord of the Ring', desc: 'Win the Golden Ring Trophy', p: function () { return [S.owned.tr_ring ? 1 : 0, 1]; } });
   A.push({ id: 'spook_squad', cat: 'Prizes', icon: '\uD83D\uDC7B', name: 'Spook Squad', desc: 'Own the Goob, Shy Boo and Countess Waltzy plushies', p: function () { return [['pl_goob', 'pl_boo', 'pl_waltzy'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'vac_owner', cat: 'Prizes', icon: '\uD83C\uDF00', name: 'Who You Gonna Call?', desc: 'Win the Grok-Vac Replica', p: function () { return [S.owned.vac_replica ? 1 : 0, 1]; } });
+  A.push({ id: 'sanctuary', cat: 'Prizes', icon: '\uD83E\uDD93', name: 'Sanctuary Keeper', desc: 'Own the Blocky Zebra, Baby Rhino and Snow Leopard plushies', p: function () { return [['pl_zebra', 'pl_rhino', 'pl_leopard'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'designer', cat: 'Arcade', icon: '\uD83D\uDCA1', name: 'Game Designer', desc: 'Send your first patch suggestion from the Suggestion Booth', p: function () { return [ev('suggest') ? 1 : 0, 1]; } });
   A.push({ id: 'claw_first', cat: 'Claw', icon: '\uD83E\uDE9D', name: 'Claw Catcher', desc: 'Win a prize from a claw machine', p: function () { return [ev('clawWins') ? 1 : 0, 1]; } });
   A.push({ id: 'claw_tricky', cat: 'Claw', icon: '\uD83C\uDFAF', name: 'Steady Hands', desc: 'Win a prize from the Tricky Claw', p: function () { return [ev('clawTricky') ? 1 : 0, 1]; } });
