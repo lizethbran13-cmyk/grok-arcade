@@ -6,7 +6,7 @@
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
-  var MAIN_STEP = GA.MAIN_GAMES.length > 12 ? 1.78 : GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
+  var MAIN_STEP = GA.MAIN_GAMES.length > 13 ? 1.66 : GA.MAIN_GAMES.length > 12 ? 1.78 : GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 13 ? -17.0 : GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -629,6 +629,20 @@
         g.fillStyle = '#b06bff'; g.beginPath(); g.arc(fx, fy, 10, 0, 7); g.fill(); g.fillStyle = '#ff4fd8'; g.fillRect(fx - 11, fy - 13, 22, 5);
         g.fillStyle = '#ffe14d'; g.fillRect(fx + 6, fy - 6, 14, 6);
         g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#5dff8a'; g.fillText('GROK SPOOKS', w / 2, 24);
+        break;
+      }
+      case 'blocks': {
+        var gb1 = g.createLinearGradient(0, 0, 0, h); gb1.addColorStop(0, '#ffcf8a'); gb1.addColorStop(1, '#ffe9b8'); g.fillStyle = gb1; g.fillRect(0, 0, w, h);
+        for (i = 0; i < w / 16 + 1; i++) { var bh = 34 + ((i * 37) % 5) * 6; g.fillStyle = i % 2 ? '#7cc24a' : '#6bb33e'; g.fillRect(i * 16, h - bh, 16, bh); g.fillStyle = '#a0703c'; g.fillRect(i * 16, h - bh + 10, 16, 4); }
+        g.fillStyle = '#5a9a33'; g.fillRect(18, 52, 8, 40); g.fillStyle = '#3f8a2a'; g.fillRect(4, 40, 38, 14);
+        var zx = ((t * 60) % (w + 80)) - 40, zy = h - 74 - Math.abs(Math.sin(t * 8)) * 4;
+        g.fillStyle = '#f4f4f4'; g.fillRect(zx, zy, 36, 18); g.fillRect(zx + 30, zy - 14, 12, 18);
+        g.fillStyle = '#222'; for (i = 0; i < 4; i++) g.fillRect(zx + 4 + i * 8, zy, 3, 18); g.fillRect(zx + 34, zy - 14, 3, 18);
+        for (i = 0; i < 4; i++) { g.fillStyle = '#f4f4f4'; g.fillRect(zx + 2 + i * 9, zy + 18, 4, 12); g.fillStyle = '#222'; g.fillRect(zx + 2 + i * 9, zy + 26, 4, 4); }
+        var tx2 = zx - 74; g.fillStyle = '#2f8f4e'; g.fillRect(tx2, h - 70, 56, 20); g.fillStyle = '#1f6b38'; g.fillRect(tx2 + 34, h - 84, 22, 16); g.fillStyle = '#bfe8ff'; g.fillRect(tx2 + 38, h - 81, 14, 9);
+        g.fillStyle = '#222'; g.beginPath(); g.arc(tx2 + 12, h - 48, 7, 0, 7); g.arc(tx2 + 44, h - 48, 7, 0, 7); g.fill();
+        g.fillStyle = '#ffe14d'; g.fillRect(tx2 + 8, h - 82, 10, 10); g.fillStyle = '#ff4f6d'; g.fillRect(tx2 + 20, h - 82, 10, 10);
+        g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#1f6b38'; g.fillText('GROK BLOCKS', w / 2, 24);
         break;
       }
       case 'parking': {

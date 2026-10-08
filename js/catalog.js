@@ -26,7 +26,9 @@ GA.MAIN_GAMES = [
   { id: 'dash', mp: true, name: 'Grok Dash', desc: 'A speedy 2.5D platformer! Run loops, bounce on springs, glide and punch through 5 worlds with Grok, Speedy, Floaty & Candy. Free the critters, beat the bosses, co-op with friends!',
     url: 'https://lizethbran13-cmyk.github.io/grok-dash/', color: '#7c4dff', color2: '#ffd23f' },
   { id: 'spooks', mp: true, name: 'Grok Spooks', desc: 'A cute-spooky 3D ghost hunt! Flash, vacuum and tug ghosts, solve co-op puzzles (or use your Goo clone), light up 6 haunted areas and beat 6 boss ghosts with a friend.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-spooks/', color: '#5dff8a', color2: '#b06bff' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-spooks/', color: '#5dff8a', color2: '#b06bff' },
+  { id: 'blocks', mp: true, name: 'Grok Blocks', desc: 'A blocky wildlife rescue! Explore 5 biomes, calm 18 kinds of animals with darts, chase runners in your truck and outsmart poachers. Co-op online!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-blocks/', color: '#4ade80', color2: '#fbbf24' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
