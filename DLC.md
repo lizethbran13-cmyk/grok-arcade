@@ -6,9 +6,9 @@ this repo with the `dlc` label. Mark an idea `in-progress` while it is being bui
 ## Prices (tickets)
 | Size | Example | Unlock price |
 | --- | --- | --- |
-| Mini Pack | new items, skins, outfits | 50 |
-| Expansion | a new level, area or mode | 150 |
-| MEGA Expansion | a whole new world or campaign | 300 |
+| Mini Pack | new items, skins, outfits | 25 |
+| Expansion | a new level, area or mode | 75 |
+| MEGA Expansion | a whole new world or campaign | 150 |
 
 A good bonus-game round pays about 8-15 tickets, so a Mini Pack is roughly 5 rounds, an Expansion about 15
 and a MEGA about 30 (similar to the Silver Trophy at the Prize Counter). Submitting an idea is free the first time, then 5 tickets.
