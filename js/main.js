@@ -7,7 +7,7 @@
   var menuIsOpen = false, started = false, launching = false;
 
   GA.UI = { menuOpen: function () { return menuIsOpen; } };
-  function pzOpen() { return !!(GA.PZ && GA.PZ.isOpen()) || !!(GA.PV && GA.PV.isOpen()) || !!(GA.SB && GA.SB.isOpen()) || !!(GA.Claw && GA.Claw.isOpen()); }
+  function pzOpen() { return !!(GA.PZ && GA.PZ.isOpen()) || !!(GA.PV && GA.PV.isOpen()) || !!(GA.SB && GA.SB.isOpen()) || !!(GA.Claw && GA.Claw.isOpen()) || !!(GA.Hall && GA.Hall.isOpen()) || !!(GA.DLC && GA.DLC.isOpen()); }
   function hm() { return GA.HubMP && GA.HubMP.active() ? GA.HubMP : null; }
 
   function setTickets(n) { $('ticketCount').textContent = n; }
@@ -40,6 +40,9 @@
     if (cab.kind === 'prize') { hidePrompt(); GA.PZ.openCounter(); return; }
     if (cab.kind === 'gallery') { hidePrompt(); GA.PZ.openGallery(); return; }
     if (cab.kind === 'suggest') { hidePrompt(); GA.SB.open(); return; }
+    if (cab.kind === 'exhibit') { hidePrompt(); GA.Hall.open(cab.gid); return; }
+    if (cab.kind === 'gus') { hidePrompt(); GA.Hall.talk(); return; }
+    if (cab.kind === 'dlc') { hidePrompt(); GA.DLC.open(); return; }
     if (cab.kind === 'mp' && GA.Fix.blocksHost()) { hidePrompt(); GA.Fix.openRepair(); return; }
     if (GA.Fix.powerOut()) { GA.Fix.noPower(cab); return; }
     if (cab.kind === 'claw') { hidePrompt(); if (GA.Claw) GA.Claw.open(cab.id); return; }
@@ -68,6 +71,9 @@
     if (cab.kind === 'prize') { var pc = GA.Prog ? GA.Prog.counts() : { prizes: 0, prizeTotal: 0 }; special = { tag: 'PRIZE COUNTER', name: 'Redeem Tickets', desc: 'You have ' + GA.getTickets() + ' tickets. Trade them for plushies, models, trophies and more! (' + pc.prizes + '/' + pc.prizeTotal + ' collected)', btn: 'PRIZES', key: 'browse prizes', cls: 'prize', pb: 'pzPlay' }; }
     else if (cab.kind === 'gallery') { var gc = GA.Prog ? GA.Prog.counts() : { ach: 0, achTotal: 0, prizes: 0, prizeTotal: 0 }; special = { tag: 'ACHIEVEMENT GALLERY', name: 'Your Trophy Room', desc: 'Achievements ' + gc.ach + '/' + gc.achTotal + ' \u00b7 Prizes ' + gc.prizes + '/' + gc.prizeTotal + '. See your collection and what to unlock next!', btn: 'VIEW', key: 'open the gallery', cls: 'gallery', pb: 'galPlay' }; }
     else if (cab.kind === 'suggest') special = { tag: 'SUGGESTION BOOTH', name: 'Patch Suggestions', desc: 'Found a bug or have an idea for any game? Send a suggestion, then check the board to see what\u2019s being worked on!', btn: 'SUGGEST', key: 'make a suggestion', cls: 'gallery', pb: 'galPlay' };
+    else if (cab.kind === 'exhibit') { var hd = GA.HALL_DATA[cab.gid], hl = hd.history[hd.history.length - 1]; special = { tag: 'HALL OF GAME RECORDS', name: cab.game.name, desc: hd.pics.length + ' pictures \u00b7 ' + hd.history.length + ' updates (newest v' + hl.ver + ') \u00b7 ' + (hd.versions.length ? hd.versions.length + ' playable old version' + (hd.versions.length > 1 ? 's' : '') : 'no old versions yet'), btn: 'VIEW', key: 'view the exhibit', cls: 'gallery', pb: 'galPlay' }; }
+    else if (cab.kind === 'gus') special = { tag: 'RECORDS DESK', name: 'Gus the Archivist', desc: 'The grumpy keeper of the Hall of Game Records. He has the directory of every game. He will sigh about it.', btn: 'TALK', key: 'talk to Gus', cls: 'npc' };
+    else if (cab.kind === 'dlc') special = { tag: 'DLC MACHINE 3000', name: 'Invent & Unlock DLC', desc: 'Suggest an expansion pack for any game (' + (GA.DLC.ideaCost() ? GA.DLC.ideaCost() + ' tickets' : 'first one free') + '), print your DLC ticket, check the DLC Board, and unlock shipped DLC with tickets. You have ' + GA.getTickets() + '.', btn: 'OPEN', key: 'use the DLC Machine', cls: 'prize', pb: 'pzPlay' };
     else if (cab.kind === 'npc') special = { tag: 'IT HELP DESK', name: 'Gary from IT', desc: GA.Fix.blocksHost() ? (GA.Fix.powerOut() ? 'The power is out! Gary can turn it back on and fix the antenna.' : 'The Multiplayer Antenna is broken. Ask Gary to fix it!') : 'Your friendly IT Manager. Say hi!', btn: 'TALK', key: 'talk to Gary', cls: 'npc' };
     else if (cab.kind === 'claw' && !GA.Fix.powerOut() && GA.Claw) { var ci = GA.Claw.promptInfo(cab.id) || { name: cab.game.name, desc: '' }; special = { tag: 'CLAW MACHINE', name: ci.name, desc: ci.desc, btn: 'PLAY', key: 'play the claw', cls: 'prize', pb: 'pzPlay' }; }
     else if (mp && GA.Fix.blocksHost()) special = { tag: GA.Fix.powerOut() ? 'NO POWER' : 'OUT OF ORDER', name: cab.game.name, desc: 'Hosting is offline until it\u2019s fixed. Get Gary from IT or fix the wires. Joining a friend with a code still works.', btn: isTouch ? 'FIX /<br>JOIN' : 'FIX / JOIN', key: 'see repair options', cls: 'broken' };
@@ -173,10 +179,24 @@
     d.querySelector('.bGo').addEventListener('click', function () { GA.Hub.teleport('suggest'); closeMenu(); GA.Audio.play('near'); });
     return d;
   }
+  function hallCard() {
+    var d = document.createElement('div'); d.className = 'card pzMenuCard'; d.style.setProperty('--c', '#e8b84a'); d.setAttribute('data-game', 'hall');
+    d.innerHTML = '<div class="cName">Hall of Game Records</div><div class="cDesc">Pictures, update history and playable old versions of every game. Curated (grumpily) by Gus.</div><div class="cBtns"><button class="bPlay">&#127963;&#65039; BROWSE</button><button class="bGo">GO TO</button></div>';
+    d.querySelector('.bPlay').addEventListener('click', function () { GA.Audio.unlock(); closeMenu(true); GA.Hall.openDirectory(); });
+    d.querySelector('.bGo').addEventListener('click', function () { GA.Hub.teleport('gus'); closeMenu(); GA.Audio.play('near'); });
+    return d;
+  }
+  function dlcCard() {
+    var d = document.createElement('div'); d.className = 'card pzMenuCard'; d.style.setProperty('--c', '#ff4fd8'); d.setAttribute('data-game', 'dlc');
+    d.innerHTML = '<div class="cName">DLC Machine 3000</div><div class="cDesc">Invent expansion packs for any game, print a DLC ticket, watch the DLC Board and unlock shipped DLC with tickets.</div><div class="cBtns"><button class="bPlay">&#128424;&#65039; OPEN</button><button class="bGo">GO TO</button></div>';
+    d.querySelector('.bPlay').addEventListener('click', function () { GA.Audio.unlock(); closeMenu(true); GA.DLC.open(); });
+    d.querySelector('.bGo').addEventListener('click', function () { GA.Hub.teleport('dlc'); closeMenu(); GA.Audio.play('near'); });
+    return d;
+  }
   function buildMenu() {
     var gm = $('gridMain'), gb = $('gridBonus');
-    var ph = document.createElement('h2'); ph.className = 'secTitle pzSec'; ph.innerHTML = 'Prizes, Achievements &amp; Suggestions <small>spend tickets &middot; see your trophies &middot; suggest patches</small>';
-    var pgd = document.createElement('div'); pgd.className = 'grid'; pgd.id = 'gridPrize'; pgd.appendChild(pzCard('prizes')); pgd.appendChild(pzCard('gallery')); pgd.appendChild(clawCard()); pgd.appendChild(sbCard());
+    var ph = document.createElement('h2'); ph.className = 'secTitle pzSec'; ph.innerHTML = 'Prizes, Records &amp; Suggestions <small>spend tickets &middot; trophies &middot; game history &middot; suggest patches &amp; DLC</small>';
+    var pgd = document.createElement('div'); pgd.className = 'grid'; pgd.id = 'gridPrize'; pgd.appendChild(pzCard('prizes')); pgd.appendChild(pzCard('gallery')); pgd.appendChild(clawCard()); pgd.appendChild(sbCard()); if (GA.Hall) pgd.appendChild(hallCard()); if (GA.DLC) pgd.appendChild(dlcCard());
     var mainTitle = document.querySelector('#menuScroll .secTitle.main'); if (mainTitle) { mainTitle.parentNode.insertBefore(ph, mainTitle); mainTitle.parentNode.insertBefore(pgd, mainTitle); if (GA.Carry) GA.Carry.buildMenu(mainTitle); }
     $('gridMp').appendChild(mpCard());
     GA.MAIN_GAMES.forEach(function (g) { gm.appendChild(card(g, false)); });
@@ -222,6 +242,8 @@
     GA.onMpClose = function () { showPrompt(GA.Hub.near()); };
     if (GA.PZ) GA.PZ.onClose = function () { setTickets(GA.getTickets()); showPrompt(GA.Hub.near()); };
     if (GA.Claw) GA.Claw.onClose = function () { setTickets(GA.getTickets()); showPrompt(GA.Hub.near()); };
+    if (GA.Hall) GA.Hall.onClose = function () { showPrompt(GA.Hub.near()); };
+    if (GA.DLC) GA.DLC.onClose = function () { setTickets(GA.getTickets()); showPrompt(GA.Hub.near()); };
     buildMenu();
     setTickets(GA.getTickets());
     $('hint').textContent = isTouch ? 'Left: move  \u00b7  Right: drag to look  \u00b7  Walk up to a cabinet!' : 'WASD / arrows to walk \u00b7 drag mouse or Q/E to look \u00b7 E/Enter to play \u00b7 M for menu';
@@ -233,7 +255,7 @@
     GA.Fix.init();
     GA.Fix.onChange = function () { showPrompt(GA.Hub.near()); };
     GA.Hub.onNear = function (cab) { if (cab) GA.Audio.play('near'); showPrompt(cab); };
-    GA.Hub.onArea = function (bonus) { var a = $('areaLabel'); a.textContent = bonus ? 'BONUS ZONE' : 'MAIN GAMES'; a.classList.toggle('bonus', bonus); if (bonus && started && GA.Prog) GA.Prog.event('bonusZone'); };
+    GA.Hub.onArea = function (bonus, area) { var a = $('areaLabel'), hall = area === 'hall'; a.textContent = hall ? 'HALL OF RECORDS' : bonus ? 'BONUS ZONE' : 'MAIN GAMES'; a.classList.toggle('bonus', bonus); a.classList.toggle('hall', hall); if (bonus && started && GA.Prog) GA.Prog.event('bonusZone'); };
 
     $('startBtn').addEventListener('click', start);
     $('title').addEventListener('click', function (e) { if (e.target === $('title')) start(); });

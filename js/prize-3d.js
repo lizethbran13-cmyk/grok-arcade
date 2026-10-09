@@ -686,13 +686,52 @@
     g.userData.tick = function (t) { s.rotation.y = Math.sin(t * 0.6) * 0.5; sp.forEach(function (m, i) { var a = t * 1.5 + i * 1.57; m.position.set(Math.cos(a) * 0.36, 0.45 + Math.sin(a * 1.3) * 0.2, Math.sin(a) * 0.3); }); };
     return g;
   }
+  /* ---------- Hall of Game Records prizes ---------- */
+  function gusPlush() {
+    var g = new T.Group(), b = grp(g, 0, 0, 0), C = lam('#8a5a3b'), S = lam('#f1c7a5'), Gr = lam('#d6d6d6');
+    add(b, sph(0.24, 24), C, 0, 0.24, 0, 1, 0.95, 0.85); add(b, sph(0.12, 16), lam('#dfe9f5'), 0, 0.3, 0.14, 0.8, 1.2, 0.5);
+    [-1, 1].forEach(function (sd) { var bt = add(b, cone(0.045, 0.09, 10), lam('#b3123a'), sd * 0.045, 0.43, 0.18); rot(bt, 0, 0, sd * Math.PI / 2); add(b, sph(0.075, 12), C, sd * 0.24, 0.24, 0.04, 0.8, 1.3, 0.8); add(b, sph(0.07, 12), lam('#3b3b4a'), sd * 0.1, 0.03, 0.08, 1, 0.6, 1.3); });
+    add(b, box(0.07, 0.035, 0.01), metal('#e8b84a'), -0.12, 0.34, 0.2);
+    var hd = grp(b, 0, 0.62, 0.02); add(hd, sph(0.2, 26), S, 0, 0, 0, 1.05, 1, 0.95);
+    [-1, 1].forEach(function (sd) { add(hd, sph(0.08, 12), Gr, sd * 0.18, 0.03, -0.04, 0.8, 1, 1.1); add(hd, sph(0.05, 10), S, sd * 0.2, -0.01, 0.02, 0.5, 1, 0.8);
+      var br = add(hd, box(0.1, 0.03, 0.04), Gr, sd * 0.07, 0.1, 0.17); rot(br, 0, 0, -sd * 0.35);
+      add(hd, tor(0.045, 0.007, 7, 6, 20), shiny('#2b2b2b', 80), sd * 0.07, 0.03, 0.19); add(hd, sph(0.02, 8), shiny('#16101f', 90), sd * 0.07, 0.03, 0.18);
+      var mu = add(hd, sph(0.06, 12), Gr, sd * 0.05, -0.08, 0.17, 1.3, 0.55, 0.6); rot(mu, 0, 0, sd * 0.35); });
+    add(hd, sph(0.045, 12), lam('#e8a98a'), 0, -0.02, 0.2);
+    var fr = add(hd, tor(0.035, 0.008, Math.PI, 6, 12), lam('#6b2a2a'), 0, -0.15, 0.17); void fr;
+    tag(b, 0.17, 0.12, 0.15);
+    g.userData.tick = function (t) { hd.rotation.y = Math.sin(t * 0.8) * 0.25; hd.rotation.z = Math.sin(t * 1.3) * 0.05; };
+    return g;
+  }
+  function kcStamp() {
+    var g = new T.Group(); keyRing(g, 0.92);
+    var s = grp(g, 0, 0.3, 0); add(s, sph(0.07, 14), lam('#5b3520'), 0, 0.22, 0, 1, 0.8, 1); add(s, cyl(0.035, 0.045, 0.16, 12), lam('#7a4a2a'), 0, 0.12, 0);
+    add(s, box(0.2, 0.06, 0.14), shiny('#b3123a', 50), 0, 0.02, 0); add(s, box(0.18, 0.015, 0.12), lam('#ffd1dc'), 0, -0.016, 0);
+    g.userData.tick = function (t) { s.position.y = 0.3 + Math.abs(Math.sin(t * 2)) * 0.04; };
+    return g;
+  }
+  function dlcReplica() {
+    var g = new T.Group(); stand(g, '#1c1f3a', 0.9);
+    var B = shiny('#2a2f7a', 90), Ch = metal('#cfd8e6');
+    add(g, box(0.5, 0.52, 0.28), B, 0, 0.36, 0); [-1, 1].forEach(function (sd) { add(g, cyl(0.13, 0.13, 0.52, 18), B, sd * 0.25, 0.36, 0); add(g, cyl(0.04, 0.04, 0.42, 12), new T.MeshPhongMaterial({ color: sd < 0 ? '#7df9ff' : '#ff9ad8', transparent: true, opacity: 0.6 }), sd * 0.32, 0.36, 0.08); add(g, cyl(0.135, 0.135, 0.02, 18), Ch, sd * 0.25, 0.62, 0); });
+    add(g, new T.SphereGeometry(0.18, 22, 12, 0, Math.PI * 2, 0, Math.PI / 2), new T.MeshPhongMaterial({ color: '#bfe9ff', transparent: true, opacity: 0.3, shininess: 120, depthWrite: false }), 0, 0.62, 0);
+    var core = add(g, new T.IcosahedronGeometry(0.07, 1), new T.MeshPhongMaterial({ color: '#ff4fd8', emissive: '#a0158a', flatShading: true }), 0, 0.7, 0);
+    var ring = add(g, tor(0.11, 0.006, 7, 6, 30), glow('#ffe14d'), 0, 0.7, 0);
+    var scr = texOf(128, 64, function (c, w, h) { c.fillStyle = '#04120f'; c.fillRect(0, 0, w, h); c.fillStyle = '#5dff8a'; c.font = 'bold 14px monospace'; c.textAlign = 'center'; c.fillText('DLC 3000', w / 2, 20); for (var i = 0; i < 8; i++) { c.fillStyle = i % 2 ? '#3ff0ff' : '#ff4fd8'; c.fillRect(10 + i * 14, 56 - (i % 4 + 1) * 7, 9, (i % 4 + 1) * 7); } });
+    add(g, new T.PlaneGeometry(0.3, 0.15), new T.MeshBasicMaterial({ map: scr }), 0, 0.42, 0.142);
+    var bulbs = []; for (var i = 0; i < 8; i++) bulbs.push(add(g, sph(0.012, 6), glow('#ffffff'), -0.21 + i * 0.06, 0.56, 0.142));
+    ['#ff3d5a', '#ffe14d', '#4ade80'].forEach(function (c, i) { add(g, cyl(0.018, 0.018, 0.02, 10), glow(c), -0.1 + i * 0.07, 0.22, 0.15).rotation.x = Math.PI / 2; });
+    var lv = add(g, cyl(0.008, 0.008, 0.12, 6), Ch, 0.17, 0.25, 0.15); void lv; add(g, sph(0.022, 10), shiny('#ff3d5a', 100), 0.17, 0.31, 0.15);
+    g.userData.tick = function (t) { core.rotation.y = t * 2; core.rotation.x = t; ring.rotation.x = t * 1.3; var k = Math.floor(t * 6); bulbs.forEach(function (b, i) { b.material = glow((i + k) % 2 ? '#ffe14d' : '#ff4fd8'); }); };
+    return g;
+  }
   var BUILD = {
     kc_snake: kcSnake, kc_joy: kcJoy, poster_arcade: function () { return poster('arcade'); }, poster_brawl: function () { return poster('brawl'); }, cap: cap, propeller: propeller,
     pl_luna: function () { return rat('luna'); }, pl_pirat: function () { return rat('pirat'); }, pl_snowie: function () { return rat('snowie'); },
     pl_invader: invader, pl_candy: candy, pl_brutus: brutus, tr_ring: ringTrophy,
     pl_goob: goob, pl_boo: boo, pl_waltzy: waltzy, vac_replica: vacReplica, kc_flash: kcFlash, goo_jar: gooJar, lava_lamp: lavaLamp,
     pl_grokloon: grokloonPlush, rides_monster: ridesMonster, taxi_hat: taxiHat, kc_wrench: kcWrench,
-    pl_embercub: function () { return critterPlush('embercub'); }, pl_puddlepup: function () { return critterPlush('puddlepup'); }, pl_leafkit: function () { return critterPlush('leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue,
+    pl_embercub: function () { return critterPlush('embercub'); }, pl_puddlepup: function () { return critterPlush('puddlepup'); }, pl_leafkit: function () { return critterPlush('leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue, pl_gus: gusPlush, kc_stamp: kcStamp, dlc_replica: dlcReplica,
     pl_zebra: zebraPlush, pl_rhino: rhinoPlush, pl_leopard: leopardPlush, ranger_hat: rangerHat, kc_dart: kcDart, snow_globe: snowGlobe, rescue_truck: rescueTruck,
     pl_dash: function () { return dashHero('grok'); }, pl_speedy: function () { return dashHero('speedy'); }, pl_floaty: function () { return dashHero('floaty'); },
     fc_ball: fcBall, gary_bobble: gary, land_fig: landFig, sky_plane: skyPlane, grid_car: gridCar,

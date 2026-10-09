@@ -49,7 +49,8 @@ GA.BONUS_GAMES = [
   { id: 'snack', name: 'Snack Stack', desc: 'Catch falling pet snacks on your tray, keep the wobbly pile balanced and serve it to Candy & Luna. No chocolate!', color: '#ff8fd0', color2: '#ffd23b' },
   { id: 'parking', name: 'Parking Panic', desc: 'Your car slides along the street. Tap to zoom into the glowing empty parking spot. Don\'t bump the parked cars! A Grok Life game.', color: '#ff4fd8', color2: '#4ade80' },
   { id: 'rush', name: 'Rush Hour', desc: 'Swerve your Grok Rides car through highway traffic. Tap left or right to switch lanes, grab coins, don\'t bonk! A Grok Rides game.', color: '#38bdf8', color2: '#ffd23f' },
-  { id: 'catch', name: 'Critter Catch', desc: 'Critters pop out of the bushes! Tap them fast to toss an orb and catch them. Shiny critters are worth extra, but don\'t tap the Gloom blobs! A Grok Poke game.', color: '#5dd66f', color2: '#ff6b6b' }
+  { id: 'catch', name: 'Critter Catch', desc: 'Critters pop out of the bushes! Tap them fast to toss an orb and catch them. Shiny critters are worth extra, but don\'t tap the Gloom blobs! A Grok Poke game.', color: '#5dd66f', color2: '#ff6b6b' },
+  { id: 'filing', name: 'Gus\u2019s Filing Frenzy', desc: 'Folders rain down on Gus\u2019s cabinet! Tap the drawer that matches each folder\u2019s color and toss the junk mail. Gold-bordered RECORD folders are worth 5. A Hall of Game Records game.', color: '#e8b84a', color2: '#ff4fd8' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };

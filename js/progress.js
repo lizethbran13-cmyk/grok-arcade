@@ -66,7 +66,8 @@
     snack: [200, 'Snack Chef', 'Score 200 in Snack Stack', '\uD83E\uDDC1'],
     parking: [15, 'Parking Pro', 'Score 15 in Parking Panic', '\uD83C\uDD7F\uFE0F'],
     rush: [30, 'Rush Hour Hero', 'Score 30 in Rush Hour', '\uD83D\uDE95'],
-    catch: [40, 'Critter Wrangler', 'Score 40 in Critter Catch', '\uD83D\uDC3E']
+    catch: [40, 'Critter Wrangler', 'Score 40 in Critter Catch', '\uD83D\uDC3E'],
+    filing: [40, 'Master Archivist', 'Score 40 in Gus\u2019s Filing Frenzy', '\uD83D\uDDC4\uFE0F']
   };
   var A = [
     { id: 'first_ticket', cat: 'Tickets', icon: '\uD83C\uDF9F\uFE0F', name: 'First Ticket!', desc: 'Earn your first ticket in the Bonus Zone', p: function () { return [st.earned, 1]; } },
@@ -113,6 +114,13 @@
   A.push({ id: 'vac_owner', cat: 'Prizes', icon: '\uD83C\uDF00', name: 'Who You Gonna Call?', desc: 'Win the Grok-Vac Replica', p: function () { return [S.owned.vac_replica ? 1 : 0, 1]; } });
   A.push({ id: 'sanctuary', cat: 'Prizes', icon: '\uD83E\uDD93', name: 'Sanctuary Keeper', desc: 'Own the Blocky Zebra, Baby Rhino and Snow Leopard plushies', p: function () { return [['pl_zebra', 'pl_rhino', 'pl_leopard'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'road_trip', cat: 'Prizes', icon: '\uD83D\uDE97', name: 'Road Trip Crew', desc: 'Own the Grokloon Plush, Monster Truck Replica and Taxi Roof Light Hat', p: function () { return [['pl_grokloon', 'rides_monster', 'taxi_hat'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
+  A.push({ id: 'filing_streak', cat: 'High Scores', icon: '\uD83D\uDCC1', name: 'Gus Almost Smiled', desc: 'File 20 folders in a row in Gus\u2019s Filing Frenzy', p: function () { return [ev('filingCombo20') ? 1 : 0, 1]; } });
+  A.push({ id: 'hall_visit', cat: 'Arcade', icon: '\uD83C\uDFDB\uFE0F', name: 'Museum Goer', desc: 'Visit an exhibit in the Hall of Game Records', p: function () { return [ev('hallSeen'), 1]; } });
+  A.push({ id: 'hall_all', cat: 'Arcade', icon: '\uD83D\uDCDC', name: 'Records Keeper', desc: 'Visit every exhibit in the Hall of Game Records', p: function () { return [ev('hallSeen'), GA.MAIN_GAMES.length]; } });
+  A.push({ id: 'old_version', cat: 'Arcade', icon: '\uD83D\uDCFC', name: 'Retro Gamer', desc: 'Play an old version of a game from the Hall of Game Records', p: function () { return [ev('oldVersion'), 1]; } });
+  A.push({ id: 'dlc_idea', cat: 'Arcade', icon: '\uD83D\uDDA8\uFE0F', name: 'DLC Dreamer', desc: 'Submit a DLC idea at the DLC Machine 3000', p: function () { return [ev('dlcIdea'), 1]; } });
+  A.push({ id: 'dlc_owner', cat: 'Prizes', icon: '\uD83C\uDF81', name: 'Day-One DLC', desc: 'Unlock a shipped DLC with tickets', p: function () { return [ev('dlcBuy'), 1]; } });
+  A.push({ id: 'gus_fan', cat: 'Prizes', icon: '\uD83E\uDDD3', name: 'Gus\u2019s Biggest Fan', desc: 'Own the Grumpy Gus Plush and the DLC Machine 3000 Replica', p: function () { return [['pl_gus', 'dlc_replica'].filter(function (k) { return S.owned[k]; }).length, 2]; } });
   A.push({ id: 'poke_pals', cat: 'Prizes', icon: '\uD83D\uDC3E', name: 'Critter Collector', desc: 'Own the Embercub, Puddlepup and Leafkit plushies', p: function () { return [['pl_embercub', 'pl_puddlepup', 'pl_leafkit'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'designer', cat: 'Arcade', icon: '\uD83D\uDCA1', name: 'Game Designer', desc: 'Send your first patch suggestion from the Suggestion Booth', p: function () { return [ev('suggest') ? 1 : 0, 1]; } });
   A.push({ id: 'claw_first', cat: 'Claw', icon: '\uD83E\uDE9D', name: 'Claw Catcher', desc: 'Win a prize from a claw machine', p: function () { return [ev('clawWins') ? 1 : 0, 1]; } });
