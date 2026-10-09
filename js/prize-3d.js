@@ -625,19 +625,81 @@
     add(w, cyl(0.05, 0.05, 0.04, 14), M, 0, -0.22, 0).rotation.x = Math.PI / 2;
     return g;
   }
+
+  /* ---------- Grok Poke prizes ---------- */
+  var CRIT = { embercub: { c: '#ff9f43', b: '#ffe0b8' }, puddlepup: { c: '#4fb3ff', b: '#d6f0ff' }, leafkit: { c: '#5dd66f', b: '#e3ffd9' } };
+  function critterBody(par, k, matOverride) {
+    var C = CRIT[k], M = matOverride || lam(C.c), Bm = matOverride || lam(C.b);
+    var body = add(par, sph(0.2, 24), M, 0, 0.2, 0, 1, 0.95, 0.9);
+    add(par, sph(0.13, 18), Bm, 0, 0.18, 0.1, 1, 1, 0.6);
+    [-1, 1].forEach(function (sd) { add(par, sph(0.07, 12), M, sd * 0.11, 0.05, 0.08, 1, 0.7, 1.2); });
+    var hd = grp(par, 0, 0.5, 0.02);
+    add(hd, sph(0.2, 26), M, 0, 0, 0, 1.08, 0.98, 1);
+    add(hd, sph(0.09, 14), Bm, 0, -0.06, 0.16, 1.2, 0.8, 0.6);
+    eyes(hd, 0.02, 0.17, 0.08, 0.035); if (!matOverride) blush(hd, -0.04, 0.17, 0.13);
+    smile(hd, -0.07, 0.2, 0.03);
+    if (k === 'embercub') {
+      [-1, 1].forEach(function (sd) { var e = add(hd, cone(0.07, 0.16, 12), M, sd * 0.12, 0.18, 0); rot(e, 0, 0, -sd * 0.35); });
+      var tl = add(par, cone(0.07, 0.22, 12), matOverride || glow('#ffcf3a'), 0, 0.26, -0.22); rot(tl, -0.9, 0, 0);
+      add(par, sph(0.06, 10), matOverride || glow('#ff6b2c'), 0, 0.33, -0.3);
+    } else if (k === 'puddlepup') {
+      [-1, 1].forEach(function (sd) { var e = add(hd, sph(0.07, 12), M, sd * 0.19, 0.0, -0.02, 0.6, 1.5, 1); rot(e, 0, 0, sd * 0.3); });
+      var fin = add(hd, cone(0.06, 0.14, 10), lam('#2b8fe0'), 0, 0.2, -0.02, 0.5, 1, 1.4); void fin;
+      add(par, sph(0.07, 12), M, 0, 0.16, -0.2, 1, 0.8, 1.4);
+    } else {
+      [-1, 1].forEach(function (sd) { var e = add(hd, sph(0.08, 12), lam('#2f9e44'), sd * 0.12, 0.17, 0, 0.45, 1.3, 0.25); rot(e, 0, 0, -sd * 0.45); });
+      var lf = add(par, sph(0.1, 12), lam('#2f9e44'), 0, 0.3, -0.22, 0.4, 1.3, 0.3); rot(lf, -0.6, 0, 0);
+    }
+    return { body: body, head: hd };
+  }
+  function critterPlush(k) {
+    var g = new T.Group(), b = grp(g, 0, 0, 0); var r = critterBody(b, k);
+    tag(b, 0.15, 0.12, 0.12);
+    g.userData.tick = function (t) { r.head.rotation.z = Math.sin(t * 1.6) * 0.08; r.head.position.y = 0.5 + Math.sin(t * 2.2) * 0.01; };
+    return g;
+  }
+  function kcOrb() {
+    var g = new T.Group(); keyRing(g, 0.9);
+    var o = grp(g, 0, 0.42, 0);
+    var top = add(o, new T.SphereGeometry(0.16, 26, 14, 0, Math.PI * 2, 0, Math.PI / 2), shiny('#ff4f6b', 80)); void top;
+    add(o, new T.SphereGeometry(0.16, 26, 14, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), shiny('#ffffff', 80));
+    add(o, cyl(0.163, 0.163, 0.03, 26), lam('#222222'));
+    var bt = add(o, cyl(0.05, 0.05, 0.03, 18), lam('#222222'), 0, 0, 0.155); bt.rotation.x = Math.PI / 2;
+    var bt2 = add(o, cyl(0.032, 0.032, 0.035, 18), glow('#ffffff'), 0, 0, 0.165); bt2.rotation.x = Math.PI / 2;
+    g.userData.tick = function (t) { o.rotation.y = Math.sin(t * 1.2) * 0.4; };
+    return g;
+  }
+  function earsHat() {
+    var g = new T.Group(), O = lam('#ff9f43');
+    var band = add(g, tor(0.3, 0.035, Math.PI, 10, 28), O, 0, 0.06, 0); band.rotation.y = Math.PI / 2;
+    [-1, 1].forEach(function (sd) { var e = add(g, cone(0.11, 0.24, 14), O, 0, 0.3, sd * 0.2); rot(e, sd * 0.35, 0, 0); var inr = add(g, cone(0.06, 0.14, 10), lam('#ffe0b8'), 0.04, 0.27, sd * 0.2); rot(inr, sd * 0.35, 0, 0); });
+    add(g, sph(0.05, 10), glow('#ffcf3a'), 0, 0.33, 0);
+    g.userData.hat = { y: 0.02, s: 0.75 };
+    return g;
+  }
+  function shinyStatue() {
+    var g = new T.Group(); stand(g, '#1f6b38', 0.8);
+    var s = grp(g, 0, 0.08, 0); s.scale.setScalar(1.05);
+    critterBody(s, 'embercub', metal('#ffcf3a'));
+    var sp = [];
+    for (var i = 0; i < 4; i++) sp.push(add(g, sph(0.035, 8), glow('#fff8b0'), 0, 0, 0));
+    g.userData.tick = function (t) { s.rotation.y = Math.sin(t * 0.6) * 0.5; sp.forEach(function (m, i) { var a = t * 1.5 + i * 1.57; m.position.set(Math.cos(a) * 0.36, 0.45 + Math.sin(a * 1.3) * 0.2, Math.sin(a) * 0.3); }); };
+    return g;
+  }
   var BUILD = {
     kc_snake: kcSnake, kc_joy: kcJoy, poster_arcade: function () { return poster('arcade'); }, poster_brawl: function () { return poster('brawl'); }, cap: cap, propeller: propeller,
     pl_luna: function () { return rat('luna'); }, pl_pirat: function () { return rat('pirat'); }, pl_snowie: function () { return rat('snowie'); },
     pl_invader: invader, pl_candy: candy, pl_brutus: brutus, tr_ring: ringTrophy,
     pl_goob: goob, pl_boo: boo, pl_waltzy: waltzy, vac_replica: vacReplica, kc_flash: kcFlash, goo_jar: gooJar, lava_lamp: lavaLamp,
     pl_grokloon: grokloonPlush, rides_monster: ridesMonster, taxi_hat: taxiHat, kc_wrench: kcWrench,
+    pl_embercub: function () { return critterPlush('embercub'); }, pl_puddlepup: function () { return critterPlush('puddlepup'); }, pl_leafkit: function () { return critterPlush('leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue,
     pl_zebra: zebraPlush, pl_rhino: rhinoPlush, pl_leopard: leopardPlush, ranger_hat: rangerHat, kc_dart: kcDart, snow_globe: snowGlobe, rescue_truck: rescueTruck,
     pl_dash: function () { return dashHero('grok'); }, pl_speedy: function () { return dashHero('speedy'); }, pl_floaty: function () { return dashHero('floaty'); },
     fc_ball: fcBall, gary_bobble: gary, land_fig: landFig, sky_plane: skyPlane, grid_car: gridCar,
     tr_bronze: function () { return trophy('#cd7f32'); }, tr_silver: function () { return trophy('#c0c7d0'); }, tr_gold: function () { return trophy('#ffcf3a', true); }, golden_joy: goldenJoy
   };
   Object.keys(FIGHTERS).forEach(function (k) { BUILD['pl_' + k] = function () { return fighter(k); }; });
-  var HATS = { cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1 };
+  var HATS = { cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1, ears_hat: 1 };
 
   function build(id) {
     if (/^ach:/.test(id)) return medal(id.slice(4));

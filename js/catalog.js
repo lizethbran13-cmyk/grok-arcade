@@ -30,7 +30,9 @@ GA.MAIN_GAMES = [
   { id: 'blocks', mp: true, name: 'Grok Blocks', desc: 'A blocky wildlife rescue! Explore 5 biomes, calm 18 kinds of animals with darts, chase runners in your truck and outsmart poachers. Co-op online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-blocks/', color: '#4ade80', color2: '#fbbf24' },
   { id: 'rides', mp: true, name: 'Grok Rides', desc: 'Free-roam driving in a big world: city, town, desert, icy tundra and a mountain! Drive cars, trucks, a limo, a monster truck, boats, helicopters, planes and hot air balloons. Race NPCs or friends, do jobs for cash. Co-op online!',
-    url: 'https://lizethbran13-cmyk.github.io/grok-rides/', color: '#ff4fd8', color2: '#38bdf8' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-rides/', color: '#ff4fd8', color2: '#38bdf8' },
+  { id: 'poke', mp: true, name: 'Grok Poke', desc: 'A big 3D adventure: explore 7 regions, befriend 39 critters, real-time battles, 5 dungeons with bosses, towns you can walk into, and trade or explore with friends online!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-poke/', color: '#5dd66f', color2: '#ffd23f' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -46,7 +48,8 @@ GA.BONUS_GAMES = [
   { id: 'skee', name: 'Skee-Ball', desc: 'The classic ticket game! Drag up to roll the ball into the rings. Corner pockets are 100, last ball is GOLDEN!', color: '#ffb020', color2: '#a78bfa' },
   { id: 'snack', name: 'Snack Stack', desc: 'Catch falling pet snacks on your tray, keep the wobbly pile balanced and serve it to Candy & Luna. No chocolate!', color: '#ff8fd0', color2: '#ffd23b' },
   { id: 'parking', name: 'Parking Panic', desc: 'Your car slides along the street. Tap to zoom into the glowing empty parking spot. Don\'t bump the parked cars! A Grok Life game.', color: '#ff4fd8', color2: '#4ade80' },
-  { id: 'rush', name: 'Rush Hour', desc: 'Swerve your Grok Rides car through highway traffic. Tap left or right to switch lanes, grab coins, don\'t bonk! A Grok Rides game.', color: '#38bdf8', color2: '#ffd23f' }
+  { id: 'rush', name: 'Rush Hour', desc: 'Swerve your Grok Rides car through highway traffic. Tap left or right to switch lanes, grab coins, don\'t bonk! A Grok Rides game.', color: '#38bdf8', color2: '#ffd23f' },
+  { id: 'catch', name: 'Critter Catch', desc: 'Critters pop out of the bushes! Tap them fast to toss an orb and catch them. Shiny critters are worth extra, but don\'t tap the Gloom blobs! A Grok Poke game.', color: '#5dd66f', color2: '#ff6b6b' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };

@@ -6,7 +6,7 @@
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
-  var MAIN_STEP = GA.MAIN_GAMES.length > 14 ? 1.55 : GA.MAIN_GAMES.length > 13 ? 1.66 : GA.MAIN_GAMES.length > 12 ? 1.78 : GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 14 ? -16.95 : GA.MAIN_GAMES.length > 13 ? -17.0 : GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
+  var MAIN_STEP = GA.MAIN_GAMES.length > 15 ? 1.48 : GA.MAIN_GAMES.length > 14 ? 1.55 : GA.MAIN_GAMES.length > 13 ? 1.66 : GA.MAIN_GAMES.length > 12 ? 1.78 : GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 15 ? -17.22 : GA.MAIN_GAMES.length > 14 ? -16.95 : GA.MAIN_GAMES.length > 13 ? -17.0 : GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -180,7 +180,7 @@
     g.strokeStyle = '#ffe14d'; g.lineWidth = 10; g.strokeRect(8, 8, W - 16, H - 16);
     neonText(g, 'BEST SCORES', W / 2, 62, 58, '#ffe14d');
     GA.BONUS_GAMES.forEach(function (gm, i) {
-      var nB = GA.BONUS_GAMES.length, y = (nB > 13 ? 90 : nB > 12 ? 92 : nB > 11 ? 96 : nB > 10 ? 100 : nB > 9 ? 106 : nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 13 ? 30 : nB > 12 ? 32 : nB > 11 ? 34 : nB > 10 ? 37 : nB > 9 ? 40 : nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 13 ? 21 : nB > 12 ? 22 : nB > 11 ? 24 : nB > 10 ? 26 : nB > 9 ? 28 : nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
+      var nB = GA.BONUS_GAMES.length, y = (nB > 14 ? 88 : nB > 13 ? 90 : nB > 12 ? 92 : nB > 11 ? 96 : nB > 10 ? 100 : nB > 9 ? 106 : nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 14 ? 28 : nB > 13 ? 30 : nB > 12 ? 32 : nB > 11 ? 34 : nB > 10 ? 37 : nB > 9 ? 40 : nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 14 ? 20 : nB > 13 ? 21 : nB > 12 ? 22 : nB > 11 ? 24 : nB > 10 ? 26 : nB > 9 ? 28 : nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
       g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.fillText(String(GA.getBest(gm.id)), W - 50, y);
     });
     d.tex.needsUpdate = true;
@@ -645,6 +645,28 @@
         g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#1f6b38'; g.fillText('GROK BLOCKS', w / 2, 24);
         break;
       }
+      case 'poke': {
+        var gp1 = g.createLinearGradient(0, 0, 0, h); gp1.addColorStop(0, '#8fd8ff'); gp1.addColorStop(1, '#d9f99d'); g.fillStyle = gp1; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#6ec96a'; g.beginPath(); g.ellipse(40, h - 30, 80, 34, 0, 0, 7); g.fill(); g.beginPath(); g.ellipse(w - 30, h - 26, 90, 36, 0, 0, 7); g.fill();
+        g.fillStyle = '#4caf50'; g.fillRect(0, h - 26, w, 26);
+        for (i = 0; i < 3; i++) { var tx3 = 20 + i * 70; g.fillStyle = '#8b5a2b'; g.fillRect(tx3 - 3, h - 70, 6, 30); g.fillStyle = '#2f9e44'; g.beginPath(); g.arc(tx3, h - 76, 16, 0, 7); g.fill(); }
+        var by3 = h - 52 + Math.abs(Math.sin(t * 4)) * -10, bx3 = w * 0.5 + Math.sin(t * 1.2) * 30;
+        g.fillStyle = '#ff9f43'; g.beginPath(); g.arc(bx3, by3, 15, 0, 7); g.fill(); g.beginPath(); g.moveTo(bx3 - 12, by3 - 8); g.lineTo(bx3 - 6, by3 - 24); g.lineTo(bx3 - 1, by3 - 11); g.moveTo(bx3 + 12, by3 - 8); g.lineTo(bx3 + 6, by3 - 24); g.lineTo(bx3 + 1, by3 - 11); g.fill();
+        g.fillStyle = '#ffe14d'; g.beginPath(); g.moveTo(bx3 - 2, by3 - 2); g.lineTo(bx3 + 4, by3 + 2); g.lineTo(bx3 - 2, by3 + 6); g.fill();
+        g.fillStyle = '#16101f'; g.beginPath(); g.arc(bx3 - 5, by3 - 3, 2.4, 0, 7); g.fill(); g.beginPath(); g.arc(bx3 + 5, by3 - 3, 2.4, 0, 7); g.fill();
+        var ox3 = 30 + ((t * 60) % (w - 20)), oy3 = 60 - Math.sin(((t * 60) % (w - 20)) / (w - 20) * Math.PI) * 30;
+        g.fillStyle = '#ff4f6b'; g.beginPath(); g.arc(ox3, oy3, 8, Math.PI, 0); g.fill(); g.fillStyle = '#fff'; g.beginPath(); g.arc(ox3, oy3, 8, 0, Math.PI); g.fill(); g.fillStyle = '#222'; g.fillRect(ox3 - 8, oy3 - 1, 16, 2); g.beginPath(); g.arc(ox3, oy3, 2.5, 0, 7); g.fill();
+        g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#1f6b38'; g.fillText('GROK POKE', w / 2, 24);
+        break;
+      }
+      case 'catch': {
+        g.fillStyle = '#7cc56a'; g.fillRect(0, 0, w, h);
+        for (i = 0; i < 6; i++) { var cx4 = w * (0.2 + (i % 3) * 0.3), cy4 = h * (i < 3 ? 0.45 : 0.8); g.fillStyle = '#2f9e44'; [[-12, 0, 12], [12, 0, 12], [0, -8, 14]].forEach(function (q) { g.beginPath(); g.arc(cx4 + q[0], cy4 + q[1], q[2], 0, 7); g.fill(); }); }
+        var pi4 = Math.floor(t / 0.8) % 6, px4 = w * (0.2 + (pi4 % 3) * 0.3), py4 = h * (pi4 < 3 ? 0.45 : 0.8) - 18 - Math.sin((t % 0.8) / 0.8 * Math.PI) * 10;
+        g.fillStyle = pi4 === 4 ? '#5b4b8a' : '#ffb84d'; g.beginPath(); g.arc(px4, py4, 11, 0, 7); g.fill(); g.fillStyle = '#16101f'; g.beginPath(); g.arc(px4 - 4, py4 - 2, 2, 0, 7); g.fill(); g.beginPath(); g.arc(px4 + 4, py4 - 2, 2, 0, 7); g.fill();
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('CRITTER CATCH', w / 2, 22);
+        break;
+      }
       case 'rides': {
         var gr1 = g.createLinearGradient(0, 0, 0, h); gr1.addColorStop(0, '#7dd3fc'); gr1.addColorStop(1, '#fbcfe8'); g.fillStyle = gr1; g.fillRect(0, 0, w, h);
         g.fillStyle = '#c4b5fd'; g.beginPath(); g.moveTo(0, h - 50); g.lineTo(46, h - 104); g.lineTo(84, h - 70); g.lineTo(126, h - 120); g.lineTo(w, h - 56); g.lineTo(w, h - 40); g.lineTo(0, h - 40); g.fill();
@@ -766,7 +788,7 @@
     // main games: along the north wall, facing south
     GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    var nb = GA.BONUS_GAMES.length, stepB = nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
+    var nb = GA.BONUS_GAMES.length, stepB = nb > 14 ? 1.5 : nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
     GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2); });
   }
 

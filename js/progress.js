@@ -65,7 +65,8 @@
     skee: [250, 'Skee-Ball Wizard', 'Score 250 in Skee-Ball', '\uD83C\uDFB3'],
     snack: [200, 'Snack Chef', 'Score 200 in Snack Stack', '\uD83E\uDDC1'],
     parking: [15, 'Parking Pro', 'Score 15 in Parking Panic', '\uD83C\uDD7F\uFE0F'],
-    rush: [30, 'Rush Hour Hero', 'Score 30 in Rush Hour', '\uD83D\uDE95']
+    rush: [30, 'Rush Hour Hero', 'Score 30 in Rush Hour', '\uD83D\uDE95'],
+    catch: [40, 'Critter Wrangler', 'Score 40 in Critter Catch', '\uD83D\uDC3E']
   };
   var A = [
     { id: 'first_ticket', cat: 'Tickets', icon: '\uD83C\uDF9F\uFE0F', name: 'First Ticket!', desc: 'Earn your first ticket in the Bonus Zone', p: function () { return [st.earned, 1]; } },
@@ -104,6 +105,7 @@
   A.push({ id: 'skee_100', cat: 'High Scores', icon: '\uD83D\uDCAF', name: 'Hundred Club', desc: 'Sink a Skee-Ball in a 100 pocket', p: function () { return [ev('skee100') ? 1 : 0, 1]; } });
   A.push({ id: 'snack_tower', cat: 'High Scores', icon: '\uD83C\uDF70', name: 'Tower of Treats', desc: 'Serve a pile of 10+ snacks in Snack Stack', p: function () { return [ev('snack10') ? 1 : 0, 1]; } });
   A.push({ id: 'rush_streak', cat: 'High Scores', icon: '\uD83D\uDEE3\uFE0F', name: 'Smooth Operator', desc: 'Pass 25 cars in a row without a bonk in Rush Hour', p: function () { return [ev('rush25') ? 1 : 0, 1]; } });
+  A.push({ id: 'catch_shiny', cat: 'High Scores', icon: '\u2728', name: 'Shiny Hunter', desc: 'Catch 3 shiny critters in one game of Critter Catch', p: function () { return [ev('catchShiny3') ? 1 : 0, 1]; } });
   A.push({ id: 'park_streak', cat: 'High Scores', icon: '\uD83D\uDE97', name: 'Valet Legend', desc: 'Park 10 cars in a row in Parking Panic', p: function () { return [ev('park10') ? 1 : 0, 1]; } });
   A.push({ id: 'dash_team', cat: 'Prizes', icon: '\uD83D\uDCA8', name: 'Team Dash', desc: 'Own the Grok Dash Hero, Speedy and Floaty plushies', p: function () { return [['pl_dash', 'pl_speedy', 'pl_floaty'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'ring_lord', cat: 'Prizes', icon: '\uD83D\uDCAB', name: 'Lord of the Ring', desc: 'Win the Golden Ring Trophy', p: function () { return [S.owned.tr_ring ? 1 : 0, 1]; } });
@@ -111,6 +113,7 @@
   A.push({ id: 'vac_owner', cat: 'Prizes', icon: '\uD83C\uDF00', name: 'Who You Gonna Call?', desc: 'Win the Grok-Vac Replica', p: function () { return [S.owned.vac_replica ? 1 : 0, 1]; } });
   A.push({ id: 'sanctuary', cat: 'Prizes', icon: '\uD83E\uDD93', name: 'Sanctuary Keeper', desc: 'Own the Blocky Zebra, Baby Rhino and Snow Leopard plushies', p: function () { return [['pl_zebra', 'pl_rhino', 'pl_leopard'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'road_trip', cat: 'Prizes', icon: '\uD83D\uDE97', name: 'Road Trip Crew', desc: 'Own the Grokloon Plush, Monster Truck Replica and Taxi Roof Light Hat', p: function () { return [['pl_grokloon', 'rides_monster', 'taxi_hat'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
+  A.push({ id: 'poke_pals', cat: 'Prizes', icon: '\uD83D\uDC3E', name: 'Critter Collector', desc: 'Own the Embercub, Puddlepup and Leafkit plushies', p: function () { return [['pl_embercub', 'pl_puddlepup', 'pl_leafkit'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'designer', cat: 'Arcade', icon: '\uD83D\uDCA1', name: 'Game Designer', desc: 'Send your first patch suggestion from the Suggestion Booth', p: function () { return [ev('suggest') ? 1 : 0, 1]; } });
   A.push({ id: 'claw_first', cat: 'Claw', icon: '\uD83E\uDE9D', name: 'Claw Catcher', desc: 'Win a prize from a claw machine', p: function () { return [ev('clawWins') ? 1 : 0, 1]; } });
   A.push({ id: 'claw_tricky', cat: 'Claw', icon: '\uD83C\uDFAF', name: 'Steady Hands', desc: 'Win a prize from the Tricky Claw', p: function () { return [ev('clawTricky') ? 1 : 0, 1]; } });
