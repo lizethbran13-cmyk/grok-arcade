@@ -28,7 +28,9 @@ GA.MAIN_GAMES = [
   { id: 'spooks', mp: true, name: 'Grok Spooks', desc: 'A cute-spooky 3D ghost hunt! Flash, vacuum and tug ghosts, solve co-op puzzles (or use your Goo clone), light up 6 haunted areas and beat 6 boss ghosts with a friend.',
     url: 'https://lizethbran13-cmyk.github.io/grok-spooks/', color: '#5dff8a', color2: '#b06bff' },
   { id: 'blocks', mp: true, name: 'Grok Blocks', desc: 'A blocky wildlife rescue! Explore 5 biomes, calm 18 kinds of animals with darts, chase runners in your truck and outsmart poachers. Co-op online!',
-    url: 'https://lizethbran13-cmyk.github.io/grok-blocks/', color: '#4ade80', color2: '#fbbf24' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-blocks/', color: '#4ade80', color2: '#fbbf24' },
+  { id: 'rides', mp: true, name: 'Grok Rides', desc: 'Free-roam driving in a big world: city, town, desert, icy tundra and a mountain! Drive cars, trucks, a limo, a monster truck, boats, helicopters, planes and hot air balloons. Race NPCs or friends, do jobs for cash. Co-op online!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-rides/', color: '#ff4fd8', color2: '#38bdf8' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -43,7 +45,8 @@ GA.BONUS_GAMES = [
   { id: 'slice', name: 'Neon Slice', desc: 'Swipe through flying neon fruit to slice it. Combos, golden stars, and watch out for bombs!', color: '#3ff0ff', color2: '#ff4fd8' },
   { id: 'skee', name: 'Skee-Ball', desc: 'The classic ticket game! Drag up to roll the ball into the rings. Corner pockets are 100, last ball is GOLDEN!', color: '#ffb020', color2: '#a78bfa' },
   { id: 'snack', name: 'Snack Stack', desc: 'Catch falling pet snacks on your tray, keep the wobbly pile balanced and serve it to Candy & Luna. No chocolate!', color: '#ff8fd0', color2: '#ffd23b' },
-  { id: 'parking', name: 'Parking Panic', desc: 'Your car slides along the street. Tap to zoom into the glowing empty parking spot. Don\'t bump the parked cars! A Grok Life game.', color: '#ff4fd8', color2: '#4ade80' }
+  { id: 'parking', name: 'Parking Panic', desc: 'Your car slides along the street. Tap to zoom into the glowing empty parking spot. Don\'t bump the parked cars! A Grok Life game.', color: '#ff4fd8', color2: '#4ade80' },
+  { id: 'rush', name: 'Rush Hour', desc: 'Swerve your Grok Rides car through highway traffic. Tap left or right to switch lanes, grab coins, don\'t bonk! A Grok Rides game.', color: '#38bdf8', color2: '#ffd23f' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };

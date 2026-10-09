@@ -22,6 +22,8 @@
     { id: 'kc_dart', cat: 'fun', name: 'Tranq Dart Keychain', price: 25, desc: 'A tiny orange rescue dart from Grok Blocks. The rangers swear it only makes you sleepy.' },
     { id: 'ranger_hat', cat: 'fun', name: 'Ranger Hat', price: 40, desc: 'The khaki field hat the Grok Blocks crew wears on the savanna. You can wear it too!' },
     { id: 'snow_globe', cat: 'fun', name: 'Sanctuary Snow Globe', price: 45, desc: 'Shake it and snow falls on a tiny safe sanctuary, blocky zebra included.' },
+    { id: 'kc_wrench', cat: 'fun', name: 'Golden Wrench Keychain', price: 20, desc: 'The Grok Rides mechanic\u2019s lucky golden wrench. Fixes dents (in your heart).' },
+    { id: 'taxi_hat', cat: 'fun', name: 'Taxi Roof Light Hat', price: 35, desc: 'The glowing TAXI sign from a Grok Cab, now a hat. Wear it and everyone wants a ride!' },
     { id: 'pl_luna', cat: 'plush', name: 'Luna Plush', price: 40, desc: 'Silver sweetheart rat plushie.' },
     { id: 'pl_pirat', cat: 'plush', name: 'Pi-rat Plush', price: 40, desc: 'One eye, big heart, extra soft.' },
     { id: 'pl_snowie', cat: 'plush', name: 'Snowie Plush', price: 40, desc: 'Snow-white speedster plushie.' },
@@ -37,6 +39,7 @@
     { id: 'pl_zebra', cat: 'plush', name: 'Blocky Zebra Plush', price: 50, desc: 'A squishy block zebra from the savanna. Stripe-perfect and very huggable.' },
     { id: 'pl_rhino', cat: 'plush', name: 'Baby Rhino Plush', price: 65, desc: 'A chubby baby rhino with one tiny horn. Feisty in the game, soft on the shelf.' },
     { id: 'pl_leopard', cat: 'plush', name: 'Snow Leopard Plush', price: 80, desc: 'The snowy-peaks runner, now a plush with spotted ears and a big tail.' },
+    { id: 'pl_grokloon', cat: 'plush', name: 'Grokloon Plush', price: 55, desc: 'The pink and yellow Grok Rides hot air balloon, as a smiley squishy plush with a tiny basket.' },
     { id: 'pl_blaze', cat: 'plush', name: 'BLAZE Plush', price: 75, desc: 'Grok Brawl\u2019s fire brawler.' },
     { id: 'pl_volt', cat: 'plush', name: 'VOLT Plush', price: 75, desc: 'Grok Brawl\u2019s lightning speedster.' },
     { id: 'pl_boulder', cat: 'plush', name: 'BOULDER Plush', price: 75, desc: 'Grok Brawl\u2019s stone titan.' },
@@ -50,6 +53,7 @@
     { id: 'sky_plane', cat: 'model', name: 'Grok Sky Airliner Model', price: 180, desc: 'A shiny display model of your airliner.' },
     { id: 'vac_replica', cat: 'model', name: 'Grok-Vac Replica', price: 220, desc: 'A full-size Grok-Vac 3000 on a stand, glowing ghost tank and all.' },
     { id: 'rescue_truck', cat: 'model', name: 'Rescue Truck Replica', price: 200, desc: 'The Grok Blocks ranger truck on a stand, cage bed, spare dart and all.' },
+    { id: 'rides_monster', cat: 'model', name: 'Monster Truck Replica', price: 190, desc: 'The Grok Rides Big Grok monster truck on a stand. Giant wheels, flame paint, very bouncy.' },
     { id: 'grid_car', cat: 'model', name: 'Grok Grid F1 Car Model', price: 200, desc: 'Pole-position racer on a display stand.' },
     { id: 'tr_bronze', cat: 'trophy', name: 'Bronze Trophy', price: 200, desc: 'A real arcade champion trophy.' },
     { id: 'tr_silver', cat: 'trophy', name: 'Silver Trophy', price: 300, desc: 'Shiny! Shows you mean business.' },
@@ -525,11 +529,48 @@
     g.restore();
   }
 
+
+  /* ---------- Grok Rides prizes ---------- */
+  function plushGrokloon(g) {
+    shadow(g, 50, 92, 22);
+    slab(g, 38, 70, 24, 16, 4, '#b07a43'); slab(g, 38, 70, 24, 4, 2, '#8b5a2b');
+    g.strokeStyle = '#6b4423'; g.lineWidth = 1.6; g.beginPath(); g.moveTo(40, 70); g.lineTo(32, 56); g.moveTo(60, 70); g.lineTo(68, 56); g.stroke();
+    ball(g, 50, 36, 30, 30, '#ff4fd8');
+    g.save(); g.beginPath(); g.arc(50, 36, 30, 0, 7); g.clip(); ['#ffd23f', '#ffd23f'].forEach(function (c, i) { g.fillStyle = c; g.beginPath(); g.ellipse(50 + (i ? 14 : -14), 36, 5, 30, 0, 0, 7); g.fill(); }); g.restore();
+    eye(g, 42, 36, 3); eye(g, 58, 36, 3); blush(g, 36, 44); blush(g, 64, 44);
+    g.strokeStyle = '#16101f'; g.lineWidth = 2; g.beginPath(); g.arc(50, 44, 5, 0.2, Math.PI - 0.2); g.stroke();
+    shine(g, 36, 20, 7, 4, 0.5); tag(g, 66, 58);
+  }
+  function ridesMonster(g) {
+    standBase(g, '#3b1d5c', true);
+    g.save(); g.translate(50, 54);
+    slab(g, -26, -16, 52, 14, 4, '#ff4fd8'); slab(g, -12, -28, 26, 14, 3, '#ff4fd8'); slab(g, -8, -26, 18, 9, 2, '#bfe8ff');
+    g.fillStyle = '#ffd23f'; g.beginPath(); g.moveTo(-24, -6); g.lineTo(-12, -12); g.lineTo(-8, -6); g.lineTo(0, -12); g.lineTo(4, -6); g.closePath(); g.fill();
+    g.fillStyle = '#9ca3af'; g.fillRect(-20, -2, 40, 4);
+    [-17, 17].forEach(function (x) { ball(g, x, 10, 12, 12, '#1a1a1a'); ball(g, x, 10, 5, 5, '#c9ced8'); });
+    g.restore();
+  }
+  function taxiHat(g) {
+    shadow(g, 50, 90, 30);
+    g.fillStyle = '#222'; g.beginPath(); g.ellipse(50, 70, 30, 8, 0, 0, 7); g.fill();
+    slab(g, 24, 42, 52, 26, 5, '#facc15');
+    g.fillStyle = '#111'; g.font = 'bold 15px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('TAXI', 50, 56);
+    for (var i = 0; i < 6; i++) { g.fillStyle = i % 2 ? '#111' : '#fff'; g.fillRect(24 + i * 8.66, 64, 8.66, 4); }
+    shine(g, 34, 46, 7, 3, 0.5); sparkle(g, 80, 36, 5);
+  }
+  function kcWrench(g) {
+    keyRing(g);
+    g.save(); g.translate(50, 64); g.rotate(0.5); g.scale(1.35, 1.35);
+    g.fillStyle = metal(g, -6, 6, '#ffcf3a'); rr(g, -4, -14, 8, 32, 3); g.fill();
+    g.beginPath(); g.arc(0, -16, 9, 0, 7); g.fill(); g.beginPath(); g.arc(0, 20, 6, 0, 7); g.fill(); g.fillStyle = 'rgba(0,0,0,0)'; g.globalCompositeOperation = 'destination-out'; g.fillRect(-3, -28, 6, 12); g.globalCompositeOperation = 'source-over';
+    g.restore(); sparkle(g, 70, 50, 5);
+  }
   var DRAW = {
     kc_snake: kcSnake, kc_joy: kcJoy, poster_arcade: function (g) { poster(g, 'arcade'); }, poster_brawl: function (g) { poster(g, 'brawl'); }, cap: cap, propeller: propeller,
     pl_luna: function (g) { plushRat(g, 'luna'); }, pl_pirat: function (g) { plushRat(g, 'pirat'); }, pl_snowie: function (g) { plushRat(g, 'snowie'); },
     pl_invader: plushInvader, pl_candy: plushCandy, pl_brutus: plushBrutus, tr_ring: ringTrophy,
     pl_goob: plushGoob, pl_boo: plushBoo, pl_waltzy: plushWaltzy, vac_replica: vacReplica, kc_flash: kcFlash, goo_jar: gooJar, lava_lamp: lavaLamp,
+    pl_grokloon: plushGrokloon, rides_monster: ridesMonster, taxi_hat: taxiHat, kc_wrench: kcWrench,
     pl_zebra: plushZebra, pl_rhino: plushRhino, pl_leopard: plushLeopard, ranger_hat: rangerHat, kc_dart: kcDart, snow_globe: snowGlobe, rescue_truck: rescueTruck,
     pl_dash: function (g) { plushDash(g, 'grok'); }, pl_speedy: function (g) { plushDash(g, 'speedy'); }, pl_floaty: function (g) { plushDash(g, 'floaty'); },
     pl_blaze: function (g) { plushFighter(g, 'blaze'); }, pl_volt: function (g) { plushFighter(g, 'volt'); }, pl_boulder: function (g) { plushFighter(g, 'boulder'); },
