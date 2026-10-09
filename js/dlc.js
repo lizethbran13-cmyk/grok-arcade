@@ -5,7 +5,7 @@
       Buying sets localStorage['grokDLC.<game>.<id>'] (same origin as every game, lizethbran13-cmyk.github.io), which the game reads to unlock it.
    3) MY DLC + DLC BOARD: your ideas, what you own, and the live board of every submitted idea and its status.
    Prices are scaled by size and tuned to how fast tickets come in (a good bonus round pays about 8-15 tickets):
-   Mini Pack 25, Expansion 75, MEGA Expansion 150 (halved per David). */
+   Mini Pack 25, Expansion 75, MEGA Expansion 200 (per David). */
 (function () {
   'use strict';
   var REPO = 'lizethbran13-cmyk/grok-arcade';
@@ -13,7 +13,7 @@
   GA.DLC_SIZES = [
     { id: 'mini', name: 'Mini Pack', icon: '\uD83C\uDF81', ex: 'new items, skins or outfits', price: 25 },
     { id: 'exp', name: 'Expansion', icon: '\uD83D\uDDFA\uFE0F', ex: 'a new level, area or mode', price: 75 },
-    { id: 'mega', name: 'MEGA Expansion', icon: '\uD83C\uDF0D', ex: 'a whole new world or campaign', price: 150 }
+    { id: 'mega', name: 'MEGA Expansion', icon: '\uD83C\uDF0D', ex: 'a whole new world or campaign', price: 200 }
   ];
   GA.DLC_IDEA_COST = 5; // first idea is free
   /* Shipped DLC you can unlock with tickets. When a DLC idea gets built, add it here:
@@ -128,7 +128,7 @@
   function renderShop() {
     var list = GA.DLC_SHOP;
     var h = '<div class="dlcShopHead">Shipped DLC you can unlock. Buying one unlocks it in that game right away (same save, just refresh the game).</div>';
-    if (!list.length) h += '<div class="sbEmpty">\uD83D\uDCE6 Nothing shipped yet!<br>When a DLC idea from the board gets built, it shows up here to unlock with tickets.<br><small>Prices: Mini Pack 25 \u00b7 Expansion 75 \u00b7 MEGA 150</small></div>';
+    if (!list.length) h += '<div class="sbEmpty">\uD83D\uDCE6 Nothing shipped yet!<br>When a DLC idea from the board gets built, it shows up here to unlock with tickets.<br><small>Prices: Mini Pack 25 \u00b7 Expansion 75 \u00b7 MEGA 200</small></div>';
     h += list.map(function (it) {
       var g = GA.findGame(it.game) || { name: it.game, color: '#ff4fd8' }, s = sizeOf(it.size), price = it.price || s.price, own = D.owns(it), can = tix() >= price;
       return '<div class="dlcItem' + (own ? ' owned' : ' locked') + '" data-dlc="' + esc(it.game + '.' + it.id) + '" style="--c:' + g.color + '"><div class="sbTop"><span class="sbSt ' + (own ? 'done' : 'new') + '">' + (own ? '\u2705 OWNED' : '\uD83D\uDD12 LOCKED') + '</span><span class="sbGameTag">' + esc(g.name) + '</span><span class="sbType">' + s.icon + ' ' + esc(s.name) + '</span></div>' +
