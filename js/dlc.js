@@ -21,7 +21,8 @@
   GA.DLC_SHOP = GA.DLC_SHOP || [];
   /* shipped DLC (the game reads localStorage 'grokDLC.<game>.<id>' live; co-op guests can play the host's DLC in that session) */
   GA.DLC_SHIPPED = [
-    { id: 'expansi_n_luna_pack', game: 'pets', name: 'Luna Pack', size: 'exp', issue: 13, desc: 'Moonlight Grove behind the new Moon Gate in the Pet Park: the Moon Market store + Moon Salon skins, 5 new pets (Chinchilla, Ferret, Guinea Pig, Sugar Glider, Fennec Fox), starry outfits, cosmic snacks, toys and furniture, fireflies, a wishing pond and stargazing.' }
+    { id: 'expansi_n_luna_pack', game: 'pets', name: 'Luna Pack', size: 'exp', issue: 13, desc: 'Moonlight Grove behind the new Moon Gate in the Pet Park: the Moon Market store + Moon Salon skins, 5 new pets (Chinchilla, Ferret, Guinea Pig, Sugar Glider, Fennec Fox), starry outfits, cosmic snacks, toys and furniture, fireflies, a wishing pond and stargazing.' },
+    { id: 'super_sonic_pack_expansion', game: 'dash', name: 'Super Sonic Pack', size: 'exp', issue: 14, desc: 'Two new worlds (Sunset Speedway + Starlight Carnival) with 12 new levels, the boss Roller Rex, the MEGA boss GIGA GRUMBOT, Super + Metal skins for every hero, and BOSS MODE: play as the villain against 3 CPU heroes!' }
   ];
   GA.DLC_SHIPPED.forEach(function (it) { if (!GA.DLC_SHOP.some(function (x) { return x.game === it.game && x.id === it.id; })) GA.DLC_SHOP.push(it); });
   var K_MINE = 'grokArcade.dlcIdeas', K_BOARD = 'grokArcade.dlcBoard', K_OWNED = 'grokArcade.dlcOwned', K_DRAFT = 'grokArcade.dlcDraft', K_FREE = 'grokArcade.dlcFreeUsed';
