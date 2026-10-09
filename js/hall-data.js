@@ -1250,5 +1250,94 @@ GA.HALL_DATA = {
 "cover": "assets/hall/poke/cover.webp",
 "quip": "Critters. Thirty-nine of them. I counted. Twice. Grumble.",
 "noOld": ""
+},
+"heist": {
+"repo": "grok-heist",
+"history": [
+{
+"date": "Oct 9",
+"ver": "1.0",
+"title": "First heist",
+"text": "Built in a day: a hideout, 5 heists (Candy Factory, City Museum, Cruise Ship, Cloud Castle, Toy Tower), 4 roles, gadgets, guards and co-op for 3."
+},
+{
+"date": "Oct 9",
+"ver": "1.1",
+"title": "Brighter and fairer",
+"text": "Fixed washed-out colors, smarter camera, fairer guards, saves, touch controls and co-op fixes."
+},
+{
+"date": "Oct 9",
+"ver": "1.2",
+"title": "Two-storey buildings",
+"text": "Buildings got upper floors, windows, name signs and rooftops to explore, plus an x-ray view so walls never hide the crew."
+},
+{
+"date": "Oct 9",
+"ver": "1.3",
+"title": "The big polish",
+"text": "Walls now drop down Sims-style, a real curved cruise ship with lifeboats and a pool, guards that comically grab you, banana pratfalls and the crew waving from the getaway van."
+},
+{
+"date": "Oct 9",
+"ver": "1.4",
+"title": "Greenlit!",
+"text": "David greenlit it, so Grok Heist Crew went live in the Arcade."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/heist/1.webp",
+"cap": "Sweet Tooth Candy Co. from outside",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/heist/2.webp",
+"cap": "Sneaking past a guard\u2019s flashlight cone",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/heist/3.webp",
+"cap": "Hacker vs. the museum lasers",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/heist/4.webp",
+"cap": "The cruise ship heist",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/heist/5.webp",
+"cap": "Smoke bomb, x-ray ping and a decoy",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/heist/6.webp",
+"cap": "GOTCHA! Caught by a guard",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/heist/7.webp",
+"cap": "Getaway! The whole crew in the van",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/heist/8.webp",
+"cap": "Co-op crew at the vault door",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/heist/cover.webp",
+"quip": "Thieves. In MY museum. I\u2019m counting the diamonds every night now.",
+"noOld": "Grok Heist Crew snuck in fully polished. No old versions. I checked the vault. Twice."
 }
 };

@@ -8,6 +8,9 @@
   var WING = { minX: 2, maxX: 18, minZ: ROOM.maxZ + 0.4, maxZ: 26, doorX: 10, doorHW: 1.5, doorH: 3.3 }; // Hall of Game Records wing behind the bonus zone's south wall
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
   var MAIN_STEP = GA.MAIN_GAMES.length > 15 ? 1.48 : GA.MAIN_GAMES.length > 14 ? 1.55 : GA.MAIN_GAMES.length > 13 ? 1.66 : GA.MAIN_GAMES.length > 12 ? 1.78 : GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 15 ? -17.22 : GA.MAIN_GAMES.length > 14 ? -16.95 : GA.MAIN_GAMES.length > 13 ? -17.0 : GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
+  // more than 16 main cabinets: shrink them a little so they still fit side by side along the north wall (x -17.95..5.75), no overlaps
+  var MAIN_K = 1; if (GA.MAIN_GAMES.length > 16) { MAIN_K = 23.7 / (1.44 * GA.MAIN_GAMES.length + 0.04 * (GA.MAIN_GAMES.length - 1)); MAIN_STEP = 1.48 * MAIN_K; MAIN_X0 = -17.95 + 0.72 * MAIN_K; }
+  var BONUS_K = 1, BONUS_STEP = 0; if (GA.BONUS_GAMES.length > 16) { BONUS_K = 23.2 / (1.44 * GA.BONUS_GAMES.length + 0.04 * (GA.BONUS_GAMES.length - 1)); BONUS_STEP = 1.48 * BONUS_K; }
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -33,6 +36,7 @@
   function cyl(rt, rb, h, s) { var k = 'c' + rt + ',' + rb + ',' + h + ',' + s; return geoCache[k] || (geoCache[k] = new T.CylinderGeometry(rt, rb, h, s || 12)); }
   function sph(r, s) { var k = 's' + r + ',' + s; return geoCache[k] || (geoCache[k] = new T.SphereGeometry(r, s || 14, Math.max(6, Math.floor((s || 14) * 0.7)))); }
   function mesh(geo, mat, x, y, z, parent) { var m = new T.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); (parent || curPar || scene).add(m); return m; }
+  function rrF(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); g.fill(); }
   function mkCanvas(w, h) { var c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
   function canvasTex(c) { var t = new T.CanvasTexture(c); t.anisotropy = 4; t.minFilter = T.LinearMipmapLinearFilter; return t; }
   function addSolid(minX, maxX, minZ, maxZ, name) { solids.push({ minX: minX, maxX: maxX, minZ: minZ, maxZ: maxZ, name: name || (curItem ? curItem.name : 'solid') }); }
@@ -188,7 +192,7 @@
     g.strokeStyle = '#ffe14d'; g.lineWidth = 10; g.strokeRect(8, 8, W - 16, H - 16);
     neonText(g, 'BEST SCORES', W / 2, 62, 58, '#ffe14d');
     GA.BONUS_GAMES.forEach(function (gm, i) {
-      var nB = GA.BONUS_GAMES.length, y = (nB > 15 ? 84 : nB > 14 ? 88 : nB > 13 ? 90 : nB > 12 ? 92 : nB > 11 ? 96 : nB > 10 ? 100 : nB > 9 ? 106 : nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 15 ? 26.5 : nB > 14 ? 28 : nB > 13 ? 30 : nB > 12 ? 32 : nB > 11 ? 34 : nB > 10 ? 37 : nB > 9 ? 40 : nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 15 ? 19 : nB > 14 ? 20 : nB > 13 ? 21 : nB > 12 ? 22 : nB > 11 ? 24 : nB > 10 ? 26 : nB > 9 ? 28 : nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
+      var nB = GA.BONUS_GAMES.length, y = nB > 16 ? 80 + i * (402 / (nB - 1)) : (nB > 15 ? 84 : nB > 14 ? 88 : nB > 13 ? 90 : nB > 12 ? 92 : nB > 11 ? 96 : nB > 10 ? 100 : nB > 9 ? 106 : nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 15 ? 26.5 : nB > 14 ? 28 : nB > 13 ? 30 : nB > 12 ? 32 : nB > 11 ? 34 : nB > 10 ? 37 : nB > 9 ? 40 : nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 16 ? 19 : nB > 15 ? 19 : nB > 14 ? 20 : nB > 13 ? 21 : nB > 12 ? 22 : nB > 11 ? 24 : nB > 10 ? 26 : nB > 9 ? 28 : nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
       g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.fillText(String(GA.getBest(gm.id)), W - 50, y);
     });
     d.tex.needsUpdate = true;
@@ -686,6 +690,31 @@
         g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('CRITTER CATCH', w / 2, 22);
         break;
       }
+      case 'heist': {
+        // night museum: a purple-hoodie hacker tiptoes past a swinging guard flashlight cone toward a glowing diamond
+        var gh1 = g.createLinearGradient(0, 0, 0, h); gh1.addColorStop(0, '#1e1b4b'); gh1.addColorStop(1, '#4c1d95'); g.fillStyle = gh1; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#fef3c7'; g.beginPath(); g.arc(w - 26, 40, 11, 0, 7); g.fill(); g.fillStyle = '#1e1b4b'; g.beginPath(); g.arc(w - 21, 37, 10, 0, 7); g.fill();
+        g.fillStyle = '#c4b5fd'; g.fillRect(0, h - 30, w, 30); g.fillStyle = '#a78bfa'; for (i = 0; i < 8; i++) g.fillRect(i * 26, h - 30, 2, 30);
+        var gx5 = w * 0.75, gy5 = h - 40, sw5 = Math.sin(t * 1.4) * 0.5;
+        g.fillStyle = 'rgba(255,240,140,.35)'; g.beginPath(); g.moveTo(gx5 - 6, gy5 - 18); g.lineTo(gx5 - 80, gy5 + 30 + sw5 * 30); g.lineTo(gx5 - 40, gy5 + 40 - sw5 * 30); g.closePath(); g.fill();
+        g.fillStyle = '#2563eb'; rrF(g, gx5 - 9, gy5 - 22, 18, 26, 6); g.fillStyle = '#ffd7b0'; g.beginPath(); g.arc(gx5, gy5 - 30, 8, 0, 7); g.fill(); g.fillStyle = '#1e3a8a'; g.fillRect(gx5 - 9, gy5 - 40, 18, 5);
+        var dy5 = 54 + Math.sin(t * 3) * 3; g.fillStyle = '#e0f2fe'; g.beginPath(); g.moveTo(w * 0.5, dy5 - 12); g.lineTo(w * 0.5 + 11, dy5); g.lineTo(w * 0.5, dy5 + 13); g.lineTo(w * 0.5 - 11, dy5); g.closePath(); g.fill();
+        g.fillStyle = 'rgba(125,211,252,.5)'; g.beginPath(); g.arc(w * 0.5, dy5, 18 + Math.sin(t * 5) * 2, 0, 7); g.fill(); g.fillStyle = '#f4ede2'; g.fillRect(w * 0.5 - 9, dy5 + 14, 18, h - 30 - dy5 - 14);
+        var hx5 = 22 + ((t * 18) % (w * 0.42)), bob5 = Math.abs(Math.sin(t * 6)) * 3;
+        g.fillStyle = '#7c3aed'; rrF(g, hx5 - 9, h - 58 - bob5, 18, 24, 7); g.beginPath(); g.arc(hx5, h - 62 - bob5, 10, 0, 7); g.fill(); g.fillStyle = '#ffd7b0'; g.beginPath(); g.arc(hx5 + 2, h - 61 - bob5, 6, 0, 7); g.fill();
+        g.fillStyle = '#16101f'; g.fillRect(hx5 - 6, h - 35, 5, 6); g.fillRect(hx5 + 2, h - 35, 5, 6); g.fillStyle = '#3ff0ff'; g.fillRect(hx5 + 7, h - 64 - bob5, 4, 3);
+        g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#ffd23f'; g.fillText('HEIST CREW', w / 2, 22);
+        break;
+      }
+      case 'laser': {
+        g.fillStyle = '#140a26'; g.fillRect(0, 0, w, h); g.fillStyle = '#2a1650'; g.fillRect(0, h - 34, w, 34);
+        for (i = 0; i < 3; i++) { var lx6 = ((i * 70 - t * 60) % (w + 40) + w + 40) % (w + 40) - 20, low6 = i % 2 === 0, ly6 = low6 ? h - 46 : h - 86;
+          g.fillStyle = '#5b4b8a'; g.fillRect(lx6 - 3, low6 ? ly6 - 4 : ly6 - 14, 6, low6 ? 16 : 18); g.strokeStyle = 'rgba(255,61,110,' + (0.7 + Math.sin(t * 20 + i) * 0.3) + ')'; g.lineWidth = 4; g.beginPath(); g.moveTo(lx6 - 26, ly6); g.lineTo(lx6 + 26, ly6); g.stroke(); }
+        var jy6 = Math.max(0, Math.sin(t * 3.2)) * 26; g.fillStyle = '#7c3aed'; rrF(g, 40, h - 62 - jy6, 18, 24, 7); g.beginPath(); g.arc(49, h - 66 - jy6, 10, 0, 7); g.fill(); g.fillStyle = '#ffd7b0'; g.beginPath(); g.arc(51, h - 65 - jy6, 6, 0, 7); g.fill();
+        g.fillStyle = '#7dd3fc'; var dx6 = w - ((t * 50) % w); g.beginPath(); g.moveTo(dx6, 44); g.lineTo(dx6 + 7, 52); g.lineTo(dx6, 61); g.lineTo(dx6 - 7, 52); g.closePath(); g.fill();
+        g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#ff3d6e'; g.fillText('LASER DASH', w / 2, 22);
+        break;
+      }
       case 'rides': {
         var gr1 = g.createLinearGradient(0, 0, 0, h); gr1.addColorStop(0, '#7dd3fc'); gr1.addColorStop(1, '#fbcfe8'); g.fillStyle = gr1; g.fillRect(0, 0, w, h);
         g.fillStyle = '#c4b5fd'; g.beginPath(); g.moveTo(0, h - 50); g.lineTo(46, h - 104); g.lineTo(84, h - 70); g.lineTo(126, h - 120); g.lineTo(w, h - 56); g.lineTo(w, h - 40); g.lineTo(0, h - 40); g.fill();
@@ -755,6 +784,7 @@
   var cabBodyMat, glowTex;
   function buildCabinet(game, kind, x, z, rot) {
     var grp = new T.Group(); grp.position.set(x, 0, z); grp.rotation.y = rot; scene.add(grp);
+    var ck = kind === 'main' ? MAIN_K : kind === 'bonus' ? BONUS_K : 1; if (ck < 1) grp.scale.set(ck, 1, 1);
     var col = game.color;
     mesh(box(1.3, 2.3, 1.0), cabBodyMat, 0, 1.15, 0, grp);
     mesh(box(0.07, 2.36, 1.04), basic(col), -0.68, 1.18, 0, grp);
@@ -807,7 +837,7 @@
     // main games: along the north wall, facing south
     GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    var nb = GA.BONUS_GAMES.length, stepB = nb > 15 ? 1.45 : nb > 14 ? 1.5 : nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4;
+    var nb = GA.BONUS_GAMES.length, stepB = BONUS_STEP || (nb > 15 ? 1.45 : nb > 14 ? 1.5 : nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4);
     GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2); });
   }
 

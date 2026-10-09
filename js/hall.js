@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   var T = THREE, A, W, H3 = GA.Hall3D = {};
-  var V = '20261009h';
+  var V = '20261009hx';
   var mats = {};
   function ph(c, s, e) { var k = 'p' + c + (s || 40) + (e || ''); return mats[k] || (mats[k] = new T.MeshPhongMaterial({ color: c, shininess: s || 40, specular: '#ffffff', emissive: e ? new T.Color(e) : new T.Color(0) })); }
   function gold() { return ph('#e8b84a', 90, '#3a2400'); }
@@ -57,6 +57,7 @@
     dash: function (g) { var r = add(g, to(0.17, 0.035, 7, 40), ph('#ffd23f', 120, '#5a4000'), 0, 0.3, 0); g.userData.spin = r; },
     spooks: function (g) { var w = new T.MeshPhongMaterial({ color: '#d9ffe4', emissive: '#1f6b38', shininess: 60, transparent: true, opacity: 0.92 }); add(g, sp(0.15, 24), w, 0, 0.32, 0); var c = add(g, cy(0.15, 0.18, 0.18, 24, 1, true), w, 0, 0.22, 0); void c; [-0.05, 0.05].forEach(function (x) { add(g, sp(0.025, 10), ph('#111827', 80), x, 0.35, 0.135); }); add(g, sp(0.03, 10), ph('#111827', 40), 0, 0.28, 0.14).scale.set(1, 1.3, 0.5); g.userData.bob = true; },
     blocks: function (g) { var wh = ph('#f8fafc', 30), bk = ph('#111827', 30); add(g, bx(0.26, 0.26, 0.26), wh, 0, 0.2, 0); [-0.06, 0.06].forEach(function (x) { add(g, bx(0.04, 0.27, 0.02), bk, x, 0.2, 0.125); }); add(g, bx(0.27, 0.04, 0.02), bk, 0, 0.27, 0.125); [-0.09, 0.09].forEach(function (x) { add(g, bx(0.06, 0.1, 0.04), wh, x, 0.38, 0); add(g, bx(0.035, 0.035, 0.02), bk, x, 0.2, 0.135); }); add(g, bx(0.04, 0.1, 0.16), bk, 0, 0.36, -0.02); },
+    heist: function (g) { add(g, bx(0.34, 0.32, 0.3), ph('#4c1d95', 70), 0, 0.17, 0); add(g, bx(0.28, 0.26, 0.02), ph('#6d28d9', 90), 0, 0.17, 0.155); var d = add(g, cy(0.07, 0.07, 0.03, 20), ph('#ffcf3a', 120, '#5a4000'), 0.03, 0.18, 0.17); d.rotation.x = Math.PI / 2; add(g, bx(0.02, 0.1, 0.02), ph('#c9ced8', 90), -0.1, 0.18, 0.17); var gm = new T.MeshPhongMaterial({ color: '#bae6fd', emissive: '#0e7490', shininess: 140, flatShading: true }); var c = add(g, cn(0.09, 0.11, 8), gm, 0, 0.42, 0); c.rotation.x = Math.PI; add(g, cy(0.05, 0.09, 0.05, 8), gm, 0, 0.5, 0); },
     rides: function (g) { add(g, bx(0.4, 0.12, 0.22), ph('#ff4fd8', 100), 0, 0.22, 0); add(g, bx(0.22, 0.1, 0.2), ph('#38bdf8', 100), -0.03, 0.32, 0); [[0.15, 0.13], [0.15, -0.13], [-0.15, 0.13], [-0.15, -0.13]].forEach(function (w) { var t = add(g, cy(0.1, 0.1, 0.08, 20), ph('#1f2937', 20), w[0], 0.1, w[1]); t.rotation.x = Math.PI / 2; add(g, cy(0.05, 0.05, 0.09, 12), chrome(), w[0], 0.1, w[1]).rotation.x = Math.PI / 2; }); },
     poke: function (g) { var o = new T.Group(); o.position.y = 0.22; g.add(o); add(o, new T.SphereGeometry(0.18, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2), ph('#ff4f6b', 90)); add(o, new T.SphereGeometry(0.18, 28, 14, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), ph('#ffffff', 90)); add(o, cy(0.183, 0.183, 0.03, 28), ph('#222222', 40)); var b = add(o, cy(0.055, 0.055, 0.03, 18), ph('#ffffff', 90), 0, 0, 0.175); b.rotation.x = Math.PI / 2; g.userData.spin = o; }
   };
@@ -344,10 +345,13 @@
     [0, 1, 2, 3, 4].forEach(function (i) { slots.push([W.minX, W.minZ + 2.2 + i * 2.0, Math.PI / 2]); });
     [0, 1, 2, 3, 4, 5].forEach(function (i) { slots.push([W.minX + 2.8 + i * 2.08, W.maxZ, Math.PI]); });
     [4, 3, 2, 1, 0].forEach(function (i) { slots.push([W.maxX, W.minZ + 2.2 + i * 2.0, -Math.PI / 2]); });
+    // overflow: one more exhibit at the back end of each side wall (clear of the back-wall exhibits)
+    slots.push([W.minX, W.minZ + 12.2, Math.PI / 2]); slots.push([W.maxX, W.minZ + 12.2, -Math.PI / 2]);
     var par = A.scene;
     games.forEach(function (gm, i) { var s = slots[i]; if (!s) return; exhibit(gm, GA.HALL_DATA[gm.id], s[0], s[1], s[2]); });
     // wood pilasters between the exhibits
     for (var i = 0; i < 4; i++) { pilaster(par, W.minX, W.minZ + 3.2 + i * 2.0, Math.PI / 2); pilaster(par, W.maxX, W.minZ + 3.2 + i * 2.0, -Math.PI / 2); }
+    if (games.length > 16) pilaster(par, W.minX, W.minZ + 11.2, Math.PI / 2); if (games.length > 17) pilaster(par, W.maxX, W.minZ + 11.2, -Math.PI / 2);
     for (i = 0; i < 5; i++) pilaster(par, W.minX + 3.84 + i * 2.08, W.maxZ, Math.PI);
     buildDesk(); buildDLC();
     var last = -1;

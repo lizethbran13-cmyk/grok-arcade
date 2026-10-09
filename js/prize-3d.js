@@ -725,12 +725,71 @@
     g.userData.tick = function (t) { core.rotation.y = t * 2; core.rotation.x = t; ring.rotation.x = t * 1.3; var k = Math.floor(t * 6); bulbs.forEach(function (b, i) { b.material = glow((i + k) % 2 ? '#ffe14d' : '#ff4fd8'); }); };
     return g;
   }
+
+  /* ---------- Grok Heist Crew prizes ---------- */
+  function baronPlush() {
+    var g = new T.Group(), b = grp(g, 0, 0, 0), suit = lam('#4c1d95'), skin = lam('#ffd9b8'), blk = lam('#1f1633');
+    add(b, sph(0.21, 24), suit, 0, 0.2, 0, 1, 0.95, 0.9);
+    add(b, box(0.12, 0.16, 0.05), lam('#f5f3ff'), 0, 0.26, 0.17); add(b, cone(0.035, 0.12, 4), lam('#b91c1c'), 0, 0.25, 0.2).rotation.x = Math.PI;
+    [-1, 1].forEach(function (sd) { add(b, sph(0.075, 12), blk, sd * 0.11, 0.04, 0.07, 1.1, 0.6, 1.3); var a = add(b, sph(0.065, 12), suit, sd * 0.2, 0.24, 0.02, 1, 1.5, 1); rot(a, 0, 0, sd * 0.5); });
+    var hd = grp(b, 0, 0.52, 0.02);
+    add(hd, sph(0.19, 26), skin, 0, 0, 0, 1.05, 0.98, 1);
+    eyes(hd, 0.02, 0.16, 0.075, 0.03); blush(hd, -0.04, 0.16, 0.12);
+    var mo = add(hd, tor(0.045, 0.008, 7, 6, 20), metal('#ffcf3a'), 0.075, 0.02, 0.19); void mo;
+    [-1, 1].forEach(function (sd) { var m = add(hd, sph(0.05, 12), lam('#6b4226'), sd * 0.05, -0.06, 0.17, 1.4, 0.45, 0.6); rot(m, 0, 0, -sd * 0.35); });
+    add(hd, cyl(0.2, 0.2, 0.02, 24), blk, 0, 0.16, 0); add(hd, cyl(0.12, 0.12, 0.22, 22), blk, 0, 0.28, 0); add(hd, cyl(0.122, 0.122, 0.04, 22), lam('#a855f7'), 0, 0.2, 0);
+    tag(b, 0.16, 0.12, 0.12);
+    g.userData.tick = function (t) { hd.rotation.z = Math.sin(t * 1.3) * 0.07; hd.rotation.y = Math.sin(t * 0.7) * 0.15; };
+    return g;
+  }
+  function gogglesHat() {
+    var g = new T.Group(), D = lam('#1f2937'), F = lam('#374151'), LM = new T.MeshBasicMaterial({ color: '#4ade80' });
+    var band = add(g, tor(0.3, 0.03, Math.PI, 10, 28), D, 0, 0.06, 0); band.rotation.y = Math.PI / 2;
+    var lens = [];
+    [-1, 1].forEach(function (sd) { var c = add(g, cyl(0.1, 0.11, 0.12, 20), F, 0.27, 0.2, sd * 0.11); c.rotation.z = Math.PI / 2; var l = add(g, cyl(0.075, 0.075, 0.02, 20), LM, 0.34, 0.2, sd * 0.11); l.rotation.z = Math.PI / 2; lens.push(l); add(g, tor(0.1, 0.012, 7, 6, 20), metal('#9aa1ad'), 0.335, 0.2, sd * 0.11).rotation.y = Math.PI / 2; });
+    add(g, box(0.06, 0.05, 0.06), F, 0.29, 0.2, 0);
+    g.userData.hat = { y: 0.02, s: 0.75 };
+    g.userData.tick = function (t) { var k = 0.75 + Math.sin(t * 4) * 0.25; LM.color.setRGB(0.29 * k, 0.87 * k, 0.5 * k); };
+    return g;
+  }
+  function kcBanana() {
+    var g = new T.Group(); keyRing(g, 0.92);
+    var b = grp(g, 0, 0.4, 0), Y = lam('#facc15');
+    add(b, sph(0.08, 16), lam('#fde047'), 0, 0.06, 0, 1, 0.9, 1); add(b, cyl(0.018, 0.022, 0.08, 8), lam('#6b4226'), 0, 0.15, 0);
+    [0, 2.1, 4.2].forEach(function (a) { var p = grp(b, 0, 0.02, 0); p.rotation.y = a; var f = add(p, sph(0.055, 12), Y, 0, -0.1, 0.07, 0.8, 1.9, 0.35); rot(f, -0.55, 0, 0); });
+    g.userData.tick = function (t) { b.rotation.y = Math.sin(t * 1.4) * 0.5; };
+    return g;
+  }
+  function moonstone() {
+    var g = new T.Group(); stand(g, '#7f1d1d', 0.7);
+    add(g, cyl(0.12, 0.15, 0.22, 20), lam('#ede9fe'), 0, 0.19, 0); add(g, cyl(0.14, 0.14, 0.03, 20), metal('#ffcf3a'), 0, 0.31, 0);
+    var d = grp(g, 0, 0.55, 0), M = new T.MeshPhongMaterial({ color: '#bae6fd', emissive: '#0e7490', shininess: 140, specular: '#ffffff', flatShading: true });
+    add(d, cone(0.17, 0.2, 8), M, 0, -0.06, 0).rotation.x = Math.PI; add(d, cyl(0.1, 0.17, 0.08, 8), M, 0, 0.08, 0);
+    var halo = add(g, sph(0.26, 18), new T.MeshBasicMaterial({ color: '#a5f3fc', transparent: true, opacity: 0.18, depthWrite: false }), 0, 0.55, 0);
+    var sp = []; for (var i = 0; i < 3; i++) sp.push(add(g, sph(0.025, 8), glow('#ffffff'), 0, 0, 0));
+    g.userData.tick = function (t) { d.rotation.y = t * 0.9; d.position.y = 0.55 + Math.sin(t * 1.8) * 0.02; halo.scale.setScalar(1 + Math.sin(t * 3) * 0.06); sp.forEach(function (m, i) { var a = t * 1.6 + i * 2.1; m.position.set(Math.cos(a) * 0.3, 0.58 + Math.sin(a * 1.4) * 0.12, Math.sin(a) * 0.24); }); };
+    return g;
+  }
+  function heistVan() {
+    var g = new T.Group(); stand(g, '#3b0764', 1.0);
+    var v = grp(g, 0, 0.1, 0), P = shiny('#7c3aed', 70), Gl = shiny('#bfe8ff', 90);
+    add(v, box(0.7, 0.3, 0.34), P, 0, 0.21, 0); add(v, box(0.5, 0.12, 0.33), P, -0.08, 0.41, 0);
+    add(v, box(0.2, 0.1, 0.345), Gl, 0.2, 0.41, 0); add(v, box(0.06, 0.1, 0.3), Gl, 0.355, 0.33, 0);
+    add(v, box(0.705, 0.05, 0.345), lam('#ffd23f'), 0, 0.2, 0);
+    [-1, 1].forEach(function (sd) { add(v, box(0.16, 0.08, 0.01), Gl, -0.15, 0.4, sd * 0.168); });
+    [[0.22, 0.17], [0.22, -0.17], [-0.22, 0.17], [-0.22, -0.17]].forEach(function (w) { var t = add(v, cyl(0.075, 0.075, 0.06, 18), lam('#1a1a1a'), w[0], 0.06, w[1]); t.rotation.x = Math.PI / 2; var h = add(v, cyl(0.035, 0.035, 0.065, 12), metal('#c9ced8'), w[0], 0.06, w[1]); h.rotation.x = Math.PI / 2; });
+    add(v, sph(0.035, 10), glow('#fff7c2'), 0.355, 0.2, 0.11); add(v, sph(0.035, 10), glow('#fff7c2'), 0.355, 0.2, -0.11);
+    var bag = add(v, sph(0.08, 14), lam('#ffd23f'), -0.15, 0.53, 0, 1, 0.85, 1); add(v, cyl(0.02, 0.03, 0.04, 8), lam('#b45309'), -0.15, 0.61, 0);
+    g.userData.tick = function (t) { v.rotation.y = Math.sin(t * 0.5) * 0.35; bag.position.y = 0.53 + Math.abs(Math.sin(t * 3)) * 0.015; };
+    return g;
+  }
   var BUILD = {
     kc_snake: kcSnake, kc_joy: kcJoy, poster_arcade: function () { return poster('arcade'); }, poster_brawl: function () { return poster('brawl'); }, cap: cap, propeller: propeller,
     pl_luna: function () { return rat('luna'); }, pl_pirat: function () { return rat('pirat'); }, pl_snowie: function () { return rat('snowie'); },
     pl_invader: invader, pl_candy: candy, pl_brutus: brutus, tr_ring: ringTrophy,
     pl_goob: goob, pl_boo: boo, pl_waltzy: waltzy, vac_replica: vacReplica, kc_flash: kcFlash, goo_jar: gooJar, lava_lamp: lavaLamp,
     pl_grokloon: grokloonPlush, rides_monster: ridesMonster, taxi_hat: taxiHat, kc_wrench: kcWrench,
+    pl_baron: baronPlush, goggles_hat: gogglesHat, kc_banana: kcBanana, moonstone: moonstone, heist_van: heistVan,
     pl_embercub: function () { return critterPlush('embercub'); }, pl_puddlepup: function () { return critterPlush('puddlepup'); }, pl_leafkit: function () { return critterPlush('leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue, pl_gus: gusPlush, kc_stamp: kcStamp, dlc_replica: dlcReplica,
     pl_zebra: zebraPlush, pl_rhino: rhinoPlush, pl_leopard: leopardPlush, ranger_hat: rangerHat, kc_dart: kcDart, snow_globe: snowGlobe, rescue_truck: rescueTruck,
     pl_dash: function () { return dashHero('grok'); }, pl_speedy: function () { return dashHero('speedy'); }, pl_floaty: function () { return dashHero('floaty'); },
@@ -738,7 +797,7 @@
     tr_bronze: function () { return trophy('#cd7f32'); }, tr_silver: function () { return trophy('#c0c7d0'); }, tr_gold: function () { return trophy('#ffcf3a', true); }, golden_joy: goldenJoy
   };
   Object.keys(FIGHTERS).forEach(function (k) { BUILD['pl_' + k] = function () { return fighter(k); }; });
-  var HATS = { cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1, ears_hat: 1 };
+  var HATS = { cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1, ears_hat: 1, goggles_hat: 1 };
 
   function build(id) {
     if (/^ach:/.test(id)) return medal(id.slice(4));

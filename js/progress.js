@@ -67,7 +67,8 @@
     parking: [15, 'Parking Pro', 'Score 15 in Parking Panic', '\uD83C\uDD7F\uFE0F'],
     rush: [30, 'Rush Hour Hero', 'Score 30 in Rush Hour', '\uD83D\uDE95'],
     catch: [40, 'Critter Wrangler', 'Score 40 in Critter Catch', '\uD83D\uDC3E'],
-    filing: [40, 'Master Archivist', 'Score 40 in Gus\u2019s Filing Frenzy', '\uD83D\uDDC4\uFE0F']
+    filing: [40, 'Master Archivist', 'Score 40 in Gus\u2019s Filing Frenzy', '\uD83D\uDDC4\uFE0F'],
+    laser: [60, 'Laser Legend', 'Score 60 in Laser Dash', '\uD83D\uDD34']
   };
   var A = [
     { id: 'first_ticket', cat: 'Tickets', icon: '\uD83C\uDF9F\uFE0F', name: 'First Ticket!', desc: 'Earn your first ticket in the Bonus Zone', p: function () { return [st.earned, 1]; } },
@@ -122,6 +123,8 @@
   A.push({ id: 'dlc_owner', cat: 'Prizes', icon: '\uD83C\uDF81', name: 'Day-One DLC', desc: 'Unlock a shipped DLC with tickets', p: function () { return [ev('dlcBuy'), 1]; } });
   A.push({ id: 'gus_fan', cat: 'Prizes', icon: '\uD83E\uDDD3', name: 'Gus\u2019s Biggest Fan', desc: 'Own the Grumpy Gus Plush and the DLC Machine 3000 Replica', p: function () { return [['pl_gus', 'dlc_replica'].filter(function (k) { return S.owned[k]; }).length, 2]; } });
   A.push({ id: 'poke_pals', cat: 'Prizes', icon: '\uD83D\uDC3E', name: 'Critter Collector', desc: 'Own the Embercub, Puddlepup and Leafkit plushies', p: function () { return [['pl_embercub', 'pl_puddlepup', 'pl_leafkit'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
+  A.push({ id: 'laser_streak', cat: 'High Scores', icon: '\uD83E\uDD77', name: 'Untouchable', desc: 'Pass 20 lasers in a row without an alarm in Laser Dash', p: function () { return [ev('laser20') ? 1 : 0, 1]; } });
+  A.push({ id: 'master_thief', cat: 'Prizes', icon: '\uD83D\uDC8E', name: 'Master Thief', desc: 'Own the Baron Grumble Plush, the Moonstone Diamond Replica and the Getaway Van Replica', p: function () { return [['pl_baron', 'moonstone', 'heist_van'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'designer', cat: 'Arcade', icon: '\uD83D\uDCA1', name: 'Game Designer', desc: 'Send your first patch suggestion from the Suggestion Booth', p: function () { return [ev('suggest') ? 1 : 0, 1]; } });
   A.push({ id: 'claw_first', cat: 'Claw', icon: '\uD83E\uDE9D', name: 'Claw Catcher', desc: 'Win a prize from a claw machine', p: function () { return [ev('clawWins') ? 1 : 0, 1]; } });
   A.push({ id: 'claw_tricky', cat: 'Claw', icon: '\uD83C\uDFAF', name: 'Steady Hands', desc: 'Win a prize from the Tricky Claw', p: function () { return [ev('clawTricky') ? 1 : 0, 1]; } });
