@@ -19,6 +19,11 @@
   /* Shipped DLC you can unlock with tickets. When a DLC idea gets built, add it here:
      { id: 'neon_skins', game: 'rides', name: 'Neon Paint Pack', size: 'mini', desc: '...' }  -> the game checks localStorage 'grokDLC.rides.neon_skins'. */
   GA.DLC_SHOP = GA.DLC_SHOP || [];
+  /* shipped DLC (the game reads localStorage 'grokDLC.<game>.<id>' live; co-op guests can play the host's DLC in that session) */
+  GA.DLC_SHIPPED = [
+    { id: 'expansi_n_luna_pack', game: 'pets', name: 'Luna Pack', size: 'exp', issue: 13, desc: 'Moonlight Grove behind the new Moon Gate in the Pet Park: the Moon Market store + Moon Salon skins, 5 new pets (Chinchilla, Ferret, Guinea Pig, Sugar Glider, Fennec Fox), starry outfits, cosmic snacks, toys and furniture, fireflies, a wishing pond and stargazing.' }
+  ];
+  GA.DLC_SHIPPED.forEach(function (it) { if (!GA.DLC_SHOP.some(function (x) { return x.game === it.game && x.id === it.id; })) GA.DLC_SHOP.push(it); });
   var K_MINE = 'grokArcade.dlcIdeas', K_BOARD = 'grokArcade.dlcBoard', K_OWNED = 'grokArcade.dlcOwned', K_DRAFT = 'grokArcade.dlcDraft', K_FREE = 'grokArcade.dlcFreeUsed';
   var D = GA.DLC = {}, openNow = false, tab = 'new', size = 'mini', loading = false;
   function $(id) { return document.getElementById(id); }
@@ -128,7 +133,7 @@
       var g = GA.findGame(it.game) || { name: it.game, color: '#ff4fd8' }, s = sizeOf(it.size), price = it.price || s.price, own = D.owns(it), can = tix() >= price;
       return '<div class="dlcItem' + (own ? ' owned' : ' locked') + '" data-dlc="' + esc(it.game + '.' + it.id) + '" style="--c:' + g.color + '"><div class="sbTop"><span class="sbSt ' + (own ? 'done' : 'new') + '">' + (own ? '\u2705 OWNED' : '\uD83D\uDD12 LOCKED') + '</span><span class="sbGameTag">' + esc(g.name) + '</span><span class="sbType">' + s.icon + ' ' + esc(s.name) + '</span></div>' +
         '<div class="sbTitle">' + esc(it.name) + '</div><div class="sbLast">' + esc(it.desc || '') + '</div>' +
-        (own ? '<div class="sbMeta">Unlocked in ' + esc(g.name) + '. Have fun!</div>' : '<button class="bigBtn dlcBuy" data-buy="' + esc(it.game + '.' + it.id) + '"' + (can ? '' : ' disabled') + '>' + (can ? '\uD83C\uDF9F\uFE0F UNLOCK \u00b7 ' + price : 'NEED ' + (price - tix()) + ' MORE') + '</button>') + '</div>';
+        (own ? '<div class="sbMeta">Unlocked in ' + esc(g.name) + '. Have fun!' + (g.url ? ' <a class="dlcPlay" href="' + esc(g.url) + '" target="_blank" rel="noopener">\u25B6 PLAY</a>' : '') + '</div>' : '<button class="bigBtn dlcBuy" data-buy="' + esc(it.game + '.' + it.id) + '"' + (can ? '' : ' disabled') + '>' + (can ? '\uD83C\uDF9F\uFE0F UNLOCK \u00b7 ' + price : 'NEED ' + (price - tix()) + ' MORE') + '</button>') + '</div>';
     }).join('');
     $('dlcBody').innerHTML = h;
     Array.prototype.forEach.call(document.querySelectorAll('.dlcBuy'), function (b) { b.addEventListener('click', function () {
