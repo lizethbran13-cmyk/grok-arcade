@@ -722,6 +722,25 @@
         g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#14532d'; g.fillText('GROK PICKLEBALL', w / 2, 24);
         break;
       }
+      case 'sports': {
+        // sports plaza: stadium lights, a big blue/yellow banner, balls bouncing across five lanes (soccer, basketball, tennis, bowling, volleyball)
+        var gs1 = g.createLinearGradient(0, 0, 0, h); gs1.addColorStop(0, '#1e3a8a'); gs1.addColorStop(0.5, '#3b82f6'); gs1.addColorStop(0.51, '#16a34a'); gs1.addColorStop(1, '#15803d'); g.fillStyle = gs1; g.fillRect(0, 0, w, h);
+        for (i = 0; i < 4; i++) { var lx7 = 18 + i * (w - 36) / 3; g.fillStyle = '#cbd5e1'; g.fillRect(lx7 - 1.5, 34, 3, 40); g.fillStyle = 'rgba(255,255,200,' + (0.6 + 0.4 * Math.sin(t * 3 + i)) + ')'; rrF(g, lx7 - 9, 30, 18, 8, 2); }
+        g.strokeStyle = 'rgba(255,255,255,.7)'; g.lineWidth = 2; g.strokeRect(10, h * 0.55, w - 20, h * 0.4); g.beginPath(); g.arc(w / 2, h * 0.75, 14, 0, 7); g.moveTo(w / 2, h * 0.55); g.lineTo(w / 2, h * 0.95); g.stroke();
+        var cols7 = ['#ffffff', '#f97316', '#e6ff3b', '#a855f7', '#fde047'];
+        for (i = 0; i < 5; i++) { var bx7 = ((t * (40 + i * 9) + i * 50) % (w + 30)) - 15, by7 = h * 0.62 + i * 9 - Math.abs(Math.sin(t * (3 + i * 0.4) + i)) * 26;
+          g.fillStyle = 'rgba(0,0,0,.25)'; g.beginPath(); g.ellipse(bx7, h * 0.66 + i * 9, 6, 2, 0, 0, 7); g.fill(); g.fillStyle = cols7[i]; g.beginPath(); g.arc(bx7, by7, i === 3 ? 7 : 5.5, 0, 7); g.fill(); }
+        g.fillStyle = '#facc15'; rrF(g, w * 0.08, 6, w * 0.84, 26, 6); g.font = font(16); g.textAlign = 'center'; g.fillStyle = '#1e3a8a'; g.fillText('GROK SPORTS COMMAND', w / 2, 24);
+        break;
+      }
+      case 'hoop': {
+        g.fillStyle = '#1d4ed8'; g.fillRect(0, 0, w, h); g.fillStyle = '#c2410c'; g.fillRect(0, h * 0.72, w, h * 0.28);
+        var hx8 = w / 2 + Math.sin(t * 1.6) * w * 0.3; g.fillStyle = '#f8fafc'; rrF(g, hx8 - 26, 34, 52, 34, 3); g.strokeStyle = '#ef4444'; g.lineWidth = 2; g.strokeRect(hx8 - 10, 46, 20, 14);
+        g.strokeStyle = '#f97316'; g.lineWidth = 3; g.beginPath(); g.ellipse(hx8, 70, 14, 4, 0, 0, 7); g.stroke();
+        var k8 = (t % 1.2) / 1.2, by8 = h - 26 - k8 * (h - 100); g.fillStyle = '#f97316'; g.beginPath(); g.arc(w / 2, by8, 9 - k8 * 3, 0, 7); g.fill();
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('HOOP FRENZY', w / 2, 22);
+        break;
+      }
       case 'dink': {
         g.fillStyle = '#2563eb'; g.fillRect(0, 0, w, h); g.fillStyle = '#16a34a'; g.fillRect(0, h * 0.42, w, h * 0.28);
         g.fillStyle = 'rgba(15,23,42,.6)'; g.fillRect(0, h * 0.5, w, 10); g.fillStyle = '#fff'; g.fillRect(0, h * 0.5 - 2, w, 3);

@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   var T = THREE, A, W, H3 = GA.Hall3D = {};
-  var V = '20261009pb';
+  var V = '20261009sc';
   var mats = {};
   function ph(c, s, e) { var k = 'p' + c + (s || 40) + (e || ''); return mats[k] || (mats[k] = new T.MeshPhongMaterial({ color: c, shininess: s || 40, specular: '#ffffff', emissive: e ? new T.Color(e) : new T.Color(0) })); }
   function gold() { return ph('#e8b84a', 90, '#3a2400'); }
@@ -57,6 +57,9 @@
     dash: function (g) { var r = add(g, to(0.17, 0.035, 7, 40), ph('#ffd23f', 120, '#5a4000'), 0, 0.3, 0); g.userData.spin = r; },
     spooks: function (g) { var w = new T.MeshPhongMaterial({ color: '#d9ffe4', emissive: '#1f6b38', shininess: 60, transparent: true, opacity: 0.92 }); add(g, sp(0.15, 24), w, 0, 0.32, 0); var c = add(g, cy(0.15, 0.18, 0.18, 24, 1, true), w, 0, 0.22, 0); void c; [-0.05, 0.05].forEach(function (x) { add(g, sp(0.025, 10), ph('#111827', 80), x, 0.35, 0.135); }); add(g, sp(0.03, 10), ph('#111827', 40), 0, 0.28, 0.14).scale.set(1, 1.3, 0.5); g.userData.bob = true; },
     blocks: function (g) { var wh = ph('#f8fafc', 30), bk = ph('#111827', 30); add(g, bx(0.26, 0.26, 0.26), wh, 0, 0.2, 0); [-0.06, 0.06].forEach(function (x) { add(g, bx(0.04, 0.27, 0.02), bk, x, 0.2, 0.125); }); add(g, bx(0.27, 0.04, 0.02), bk, 0, 0.27, 0.125); [-0.09, 0.09].forEach(function (x) { add(g, bx(0.06, 0.1, 0.04), wh, x, 0.38, 0); add(g, bx(0.035, 0.035, 0.02), bk, x, 0.2, 0.135); }); add(g, bx(0.04, 0.1, 0.16), bk, 0, 0.36, -0.02); },
+    sports: function (g) { var c = new T.Group(); c.position.y = 0.3; g.add(c); add(c, sp(0.12, 24), ph('#f97316', 50), 0, 0, 0); var ln = ph('#3b1d0a', 20); [0, Math.PI / 2].forEach(function (a) { var m = add(c, to(0.121, 0.006, 7, 32), ln, 0, 0, 0); m.rotation.y = a; }); add(c, to(0.121, 0.006, 7, 32), ln, 0, 0, 0).rotation.x = Math.PI / 2;
+      var o = new T.Group(); o.position.y = 0.3; g.add(o); add(o, sp(0.06, 16), ph('#ffffff', 60), 0.22, 0, 0); add(o, sp(0.045, 14), ph('#e6ff3b', 60, '#2a3300'), -0.11, 0.05, 0.19); add(o, sp(0.055, 14), ph('#a855f7', 100), -0.11, -0.04, -0.19);
+      add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
     pickle: function (g) { var pd = new T.Group(); pd.position.set(-0.06, 0.3, 0); pd.rotation.z = 0.35; g.add(pd); var f = add(pd, cy(0.15, 0.15, 0.03, 28), ph('#22c55e', 90), 0, 0.06, 0); f.rotation.x = Math.PI / 2; f.scale.set(1, 1, 1.25); var e = add(pd, to(0.15, 0.012, 7, 32), ph('#14532d', 60), 0, 0.06, 0); e.scale.set(1, 1.25, 1);
       add(pd, cy(0.025, 0.028, 0.18, 12), ph('#3b2a1a', 30), 0, -0.17, 0); add(pd, sp(0.03, 10), ph('#3b2a1a', 30), 0, -0.26, 0);
       var bl = add(g, sp(0.08, 20), ph('#e6ff3b', 70, '#3a4500'), 0.17, 0.48, 0.05); [[0, 0.07, 0.04], [0.06, 0.02, 0.05], [-0.05, 0.03, 0.06], [0.02, -0.05, 0.065]].forEach(function (q) { add(bl, sp(0.016, 8), ph('#84a110', 20), q[0], q[1], q[2]); }); g.userData.spin = pd; },
@@ -350,6 +353,8 @@
     [4, 3, 2, 1, 0].forEach(function (i) { slots.push([W.maxX, W.minZ + 2.2 + i * 2.0, -Math.PI / 2]); });
     // overflow: one more exhibit at the back end of each side wall (clear of the back-wall exhibits)
     slots.push([W.minX, W.minZ + 12.2, Math.PI / 2]); slots.push([W.maxX, W.minZ + 12.2, -Math.PI / 2]);
+    // 19th: free-standing on the right of Gus's desk, facing the entrance
+    slots.push([W.doorX + 4.4, W.minZ + 5.6, Math.PI]);
     var par = A.scene;
     games.forEach(function (gm, i) { var s = slots[i]; if (!s) return; exhibit(gm, GA.HALL_DATA[gm.id], s[0], s[1], s[2]); });
     // wood pilasters between the exhibits

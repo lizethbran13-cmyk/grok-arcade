@@ -1398,5 +1398,76 @@ GA.HALL_DATA = {
 "cover": "assets/hall/pickle/cover.webp",
 "quip": "Pickleball. The ball has HOLES in it. Nobody can explain that to me.",
 "noOld": "Grok Pickleball arrived already polished. No old versions. Stay out of my kitchen."
+},
+"sports": {
+"repo": "grok-sports",
+"history": [
+{
+"date": "Oct 9",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A walkable 3D sports plaza with 10 sports (soccer, basketball, tennis, bowling, beach volleyball, mini golf, badminton, dodgeball, archery, table tennis), easy touch controls, Assist Mode, how-to-play cards, ranks, coins, daily challenges, a locker room, a trophy hall, a records board, doors to Grok FC and Grok Pickleball, and online play for up to 3."
+},
+{
+"date": "Oct 9",
+"ver": "1.1",
+"title": "A real bowling alley",
+"text": "Bowling got a proper neon alley (wood lanes with arrows, gutters, other bowlers, a ball return, a pinsetter, glowing scoreboards and seats) and a real frame-by-frame scorecard. Badminton and table tennis got stands and crowds too."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/sports/1.webp",
+"cap": "The sports plaza: walk into a door to play",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/sports/2.webp",
+"cap": "Soccer 3v3 under the stadium lights",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/sports/3.webp",
+"cap": "Basketball 2v2 street court",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/sports/4.webp",
+"cap": "The neon Grok Bowl alley",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/sports/5.webp",
+"cap": "Mini golf: the windmill hole",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/sports/6.webp",
+"cap": "Beach volleyball 2v2",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/sports/7.webp",
+"cap": "Dodgeball 3v3 in the arena",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/sports/8.webp",
+"cap": "Results: XP, coins, records and trophies",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/sports/cover.webp",
+"quip": "Ten sports. TEN. Somebody bowled a ball into my filing cabinet already.",
+"noOld": "Grok Sports Command showed up already in uniform. No old versions. No running in the Hall."
 }
 };

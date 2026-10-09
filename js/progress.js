@@ -69,7 +69,8 @@
     catch: [40, 'Critter Wrangler', 'Score 40 in Critter Catch', '\uD83D\uDC3E'],
     filing: [40, 'Master Archivist', 'Score 40 in Gus\u2019s Filing Frenzy', '\uD83D\uDDC4\uFE0F'],
     laser: [60, 'Laser Legend', 'Score 60 in Laser Dash', '\uD83D\uDD34'],
-    dink: [40, 'Dink Master', 'Score 40 in Dink Duel', '\uD83C\uDFD3']
+    dink: [40, 'Dink Master', 'Score 40 in Dink Duel', '\uD83C\uDFD3'],
+    hoop: [45, 'Hoop Hero', 'Score 45 in Hoop Frenzy', '\uD83C\uDFC0']
   };
   var A = [
     { id: 'first_ticket', cat: 'Tickets', icon: '\uD83C\uDF9F\uFE0F', name: 'First Ticket!', desc: 'Earn your first ticket in the Bonus Zone', p: function () { return [st.earned, 1]; } },
@@ -128,6 +129,8 @@
   A.push({ id: 'master_thief', cat: 'Prizes', icon: '\uD83D\uDC8E', name: 'Master Thief', desc: 'Own the Baron Grumble Plush, the Moonstone Diamond Replica and the Getaway Van Replica', p: function () { return [['pl_baron', 'moonstone', 'heist_van'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'dink_perfect', cat: 'High Scores', icon: '\uD83E\uDD52', name: 'Soft Hands', desc: 'Hit 5 PERFECT dinks in one game of Dink Duel', p: function () { return [ev('dinkPerfect5') ? 1 : 0, 1]; } });
   A.push({ id: 'pickle_squad', cat: 'Prizes', icon: '\uD83E\uDD52', name: 'Pickle Squad', desc: 'Own the Pickle Pal Plush, the Golden Paddle Trophy and the Pickleball Visor', p: function () { return [['pl_pickle', 'tr_paddle', 'pb_visor'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
+  A.push({ id: 'hoop_streak', cat: 'High Scores', icon: '\uD83D\uDD25', name: 'On Fire', desc: 'Make 5 shots in a row in Hoop Frenzy', p: function () { return [ev('hoop5') ? 1 : 0, 1]; } });
+  A.push({ id: 'all_star', cat: 'Prizes', icon: '\u2B50', name: 'All-Star', desc: 'Own the MVP Bear Plush, the Golden Bowling Pin and the Sports Command Cup', p: function () { return [['pl_mvp', 'gold_pin', 'tr_sports'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'designer', cat: 'Arcade', icon: '\uD83D\uDCA1', name: 'Game Designer', desc: 'Send your first patch suggestion from the Suggestion Booth', p: function () { return [ev('suggest') ? 1 : 0, 1]; } });
   A.push({ id: 'claw_first', cat: 'Claw', icon: '\uD83E\uDE9D', name: 'Claw Catcher', desc: 'Win a prize from a claw machine', p: function () { return [ev('clawWins') ? 1 : 0, 1]; } });
   A.push({ id: 'claw_tricky', cat: 'Claw', icon: '\uD83C\uDFAF', name: 'Steady Hands', desc: 'Win a prize from the Tricky Claw', p: function () { return [ev('clawTricky') ? 1 : 0, 1]; } });

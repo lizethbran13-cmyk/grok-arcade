@@ -825,6 +825,58 @@
     g.userData.tick = function (t) { pd.rotation.y = Math.sin(t * 0.7) * 0.6; bl.position.y = 0.72 + Math.abs(Math.sin(t * 2.6)) * 0.08; sp.forEach(function (m, i) { var a = t * 1.5 + i * 2.1; m.position.set(Math.cos(a) * 0.32, 0.6 + Math.sin(a * 1.3) * 0.15, Math.sin(a) * 0.26); }); };
     return g;
   }
+  /* ---------- Grok Sports Command prizes ---------- */
+  function bBall(par, r, x, y, z) { var b = add(par, sph(r, 24), shiny('#f97316', 30), x, y, z); var L = lam('#3b1d0a');
+    [0, Math.PI / 2].forEach(function (a) { var m = add(b, tor(r * 1.002, r * 0.04, 7, 6, 36), L); m.rotation.y = a; }); var e = add(b, tor(r * 1.002, r * 0.04, 7, 6, 36), L); e.rotation.x = Math.PI / 2; return b; }
+  function mvpPlush() {
+    var g = new T.Group(), b = grp(g, 0, 0, 0), F = lam('#a16207'), Fd = lam('#7c4a03'), J = lam('#2563eb');
+    add(b, sph(0.17, 24), J, 0, 0.24, 0, 1, 1.05, 0.9); add(b, sph(0.12, 16), lam('#fde68a'), 0, 0.22, 0.08, 1, 1.1, 0.5);
+    var num = add(b, box(0.06, 0.1, 0.01), lam('#facc15'), 0, 0.26, 0.16); void num;
+    [-1, 1].forEach(function (sd) { add(b, sph(0.07, 12), F, sd * 0.1, 0.06, 0.06, 1, 0.7, 1.3); var a = add(b, sph(0.055, 12), F, sd * 0.16, 0.25, 0.08, 1, 1.5, 1); rot(a, 0.6, 0, sd * 0.5); });
+    var hd = grp(b, 0, 0.5, 0); add(hd, sph(0.15, 24), F, 0, 0, 0);
+    [-1, 1].forEach(function (sd) { add(hd, sph(0.055, 12), F, sd * 0.11, 0.11, -0.01); add(hd, sph(0.03, 10), lam('#fbcfe8'), sd * 0.11, 0.11, 0.03, 1, 1, 0.5); });
+    add(hd, sph(0.065, 14), lam('#fde68a'), 0, -0.04, 0.12, 1, 0.8, 0.6); add(hd, sph(0.025, 10), shiny('#16101f', 90), 0, -0.02, 0.165);
+    eyes(hd, 0.035, 0.142, 0.055, 0.026); blush(hd, -0.025, 0.125, 0.09);
+    var bl = grp(b, 0, 0.2, 0.2); bBall(bl, 0.09, 0, 0, 0);
+    tag(b, -0.15, 0.1, 0.1);
+    g.userData.tick = function (t) { hd.rotation.z = Math.sin(t * 1.6) * 0.08; bl.rotation.y = t * 0.6; };
+    return g;
+  }
+  function kcHoop() {
+    var g = new T.Group(); keyRing(g, 0.9);
+    var o = grp(g, 0, 0.5, 0); add(o, box(0.3, 0.2, 0.02), shiny('#f8fafc', 50), 0, 0.12, -0.02); add(o, box(0.1, 0.07, 0.005), lam('#ef4444'), 0, 0.08, 0);
+    add(o, tor(0.075, 0.009, 7, 6, 24), shiny('#f97316', 80), 0, 0.02, 0.08).rotation.x = Math.PI / 2;
+    add(o, new T.CylinderGeometry(0.075, 0.045, 0.1, 12, 1, true), new T.MeshLambertMaterial({ color: '#ffffff', wireframe: true }), 0, -0.03, 0.08);
+    bBall(o, 0.05, 0, -0.04, 0.08);
+    g.userData.tick = function (t) { o.rotation.y = Math.sin(t * 0.9) * 0.5; };
+    return g;
+  }
+  function sweatband() {
+    var g = new T.Group(); var bd = add(g, new T.CylinderGeometry(0.3, 0.3, 0.09, 36, 1, true), new T.MeshLambertMaterial({ color: '#2563eb', side: T.DoubleSide }), 0, 0.05, 0); void bd;
+    add(g, tor(0.3, 0.012, 7, 6, 36), lam('#facc15'), 0, 0.005, 0).rotation.x = Math.PI / 2; add(g, tor(0.3, 0.012, 7, 6, 36), lam('#facc15'), 0, 0.095, 0).rotation.x = Math.PI / 2;
+    var st = add(g, starGeo(0.05, 0.022, 0.01), metal('#facc15'), 0, 0.05, 0.305); void st;
+    add(g, new T.CylinderGeometry(0.29, 0.29, 0.085, 36, 1, true), new T.MeshLambertMaterial({ color: '#1e3a8a', side: T.BackSide }), 0, 0.05, 0); // terry lining
+    g.userData.hat = { y: 0.06, s: 0.75 };
+    return g;
+  }
+  function goldenPin() {
+    var g = new T.Group(); add(g, cyl(0.22, 0.25, 0.08, 28), lam('#4c1d95'), 0, 0.04, 0); add(g, cyl(0.2, 0.2, 0.02, 28), metal('#a855f7'), 0, 0.09, 0);
+    var prof = [[0, 0], [0.06, 0], [0.085, 0.08], [0.095, 0.16], [0.08, 0.26], [0.045, 0.34], [0.04, 0.38], [0.055, 0.44], [0.055, 0.48], [0.035, 0.53], [0, 0.545]].map(function (p) { return new T.Vector2(p[0], p[1]); });
+    var pin = grp(g, 0, 0.1, 0); add(pin, G('bpin', function () { return new T.LatheGeometry(prof, 28); }), metal('#ffcf3a'), 0, 0, 0);
+    add(pin, cyl(0.043, 0.043, 0.012, 20), lam('#ef4444'), 0, 0.36, 0); add(pin, cyl(0.046, 0.046, 0.012, 20), lam('#ef4444'), 0, 0.395, 0);
+    var orb = add(g, sph(0.065, 20), shiny('#a855f7', 100), 0.17, 0.165, 0.05);
+    var sp = []; for (var i = 0; i < 3; i++) sp.push(add(g, sph(0.02, 8), glow('#fff8b0'), 0, 0, 0));
+    g.userData.tick = function (t) { pin.rotation.y = t * 0.6; orb.position.set(Math.cos(t * 1.2) * 0.17, 0.165, Math.sin(t * 1.2) * 0.17); orb.rotation.x = t * 3; sp.forEach(function (m, k) { var a = t * 1.4 + k * 2.1; m.position.set(Math.cos(a) * 0.24, 0.35 + Math.sin(a * 1.3) * 0.15, Math.sin(a) * 0.2); }); };
+    return g;
+  }
+  function sportsCup() {
+    var g = trophy('#ffcf3a', true), oldTick = g.userData.tick;
+    var o = grp(g, 0, 0.75, 0); var b1 = grp(o, 0.36, 0, 0); bBall(b1, 0.065, 0, 0, 0);
+    var b2 = add(o, sph(0.06, 18), shiny('#ffffff', 60), -0.18, 0, 0.31); add(b2, sph(0.025, 8), lam('#111827'), 0, 0, 0.05); add(b2, sph(0.025, 8), lam('#111827'), 0.04, 0.03, -0.02);
+    var b3 = add(o, sph(0.045, 16), lam('#e6ff3b'), -0.18, 0, -0.31); void b3;
+    g.userData.tick = function (t) { if (oldTick) oldTick(t); o.rotation.y = t * 0.8; o.position.y = 0.75 + Math.sin(t * 2) * 0.03; };
+    return g;
+  }
   var BUILD = {
     kc_snake: kcSnake, kc_joy: kcJoy, poster_arcade: function () { return poster('arcade'); }, poster_brawl: function () { return poster('brawl'); }, cap: cap, propeller: propeller,
     pl_luna: function () { return rat('luna'); }, pl_pirat: function () { return rat('pirat'); }, pl_snowie: function () { return rat('snowie'); },
@@ -833,6 +885,7 @@
     pl_grokloon: grokloonPlush, rides_monster: ridesMonster, taxi_hat: taxiHat, kc_wrench: kcWrench,
     pl_baron: baronPlush, goggles_hat: gogglesHat, kc_banana: kcBanana, moonstone: moonstone, heist_van: heistVan,
     pl_pickle: picklePlush, kc_pball: kcPickleball, pb_visor: visorHat, tr_paddle: paddleTrophy,
+    pl_mvp: mvpPlush, kc_hoop: kcHoop, sw_band: sweatband, gold_pin: goldenPin, tr_sports: sportsCup,
     pl_embercub: function () { return critterPlush('embercub'); }, pl_puddlepup: function () { return critterPlush('puddlepup'); }, pl_leafkit: function () { return critterPlush('leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue, pl_gus: gusPlush, kc_stamp: kcStamp, dlc_replica: dlcReplica,
     pl_zebra: zebraPlush, pl_rhino: rhinoPlush, pl_leopard: leopardPlush, ranger_hat: rangerHat, kc_dart: kcDart, snow_globe: snowGlobe, rescue_truck: rescueTruck,
     pl_dash: function () { return dashHero('grok'); }, pl_speedy: function () { return dashHero('speedy'); }, pl_floaty: function () { return dashHero('floaty'); },
@@ -840,7 +893,7 @@
     tr_bronze: function () { return trophy('#cd7f32'); }, tr_silver: function () { return trophy('#c0c7d0'); }, tr_gold: function () { return trophy('#ffcf3a', true); }, golden_joy: goldenJoy
   };
   Object.keys(FIGHTERS).forEach(function (k) { BUILD['pl_' + k] = function () { return fighter(k); }; });
-  var HATS = { cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1, ears_hat: 1, goggles_hat: 1, pb_visor: 1 };
+  var HATS = { cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1, ears_hat: 1, goggles_hat: 1, pb_visor: 1, sw_band: 1 };
 
   function build(id) {
     if (/^ach:/.test(id)) return medal(id.slice(4));
