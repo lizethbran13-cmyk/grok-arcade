@@ -706,6 +706,31 @@
         g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#ffd23f'; g.fillText('HEIST CREW', w / 2, 22);
         break;
       }
+      case 'pickle': {
+        // sunny park court: blue court with green kitchen, net, two players dinking a yellow ball back and forth
+        var gq1 = g.createLinearGradient(0, 0, 0, h); gq1.addColorStop(0, '#7dd3fc'); gq1.addColorStop(0.45, '#bbf7d0'); gq1.addColorStop(1, '#22c55e'); g.fillStyle = gq1; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#2f9e44'; for (i = 0; i < 4; i++) { g.beginPath(); g.arc(18 + i * 58, 52, 16, 0, 7); g.fill(); }
+        g.fillStyle = '#2563eb'; g.beginPath(); g.moveTo(w * 0.3, 62); g.lineTo(w * 0.7, 62); g.lineTo(w * 0.92, h - 8); g.lineTo(w * 0.08, h - 8); g.closePath(); g.fill();
+        var ny = 62 + (h - 70) * 0.42; g.fillStyle = '#16a34a'; g.fillRect(w * 0.21, ny - 14, w * 0.58, 30);
+        g.fillStyle = 'rgba(15,23,42,.6)'; g.fillRect(w * 0.18, ny - 12, w * 0.64, 12); g.fillStyle = '#fff'; g.fillRect(w * 0.18, ny - 14, w * 0.64, 3);
+        var kq = (Math.sin(t * 2.2) + 1) / 2, qx = w * (0.42 + 0.16 * Math.sin(t * 1.3)), qy = 78 + kq * (h - 120), qh = Math.abs(Math.sin(t * 4.4)) * 16;
+        g.fillStyle = '#e11d48'; rrF(g, w * 0.48, 66, 12, 16, 4); g.fillStyle = '#f1c7a5'; g.beginPath(); g.arc(w * 0.48 + 6, 62, 6, 0, 7); g.fill();
+        g.fillStyle = '#3b82f6'; rrF(g, w * 0.45, h - 46, 20, 26, 7); g.fillStyle = '#f1c7a5'; g.beginPath(); g.arc(w * 0.45 + 10, h - 52, 9, 0, 7); g.fill(); g.fillStyle = '#1d4ed8'; g.beginPath(); g.arc(w * 0.45 + 10, h - 54, 9.5, Math.PI, 0); g.fill();
+        g.fillStyle = '#22c55e'; g.beginPath(); g.ellipse(w * 0.45 + 28, h - 50, 7, 9, 0.4, 0, 7); g.fill();
+        g.fillStyle = 'rgba(0,0,0,.25)'; g.beginPath(); g.ellipse(qx, qy + 4, 5, 2, 0, 0, 7); g.fill();
+        g.fillStyle = '#e6ff3b'; g.beginPath(); g.arc(qx, qy - qh, 5, 0, 7); g.fill();
+        g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#14532d'; g.fillText('GROK PICKLEBALL', w / 2, 24);
+        break;
+      }
+      case 'dink': {
+        g.fillStyle = '#2563eb'; g.fillRect(0, 0, w, h); g.fillStyle = '#16a34a'; g.fillRect(0, h * 0.42, w, h * 0.28);
+        g.fillStyle = 'rgba(15,23,42,.6)'; g.fillRect(0, h * 0.5, w, 10); g.fillStyle = '#fff'; g.fillRect(0, h * 0.5 - 2, w, 3);
+        var dk = (t % 1.6) / 1.6, dy = 40 + dk * (h - 70), dh = dk < 0.6 ? Math.sin(dk / 0.6 * Math.PI) * 30 : Math.sin((dk - 0.6) / 0.4 * Math.PI) * 14;
+        g.strokeStyle = '#ffe14d'; g.lineWidth = 2; g.beginPath(); g.ellipse(w / 2, 40 + 0.6 * (h - 70), 11, 4, 0, 0, 7); g.stroke();
+        g.fillStyle = '#e6ff3b'; g.beginPath(); g.arc(w / 2, dy - dh, 6, 0, 7); g.fill();
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('DINK DUEL', w / 2, 22);
+        break;
+      }
       case 'laser': {
         g.fillStyle = '#140a26'; g.fillRect(0, 0, w, h); g.fillStyle = '#2a1650'; g.fillRect(0, h - 34, w, 34);
         for (i = 0; i < 3; i++) { var lx6 = ((i * 70 - t * 60) % (w + 40) + w + 40) % (w + 40) - 20, low6 = i % 2 === 0, ly6 = low6 ? h - 46 : h - 86;

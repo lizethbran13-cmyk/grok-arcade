@@ -1339,5 +1339,64 @@ GA.HALL_DATA = {
 "cover": "assets/hall/heist/cover.webp",
 "quip": "Thieves. In MY museum. I\u2019m counting the diamonds every night now.",
 "noOld": "Grok Heist Crew snuck in fully polished. No old versions. I checked the vault. Twice."
+},
+"pickle": {
+"repo": "grok-pickleball",
+"history": [
+{
+"date": "Oct 9",
+"ver": "1.0",
+"title": "First serve",
+"text": "Real pickleball in 3D: underhand serves, the two-bounce rule, the kitchen, side-out or rally scoring, Assist Mode, a tutorial, the 8-player Pickle Cup, 4 mini games, 5 courts and online play for up to 3."
+},
+{
+"date": "Oct 9",
+"ver": "1.1",
+"title": "Faces & fixes",
+"text": "Cuter players with real eyes and faces, team rings, a clearer HUD (no overlapping hints or names), no fence blocking the view, a TV-style replay camera and shorter doubles rallies."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/pickle/1.webp",
+"cap": "Title screen",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickle/2.webp",
+"cap": "Serving at the park",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickle/3.webp",
+"cap": "Doubles in Vegas (neon!)",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickle/4.webp",
+"cap": "Rally at the beach",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickle/5.webp",
+"cap": "Night rooftop court",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickle/6.webp",
+"cap": "The locker: paddles & outfits",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/pickle/cover.webp",
+"quip": "Pickleball. The ball has HOLES in it. Nobody can explain that to me.",
+"noOld": "Grok Pickleball arrived already polished. No old versions. Stay out of my kitchen."
 }
 };

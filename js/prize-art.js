@@ -24,6 +24,8 @@
     { id: 'snow_globe', cat: 'fun', name: 'Sanctuary Snow Globe', price: 45, desc: 'Shake it and snow falls on a tiny safe sanctuary, blocky zebra included.' },
     { id: 'kc_wrench', cat: 'fun', name: 'Golden Wrench Keychain', price: 20, desc: 'The Grok Rides mechanic\u2019s lucky golden wrench. Fixes dents (in your heart).' },
     { id: 'kc_stamp', cat: 'fun', name: 'Gus\u2019s APPROVED Stamp', price: 20, desc: 'A tiny red rubber stamp from the Hall of Game Records. Stamp it on things. Gus says don\u2019t.' },
+    { id: 'kc_pball', cat: 'fun', name: 'Pickleball Keychain', price: 20, desc: 'A tiny yellow Grok Pickleball ball with all its holes. Dink your keys!' },
+    { id: 'pb_visor', cat: 'fun', name: 'Pickleball Visor', price: 35, desc: 'The green Grok Pickleball sun visor with a little ball pin. Instant pro look!' },
     { id: 'kc_banana', cat: 'fun', name: 'Banana Peel Keychain', price: 20, desc: 'The Grok Heist Crew guard-tripping banana peel, now on your keys. Slippery luck!' },
     { id: 'goggles_hat', cat: 'fun', name: 'Lookout Night-Vision Goggles', price: 35, desc: 'The Lookout\u2019s glowing green goggles from Grok Heist Crew. Wear them and spot every guard!' },
     { id: 'kc_orb', cat: 'fun', name: 'Catch Orb Keychain', price: 20, desc: 'A tiny red-and-white Grok Poke catch orb. Click the button for good luck!' },
@@ -45,6 +47,7 @@
     { id: 'pl_rhino', cat: 'plush', name: 'Baby Rhino Plush', price: 65, desc: 'A chubby baby rhino with one tiny horn. Feisty in the game, soft on the shelf.' },
     { id: 'pl_leopard', cat: 'plush', name: 'Snow Leopard Plush', price: 80, desc: 'The snowy-peaks runner, now a plush with spotted ears and a big tail.' },
     { id: 'pl_gus', cat: 'plush', name: 'Grumpy Gus Plush', price: 70, desc: 'Gus the archivist, with his cardigan, bow tie, glasses and walrus mustache. Frowns even when you hug him.' },
+    { id: 'pl_pickle', cat: 'plush', name: 'Pickle Pal Plush', price: 55, desc: 'A bumpy, smiley pickle in a sweatband holding its own tiny paddle. The Grok Pickleball mascot!' },
     { id: 'pl_baron', cat: 'plush', name: 'Baron Grumble Plush', price: 60, desc: 'The top-hatted, monocled villain of Grok Heist Crew, as a squishy plush. Still grumbling about his treasures.' },
     { id: 'pl_embercub', cat: 'plush', name: 'Embercub Plush', price: 55, desc: 'The fire-tail Grok Poke starter, extra squishy. Its tail glows (but never burns).' },
     { id: 'pl_puddlepup', cat: 'plush', name: 'Puddlepup Plush', price: 55, desc: 'The floppy-eared water starter from Grok Poke. Smells a little like the beach.' },
@@ -64,6 +67,7 @@
     { id: 'vac_replica', cat: 'model', name: 'Grok-Vac Replica', price: 220, desc: 'A full-size Grok-Vac 3000 on a stand, glowing ghost tank and all.' },
     { id: 'rescue_truck', cat: 'model', name: 'Rescue Truck Replica', price: 200, desc: 'The Grok Blocks ranger truck on a stand, cage bed, spare dart and all.' },
     { id: 'dlc_replica', cat: 'model', name: 'DLC Machine 3000 Replica', price: 210, desc: 'A desk-size DLC Machine 3000 with a spinning pink core, bubbling tubes and chasing lights. Prints nothing. Looks amazing.' },
+    { id: 'tr_paddle', cat: 'model', name: 'Golden Paddle Trophy', price: 190, desc: 'The Pickle Cup champion\u2019s golden paddle on a stand, with a ball bouncing on top. Kitchen not included.' },
     { id: 'moonstone', cat: 'model', name: 'Moonstone Diamond Replica', price: 210, desc: 'The glowing Moonstone Diamond from the City Museum heist, spinning on a velvet stand. (It\u2019s a replica. Probably.)' },
     { id: 'heist_van', cat: 'model', name: 'Getaway Van Replica', price: 220, desc: 'The Grok Heist Crew getaway van on a display stand: purple paint, gold HEIST stripe and a loot bag on the roof.' },
     { id: 'shiny_statue', cat: 'model', name: 'Shiny Embercub Statue', price: 240, desc: 'A rare golden SHINY Embercub on a stand with orbiting sparkles. Only the best critter trainers get one.' },
@@ -698,6 +702,30 @@
     [-18, 18].forEach(function (x) { ball(g, x, 6, 8, 8, '#1a1a1a'); ball(g, x, 6, 3.5, 3.5, '#c9ced8'); });
     g.restore();
   }
+
+  /* ---------- Grok Pickleball prizes ---------- */
+  function pbBall(g, x, y, r) { ball(g, x, y, r, r, '#e6ff3b'); g.fillStyle = '#9bb315'; [[-0.4, -0.3], [0.35, -0.35], [0, 0.1], [-0.35, 0.45], [0.4, 0.4]].forEach(function (d) { g.beginPath(); g.arc(x + d[0] * r, y + d[1] * r, r * 0.16, 0, 7); g.fill(); }); }
+  function plushPickle(g) {
+    shadow(g, 50, 92, 22);
+    ball(g, 46, 58, 17, 32, '#65a30d'); g.fillStyle = '#84cc16'; [[38, 40], [54, 48], [40, 70], [55, 76], [47, 30]].forEach(function (q) { g.beginPath(); g.arc(q[0], q[1], 2.4, 0, 7); g.fill(); });
+    g.fillStyle = '#fff'; rr(g, 30, 26, 32, 6, 3); g.fill();
+    eye(g, 40, 46, 2.6); eye(g, 52, 46, 2.6); blush(g, 36, 53); blush(g, 56, 53);
+    g.strokeStyle = '#3f1d0b'; g.lineWidth = 1.8; g.beginPath(); g.arc(46, 52, 5, 0.2, Math.PI - 0.2); g.stroke();
+    g.save(); g.translate(70, 58); g.rotate(0.5); g.fillStyle = '#3b2a1a'; g.fillRect(-2, 6, 4, 14); g.fillStyle = '#3b82f6'; rr(g, -9, -14, 18, 21, 8); g.fill(); g.restore();
+    shine(g, 40, 36, 4, 7, 0.4); tag(g, 58, 78);
+  }
+  function kcPball(g) { keyRing(g); pbBall(g, 50, 66, 18); shine(g, 43, 58, 5, 3, 0.5); }
+  function pbVisor(g) {
+    shadow(g, 50, 88, 30);
+    g.strokeStyle = '#22c55e'; g.lineWidth = 6; g.beginPath(); g.arc(50, 74, 26, Math.PI * 1.05, Math.PI * 1.95); g.stroke();
+    g.fillStyle = '#16a34a'; g.beginPath(); g.ellipse(50, 74, 34, 10, 0, 0, Math.PI); g.fill(); pbBall(g, 66, 54, 6); sparkle(g, 26, 40, 5);
+  }
+  function trPaddle(g) {
+    standBase(g, '#14532d', true);
+    g.fillStyle = '#ffcf3a'; rr(g, 44, 62, 12, 14, 3); g.fill(); g.fillStyle = '#1f2937'; g.fillRect(47, 50, 6, 14);
+    ball(g, 50, 32, 20, 24, '#ffcf3a'); g.strokeStyle = '#b45309'; g.lineWidth = 2; g.beginPath(); g.ellipse(50, 32, 20, 24, 0, 0, 7); g.stroke();
+    shine(g, 42, 22, 6, 4, 0.6); pbBall(g, 76, 20, 7); sparkle(g, 20, 26, 6); sparkle(g, 82, 52, 4);
+  }
   var DRAW = {
     kc_snake: kcSnake, kc_joy: kcJoy, poster_arcade: function (g) { poster(g, 'arcade'); }, poster_brawl: function (g) { poster(g, 'brawl'); }, cap: cap, propeller: propeller,
     pl_luna: function (g) { plushRat(g, 'luna'); }, pl_pirat: function (g) { plushRat(g, 'pirat'); }, pl_snowie: function (g) { plushRat(g, 'snowie'); },
@@ -705,6 +733,7 @@
     pl_goob: plushGoob, pl_boo: plushBoo, pl_waltzy: plushWaltzy, vac_replica: vacReplica, kc_flash: kcFlash, goo_jar: gooJar, lava_lamp: lavaLamp,
     pl_grokloon: plushGrokloon, rides_monster: ridesMonster, taxi_hat: taxiHat, kc_wrench: kcWrench,
     pl_baron: plushBaron, goggles_hat: gogglesHat, kc_banana: kcBanana, moonstone: moonstone, heist_van: heistVan,
+    pl_pickle: plushPickle, kc_pball: kcPball, pb_visor: pbVisor, tr_paddle: trPaddle,
     pl_embercub: function (g) { plushCritter(g, 'embercub'); }, pl_puddlepup: function (g) { plushCritter(g, 'puddlepup'); }, pl_leafkit: function (g) { plushCritter(g, 'leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue, pl_gus: plushGus, kc_stamp: kcStamp, dlc_replica: dlcReplica,
     pl_zebra: plushZebra, pl_rhino: plushRhino, pl_leopard: plushLeopard, ranger_hat: rangerHat, kc_dart: kcDart, snow_globe: snowGlobe, rescue_truck: rescueTruck,
     pl_dash: function (g) { plushDash(g, 'grok'); }, pl_speedy: function (g) { plushDash(g, 'speedy'); }, pl_floaty: function (g) { plushDash(g, 'floaty'); },

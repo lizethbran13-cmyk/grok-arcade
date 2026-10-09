@@ -783,6 +783,48 @@
     g.userData.tick = function (t) { v.rotation.y = Math.sin(t * 0.5) * 0.35; bag.position.y = 0.53 + Math.abs(Math.sin(t * 3)) * 0.015; };
     return g;
   }
+
+  /* ---------- Grok Pickleball prizes ---------- */
+  function pickleBall(par, r, x, y, z) { var b = add(par, sph(r, 22), lam('#e6ff3b'), x, y, z); var H = lam('#9bb315'); for (var i = 0; i < 10; i++) { var a = i * 2.4, e = Math.acos(1 - 2 * (i + 0.5) / 10); add(b, sph(r * 0.17, 8), H, Math.sin(e) * Math.cos(a) * r * 0.93, Math.cos(e) * r * 0.93, Math.sin(e) * Math.sin(a) * r * 0.93, 1, 1, 0.4).lookAt(0, 0, 0); } return b; }
+  function picklePlush() {
+    var g = new T.Group(), b = grp(g, 0, 0, 0), P = lam('#65a30d'), Pl = lam('#84cc16');
+    var body = add(b, sph(0.17, 26), P, 0, 0.33, 0, 1, 1.75, 0.95); void body;
+    for (var i = 0; i < 9; i++) add(b, sph(0.025, 8), Pl, Math.sin(i * 2.3) * 0.15, 0.15 + (i % 5) * 0.08, Math.cos(i * 2.3) * 0.13 + 0.02);
+    [-1, 1].forEach(function (sd) { add(b, sph(0.06, 12), P, sd * 0.09, 0.05, 0.05, 1, 0.6, 1.3); var a = add(b, sph(0.05, 12), P, sd * 0.17, 0.3, 0.03, 1, 1.6, 1); rot(a, 0, 0, sd * 0.6); });
+    var hd = grp(b, 0, 0.46, 0.1); eyes(hd, 0.02, 0.06, 0.06, 0.032); blush(hd, -0.04, 0.06, 0.1); smile(hd, -0.05, 0.075, 0.035);
+    add(b, cyl(0.16, 0.17, 0.05, 20), lam('#ffffff'), 0, 0.58, 0); add(b, cyl(0.17, 0.17, 0.02, 20, 1), lam('#22c55e'), 0, 0.565, 0.02); // headband
+    var pd = grp(b, 0.22, 0.28, 0.06); rot(pd, 0, 0, -0.5); var f = add(pd, cyl(0.09, 0.09, 0.02, 22), shiny('#3b82f6', 60), 0, 0.1, 0); f.rotation.x = Math.PI / 2; f.scale.set(1, 1, 1.25); add(pd, cyl(0.016, 0.018, 0.1, 10), lam('#3b2a1a'), 0, -0.02, 0);
+    tag(b, 0.13, 0.12, 0.13);
+    g.userData.tick = function (t) { b.rotation.z = Math.sin(t * 1.5) * 0.05; pd.rotation.z = -0.5 + Math.sin(t * 3) * 0.15; };
+    return g;
+  }
+  function kcPickleball() {
+    var g = new T.Group(); keyRing(g, 0.9);
+    var o = grp(g, 0, 0.42, 0); pickleBall(o, 0.15, 0, 0, 0);
+    g.userData.tick = function (t) { o.rotation.y = t * 0.8; o.position.y = 0.42 + Math.sin(t * 3) * 0.01; };
+    return g;
+  }
+  function visorHat() {
+    var g = new T.Group(), C = lam('#22c55e');
+    var band = add(g, tor(0.3, 0.035, Math.PI * 1.3, 10, 30), C, 0, 0.06, 0); band.rotation.set(Math.PI / 2, 0, -Math.PI * 0.15 + Math.PI / 2);
+    var br = add(g, new T.CylinderGeometry(0.34, 0.34, 0.02, 30, 1, false, -Math.PI * 0.35, Math.PI * 0.7), shiny('#16a34a', 40), 0.06, 0.07, 0); void br;
+    add(g, box(0.02, 0.08, 0.14), lam('#ffffff'), 0.3, 0.1, 0);
+    pickleBall(g, 0.045, 0.31, 0.11, 0.0);
+    g.userData.hat = { y: 0.02, s: 0.75 };
+    return g;
+  }
+  function paddleTrophy() {
+    var g = new T.Group(); stand(g, '#14532d', 0.8);
+    add(g, cyl(0.1, 0.13, 0.16, 20), metal('#ffcf3a'), 0, 0.16, 0);
+    var pd = grp(g, 0, 0.5, 0), Gd = metal('#ffcf3a');
+    var f = add(pd, cyl(0.17, 0.17, 0.03, 30), Gd, 0, 0.1, 0); f.rotation.x = Math.PI / 2; f.scale.set(1, 1, 1.3);
+    add(pd, tor(0.17, 0.012, 7, 8, 32), metal('#b45309'), 0, 0.1, 0).scale.set(1, 1.3, 1);
+    add(pd, cyl(0.03, 0.035, 0.2, 12), lam('#1f2937'), 0, -0.2, 0); add(pd, sph(0.035, 10), lam('#1f2937'), 0, -0.3, 0);
+    var bl = grp(g, 0.24, 0.72, 0.05); pickleBall(bl, 0.06, 0, 0, 0);
+    var sp = []; for (var i = 0; i < 3; i++) sp.push(add(g, sph(0.025, 8), glow('#fff8b0'), 0, 0, 0));
+    g.userData.tick = function (t) { pd.rotation.y = Math.sin(t * 0.7) * 0.6; bl.position.y = 0.72 + Math.abs(Math.sin(t * 2.6)) * 0.08; sp.forEach(function (m, i) { var a = t * 1.5 + i * 2.1; m.position.set(Math.cos(a) * 0.32, 0.6 + Math.sin(a * 1.3) * 0.15, Math.sin(a) * 0.26); }); };
+    return g;
+  }
   var BUILD = {
     kc_snake: kcSnake, kc_joy: kcJoy, poster_arcade: function () { return poster('arcade'); }, poster_brawl: function () { return poster('brawl'); }, cap: cap, propeller: propeller,
     pl_luna: function () { return rat('luna'); }, pl_pirat: function () { return rat('pirat'); }, pl_snowie: function () { return rat('snowie'); },
@@ -790,6 +832,7 @@
     pl_goob: goob, pl_boo: boo, pl_waltzy: waltzy, vac_replica: vacReplica, kc_flash: kcFlash, goo_jar: gooJar, lava_lamp: lavaLamp,
     pl_grokloon: grokloonPlush, rides_monster: ridesMonster, taxi_hat: taxiHat, kc_wrench: kcWrench,
     pl_baron: baronPlush, goggles_hat: gogglesHat, kc_banana: kcBanana, moonstone: moonstone, heist_van: heistVan,
+    pl_pickle: picklePlush, kc_pball: kcPickleball, pb_visor: visorHat, tr_paddle: paddleTrophy,
     pl_embercub: function () { return critterPlush('embercub'); }, pl_puddlepup: function () { return critterPlush('puddlepup'); }, pl_leafkit: function () { return critterPlush('leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue, pl_gus: gusPlush, kc_stamp: kcStamp, dlc_replica: dlcReplica,
     pl_zebra: zebraPlush, pl_rhino: rhinoPlush, pl_leopard: leopardPlush, ranger_hat: rangerHat, kc_dart: kcDart, snow_globe: snowGlobe, rescue_truck: rescueTruck,
     pl_dash: function () { return dashHero('grok'); }, pl_speedy: function () { return dashHero('speedy'); }, pl_floaty: function () { return dashHero('floaty'); },
@@ -797,7 +840,7 @@
     tr_bronze: function () { return trophy('#cd7f32'); }, tr_silver: function () { return trophy('#c0c7d0'); }, tr_gold: function () { return trophy('#ffcf3a', true); }, golden_joy: goldenJoy
   };
   Object.keys(FIGHTERS).forEach(function (k) { BUILD['pl_' + k] = function () { return fighter(k); }; });
-  var HATS = { cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1, ears_hat: 1, goggles_hat: 1 };
+  var HATS = { cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1, ears_hat: 1, goggles_hat: 1, pb_visor: 1 };
 
   function build(id) {
     if (/^ach:/.test(id)) return medal(id.slice(4));

@@ -34,7 +34,9 @@ GA.MAIN_GAMES = [
   { id: 'poke', mp: true, name: 'Grok Poke', desc: 'A big 3D adventure: explore 7 regions, befriend 39 critters, real-time battles, 5 dungeons with bosses, towns you can walk into, and trade or explore with friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-poke/', color: '#5dd66f', color2: '#ffd23f' },
   { id: 'heist', mp: true, name: 'Grok Heist Crew', desc: 'A cartoony co-op stealth heist! Pick Hacker, Lookout, Acrobat or Muscle, sneak past guards, hack doors and lasers and grab Baron Grumble\u2019s treasures from 5 heists. Up to 3 friends online!',
-    url: 'https://lizethbran13-cmyk.github.io/grok-heist/', color: '#a855f7', color2: '#ffd23f' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-heist/', color: '#a855f7', color2: '#ffd23f' },
+  { id: 'pickle', mp: true, name: 'Grok Pickleball', desc: 'Real 3D pickleball with easy swipe-to-hit controls and an Assist Mode! Serve, dink and smash on 5 courts, beat 8 rivals in the Pickle Cup, play 4 mini games, and team up with friends online (up to 3).',
+    url: 'https://lizethbran13-cmyk.github.io/grok-pickleball/', color: '#22c55e', color2: '#e6ff3b' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -53,7 +55,8 @@ GA.BONUS_GAMES = [
   { id: 'rush', name: 'Rush Hour', desc: 'Swerve your Grok Rides car through highway traffic. Tap left or right to switch lanes, grab coins, don\'t bonk! A Grok Rides game.', color: '#38bdf8', color2: '#ffd23f' },
   { id: 'catch', name: 'Critter Catch', desc: 'Critters pop out of the bushes! Tap them fast to toss an orb and catch them. Shiny critters are worth extra, but don\'t tap the Gloom blobs! A Grok Poke game.', color: '#5dd66f', color2: '#ff6b6b' },
   { id: 'filing', name: 'Gus\u2019s Filing Frenzy', desc: 'Folders rain down on Gus\u2019s cabinet! Tap the drawer that matches each folder\u2019s color and toss the junk mail. Gold-bordered RECORD folders are worth 5. A Hall of Game Records game.', color: '#e8b84a', color2: '#ff4fd8' },
-  { id: 'laser', name: 'Laser Dash', desc: 'Sneak down the museum hall! Tap the top to JUMP the low lasers and the bottom to DUCK the high ones. Grab diamonds, don\u2019t trip the alarm! A Grok Heist Crew game.', color: '#ff3d6e', color2: '#a855f7' }
+  { id: 'laser', name: 'Laser Dash', desc: 'Sneak down the museum hall! Tap the top to JUMP the low lasers and the bottom to DUCK the high ones. Grab diamonds, don\u2019t trip the alarm! A Grok Heist Crew game.', color: '#ff3d6e', color2: '#a855f7' },
+  { id: 'dink', name: 'Dink Duel', desc: 'The CPU dinks it over the net. Let it BOUNCE (it\u2019s the kitchen rule!), then tap to dink it back. Tap at the top of the hop for PERFECT. A Grok Pickleball game.', color: '#e6ff3b', color2: '#22c55e' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };
