@@ -660,3 +660,7 @@ body.arOn #joy,body.arOn #playBtn,body.arOn #prompt,body.arOn #arMap,body.arOn #
 @keyframes arFall{to{transform:translateY(105vh) rotate(720deg)}}
 @media (max-width:420px){.arTitle{font-size:17px}.arFw{min-height:58px;font-size:22px}.arFw small,.arTop small{font-size:8.5px}.arPad{grid-template-columns:repeat(3,66px)}.arEmo{min-height:52px;font-size:10px}}
 .hlCard.hlArc{width:100%;margin-bottom:10px;background:linear-gradient(90deg,rgba(255,79,216,.18),rgba(63,240,255,.12))}.hlCard.hlArc b{white-space:normal;font-size:16px}
+#areaLabel.ar_gallery{color:#3ff0ff;border-color:#ffd23f}
+.arRec{display:flex;gap:10px;align-items:center;margin-top:10px;background:rgba(0,0,0,.3);border:2px solid var(--c);border-radius:14px;padding:8px}.arRec img{width:120px;aspect-ratio:16/9;object-fit:cover;border-radius:8px}
+.arRec small{display:block;font-size:11px;color:#ffe14d;letter-spacing:1px}.arRec b{display:block;font-size:18px;color:var(--c)}.arRec span{font-size:13px;color:#cbd5e1}
+.arSecs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.arSecs span{font-size:12px;border:1px solid var(--c);color:#fff;border-radius:10px;padding:3px 8px}.arSecs b{color:var(--c)}

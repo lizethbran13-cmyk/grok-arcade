@@ -69,6 +69,9 @@
       case 'ar_vault': return { tag: 'SECRET BASEMENT', name: 'Rare Prize Vault', desc: 'Prizes you can\u2019t get anywhere else: Gus\u2019s Golden Key and the Mini Retro Cabinet.', btn: 'OPEN', key: 'open the vault', cls: 'prize', pb: 'pzPlay' };
       case 'ar_jukebox': return { tag: 'SECRET BASEMENT', name: 'Jukebox', desc: 'Old records from 1958 to 1983. Drop a (free) coin!' + (UI.music().on ? ' Now playing: ' + UI.music().name : ''), btn: 'PLAY', key: 'pick a record', cls: 'gallery', pb: 'galPlay' };
       case 'ar_gusdesk': return { tag: 'SECRET BASEMENT', name: 'Gus\u2019s Old Desk', desc: 'Gus worked down here in 1983. His notes are still on the desk...', btn: 'READ', key: 'read Gus\u2019s notes', cls: 'npc' };
+      case 'ar_gallery': return { tag: 'GAME GALLERY \u2192', name: 'All ' + GA.MAIN_GAMES.length + ' Grok games', desc: 'Every game cabinet lives in the Game Gallery now, sorted into Adventure, Racing, Sports, Life Sims and Party. Gus Jr. the 2nd runs it. Do not smile at him.', btn: 'ENTER', key: 'enter the Game Gallery', cls: 'gallery', pb: 'galPlay' };
+      case 'ar_galexit': return { tag: 'EXIT', name: 'Back to the arcade floor', desc: 'The Bonus Zone, Prize Counter, Food Court and everything else.', btn: 'GO', key: 'go back', cls: 'gallery', pb: 'galPlay' };
+      case 'ar_gusjr': return { tag: 'GALLERY DESK', name: 'Gus Jr. the 2nd', desc: 'Gus\u2019s equally grumpy son. Ask him what to play and he\u2019ll (reluctantly) pick a game for you.', btn: 'TALK', key: 'talk to Gus Jr.', cls: 'npc' };
       case 'ar_retro': var gid = cab.id === 'rt_lock' ? 'lockpick' : cab.id; return { tag: 'RARE RETRO CABINET', name: cab.game.name, desc: cab.game.desc + ' Best: ' + GA.getBest(gid) + (P.dow === 3 && gid !== 'lockpick' ? ' \u00b7 THROWBACK THURSDAY x2 tickets!' : ''), btn: '&#9654; PLAY', key: 'play', cls: 'gallery', pb: 'galPlay' };
     }
     return { tag: 'AREA', name: cab.game.name, desc: '', btn: 'GO', key: 'use', cls: 'gallery' };
@@ -94,6 +97,9 @@
     if (k === 'ar_safe') return openSafe();
     if (k === 'ar_vault') return openVault();
     if (k === 'ar_gusdesk') return openDesk();
+    if (k === 'ar_gallery') { snd('open'); AR.travel('gallery'); return; }
+    if (k === 'ar_galexit') { snd('click'); AR.travel('gallery_back'); return; }
+    if (k === 'ar_gusjr') return openGusJr();
     if (k === 'ar_retro') { var gid = cab.id === 'rt_lock' ? 'lockpick' : cab.id; GA.openBonus(gid); return; }
   };
 
@@ -273,6 +279,18 @@
     show('desk', '\uD83E\uDDD3 GUS\u2019S OLD DESK', 'Dusty notes from 1983', h, '', 'base'); if (GA.Prog) GA.Prog.event('gusDesk');
   }
 
+  /* ---------- Gus Jr. the 2nd: grumbles + a random game pick ---------- */
+  function openGusJr(rec) {
+    rec = rec || AR.gjRecommend(); var line = AR.GJ_LINES[Math.floor(Math.random() * AR.GJ_LINES.length)], g = rec.game;
+    AR.gjSay(rec.line, 6); snd('talk'); if (GA.Prog) GA.Prog.event('gjRec');
+    var counts = {}; GA.Hub.cabinets().forEach(function (c) { if (c.gallery) counts[c.sec] = (counts[c.sec] || 0) + 1; });
+    var h = '<div class="arNote gus">Gus Jr.: \u201C' + esc(line) + '\u201D</div><div class="arRec" style="--c:' + (g.color || '#3ff0ff') + '"><img alt="" src="assets/hall/' + g.id + '/cover.webp" onerror="this.style.display=\'none\'"><div><small>GUS JR.\u2019S PICK</small><b>' + esc(g.name) + '</b><span>' + esc(rec.sec.icon + ' ' + rec.sec.name) + '</span></div></div><div class="arNote">\u201C' + esc(rec.line) + '\u201D</div>' +
+      '<div class="arSecs">' + AR.GAL_SECTIONS.map(function (s2) { return '<span style="--c:' + s2.col + '">' + s2.icon + ' ' + esc(s2.name) + ' <b>' + (counts[s2.id] || 0) + '/' + s2.slots + '</b></span>'; }).join('') + '</div>';
+    show('gusjr', '\uD83E\uDDE2 GUS JR. THE 2nd', 'Keeper of the Game Gallery \u00b7 Gus\u2019s son', h, '<button class="bigBtn" id="arGjGo">TAKE ME THERE</button><button class="pill" id="arGjAgain">\uD83C\uDFB2 ANOTHER</button>', 'base');
+    UI._gjRec = rec;
+    $('arGjGo').addEventListener('click', function () { var c = GA.Hub.cabinets().find(function (q) { return q.gallery && q.id === g.id; }); UI.close(true); if (c) { AR.goToCab(c); snd('ding'); } });
+    $('arGjAgain').addEventListener('click', function () { snd('click'); openGusJr(); });
+  }
   /* ---------- Gus grumbles hints about his key ---------- */
   function wrapGus() { if (!GA.Hall || GA.Hall._arWrapped) return; var t0 = GA.Hall.talk; GA.Hall._arWrapped = true;
     GA.Hall.talk = function () { t0.apply(GA.Hall, arguments); if (!AR.unlocked()) setTimeout(function () { var line = 'Grumble... ' + AR.keyHint(); if (GA.Hall3D && GA.Hall3D.say) GA.Hall3D.say(line, 7); toast('\uD83E\uDDD3 Gus: \u201C' + line + '\u201D', 6000); }, 900); }; }
@@ -290,14 +308,15 @@
   };
   function onArea(area) { if (MUS.on && MUS.where && area !== MUS.where) stopMusic(); if (area !== 'roof') { if (UI.emotesOpen()) closeEmotes(); } drawMap(true); }
   var MAPS = {
-    arcade: { minX: -19, maxX: 19, minZ: -13, maxZ: 27, rooms: [['MAIN GAMES', -18, 6, -12, 12, '#3ff0ff'], ['BONUS', 6, 18, -12, 12, '#ff4fd8'], ['HALL', 2, 18, 12.4, 26, '#ffe14d'], ['FOOD COURT', -18, 1.6, 12.4, 26, '#ff9a3a']],
-      marks: function () { return [['\uD83C\uDF55', -11.6, 12], ['\uD83C\uDFDB\uFE0F', 10, 12], ['\uD83D\uDED7', -17, 18.8], [AR.unlocked() ? '\uD83D\uDD13' : '\uD83D\uDD12', 1.2, 15], ['\uD83C\uDF9F\uFE0F', -6, 10.4]]; } },
+    arcade: { minX: -19, maxX: 19, minZ: -13, maxZ: 27, rooms: [['ARCADE', -18, 6, -12, 12, '#3ff0ff'], ['BONUS', 6, 18, -12, 12, '#ff4fd8'], ['HALL', 2, 18, 12.4, 26, '#ffe14d'], ['FOOD COURT', -18, 1.6, 12.4, 26, '#ff9a3a']],
+      marks: function () { return [['\uD83D\uDDBC\uFE0F', -6, -11], ['\uD83C\uDF55', -11.6, 12], ['\uD83C\uDFDB\uFE0F', 10, 12], ['\uD83D\uDED7', -17, 18.8], [AR.unlocked() ? '\uD83D\uDD13' : '\uD83D\uDD12', 1.2, 15], ['\uD83C\uDF9F\uFE0F', -6, 10.4]]; } },
     roof: { minX: -15, maxX: 15, minZ: -125, maxZ: -94, rooms: [['ROOFTOP PARTY DECK', -14, 14, -124, -95, '#ff4fd8']], marks: function () { return [['\uD83C\uDFA7', 0, -120.5], ['\uD83D\uDC83', 0, -113], ['\uD83C\uDF86', 10.3, -112], ['\uD83D\uDCC5', -12.9, -108], ['\uD83D\uDED7', 0, -96]]; } },
+    gallery: { minX: 29, maxX: 63, minZ: -15, maxZ: 13, rooms: [['GAME GALLERY', 30, 62, -14, 12, '#3ff0ff']], marks: function () { return [['\uD83D\uDDFA\uFE0F', 40.7, -12.2], ['\uD83C\uDFC1', 54.7, -12.2], ['\uD83C\uDFC6', 60.2, -6], ['\u2728', 60.2, 4.1], ['\uD83C\uDFE1', 39.4, 10.2], ['\uD83C\uDF89', 51.6, 10.2], ['\uD83E\uDDE2', 34.6, 7.2], ['\u2B05\uFE0F', 31.2, -1]]; } },
     basement: { minX: -12, maxX: 12, minZ: 99, maxZ: 119, rooms: [['SECRET BASEMENT', -11, 11, 100, 118, '#4ade80']], marks: function () { return [['\uD83D\uDD79\uFE0F', -10.5, 109], ['\u26A1', 10.8, 104.6], ['\uD83D\uDD10', 5.6, 117.4], ['\uD83D\uDC8E', -0.6, 117.3], ['\uD83D\uDCBF', 7.6, 100.6], ['\u2B06\uFE0F', 0, 100.4]]; } }
   };
   function drawMap(force) {
     var cv = $('arMap'); if (!cv || !AR || !AR.built) return; var started = !$('hud').classList.contains('hidden'); if (!started && !force) return;
-    var big = cv.classList.contains('big'), area = GA.Hub.area(), M = area === 'roof' ? MAPS.roof : area === 'basement' ? MAPS.basement : MAPS.arcade, c = cv.getContext('2d'), W = cv.width, H = cv.height;
+    var big = cv.classList.contains('big'), area = GA.Hub.area(), M = area === 'roof' ? MAPS.roof : area === 'basement' ? MAPS.basement : area === 'gallery' ? MAPS.gallery : MAPS.arcade, c = cv.getContext('2d'), W = cv.width, H = cv.height;
     var sx = W / (M.maxX - M.minX), sz = H / (M.maxZ - M.minZ), s = Math.min(sx, sz), ox = (W - (M.maxX - M.minX) * s) / 2, oz = (H - (M.maxZ - M.minZ) * s) / 2;
     function X(x) { return ox + (x - M.minX) * s; } function Z(z) { return oz + (z - M.minZ) * s; }
     c.clearRect(0, 0, W, H); c.fillStyle = 'rgba(14,6,34,.82)'; c.fillRect(0, 0, W, H);

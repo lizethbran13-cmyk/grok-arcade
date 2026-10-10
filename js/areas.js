@@ -39,7 +39,7 @@
   function solidOf(g, pad) { g.updateMatrixWorld(true); var b = new T.Box3(), tmp = new T.Box3(); g.traverse(function (o) { if (!o.isMesh) return; for (var q = o; q; q = q.parent) if (q.userData.noAudit) return; if (!o.geometry.boundingBox) o.geometry.computeBoundingBox(); tmp.copy(o.geometry.boundingBox).applyMatrix4(o.matrixWorld); b.union(tmp); }); pad = pad || 0; A.addSolid(b.min.x - pad, b.max.x + pad, b.min.z - pad, b.max.z + pad, g.name); return b; }
 
   /* ---------- areas: roots (hidden when you're elsewhere, saves draw calls on phones) + regions ---------- */
-  var R = {}, CABS = {}, ANIM = { food: [], roof: [], base: [], any: [] }, live = { food: true, roof: false, base: false };
+  var R = {}, CABS = {}, ANIM = { food: [], roof: [], base: [], gal: [], any: [] }, live = { food: true, roof: false, base: false, gal: false };
   var ROOF = { name: 'roof', minX: -14, maxX: 14, minZ: -124, maxZ: -95, maxY: 30, spawn: { x: 0, z: -98.6 }, cx: 0, cz: -110 };
   var BASE = { name: 'basement', minX: -11, maxX: 11, minZ: 100, maxZ: 118, maxY: 4.2, H: 4.0, spawn: { x: 0, z: 102.9 }, cx: 0, cz: 109 };
   AR.ROOF = ROOF; AR.BASE = BASE;
@@ -1037,6 +1037,8 @@
     basement: function () { goTo(BASE.spawn.x, BASE.spawn.z, 0, 1); },
     food_elev: function () { var c = CABS.fc_elevator; goTo(c.x + 0.6, c.z, 1, 0); },
     food_stairs: function () { var c = CABS.fc_stairs; goTo(c.x + 0.6, c.z, 1, 0); },
+    gallery: function () { goTo(GAL.spawn.x, GAL.spawn.z, 1, 0); },
+    gallery_back: function () { goTo(-6, A.ROOM.minZ + 2.3, 0, 1); },
     food_base: function () { var c = CABS.fc_basement; goTo(c.x - 0.6, c.z, -1, 0); }
   };
   AR.travel = function (where, cb) {
@@ -1048,12 +1050,13 @@
   var FOGS = { main: ['#140a2b', 22, 48], roof: ['#1a0b45', 30, 75], basement: ['#0d0812', 9, 26] }, lastT = 0, curArea = null;
   function tick(force) {
     var p = A.pose(), area = GA.Hub.regionAt(p.x, p.z);
-    var lf = area === 'food' || (area !== 'roof' && area !== 'basement' && p.z > 1), lr = area === 'roof', lb = area === 'basement';
+    var lf = area === 'food' || (area !== 'roof' && area !== 'basement' && area !== 'gallery' && p.z > 1), lr = area === 'roof', lb = area === 'basement';
     if (force || lf !== live.food) { live.food = lf; R.food.visible = lf; }
     if (force || lr !== live.roof) { live.roof = lr; R.roof.visible = lr; }
     if (force || lb !== live.base) { live.base = lb; R.base.visible = lb; }
+    var lg = area === 'gallery'; if (R.gal && (force || lg !== live.gal)) { live.gal = lg; R.gal.visible = lg; }
     if (area !== curArea) { var prev = curArea; curArea = area; var fg = FOGS[area] || FOGS.main; if (A.scene.fog && (area === 'roof' || area === 'basement' || prev === 'roof' || prev === 'basement')) { A.scene.fog.near = fg[1]; A.scene.fog.far = fg[2]; A.scene.fog.color.set(fg[0]); A.renderer().setClearColor(fg[0]); }
-      if (GA.Prog) { if (area === 'food') GA.Prog.event('fcVisit'); if (area === 'roof') GA.Prog.event('rfVisit'); if (area === 'basement') GA.Prog.event('bsVisit'); }
+      if (GA.Prog) { if (area === 'gallery') GA.Prog.event('galVisit'); if (area === 'food') GA.Prog.event('fcVisit'); if (area === 'roof') GA.Prog.event('rfVisit'); if (area === 'basement') GA.Prog.event('bsVisit'); }
       if (AR.onArea) AR.onArea(area, prev); }
     return area;
   }
@@ -1063,6 +1066,8 @@
     if (live.food) ANIM.food.forEach(function (f) { f(t, dt); });
     if (live.roof) ANIM.roof.forEach(function (f) { f(t, dt); });
     if (live.base) ANIM.base.forEach(function (f) { f(t, dt); });
+    if (live.gal) ANIM.gal.forEach(function (f) { f(t, dt); });
+    ANIM.any.forEach(function (f) { f(t, dt); });
     // ELEVATOR doors slide open when you're near
     for (var k in ELEV) { var e = ELEV[k], nr = GA.Hub.near() === e.cab; e.open += ((nr ? 1 : 0) - e.open) * Math.min(1, dt * 4); e.dl.position.x = -0.4 - e.open * 0.36; e.dr.position.x = 0.4 + e.open * 0.36; }
     // the key bobs + spins + sparkles (and jumps to its new spot when the week changes)
@@ -1070,10 +1075,192 @@
     if (GA.AreasUI && GA.AreasUI.frame) GA.AreasUI.frame(t, dt, curArea);
   }
 
+  /* =====================================================================================================
+     4) GAME GALLERY (far east at x 30..62): every main game cabinet, sorted into themed sections along the walls,
+        with empty "NEXT GAME HERE" slots for future games. Run by Gus Jr. the 2nd. The main floor keeps a NEW! spotlight
+        cabinet + the big GAME GALLERY arch + game posters.
+     ===================================================================================================== */
+  var GAL = { name: 'gallery', minX: 30, maxX: 62, minZ: -14, maxZ: 12, maxY: 6, H: 5.2, spawn: { x: 32.9, z: -1 }, cx: 46, cz: -1 };
+  AR.GAL = GAL;
+  // walls: N = north (z = minZ, facing +z), E = east (x = maxX, facing -x), S = south (z = maxZ, facing -z)
+  AR.GAL_SECTIONS = [
+    { id: 'adv', name: 'ADVENTURE', icon: '\uD83D\uDDFA\uFE0F', col: '#4ade80', ids: ['sky', 'land', 'voxels', 'poke', 'heist', 'detective', 'spooks', 'dash', 'blocks'], wall: 'N', from: 32.9, slots: 10 },
+    { id: 'race', name: 'RACING', icon: '\uD83C\uDFC1', col: '#f97316', ids: ['grid', 'surfers', 'rides', 'kart'], wall: 'N', from: 51.2, slots: 5 },
+    { id: 'sport', name: 'SPORTS', icon: '\uD83C\uDFC6', col: '#38bdf8', ids: ['fc', 'pickle', 'sports'], wall: 'E', from: -10.4, slots: 6 },
+    { id: 'more', name: 'MORE GAMES', icon: '\u2728', col: '#e879f9', ids: [], wall: 'E', from: 0.6, slots: 5 },
+    { id: 'life', name: 'LIFE SIMS', icon: '\uD83C\uDFE1', col: '#facc15', ids: ['pets', 'life', 'disaster'], wall: 'S', from: 35.0, slots: 6 },
+    { id: 'party', name: 'PARTY', icon: '\uD83C\uDF89', col: '#ff4fd8', ids: ['party', 'brawl'], wall: 'S', from: 47.2, slots: 6 }];
+  var GSTEP = 1.75;
+  function slotPos(sec, k) { var d = sec.from + k * GSTEP;
+    if (sec.wall === 'N') return { x: d, z: GAL.minZ + 0.6, rot: 0 };
+    if (sec.wall === 'S') return { x: d, z: GAL.maxZ - 0.6, rot: Math.PI };
+    return { x: GAL.maxX - 0.6, z: d, rot: -Math.PI / 2 }; }
+  AR.slotPos = slotPos;
+  // where every main game goes (the hub calls this before it builds the cabinets). Unknown / overflow games go to MORE GAMES, then any free slot.
+  AR.galleryLayout = function (games) {
+    var used = {}, out = [];
+    AR.GAL_SECTIONS.forEach(function (s) { used[s.id] = 0; });
+    function take(s) { if (used[s.id] >= s.slots) return null; var k = used[s.id]++, p = slotPos(s, k); p.sec = s.id; p.slot = k; return p; }
+    games.forEach(function (g) {
+      var s = AR.GAL_SECTIONS.find(function (q) { return q.ids.indexOf(g.id) >= 0; }) || AR.GAL_SECTIONS.find(function (q) { return q.id === 'more'; });
+      var p = take(s) || take(AR.GAL_SECTIONS.find(function (q) { return q.id === 'more'; }));
+      for (var i = 0; !p && i < AR.GAL_SECTIONS.length; i++) p = take(AR.GAL_SECTIONS[i]);
+      out.push(p || { x: GAL.cx, z: GAL.cz, rot: 0, sec: 'none' });
+    });
+    AR._galUsed = used; return out;
+  };
+  AR.galleryCapacity = function () { return AR.GAL_SECTIONS.reduce(function (a, s) { return a + s.slots; }, 0); };
+  AR.SPOT = { x: -2.2 };
+  AR.newestGame = function () { return GA.MAIN_GAMES[GA.MAIN_GAMES.length - 1]; };
+  var gj = {};
+  function buildGusJr(par) {
+    var root = new T.Group(); par.add(root);
+    var skin = ph('#f3cdb0', 20), card = ph('#3f6e5a', 15), hair = ph('#6b4423', 20), shirt = ph('#f5f0e6', 20), beanie = ph('#d9480f', 15);
+    var body = new T.Group(); root.add(body);
+    add(body, cy(0.17, 0.19, 0.7, 16), ph('#2f3b52', 15), 0, 0.35, 0);
+    var torso = add(body, sp(0.31, 24), card, 0, 1.03, 0); torso.scale.set(1, 1.3, 0.82);
+    add(body, sp(0.18, 18), shirt, 0, 1.2, 0.15).scale.set(0.7, 1.1, 0.5);
+    [-1, 1].forEach(function (sd) { var b = add(body, cn(0.05, 0.1, 12), ph('#1e3a8a', 40), sd * 0.047, 1.38, 0.25); b.rotation.z = sd * Math.PI / 2; }); // a blue bow tie (Dad's is red)
+    add(body, sp(0.026, 10), ph('#1e3a8a', 40), 0, 1.38, 0.255);
+    [0.93, 1.05, 1.17].forEach(function (y) { add(body, sp(0.02, 8), ph('#e8d5b0', 60), 0, y, 0.262); });
+    // mini APPROVED badge (round, red, on the cardigan)
+    var bdg = cvs(128, 128, function (c, w, h) { c.fillStyle = '#b3123a'; c.beginPath(); c.arc(64, 64, 60, 0, 7); c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 6; c.beginPath(); c.arc(64, 64, 50, 0, 7); c.stroke(); c.fillStyle = '#fff'; c.font = F(22); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('APPROVED', 64, 58); c.font = F(15); c.fillText('JR.', 64, 82); });
+    var bm = add(body, new T.CircleGeometry(0.075, 24), new T.MeshBasicMaterial({ map: bdg.tex }), -0.16, 1.22, 0.255); bm.rotation.y = -0.4;
+    function arm(sd) { var a = new T.Group(); a.position.set(sd * 0.33, 1.32, 0); body.add(a); add(a, cy(0.07, 0.065, 0.44, 12), card, 0, -0.22, 0); add(a, sp(0.07, 12), skin, 0, -0.47, 0); return a; }
+    var aL = arm(-1), aR = arm(1);
+    var clip = new T.Group(); clip.position.set(0, -0.5, 0.06); aR.add(clip); add(clip, bx(0.2, 0.26, 0.015), ph('#8a5a2b', 20), 0, 0, 0); add(clip, bx(0.17, 0.2, 0.004), lm('#fffdf0'), 0, -0.01, 0.01); add(clip, bx(0.07, 0.03, 0.02), chrome(), 0, 0.12, 0.01);
+    var head = new T.Group(); head.position.set(0, 1.58, 0.02); body.add(head);
+    add(head, sp(0.23, 26), skin, 0, 0.11, 0).scale.set(1, 1.06, 0.98);
+    [-1, 1].forEach(function (sd) { add(head, sp(0.065, 12), skin, sd * 0.23, 0.1, -0.01).scale.set(0.5, 1, 0.8); add(head, sp(0.085, 12), hair, sd * 0.19, 0.12, -0.08).scale.set(0.8, 1, 1.2); });
+    var browL = add(head, bx(0.12, 0.04, 0.045), hair, -0.08, 0.23, 0.2), browR = add(head, bx(0.12, 0.04, 0.045), hair, 0.08, 0.23, 0.2); browL.rotation.z = -0.4; browR.rotation.z = 0.4;
+    [-1, 1].forEach(function (sd) { add(head, sp(0.026, 10), ph('#111827', 90), sd * 0.08, 0.15, 0.21); add(head, to(0.05, 0.008, 7, 24), ph('#2b2b2b', 60), sd * 0.08, 0.15, 0.225); });
+    add(head, bx(0.055, 0.011, 0.011), ph('#2b2b2b', 60), 0, 0.155, 0.23);
+    add(head, sp(0.05, 14), ph('#eaa98a', 20), 0, 0.085, 0.235);
+    var mus = new T.Group(); mus.position.set(0, 0.025, 0.215); head.add(mus); // a small, young, very serious mustache
+    [-1, 1].forEach(function (sd) { var m = add(mus, sp(0.045, 12), hair, sd * 0.04, 0, 0); m.scale.set(1.3, 0.5, 0.5); m.rotation.z = sd * 0.25; });
+    add(head, bx(0.07, 0.012, 0.012), ph('#6b2a2a', 20), 0, -0.05, 0.215); // flat, unimpressed mouth
+    // the beanie: knit dome + ribbed fold + pom-pom
+    add(head, new T.SphereGeometry(0.245, 26, 14, 0, Math.PI * 2, 0, Math.PI / 2), beanie, 0, 0.16, -0.01).scale.set(1, 0.95, 1);
+    var rim = add(head, to(0.235, 0.045, 7, 30), beanie, 0, 0.17, -0.01); rim.rotation.x = Math.PI / 2;
+    for (var k = 0; k < 12; k++) { var a = k / 12 * Math.PI * 2, rb = add(head, bx(0.02, 0.07, 0.02), ph('#b33a0b', 10), Math.sin(a) * 0.27, 0.17, Math.cos(a) * 0.27 - 0.01); rb.rotation.y = a; }
+    var pom = add(head, sp(0.07, 14), ph('#fff4e0', 5), 0, 0.42, -0.01);
+    var bub = bubble(root, 2.4);
+    gj = { root: root, body: body, head: head, aL: aL, aR: aR, browL: browL, browR: browR, pom: pom, bub: bub, look: 0 };
+    return root;
+  }
+  var GJ_LINES = ['Dad says no running. I say no smiling.', 'Dad guards the Hall. I guard THIS. Which is more important? Me. I\u2019m more important.', 'Dad got a basement. I got a gallery. Fine. FINE.',
+    'Every cabinet here is sorted by theme. Touch the sorting and I will know.', 'Dad says I have his frown. I\u2019ve been practicing in the mirror.', 'Please play quietly. Or loudly. I\u2019m not your dad.',
+    'I counted the games twice. Dad counts three times. Show-off.', 'Yes, it\u2019s a real beanie. No, you can\u2019t try it on.', 'The empty spots are for new games. Don\u2019t stand in them. They\u2019re reserved.',
+    'My badge says APPROVED. I have never approved of anything.'];
+  AR.GJ_LINES = GJ_LINES;
+  AR.gjRecommend = function () { var gs = GA.MAIN_GAMES, g = gs[Math.floor(Math.random() * gs.length)], lay = AR.galleryLayout(gs)[gs.indexOf(g)], sec = AR.GAL_SECTIONS.find(function (s) { return s.id === lay.sec; }) || { name: 'somewhere' };
+    var tails = ['Dad hates it, so it\u2019s probably good.', 'I played it once. I didn\u2019t smile. Much.', 'It\u2019s fine. That\u2019s the best review I give.', 'Don\u2019t tell Dad I said that.', 'Go. Before I change my mind.'];
+    return { game: g, sec: sec, line: 'Fine. Play ' + g.name + '. It\u2019s in ' + sec.name + '. ' + tails[Math.floor(Math.random() * tails.length)] }; };
+  AR.gjSay = function (s, secs) { if (gj.bub) gj.bub.say(s, secs || 5); };
+  AR.goToCab = function (cab) { var vx = cab.dir.x, vz = cab.dir.z; goTo(cab.front.x + vx * 0.4, cab.front.z + vz * 0.4, -vx, -vz); };
+  function galTex(name) { var t = new T.TextureLoader().load(name); return t; }
+  function buildGallery() {
+    var r = mkRoot('gal'), B = GAL, W = B.maxX - B.minX, D = B.maxZ - B.minZ, H = B.H, cx = B.cx, cz = B.cz; GA.Hub.addRegion(GAL);
+    // floor: polished dark wood with a big patterned carpet runner; ceiling with neon coves
+    var ft = cvs(256, 256, function (c, w, h) { c.fillStyle = '#2a1a3e'; c.fillRect(0, 0, w, h); for (var i = 0; i < 8; i++) { c.fillStyle = i % 2 ? '#311f48' : '#28183b'; c.fillRect(0, i * 32, w, 31); } c.strokeStyle = 'rgba(0,0,0,.35)'; for (i = 0; i < 8; i++) { c.beginPath(); c.moveTo((i * 61) % w, i * 32); c.lineTo((i * 61) % w, i * 32 + 32); c.stroke(); } });
+    ft.tex.wrapS = ft.tex.wrapT = T.RepeatWrapping; ft.tex.repeat.set(W / 4, D / 4);
+    var fl = add(r, new T.PlaneGeometry(W, D), new T.MeshPhongMaterial({ map: ft.tex, shininess: 70 }), cx, 0, cz); fl.rotation.x = -Math.PI / 2; A.noAud(fl);
+    var rt = cvs(256, 128, function (c, w, h) { c.fillStyle = '#5b1a5e'; c.fillRect(0, 0, w, h); c.strokeStyle = '#ffe14d'; c.lineWidth = 6; c.strokeRect(8, 8, w - 16, h - 16); c.fillStyle = '#ff4fd8'; for (var i = 0; i < 6; i++) { c.save(); c.translate(24 + i * 42, h / 2); c.rotate(Math.PI / 4); c.fillRect(-9, -9, 18, 18); c.restore(); } });
+    var rug = add(r, new T.PlaneGeometry(22, 6.5), new T.MeshLambertMaterial({ map: rt.tex }), cx + 1, 0.012, cz); rug.rotation.x = -Math.PI / 2; A.noAud(rug);
+    var ce = add(r, new T.PlaneGeometry(W, D), lm('#1a0f2e'), cx, H, cz); ce.rotation.x = Math.PI / 2; A.noAud(ce);
+    var shell = new T.Group(); r.add(shell); A.noAud(shell);
+    var wt = cvs(128, 256, function (c, w, h) { var g2 = c.createLinearGradient(0, 0, 0, h); g2.addColorStop(0, '#1d1240'); g2.addColorStop(1, '#3a1f6b'); c.fillStyle = g2; c.fillRect(0, 0, w, h); c.fillStyle = 'rgba(255,255,255,.04)'; for (var i = 0; i < w; i += 16) c.fillRect(i, 0, 2, h); });
+    function wall(len, x, z, ry) { var t2 = wt.tex.clone(); t2.needsUpdate = true; t2.wrapS = T.RepeatWrapping; t2.repeat.set(len / 2, 1); var m = add(shell, new T.PlaneGeometry(len, H), new T.MeshLambertMaterial({ map: t2 }), x, H / 2, z); m.rotation.y = ry;
+      var tr = add(shell, bx(len, 0.06, 0.06), gl('#3ff0ff'), x + Math.sin(ry) * 0.04, 0.12, z + Math.cos(ry) * 0.04); tr.rotation.y = ry; var tr2 = add(shell, bx(len, 0.06, 0.06), gl('#ff4fd8'), x + Math.sin(ry) * 0.04, H - 0.2, z + Math.cos(ry) * 0.04); tr2.rotation.y = ry; }
+    wall(W, cx, B.minZ, 0); wall(W, cx, B.maxZ, Math.PI); wall(D, B.minX, cz, Math.PI / 2); wall(D, B.maxX, cz, -Math.PI / 2);
+    var th = 0.4; A.addWall(B.minX - 1, B.maxX + 1, -1, H + 3, B.minZ - th, B.minZ); A.addWall(B.minX - 1, B.maxX + 1, -1, H + 3, B.maxZ, B.maxZ + th);
+    A.addWall(B.minX - th, B.minX, -1, H + 3, B.minZ - 1, B.maxZ + 1); A.addWall(B.maxX, B.maxX + th, -1, H + 3, B.minZ - 1, B.maxZ + 1);
+    A.walls.push({ minX: B.minX - 1, maxX: B.maxX + 1, minY: H, maxY: H + 2, minZ: B.minZ - 1, maxZ: B.maxZ + 1 });
+    var L1 = new T.PointLight('#ffffff', 0.7, 26, 1.2); L1.position.set(38, 4.4, -1); r.add(L1); var L2 = new T.PointLight('#ffe9ff', 0.7, 26, 1.2); L2.position.set(54, 4.4, -1); r.add(L2);
+    // section signs over each row + "NEXT GAME HERE" markers in the free slots
+    var lay = AR.galleryLayout(GA.MAIN_GAMES), used = AR._galUsed;
+    AR.GAL_SECTIONS.forEach(function (s) {
+      var a = slotPos(s, 0), b = slotPos(s, s.slots - 1), mx = (a.x + b.x) / 2, mz = (a.z + b.z) / 2, len = s.slots * GSTEP - 0.2;
+      var tx = cvs(1024, 160, function (c, w, h) { c.fillStyle = 'rgba(14,6,34,.92)'; rr(c, 4, 4, w - 8, h - 8, 26); c.fill(); c.strokeStyle = s.col; c.lineWidth = 8; c.stroke(); glowText(c, s.icon + ' ' + s.name, w / 2, h / 2 + 4, 92, s.col, w - 60); });
+      var sx, sz, ry; if (s.wall === 'N') { sx = mx; sz = B.minZ + 0.03; ry = 0; } else if (s.wall === 'S') { sx = mx; sz = B.maxZ - 0.03; ry = Math.PI; } else { sx = B.maxX - 0.03; sz = mz; ry = -Math.PI / 2; }
+      wallSign('gal', 'gallery sign ' + s.name, Math.min(len, 7.5), Math.min(len, 7.5) * 160 / 1024, tx.tex, sx, 3.45, sz, ry);
+      for (var k = used[s.id]; k < s.slots; k++) { var p = slotPos(s, k), g = prop('gal', 'free slot ' + s.id + k, p.x, p.z, p.rot);
+        var mk = cvs(256, 256, function (c, w, h) { c.strokeStyle = s.col; c.lineWidth = 8; c.setLineDash([22, 14]); c.strokeRect(10, 10, w - 20, h - 20); c.setLineDash([]); c.fillStyle = s.col; c.textAlign = 'center'; c.font = F(36); c.fillText('NEXT', w / 2, 96); c.fillText('GAME', w / 2, 140); c.fillText('HERE', w / 2, 184); });
+        var pl = texPlane(1.3, 1.3, mk.tex, { transparent: true }); pl.rotation.x = -Math.PI / 2; pl.position.set(0, 0.02, 0.2); pl.material.depthWrite = false; g.add(pl); A.noAud(g); }
+    });
+    // the exit back to the arcade floor (west wall)
+    var ex = prop('gal', 'Gallery exit', B.minX + 0.12, B.spawn.z, Math.PI / 2);
+    add(ex, bx(3.4, 3.3, 0.24), ph('#ffd23f', 50), 0, 1.65, 0); add(ex, bx(2.8, 2.9, 0.1), ph('#140a2b', 10), 0, 1.45, 0.1);
+    var exs = cvs(512, 128, function (c, w, h) { c.fillStyle = '#0d5f2c'; rr(c, 4, 4, w - 8, h - 8, 18); c.fill(); glowText(c, '\u25C0 ARCADE FLOOR', w / 2, h / 2, 62, '#e8fff0', w - 40); }); var exp = texPlane(2.2, 0.55, exs.tex); exp.position.set(0, 2.55, 0.17); ex.add(exp);
+    reg(ex, 'booth'); solidOf(ex, 0.02);
+    inter({ id: 'gal_exit', kind: 'ar_galexit', area: 'gal', name: 'Back to the arcade floor', col: '#4ade80', x: B.minX + 1.3, z: B.spawn.z, dir: [1, 0], r: 1.0 });
+    // Gus Jr.'s desk (south-west corner, facing the room)
+    var dx = 33.4, dz = 7.2, dk = prop('gal', 'Gus Jr. desk', dx, dz, Math.PI / 2), wood = ph('#6b3f22', 30);
+    add(dk, bx(2.2, 0.08, 0.85), wood, 0, 0.95, 0); add(dk, bx(2.1, 0.88, 0.06), ph('#4a2b16', 20), 0, 0.48, 0.38); [-1, 1].forEach(function (sd) { add(dk, bx(0.08, 0.9, 0.8), ph('#4a2b16', 20), sd * 1.02, 0.47, 0); });
+    var np = cvs(512, 128, function (c, w, h) { c.fillStyle = '#e8b84a'; rr(c, 4, 4, w - 8, h - 8, 14); c.fill(); c.fillStyle = '#3a2216'; c.font = F(46); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('GUS JR. THE 2nd', w / 2, h / 2 + 2); });
+    var npm = texPlane(1.2, 0.3, np.tex); npm.position.set(0, 0.75, 0.415); dk.add(npm);
+    add(dk, bx(0.34, 0.06, 0.26), ph('#b3123a', 30), -0.7, 1.02, 0.05); add(dk, bx(0.5, 0.36, 0.04), ph('#1b1530', 40), 0.6, 1.2, -0.2); // stamp pad + a little monitor
+    var ms = cvs(256, 160, function (c, w, h) { c.fillStyle = '#062a12'; c.fillRect(0, 0, w, h); c.fillStyle = '#4ade80'; c.font = '20px monospace'; ['GALLERY.SYS', 'GAMES: ' + GA.MAIN_GAMES.length, 'SMILES: 0', 'STATUS: GRUMPY'].forEach(function (l, i) { c.fillText(l, 14, 34 + i * 32); }); });
+    var msm = texPlane(0.44, 0.3, ms.tex); msm.position.set(0.6, 1.2, -0.175); dk.add(msm);
+    reg(dk, 'booth'); solidOf(dk, 0.02);
+    var gjn = buildGusJr(R.gal); gjn.position.set(dx - 0.85, 0, dz); gjn.rotation.y = Math.PI / 2;
+    inter({ id: 'gal_gusjr', kind: 'ar_gusjr', area: 'gal', name: 'Gus Jr. the 2nd', col: '#4ade80', x: dx + 1.35, z: dz, dir: [1, 0], r: 1.25 });
+    // centre: a spinning holo-kiosk with the game count, benches, plants
+    var kio = prop('gal', 'Gallery kiosk', cx + 1, cz, 0);
+    add(kio, cy(1.0, 1.15, 0.4, 32), ph('#2b1a5e', 60), 0, 0.2, 0); var kr = add(kio, to(1.05, 0.05, 7, 40), gl('#3ff0ff'), 0, 0.41, 0); kr.rotation.x = Math.PI / 2;
+    add(kio, cy(0.12, 0.16, 1.4, 16), chrome(), 0, 1.1, 0);
+    var holo = new T.Group(); holo.position.y = 2.25; kio.add(holo);
+    var ico = add(holo, new T.IcosahedronGeometry(0.42, 1), new T.MeshPhongMaterial({ color: '#ff4fd8', emissive: '#5a0a4a', shininess: 90, flatShading: true }), 0, 0, 0);
+    var hr = add(holo, to(0.7, 0.03, 7, 48), gl('#ffe14d'), 0, 0, 0); hr.rotation.x = Math.PI / 2.4;
+    var ks = cvs(512, 256, function (c, w, h) { glowText(c, 'GAME GALLERY', w / 2, 80, 70, '#3ff0ff', w - 30); glowText(c, GA.MAIN_GAMES.length + ' games \u00b7 ' + AR.GAL_SECTIONS.length + ' sections', w / 2, 170, 44, '#ffe14d', w - 30); });
+    [0, Math.PI].forEach(function (ry) { var kp = texPlane(2.0, 1.0, ks.tex, { transparent: true }); kp.position.set(Math.sin(ry) * 0.01, 3.35, Math.cos(ry) * 0.01); kp.rotation.y = ry; kp.material.depthWrite = false; kio.add(kp); });
+    reg(kio, 'prop'); solidBox('Gallery kiosk', cx - 0.15, cx + 2.15, cz - 1.15, cz + 1.15);
+    function bench(x, z, ry) { var b = prop('gal', 'gallery bench ' + x + ',' + z, x, z, ry); add(b, bx(2.0, 0.12, 0.6), ph('#ff4fd8', 40), 0, 0.48, 0); add(b, bx(2.0, 0.5, 0.1), ph('#ff4fd8', 40), 0, 0.8, -0.27); [-0.85, 0.85].forEach(function (q) { add(b, bx(0.1, 0.44, 0.5), chrome(), q, 0.22, 0); }); reg(b, 'prop'); solidOf(b, 0.02); }
+    bench(40, -5.0, 0); bench(52, -5.0, 0); bench(40, 3.2, Math.PI); bench(52, 3.2, Math.PI);
+    function plant(x, z) { var p = prop('gal', 'gallery plant ' + x + ',' + z, x, z, 0); add(p, cy(0.28, 0.22, 0.55, 16), ph('#f5f0e6', 40), 0, 0.27, 0); for (var k = 0; k < 7; k++) { var l = add(p, sp(0.22, 10), lm(k % 2 ? '#22c55e' : '#16a34a'), Math.sin(k * 0.9) * 0.18, 0.7 + (k % 3) * 0.16, Math.cos(k * 0.9) * 0.18); l.scale.set(1, 1.4, 1); } reg(p, 'prop'); solidOf(p, 0.02); }
+    plant(31.0, -12.9); plant(31.0, 10.9); plant(60.9, 10.9);
+    ANIM.gal.push(function (t, dt) {
+      holo.rotation.y = t * 0.8; ico.rotation.x = t * 0.5; holo.position.y = 2.25 + Math.sin(t * 1.6) * 0.08;
+      if (gj.root) { gj.bub.tick(dt); var p2 = A.pose(), ang = Math.atan2(p2.x - (dx - 0.85), p2.z - dz) - Math.PI / 2; gj.head.rotation.y += (Math.max(-0.7, Math.min(0.7, -ang + Math.PI / 2 - Math.PI / 2)) - gj.head.rotation.y) * Math.min(1, dt * 3);
+        gj.body.position.y = Math.sin(t * 1.7) * 0.01; gj.aL.rotation.x = -0.6 + Math.sin(t * 1.3) * 0.05; gj.aL.rotation.z = 0.5; gj.aR.rotation.x = -0.9 + (gj.bub.left > 0 ? Math.sin(t * 7) * 0.25 : 0); gj.aR.rotation.z = -0.3;
+        var roll = (t % 9) < 0.6; gj.browL.rotation.z = roll ? -0.1 : -0.4; gj.browR.rotation.z = roll ? 0.1 : 0.4; gj.pom.position.y = 0.42 + Math.abs(Math.sin(t * 2)) * 0.01; }
+    });
+    buildMainFloorGallery();
+  }
+  // main floor: the big GAME GALLERY arch (north wall), the NEW! spotlight podium + game posters so the floor still feels full
+  function buildMainFloorGallery() {
+    var r = mkRoot('mainx'), RM = A.ROOM, z0 = RM.minZ, ax = -6;
+    var arch = new T.Group(); arch.name = 'Game Gallery arch'; arch.position.set(ax, 0, z0); r.add(arch);
+    var gold2 = ph('#ffd23f', 60, '#3a2400');
+    add(arch, bx(0.44, 2.1, 0.5), gold2, -1.5, 1.05, 0.25); add(arch, bx(0.44, 2.1, 0.5), gold2, 1.5, 1.05, 0.25);
+    var top = add(arch, new T.TorusGeometry(1.5, 0.22, 12, 40, Math.PI), gold2, 0, 2.1, 0.25); void top;
+    var portal = add(arch, new T.CircleGeometry(1.28, 40, 0, Math.PI), new T.MeshBasicMaterial({ color: '#3ff0ff', transparent: true, opacity: 0.6 }), 0, 2.1, 0.06); var portal2 = add(arch, new T.PlaneGeometry(2.56, 2.1), new T.MeshBasicMaterial({ color: '#3ff0ff', transparent: true, opacity: 0.6 }), 0, 1.05, 0.06);
+    var sw = cvs(256, 256, function (c, w, h) { var g2 = c.createRadialGradient(w / 2, h, 10, w / 2, h, h); g2.addColorStop(0, '#ffffff'); g2.addColorStop(0.4, '#3ff0ff'); g2.addColorStop(1, '#7b2cff'); c.fillStyle = g2; c.fillRect(0, 0, w, h); });
+    portal.material.map = sw.tex; portal2.material.map = sw.tex; portal.material.needsUpdate = portal2.material.needsUpdate = true;
+    var bulbs = []; for (var i = 0; i <= 12; i++) { var a = Math.PI * i / 12, b = add(arch, sp(0.07, 8), gl(i % 2 ? '#ff4fd8' : '#ffe14d'), Math.cos(a) * 1.5, 2.1 + Math.sin(a) * 1.5, 0.49); bulbs.push(b); }
+    reg(arch, 'booth'); A.addSolid(ax - 1.75, ax + 1.75, z0, z0 + 0.55, 'Game Gallery arch');
+    inter({ id: 'gal_arch', kind: 'ar_gallery', area: 'mainx', name: 'Game Gallery', col: '#3ff0ff', x: ax, z: z0 + 1.7, dir: [0, 1], r: 1.6, gw: 3.0 });
+    // NEW! spotlight podium + light cone around the newest game's cabinet (the hub builds the cabinet itself at SPOT)
+    var S = { x: AR.SPOT.x, z: z0 + 0.6 }, pod = prop('mainx', 'NEW spotlight podium', S.x, S.z + 0.15, 0);
+    add(pod, cy(1.05, 1.15, 0.14, 32), ph('#2b1a5e', 60), 0, 0.07, 0); var pr = add(pod, to(1.1, 0.04, 7, 40), gl('#ffe14d'), 0, 0.14, 0); pr.rotation.x = Math.PI / 2; A.noAud(pod);
+    var cone = add(r, new T.ConeGeometry(1.25, 4.0, 32, 1, true), new T.MeshBasicMaterial({ color: '#fff3b0', transparent: true, opacity: 0.12, depthWrite: false, side: T.DoubleSide, blending: T.AdditiveBlending }), S.x, 2.0, S.z + 0.2); A.noAud(cone);
+    var ns = cvs(512, 256, function (c, w, h) { c.fillStyle = '#ffe14d'; c.beginPath(); for (var k = 0; k < 24; k++) { var a2 = k / 24 * Math.PI * 2, rr2 = k % 2 ? 92 : 124; c.lineTo(w / 2 + Math.cos(a2) * rr2 * 1.8, h / 2 + Math.sin(a2) * rr2 * 0.95); } c.closePath(); c.fill(); c.fillStyle = '#ff2d6f'; c.font = F(110); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('NEW!', w / 2, h / 2 + 6); });
+    var nsg = wallSign('mainx', 'NEW! spotlight sign', 1.7, 0.85, ns.tex, S.x, 3.35, z0 + 0.04, 0); nsg.material.transparent = true;
+    // posters of games along the north wall (real framed boards with the game's cover art)
+    var POST = [['sky', -16.3], ['poke', -13.5], ['pets', -10.7], ['heist', 0.9], ['kart', 3.7]];
+    POST.forEach(function (q) { var g3 = GA.findGame(q[0]); if (!g3) return; var pg = prop('mainx', 'poster ' + q[0], q[1], z0 + 0.05, 0);
+      add(pg, bx(2.3, 1.45, 0.08), ph(g3.color || '#3ff0ff', 40), 0, 1.9, 0.04); var im = add(pg, new T.PlaneGeometry(2.1, 1.18), new T.MeshBasicMaterial({ map: galTex('assets/hall/' + q[0] + '/cover.webp') }), 0, 1.9, 0.085); void im;
+      var lb = cvs(512, 96, function (c, w, h) { c.fillStyle = '#140a2b'; c.fillRect(0, 0, w, h); glowText(c, g3.name.toUpperCase() + ' \u2192 GALLERY', w / 2, h / 2, 44, g3.color || '#3ff0ff', w - 20); }); var lp = texPlane(2.1, 0.36, lb.tex); lp.position.set(0, 0.95, 0.06); pg.add(lp); A.noAud(pg); });
+    // floor arrows from the middle of the room to the arch
+    for (i = 0; i < 3; i++) { var ar2 = cvs(128, 128, function (c, w, h) { c.fillStyle = 'rgba(63,240,255,.85)'; c.beginPath(); c.moveTo(w / 2, 10); c.lineTo(w - 14, 70); c.lineTo(w / 2 + 18, 70); c.lineTo(w / 2 + 18, h - 10); c.lineTo(w / 2 - 18, h - 10); c.lineTo(w / 2 - 18, 70); c.lineTo(14, 70); c.closePath(); c.fill(); });
+      var am = texPlane(0.9, 0.9, ar2.tex, { transparent: true }); am.rotation.x = -Math.PI / 2; am.position.set(ax, 0.021, -5.4 + i * 1.1); am.material.depthWrite = false; r.add(am); A.noAud(am); }
+    ANIM.any.push(function (t) { bulbs.forEach(function (b, k) { b.visible = ((k + Math.floor(t * 6)) % 3) !== 0; }); sw.tex.offset.y = (t * 0.2) % 1; cone.material.opacity = 0.1 + Math.sin(t * 2) * 0.03; });
+  }
   /* ---------- build everything into the hub ---------- */
   AR.build = function (api) {
-    A = api; buildFoodCourt(); buildRoof(); buildBasement(); buildKey();
-    R.roof.visible = false; R.base.visible = false; drawSchedule();
+    A = api; buildFoodCourt(); buildRoof(); buildBasement(); buildGallery(); buildKey();
+    A.cabinets.forEach(function (c) { if (c.kind === 'main' && !c.spot && c.gallery) R.gal.add(c.group); });
+    R.roof.visible = false; R.base.visible = false; R.gal.visible = false; drawSchedule();
     A.anims.push(frame);
     AR.built = true;
   };

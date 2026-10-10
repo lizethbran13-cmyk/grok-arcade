@@ -181,12 +181,12 @@
   function U_rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
 
   function buildSigns() {
-    var s1 = sign('MAIN GAMES\nLizeth\'s Grok games', 7, 1.5, '#3ff0ff'); s1.position.set(-6, 3.75, ROOM.minZ + 0.03); wallSign('MAIN GAMES', s1);
+    var GALL = !!(GA.Areas && GA.Areas.galleryLayout), s1 = GALL ? sign('GAME GALLERY\nall ' + GA.MAIN_GAMES.length + ' Grok games inside', 5.6, 1.0, '#3ff0ff') : sign('MAIN GAMES\nLizeth\'s Grok games', 7, 1.5, '#3ff0ff'); s1.position.set(-6, GALL ? 4.4 : 3.75, ROOM.minZ + 0.03); wallSign('MAIN GAMES', s1);
     var s2 = sign('BONUS ZONE\nNew mini games - earn tickets!', 7, 1.5, '#ff4fd8'); s2.position.set(ROOM.maxX - 0.03, 3.75, 0); s2.rotation.y = -Math.PI / 2; wallSign('BONUS ZONE', s2);
     var s3 = sign('BONUS ZONE  >', 4.6, 1.2, '#ff4fd8'); s3.position.set(DIV_X - 0.23, 4.1, 0); s3.rotation.y = -Math.PI / 2; wallSign('BONUS ZONE >', s3);
-    var s3b = sign('< MAIN GAMES', 4.6, 1.2, '#3ff0ff'); s3b.position.set(DIV_X + 0.23, 4.1, 0); s3b.rotation.y = Math.PI / 2; wallSign('< MAIN GAMES', s3b);
+    var s3b = sign((GA.Areas && GA.Areas.galleryLayout) ? '< GAME GALLERY' : '< MAIN GAMES', 4.6, 1.2, '#3ff0ff'); s3b.position.set(DIV_X + 0.23, 4.1, 0); s3b.rotation.y = Math.PI / 2; wallSign('< MAIN GAMES', s3b);
     var s4 = sign('GROK ARCADE', 5.0, 1.0, '#ffe14d'); s4.position.set(ROOM.minX + 0.03, 3.4, 0.7); s4.rotation.y = Math.PI / 2; wallSign('GROK ARCADE', s4);
-    regItem('decal:MAIN GAMES', 'decal', decal('MAIN GAMES', 7, 1.6, '#3ff0ff', -6, -7.2, 0, 'walk up to a cabinet to play'));
+    regItem('decal:MAIN GAMES', 'decal', GALL ? decal('GAME GALLERY', 7, 1.6, '#3ff0ff', -6, -7.2, 0, 'walk up to the golden arch') : decal('MAIN GAMES', 7, 1.6, '#3ff0ff', -6, -7.2, 0, 'walk up to a cabinet to play'));
     regItem('decal:BONUS ZONE', 'decal', decal('BONUS ZONE', 6.4, 1.5, '#ff4fd8', 11.6, 0, Math.PI / 2, 'mini games - best scores saved'));
     regItem('decal:BONUS >>', 'decal', decal('BONUS  >>', 3.2, 1.1, '#ff4fd8', 3.2, 0, 0));
     // center logo rug
@@ -894,9 +894,9 @@
 
   /* ---------- cabinets ---------- */
   var cabBodyMat, glowTex;
-  function buildCabinet(game, kind, x, z, rot) {
+  function buildCabinet(game, kind, x, z, rot, kOverride) {
     var grp = new T.Group(); grp.position.set(x, 0, z); grp.rotation.y = rot; scene.add(grp);
-    var ck = kind === 'main' ? MAIN_K : kind === 'bonus' ? BONUS_K : 1; if (ck < 1) grp.scale.set(ck, 1, 1);
+    var ck = kOverride || (kind === 'main' ? MAIN_K : kind === 'bonus' ? BONUS_K : 1); if (ck < 1) grp.scale.set(ck, 1, 1);
     var col = game.color;
     mesh(box(1.3, 2.3, 1.0), cabBodyMat, 0, 1.15, 0, grp);
     mesh(box(0.07, 2.36, 1.04), basic(col), -0.68, 1.18, 0, grp);
@@ -947,7 +947,12 @@
     cabBodyMat = lam('#1c1236');
     ensureGlow();
     // main games: along the north wall, facing south
-    GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
+    // main games live in the GAME GALLERY wing now (sorted into themed sections; js/areas.js has the layout). The main floor keeps a NEW! spotlight cabinet for the newest game.
+    var GL = GA.Areas && GA.Areas.galleryLayout ? GA.Areas.galleryLayout(GA.MAIN_GAMES) : null;
+    if (GL) {
+      GA.MAIN_GAMES.forEach(function (gm, i) { var q = GL[i], c = buildCabinet(gm, 'main', q.x, q.z, q.rot, 1); c.gallery = true; c.sec = q.sec; });
+      var nw = GA.Areas.newestGame(), sc2 = buildCabinet(nw, 'main', GA.Areas.SPOT.x, ROOM.minZ + 0.6, 0, 1); sc2.spot = true;
+    } else GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
     var nAll = GA.BONUS_GAMES.length, nOver = BONUS_NORTH_X.length + BONUS_DIV_Z.length, nb = nAll > BONUS_EAST ? Math.max(BONUS_EAST, nAll - nOver) : nAll, stepB = BONUS_STEP || (nb > 15 ? 1.45 : nb > 14 ? 1.5 : nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4);
     GA.BONUS_GAMES.forEach(function (gm, i) {
@@ -1520,6 +1525,7 @@
       if (powerK < 0.5) { if (!c.offDrawn) { c.offDrawn = true; c.sctx.fillStyle = '#000'; c.sctx.fillRect(0, 0, c.w, c.h); c.stex.needsUpdate = true; } return; }
       c.offDrawn = false;
       if (now < c.nextDraw) return;
+      if (c.group.parent && c.group.parent.visible === false) { c.nextDraw = now + 0.5; return; }
       var d = Math.hypot(P.x - c.x, P.z - c.z);
       c.nextDraw = now + (d < 9 ? 1 / 15 : d < 16 ? 1 / 6 : 0.5);
       attract(c.id, c.sctx, c.w, c.h, now, c); c.stex.needsUpdate = true;
