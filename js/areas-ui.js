@@ -48,7 +48,7 @@
 
   /* ---------- walk-up prompts ---------- */
   UI.prompt = function (cab) {
-    build(); var k = cab.kind, P = AR.party(); if (/^at_/.test(k) && GA.AtticUI) return GA.AtticUI.prompt(cab);
+    build(); var k = cab.kind, P = AR.party(); if (/^tm_/.test(k) && GA.RetroUI) return GA.RetroUI.prompt(cab); if (/^at_/.test(k) && GA.AtticUI) return GA.AtticUI.prompt(cab);
     switch (k) {
       case 'ar_snack': return { tag: 'FOOD COURT', name: 'Snack Bar', desc: 'Snacks give fun boosts: x2 tickets, run faster, lucky games! Pay with tickets or ' + COIN + ' coins (you have ' + AR.coins() + '). ' + (P.dow === 0 ? 'SNACK ATTACK MONDAY: half price!' : ''), btn: 'MENU', key: 'order a snack', cls: 'prize', pb: 'pzPlay' };
       case 'ar_chef': return { tag: 'FOOD COURT', name: 'Chef Gio', desc: 'The pizza chef! Help him cook at the brick oven to earn ' + COIN + ' coins and a Chef\u2019s Special boost.', btn: 'TALK', key: 'talk to Chef Gio', cls: 'npc' };
@@ -79,7 +79,7 @@
 
   /* ---------- open (E / PLAY) ---------- */
   UI.open = function (cab) {
-    build(); var k = cab.kind; cur = cab; if (/^at_/.test(k) && GA.AtticUI) return GA.AtticUI.open(cab);
+    build(); var k = cab.kind; cur = cab; if (/^tm_/.test(k) && GA.RetroUI) return GA.RetroUI.open(cab); if (/^at_/.test(k) && GA.AtticUI) return GA.AtticUI.open(cab);
     if (k === 'ar_snack') return openSnacks();
     if (k === 'ar_slushie') return quickBuy('slushie');
     if (k === 'ar_icecream') return quickBuy('icecream');

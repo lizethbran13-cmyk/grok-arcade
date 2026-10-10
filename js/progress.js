@@ -82,6 +82,12 @@
     meteor: [40, 'Disaster Master', 'Score 40 in Meteor Mayhem', '\u2604\uFE0F'],
     swing: [40, 'Tail Swinger', 'Score 40 in Tail Swing', '\uD83D\uDC00'],
     tame: [60, 'Monster Tamer', 'Score 60 in Tame Rush', '\uD83D\uDC32'],
+    tm_munch: [150, 'Maze Muncher', 'Score 150 in Munch Maze \u201980', '\uD83D\uDFE3'],
+    tm_swoop: [60, 'Swoop Stopper', 'Score 60 in Star Swoopers \u201981', '\uD83D\uDE80'],
+    tm_toad: [40, 'Road Hopper', 'Score 40 in Toad Road \u201981', '\uD83D\uDC38'],
+    tm_centi: [80, 'Bug Zapper', 'Score 80 in Centi-Bug \u201981', '\uD83D\uDC1B'],
+    tm_pogo: [30, 'Cloud Climber', 'Score 30 in Pogo Pete \u201983', '\u2601\uFE0F'],
+    tm_tangle: [40, 'Time Keeper', 'Score 40 in Time Tangle \u201983', '\u23F0'],
     lockpick: [40, 'Master Locksmith', 'Score 40 in Lockpick Panic', '\uD83D\uDD10'],
     ghost: [45, 'Lantern Legend', 'Score 45 in Ghost Lantern \u201983', '\uD83C\uDFEE']
   };
@@ -187,6 +193,15 @@
   A.push({ id: 'bs_key', cat: 'Arcade', icon: '\uD83D\uDD11', name: 'Finders Keepers', desc: 'Find Gus\u2019s hidden basement key', p: function () { return [ev('bsKey') ? 1 : 0, 1]; } });
   A.push({ id: 'bs_pick', cat: 'Arcade', icon: '\uD83D\uDD13', name: 'Lock Picker', desc: 'Pick the lock on the basement door', p: function () { return [ev('bsPick') ? 1 : 0, 1]; } });
   A.push({ id: 'bs_puzzle', cat: 'Arcade', icon: '\uD83E\uDDE9', name: 'Puzzle Master', desc: 'Fix the basement fuse box and crack Gus\u2019s code safe', p: function () { return [(ev('bsFuse') ? 1 : 0) + (ev('bsSafe') ? 1 : 0), 2]; } });
+  // Retro Arcade / Time Machine
+  A.push({ id: 'tm_find', cat: 'Time Machine', icon: '\uD83D\uDD73\uFE0F', name: 'Behind the Cabinet', desc: 'Find the secret tunnel under the arcade', p: function () { return [ev('tmFound') ? 1 : 0, 1]; } });
+  A.push({ id: 'tm_lily', cat: 'Time Machine', icon: '\uD83E\uDD16', name: 'Sister Act', desc: 'Meet Lily the Bot, Mimi\u2019s sister', p: function () { return [ev('tmLily') ? 1 : 0, 1]; } });
+  A.push({ id: 'tm_1983', cat: 'Time Machine', icon: '\u23F3', name: 'Time Traveler', desc: 'Visit the OLD Grok Arcade in 1983', p: function () { return [ev('tm1983') ? 1 : 0, 1]; } });
+  A.push({ id: 'tm_crew', cat: 'Time Machine', icon: '\uD83D\uDC4B', name: 'The Class of \u201983', desc: 'Talk to young Gary, Larry and young Gus in 1983', p: function () { return [['tmGary', 'tmLarry', 'tmGus'].filter(function (k) { return ev(k); }).length, 3]; } });
+  A.push({ id: 'tm_back', cat: 'Time Machine', icon: '\uD83D\uDD70\uFE0F', name: 'Back to the Present', desc: 'Find the 3 parts and fix the old Chrono-Booth to get home', p: function () { return [ev('tmBack') ? 1 : 0, 1]; } });
+  A.push({ id: 'tm_fix', cat: 'Time Machine', icon: '\uD83D\uDEE0\uFE0F', name: 'Better Than Dale', desc: 'Fix the broken Chrono-Gate with fuses and Tele Juice', p: function () { return [ev('tmFix') ? 1 : 0, 1]; } });
+  A.push({ id: 'tm_retro6', cat: 'Time Machine', icon: '\uD83D\uDD79\uFE0F', name: 'Totally Radical', desc: 'Play all 6 retro cabinets in the 1983 arcade', p: function () { return [['tm_munch', 'tm_swoop', 'tm_toad', 'tm_centi', 'tm_pogo', 'tm_tangle'].filter(function (k) { return st.played[k] || best(k) > 0; }).length, 6]; } });
+  A.push({ id: 'tm_rares', cat: 'Prizes', icon: '\u231B', name: 'Collector Across Time', desc: 'Own all 5 Time Machine rares', p: function () { return [['pl_lily', 'tele_juice', 'chrono_booth', 'dale_wrench', 'token_83'].filter(function (k) { return S.owned[k]; }).length, 5]; } });
   A.push({ id: 'bs_retro', cat: 'High Scores', icon: '\uD83D\uDCFA', name: 'Retro Legend', desc: 'Play both rare cabinets in the Secret Basement (Paddle Pong + Galaxy Groks)', p: function () { return [['rt_pong', 'rt_invaders'].filter(function (k) { return st.played[k] || best(k) > 0; }).length, 2]; } });
   A.push({ id: 'party_set', cat: 'Prizes', icon: '\uD83E\uDD73', name: 'Life of the Party', desc: 'Own the Chef Gio Plush, the Rooftop Party Hat and the Mini Disco Ball', p: function () { return [['pl_chef', 'party_hat', 'disco_ball'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'vault_rares', cat: 'Prizes', icon: '\uD83D\uDC8E', name: 'Vault Keeper', desc: 'Own both Basement Rares: Gus\u2019s Golden Key and the Mini Retro Cabinet', p: function () { return [['gold_key', 'retro_cab'].filter(function (k) { return S.owned[k]; }).length, 2]; } });

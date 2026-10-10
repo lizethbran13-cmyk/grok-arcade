@@ -17,7 +17,7 @@
      (room for 27). Only past that do the east-wall cabinets squeeze. */
   var BONUS_EAST = 15, BONUS_NORTH_X = [9.7, 11.2, 12.7, 14.2], BONUS_DIV_Z = [-9.2, -7.7, -6.2, -4.7, 4.7, 6.2, 7.7, 9.2];
   var BONUS_CAP = BONUS_EAST + BONUS_NORTH_X.length + BONUS_DIV_Z.length;
-  var BONUS_K = 1, BONUS_STEP = 0; if (GA.BONUS_GAMES.length > BONUS_CAP) { var nE0 = GA.BONUS_GAMES.length - BONUS_CAP + BONUS_EAST; BONUS_K = 23.2 / (1.44 * nE0 + 0.04 * (nE0 - 1)); BONUS_STEP = 1.48 * BONUS_K; }
+  var BONUS_K = 1, BONUS_STEP = 0; if (GA.wallBonus().length > BONUS_CAP) { var nE0 = GA.wallBonus().length - BONUS_CAP + BONUS_EAST; BONUS_K = 23.2 / (1.44 * nE0 + 0.04 * (nE0 - 1)); BONUS_STEP = 1.48 * BONUS_K; }
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -204,8 +204,8 @@
     g.fillStyle = '#140829'; g.fillRect(0, 0, W, H);
     g.strokeStyle = '#ffe14d'; g.lineWidth = 10; g.strokeRect(8, 8, W - 16, H - 16);
     neonText(g, 'BEST SCORES', W / 2, 62, 58, '#ffe14d');
-    GA.BONUS_GAMES.forEach(function (gm, i) {
-      var nB = GA.BONUS_GAMES.length, y = nB > 16 ? 80 + i * (402 / (nB - 1)) : (nB > 15 ? 84 : nB > 14 ? 88 : nB > 13 ? 90 : nB > 12 ? 92 : nB > 11 ? 96 : nB > 10 ? 100 : nB > 9 ? 106 : nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 15 ? 26.5 : nB > 14 ? 28 : nB > 13 ? 30 : nB > 12 ? 32 : nB > 11 ? 34 : nB > 10 ? 37 : nB > 9 ? 40 : nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 16 ? 19 : nB > 15 ? 19 : nB > 14 ? 20 : nB > 13 ? 21 : nB > 12 ? 22 : nB > 11 ? 24 : nB > 10 ? 26 : nB > 9 ? 28 : nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
+    GA.wallBonus().forEach(function (gm, i) {
+      var nB = GA.wallBonus().length, y = nB > 16 ? 80 + i * (402 / (nB - 1)) : (nB > 15 ? 84 : nB > 14 ? 88 : nB > 13 ? 90 : nB > 12 ? 92 : nB > 11 ? 96 : nB > 10 ? 100 : nB > 9 ? 106 : nB > 8 ? 108 : nB > 7 ? 114 : nB > 6 ? 118 : nB > 5 ? 128 : 140) + i * (nB > 15 ? 26.5 : nB > 14 ? 28 : nB > 13 ? 30 : nB > 12 ? 32 : nB > 11 ? 34 : nB > 10 ? 37 : nB > 9 ? 40 : nB > 8 ? 45 : nB > 7 ? 50 : nB > 6 ? 56 : nB > 5 ? 64 : 70); g.font = font(nB > 16 ? 19 : nB > 15 ? 19 : nB > 14 ? 20 : nB > 13 ? 21 : nB > 12 ? 22 : nB > 11 ? 24 : nB > 10 ? 26 : nB > 9 ? 28 : nB > 8 ? 30 : nB > 7 ? 32 : nB > 6 ? 34 : nB > 5 ? 38 : 42); g.textAlign = 'left'; g.fillStyle = gm.color; g.fillText(gm.name, 50, y);
       g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.fillText(String(GA.getBest(gm.id)), W - 50, y);
     });
     d.tex.needsUpdate = true;
@@ -994,8 +994,8 @@
       var nw = GA.Areas.newestGame(), sc2 = buildCabinet(nw, 'main', GA.Areas.SPOT.x, ROOM.minZ + 0.6, 0, 1); sc2.spot = true;
     } else GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    var nAll = GA.BONUS_GAMES.length, nOver = BONUS_NORTH_X.length + BONUS_DIV_Z.length, nb = nAll > BONUS_EAST ? Math.max(BONUS_EAST, nAll - nOver) : nAll, stepB = BONUS_STEP || (nb > 15 ? 1.45 : nb > 14 ? 1.5 : nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4);
-    GA.BONUS_GAMES.forEach(function (gm, i) {
+    var nAll = GA.wallBonus().length, nOver = BONUS_NORTH_X.length + BONUS_DIV_Z.length, nb = nAll > BONUS_EAST ? Math.max(BONUS_EAST, nAll - nOver) : nAll, stepB = BONUS_STEP || (nb > 15 ? 1.45 : nb > 14 ? 1.5 : nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4);
+    GA.wallBonus().forEach(function (gm, i) {
       if (i < nb) return buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2);
       var j = i - nb; // overflow rows: north wall of the bonus room (facing south), then the divider wall (facing east)
       if (j < BONUS_NORTH_X.length) buildCabinet(gm, 'bonus', BONUS_NORTH_X[j], ROOM.minZ + 0.6, 0);
