@@ -50,16 +50,19 @@
   /* hatch hide spots (5). Never shown to players; the rotation picks one per 3-day period, same order for everyone. */
   var SPOTS = [{ x: -15.2, z: 6.6, a: 'main' }, { x: -16.0, z: -8.0, a: 'main' }, { x: 13.4, z: 10.4, a: 'bonus' }, { x: 3.4, z: 24.6, a: 'hall' }, { x: -3.0, z: 24.4, a: 'food' }];
   AT.SPOTS = SPOTS;
-  AT.spotIndex = function (p) { p = p == null ? AT.period() : p; var r = rng(hash('attic-hatch:' + Math.floor(p / 5))), ord = [0, 1, 2, 3, 4]; for (var i = 4; i > 0; i--) { var j = Math.floor(r() * (i + 1)), t = ord[i]; ord[i] = ord[j]; ord[j] = t; } return ord[((p % 5) + 5) % 5]; };
+  function cycle(c) { var r = rng(hash('attic-hatch:' + c)), ord = [0, 1, 2, 3, 4]; for (var i = 4; i > 0; i--) { var j = Math.floor(r() * (i + 1)), t = ord[i]; ord[i] = ord[j]; ord[j] = t; } return ord; }
+  // every spot once per 15 days, in a shuffled order, and never the same spot twice in a row
+  AT.spotIndex = function (p) { p = p == null ? AT.period() : p; var c = Math.floor(p / 5), ord = cycle(c), prev = cycle(c - 1)[4]; if (ord[0] === prev) { var t = ord[0]; ord[0] = ord[1]; ord[1] = t; } return ord[((p % 5) + 5) % 5]; };
   AT.spot = function () { return SPOTS[AT.spotIndex()]; };
   // weekly content
   AT.THEMES = [{ id: 'clock', name: 'Clockwork Room', icon: '\u2699\uFE0F' }, { id: 'candle', name: 'Candle Room', icon: '\uD83D\uDD6F\uFE0F' }, { id: 'mirror', name: 'Hall of Mirrors', icon: '\uD83E\uDE9E' }, { id: 'kitchen', name: 'Haunted Kitchen', icon: '\uD83E\uDDEA' }];
-  AT.theme = function () { return AT.THEMES[AT.weekSeed() % AT.THEMES.length]; };
+  AT.weekNum = function () { var w = AT.week(); return (w.y || 2026) * 53 + (w.w || 1); }; // consecutive weeks always differ
+  AT.theme = function () { return AT.THEMES[AT.weekNum() % AT.THEMES.length]; };
   AT.weeklyDone = function () { return !!S.weekly[AT.weekKey()]; };
-  var OPUS = [{ r: 'attic', x: -110.6, z: -2.2 }, { r: 'attic', x: -86.2, z: -1.8 }, { r: 'attic', x: -73.2, z: 1.6 }, { r: 'attic2', x: -110.6, z: 44.5 }, { r: 'attic3', x: -110.4, z: 74.6 }, { r: 'attic', x: -97.4, z: -12.8 }];
-  AT.opusSpot = function () { return OPUS[(AT.weekSeed() >>> 3) % OPUS.length]; };
+  var OPUS = [{ r: 'attic', x: -110.6, z: -2.2 }, { r: 'attic', x: -86.2, z: -1.8 }, { r: 'attic', x: -73.2, z: 1.6 }, { r: 'attic2', x: -110.6, z: 44.5 }, { r: 'attic3', x: -104.0, z: 74.2 }, { r: 'attic', x: -97.4, z: -12.8 }];
+  AT.opusSpot = function () { return OPUS[(AT.weekNum() * 5) % OPUS.length]; };
   AT.opusDone = function () { return !!S.opus[AT.weekKey()]; };
-  AT.oddPortrait = function () { return (AT.weekSeed() >>> 5) % 6; };
+  AT.oddPortrait = function () { return (AT.weekNum() * 7 + 3) % 6; };
   AT.BOOK_COLS = [['RED', '#ef4444'], ['BLUE', '#3b82f6'], ['GREEN', '#22c55e'], ['GOLD', '#facc15'], ['PURPLE', '#a855f7'], ['WHITE', '#f8fafc']];
   AT.bookOrder = function () { var r = rng(hash('attic-books:' + S.seed)), a = [0, 1, 2, 3, 4, 5]; for (var i = 5; i > 0; i--) { var j = Math.floor(r() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a.slice(0, 3); };
   AT.CLUE_IDS = ['portrait', 'music', 'toys'];
@@ -158,9 +161,10 @@
     [-1, 1].forEach(function (sd) { var rail = add(lad, bx(0.07, H + 0.25, 0.07), lw, sd * 0.24, (H + 0.25) / 2, 0); void rail; }); for (var k = 0; k < 15; k++) add(lad, cy(0.025, 0.025, 0.48, 8), lw, 0, 0.3 + k * 0.33, 0).rotation.z = Math.PI / 2;
     lad.position.set(0.15, 0, 0.75); lad.rotation.x = -0.12;
     HT.cab = inter({ id: 'at_hatch', kind: 'at_hatch', root: 'hatch', name: 'A draft from above\u2026', col: '#ffd9a0', x: 0, z: 0, dir: [0, 1], r: 1.15, hideGlow: true });
-    HT.cab.noStand = true; HT.idx = -1; placeHatch();
+    HT.cab.noStand = true; HT.idx = -1;
     // Gary's ladder leaning on the wall behind the IT desk (you can borrow it)
     var gl2 = GA.AtticLadderModel(); gl2.scale.set(1.2, 1.5, 1.2); gl2.position.set(0.55, 0, A.ROOM.maxZ - 0.2); gl2.rotation.x = 0.16; r.add(gl2); A.noAud(gl2); HT.garyLadder = gl2;
+    placeHatch(true);
   }
   function placeHatch(force) { var i = AT.spotIndex(); if (i === HT.idx && !force) return; HT.idx = i; var s = SPOTS[i]; HT.g.position.set(s.x, 0, s.z); moveCab(HT.cab, s.x, s.z); HT.g.updateMatrixWorld(true); refreshHatch(); }
   function refreshHatch() { if (!HT.g) return; HT.ladder.visible = S.ladder === 'placed'; HT.garyLadder.visible = S.ladder === 'gary'; HT.door.rotation.z = S.opened ? -0.9 : 0; HT.leak.material.opacity = S.opened ? 0.35 : 0.05;
@@ -420,7 +424,7 @@
     var r = rng(seed), n = 0, cols = ['#7f1d1d', '#1e3a8a', '#14532d', '#713f12', '#581c87', '#334155', '#9a3412', '#0f766e'];
     var im = new T.InstancedMesh(bx(1, 1, 1), new T.MeshLambertMaterial({ color: '#ffffff' }), rows * 40), m4 = new T.Matrix4(), q = new T.Quaternion(), sc = new T.Vector3(), ps = new T.Vector3(), col = new T.Color();
     for (var i = 0; i < rows; i++) { add(g, bx(w, 0.05, 0.5), wood, 0, 0.1 + i * 0.55, 0); var xx = -w / 2 + 0.1; while (xx < w / 2 - 0.12 && n < rows * 40) { var bw = 0.06 + r() * 0.06, bh = 0.32 + r() * 0.16, lean = r() < 0.08 ? 0.25 : 0; q.setFromEuler(new T.Euler(0, 0, lean)); sc.set(bw, bh, 0.32 + r() * 0.08); ps.set(xx + bw / 2, 0.13 + i * 0.55 + bh / 2, 0.02); m4.compose(ps, q, sc); im.setMatrixAt(n, m4); im.setColorAt(n, col.set(cols[Math.floor(r() * cols.length)])); n++; xx += bw + 0.01 + (lean ? 0.06 : 0); if (r() < 0.04) xx += 0.25; } }
-    im.count = n; im.instanceMatrix.needsUpdate = true; if (im.instanceColor) im.instanceColor.needsUpdate = true; g.add(im);
+    im.count = n; im.instanceMatrix.needsUpdate = true; if (im.instanceColor) im.instanceColor.needsUpdate = true; g.add(im); A.noAud(im);
     var cw = cobweb(), web = texPlane(0.8, 0.8, cw, { transparent: true, double: true }); web.position.set(w / 2 - 0.4, h - 0.4, 0.27); g.add(web); A.noAud(web);
     reg(g, 'prop'); solidOf(g, 0.02); return g; }
   function buildLibrary() {
