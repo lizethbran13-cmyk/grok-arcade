@@ -1076,20 +1076,20 @@
   }
 
   /* =====================================================================================================
-     4) GAME GALLERY (far east at x 30..62): every main game cabinet, sorted into themed sections along the walls,
+     4) GAME GALLERY (far east at x 70..102, past the outer walls): every main game cabinet, sorted into themed sections along the walls,
         with empty "NEXT GAME HERE" slots for future games. Run by Gus Jr. the 2nd. The main floor keeps a NEW! spotlight
         cabinet + the big GAME GALLERY arch + game posters.
      ===================================================================================================== */
-  var GAL = { name: 'gallery', minX: 30, maxX: 62, minZ: -14, maxZ: 12, maxY: 6, H: 5.2, spawn: { x: 32.9, z: -1 }, cx: 46, cz: -1 };
+  var GAL = { name: 'gallery', minX: 70, maxX: 102, minZ: -14, maxZ: 12, maxY: 6, H: 5.2, spawn: { x: 72.9, z: -1 }, cx: 86, cz: -1 };
   AR.GAL = GAL;
   // walls: N = north (z = minZ, facing +z), E = east (x = maxX, facing -x), S = south (z = maxZ, facing -z)
   AR.GAL_SECTIONS = [
-    { id: 'adv', name: 'ADVENTURE', icon: '\uD83D\uDDFA\uFE0F', col: '#4ade80', ids: ['sky', 'land', 'voxels', 'poke', 'heist', 'detective', 'spooks', 'dash', 'blocks'], wall: 'N', from: 32.9, slots: 10 },
-    { id: 'race', name: 'RACING', icon: '\uD83C\uDFC1', col: '#f97316', ids: ['grid', 'surfers', 'rides', 'kart'], wall: 'N', from: 51.2, slots: 5 },
+    { id: 'adv', name: 'ADVENTURE', icon: '\uD83D\uDDFA\uFE0F', col: '#4ade80', ids: ['sky', 'land', 'voxels', 'poke', 'heist', 'detective', 'spooks', 'dash', 'blocks'], wall: 'N', from: 72.9, slots: 10 },
+    { id: 'race', name: 'RACING', icon: '\uD83C\uDFC1', col: '#f97316', ids: ['grid', 'surfers', 'rides', 'kart'], wall: 'N', from: 91.2, slots: 5 },
     { id: 'sport', name: 'SPORTS', icon: '\uD83C\uDFC6', col: '#38bdf8', ids: ['fc', 'pickle', 'sports'], wall: 'E', from: -10.4, slots: 6 },
     { id: 'more', name: 'MORE GAMES', icon: '\u2728', col: '#e879f9', ids: [], wall: 'E', from: 0.6, slots: 5 },
-    { id: 'life', name: 'LIFE SIMS', icon: '\uD83C\uDFE1', col: '#facc15', ids: ['pets', 'life', 'disaster'], wall: 'S', from: 35.0, slots: 6 },
-    { id: 'party', name: 'PARTY', icon: '\uD83C\uDF89', col: '#ff4fd8', ids: ['party', 'brawl'], wall: 'S', from: 47.2, slots: 6 }];
+    { id: 'life', name: 'LIFE SIMS', icon: '\uD83C\uDFE1', col: '#facc15', ids: ['pets', 'life', 'disaster'], wall: 'S', from: 75.0, slots: 6 },
+    { id: 'party', name: 'PARTY', icon: '\uD83C\uDF89', col: '#ff4fd8', ids: ['party', 'brawl'], wall: 'S', from: 87.2, slots: 6 }];
   var GSTEP = 1.75;
   function slotPos(sec, k) { var d = sec.from + k * GSTEP;
     if (sec.wall === 'N') return { x: d, z: GAL.minZ + 0.6, rot: 0 };
@@ -1176,7 +1176,7 @@
     var th = 0.4; A.addWall(B.minX - 1, B.maxX + 1, -1, H + 3, B.minZ - th, B.minZ); A.addWall(B.minX - 1, B.maxX + 1, -1, H + 3, B.maxZ, B.maxZ + th);
     A.addWall(B.minX - th, B.minX, -1, H + 3, B.minZ - 1, B.maxZ + 1); A.addWall(B.maxX, B.maxX + th, -1, H + 3, B.minZ - 1, B.maxZ + 1);
     A.walls.push({ minX: B.minX - 1, maxX: B.maxX + 1, minY: H, maxY: H + 2, minZ: B.minZ - 1, maxZ: B.maxZ + 1 });
-    var L1 = new T.PointLight('#ffffff', 0.7, 26, 1.2); L1.position.set(38, 4.4, -1); r.add(L1); var L2 = new T.PointLight('#ffe9ff', 0.7, 26, 1.2); L2.position.set(54, 4.4, -1); r.add(L2);
+    var L1 = new T.PointLight('#ffffff', 0.7, 26, 1.2); L1.position.set(78, 4.4, -1); r.add(L1); var L2 = new T.PointLight('#ffe9ff', 0.7, 26, 1.2); L2.position.set(94, 4.4, -1); r.add(L2);
     // section signs over each row + "NEXT GAME HERE" markers in the free slots
     var lay = AR.galleryLayout(GA.MAIN_GAMES), used = AR._galUsed;
     AR.GAL_SECTIONS.forEach(function (s) {
@@ -1195,7 +1195,7 @@
     reg(ex, 'booth'); solidOf(ex, 0.02);
     inter({ id: 'gal_exit', kind: 'ar_galexit', area: 'gal', name: 'Back to the arcade floor', col: '#4ade80', x: B.minX + 1.3, z: B.spawn.z, dir: [1, 0], r: 1.0 });
     // Gus Jr.'s desk (south-west corner, facing the room)
-    var dx = 33.4, dz = 7.2, dk = prop('gal', 'Gus Jr. desk', dx, dz, Math.PI / 2), wood = ph('#6b3f22', 30);
+    var dx = 73.4, dz = 7.2, dk = prop('gal', 'Gus Jr. desk', dx, dz, Math.PI / 2), wood = ph('#6b3f22', 30);
     add(dk, bx(2.2, 0.08, 0.85), wood, 0, 0.95, 0); add(dk, bx(2.1, 0.88, 0.06), ph('#4a2b16', 20), 0, 0.48, 0.38); [-1, 1].forEach(function (sd) { add(dk, bx(0.08, 0.9, 0.8), ph('#4a2b16', 20), sd * 1.02, 0.47, 0); });
     var np = cvs(512, 128, function (c, w, h) { c.fillStyle = '#e8b84a'; rr(c, 4, 4, w - 8, h - 8, 14); c.fill(); c.fillStyle = '#3a2216'; c.font = F(46); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('GUS JR. THE 2nd', w / 2, h / 2 + 2); });
     var npm = texPlane(1.2, 0.3, np.tex); npm.position.set(0, 0.75, 0.415); dk.add(npm);
@@ -1216,9 +1216,9 @@
     [0, Math.PI].forEach(function (ry) { var kp = texPlane(2.0, 1.0, ks.tex, { transparent: true }); kp.position.set(Math.sin(ry) * 0.01, 3.35, Math.cos(ry) * 0.01); kp.rotation.y = ry; kp.material.depthWrite = false; kio.add(kp); });
     reg(kio, 'prop'); solidBox('Gallery kiosk', cx - 0.15, cx + 2.15, cz - 1.15, cz + 1.15);
     function bench(x, z, ry) { var b = prop('gal', 'gallery bench ' + x + ',' + z, x, z, ry); add(b, bx(2.0, 0.12, 0.6), ph('#ff4fd8', 40), 0, 0.48, 0); add(b, bx(2.0, 0.5, 0.1), ph('#ff4fd8', 40), 0, 0.8, -0.27); [-0.85, 0.85].forEach(function (q) { add(b, bx(0.1, 0.44, 0.5), chrome(), q, 0.22, 0); }); reg(b, 'prop'); solidOf(b, 0.02); }
-    bench(40, -5.0, 0); bench(52, -5.0, 0); bench(40, 3.2, Math.PI); bench(52, 3.2, Math.PI);
+    bench(80, -5.0, 0); bench(92, -5.0, 0); bench(80, 3.2, Math.PI); bench(92, 3.2, Math.PI);
     function plant(x, z) { var p = prop('gal', 'gallery plant ' + x + ',' + z, x, z, 0); add(p, cy(0.28, 0.22, 0.55, 16), ph('#f5f0e6', 40), 0, 0.27, 0); for (var k = 0; k < 7; k++) { var l = add(p, sp(0.22, 10), lm(k % 2 ? '#22c55e' : '#16a34a'), Math.sin(k * 0.9) * 0.18, 0.7 + (k % 3) * 0.16, Math.cos(k * 0.9) * 0.18); l.scale.set(1, 1.4, 1); } reg(p, 'prop'); solidOf(p, 0.02); }
-    plant(31.0, -12.9); plant(31.0, 10.9); plant(60.9, 10.9);
+    plant(71.0, -12.9); plant(71.0, 10.9); plant(100.9, 10.9);
     ANIM.gal.push(function (t, dt) {
       holo.rotation.y = t * 0.8; ico.rotation.x = t * 0.5; holo.position.y = 2.25 + Math.sin(t * 1.6) * 0.08;
       if (gj.root) { gj.bub.tick(dt); var p2 = A.pose(), ang = Math.atan2(p2.x - (dx - 0.85), p2.z - dz) - Math.PI / 2; gj.head.rotation.y += (Math.max(-0.7, Math.min(0.7, -ang + Math.PI / 2 - Math.PI / 2)) - gj.head.rotation.y) * Math.min(1, dt * 3);
