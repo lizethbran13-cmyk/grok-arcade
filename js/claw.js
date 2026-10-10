@@ -34,12 +34,75 @@
 
   /* ---------- the prize pile ---------- */
   function inChuteZone(x, z, pad) { return x < CH.x + CH.h + 0.035 + pad && z > CH.z - CH.h - 0.035 - pad; }
+  /* Prize spacing (booth #17): every prize knows its real on-screen size (vr = how wide it is from above, vR = a ball that
+     fully holds it, dy = how far its middle sits below the physics centre). Prizes on the floor never get closer than their
+     widths; anything that can't fit on the floor rests on top of others, touching but never inside them. */
+  function vis(o) { if (o.vR == null) { var v = prizeVis(o.id, o.r, o.tilt || 0); o.vr = v.vr; o.vR = v.vR; o.dy = v.dy; } return o; }
   function restY(x, z, r, items, skip) {
-    var y = FLOOR + r;
-    for (var i = 0; i < items.length; i++) { var o = items[i]; if (o === skip) continue; var dx = x - o.x, dz = z - o.z, dh = dx * dx + dz * dz, rr = r + o.r; if (dh < rr * rr) y = Math.max(y, o.y + Math.sqrt(rr * rr - dh)); }
+    var me = skip && skip.vR != null ? skip : null, y = FLOOR + r;
+    for (var i = 0; i < items.length; i++) {
+      var o = items[i]; if (o === skip) continue; var dx = x - o.x, dz = z - o.z, dh = dx * dx + dz * dz;
+      if (me && o.vR != null) { var RR = me.vR + o.vR; if (dh < RR * RR) y = Math.max(y, (o.y - o.dy) + Math.sqrt(RR * RR - dh) + me.dy); }
+      else { var rr = r + o.r; if (dh < rr * rr) y = Math.max(y, o.y + Math.sqrt(rr * rr - dh)); }
+    }
     return y;
   }
   function resettle(items) { for (var pass = 0; pass < 3; pass++) { items.slice().sort(function (a, b) { return a.y - b.y; }).forEach(function (o) { o.y = Math.min(o.y, restY(o.x, o.z, o.r, items, o)); }); } }
+  // lay the given prizes out: floor first (best-candidate spacing, widest gaps), then on top of the pile if the floor is full
+  function scatter(items, rng) {
+    var placed = [];
+    items.forEach(function (o) { vis(o); });
+    items.slice().sort(function (a, b) { return b.vr - a.vr; }).forEach(function (o) {
+      var best = null, k, x, z, c;
+      for (k = 0; k < 90; k++) {
+        x = -AX + o.vr + rng() * (2 * (AX - o.vr)); z = -AZ + o.vr + rng() * (2 * (AZ - o.vr));
+        if (inChuteZone(x, z, o.vr)) continue;
+        c = 9;
+        for (var i = 0; i < placed.length; i++) { var q = placed[i], d = Math.hypot(x - q.x, z - q.z); c = Math.min(c, q.floor ? d - (o.vr + q.vr) : d - (o.vR + q.vR)); }
+        if (!best || c > best.c) best = { x: x, z: z, c: c };
+      }
+      if (best && best.c >= 0.008) { o.x = best.x; o.z = best.z; o.y = FLOOR + o.r; o.floor = true; }
+      else { // no room left on the floor: rest it on top, in the lowest spot
+        var low = null;
+        for (k = 0; k < 90; k++) {
+          x = -AX + o.vr + rng() * (2 * (AX - o.vr)); z = -AZ + o.vr + rng() * (2 * (AZ - o.vr)); if (inChuteZone(x, z, o.vr)) continue;
+          var y = restY(x, z, o.r, placed, o); if (!low || y < low.y) low = { x: x, z: z, y: y };
+        }
+        o.x = low.x; o.z = low.z; o.y = low.y; o.floor = low.y <= FLOOR + o.r + 1e-6;
+      }
+      placed.push(o);
+    });
+    if (items.some(function (o) { return !o.floor; })) relaxFloor(items, rng);
+    return items;
+  }
+  // the floor is a bit crowded: try nudging everything apart (like shaking the box) so every prize can sit on the floor
+  function relaxFloor(items, rng) {
+    var P = items.map(function (o) { return { o: o, x: o.floor ? o.x : -AX + o.vr + rng() * (2 * (AX - o.vr)), z: o.floor ? o.z : -AZ + o.vr + rng() * (2 * (AZ - o.vr)) }; }), GAP = 0.006, ok = false;
+    function keepIn(q) {
+      var r = q.o.vr; q.x = clamp(q.x, -AX + r, AX - r); q.z = clamp(q.z, -AZ + r, AZ - r);
+      if (inChuteZone(q.x, q.z, r)) { var ex = (CH.x + CH.h + 0.035 + r) - q.x, ez = q.z - (CH.z - CH.h - 0.035 - r); if (ex < ez) q.x += ex + 0.001; else q.z -= ez + 0.001; }
+    }
+    for (var it = 0; it < 400 && !ok; it++) {
+      ok = true;
+      for (var i = 0; i < P.length; i++) for (var j = i + 1; j < P.length; j++) {
+        var a = P[i], b = P[j], dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz), need = a.o.vr + b.o.vr + GAP;
+        if (d < need) { ok = false; if (d < 1e-6) { dx = rng() - 0.5; dz = rng() - 0.5; d = Math.hypot(dx, dz); } var push = (need - d) / 2 + 0.0005; a.x -= dx / d * push; a.z -= dz / d * push; b.x += dx / d * push; b.z += dz / d * push; }
+      }
+      P.forEach(keepIn);
+    }
+    if (!ok) return false;
+    P.forEach(function (q) { q.o.x = q.x; q.o.z = q.z; q.o.y = FLOOR + q.o.r; q.o.floor = true; });
+    return true;
+  }
+  function overlaps(items) { // pairs whose real shapes would poke into each other (should always be [])
+    var out = [];
+    for (var i = 0; i < items.length; i++) for (var j = i + 1; j < items.length; j++) {
+      var a = vis(items[i]), b = vis(items[j]), dh = Math.hypot(a.x - b.x, a.z - b.z), bothFloor = Math.abs(a.y - a.r - FLOOR) < 0.002 && Math.abs(b.y - b.r - FLOOR) < 0.002;
+      var bad = bothFloor ? dh < a.vr + b.vr - 0.002 : Math.hypot(dh, (a.y - a.dy) - (b.y - b.dy)) < a.vR + b.vR - 0.003;
+      if (bad) out.push([a.id, b.id, +dh.toFixed(3)]);
+    }
+    return out;
+  }
   function makePile(machine, seed) {
     var cfg = CFG[machine], rng = rngOf(seed), ids = contents(machine), list = [];
     var commons = ids.filter(function (id) { return !prize(id).rare; }), rares = ids.filter(function (id) { return prize(id).rare; });
@@ -47,17 +110,8 @@
     while (list.length < cfg.n) list.push(commons[Math.floor(rng() * commons.length)]);
     list = list.slice(0, cfg.n);
     for (var i = list.length - 1; i > 0; i--) { var j = Math.floor(rng() * (i + 1)), t = list[i]; list[i] = list[j]; list[j] = t; }
-    var items = [];
-    list.forEach(function (id, n) {
-      var r = prize(id).r || 0.115, best = null;
-      for (var k = 0; k < 40 && (!best || k < 6); k++) {
-        var x = -AX + r + rng() * (2 * (AX - r)), z = -AZ + r + rng() * (2 * (AZ - r));
-        if (inChuteZone(x, z, r)) continue;
-        var y = restY(x, z, r, items, null);
-        if (!best || y < best.y) best = { x: x, z: z, y: y };
-      }
-      items.push({ id: id, r: r, x: best.x, z: best.z, y: best.y, rot: rng() * 6.283, tilt: (rng() - 0.5) * 0.5, uid: machine + n + '_' + seed });
-    });
+    var items = list.map(function (id, n) { return { id: id, r: prize(id).r || 0.115, x: 0, z: 0, y: FLOOR, rot: rng() * 6.283, tilt: (rng() - 0.5) * 0.3, uid: machine + n + '_' + seed }; });
+    scatter(items, rng);
     resettle(items);
     return items;
   }
@@ -114,7 +168,7 @@
         if (o.x - (CH.x + CH.h + 0.035) > (CH.z - CH.h - 0.035) - o.z) o.x = Math.max(o.x, CH.x + CH.h + 0.04 + o.r); else o.z = Math.min(o.z, CH.z - CH.h - 0.04 - o.r);
       }
       o.x = clamp(o.x, -AX + o.r, AX - o.r); o.z = clamp(o.z, -AZ + o.r, AZ - o.r);
-      var ry = restY(o.x, o.z, o.r, g.items, o);
+      vis(o); var ry = restY(o.x, o.z, o.r, g.items, o);
       if (o.y <= ry) { o.y = ry; g.items.push(o); g.falls.splice(f, 1); resettle(g.items); }
     }
     var hx = headX(g), hz = headZ(g);
@@ -225,15 +279,22 @@
       var g = new T.BufferGeometry(); g.setAttribute('position', new T.BufferAttribute(pos, 3)); g.setAttribute('normal', new T.BufferAttribute(nor, 3)); g.setAttribute('color', new T.BufferAttribute(col, 3)); return g;
     }
     var bb = new T.Box3().setFromObject(model), size = bb.getSize(new T.Vector3()), ctr = bb.getCenter(new T.Vector3());
-    flatCache[id] = { lit: merge(lit), bas: merge(bas), size: Math.max(size.x, size.y, size.z) || 1, ctr: ctr };
+    var hr = 0, hh = 0, br = 0; [lit, bas].forEach(function (L) { L.forEach(function (p) { var pa = p.g.attributes.position; for (var i = 0; i < pa.count; i++) { var dx = pa.getX(i) - ctr.x, dy = pa.getY(i) - ctr.y, dz = pa.getZ(i) - ctr.z, h2 = Math.sqrt(dx * dx + dz * dz); if (h2 > hr) hr = h2; if (Math.abs(dy) > hh) hh = Math.abs(dy); var b3 = Math.sqrt(h2 * h2 + dy * dy); if (b3 > br) br = b3; } }); });
+    flatCache[id] = { lit: merge(lit), bas: merge(bas), size: Math.max(size.x, size.y, size.z) || 1, ctr: ctr, hr: hr, hh: hh, br: br };
     return flatCache[id];
   }
+  function prizeVis(id, r, tilt) { // real size of a prize model in the machine (see scatter)
+    var f = flatten(id), s = (2 * r) / f.size * 1.08, ct = Math.cos(tilt || 0), st = Math.abs(Math.sin(tilt || 0));
+    var hr = (f.hr * ct + f.hh * st) * s, hh = (f.hh * ct + f.hr * st) * s;
+    var vR = f.br * s * 1.02; return { vr: Math.min(hr * 1.02, vR), vR: vR, dy: r - hh };
+  }
   function itemMesh(o) {
-    var f = flatten(o.id), g = new T.Group(), inner = new T.Group(), s = (2 * o.r) / f.size * 1.08;
+    vis(o);
+    var f = flatten(o.id), g = new T.Group(), rg = new T.Group(), inner = new T.Group(), s = (2 * o.r) / f.size * 1.08;
     if (!matLit) { matLit = new T.MeshLambertMaterial({ vertexColors: true }); matBasic = new T.MeshBasicMaterial({ vertexColors: true }); }
     if (f.lit) inner.add(new T.Mesh(f.lit, matLit)); if (f.bas) inner.add(new T.Mesh(f.bas, matBasic));
     inner.scale.setScalar(s); inner.position.set(-f.ctr.x * s, -f.ctr.y * s, -f.ctr.z * s);
-    g.add(inner); g.rotation.set(o.tilt || 0, o.rot || 0, 0); return g;
+    rg.add(inner); rg.rotation.set(o.tilt || 0, o.rot || 0, 0); rg.position.y = -o.dy; g.add(rg); g.userData.noBatch = true; return g;
   }
   function canvasSign(w, h) { var c = api.mkCanvas(w, h); return { c: c, g: c.getContext('2d'), tex: api.canvasTex(c) }; }
   function drawHeader(mc) {
@@ -272,6 +333,9 @@
     a.mesh(a.box(1.3, 0.05, 0.22), dark, 0, 0.97, 0.63, g);
     a.mesh(a.cyl(0.012, 0.012, 0.09, 6), a.basic('#dddddd'), 0.2, 1.03, 0.64, g); a.mesh(a.sph(0.035, 10), a.basic('#ff3b4f'), 0.2, 1.08, 0.64, g);
     a.mesh(a.cyl(0.05, 0.05, 0.03, 14), a.basic('#ff3b4f'), 0.42, 1.0, 0.64, g);
+    a.mesh(a.cyl(0.04, 0.04, 0.03, 14), a.basic('#3ff0ff'), -0.06, 1.0, 0.64, g); // SHUFFLE button
+    var shl = canvasSign(256, 64); shl.g.fillStyle = '#0b0420'; shl.g.fillRect(0, 0, 256, 64); shl.g.fillStyle = '#3ff0ff'; shl.g.font = api.font(40, 900); shl.g.textAlign = 'center'; shl.g.textBaseline = 'middle'; shl.g.fillText('SHUFFLE', 128, 34); shl.tex.needsUpdate = true;
+    var shm = a.mesh(a.plane(0.2, 0.05), new T.MeshBasicMaterial({ map: shl.tex }), -0.06, 0.97, 0.7415, g); a.noAud(shm);
     // glass box + posts + header
     var glass = new T.MeshBasicMaterial({ color: '#cfefff', transparent: true, opacity: 0.1, depthWrite: false, side: T.DoubleSide });
     var fp = a.mesh(a.plane(1.26, 1.28), glass, 0, 1.6, 0.545, g); fp.renderOrder = 4;
@@ -345,6 +409,9 @@
     a.anims.push(function (t) {
       var dt = Math.min(0.05, Math.max(0, t - lastT)); lastT = t;
       if (t - last > 3) { last = t; Object.keys(M).forEach(function (k) { var mc = M[k]; if (mc.panelKey !== freeLeft(k) + ':' + daysLeft()) drawPanel(mc); if (!G && mc.period !== period()) buildPile(mc); }); }
+      Object.keys(M).forEach(function (k) { var mc = M[k]; if (!mc.shufAnim) return; mc.shufAnim += dt; var busy = false;
+        mc.items.forEach(function (o) { if (!o.mesh || o.dropT == null) return; var q = clamp((mc.shufAnim - o.dropT) / 0.45, 0, 1), e = 1 - q; o.mesh.position.y = o.y + 0.32 * e * e - (q > 0.7 ? Math.sin((q - 0.7) / 0.3 * Math.PI) * 0.012 : 0); if (q < 1) busy = true; else { o.mesh.position.y = o.y; o.dropT = null; } });
+        if (!busy) mc.shufAnim = 0; });
       if (G) { acc += dt; var n = 0; while (G && acc >= DT && n++ < 12) { tick(DT); acc -= DT; } if (n >= 12) acc = 0; if (G) render(); } else acc = 0;
     });
   };
@@ -412,6 +479,34 @@
     hideCard(); setPlaying(true); drawPanel(mc); snd('start');
   }
 
+  /* ---------- SHUFFLE (booth #17): re-scatter the prizes in a machine so none are stuck under or inside each other ---------- */
+  var SHUF_CD = 4;
+  function shufLeft(m) { var mc = M[m]; return mc && mc.shufAt ? Math.max(0, SHUF_CD - (performance.now() - mc.shufAt) / 1000) : 0; }
+  function shufLabel() { var l = cur ? Math.ceil(shufLeft(cur)) : 0; return '\uD83D\uDD00 SHUFFLE' + (l > 0 ? ' (' + l + ')' : ''); }
+  function shufTick() {
+    if (!ui) return; var b = ui.card.querySelector('[data-act="shuffle"]'); if (!b) return;
+    var l = cur ? shufLeft(cur) : 0; b.textContent = shufLabel(); b.disabled = l > 0;
+    if (l > 0) setTimeout(shufTick, 250);
+  }
+  C.shuffle = function (m) {
+    m = String(m || cur || '').replace(/^claw_/, ''); var mc = M[m]; if (!mc) return { ok: false, why: 'machine' };
+    if (G) return { ok: false, why: 'playing' };
+    var left = shufLeft(m); if (left > 0) return { ok: false, why: 'cooldown', left: +left.toFixed(1) };
+    if (!mc.items || mc.period !== period()) buildPile(mc);
+    mc.shufAt = performance.now(); mc.shufN = (mc.shufN || 0) + 1;
+    scatter(mc.items, rngOf(hash(m + ':shuffle:' + mc.shufN + ':' + Date.now()))); resettle(mc.items);
+    mc.items.forEach(function (o, i) { if (o.mesh) { if (o.mesh.parent !== mc.pileG) mc.pileG.add(o.mesh); o.mesh.position.set(o.x, o.y + 0.32, o.z); o.dropT = 0.05 * i; } });
+    mc.shufAnim = 0.001; snd('click');
+    return { ok: true, n: mc.items.length, overlaps: overlaps(mc.items).length };
+  };
+  C.overlaps = function (m) { var mc = M[m]; return mc ? overlaps(G && cur === m ? G.items : mc.items) : null; };
+  C.pileCheck = function (machine, n) { // tests: lots of fresh piles + shuffles, count overlapping pairs and prizes on the floor
+    var bad = 0, floor = 0, total = 0, worst = null;
+    for (var i = 0; i < (n || 50); i++) { var items = makePile(machine, hash(machine + ':chk:' + i)); if (i % 2) { scatter(items, rngOf(i * 977)); resettle(items); }
+      var ov = overlaps(items); bad += ov.length; if (ov.length && !worst) worst = { i: i, ov: ov, items: items.map(function (o) { return [o.id, +o.x.toFixed(3), +o.y.toFixed(3), +o.z.toFixed(3), o.floor, +o.vr.toFixed(3), +o.vR.toFixed(3), +o.dy.toFixed(3)]; }) }; total += items.length; items.forEach(function (o) { if (o.floor) floor++; }); }
+    return { piles: n || 50, overlaps: bad, worst: worst, onFloor: +(floor / total).toFixed(2) };
+  };
+
   /* ---------- overlay UI ---------- */
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -441,6 +536,7 @@
       if (act === 'play') startPlay();
       else if (act === 'leave') C.close();
       else if (act === 'again') showStart();
+      else if (act === 'shuffle') { if (C.shuffle(cur).ok) shufTick(); }
       else if (act === 'view') { var id = b.getAttribute('data-id'); if (GA.PV && GA.PV.open) { var prev = GA.PV.onClose; GA.PV.onClose = function () { GA.PV.onClose = prev; if (prev) prev(); }; GA.PV.open(id, [id]); } }
     });
     window.addEventListener('keydown', function (e) {
@@ -466,7 +562,7 @@
       '<div class="clCost">' + (fl > 0 ? '\uD83C\uDF81 ' + fl + ' FREE play' + (fl > 1 ? 's' : '') + ' left today' : cfg.cost + ' \uD83C\uDFAB per play \u00b7 you have ' + have) + '</div>' +
       (why === 'need' || !can ? '<div class="clNeed">You need ' + (cfg.cost - have) + ' more ticket' + (cfg.cost - have > 1 ? 's' : '') + '. Win some in the games!</div>' : '') +
       '<div class="clHow">Steer with the pad (or arrow keys), then hit DROP. Line the ring up over a prize!</div>' +
-      '<div class="clBtns"><button type="button" class="clBtn" data-act="play"' + (can ? '' : ' disabled') + '>' + (fl > 0 ? 'PLAY FREE' : 'PLAY \u00b7 ' + cfg.cost + ' \uD83C\uDFAB') + '</button><button type="button" class="clBtn ghost" data-act="leave">LEAVE</button></div>';
+      '<div class="clBtns"><button type="button" class="clBtn" data-act="play"' + (can ? '' : ' disabled') + '>' + (fl > 0 ? 'PLAY FREE' : 'PLAY \u00b7 ' + cfg.cost + ' \uD83C\uDFAB') + '</button>' + '<button type="button" class="clBtn shuf" data-act="shuffle">' + shufLabel() + '</button>' + '<button type="button" class="clBtn ghost" data-act="leave">LEAVE</button></div>';
     ui.card.innerHTML = h; ui.card.classList.remove('hidden'); ui.exit.classList.remove('hidden'); cardShown = true; setPlaying(false);
   }
   function showResult(won, res, g) {
@@ -476,11 +572,11 @@
       var p = prize(won), dupe = res && res.res && res.res.dupe;
       h = '<div class="clT win">\uD83C\uDF89 YOU WON!</div><div class="clWin"><img alt="" src="' + GA.PrizeArt.url(won, 160) + '"><b>' + esc(p.name) + '</b>' + (p.rare ? '<em>RARE</em>' : '') + '</div>' +
         '<div class="clSub">' + (dupe ? 'You already had this one, so here are +2 bonus tickets!' : 'It\u2019s on your shelf in the Achievement Gallery. Tap VIEW 3D to see it, or carry it around!') + '</div>' +
-        '<div class="clBtns"><button type="button" class="clBtn" data-act="view" data-id="' + esc(won) + '">VIEW 3D</button><button type="button" class="clBtn" data-act="again">PLAY AGAIN</button><button type="button" class="clBtn ghost" data-act="leave">DONE</button></div>';
+        '<div class="clBtns"><button type="button" class="clBtn" data-act="view" data-id="' + esc(won) + '">VIEW 3D</button><button type="button" class="clBtn" data-act="again">PLAY AGAIN</button>' + '<button type="button" class="clBtn shuf" data-act="shuffle">' + shufLabel() + '</button>' + '<button type="button" class="clBtn ghost" data-act="leave">DONE</button></div>';
     } else {
       h = '<div class="clT">' + (g.slipped ? '\uD83D\uDE2E It slipped!' : g.grabbed ? '\uD83D\uDE2E So close!' : '\uD83D\uDE45 Missed!') + '</div>' +
         '<div class="clSub">' + (g.slipped ? (cur === 'tricky' ? 'The Tricky Claw has a weak grip. Center the ring on a prize and let the claw stop swinging first.' : 'Almost! Try to center the ring right over the prize.') : 'Line the ring up right over a prize that isn\u2019t buried under others.') + '</div>' +
-        '<div class="clBtns"><button type="button" class="clBtn" data-act="again">PLAY AGAIN</button><button type="button" class="clBtn ghost" data-act="leave">DONE</button></div>';
+        '<div class="clBtns"><button type="button" class="clBtn" data-act="again">PLAY AGAIN</button>' + '<button type="button" class="clBtn shuf" data-act="shuffle">' + shufLabel() + '</button>' + '<button type="button" class="clBtn ghost" data-act="leave">DONE</button></div>';
     }
     ui.card.innerHTML = h; ui.card.classList.remove('hidden'); ui.exit.classList.remove('hidden'); cardShown = true; setPlaying(false);
   }
@@ -525,7 +621,8 @@
     return { open: C.isOpen(), machine: cur, playing: !!g, phase: g ? g.phase : null, gx: g ? +g.gx.toFixed(3) : null, gz: g ? +g.gz.toFixed(3) : null, hx: g ? +headX(g).toFixed(3) : null, hz: g ? +headZ(g).toFixed(3) : null,
       swing: g ? +Math.hypot(g.sx, g.sz).toFixed(4) : 0, held: g && g.held ? g.held.id : null, timeLeft: g ? +g.timeLeft.toFixed(1) : null, card: !!(ui && cardShown),
       free: { easy: freeLeft('easy'), tricky: freeLeft('tricky') }, period: period(), daysLeft: daysLeft(), contents: { easy: contents('easy'), tricky: contents('tricky') },
-      pile: mc ? (g ? g.items : mc.items).map(function (o) { return { id: o.id, x: +o.x.toFixed(3), z: +o.z.toFixed(3), y: +o.y.toFixed(3), r: o.r, buried: buried(o, g ? g.items : mc.items) }; }) : null,
+      overlaps: mc ? overlaps(g ? g.items : mc.items).length : null, shuffleLeft: mc ? +shufLeft(cur).toFixed(1) : 0,
+      pile: mc ? (g ? g.items : mc.items).map(function (o) { return { id: o.id, floor: !!o.floor, vr: +(o.vr || 0).toFixed(3), x: +o.x.toFixed(3), z: +o.z.toFixed(3), y: +o.y.toFixed(3), r: o.r, buried: buried(o, g ? g.items : mc.items) }; }) : null,
       pileIds: { easy: M.easy ? M.easy.items.map(function (o) { return o.id; }) : [], tricky: M.tricky ? M.tricky.items.map(function (o) { return o.id; }) : [] } };
   };
   C.setDayOffset = function (n) { C._dayOffset = +n || 0; Object.keys(M).forEach(function (k) { if (M[k].period !== period() && !(G && cur === k)) buildPile(M[k]); drawPanel(M[k]); }); return period(); };

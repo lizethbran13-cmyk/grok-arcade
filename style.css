@@ -707,3 +707,4 @@ body.touch.near .atChip,body.arOn .atChip{display:none!important}
 .mimiOut{position:absolute;z-index:6;right:max(12px,env(safe-area-inset-right));top:calc(max(12px,env(safe-area-inset-top)) + 96px);background:#3a0000;border:2px solid #ff2a2a;color:#ffb4b4;border-radius:10px;padding:4px 10px;font:bold 12px "Trebuchet MS",system-ui,sans-serif;animation:mmBlink 1s infinite}
 @keyframes mmBlink{50%{opacity:.45}}
 .mimiNav.hidden,.mimiOut.hidden{display:none}
+.clBtn.shuf{background:linear-gradient(180deg,#7df9ff,#22d3ee);color:#06202a}
