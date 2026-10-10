@@ -73,6 +73,8 @@
     bad: function () { tone(180, 0.16, 'square', 0.12, 120); },
     ding: function () { tone(1318, 0.5, 'sine', 0.16); tone(1046, 0.7, 'sine', 0.12, 0, 0.18); },
     firework: function () { noise(0.6, 0.22); tone(90, 0.4, 'sine', 0.2, 40); for (var i = 0; i < 6; i++) noise(0.05, 0.06, 0.25 + i * 0.07); },
+    creak: function () { tone(150, 0.55, 'sawtooth', 0.045, 95); tone(230, 0.4, 'triangle', 0.035, 160, 0.18); },
+    whoo: function () { tone(420, 0.9, 'sine', 0.07, 300); tone(530, 0.75, 'sine', 0.045, 390, 0.22); },
     tick: function () { tone(2400, 0.025, 'square', 0.06); },
     burp: function () { tone(110, 0.45, 'sawtooth', 0.16, 70); tone(90, 0.4, 'square', 0.08, 60, 0.05); },
     unlock: function () { tone(1600, 0.05, 'square', 0.1); tone(900, 0.08, 'square', 0.1, 0, 0.07); [659, 988, 1318].forEach(function (f, i) { tone(f, 0.14, 'triangle', 0.1, 0, 0.18 + i * 0.07); }); },
