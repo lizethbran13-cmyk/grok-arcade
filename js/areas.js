@@ -1073,6 +1073,7 @@
     for (var k in ELEV) { var e = ELEV[k], nr = GA.Hub.near() === e.cab; e.open += ((nr ? 1 : 0) - e.open) * Math.min(1, dt * 4); e.dl.position.x = -0.4 - e.open * 0.36; e.dr.position.x = 0.4 + e.open * 0.36; }
     // the key bobs + spins + sparkles (and jumps to its new spot when the week changes)
     if (KEY.g) { if (KEY.wk !== AR.week().key || KEY.g.visible === AR.hasKey()) placeKey(); KEY.inner.rotation.y = t * 2; KEY.g.position.y = (KEY.spot.y || 0.05) + Math.abs(Math.sin(t * 2.4)) * 0.08; KEY.sp.material.opacity = 0.35 + Math.abs(Math.sin(t * 3)) * 0.4; }
+    if (GA.Attic && GA.Attic.frame) GA.Attic.frame(t, dt);
     if (GA.AreasUI && GA.AreasUI.frame) GA.AreasUI.frame(t, dt, curArea);
   }
 

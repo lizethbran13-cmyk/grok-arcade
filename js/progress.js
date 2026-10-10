@@ -80,7 +80,8 @@
     hoop: [45, 'Hoop Hero', 'Score 45 in Hoop Frenzy', '\uD83C\uDFC0'],
     drift: [40, 'Drift King', 'Score 40 in Spark Drift', '\uD83C\uDFCE\uFE0F'],
     meteor: [40, 'Disaster Master', 'Score 40 in Meteor Mayhem', '\u2604\uFE0F'],
-    lockpick: [40, 'Master Locksmith', 'Score 40 in Lockpick Panic', '\uD83D\uDD10']
+    lockpick: [40, 'Master Locksmith', 'Score 40 in Lockpick Panic', '\uD83D\uDD10'],
+    ghost: [45, 'Lantern Legend', 'Score 45 in Ghost Lantern \u201983', '\uD83C\uDFEE']
   };
   var A = [
     { id: 'first_ticket', cat: 'Tickets', icon: '\uD83C\uDF9F\uFE0F', name: 'First Ticket!', desc: 'Earn your first ticket in the Bonus Zone', p: function () { return [st.earned, 1]; } },
@@ -157,6 +158,19 @@
   // Food Court / Rooftop Party Deck / Secret Basement
   A.push({ id: 'area_tour', cat: 'Arcade', icon: '\uD83D\uDDFA\uFE0F', name: 'Grand Tour', desc: 'Visit the Food Court, the Rooftop Party Deck and the Secret Basement', p: function () { return [['fcVisit', 'rfVisit', 'bsVisit'].filter(function (k) { return ev(k); }).length, 3]; } });
   A.push({ id: 'fc_snack', cat: 'Arcade', icon: '\uD83C\uDF55', name: 'Snack Time', desc: 'Buy a snack at the Food Court Snack Bar', p: function () { return [ev('fcSnack') ? 1 : 0, 1]; } });
+  // The Mysterious Attic
+  A.push({ id: 'at_find', cat: 'Attic', icon: '\uD83D\uDD78\uFE0F', name: 'Something Creaks', desc: 'Find the hidden attic hatch', p: function () { return [ev('atFound') ? 1 : 0, 1]; } });
+  A.push({ id: 'at_ladder', cat: 'Attic', icon: '\uD83E\uDE9C', name: 'Ladder Lugger', desc: 'Borrow Gary\u2019s ladder and set it up under the hatch', p: function () { return [(ev('atLadderGet') ? 1 : 0) + (ev('atLadder') ? 1 : 0), 2]; } });
+  A.push({ id: 'at_fuse', cat: 'Attic', icon: '\u26A1', name: 'Fuse Fixer', desc: 'Sort Larry\u2019s fuse rack and install the fuse', p: function () { return [(ev('atFuse') ? 1 : 0) + (ev('atFuseIn') ? 1 : 0), 2]; } });
+  A.push({ id: 'at_reunion', cat: 'Attic', icon: '\uD83E\uDD17', name: 'Family Reunion', desc: 'Bring Larry\u2019s postcard to his little brother Gary', p: function () { return [ev('atReunion') ? 1 : 0, 1]; } });
+  A.push({ id: 'at_ghost', cat: 'Attic', icon: '\uD83D\uDC7B', name: 'Lantern Lit', desc: 'Beat the target score on Ghost Lantern \u201983', p: function () { return [ev('atGhost') ? 1 : 0, 1]; } });
+  A.push({ id: 'at_open', cat: 'Attic', icon: '\uD83C\uDFDA\uFE0F', name: 'Up We Go', desc: 'Crack the keypad and climb into the Mysterious Attic', p: function () { return [ev('atOpen') ? 1 : 0, 1]; } });
+  A.push({ id: 'at_clues', cat: 'Attic', icon: '\uD83D\uDD0D', name: 'Clue Hunter', desc: 'Find all 3 clues in the attic', p: function () { return [Math.min(3, ev('atClues')), 3]; } });
+  A.push({ id: 'at_library', cat: 'Attic', icon: '\uD83D\uDCDA', name: 'Bookworm', desc: 'Open the long corridor and the library\u2019s secret bookcase', p: function () { return [(ev('atDoor1') ? 1 : 0) + (ev('atBooks') ? 1 : 0), 2]; } });
+  A.push({ id: 'at_stars', cat: 'Attic', icon: '\uD83D\uDD2D', name: 'Stargazer', desc: 'Find a ghost constellation through the observatory telescope', p: function () { return [ev('atStars') ? 1 : 0, 1]; } });
+  A.push({ id: 'at_orbs', cat: 'Attic', icon: '\uD83D\uDD2E', name: 'Marble Collector', desc: 'Find all 8 spirit marbles hidden around the attic', p: function () { return [Math.min(8, ev('atOrbs')), 8]; } });
+  A.push({ id: 'at_weekly', cat: 'Attic', icon: '\u2699\uFE0F', name: 'Weekly Ghostbuster', desc: 'Solve the attic\u2019s weekly puzzle room', p: function () { return [ev('atWeekly') ? 1 : 0, 1]; } });
+  A.push({ id: 'at_opus', cat: 'Attic', icon: '\uD83C\uDFBC', name: 'Mystery Opus', desc: 'Find a week\u2019s hidden sheet of mystery music', p: function () { return [ev('atOpus') ? 1 : 0, 1]; } });
   A.push({ id: 'gal_pick', cat: 'Arcade', icon: '\uD83E\uDDE2', name: 'Gus Jr. Approved', desc: 'Visit the Game Gallery and ask Gus Jr. the 2nd what to play', p: function () { return [(ev('galVisit') ? 1 : 0) + (ev('gjRec') ? 1 : 0), 2]; } });
   A.push({ id: 'fc_chef', cat: 'Arcade', icon: '\uD83D\uDC68\u200D\uD83C\uDF73', name: 'Sous Chef', desc: 'Cook a PERFECT pizza with Chef Gio', p: function () { return [ev('fcPerfect') ? 1 : 0, 1]; } });
   A.push({ id: 'rf_party', cat: 'Arcade', icon: '\uD83C\uDF86', name: 'Party Animal', desc: 'Dance on the rooftop floor and launch a firework', p: function () { return [(ev('rfDance') ? 1 : 0) + (ev('rfFirework') ? 1 : 0), 2]; } });
