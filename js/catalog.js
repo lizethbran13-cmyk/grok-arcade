@@ -44,7 +44,9 @@ GA.MAIN_GAMES = [
   { id: 'disaster', mp: true, name: 'Grok Disaster Zone', desc: 'Survive cartoon disasters! A kaiju attack, tornadoes, meteors, tsunamis, lightning, volcanoes, quakes, blizzards and an alien invasion on 4 maps. Hide in bunkers, basements and rooftops, earn coins, buy upgrades, and team up with up to 3 friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-disaster/', color: '#ff7b00', color2: '#7b5cd6' },
   { id: 'hunters', mp: true, name: 'Grok Monster Hunters', desc: 'A cartoony 3D co-op monster hunting adventure! Tame 13 big monsters across 6 regions (forest, canyon, marsh, volcano, frozen peaks and the Starfall Summit boss) with 5 weapons, combos, dodge rolls and lock-on. Forge gear, cook meals, decorate your house in Pawprint Village, bring your buddy Mochi, and hunt with up to 3 friends online!',
-    url: 'https://lizethbran13-cmyk.github.io/grok-hunters/', color: '#f59e0b', color2: '#22d3ee' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-hunters/', color: '#f59e0b', color2: '#22d3ee' },
+  { id: 'ratita', mp: true, name: 'Grok Ratita Rescue', desc: 'A cartoony 3D platformer! Play as Luna, Pi-rat or Snowie and sneak through a GIANT house: kitchen, living room, vents, garden, garage, toy room and attic. Grab cheese, rescue baby rats, earn Ratita Industries gadgets (glider, grapple tail, jet tail...), dodge Candy the schnauzer and beat 7 goofy bosses. Martina the tortoise helps out! Co-op for 3 online.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-ratita/', color: '#ff4fa0', color2: '#ffd23f' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -70,7 +72,8 @@ GA.BONUS_GAMES = [
   { id: 'drift', name: 'Spark Drift', desc: 'Corners ahead! HOLD to drift and charge the sparks blue, orange, PURPLE, then let go for a mini-turbo. Hold too long and you spin out! A Grok Kart Party game.', color: '#c084fc', color2: '#ff4fd8' },
   { id: 'meteor', name: 'Meteor Mayhem', desc: 'Meteors rain on Grok City! Red circles show where they will land, so drag to run out of the way. Grab coins and gold stars, and score CLOSE CALLS for near misses. A Grok Disaster Zone game.', color: '#ff7b00', color2: '#7b5cd6' },
   { id: 'ghost', name: 'Ghost Lantern \u201983', desc: 'A dusty 1983 cabinet from the basement! Friendly ghosts drift toward your candle. TAP them to catch them in your lantern before they blow it out. Big grumpy ghosts need 3 taps, golden ghosts are worth 5. 3 candles. Rumor says a high score shows a secret code\u2026', color: '#a7f3d0', color2: '#7c3aed' },
-  { id: 'tame', name: 'Tame Rush', desc: 'A big cartoon monster stomps around! Drag to run in close and your hunter swings by itself. Dodge the RED stomp circles and tail sweeps, hit the glowing weak spot for extra points, and tame monster after monster. A Grok Monster Hunters game.', color: '#f59e0b', color2: '#22d3ee' }
+  { id: 'tame', name: 'Tame Rush', desc: 'A big cartoon monster stomps around! Drag to run in close and your hunter swings by itself. Dodge the RED stomp circles and tail sweeps, hit the glowing weak spot for extra points, and tame monster after monster. A Grok Monster Hunters game.', color: '#f59e0b', color2: '#22d3ee' },
+  { id: 'swing', name: 'Tail Swing', desc: 'Luna zips through the giant kitchen with her Grapple Tail! HOLD to grab a glowing ring and swing, LET GO to fly. Grab crumbs and cheese, and don\u2019t fall where Candy can boop you! A Grok Ratita Rescue game.', color: '#3ff0ff', color2: '#ff4fa0' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };

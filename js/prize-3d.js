@@ -931,6 +931,31 @@
     g.userData.tick = function (t) { if (oldTick) oldTick(t); o.position.y = 0.75 + Math.sin(t * 2) * 0.03; orb.rotation.y = t * 1.1; sw.rotation.y = hm.rotation.y = Math.sin(t) * 0.4; };
     return g;
   }
+  /* ---------- Grok Ratita Rescue prizes ---------- */
+  function cheese3(par, s, x, y, z) { var sh = new T.Shape(); sh.moveTo(-0.16, 0); sh.lineTo(0.16, 0); sh.lineTo(0.16, 0.12); sh.closePath();
+    var m = add(par, G('rrcheese', function () { var e = new T.ExtrudeGeometry(sh, { depth: 0.12, bevelEnabled: true, bevelSize: 0.01, bevelThickness: 0.01, bevelSegments: 2 }); e.translate(0, -0.05, -0.06); return e; }), shiny('#ffcf3a', 70), x, y, z); m.scale.setScalar(s);
+    [[0.06, 0.03], [-0.04, 0.015], [0.11, 0.07]].forEach(function (q) { add(m, sph(0.018, 10), lam('#e8a317'), q[0], q[1] - 0.05, 0.065, 1, 1, 0.4); }); return m; }
+  function kcCheese() { var g = new T.Group(); keyRing(g, 0.9); var o = grp(g, 0, 0.45, 0); cheese3(o, 1.3, 0, 0, 0); g.userData.tick = function (t) { o.rotation.y = Math.sin(t * 1.5) * 0.5; }; return g; }
+  function rrGoggles() { var g = new T.Group(); add(g, tor(0.2, 0.025, Math.PI, 8, 28), lam('#7c2d6b'), 0, 0.12, -0.02);
+    [-1, 1].forEach(function (s) { add(g, cyl(0.085, 0.085, 0.06, 24), shiny('#4b5563', 80), s * 0.1, 0.12, 0.05).rotation.x = Math.PI / 2; add(g, cyl(0.065, 0.065, 0.02, 24), glow('#3ff0ff'), s * 0.1, 0.12, 0.085).rotation.x = Math.PI / 2; });
+    var gr = add(g, cyl(0.04, 0.04, 0.02, 8), shiny('#ffd23f', 70), 0.22, 0.17, 0.02); gr.rotation.z = Math.PI / 2; g.userData.hat = { y: -0.02, s: 0.85 }; g.userData.tick = function (t) { gr.rotation.x = t * 2; }; return g; }
+  function piratPlush() { var g = new T.Group(), b = grp(g, 0, 0, 0), F = lam('#c99a6b'), Fl = lam('#e2bf96'), Pk = lam('#f9a8d4');
+    add(b, sph(0.17, 24), F, 0, 0.18, 0, 1, 0.9, 1.15); add(b, sph(0.11, 18), Fl, 0, 0.16, 0.1, 1, 0.9, 0.6);
+    var hd = grp(b, 0, 0.36, 0.08); add(hd, sph(0.12, 22), F, 0, 0, 0, 1, 0.95, 1.05); add(hd, cone(0.07, 0.12, 16), F, 0, -0.02, 0.12).rotation.x = Math.PI / 2; add(hd, sph(0.025, 10), Pk, 0, -0.02, 0.19);
+    [-1, 1].forEach(function (s) { add(hd, sph(0.06, 14), Pk, s * 0.09, 0.1, -0.02, 1, 1, 0.35); });
+    add(hd, sph(0.02, 10), lam('#16101f'), 0.045, 0.03, 0.105); add(hd, tor(0.022, 0.006, Math.PI, 6, 12), lam('#2a1d1d'), -0.045, 0.025, 0.105);
+    add(hd, tor(0.115, 0.022, 7, 8, 26), lam('#ef4444'), 0, 0.05, 0).rotation.x = Math.PI / 2 - 0.2;
+    var tl = grp(b, 0, 0.08, -0.17); add(tl, cyl(0.012, 0.02, 0.28, 8), Pk, 0, 0, -0.12).rotation.x = -1.2; tag(b, 0.13, 0.1, 0.1);
+    g.userData.tick = function (t) { hd.rotation.z = Math.sin(t * 1.6) * 0.1; tl.rotation.y = Math.sin(t * 3) * 0.5; }; return g; }
+  function martinaFig() { var g = new T.Group(); add(g, cyl(0.26, 0.29, 0.07, 28), lam('#7c4a22'), 0, 0.035, 0);
+    var tt = grp(g, 0, 0.08, 0); add(tt, sph(0.22, 28), shiny('#a16207', 40), 0, 0.06, 0, 1, 0.6, 1.1); for (var i = 0; i < 7; i++) { var a = i / 7 * Math.PI * 2; add(tt, sph(0.05, 10), shiny('#ca8a04', 40), Math.cos(a) * 0.12, 0.17, Math.sin(a) * 0.14, 1, 0.4, 1); }
+    var hd = grp(tt, 0, 0.06, 0.25); add(hd, sph(0.07, 16), lam('#a3a37a'), 0, 0, 0, 1, 0.9, 1.2); eyes(hd, 0.02, 0.06, 0.035, 0.012);
+    [[-0.12, -0.12], [0.12, -0.12], [-0.12, 0.12], [0.12, 0.12]].forEach(function (q) { add(tt, sph(0.045, 10), lam('#a3a37a'), q[0], -0.03, q[1], 1, 0.7, 1); });
+    ['#a9afbd', '#c99a6b', '#fbfbff'].forEach(function (c, k) { var r = grp(tt, -0.09 + k * 0.09, 0.2, -0.02 + (k % 2) * 0.04); add(r, sph(0.035, 12), lam(c), 0, 0, 0, 1, 0.85, 1.3); add(r, sph(0.022, 10), lam(c), 0, 0.02, 0.04); add(r, sph(0.012, 8), lam('#f9a8d4'), 0.015, 0.045, 0.03); });
+    g.userData.tick = function (t) { hd.position.y = 0.06 + Math.sin(t * 2) * 0.012; hd.rotation.y = Math.sin(t * 0.9) * 0.4; }; return g; }
+  function ratitaCup() { var g = trophy('#ffcf3a', true), oldTick = g.userData.tick; var o = grp(g, 0, 0.75, 0); cheese3(o, 0.6, 0.34, 0, 0);
+    var gr = add(o, cyl(0.06, 0.06, 0.025, 10), shiny('#3ff0ff', 80), -0.17, 0, 0.29); gr.rotation.x = Math.PI / 2; var cr = grp(o, -0.17, 0.02, -0.29); for (var i = 0; i < 5; i++) { var a = i / 5 * Math.PI * 2; add(cr, cone(0.012, 0.04, 6), shiny('#ffd23f', 90), Math.cos(a) * 0.035, 0.02, Math.sin(a) * 0.035); } add(cr, cyl(0.04, 0.04, 0.02, 14), shiny('#ffd23f', 90), 0, 0, 0);
+    g.userData.tick = function (t) { if (oldTick) oldTick(t); o.rotation.y = t * 0.8; o.position.y = 0.75 + Math.sin(t * 2) * 0.03; gr.rotation.y = t * 2; }; return g; }
   /* ---------- Grok Sports Command prizes ---------- */
   function bBall(par, r, x, y, z) { var b = add(par, sph(r, 24), shiny('#f97316', 30), x, y, z); var L = lam('#3b1d0a');
     [0, Math.PI / 2].forEach(function (a) { var m = add(b, tor(r * 1.002, r * 0.04, 7, 6, 36), L); m.rotation.y = a; }); var e = add(b, tor(r * 1.002, r * 0.04, 7, 6, 36), L); e.rotation.x = Math.PI / 2; return b; }
@@ -1113,6 +1138,7 @@
     pl_chinchino: chinPlush, kc_seeker: seekerKc, kart_helmet: racingHelmet, kart_model: partyKart, tr_kart: kartCup,
     pl_mvp: mvpPlush, kc_hoop: kcHoop, sw_band: sweatband, gold_pin: goldenPin, tr_sports: sportsCup,
     kc_duck: kcDuck, hard_hat: hardHat, pl_roargon: roargonPlush, ufo_model: ufoModel, tr_disaster: disasterCup,
+    kc_cheese: kcCheese, rr_goggles: rrGoggles, pl_pirat: piratPlush, md_martina: martinaFig, tr_ratita: ratitaCup,
     kc_puffhorn: kcPuffhorn, raptor_helm: raptorHelm, pl_mochi: mochiPlush, starfang_statue: starfangStatue, tr_hunters: huntersCup,
     pl_chef: chefPlush, party_hat: partyHat, disco_ball: discoBall, gold_key: goldKey, retro_cab: retroCabModel,
     pl_embercub: function () { return critterPlush('embercub'); }, pl_puddlepup: function () { return critterPlush('puddlepup'); }, pl_leafkit: function () { return critterPlush('leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue, pl_gus: gusPlush, kc_stamp: kcStamp, dlc_replica: dlcReplica,
@@ -1122,7 +1148,7 @@
     tr_bronze: function () { return trophy('#cd7f32'); }, tr_silver: function () { return trophy('#c0c7d0'); }, tr_gold: function () { return trophy('#ffcf3a', true); }, golden_joy: goldenJoy
   };
   Object.keys(FIGHTERS).forEach(function (k) { BUILD['pl_' + k] = function () { return fighter(k); }; });
-  var HATS = { cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1, ears_hat: 1, goggles_hat: 1, pb_visor: 1, sw_band: 1, kart_helmet: 1, hard_hat: 1, party_hat: 1 };
+  var HATS = { rr_goggles: 1, cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1, ears_hat: 1, goggles_hat: 1, pb_visor: 1, sw_band: 1, kart_helmet: 1, hard_hat: 1, party_hat: 1 };
 
   function build(id) {
     if (/^ach:/.test(id)) return medal(id.slice(4));

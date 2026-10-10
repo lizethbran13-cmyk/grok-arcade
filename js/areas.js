@@ -1091,7 +1091,7 @@
     { id: 'sport', name: 'SPORTS', icon: '\uD83C\uDFC6', col: '#38bdf8', ids: ['fc', 'pickle', 'sports'], wall: 'E', from: -10.4, slots: 6 },
     { id: 'more', name: 'MORE GAMES', icon: '\u2728', col: '#e879f9', ids: [], wall: 'E', from: 0.6, slots: 5 },
     { id: 'life', name: 'LIFE SIMS', icon: '\uD83C\uDFE1', col: '#facc15', ids: ['pets', 'life', 'disaster'], wall: 'S', from: 75.0, slots: 6 },
-    { id: 'party', name: 'PARTY', icon: '\uD83C\uDF89', col: '#ff4fd8', ids: ['party', 'brawl'], wall: 'S', from: 87.2, slots: 6 }];
+    { id: 'party', name: 'PARTY', icon: '\uD83C\uDF89', col: '#ff4fd8', ids: ['party', 'brawl', 'ratita'], wall: 'S', from: 87.2, slots: 6 }];
   var GSTEP = 1.75;
   function slotPos(sec, k) { var d = sec.from + k * GSTEP;
     if (sec.wall === 'N') return { x: d, z: GAL.minZ + 0.6, rot: 0 };

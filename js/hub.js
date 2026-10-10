@@ -824,6 +824,23 @@
         g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('METEOR MAYHEM', w / 2, 22);
         break;
       }
+      case 'ratita': {
+        // Ratita Rescue: giant kitchen, three rats running along the counter, Candy peeking, cheese bouncing
+        var gr1 = g.createLinearGradient(0, 0, 0, h); gr1.addColorStop(0, '#ffe8c2'); gr1.addColorStop(0.62, '#ffd2a1'); gr1.addColorStop(0.63, '#5b6b8c'); gr1.addColorStop(0.67, '#f7f2e8'); gr1.addColorStop(1, '#e9dfcc'); g.fillStyle = gr1; g.fillRect(0, 0, w, h);
+        g.strokeStyle = 'rgba(214,160,120,.35)'; g.lineWidth = 1; for (i = 0; i < w; i += 18) { g.beginPath(); g.moveTo(i, 30); g.lineTo(i, h * 0.62); g.stroke(); }
+        g.fillStyle = '#9ca3af'; g.beginPath(); g.ellipse(w * 0.86, h * 0.56, 26, 18, 0, 0, 7); g.fill(); g.fillStyle = '#e5e7eb'; g.beginPath(); g.ellipse(w * 0.8, h * 0.6, 12, 8, 0, 0, 7); g.fill(); g.fillStyle = '#111'; g.beginPath(); g.arc(w * 0.74, h * 0.58, 3, 0, 7); g.fill(); g.beginPath(); g.arc(w * 0.85, h * 0.5, 2, 0, 7); g.fill();
+        ['#a9afbd', '#c99a6b', '#fbfbff'].forEach(function (c, k) { var rx = ((t * 40 + k * 46) % (w * 0.7)) + 10, ry = h * 0.6 - Math.abs(Math.sin(t * 6 + k)) * 10; g.fillStyle = c; g.beginPath(); g.ellipse(rx, ry, 11, 7, 0, 0, 7); g.fill(); g.beginPath(); g.ellipse(rx + 9, ry - 3, 6, 5, 0, 0, 7); g.fill(); g.fillStyle = '#f9a8d4'; g.beginPath(); g.arc(rx + 6, ry - 8, 3, 0, 7); g.fill(); g.strokeStyle = '#f9a8d4'; g.lineWidth = 2; g.beginPath(); g.moveTo(rx - 10, ry); g.lineTo(rx - 20, ry - 5); g.stroke(); });
+        var cy9 = h * 0.4 + Math.sin(t * 3) * 6; g.fillStyle = '#ffd23f'; g.beginPath(); g.moveTo(w * 0.5 - 14, cy9 + 8); g.lineTo(w * 0.5 + 14, cy9 + 8); g.lineTo(w * 0.5 + 14, cy9 - 6); g.closePath(); g.fill();
+        g.fillStyle = '#ff4fa0'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK RATITA RESCUE', w / 2, 24);
+        break;
+      }
+      case 'swing': {
+        g.fillStyle = '#fff3e0'; g.fillRect(0, 0, w, h); g.fillStyle = '#f28c8c'; g.fillRect(0, h * 0.82, w, h * 0.18);
+        for (i = 0; i < 3; i++) { var rxs = ((i * w / 2.4) - (t * 30) % (w / 2.4)) + 30; g.fillStyle = '#9ca3af'; g.fillRect(rxs - 1, 30, 2, h * 0.3 - 40); g.strokeStyle = '#3ff0ff'; g.lineWidth = 3; g.beginPath(); g.arc(rxs, h * 0.3, 7, 0, 7); g.stroke(); }
+        var ax = w * 0.45 + Math.sin(t * 2.4) * 40, ay = h * 0.3 + Math.cos(t * 2.4) * 22 + 40; g.strokeStyle = '#f9a8d4'; g.lineWidth = 2; g.beginPath(); g.moveTo(w * 0.45, h * 0.3); g.lineTo(ax, ay); g.stroke(); g.fillStyle = '#a9afbd'; g.beginPath(); g.ellipse(ax, ay, 10, 7, 0, 0, 7); g.fill();
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#ff4fa0'; g.fillText('TAIL SWING', w / 2, 22);
+        break;
+      }
       case 'lockpick': {
         g.fillStyle = '#1a0f2e'; g.fillRect(0, 0, w, h); g.fillStyle = '#d9b46a'; rrF(g, w * 0.12, h * 0.28, w * 0.76, h * 0.5, 10); g.fillStyle = '#5a4520'; g.fillRect(w * 0.15, h * 0.52, w * 0.7, h * 0.18);
         g.strokeStyle = '#4ade80'; g.lineWidth = 2; g.setLineDash([5, 4]); g.beginPath(); g.moveTo(w * 0.14, h * 0.52); g.lineTo(w * 0.86, h * 0.52); g.stroke(); g.setLineDash([]);

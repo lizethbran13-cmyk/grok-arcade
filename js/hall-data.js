@@ -1688,5 +1688,76 @@ GA.HALL_DATA = {
 "cover": "assets/hall/hunters/cover.webp",
 "quip": "A cat in a helmet tamed a giant fluffy rhino right outside my Hall. It wanted a belly rub. I filed a complaint.",
 "noOld": "Grok Monster Hunters just set up camp. No old versions yet. Please leave the Starfang outside."
+},
+"ratita": {
+"repo": "grok-ratita",
+"history": [
+{
+"date": "Oct 10",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A bright cartoon 3D platformer with soft shadows, glow and real 3D props everywhere. Luna, Pi-rat and Snowie sneak through 7 rooms of a GIANT house (kitchen, living room, vent tunnels, garden, garage, toy room, attic) to rescue 21 baby rats, collect cheese and Ratita Industries gadget parts, and beat 7 goofy bosses. Earn a new gadget in every room (glider, grapple tail, magnet whiskers, jet tail, bubble shield, mega blaster), buy upgrades and hats at Ratita HQ, dodge Candy the schnauzer and get help from Martina the tortoise. Co-op for 3 online."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/ratita/1.webp",
+"cap": "Ratita HQ, the rats' secret base",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratita/2.webp",
+"cap": "Countertop Caper in the giant kitchen",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratita/3.webp",
+"cap": "Toastzilla, the kitchen boss",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratita/4.webp",
+"cap": "Sneaking past the living room couch",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratita/5.webp",
+"cap": "Fans and grapple rings in the Vent Tunnels",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratita/6.webp",
+"cap": "Candy is awake in the Garden!",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratita/7.webp",
+"cap": "Grease Garage: tires, bikes and tool shelves",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratita/8.webp",
+"cap": "Blocktopia in the Toy Room",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratita/9.webp",
+"cap": "Moonlit beams in the Attic",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/ratita/cover.webp",
+"quip": "Three rats ran through my Hall with a cheese wedge and a grappling hook. I didn't even know rats could zip-line.",
+"noOld": "Grok Ratita Rescue just scurried in. No old versions yet. Please keep the cheese off the exhibits."
 }
 };

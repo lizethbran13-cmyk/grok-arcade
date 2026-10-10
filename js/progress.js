@@ -80,6 +80,7 @@
     hoop: [45, 'Hoop Hero', 'Score 45 in Hoop Frenzy', '\uD83C\uDFC0'],
     drift: [40, 'Drift King', 'Score 40 in Spark Drift', '\uD83C\uDFCE\uFE0F'],
     meteor: [40, 'Disaster Master', 'Score 40 in Meteor Mayhem', '\u2604\uFE0F'],
+    swing: [40, 'Tail Swinger', 'Score 40 in Tail Swing', '\uD83D\uDC00'],
     tame: [60, 'Monster Tamer', 'Score 60 in Tame Rush', '\uD83D\uDC32'],
     lockpick: [40, 'Master Locksmith', 'Score 40 in Lockpick Panic', '\uD83D\uDD10'],
     ghost: [45, 'Lantern Legend', 'Score 45 in Ghost Lantern \u201983', '\uD83C\uDFEE']
@@ -147,6 +148,8 @@
   A.push({ id: 'all_star', cat: 'Prizes', icon: '\u2B50', name: 'All-Star', desc: 'Own the MVP Bear Plush, the Golden Bowling Pin and the Sports Command Cup', p: function () { return [['pl_mvp', 'gold_pin', 'tr_sports'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'meteor_close', cat: 'High Scores', icon: '\uD83D\uDE2E', name: 'Daredevil', desc: 'Get 10 CLOSE CALLS in one game of Meteor Mayhem', p: function () { return [ev('meteorClose10') ? 1 : 0, 1]; } });
   A.push({ id: 'storm_chaser', cat: 'Prizes', icon: '\uD83C\uDF2A\uFE0F', name: 'Storm Chaser', desc: 'Own the Roargon Plush, the Area 51 UFO Model and the Disaster Survivor Cup', p: function () { return [['pl_roargon', 'ufo_model', 'tr_disaster'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
+  A.push({ id: 'swing_rings', cat: 'High Scores', icon: '\uD83E\uDE9D', name: 'Ring Zipper', desc: 'Swing from 25 rings in one game of Tail Swing', p: function () { return [ev('swing25') ? 1 : 0, 1]; } });
+  A.push({ id: 'house_hero', cat: 'Prizes', icon: '\uD83E\uDDC0', name: 'House Hero', desc: 'Own the Pi-rat Plush, the Martina & Friends Figure and the House Rescued Cup', p: function () { return [['pl_pirat', 'md_martina', 'tr_ratita'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'tame_three', cat: 'High Scores', icon: '\uD83D\uDC96', name: 'Beast Friend', desc: 'Tame 3 monsters in one game of Tame Rush', p: function () { return [ev('tame3') ? 1 : 0, 1]; } });
   A.push({ id: 'hunter_master', cat: 'Prizes', icon: '\uD83D\uDDE1\uFE0F', name: 'Master Hunter', desc: 'Own the Mochi Buddy Plush, the Starfang Statue and the Monster Hunters Cup', p: function () { return [['pl_mochi', 'starfang_statue', 'tr_hunters'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'designer', cat: 'Arcade', icon: '\uD83D\uDCA1', name: 'Game Designer', desc: 'Send your first patch suggestion from the Suggestion Booth', p: function () { return [ev('suggest') ? 1 : 0, 1]; } });
