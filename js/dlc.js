@@ -43,6 +43,10 @@
   /* tickets can never go below zero */
   D.spend = function (n) { n = Math.max(0, Math.floor(+n || 0)); if (tix() < n) return false; GA.store.set('tickets', tix() - n); refreshTix(); return true; };
   D.price = function (sizeId) { return sizeOf(sizeId).price; };
+  /* starter vouchers: your first Mini, first Expansion and first MEGA pack are free (David's patch) */
+  var K_VOUCH = 'grokArcade.dlcVouchersUsed';
+  D.free = function (sizeId) { return !load(K_VOUCH, {})[sizeId]; };
+  D.costOf = function (it) { return D.free(it.size) ? 0 : (it.price || D.price(it.size)); };
   D.ideaCost = function () { return load(K_FREE, 0) ? GA.DLC_IDEA_COST : 0; };
   D.key = function (item) { return 'grokDLC.' + item.game + '.' + item.id; };
   D.owns = function (item) { if (typeof item === 'string') item = D.find(item); if (!item) return false; try { return !!localStorage.getItem(D.key(item)); } catch (e) { return !!load(K_OWNED, {})[item.game + '.' + item.id]; } };
@@ -50,15 +54,16 @@
   D.buy = function (id) {
     var it = D.find(id); if (!it) return { ok: false, why: 'unknown' };
     if (D.owns(it)) return { ok: false, why: 'owned' };
-    var price = it.price || D.price(it.size);
+    var free = D.free(it.size), price = D.costOf(it);
     if (tix() < price) return { ok: false, why: 'tickets', need: price - tix() };
     if (!D.spend(price)) return { ok: false, why: 'tickets', need: price - tix() };
+    if (free) { var vu = load(K_VOUCH, {}); vu[it.size] = it.game + '.' + it.id; store(K_VOUCH, vu); }
     var rec = { owned: true, id: it.id, game: it.game, name: it.name, t: Date.now(), from: 'grok-arcade' };
     try { localStorage.setItem(D.key(it), JSON.stringify(rec)); } catch (e) {}
     var o = load(K_OWNED, {}); o[it.game + '.' + it.id] = rec.t; store(K_OWNED, o);
     try { var all = JSON.parse(localStorage.getItem('grokDLC.owned') || '[]'); if (all.indexOf(D.key(it)) < 0) all.push(D.key(it)); localStorage.setItem('grokDLC.owned', JSON.stringify(all)); } catch (e) {}
     if (GA.Prog) GA.Prog.event('dlcBuy');
-    return { ok: true, left: tix(), key: D.key(it) };
+    return { ok: true, left: tix(), key: D.key(it), free: free };
   };
 
   /* ---------- composing an idea ---------- */
@@ -131,17 +136,19 @@
   function renderShop() {
     var list = GA.DLC_SHOP;
     var h = '<div class="dlcShopHead">Shipped DLC you can unlock. Buying one unlocks it in that game right away (same save, just refresh the game).</div>';
+    var vl = GA.DLC_SIZES.filter(function (z) { return D.free(z.id); });
+    h += '<div class="dlcShopHead" style="background:linear-gradient(90deg,#ffe066,#ff8fd8);color:#3a1450;font-weight:800;border-radius:12px;padding:8px 10px">\uD83C\uDF81 STARTER VOUCHERS: ' + (vl.length ? 'your first ' + vl.map(function (z) { return z.name; }).join(', ') + ' ' + (vl.length > 1 ? 'are' : 'is') + ' FREE!' : 'all used. Thanks for being a DLC legend!') + '</div>';
     if (!list.length) h += '<div class="sbEmpty">\uD83D\uDCE6 Nothing shipped yet!<br>When a DLC idea from the board gets built, it shows up here to unlock with tickets.<br><small>Prices: Mini Pack 25 \u00b7 Expansion 75 \u00b7 MEGA 200</small></div>';
     h += list.map(function (it) {
-      var g = GA.findGame(it.game) || { name: it.game, color: '#ff4fd8' }, s = sizeOf(it.size), price = it.price || s.price, own = D.owns(it), can = tix() >= price;
+      var g = GA.findGame(it.game) || { name: it.game, color: '#ff4fd8' }, s = sizeOf(it.size), price = D.costOf(it), free = price === 0, own = D.owns(it), can = tix() >= price;
       return '<div class="dlcItem' + (own ? ' owned' : ' locked') + '" data-dlc="' + esc(it.game + '.' + it.id) + '" style="--c:' + g.color + '"><div class="sbTop"><span class="sbSt ' + (own ? 'done' : 'new') + '">' + (own ? '\u2705 OWNED' : '\uD83D\uDD12 LOCKED') + '</span><span class="sbGameTag">' + esc(g.name) + '</span><span class="sbType">' + s.icon + ' ' + esc(s.name) + '</span></div>' +
         '<div class="sbTitle">' + esc(it.name) + '</div><div class="sbLast">' + esc(it.desc || '') + '</div>' +
-        (own ? '<div class="sbMeta">Unlocked in ' + esc(g.name) + '. Have fun!' + (g.url ? ' <a class="dlcPlay" href="' + esc(g.url) + '" target="_blank" rel="noopener">\u25B6 PLAY</a>' : '') + '</div>' : '<button class="bigBtn dlcBuy" data-buy="' + esc(it.game + '.' + it.id) + '"' + (can ? '' : ' disabled') + '>' + (can ? '\uD83C\uDF9F\uFE0F UNLOCK \u00b7 ' + price : 'NEED ' + (price - tix()) + ' MORE') + '</button>') + '</div>';
+        (own ? '<div class="sbMeta">Unlocked in ' + esc(g.name) + '. Have fun!' + (g.url ? ' <a class="dlcPlay" href="' + esc(g.url) + '" target="_blank" rel="noopener">\u25B6 PLAY</a>' : '') + '</div>' : '<button class="bigBtn dlcBuy" data-buy="' + esc(it.game + '.' + it.id) + '"' + (can ? '' : ' disabled') + '>' + (free ? '\uD83C\uDF81 UNLOCK FREE \u00b7 starter voucher' : can ? '\uD83C\uDF9F\uFE0F UNLOCK \u00b7 ' + price : 'NEED ' + (price - tix()) + ' MORE') + '</button>') + '</div>';
     }).join('');
     $('dlcBody').innerHTML = h;
     Array.prototype.forEach.call(document.querySelectorAll('.dlcBuy'), function (b) { b.addEventListener('click', function () {
       var r = D.buy(b.getAttribute('data-buy'));
-      if (r.ok) { snd('win'); toast('\uD83C\uDF81 DLC unlocked! Open the game to play it.', 3600); gus('Unlocked. Receipt filed. Don\u2019t lose it.'); }
+      if (r.ok) { snd('win'); toast('\uD83C\uDF81 DLC unlocked' + (r.free ? ' FREE with your starter voucher' : '') + '! Open the game to play it.', 3600); gus(r.free ? 'Free?! Who approved this. ...Fine. Stamped.' : 'Unlocked. Receipt filed. Don\u2019t lose it.'); renderShop(); }
       else { snd('buzz'); toast(r.why === 'tickets' ? 'You need ' + r.need + ' more tickets.' : 'Already yours!'); }
       renderShop(); refreshTix();
     }); });
