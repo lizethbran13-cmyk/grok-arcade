@@ -1505,7 +1505,9 @@
     want = Math.min(cdist, dd - step);
     C.cur += (want - C.cur) * Math.min(1, dt * (want < C.cur ? 20 : 4));
     camera.position.set(tx + bx * C.cur, ty + by * C.cur, tz + bz * C.cur);
-    camera.lookAt(tx, ty + 0.25 - 0.3 * C.nb, tz);
+    var ah = ct && ct.ahead ? ct.ahead * (1 - C.nb) : 0; // indoor rooms look a little past you so you see the room
+    camera.lookAt(tx - Math.sin(C.yaw) * ah, ty + 0.25 - 0.3 * C.nb, tz - Math.cos(C.yaw) * ah);
+    var f0 = camera.userData.fov0 || 58, fov = ct && ct.fov ? f0 + ct.fov : f0; if (Math.abs(camera.fov - fov) > 0.05) { camera.fov += (fov - camera.fov) * Math.min(1, dt * 4); camera.updateProjectionMatrix(); }
     // claw machine close-up: blend smoothly into / out of the machine's camera
     if (camOv || camK > 0) {
       if (camOv) { var ca = camOv(); if (ca) camLast = ca; }
@@ -1551,7 +1553,7 @@
     var w = window.innerWidth, h = window.innerHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    camera.fov = w < h ? 70 : 58;
+    camera.fov = camera.userData.fov0 = w < h ? 70 : 58;
     C.dist = w < h ? 7.0 : 6.2;
     camera.updateProjectionMatrix();
   }

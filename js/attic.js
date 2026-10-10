@@ -498,7 +498,7 @@
         dust beams, hanging spiders, wandering ghosts). Floor furniture is audited + solid; small things
         sitting on furniture are decoration only.
      ========================================================================================= */
-  var CAM = { attic: { pitch: 0.8, dist: 5.6 }, attic2: { pitch: 0.78, dist: 5.6 }, attic3: { pitch: 0.7, dist: 6.0 }, maint: { pitch: 0.82, dist: 5.2 } };
+  var CAM = { attic: { pitch: 0.46, dist: 5.4, ahead: 2.2, fov: 8 }, attic2: { pitch: 0.44, dist: 5.6, ahead: 2.2, fov: 8 }, attic3: { pitch: 0.42, dist: 6.0, ahead: 2.0, fov: 6 }, maint: { pitch: 0.5, dist: 5.2, ahead: 2.0, fov: 10 } };
   AT.CAM = CAM;
   var FLAMES = [];
   function flame(par, x, y, z, s) { var f = add(par, sp(0.035 * (s || 1), 8), gl('#ffc14d'), x, y, z); f.scale.y = 1.8; FLAMES.push(f); var g2 = new T.Sprite(new T.SpriteMaterial({ map: A.glowTex, color: '#ffb347', transparent: true, opacity: 0.55, depthWrite: false, blending: T.AdditiveBlending })); g2.scale.set(0.45 * (s || 1), 0.45 * (s || 1), 1); g2.position.set(x, y, z); par.add(g2); return f; }
