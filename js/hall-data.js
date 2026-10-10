@@ -1469,5 +1469,88 @@ GA.HALL_DATA = {
 "cover": "assets/hall/sports/cover.webp",
 "quip": "Ten sports. TEN. Somebody bowled a ball into my filing cabinet already.",
 "noOld": "Grok Sports Command showed up already in uniform. No old versions. No running in the Hall."
+},
+"kart": {
+"repo": "grok-kart",
+"history": [
+{
+"date": "Oct 9",
+"ver": "1.0",
+"title": "Green flag!",
+"text": "A brand new bright cartoon 3D engine built just for karts: glossy paint, soft shadows, bloom and sunny skies. 8 tracks in the Sunny Cup and Star Cup (Grok City, Canyon Rush, Candy Coaster, Breezy Beach, a haunted castle, a snowy pass, a volcano and a neon space road), with ramps, tricks, gliders, boost pads, shortcuts and hazards."
+},
+{
+"date": "Oct 9",
+"ver": "1.0",
+"title": "Ten racers, eleven items",
+"text": "Grok, Martina, Chinchino and seven more racers, kart bodies, wheels, gliders and paint to unlock with coins. Drift mini-turbos (blue, orange, purple), rocket starts, and 11 original items like the homing Seeker, Slime puddles, the Zap shrink and the Nova star."
+},
+{
+"date": "Oct 9",
+"ver": "1.0",
+"title": "Modes for everyone",
+"text": "Grand Prix cups, Time Trial against your own ghost, VS races, Balloon Battle and Coin Runners in two arenas, and online racing for up to 3 friends with a 5-letter code (CPUs fill the grid)."
+},
+{
+"date": "Oct 9",
+"ver": "1.0",
+"title": "Polish lap",
+"text": "Smoother kart backs with tail lights, lighter scenery for phones, a battle camera that never gets stuck in a pillar, and online races that keep everyone connected while a slow phone loads the track."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/kart/1.webp",
+"cap": "The garage stage: your kart on the turntable",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/kart/2.webp",
+"cap": "Grok City Circuit: the pack heading into turn one",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/kart/3.webp",
+"cap": "Candy Coaster: cupcakes, gumdrops and sprinkles",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/kart/4.webp",
+"cap": "The haunted castle at night",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/kart/5.webp",
+"cap": "Gliding over the volcano",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/kart/6.webp",
+"cap": "Neon space road above the planets",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/kart/7.webp",
+"cap": "Balloon Battle in Block Party Plaza",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/kart/8.webp",
+"cap": "Pick your racer, kart, wheels, glider and paint",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/kart/cover.webp",
+"quip": "Karts! In MY Hall! Chinchino did a purple drift right past my desk and I'm still finding sparks.",
+"noOld": "Grok Kart Party just crossed the finish line for the first time. No old versions yet. No drifting in the Hall."
 }
 };

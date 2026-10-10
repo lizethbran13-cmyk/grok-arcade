@@ -739,6 +739,31 @@
         g.fillStyle = '#facc15'; rrF(g, w * 0.08, 6, w * 0.84, 26, 6); g.font = font(16); g.textAlign = 'center'; g.fillStyle = '#1e3a8a'; g.fillText('GROK SPORTS COMMAND', w / 2, 24);
         break;
       }
+      case 'kart': {
+        // kart party: pink-sky candy hills, a curving checkered road and three karts drifting with purple sparks
+        var gk = g.createLinearGradient(0, 0, 0, h); gk.addColorStop(0, '#5b6cff'); gk.addColorStop(0.45, '#ff8fd8'); gk.addColorStop(0.62, '#ffe6a8'); gk.addColorStop(0.63, '#4ade80'); gk.addColorStop(1, '#16a34a'); g.fillStyle = gk; g.fillRect(0, 0, w, h);
+        for (i = 0; i < 4; i++) { g.fillStyle = ['#7cff6b', '#ff7ab6', '#3ff0ff', '#ffe14d'][i]; g.beginPath(); g.ellipse(((i * 70 - t * 12) % (w + 80) + w + 80) % (w + 80) - 40, h * 0.63, 46, 22 + i * 4, 0, Math.PI, 0); g.fill(); }
+        var ry9 = h * 0.63; g.fillStyle = '#ff4fd8'; g.beginPath(); g.moveTo(w * 0.46, ry9); g.lineTo(w * 0.54, ry9); g.lineTo(w * 0.98, h); g.lineTo(w * 0.02, h); g.closePath(); g.fill();
+        g.fillStyle = '#ffb3e6'; g.beginPath(); g.moveTo(w * 0.47, ry9); g.lineTo(w * 0.53, ry9); g.lineTo(w * 0.9, h); g.lineTo(w * 0.1, h); g.closePath(); g.fill();
+        for (i = 0; i < 6; i++) { var q9 = ((i / 6 + t * 0.6) % 1), yy9 = ry9 + (h - ry9) * q9 * q9; g.fillStyle = '#fff'; g.fillRect(w / 2 - 1 - q9 * 2, yy9, 2 + q9 * 4, 2 + q9 * 6); }
+        var kc9 = ['#e11d48', '#3ff0ff', '#ffd23f'];
+        for (i = 0; i < 3; i++) { var kq = 0.35 + i * 0.25, kx9 = w / 2 + Math.sin(t * 1.6 + i * 2) * w * 0.22 * kq, ky9 = ry9 + (h - ry9) * kq * kq + 6, ks9 = 0.5 + kq * 0.7;
+          g.save(); g.translate(kx9, ky9); g.rotate(Math.sin(t * 1.6 + i * 2) * 0.25); g.scale(ks9, ks9);
+          g.fillStyle = '#1f2433'; g.fillRect(-16, 0, 8, 9); g.fillRect(8, 0, 8, 9); g.fillStyle = kc9[i]; rrF(g, -13, -6, 26, 11, 4); g.fillStyle = '#e8f1ff'; rrF(g, -5, -15, 10, 9, 3);
+          for (var sp9 = 0; sp9 < 3; sp9++) { g.fillStyle = (sp9 + ((t * 10) | 0)) % 2 ? '#c084fc' : '#fb923c'; g.beginPath(); g.arc(-14 + Math.random() * 4, 9 + Math.random() * 3, 1.6, 0, 7); g.arc(14 - Math.random() * 4, 9 + Math.random() * 3, 1.6, 0, 7); g.fill(); }
+          g.restore(); }
+        for (i = 0; i < 8; i++) { g.fillStyle = i % 2 ? '#111827' : '#ffffff'; g.fillRect(w * 0.08 + i * (w * 0.84 / 8), 4, w * 0.84 / 8, 4); g.fillStyle = i % 2 ? '#ffffff' : '#111827'; g.fillRect(w * 0.08 + i * (w * 0.84 / 8), 8, w * 0.84 / 8, 4); }
+        g.fillStyle = '#ff4fd8'; rrF(g, w * 0.08, 12, w * 0.84, 24, 6); g.font = font(16); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK KART PARTY', w / 2, 30);
+        break;
+      }
+      case 'drift': {
+        g.fillStyle = '#2a1a7a'; g.fillRect(0, 0, w, h); g.fillStyle = '#ffb3e6'; g.beginPath(); g.moveTo(w * 0.42, h * 0.38); g.lineTo(w * 0.58, h * 0.38); g.lineTo(w, h); g.lineTo(0, h); g.closePath(); g.fill();
+        var cl10 = ((t * 0.7) % 1), col10 = cl10 < 0.33 ? '#38bdf8' : cl10 < 0.66 ? '#fb923c' : '#c084fc';
+        g.save(); g.translate(w / 2, h * 0.78); g.rotate(Math.sin(t * 2) * 0.3); g.fillStyle = '#1f2433'; g.fillRect(-24, 0, 10, 12); g.fillRect(14, 0, 10, 12); g.fillStyle = '#e11d48'; rrF(g, -20, -10, 40, 16, 6); g.fillStyle = '#e8f1ff'; rrF(g, -7, -24, 14, 13, 4);
+        for (i = 0; i < 8; i++) { g.fillStyle = col10; g.beginPath(); g.arc((i % 2 ? 1 : -1) * (20 + Math.random() * 8), 12 + Math.random() * 6, 2.4, 0, 7); g.fill(); } g.restore();
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('SPARK DRIFT', w / 2, 22); g.fillStyle = col10; g.font = font(13); g.fillText('HOLD... LET GO!', w / 2, 44);
+        break;
+      }
       case 'hoop': {
         g.fillStyle = '#1d4ed8'; g.fillRect(0, 0, w, h); g.fillStyle = '#c2410c'; g.fillRect(0, h * 0.72, w, h * 0.28);
         var hx8 = w / 2 + Math.sin(t * 1.6) * w * 0.3; g.fillStyle = '#f8fafc'; rrF(g, hx8 - 26, 34, 52, 34, 3); g.strokeStyle = '#ef4444'; g.lineWidth = 2; g.strokeRect(hx8 - 10, 46, 20, 14);
