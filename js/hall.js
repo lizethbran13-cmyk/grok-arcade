@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   var T = THREE, A, W, H3 = GA.Hall3D = {};
-  var V = '20261009dz';
+  var V = '20261010mh';
   var mats = {};
   function ph(c, s, e) { var k = 'p' + c + (s || 40) + (e || ''); return mats[k] || (mats[k] = new T.MeshPhongMaterial({ color: c, shininess: s || 40, specular: '#ffffff', emissive: e ? new T.Color(e) : new T.Color(0) })); }
   function gold() { return ph('#e8b84a', 90, '#3a2400'); }
@@ -64,6 +64,10 @@
       var whs = []; [[-0.13, 0.11], [0.13, 0.11], [-0.13, -0.11], [0.13, -0.11]].forEach(function (q) { var w = add(k, cy(0.05, 0.05, 0.05, 16), ph('#1f2433', 30), q[0], -0.03, q[1]); w.rotation.z = Math.PI / 2; whs.push(w); });
       [-1, 1].forEach(function (sd) { add(k, sp(0.02, 8), ph('#c084fc', 10, '#c084fc'), sd * 0.05, 0, -0.19); });
       add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = k; },
+    hunters: function (g) { var k = new T.Group(); k.position.y = 0.32; g.add(k); add(k, sp(0.12, 24), ph('#22d3ee', 70), 0, 0, 0).scale.set(1.25, 0.9, 0.9); add(k, sp(0.075, 20), ph('#22d3ee', 70), 0.15, 0.09, 0);
+      [-0.02, 0.02].forEach(function (z) { add(k, sp(0.016, 8), ph('#111827', 80), 0.21, 0.11, z); }); for (var i = 0; i < 3; i++) { var c = add(k, new T.ConeGeometry(0.03, 0.08, 8), ph('#facc15', 90, '#5a4a00'), -0.06 + i * 0.06, 0.12, 0); void c; }
+      var o = new T.Group(); o.position.y = 0.32; g.add(o); var sw = add(o, new T.BoxGeometry(0.02, 0.22, 0.01), ph('#e2e8f0', 120), 0.24, 0.02, 0); sw.rotation.z = 0.5; add(o, sp(0.03, 10), ph('#fde047', 60, '#5a4a00'), -0.22, 0.05, 0.1); add(o, sp(0.03, 10), ph('#f472b6', 60), -0.1, 0.02, -0.22);
+      add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
     disaster: function (g) { var k = new T.Group(); k.position.y = 0.3; g.add(k); add(k, sp(0.12, 24), ph('#7b5cd6', 60), 0, 0, 0); add(k, sp(0.08, 20), ph('#7b5cd6', 60), 0.04, 0.12, 0.05); [-0.03, 0.03].forEach(function (x) { add(k, sp(0.018, 8), ph('#111827', 80), 0.04 + x, 0.14, 0.12); }); for (var i = 0; i < 3; i++) { var c = add(k, new T.ConeGeometry(0.035, 0.09, 10), ph('#5ff3ff', 90, '#0e6e80'), 0, 0.1 - i * 0.07, -0.1 - i * 0.01); c.rotation.x = -0.7; }
       var o = new T.Group(); o.position.y = 0.3; g.add(o); add(o, sp(0.045, 14), ph('#8b5e3c', 30), 0.22, 0.03, 0); add(o, sp(0.03, 10), ph('#ff9f1c', 60, '#7a3a00'), 0.2, 0.05, 0.03); add(o, sp(0.04, 14), ph('#c7d0dc', 110), -0.11, -0.03, 0.19).scale.set(1.6, 0.4, 1.6); add(o, sp(0.035, 12), ph('#fde047', 60, '#5a4a00'), -0.11, 0.03, -0.19);
       add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
@@ -365,6 +369,8 @@
     // 20th / 21st: free-standing on the left of Gus's desk, then beside the Golden Joystick statue facing it
     if (games.length > 19) slots.push([W.doorX - 4.4, W.minZ + 5.6, Math.PI]);
     if (games.length > 20) slots.push([W.doorX - 3.6, W.minZ + 9.2, Math.PI / 2]);
+    // 22nd: mirrored on the other side of the Golden Joystick statue
+    if (games.length > 21) slots.push([W.doorX + 3.6, W.minZ + 9.2, -Math.PI / 2]);
     var par = A.scene;
     games.forEach(function (gm, i) { var s = slots[i]; if (!s) return; exhibit(gm, GA.HALL_DATA[gm.id], s[0], s[1], s[2]); });
     // wood pilasters between the exhibits

@@ -1623,19 +1623,70 @@ GA.HALL_DATA = {
 "cover": "assets/hall/disaster/cover.webp",
 "quip": "A kaiju, a tornado AND aliens? I'm filing this one under 'Do Not Open Indoors'.",
 "noOld": "Grok Disaster Zone arrived in one piece (somehow). No old versions yet. Please keep the meteors out of the Hall."
+},
+"hunters": {
+"repo": "grok-hunters",
+"history": [
+{
+"date": "Oct 10",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A bright cartoon 3D monster hunting adventure with soft shadows and glow. Pawprint Village with a forge, kitchen, armor shop, quest hall and your own house to decorate, 6 hunting regions (Sunleaf Forest, Dusty Canyon, Muddle Marsh, Blaze Mountain, Frostbite Peaks and Starfall Summit), 13 monsters to tame (never hurt!) with weak spots and breakable parts, 5 weapons with combos, dodge rolls and lock-on, crafting, meals, star-rank quests, Mochi the buddy cat, Assist Mode, and online co-op for up to 3."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/hunters/1.webp",
+"cap": "Pawprint Village: your home base, with the forge, kitchen and quest hall",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/hunters/2.webp",
+"cap": "A Puffhorn fight in Sunleaf Forest (lock-on + weak spots)",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/hunters/3.webp",
+"cap": "Cactaroo bounces through Dusty Canyon",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/hunters/4.webp",
+"cap": "Emberwing guards the lava fields of Blaze Mountain",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/hunters/5.webp",
+"cap": "Glacilynx prowls the snowy pines of Frostbite Peaks",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/hunters/6.webp",
+"cap": "Muddle Marsh: a two-monster hunt with Bogglug and Mossmaw",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/hunters/7.webp",
+"cap": "Starfang, the final boss of Starfall Summit",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/hunters/8.webp",
+"cap": "Inside the Hunter Guild: the quest counter and board",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/hunters/cover.webp",
+"quip": "A cat in a helmet tamed a giant fluffy rhino right outside my Hall. It wanted a belly rub. I filed a complaint.",
+"noOld": "Grok Monster Hunters just set up camp. No old versions yet. Please leave the Starfang outside."
 }
 };
-/* the Arcade's own update history (from the grok-arcade git log, in plain words) - shown on the ARCADE card in Gus's directory */
-GA.ARCADE_HISTORY = [
-  { date: 'Oct 2', ver: '1.0', title: 'The Arcade opens', text: 'A neon 3D room with a few game cabinets you can walk up to and play.' },
-  { date: 'Oct 2', ver: '1.2', title: 'Play together', text: 'Online multiplayer, Grok Brawl, Grok FC and the Penalty Kick cabinet.' },
-  { date: 'Oct 3', ver: '1.5', title: 'Bonus Zone', text: 'Grok Land Party, Candy\u2019s Fetch, Rat Maze Dash and the Bonus Zone of mini games that pay tickets.' },
-  { date: 'Oct 7', ver: '2.0', title: 'Prizes & achievements', text: 'The Prize Counter, the Achievement Gallery, 3D prizes you can carry and wear, Skee-Ball and walking around together online.' },
-  { date: 'Oct 7', ver: '2.5', title: 'More cabinets', text: 'Grok Pets, Grok Life, Grok Dash and Grok Spooks cabinets, the Suggestion Booth, and lots of new bonus games and prizes.' },
-  { date: 'Oct 8', ver: '3.0', title: 'Claw machines', text: 'Two real claw machines with 18 claw-only prizes, Grok Blocks, Grok Rides and Rush Hour.' },
-  { date: 'Oct 9', ver: '3.5', title: 'Hall of Game Records', text: 'This very Hall, with Gus, every game\u2019s history and old versions, plus the DLC Machine 3000.' },
-  { date: 'Oct 9', ver: '3.8', title: 'Heists, pickleball & sports', text: 'Grok Heist Crew, Grok Pickleball and Grok Sports Command cabinets, bonus games #17-#19, DLC packs with free starter vouchers and a roomier bonus wall.' },
-  { date: 'Oct 9', ver: '3.9', title: 'Kart Party & Disaster Zone', text: 'The Grok Kart Party and Grok Disaster Zone cabinets, plus bonus games Spark Drift and Meteor Mayhem.' },
-  { date: 'Oct 9', ver: '4.0', title: 'Game Gallery, Food Court, Rooftop & Secret Basement', text: 'Three new places! A Food Court with Chef Gio, snacks that give boosts and a pizza oven you cook at. A Rooftop Party Deck with a DJ booth, dance emotes, fireworks and a weekly party schedule. And a Secret Basement retro arcade with rare cabinets, puzzles and rare prizes. Get in with Gus\u2019s key (it hides somewhere new every week) or pick the lock. Plus bonus game #20 Lockpick Panic. And every game cabinet moved into the new Game Gallery wing, sorted into themed rows and run by Gus Jr. the 2nd (Dad says no running).' },
-  { date: 'Oct 10', ver: '4.1', title: 'The Mysterious Attic', text: 'Gus was right! A hidden hatch that moves every 3 days, Gary\u2019s ladder, Gary\u2019s long-lost brother Larry in a new Maintenance Room, the vintage Ghost Lantern \u201983 cabinet (bonus #23), and a spooky (friendly!) attic: portraits whose eyes follow you, a music box, a toy room, a ghost tea party, the Cobweb Library, the Foggy Observatory, a weekly puzzle room, weekly mystery opuses and 5 attic rares. Plus MIMI THE BOT by Ratita Industries at the new Customer Relations desk (game finder, navigator, mystery hints, daily gift) and surprise power outages that make her… a little grumpy.' }
-];

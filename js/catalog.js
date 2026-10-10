@@ -42,7 +42,9 @@ GA.MAIN_GAMES = [
   { id: 'kart', mp: true, name: 'Grok Kart Party', desc: 'A bright cartoony 3D kart racer! 8 tracks in 2 cups (city, canyon, candy, beach, haunted castle, snow, volcano, space), drifts and mini-turbos, ramps and gliders, 11 wacky items, Grand Prix, Time Trial ghosts, Balloon Battle and Coin Runners, 10 racers and kart parts to unlock, and online racing for up to 3.',
     url: 'https://lizethbran13-cmyk.github.io/grok-kart/', color: '#ff4fd8', color2: '#3ff0ff' },
   { id: 'disaster', mp: true, name: 'Grok Disaster Zone', desc: 'Survive cartoon disasters! A kaiju attack, tornadoes, meteors, tsunamis, lightning, volcanoes, quakes, blizzards and an alien invasion on 4 maps. Hide in bunkers, basements and rooftops, earn coins, buy upgrades, and team up with up to 3 friends online!',
-    url: 'https://lizethbran13-cmyk.github.io/grok-disaster/', color: '#ff7b00', color2: '#7b5cd6' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-disaster/', color: '#ff7b00', color2: '#7b5cd6' },
+  { id: 'hunters', mp: true, name: 'Grok Monster Hunters', desc: 'A cartoony 3D co-op monster hunting adventure! Tame 13 big monsters across 6 regions (forest, canyon, marsh, volcano, frozen peaks and the Starfall Summit boss) with 5 weapons, combos, dodge rolls and lock-on. Forge gear, cook meals, decorate your house in Pawprint Village, bring your buddy Mochi, and hunt with up to 3 friends online!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-hunters/', color: '#f59e0b', color2: '#22d3ee' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -67,7 +69,8 @@ GA.BONUS_GAMES = [
   { id: 'lockpick', name: 'Lockpick Panic', desc: 'Pick Gus\u2019s locks against the clock! Tap when each bobbing pin lines up with the green shear line. Gold master locks wobble. A Secret Basement game.', color: '#ffd23f', color2: '#ff4fd8' },
   { id: 'drift', name: 'Spark Drift', desc: 'Corners ahead! HOLD to drift and charge the sparks blue, orange, PURPLE, then let go for a mini-turbo. Hold too long and you spin out! A Grok Kart Party game.', color: '#c084fc', color2: '#ff4fd8' },
   { id: 'meteor', name: 'Meteor Mayhem', desc: 'Meteors rain on Grok City! Red circles show where they will land, so drag to run out of the way. Grab coins and gold stars, and score CLOSE CALLS for near misses. A Grok Disaster Zone game.', color: '#ff7b00', color2: '#7b5cd6' },
-  { id: 'ghost', name: 'Ghost Lantern \u201983', desc: 'A dusty 1983 cabinet from the basement! Friendly ghosts drift toward your candle. TAP them to catch them in your lantern before they blow it out. Big grumpy ghosts need 3 taps, golden ghosts are worth 5. 3 candles. Rumor says a high score shows a secret code\u2026', color: '#a7f3d0', color2: '#7c3aed' }
+  { id: 'ghost', name: 'Ghost Lantern \u201983', desc: 'A dusty 1983 cabinet from the basement! Friendly ghosts drift toward your candle. TAP them to catch them in your lantern before they blow it out. Big grumpy ghosts need 3 taps, golden ghosts are worth 5. 3 candles. Rumor says a high score shows a secret code\u2026', color: '#a7f3d0', color2: '#7c3aed' },
+  { id: 'tame', name: 'Tame Rush', desc: 'A big cartoon monster stomps around! Drag to run in close and your hunter swings by itself. Dodge the RED stomp circles and tail sweeps, hit the glowing weak spot for extra points, and tame monster after monster. A Grok Monster Hunters game.', color: '#f59e0b', color2: '#22d3ee' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };

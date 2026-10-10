@@ -793,6 +793,29 @@
         g.fillStyle = '#ff7b00'; rrF(g, w * 0.08, 6, w * 0.84, 26, 6); g.font = font(16); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK DISASTER ZONE', w / 2, 24);
         break;
       }
+      case 'hunters': {
+        // Monster Hunters: sunny meadow, a big round monster bobbing, a little hunter swinging a sword, title banner
+        var gh1 = g.createLinearGradient(0, 0, 0, h); gh1.addColorStop(0, '#1ea7ff'); gh1.addColorStop(0.6, '#c8f4ff'); gh1.addColorStop(0.61, '#6cc24a'); gh1.addColorStop(1, '#3f9e44'); g.fillStyle = gh1; g.fillRect(0, 0, w, h);
+        for (i = 0; i < 4; i++) { var tx7 = (i * 61 + 14) % w; g.fillStyle = '#8b5a2b'; g.fillRect(tx7 - 3, h * 0.48, 6, h * 0.13); g.fillStyle = '#3f9e44'; g.beginPath(); g.arc(tx7, h * 0.46, 16, 0, 7); g.fill(); }
+        var mx7 = w * 0.62 + Math.sin(t * 0.8) * w * 0.12, by7 = Math.sin(t * 5) * 3; g.fillStyle = '#22d3ee'; g.beginPath(); g.ellipse(mx7, h * 0.56 + by7, 34, 22, 0, 0, 7); g.fill(); g.beginPath(); g.arc(mx7 - 30, h * 0.47 + by7, 16, 0, 7); g.fill();
+        g.fillStyle = '#facc15'; for (i = 0; i < 3; i++) { g.beginPath(); g.moveTo(mx7 - 14 + i * 14, h * 0.47 + by7); g.lineTo(mx7 - 8 + i * 14, h * 0.38 + by7); g.lineTo(mx7 - 2 + i * 14, h * 0.47 + by7); g.fill(); }
+        g.fillStyle = '#fff'; g.beginPath(); g.arc(mx7 - 34, h * 0.46 + by7, 5, 0, 7); g.fill(); g.fillStyle = '#111'; g.beginPath(); g.arc(mx7 - 36, h * 0.46 + by7, 2.5, 0, 7); g.fill();
+        var hx7 = mx7 - 70; g.fillStyle = '#22d3ee'; g.fillRect(hx7 - 5, h * 0.58, 10, 12); g.fillStyle = '#f6c9a0'; g.beginPath(); g.arc(hx7, h * 0.55, 6, 0, 7); g.fill(); g.fillStyle = '#0e7490'; g.beginPath(); g.arc(hx7, h * 0.545, 6.5, Math.PI, 0); g.fill();
+        g.save(); g.translate(hx7 + 6, h * 0.6); g.rotate(-1.2 + (Math.sin(t * 6) * 0.5 + 0.5) * 1.6); g.fillStyle = '#e2e8f0'; g.fillRect(-1.5, -18, 3, 18); g.restore();
+        if (Math.sin(t * 6) > 0.7) { g.fillStyle = '#fde047'; g.font = font(12); g.textAlign = 'center'; g.fillText('\u2605', mx7 - 46, h * 0.5); }
+        g.fillStyle = '#f59e0b'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK MONSTER HUNTERS', w / 2, 24);
+        break;
+      }
+      case 'tame': {
+        g.fillStyle = '#c8f4ff'; g.fillRect(0, 0, w, h); var gt2 = g.createLinearGradient(0, 0, 0, h * 0.75); gt2.addColorStop(0, '#1ea7ff'); gt2.addColorStop(1, '#c8f4ff'); g.fillStyle = gt2; g.fillRect(0, 0, w, h * 0.75); g.fillStyle = '#6cc24a'; g.fillRect(0, h * 0.75, w, h * 0.25);
+        var mx2 = w / 2 + Math.sin(t * 1.1) * w * 0.22, k3 = (t % 1.4) / 1.4; g.strokeStyle = 'rgba(255,40,60,' + (0.5 + 0.5 * Math.sin(t * 18)) + ')'; g.lineWidth = 2; g.beginPath(); g.ellipse(mx2 + 20, h * 0.78, 26 * (0.4 + k3 * 0.6), 6, 0, 0, 7); g.stroke();
+        g.fillStyle = '#fff4e6'; g.beginPath(); g.ellipse(mx2, h * 0.62, 28, 18, 0, 0, 7); g.fill(); g.beginPath(); g.arc(mx2 + 26, h * 0.54, 12, 0, 7); g.fill(); g.fillStyle = '#fde68a'; g.beginPath(); g.moveTo(mx2 + 24, h * 0.47); g.lineTo(mx2 + 30, h * 0.38); g.lineTo(mx2 + 34, h * 0.48); g.fill();
+        g.fillStyle = '#111'; g.beginPath(); g.arc(mx2 + 30, h * 0.53, 2, 0, 7); g.fill(); g.fillStyle = '#fde047'; g.font = font(14); g.textAlign = 'center'; g.fillText('\u2605', mx2 - 18, h * 0.6);
+        var px3 = mx2 - 50; g.fillStyle = '#22d3ee'; g.fillRect(px3 - 4, h * 0.7, 8, 10); g.fillStyle = '#0e7490'; g.beginPath(); g.arc(px3, h * 0.68, 5, 0, 7); g.fill();
+        g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(w * 0.25, 30, w * 0.5, 7); g.fillStyle = '#f472b6'; g.fillRect(w * 0.25, 30, w * 0.5 * ((t * 0.15) % 1), 7);
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('TAME RUSH', w / 2, 22);
+        break;
+      }
       case 'meteor': {
         g.fillStyle = '#3b0764'; g.fillRect(0, 0, w, h); var gm2 = g.createLinearGradient(0, 0, 0, h * 0.75); gm2.addColorStop(0, '#3b0764'); gm2.addColorStop(1, '#fb923c'); g.fillStyle = gm2; g.fillRect(0, 0, w, h * 0.75); g.fillStyle = '#4a5260'; g.fillRect(0, h * 0.75, w, h * 0.25);
         var tx2 = w / 2 + Math.sin(t * 1.3) * w * 0.3, k2 = (t % 1.1) / 1.1; g.strokeStyle = 'rgba(255,40,60,' + (0.5 + 0.5 * Math.sin(t * 18)) + ')'; g.lineWidth = 2; g.beginPath(); g.ellipse(tx2, h * 0.78, 22, 6, 0, 0, 7); g.stroke();
