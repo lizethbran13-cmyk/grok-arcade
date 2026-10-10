@@ -1251,7 +1251,7 @@
     // posters of games along the north wall (real framed boards with the game's cover art)
     var POST = [['sky', -16.3], ['poke', -13.5], ['pets', -10.7], ['heist', 0.9], ['kart', 3.7]];
     POST.forEach(function (q) { var g3 = GA.findGame(q[0]); if (!g3) return; var pg = prop('mainx', 'poster ' + q[0], q[1], z0 + 0.05, 0);
-      add(pg, bx(2.3, 1.45, 0.08), ph(g3.color || '#3ff0ff', 40), 0, 1.9, 0.04); var im = add(pg, new T.PlaneGeometry(2.1, 1.18), new T.MeshBasicMaterial({ map: galTex('assets/hall/' + q[0] + '/cover.webp') }), 0, 1.9, 0.085); void im;
+      add(pg, bx(2.3, 1.45, 0.08), ph(g3.color || '#3ff0ff', 40), 0, 1.9, 0.04); var im = add(pg, new T.PlaneGeometry(2.1, 1.18), new T.MeshBasicMaterial({ map: GA.Pics ? GA.Pics.poster('assets/hall/' + q[0] + '/cover.webp?v=20261010pq', 2.1, 1.18) : galTex('assets/hall/' + q[0] + '/cover.webp') }), 0, 1.9, 0.085); void im;
       var lb = cvs(512, 96, function (c, w, h) { c.fillStyle = '#140a2b'; c.fillRect(0, 0, w, h); glowText(c, g3.name.toUpperCase() + ' \u2192 GALLERY', w / 2, h / 2, 44, g3.color || '#3ff0ff', w - 20); }); var lp = texPlane(2.1, 0.36, lb.tex); lp.position.set(0, 0.95, 0.06); pg.add(lp); A.noAud(pg); });
     // floor arrows from the middle of the room to the arch
     for (i = 0; i < 3; i++) { var ar2 = cvs(128, 128, function (c, w, h) { c.fillStyle = 'rgba(63,240,255,.85)'; c.beginPath(); c.moveTo(w / 2, 10); c.lineTo(w - 14, 70); c.lineTo(w / 2 + 18, 70); c.lineTo(w / 2 + 18, h - 10); c.lineTo(w / 2 - 18, h - 10); c.lineTo(w / 2 - 18, 70); c.lineTo(14, 70); c.closePath(); c.fill(); });

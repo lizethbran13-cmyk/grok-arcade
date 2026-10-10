@@ -45,7 +45,7 @@
   function mesh(geo, mat, x, y, z, parent) { var m = new T.Mesh(geo, mat); m.position.set(x || 0, y || 0, z || 0); (parent || curPar || scene).add(m); return m; }
   function rrF(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); g.fill(); }
   function mkCanvas(w, h) { var c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
-  function canvasTex(c) { var t = new T.CanvasTexture(c); t.anisotropy = 4; t.minFilter = T.LinearMipmapLinearFilter; return t; }
+  function canvasTex(c) { var t = new T.CanvasTexture(c); t.anisotropy = renderer ? Math.min(8, renderer.capabilities.getMaxAnisotropy() || 4) : 4; t.minFilter = T.LinearMipmapLinearFilter; return t; } // sharp signs at an angle (booth #20)
   function addSolid(minX, maxX, minZ, maxZ, name) { solids.push({ minX: minX, maxX: maxX, minZ: minZ, maxZ: maxZ, name: name || (curItem ? curItem.name : 'solid') }); }
   function addWall(minX, maxX, minY, maxY, minZ, maxZ) { walls.push({ minX: minX, maxX: maxX, minY: minY, maxY: maxY, minZ: minZ, maxZ: maxZ }); addSolid(minX, maxX, minZ, maxZ, 'wall'); }
   /* ---------- layout audit registry: every prop, cabinet, booth, counter and wall sign is registered with its real 3D bounds,
@@ -1534,6 +1534,7 @@
       attract(c.id, c.sctx, c.w, c.h, now, c); c.stex.needsUpdate = true;
     });
     for (var i = 0; i < anims.length; i++) anims[i](time);
+    if (GA.Pics) GA.Pics.tick(P.x, P.z, time);
     updateBroken(dt); updateGary(dt); updatePower(dt);
 
     // area label

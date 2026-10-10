@@ -137,10 +137,9 @@
     add(g, bx(1.44, 3.3, 0.1), ph(darker(col, 0.35), 20), 0, 1.75, 0.05);
     add(g, bx(1.44, 0.06, 0.12), gold(), 0, 3.42, 0.06); add(g, bx(1.44, 0.06, 0.12), gold(), 0, 0.08, 0.06);
     // framed screenshot (the real game, loaded from assets/hall)
-    add(g, bx(1.3, 0.82, 0.08), gold(), 0, 2.32, 0.14);
-    add(g, bx(1.2, 0.72, 0.02), ph('#111111', 10), 0, 2.32, 0.18);
-    var tex = new T.TextureLoader().load(data.cover + '?v=' + V); tex.anisotropy = 4;
-    var pic = planeM(1.16, 0.68, tex, g, 0, 2.32, 0.192); pic.material.toneMapped = false;
+    // (booth #20) the frame takes the picture's real shape: tall frames for phone games, wide ones for the rest, never squashed
+    if (GA.Pics) { var portrait = GA.Pics.aspect(data.cover) < 1; GA.Pics.frame(g, data.cover + '?v=' + V, { x: 0, y: portrait ? 2.2 : 2.32, z: 0.1, maxW: 1.22, maxH: portrait ? 1.13 : 0.8, trim: gold() }); }
+    else { add(g, bx(1.3, 0.82, 0.08), gold(), 0, 2.32, 0.14); var tex = new T.TextureLoader().load(data.cover + '?v=' + V); planeM(1.16, 0.68, tex, g, 0, 2.32, 0.192); }
     // name plaque
     var nm = plaqueTex(512, 120, gm.name.toUpperCase(), null, col); planeM(1.3, 0.3, nm.tex, g, 0, 3.02, 0.11);
     // marble pedestal + gold rings + the spinning model
