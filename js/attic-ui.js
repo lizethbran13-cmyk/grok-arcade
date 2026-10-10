@@ -330,7 +330,7 @@
   var GUS_ATTIC = ['I SWEAR there was an attic above the Suggestion Booth once. Now it\u2019s just ceiling. I\u2019m not crazy. Don\u2019t look at me like that.', 'Back in \u201983 we had attic tours. Then the attic\u2026 wandered off. Attics don\u2019t DO that. And yet.', 'If you hear the ceiling creak, it\u2019s not the building settling. Buildings don\u2019t settle. They SCHEME.'];
   function gusHook() { if (!GA.Hall || GA.Hall._atWrapped) return; var t0 = GA.Hall.talk; GA.Hall._atWrapped = true;
     GA.Hall.talk = function () { t0.apply(GA.Hall, arguments); var s = S(); if (s.opened || Math.random() < 0.5) return; setTimeout(function () { var line = GUS_ATTIC[Math.floor(Math.random() * GUS_ATTIC.length)]; if (GA.Hall3D && GA.Hall3D.say) GA.Hall3D.say(line, 7); toast('\uD83E\uDDD3 Gus: \u201C' + line + '\u201D', 6000); }, 2600); }; }
-  if (GA.Areas && GA.Areas.GJ_LINES) ['Dad says there\u2019s an attic. Dad also says the 8-track is coming back.', 'An attic? If it existed, I\u2019d have catalogued it. Twice. Grumble.', 'Dad says the attic moves around. I say Dad needs a nap.'].forEach(function (l) { GA.Areas.GJ_LINES.push(l); });
+  if (GA.Areas && GA.Areas.GJ_LINES) ['Dad says there\u2019s an attic. Dad also says the 8-track is coming back.', 'An attic? If it existed, I\u2019d have catalogued it. Twice. Grumble.', 'Dad says the attic moves around. I say Dad needs a nap.', 'That new robot, Mimi? Too cheerful. Suspiciously cheerful. Dad agrees.', 'Mimi said I have \u201Cgreat customer energy\u201D. I have never been so insulted.', 'When the power goes out, Mimi gets grumpy. Finally, a coworker who gets me.'].forEach(function (l) { GA.Areas.GJ_LINES.push(l); });
 
   /* ---------- per-frame + init ---------- */
   var upT = 0;
