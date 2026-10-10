@@ -1,4 +1,4 @@
-/* Grok Arcade - bonus game #25: Tame Rush (Grok Monster Hunters tie-in).
+/* Grok Arcade - bonus game #24: Tame Rush (Grok Monster Hunters tie-in). NOTE: Ratita Rescue is not in the Arcade yet, so it takes the next number (#25).
    A big cartoon monster stomps around. Drag (or arrow keys) to run in close: your hunter swings by itself (+1).
    Stand on the side with the glowing weak spot for +2. Dodge the RED circles (stomps, falling rocks) and the
    RED tail-sweep band. Fill the TAME meter to tame the monster (+10) and a tougher one shows up. 3 hearts. */
