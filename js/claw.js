@@ -260,14 +260,15 @@
   C.freeLeft = freeLeft;
 
   /* ---------- 3D: machines in the hub ---------- */
-  var M = {}, api = null, flatCache = {}, matLit = null, matBasic = null;
-  function flatten(id) { // merge a prize model into <= 2 vertex-coloured meshes (cheap enough for 23 prizes in the machines)
-    if (flatCache[id]) return flatCache[id];
+  var M = {}, api = null, flatCache = {}, matLit = null, matBasic = null, lodV = new T.Vector3();
+  function flatten(id, lo) { // merge a prize model into <= 2 vertex-coloured meshes (cheap enough for 23 prizes in the machines)
+    var ck = id + (lo ? '~lo' : ''); if (flatCache[ck]) return flatCache[ck];
     var model = GA.Prize3D.build(id), lit = [], bas = []; model.updateMatrixWorld(true);
     model.traverse(function (o) {
       if (!o.isMesh || !o.geometry || !o.geometry.attributes.position) return;
       var m = Array.isArray(o.material) ? o.material[0] : o.material; if (!m || m.visible === false) return;
-      var g2 = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone(); g2.applyMatrix4(o.matrixWorld);
+      var src = lo && GA.Perf && GA.Perf.lowGeo ? (GA.Perf.lowGeo(o.geometry) || o.geometry) : o.geometry; // far-away copy: fewer segments
+      var g2 = src.index ? src.toNonIndexed() : src.clone(); g2.applyMatrix4(o.matrixWorld);
       if (!g2.attributes.normal) g2.computeVertexNormals();
       var col = m.color ? m.color.clone() : new T.Color(1, 1, 1); if (m.emissive && !m.isMeshBasicMaterial) col.add(m.emissive);
       (m.isMeshBasicMaterial ? bas : lit).push({ g: g2, c: col });
@@ -280,8 +281,8 @@
     }
     var bb = new T.Box3().setFromObject(model), size = bb.getSize(new T.Vector3()), ctr = bb.getCenter(new T.Vector3());
     var hr = 0, hh = 0, br = 0; [lit, bas].forEach(function (L) { L.forEach(function (p) { var pa = p.g.attributes.position; for (var i = 0; i < pa.count; i++) { var dx = pa.getX(i) - ctr.x, dy = pa.getY(i) - ctr.y, dz = pa.getZ(i) - ctr.z, h2 = Math.sqrt(dx * dx + dz * dz); if (h2 > hr) hr = h2; if (Math.abs(dy) > hh) hh = Math.abs(dy); var b3 = Math.sqrt(h2 * h2 + dy * dy); if (b3 > br) br = b3; } }); });
-    flatCache[id] = { lit: merge(lit), bas: merge(bas), size: Math.max(size.x, size.y, size.z) || 1, ctr: ctr, hr: hr, hh: hh, br: br };
-    return flatCache[id];
+    flatCache[ck] = { lit: merge(lit), bas: merge(bas), size: Math.max(size.x, size.y, size.z) || 1, ctr: ctr, hr: hr, hh: hh, br: br };
+    return flatCache[ck];
   }
   function prizeVis(id, r, tilt) { // real size of a prize model in the machine (see scatter)
     var f = flatten(id), s = (2 * r) / f.size * 1.08, ct = Math.cos(tilt || 0), st = Math.abs(Math.sin(tilt || 0));
@@ -294,7 +295,8 @@
     if (!matLit) { matLit = new T.MeshLambertMaterial({ vertexColors: true }); matBasic = new T.MeshBasicMaterial({ vertexColors: true }); }
     if (f.lit) inner.add(new T.Mesh(f.lit, matLit)); if (f.bas) inner.add(new T.Mesh(f.bas, matBasic));
     inner.scale.setScalar(s); inner.position.set(-f.ctr.x * s, -f.ctr.y * s, -f.ctr.z * s);
-    rg.add(inner); rg.rotation.set(o.tilt || 0, o.rot || 0, 0); rg.position.y = -o.dy; g.add(rg); g.userData.noBatch = true; return g;
+    rg.add(inner);
+    var fl = flatten(o.id, true); if (fl.lit !== f.lit) { var lo = new T.Group(); if (fl.lit) lo.add(new T.Mesh(fl.lit, matLit)); if (fl.bas) lo.add(new T.Mesh(fl.bas, matBasic)); lo.scale.copy(inner.scale); lo.position.copy(inner.position); lo.visible = false; rg.add(lo); g.userData.lod = { hi: inner, lo: lo }; } rg.rotation.set(o.tilt || 0, o.rot || 0, 0); rg.position.y = -o.dy; g.add(rg); g.userData.noBatch = true; return g;
   }
   function canvasSign(w, h) { var c = api.mkCanvas(w, h); return { c: c, g: c.getContext('2d'), tex: api.canvasTex(c) }; }
   function drawHeader(mc) {
@@ -409,6 +411,9 @@
     a.anims.push(function (t) {
       var dt = Math.min(0.05, Math.max(0, t - lastT)); lastT = t;
       if (t - last > 3) { last = t; Object.keys(M).forEach(function (k) { var mc = M[k]; if (mc.panelKey !== freeLeft(k) + ':' + daysLeft()) drawPanel(mc); if (!G && mc.period !== period()) buildPile(mc); }); }
+      if (t - (C._lodT || 0) > 0.25) { C._lodT = t; var cam = api.camera && api.camera(); if (cam) Object.keys(M).forEach(function (k) { // far away: lighter prize models
+        var mc = M[k]; mc.g.getWorldPosition(lodV); var d = lodV.distanceTo(cam.position), far = !(G && cur === k) && !C.isOpen() && (mc.lodFar ? d > 6 : d > 7);
+        mc.lodFar = far; mc.items.forEach(function (o) { var L = o.mesh && o.mesh.userData.lod; if (L && L.lo.visible !== far) { L.lo.visible = far; L.hi.visible = !far; } }); }); }
       Object.keys(M).forEach(function (k) { var mc = M[k]; if (!mc.shufAnim) return; mc.shufAnim += dt; var busy = false;
         mc.items.forEach(function (o) { if (!o.mesh || o.dropT == null) return; var q = clamp((mc.shufAnim - o.dropT) / 0.45, 0, 1), e = 1 - q; o.mesh.position.y = o.y + 0.32 * e * e - (q > 0.7 ? Math.sin((q - 0.7) / 0.3 * Math.PI) * 0.012 : 0); if (q < 1) busy = true; else { o.mesh.position.y = o.y; o.dropT = null; } });
         if (!busy) mc.shufAnim = 0; });

@@ -1529,6 +1529,7 @@
       c.offDrawn = false;
       if (now < c.nextDraw) return;
       if (c.group.parent && c.group.parent.visible === false) { c.nextDraw = now + 0.5; return; }
+      if (GA.Perf && !GA.Perf.inView(c.x, 1.6, c.z, 1.4)) { c.nextDraw = now + 0.25; return; } // off-screen: don't repaint its attract screen
       var d = Math.hypot(P.x - c.x, P.z - c.z);
       c.nextDraw = now + (d < 9 ? 1 / 15 : d < 16 ? 1 / 6 : 0.5);
       attract(c.id, c.sctx, c.w, c.h, now, c); c.stex.needsUpdate = true;
@@ -1544,9 +1545,10 @@
 
   function frame(t) {
     requestAnimationFrame(frame);
-    var dt = Math.min(0.05, Math.max(0, (t - lastT) / 1000)); lastT = t;
+    var rawMs = t - lastT, dt = Math.min(0.05, Math.max(0, rawMs / 1000)); lastT = t;
     if (paused) return;
     update(dt);
+    if (GA.Perf) GA.Perf.frame(dt, rawMs);
     renderer.render(scene, camera);
   }
 
@@ -1655,6 +1657,7 @@
     if (saved && isFinite(saved.x) && isFinite(saved.z)) { P.x = saved.x; P.z = saved.z; P.face = saved.face || 0; Hub._startYaw = saved.yaw || 0; }
     else { Hub._startYaw = SPAWN.yaw; P.face = Math.PI; }
     window.addEventListener('resize', resize); resize();
+    if (GA.Perf) { try { GA.Perf.init({ renderer: renderer, scene: scene, camera: camera, mobile: mobile, prMax: Math.min(window.devicePixelRatio || 1, mobile ? 1.6 : 1.75), keep: [player, GARY.root].filter(Boolean), pose: function () { return P; } }); } catch (e) { if (window.console) console.warn('perf init', e); } }
     requestAnimationFrame(function (t) { lastT = t; frame(t); });
   };
   Hub.setEnabled = function (b) { enabled = b; titleMode = !b; if (b) { C.yaw = Hub._startYaw != null ? Hub._startYaw : C.yaw; } };

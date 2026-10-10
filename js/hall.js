@@ -77,6 +77,7 @@
 
   /* ---------- the wing ---------- */
   var EX = [], gus = {}, dlc = {}, state = { inHall: false, saidHi: false, vis: true }, ROOTS = []; // ROOTS: hidden when you're far away (saves draw calls on phones)
+  H3.roots = ROOTS; // js/perf.js groups these under one node so the whole wing hides with one switch
   function marbleTex() {
     var c = A.mkCanvas(512, 512), g = c.getContext('2d');
     for (var i = 0; i < 2; i++) for (var j = 0; j < 2; j++) { g.fillStyle = (i + j) % 2 ? '#2b1a14' : '#efe6d8'; g.fillRect(i * 256, j * 256, 256, 256); }
@@ -375,7 +376,7 @@
     A.anims.push(function (t) {
       var p = A.pose(), inWing = p.x > W.minX - 3 && p.z < W.maxZ + 3, inH = p.z > A.ROOM.maxZ - 3 && inWing;
       var cam = A.camera().position, vis = p.z < W.maxZ + 3 && (p.z > A.ROOM.maxZ - 7 || cam.z > A.ROOM.maxZ - 7 || (p.x > A.DIV_X - 1.5 && p.z > -3));
-      if (vis !== state.vis) { state.vis = vis; ROOTS.forEach(function (o) { o.visible = vis; }); }
+      if (vis !== state.vis) { state.vis = vis; if (H3.setVis) H3.setVis(vis); else ROOTS.forEach(function (o) { o.visible = vis; }); }
       state.inHall = inH;
       var inside = p.z > A.ROOM.maxZ + 0.3 && p.x > W.minX && p.z < W.maxZ; // greet once per visit (and not again within 30s)
       if (inside && !state.saidHi && GA.HallUI && !(GA.Hall && GA.Hall.isOpen()) && t - (state.hiT || -99) > 30) { state.saidHi = true; state.hiT = t; H3.say(GA.HallUI.line('hello'), 5); }
