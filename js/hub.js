@@ -1496,12 +1496,13 @@
     var tx = P.x, ty = 1.35 + 0.75 * C.nb, tz = P.z;
     if (near) { tx += -near.dir.x * 0.6 * C.nb; tz += -near.dir.z * 0.6 * C.nb; }
     if (titleMode) { C.yaw += dt * 0.12; }
-    var pitch = Math.min(0.95, C.pitch + 0.12 * C.nb);
+    var ct = Hub.camTune ? Hub.camTune(Hub._area) : null, cdist = ct ? Math.min(C.dist, ct.dist) : C.dist; // indoor rooms (attic) tune the camera: higher + closer so you see the room, not your back
+    var pitch = Math.min(0.95, (ct ? ct.pitch : C.pitch) + 0.12 * C.nb);
     var cp = Math.cos(pitch), sp = Math.sin(pitch);
-    var want = C.dist, step = 0.12, dd = 0.4;
+    var want = cdist, step = 0.12, dd = 0.4;
     var bx = Math.sin(C.yaw) * cp, by = sp, bz = Math.cos(C.yaw) * cp;
-    for (dd = 0.4; dd <= C.dist; dd += step) { if (inWall(tx + bx * dd, ty + by * dd, tz + bz * dd, 0.25)) { break; } }
-    want = Math.min(C.dist, dd - step);
+    for (dd = 0.4; dd <= cdist; dd += step) { if (inWall(tx + bx * dd, ty + by * dd, tz + bz * dd, 0.25)) { break; } }
+    want = Math.min(cdist, dd - step);
     C.cur += (want - C.cur) * Math.min(1, dt * (want < C.cur ? 20 : 4));
     camera.position.set(tx + bx * C.cur, ty + by * C.cur, tz + bz * C.cur);
     camera.lookAt(tx, ty + 0.25 - 0.3 * C.nb, tz);

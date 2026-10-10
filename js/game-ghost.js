@@ -82,6 +82,7 @@
         },
         onDown: function (x, y) { tapAt(x, y); },
         _state: function () { return { ghosts: G.length, candles: candles, t: t, caught: caught, streak: streak }; },
+        _add: function (n) { api.addScore(n); }, _end: function () { api.gameOver(); },
         _catchAll: function () { G.slice().forEach(function (g) { while (G.indexOf(g) >= 0) tapAt(g.x, g.y); }); }
       };
     }
