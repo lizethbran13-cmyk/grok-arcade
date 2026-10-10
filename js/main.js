@@ -82,7 +82,7 @@
     else if (GA.Fix.powerOut()) special = { tag: 'NO POWER', name: cab.game.name, desc: 'The arcade lost power. Ask Gary from IT (IT Help Desk by the prize counter) to turn it back on.', btn: 'NO POWER', key: 'check', cls: 'broken' };
     $('prompt').classList.remove('npc', 'broken', 'prize', 'gallery', 'together'); $('playBtn').classList.remove('pzPlay', 'galPlay', 'togBtn'); chalBtn(false);
     if (special) {
-      $('prompt').classList.remove('mp', 'bonus'); $('prompt').classList.add(special.cls);
+      $('prompt').classList.remove('mp', 'bonus'); if (special.cls) $('prompt').classList.add(special.cls);
       $('pTag').textContent = special.tag; $('pName').textContent = special.name; $('pDesc').textContent = special.desc;
       $('playBtn').innerHTML = special.btn; $('playBtn').classList.remove('mpBtn'); if (special.pb) $('playBtn').classList.add(special.pb); $('playBtn').setAttribute('data-game', cab.id); $('playBtn').removeAttribute('data-href');
       $('pKey').innerHTML = 'Press <kbd>E</kbd> or <kbd>Enter</kbd> to ' + special.key;

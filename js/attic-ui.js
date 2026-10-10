@@ -116,17 +116,18 @@
   /* ---------- Gary: lends the ladder, remembers Larry, the family reunion ---------- */
   function garyHook() {
     if (!GA.Fix || GA.Fix._atWrapped) return; var t0 = GA.Fix.talk; GA.Fix._atWrapped = true;
-    GA.Fix.talk = function () { var st = GA.Hub.gary(), s = S(); if (st.state === 'desk' && !GA.Fix.blocksHost()) { var line = garyLine(s); if (line) { GA.Fix.say(line, 6500); return; } } t0.apply(GA.Fix, arguments); };
+    GA.Fix.talk = function () { var st = GA.Hub.gary(), s = S(); if (st.state === 'desk') { var line = garyLine(s, GA.Fix.blocksHost()); if (line) { GA.Fix.say(line, 6500); return; } } t0.apply(GA.Fix, arguments); };
   }
-  function garyLine(s) {
+  function garyLine(s, busy) {
     if (s.postcard === 'carry') { s.postcard = 'delivered'; save(); AT.ev('atReunion'); tix(15, 'family reunion'); snd('win');
       return 'Is that\u2026 LARRY\u2019s handwriting? \u201CLil Gary, fixed the boiler. Also I live down here now. Bring snacks.\u201D (sniff) Fourteen years! Tell him I\u2019m coming down for Taco Tuesday!'; }
     if (s.found && s.ladder === 'gary' && !s.opened) { s.ladder = 'carry'; save(); applyCarry(); AT.ev('atLadderGet'); snd('ding');
       return 'A hatch in the CEILING? Huh. I never look up, it\u2019s bad for the neck. Here, borrow my ladder. Bring it back in one piece! (Psst, it\u2019s in your hands now.)'; }
-    if (s.ladder === 'carry') return 'The ladder won\u2019t carry itself. Well\u2026 technically you\u2019re carrying it. Go find that hatch!';
+    if (s.ladder === 'carry' && !busy) return 'The ladder won\u2019t carry itself. Well\u2026 technically you\u2019re carrying it. Go find that hatch!';
     if (s.keypadSeen && s.fuse === 'none' && !s.maintTold) { s.maintTold = true; save(); snd('ding');
       return 'A FUSE? That\u2019s a maintenance thing. Maintenance\u2026 maintenance\u2026 LARRY! My big brother Larry! He went down to fix the boiler in 2009 and never came back up! Check the secret basement for a door marked MAINTENANCE!'; }
     if (s.fuse === 'none' && s.maintTold && !s.larryMet) return 'Did you find Larry yet? Big beard? Talks to a mop? Secret basement, door marked MAINTENANCE!';
+    if (busy) return null; // the antenna is broken: let Gary's normal repair talk run (quest lines above still work)
     if (!s.found && Math.random() < 0.35) return 'Gus keeps going on about an attic. I\u2019ve never seen it. Then again, I never look up. If you hear creaking, it\u2019s NOT the wiring. Probably.';
     return null;
   }
