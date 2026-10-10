@@ -1032,6 +1032,7 @@
 
   /* ---------- travel between areas (elevator / stairs / basement door) with a quick fade ---------- */
   function goTo(x, z, vx, vz) { GA.Hub.setPlayer(x, z); GA.Hub.setFace(Math.atan2(vx, vz)); GA.Hub.cameraYaw(Math.atan2(-vx, -vz)); }
+  AR.goTo = goTo;
   AR.ARRIVE = {
     roof: function () { goTo(ROOF.spawn.x, ROOF.spawn.z, 0, -1); },
     basement: function () { goTo(BASE.spawn.x, BASE.spawn.z, 0, 1); },
@@ -1047,15 +1048,15 @@
   };
 
   /* ---------- per-frame: show only the area you're in (+ the food court from the main hall), area fog, animations ---------- */
-  var FOGS = { main: ['#140a2b', 22, 48], roof: ['#1a0b45', 30, 75], basement: ['#0d0812', 9, 26] }, lastT = 0, curArea = null;
+  var FOGS = AR.FOGS = { main: ['#140a2b', 22, 48], roof: ['#1a0b45', 30, 75], basement: ['#0d0812', 9, 26] }, lastT = 0, curArea = null;
   function tick(force) {
     var p = A.pose(), area = GA.Hub.regionAt(p.x, p.z);
-    var lf = area === 'food' || (area !== 'roof' && area !== 'basement' && area !== 'gallery' && p.z > 1), lr = area === 'roof', lb = area === 'basement';
+    var lf = area === 'food' || ((area === 'main' || area === 'bonus' || area === 'hall') && p.z > 1), lr = area === 'roof', lb = area === 'basement';
     if (force || lf !== live.food) { live.food = lf; R.food.visible = lf; }
     if (force || lr !== live.roof) { live.roof = lr; R.roof.visible = lr; }
     if (force || lb !== live.base) { live.base = lb; R.base.visible = lb; }
     var lg = area === 'gallery'; if (R.gal && (force || lg !== live.gal)) { live.gal = lg; R.gal.visible = lg; }
-    if (area !== curArea) { var prev = curArea; curArea = area; var fg = FOGS[area] || FOGS.main; if (A.scene.fog && (area === 'roof' || area === 'basement' || prev === 'roof' || prev === 'basement')) { A.scene.fog.near = fg[1]; A.scene.fog.far = fg[2]; A.scene.fog.color.set(fg[0]); A.renderer().setClearColor(fg[0]); }
+    if (area !== curArea) { var prev = curArea; curArea = area; var fg = FOGS[area] || FOGS.main; if (A.scene.fog && (FOGS[area] || FOGS[prev]) && (area !== 'main' || prev)) { A.scene.fog.near = fg[1]; A.scene.fog.far = fg[2]; A.scene.fog.color.set(fg[0]); A.renderer().setClearColor(fg[0]); }
       if (GA.Prog) { if (area === 'gallery') GA.Prog.event('galVisit'); if (area === 'food') GA.Prog.event('fcVisit'); if (area === 'roof') GA.Prog.event('rfVisit'); if (area === 'basement') GA.Prog.event('bsVisit'); }
       if (AR.onArea) AR.onArea(area, prev); }
     return area;

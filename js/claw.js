@@ -30,7 +30,7 @@
   function daysLeft() { return 3 - (((dayNum() % 3) + 3) % 3); }
   function contents(machine, p) { p = p == null ? period() : p; var S = GA.CLAW_SETS || [[]]; var i = machine === 'easy' ? p : p + 1; return S[((i % S.length) + S.length) % S.length].slice(); }
   C.contents = function (machine, dayOffset) { if (dayOffset == null) return contents(machine); var o = C._dayOffset; C._dayOffset = dayOffset; var r = contents(machine); C._dayOffset = o; return r; };
-  C.daysLeft = daysLeft;
+  C.daysLeft = daysLeft; C.period = period; // the attic hatch moves on this same 3-day clock
 
   /* ---------- the prize pile ---------- */
   function inChuteZone(x, z, pad) { return x < CH.x + CH.h + 0.035 + pad && z > CH.z - CH.h - 0.035 - pad; }

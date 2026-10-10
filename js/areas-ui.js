@@ -48,7 +48,7 @@
 
   /* ---------- walk-up prompts ---------- */
   UI.prompt = function (cab) {
-    build(); var k = cab.kind, P = AR.party();
+    build(); var k = cab.kind, P = AR.party(); if (/^at_/.test(k) && GA.AtticUI) return GA.AtticUI.prompt(cab);
     switch (k) {
       case 'ar_snack': return { tag: 'FOOD COURT', name: 'Snack Bar', desc: 'Snacks give fun boosts: x2 tickets, run faster, lucky games! Pay with tickets or ' + COIN + ' coins (you have ' + AR.coins() + '). ' + (P.dow === 0 ? 'SNACK ATTACK MONDAY: half price!' : ''), btn: 'MENU', key: 'order a snack', cls: 'prize', pb: 'pzPlay' };
       case 'ar_chef': return { tag: 'FOOD COURT', name: 'Chef Gio', desc: 'The pizza chef! Help him cook at the brick oven to earn ' + COIN + ' coins and a Chef\u2019s Special boost.', btn: 'TALK', key: 'talk to Chef Gio', cls: 'npc' };
@@ -79,7 +79,7 @@
 
   /* ---------- open (E / PLAY) ---------- */
   UI.open = function (cab) {
-    build(); var k = cab.kind; cur = cab;
+    build(); var k = cab.kind; cur = cab; if (/^at_/.test(k) && GA.AtticUI) return GA.AtticUI.open(cab);
     if (k === 'ar_snack') return openSnacks();
     if (k === 'ar_slushie') return quickBuy('slushie');
     if (k === 'ar_icecream') return quickBuy('icecream');
@@ -316,7 +316,7 @@
   };
   function drawMap(force) {
     var cv = $('arMap'); if (!cv || !AR || !AR.built) return; var started = !$('hud').classList.contains('hidden'); if (!started && !force) return;
-    var big = cv.classList.contains('big'), area = GA.Hub.area(), M = area === 'roof' ? MAPS.roof : area === 'basement' ? MAPS.basement : area === 'gallery' ? MAPS.gallery : MAPS.arcade, c = cv.getContext('2d'), W = cv.width, H = cv.height;
+    var big = cv.classList.contains('big'), area = GA.Hub.area(), M = (GA.AtticUI && GA.AtticUI.map && GA.AtticUI.map(area)) || (area === 'roof' ? MAPS.roof : area === 'basement' ? MAPS.basement : area === 'gallery' ? MAPS.gallery : MAPS.arcade), c = cv.getContext('2d'), W = cv.width, H = cv.height;
     var sx = W / (M.maxX - M.minX), sz = H / (M.maxZ - M.minZ), s = Math.min(sx, sz), ox = (W - (M.maxX - M.minX) * s) / 2, oz = (H - (M.maxZ - M.minZ) * s) / 2;
     function X(x) { return ox + (x - M.minX) * s; } function Z(z) { return oz + (z - M.minZ) * s; }
     c.clearRect(0, 0, W, H); c.fillStyle = 'rgba(14,6,34,.82)'; c.fillRect(0, 0, W, H);
@@ -325,5 +325,5 @@
     c.font = (big ? 22 : 20) + 'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif'; M.marks().forEach(function (m) { c.fillText(m[0], X(m[1]), Z(m[2])); });
     var p = GA.Hub.pose(), px = X(p.x), pz = Z(p.z), f = p.face; c.save(); c.translate(px, pz); c.rotate(-f + Math.PI); c.fillStyle = '#ffffff'; c.strokeStyle = '#ff4fd8'; c.lineWidth = 3; c.beginPath(); c.moveTo(0, -11); c.lineTo(8, 8); c.lineTo(0, 4); c.lineTo(-8, 8); c.closePath(); c.fill(); c.stroke(); c.restore();
   }
-  UI.drawMap = drawMap; UI.build = build;
+  UI.drawMap = drawMap; UI.build = build; UI.show = show; UI.wire = wire; UI.MAPS = MAPS;
 })();

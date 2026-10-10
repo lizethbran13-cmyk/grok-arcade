@@ -257,7 +257,7 @@
     GA.Fix.init();
     GA.Fix.onChange = function () { showPrompt(GA.Hub.near()); };
     GA.Hub.onNear = function (cab) { if (cab) GA.Audio.play('near'); showPrompt(cab); };
-    GA.Hub.onArea = function (bonus, area) { var a = $('areaLabel'), hall = area === 'hall', AN = { food: 'FOOD COURT', roof: 'ROOFTOP PARTY', basement: 'SECRET BASEMENT', gallery: 'GAME GALLERY' }; a.textContent = AN[area] || (hall ? 'HALL OF RECORDS' : bonus ? 'BONUS ZONE' : 'ARCADE FLOOR'); a.classList.toggle('bonus', bonus); a.classList.toggle('hall', hall); ['food', 'roof', 'basement', 'gallery'].forEach(function (k) { a.classList.toggle('ar_' + k, area === k); }); if (bonus && started && GA.Prog) GA.Prog.event('bonusZone'); };
+    GA.Hub.onArea = function (bonus, area) { var a = $('areaLabel'), hall = area === 'hall', AN = { food: 'FOOD COURT', roof: 'ROOFTOP PARTY', basement: 'SECRET BASEMENT', gallery: 'GAME GALLERY', attic: 'THE ATTIC', attic2: 'COBWEB LIBRARY', attic3: 'FOGGY OBSERVATORY', maint: 'MAINTENANCE' }; a.textContent = AN[area] || (hall ? 'HALL OF RECORDS' : bonus ? 'BONUS ZONE' : 'ARCADE FLOOR'); a.classList.toggle('bonus', bonus); a.classList.toggle('hall', hall); ['food', 'roof', 'basement', 'gallery', 'attic', 'attic2', 'attic3', 'maint'].forEach(function (k) { a.classList.toggle('ar_' + k, area === k); }); if (bonus && started && GA.Prog) GA.Prog.event('bonusZone'); };
 
     $('startBtn').addEventListener('click', start);
     $('title').addEventListener('click', function (e) { if (e.target === $('title')) start(); });

@@ -1644,6 +1644,7 @@
     buildRoom(); buildSigns(); buildDecor(); buildCabinets(); buildAntenna();
     if (GA.Hall3D && GA.Hall3D.build) { try { GA.Hall3D.build(api()); } catch (e) { if (window.console) console.warn('Hall of Game Records failed to build', e); } }
     if (GA.Areas && GA.Areas.build) { try { GA.Areas.build(api()); } catch (e) { if (window.console) console.warn('Food Court / Rooftop / Basement failed to build', e); } }
+    if (GA.Attic && GA.Attic.build) { try { GA.Attic.build(api()); } catch (e) { if (window.console) console.warn('Attic failed to build', e); } }
     buildGary(); buildPlayer(); setupInput();
     // restore position when coming back from a main game
     var saved = null; try { saved = JSON.parse(sessionStorage.getItem('grokArcade.pos') || 'null'); } catch (e) {}

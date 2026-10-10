@@ -66,7 +66,8 @@ GA.BONUS_GAMES = [
   { id: 'hoop', name: 'Hoop Frenzy', desc: 'The hoop slides back and forth! Tap to shoot and lead the hoop so the ball drops right in. Swish = 3, rainbow money balls count double. A Grok Sports Command game.', color: '#f97316', color2: '#2563eb' },
   { id: 'lockpick', name: 'Lockpick Panic', desc: 'Pick Gus\u2019s locks against the clock! Tap when each bobbing pin lines up with the green shear line. Gold master locks wobble. A Secret Basement game.', color: '#ffd23f', color2: '#ff4fd8' },
   { id: 'drift', name: 'Spark Drift', desc: 'Corners ahead! HOLD to drift and charge the sparks blue, orange, PURPLE, then let go for a mini-turbo. Hold too long and you spin out! A Grok Kart Party game.', color: '#c084fc', color2: '#ff4fd8' },
-  { id: 'meteor', name: 'Meteor Mayhem', desc: 'Meteors rain on Grok City! Red circles show where they will land, so drag to run out of the way. Grab coins and gold stars, and score CLOSE CALLS for near misses. A Grok Disaster Zone game.', color: '#ff7b00', color2: '#7b5cd6' }
+  { id: 'meteor', name: 'Meteor Mayhem', desc: 'Meteors rain on Grok City! Red circles show where they will land, so drag to run out of the way. Grab coins and gold stars, and score CLOSE CALLS for near misses. A Grok Disaster Zone game.', color: '#ff7b00', color2: '#7b5cd6' },
+  { id: 'ghost', name: 'Ghost Lantern \u201983', desc: 'A dusty 1983 cabinet from the basement! Friendly ghosts drift toward your candle. TAP them to catch them in your lantern before they blow it out. Big grumpy ghosts need 3 taps, golden ghosts are worth 5. 3 candles. Rumor says a high score shows a secret code\u2026', color: '#a7f3d0', color2: '#7c3aed' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };
