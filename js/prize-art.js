@@ -7,7 +7,8 @@
     { id: 'fun', name: 'Fun Stuff', icon: '\uD83C\uDF9F\uFE0F' },
     { id: 'plush', name: 'Plushies', icon: '\uD83E\uDDF8' },
     { id: 'model', name: 'Models & Figures', icon: '\u2708\uFE0F' },
-    { id: 'trophy', name: 'Trophies', icon: '\uD83C\uDFC6' }
+    { id: 'trophy', name: 'Trophies', icon: '\uD83C\uDFC6' },
+    { id: 'vault', name: 'Basement Rares', icon: '\uD83D\uDC8E' }
   ];
   GA.PRIZES = [
     { id: 'kc_snake', cat: 'fun', name: 'Grok Snake Keychain', price: 10, desc: 'A squishy neon snake for your keys.' },
@@ -26,6 +27,8 @@
     { id: 'kc_stamp', cat: 'fun', name: 'Gus\u2019s APPROVED Stamp', price: 20, desc: 'A tiny red rubber stamp from the Hall of Game Records. Stamp it on things. Gus says don\u2019t.' },
     { id: 'kc_pball', cat: 'fun', name: 'Pickleball Keychain', price: 20, desc: 'A tiny yellow Grok Pickleball ball with all its holes. Dink your keys!' },
     { id: 'kc_hoop', cat: 'fun', name: 'Mini Hoop Keychain', price: 20, desc: 'A tiny orange-rimmed basketball hoop with a net and a ball stuck in it. Swish!' },
+    { id: 'party_hat', cat: 'fun', name: 'Rooftop Party Hat', price: 35, desc: 'A pink striped party cone with a fluffy pom-pom from the Rooftop Party Deck. Wear it! (Free on Party Night.)' },
+    { id: 'disco_ball', cat: 'fun', name: 'Mini Disco Ball', price: 40, desc: 'A tiny mirror ball that spins on its stand and throws little colored lights around, just like the one over the rooftop dance floor.' },
     { id: 'sw_band', cat: 'fun', name: 'Champ Sweatband', price: 30, desc: 'The blue Grok Sports Command headband with a gold star. Instantly 10% sportier.' },
     { id: 'kc_seeker', cat: 'fun', name: 'Seeker Keychain', price: 20, desc: 'The homing Seeker from Grok Kart Party: a little blue rocket-shell with a glowing eye. It always finds your keys.' },
     { id: 'kart_helmet', cat: 'fun', name: 'Racing Helmet', price: 35, desc: 'A glossy pink-and-cyan Grok Kart Party racing helmet with a checkered stripe and a lightning bolt. Safety first, speed second!' },
@@ -56,6 +59,7 @@
     { id: 'pl_mvp', cat: 'plush', name: 'MVP Bear Plush', price: 60, desc: 'A cuddly bear in a #1 Grok Sports Command jersey, hugging a basketball. Most Valuable Plush!' },
     { id: 'pl_chinchino', cat: 'plush', name: 'Chinchino Racer Plush', price: 60, desc: 'Chinchino the fluffy chinchilla from Grok Kart Party in a little racing scarf, holding a tiny steering wheel. Extremely soft, surprisingly fast.' },
     { id: 'pl_roargon', cat: 'plush', name: 'Roargon Plush', price: 65, desc: 'A squishy purple Roargon, the friendly-ish kaiju from Grok Disaster Zone, with glowing cyan back spikes.' },
+    { id: 'pl_chef', cat: 'plush', name: 'Chef Gio Plush', price: 55, desc: 'The Food Court\u2019s pizza chef, with his puffy hat, big mustache and a slice for you. Mamma mia, so soft!' },
     { id: 'pl_pickle', cat: 'plush', name: 'Pickle Pal Plush', price: 55, desc: 'A bumpy, smiley pickle in a sweatband holding its own tiny paddle. The Grok Pickleball mascot!' },
     { id: 'pl_baron', cat: 'plush', name: 'Baron Grumble Plush', price: 60, desc: 'The top-hatted, monocled villain of Grok Heist Crew, as a squishy plush. Still grumbling about his treasures.' },
     { id: 'pl_embercub', cat: 'plush', name: 'Embercub Plush', price: 55, desc: 'The fire-tail Grok Poke starter, extra squishy. Its tail glows (but never burns).' },
@@ -92,7 +96,10 @@
     { id: 'tr_kart', cat: 'trophy', name: 'Grand Prix Gold Cup', price: 320, desc: 'The Grok Kart Party Grand Prix trophy: a golden cup with a checkered flag and a racing wheel spinning on top.' },
     { id: 'tr_disaster', cat: 'trophy', name: 'Disaster Survivor Cup', price: 330, desc: 'The Grok Disaster Zone survivor trophy: a golden cup with a meteor, a lightning bolt and a snowflake orbiting around it.' },
     { id: 'tr_ring', cat: 'trophy', name: 'Golden Ring Trophy', price: 350, desc: 'A giant spinning Grok Dash ring on a stand. Shiny!' },
-    { id: 'golden_joy', cat: 'trophy', name: 'Golden Joystick', price: 750, desc: 'The legendary Golden Joystick. The ultimate prize!' }
+    { id: 'golden_joy', cat: 'trophy', name: 'Golden Joystick', price: 750, desc: 'The legendary Golden Joystick. The ultimate prize!' },
+    // Secret Basement rares: never sold at the Prize Counter (Gus’s Golden Key = crack the code safe; Mini Retro Cabinet = the basement’s Rare Prize Vault)
+    { id: 'gold_key', cat: 'vault', vault: true, name: 'Gus\u2019s Golden Key', price: 0, desc: 'RARE! The golden key to the Secret Basement, on a velvet cushion. Only found by cracking Gus\u2019s code safe.' },
+    { id: 'retro_cab', cat: 'vault', vault: true, name: 'Mini Retro Cabinet', price: 60, desc: 'RARE! A tiny 1983 arcade cabinet with a glowing screen. Only sold in the Rare Prize Vault in the Secret Basement.' }
   ];
   GA.findPrize = function (id) { return GA.PRIZES.find(function (p) { return p.id === id; }); };
 
@@ -798,6 +805,28 @@
     g.fillStyle = '#c084fc'; g.beginPath(); g.moveTo(84, 56); g.lineTo(96, 52); g.lineTo(90, 58); g.lineTo(98, 62); g.lineTo(84, 62); g.fill(); sparkle(g, 18, 34, 5); }
   function trKart(g) { trophy(g, '#ffcf3a', true); g.fillStyle = '#6b4423'; g.fillRect(76, 14, 2, 30); checker(g, 78, 14, 16, 10, 4);
     g.strokeStyle = '#1f2433'; g.lineWidth = 3; g.beginPath(); g.arc(50, 12, 8, 0, 7); g.stroke(); g.fillStyle = '#1f2433'; g.fillRect(42, 11, 16, 2.5); }
+
+  /* ---------- Food Court / Rooftop / Secret Basement prizes ---------- */
+  function plushChef(g) {
+    shadow(g, 50, 92, 24); ball(g, 50, 70, 22, 20, '#fbfbf7'); g.fillStyle = '#d62828'; [62, 70, 78].forEach(function (y) { g.beginPath(); g.arc(50, y, 2, 0, 7); g.fill(); }); g.fillRect(36, 52, 28, 5);
+    ball(g, 50, 40, 17, 16, '#f1c7a5'); g.fillStyle = '#3a2216'; g.beginPath(); g.ellipse(44, 47, 6, 2.6, 0.2, 0, 7); g.ellipse(56, 47, 6, 2.6, -0.2, 0, 7); g.fill();
+    eye(g, 44, 38, 2.2); eye(g, 56, 38, 2.2); blush(g, 39, 44); blush(g, 61, 44);
+    ball(g, 50, 22, 15, 6, '#ffffff'); ball(g, 42, 15, 8, 8, '#ffffff'); ball(g, 58, 15, 8, 8, '#ffffff'); ball(g, 50, 11, 9, 9, '#ffffff');
+    g.fillStyle = '#f0b54a'; g.beginPath(); g.moveTo(66, 66); g.lineTo(86, 72); g.lineTo(70, 84); g.closePath(); g.fill(); g.fillStyle = '#c0392b'; g.beginPath(); g.arc(73, 73, 2.4, 0, 7); g.arc(77, 77, 2, 0, 7); g.fill(); tag(g, 30, 78);
+  }
+  function partyHat(g) { shadow(g, 50, 88, 26); g.fillStyle = '#ff4fd8'; g.beginPath(); g.moveTo(50, 12); g.lineTo(74, 84); g.lineTo(26, 84); g.closePath(); g.fill();
+    ['#ffe14d', '#3ff0ff', '#4ade80'].forEach(function (c, i) { g.strokeStyle = c; g.lineWidth = 4; var y = 74 - i * 18, hw = 24 * (y - 12) / 72; g.beginPath(); g.moveTo(50 - hw, y); g.lineTo(50 + hw, y); g.stroke(); });
+    ball(g, 50, 12, 8, 8, '#ffe14d'); sparkle(g, 22, 30, 5); sparkle(g, 80, 40, 4); shine(g, 44, 40, 3, 10, 0.35); }
+  function discoBall(g) { standBase(g, '#2a1650', true); g.strokeStyle = '#c9ced8'; g.lineWidth = 2; g.beginPath(); g.moveTo(50, 8); g.lineTo(50, 20); g.stroke();
+    ball(g, 50, 40, 22, 22, '#c9d2e4'); g.strokeStyle = 'rgba(80,90,120,.6)'; g.lineWidth = 1; for (var i = -3; i <= 3; i++) { g.beginPath(); g.ellipse(50, 40, 22, Math.abs(i) * 7 + 0.5, 0, 0, 7); g.stroke(); g.beginPath(); g.moveTo(50 + i * 7, 18); g.lineTo(50 + i * 7, 62); g.stroke(); }
+    [['#ff4fd8', 40, 30], ['#3ff0ff', 58, 36], ['#ffe14d', 46, 50]].forEach(function (q) { g.fillStyle = q[0]; g.fillRect(q[1], q[2], 5, 5); }); shine(g, 42, 30, 5, 5, 0.8); sparkle(g, 20, 24, 5); sparkle(g, 82, 22, 5); sparkle(g, 80, 60, 4); }
+  function goldKeyArt(g) { shadow(g, 50, 88, 32); g.fillStyle = '#7a1f4a'; g.beginPath(); g.ellipse(50, 78, 36, 10, 0, 0, 7); g.fill(); var M = metal(g, 30, 60, '#ffcf3a');
+    g.strokeStyle = M; g.lineWidth = 7; g.beginPath(); g.arc(30, 44, 12, 0, 7); g.stroke(); g.fillStyle = M; g.fillRect(40, 41, 40, 6); g.fillRect(70, 47, 5, 12); g.fillRect(62, 47, 5, 8);
+    g.fillStyle = '#ff4fd8'; g.beginPath(); g.arc(30, 62, 5, 0, 7); g.fill(); sparkle(g, 76, 26, 6); sparkle(g, 20, 22, 4); shine(g, 26, 38, 3, 3, 0.8); }
+  function retroCabArt(g) { shadow(g, 50, 92, 24); g.fillStyle = '#6b3f22'; rr(g, 30, 10, 40, 82, 4); g.fill(); g.fillStyle = '#16121f'; g.fillRect(34, 16, 32, 44);
+    g.fillStyle = '#ff4fd8'; g.fillRect(33, 12, 34, 8); g.fillStyle = '#3ff0ff'; g.fillRect(37, 24, 26, 20); g.fillStyle = '#fff'; [40, 46, 52, 58].forEach(function (x, i) { g.fillRect(x, 28 + (i % 2) * 6, 3, 3); });
+    g.fillStyle = '#c0392b'; g.fillRect(31, 58, 38, 8); g.fillStyle = '#ff2a2a'; g.beginPath(); g.arc(42, 58, 3, 0, 7); g.fill(); g.fillStyle = '#ffe14d'; g.beginPath(); g.arc(56, 62, 2.4, 0, 7); g.fill(); g.fillStyle = '#3ff0ff'; g.beginPath(); g.arc(62, 62, 2.4, 0, 7); g.fill();
+    g.fillStyle = '#ff3d3d'; g.fillRect(44, 74, 4, 6); g.fillRect(52, 74, 4, 6); sparkle(g, 80, 22, 5); }
   var DRAW = {
     kc_snake: kcSnake, kc_joy: kcJoy, poster_arcade: function (g) { poster(g, 'arcade'); }, poster_brawl: function (g) { poster(g, 'brawl'); }, cap: cap, propeller: propeller,
     pl_luna: function (g) { plushRat(g, 'luna'); }, pl_pirat: function (g) { plushRat(g, 'pirat'); }, pl_snowie: function (g) { plushRat(g, 'snowie'); },
@@ -809,6 +838,7 @@
     pl_chinchino: plushChin, kc_seeker: kcSeeker, kart_helmet: helmet, kart_model: kartModel, tr_kart: trKart,
     pl_mvp: plushMvp, kc_hoop: kcHoop, sw_band: swBand, gold_pin: goldPin, tr_sports: trSports,
     kc_duck: kcDuck, hard_hat: hardHat, pl_roargon: plushRoargon, ufo_model: ufoModel, tr_disaster: trDisaster,
+    pl_chef: plushChef, party_hat: partyHat, disco_ball: discoBall, gold_key: goldKeyArt, retro_cab: retroCabArt,
     pl_embercub: function (g) { plushCritter(g, 'embercub'); }, pl_puddlepup: function (g) { plushCritter(g, 'puddlepup'); }, pl_leafkit: function (g) { plushCritter(g, 'leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue, pl_gus: plushGus, kc_stamp: kcStamp, dlc_replica: dlcReplica,
     pl_zebra: plushZebra, pl_rhino: plushRhino, pl_leopard: plushLeopard, ranger_hat: rangerHat, kc_dart: kcDart, snow_globe: snowGlobe, rescue_truck: rescueTruck,
     pl_dash: function (g) { plushDash(g, 'grok'); }, pl_speedy: function (g) { plushDash(g, 'speedy'); }, pl_floaty: function (g) { plushDash(g, 'floaty'); },

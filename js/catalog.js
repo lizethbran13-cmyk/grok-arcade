@@ -64,6 +64,7 @@ GA.BONUS_GAMES = [
   { id: 'laser', name: 'Laser Dash', desc: 'Sneak down the museum hall! Tap the top to JUMP the low lasers and the bottom to DUCK the high ones. Grab diamonds, don\u2019t trip the alarm! A Grok Heist Crew game.', color: '#ff3d6e', color2: '#a855f7' },
   { id: 'dink', name: 'Dink Duel', desc: 'The CPU dinks it over the net. Let it BOUNCE (it\u2019s the kitchen rule!), then tap to dink it back. Tap at the top of the hop for PERFECT. A Grok Pickleball game.', color: '#e6ff3b', color2: '#22c55e' },
   { id: 'hoop', name: 'Hoop Frenzy', desc: 'The hoop slides back and forth! Tap to shoot and lead the hoop so the ball drops right in. Swish = 3, rainbow money balls count double. A Grok Sports Command game.', color: '#f97316', color2: '#2563eb' },
+  { id: 'lockpick', name: 'Lockpick Panic', desc: 'Pick Gus\u2019s locks against the clock! Tap when each bobbing pin lines up with the green shear line. Gold master locks wobble. A Secret Basement game.', color: '#ffd23f', color2: '#ff4fd8' },
   { id: 'drift', name: 'Spark Drift', desc: 'Corners ahead! HOLD to drift and charge the sparks blue, orange, PURPLE, then let go for a mini-turbo. Hold too long and you spin out! A Grok Kart Party game.', color: '#c084fc', color2: '#ff4fd8' },
   { id: 'meteor', name: 'Meteor Mayhem', desc: 'Meteors rain on Grok City! Red circles show where they will land, so drag to run out of the way. Grab coins and gold stars, and score CLOSE CALLS for near misses. A Grok Disaster Zone game.', color: '#ff7b00', color2: '#7b5cd6' }
 ];

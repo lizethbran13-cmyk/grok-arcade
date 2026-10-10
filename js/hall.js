@@ -374,11 +374,11 @@
     buildDesk(); buildDLC();
     var last = -1;
     A.anims.push(function (t) {
-      var p = A.pose(), inH = p.z > A.ROOM.maxZ - 3;
-      var cam = A.camera().position, vis = p.z > A.ROOM.maxZ - 7 || cam.z > A.ROOM.maxZ - 7 || (p.x > A.DIV_X - 1.5 && p.z > -3);
+      var p = A.pose(), inWing = p.x > W.minX - 3 && p.z < W.maxZ + 3, inH = p.z > A.ROOM.maxZ - 3 && inWing;
+      var cam = A.camera().position, vis = p.z < W.maxZ + 3 && (p.z > A.ROOM.maxZ - 7 || cam.z > A.ROOM.maxZ - 7 || (p.x > A.DIV_X - 1.5 && p.z > -3));
       if (vis !== state.vis) { state.vis = vis; ROOTS.forEach(function (o) { o.visible = vis; }); }
       state.inHall = inH;
-      var inside = p.z > A.ROOM.maxZ + 0.3; // greet once per visit (and not again within 30s)
+      var inside = p.z > A.ROOM.maxZ + 0.3 && p.x > W.minX && p.z < W.maxZ; // greet once per visit (and not again within 30s)
       if (inside && !state.saidHi && GA.HallUI && !(GA.Hall && GA.Hall.isOpen()) && t - (state.hiT || -99) > 30) { state.saidHi = true; state.hiT = t; H3.say(GA.HallUI.line('hello'), 5); }
       if (p.z < A.ROOM.maxZ - 1.5) state.saidHi = false;
       var dt = state.lt ? Math.min(0.05, t - state.lt) : 0.016; state.lt = t;

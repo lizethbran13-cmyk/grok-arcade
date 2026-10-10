@@ -6,6 +6,8 @@
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
   var WING = { minX: 2, maxX: 18, minZ: ROOM.maxZ + 0.4, maxZ: 26, doorX: 10, doorHW: 1.5, doorH: 3.3 }; // Hall of Game Records wing behind the bonus zone's south wall
+  var FOOD = { minX: ROOM.minX, maxX: WING.minX - 0.4, minZ: ROOM.maxZ + 0.4, maxZ: WING.maxZ, doorX: -11.6, doorHW: 1.5, doorH: 3.3 }; // Food Court behind the main hall's south wall (west of the Hall wing)
+  var REGIONS = []; // far-away walk-in areas (rooftop deck, secret basement) registered by js/areas.js: {name,minX,maxX,minZ,maxZ,maxY,spawn:{x,z}}
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
   var MAIN_STEP = GA.MAIN_GAMES.length > 15 ? 1.48 : GA.MAIN_GAMES.length > 14 ? 1.55 : GA.MAIN_GAMES.length > 13 ? 1.66 : GA.MAIN_GAMES.length > 12 ? 1.78 : GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 15 ? -17.22 : GA.MAIN_GAMES.length > 14 ? -16.95 : GA.MAIN_GAMES.length > 13 ? -17.0 : GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
   // more than 16 main cabinets: shrink them a little so they still fit side by side along the north wall (x -17.95..5.75), no overlaps
@@ -120,18 +122,24 @@
     var wallMat = lam('#3b2370'), th = 0.4, H = ROOM.h;
     // outer walls
     mesh(box(ROOM.maxX - ROOM.minX + th * 2, H, th), wallMat, 0, H / 2, ROOM.minZ - th / 2);
-    var dL = WING.doorX - WING.doorHW, dR = WING.doorX + WING.doorHW, sL = dL - (ROOM.minX - th), sR = (ROOM.maxX + th) - dR;
-    mesh(box(sL, H, th), wallMat, ROOM.minX - th + sL / 2, H / 2, ROOM.maxZ + th / 2);
+    var dL = WING.doorX - WING.doorHW, dR = WING.doorX + WING.doorHW, sR = (ROOM.maxX + th) - dR;
+    var fL = FOOD.doorX - FOOD.doorHW, fR = FOOD.doorX + FOOD.doorHW, sL0 = fL - (ROOM.minX - th), sM = dL - fR;
+    mesh(box(sL0, H, th), wallMat, ROOM.minX - th + sL0 / 2, H / 2, ROOM.maxZ + th / 2);
+    mesh(box(sM, H, th), wallMat, fR + sM / 2, H / 2, ROOM.maxZ + th / 2);
     mesh(box(sR, H, th), wallMat, dR + sR / 2, H / 2, ROOM.maxZ + th / 2);
     mesh(box(WING.doorHW * 2, H - WING.doorH, th), wallMat, WING.doorX, WING.doorH + (H - WING.doorH) / 2, ROOM.maxZ + th / 2);
+    mesh(box(FOOD.doorHW * 2, H - FOOD.doorH, th), wallMat, FOOD.doorX, FOOD.doorH + (H - FOOD.doorH) / 2, ROOM.maxZ + th / 2);
     mesh(box(th, H, D), wallMat, ROOM.minX - th / 2, H / 2, 0);
     mesh(box(th, H, D), wallMat, ROOM.maxX + th / 2, H / 2, 0);
-    addWall(-99, 99, -1, 99, -99, ROOM.minZ);
-    // south wall: solid except the doorway into the Hall of Game Records wing (the wing adds its own outer walls)
-    addWall(-99, dL, -1, 99, ROOM.maxZ, ROOM.maxZ + th); addWall(dR, 99, -1, 99, ROOM.maxZ, ROOM.maxZ + th);
+    // outer walls are kept to the arcade building (z -40..40) so the far-away rooftop deck and basement (js/areas.js) stay walkable
+    addWall(-60, 60, -1, 99, -40, ROOM.minZ);
+    // south wall: solid except the doorways into the Food Court and the Hall of Game Records wing (both add their own inner decor)
+    addWall(-60, fL, -1, 99, ROOM.maxZ, ROOM.maxZ + th); addWall(fR, dL, -1, 99, ROOM.maxZ, ROOM.maxZ + th); addWall(dR, 60, -1, 99, ROOM.maxZ, ROOM.maxZ + th);
     walls.push({ minX: dL, maxX: dR, minY: WING.doorH, maxY: 99, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th });
-    addWall(-99, WING.minX, -1, 99, ROOM.maxZ, 99); addWall(WING.maxX, 99, -1, 99, ROOM.maxZ, 99); addWall(-99, 99, -1, 99, WING.maxZ, 99);
-    addWall(-99, ROOM.minX, -1, 99, -99, 99); addWall(ROOM.maxX, 99, -1, 99, -99, 99);
+    walls.push({ minX: fL, maxX: fR, minY: FOOD.doorH, maxY: 99, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th });
+    addWall(FOOD.maxX, WING.minX, -1, 99, ROOM.maxZ, WING.maxZ); addWall(WING.maxX, 60, -1, 99, ROOM.maxZ, 40); addWall(-60, 60, -1, 99, WING.maxZ, 40);
+    walls.push({ minX: FOOD.minX, maxX: FOOD.maxX, minY: H - 0.3, maxY: 99, minZ: FOOD.minZ, maxZ: FOOD.maxZ }); // Food Court ceiling (keeps the camera inside)
+    addWall(-60, ROOM.minX, -1, 99, -40, 40); addWall(ROOM.maxX, 60, -1, 99, -40, 40);
     // divider with a doorway into the Bonus Zone
     var len = ROOM.maxZ - DOOR, divMat = lam('#4a2a86'), doorH = 3.3;
     mesh(box(th, H, len), divMat, DIV_X, H / 2, ROOM.minZ + len / 2);
@@ -152,7 +160,7 @@
     strip(ROOM.minX, ROOM.minZ + e, DIV_X, ROOM.minZ + e, 4.4, pink); strip(DIV_X, ROOM.minZ + e, ROOM.maxX, ROOM.minZ + e, 4.4, cyan);
     strip(ROOM.minX, ROOM.maxZ - e, DIV_X, ROOM.maxZ - e, 4.4, cyan); strip(DIV_X, ROOM.maxZ - e, ROOM.maxX, ROOM.maxZ - e, 4.4, pink);
     strip(ROOM.minX + e, ROOM.minZ, ROOM.minX + e, ROOM.maxZ, 4.4, pink); strip(ROOM.maxX - e, ROOM.minZ, ROOM.maxX - e, ROOM.maxZ, 4.4, yel);
-    strip(ROOM.minX, ROOM.minZ + e, ROOM.maxX, ROOM.minZ + e, 0.1, cyan); strip(ROOM.minX, ROOM.maxZ - e, dL, ROOM.maxZ - e, 0.1, cyan); strip(dR, ROOM.maxZ - e, ROOM.maxX, ROOM.maxZ - e, 0.1, cyan);
+    strip(ROOM.minX, ROOM.minZ + e, ROOM.maxX, ROOM.minZ + e, 0.1, cyan); strip(ROOM.minX, ROOM.maxZ - e, fL, ROOM.maxZ - e, 0.1, cyan); strip(fR, ROOM.maxZ - e, dL, ROOM.maxZ - e, 0.1, cyan); strip(dR, ROOM.maxZ - e, ROOM.maxX, ROOM.maxZ - e, 0.1, cyan);
     strip(ROOM.minX + e, ROOM.minZ, ROOM.minX + e, ROOM.maxZ, 0.1, cyan); strip(ROOM.maxX - e, ROOM.minZ, ROOM.maxX - e, ROOM.maxZ, 0.1, pink);
     [-0.22, 0.22].forEach(function (o) { strip(DIV_X + o, ROOM.minZ, DIV_X + o, -DOOR, 4.4, o < 0 ? pink : cyan); strip(DIV_X + o, DOOR, DIV_X + o, ROOM.maxZ, 4.4, o < 0 ? pink : cyan); });
     // ceiling light bars
@@ -278,7 +286,7 @@
 
 
   /* ---------- Suggestion Booth (south-west corner of the main hall) ---------- */
-  var SBX = -13.4, SBZ = ROOM.maxZ - 0.9;
+  var SBX = -14.9, SBZ = ROOM.maxZ - 0.9;
   function boothScreen(g, w, h, t) {
     var gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#0c2a3a'); gr.addColorStop(1, '#13104a'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
     g.save(); g.shadowColor = '#ffe14d'; g.shadowBlur = 10 + Math.sin(t * 3) * 6; g.fillStyle = '#ffe14d'; g.beginPath(); g.arc(w / 2, 46, 20, 0, 7); g.fill(); g.restore();
@@ -791,6 +799,14 @@
         g.fillStyle = '#8b5e3c'; g.beginPath(); g.arc(tx2, 20 + k2 * (h * 0.7), 7, 0, 7); g.fill(); g.fillStyle = 'rgba(255,170,60,.6)'; g.beginPath(); g.arc(tx2 - 5, 8 + k2 * (h * 0.7), 6, 0, 7); g.fill();
         var px2 = w / 2 - Math.sin(t * 1.3) * w * 0.25; g.fillStyle = '#3b82f6'; g.fillRect(px2 - 4, h * 0.7, 8, 10); g.fillStyle = '#ef4444'; g.beginPath(); g.arc(px2, h * 0.68, 5, 0, 7); g.fill();
         g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('METEOR MAYHEM', w / 2, 22);
+        break;
+      }
+      case 'lockpick': {
+        g.fillStyle = '#1a0f2e'; g.fillRect(0, 0, w, h); g.fillStyle = '#d9b46a'; rrF(g, w * 0.12, h * 0.28, w * 0.76, h * 0.5, 10); g.fillStyle = '#5a4520'; g.fillRect(w * 0.15, h * 0.52, w * 0.7, h * 0.18);
+        g.strokeStyle = '#4ade80'; g.lineWidth = 2; g.setLineDash([5, 4]); g.beginPath(); g.moveTo(w * 0.14, h * 0.52); g.lineTo(w * 0.86, h * 0.52); g.stroke(); g.setLineDash([]);
+        for (i = 0; i < 4; i++) { var px9 = w * (0.24 + i * 0.17), act9 = i === Math.floor(t * 0.8) % 4, y9 = act9 ? Math.abs(Math.sin(t * 3)) * 14 : (i < Math.floor(t * 0.8) % 4 ? 8 : 0);
+          g.fillStyle = '#e5e7eb'; g.fillRect(px9 - 6, h * 0.3, 12, h * 0.2 - y9); g.fillStyle = i < Math.floor(t * 0.8) % 4 ? '#4ade80' : act9 ? '#3ff0ff' : '#7c6a9a'; g.fillRect(px9 - 6, h * 0.52 - y9 + 2, 12, h * 0.16); }
+        g.font = font(17); g.textAlign = 'center'; g.fillStyle = '#ffd23f'; g.fillText('LOCKPICK PANIC', w / 2, 22);
         break;
       }
       case 'dink': {
@@ -1325,6 +1341,27 @@
     }
   }
 
+  /* ---------- areas + dance emotes ---------- */
+  function regionAt(x, z) {
+    for (var i = 0; i < REGIONS.length; i++) { var r = REGIONS[i]; if (x >= r.minX - 1 && x <= r.maxX + 1 && z >= r.minZ - 1 && z <= r.maxZ + 1) return r.name; }
+    if (z > ROOM.maxZ + 0.2) return x < FOOD.maxX + 0.2 ? 'food' : 'hall';
+    return x > DIV_X ? 'bonus' : 'main';
+  }
+  var EMO = { name: null, t0: 0, was: false };
+  function emotePose(pp, t) {
+    var s1 = Math.sin(t * 8), s2 = Math.sin(t * 4), b = pp.body; EMO.was = true;
+    b.rotation.set(0, 0, 0); pp.head.rotation.x = 0; pp.armL.rotation.set(0, 0, 0); pp.armR.rotation.set(0, 0, 0); pp.legL.rotation.set(0, 0, 0); pp.legR.rotation.set(0, 0, 0);
+    switch (EMO.name) {
+      case 'wave': pp.armR.rotation.z = 2.6 + s1 * 0.35; pp.armL.rotation.x = 0.1; pp.head.rotation.z = s2 * 0.08; break;
+      case 'dance': b.position.y = Math.abs(s1) * 0.12; b.rotation.y = s2 * 0.45; pp.armL.rotation.z = -1.2 - s1 * 0.6; pp.armR.rotation.z = 1.2 - s1 * 0.6; pp.legL.rotation.x = s1 * 0.5; pp.legR.rotation.x = -s1 * 0.5; break;
+      case 'spin': b.rotation.y = t * 9; b.position.y = Math.abs(Math.sin(t * 3)) * 0.18; pp.armL.rotation.z = -1.5; pp.armR.rotation.z = 1.5; break;
+      case 'robot': var st = Math.floor(t * 3) % 4; pp.armL.rotation.x = st < 2 ? -1.5 : 0; pp.armR.rotation.x = st % 2 ? -1.5 : 0; pp.armL.rotation.z = -0.1; pp.armR.rotation.z = 0.1; b.rotation.y = [0, 0.5, 0, -0.5][st]; pp.head.rotation.y = -[0, 0.5, 0, -0.5][st]; b.position.y = 0; break;
+      case 'jump': var ph2 = (t * 1.8) % 1; b.position.y = Math.sin(ph2 * Math.PI) * 0.7; pp.armL.rotation.z = -2.6 * Math.sin(ph2 * Math.PI); pp.armR.rotation.z = 2.6 * Math.sin(ph2 * Math.PI); pp.legL.rotation.x = -0.5 * Math.sin(ph2 * Math.PI); pp.legR.rotation.x = -0.5 * Math.sin(ph2 * Math.PI); break;
+      case 'floss': var f = Math.sin(t * 10); b.rotation.z = f * 0.12; pp.armL.rotation.x = 0.3; pp.armR.rotation.x = 0.3; pp.armL.rotation.z = f * 0.7; pp.armR.rotation.z = f * 0.7; b.position.y = Math.abs(f) * 0.05; break;
+      default: break;
+    }
+  }
+
   /* ---------- collisions ---------- */
   function collide(x, z) {
     for (var it = 0; it < 3; it++) {
@@ -1415,8 +1452,8 @@
     var mag = Math.hypot(mx, my); if (mag > 1) { mx /= mag; my /= mag; mag = 1; }
     var fx = -Math.sin(C.yaw), fz = -Math.cos(C.yaw), rx = Math.cos(C.yaw), rz = -Math.sin(C.yaw);
     var vx = (fx * my + rx * mx), vz = (fz * my + rz * mx);
-    var SPEED = 5.2;
-    var target = mag * SPEED; P.speed += (target - P.speed) * Math.min(1, dt * 10);
+    var SPEED = 5.2, SPK = GA.Boost && GA.Boost.speed ? GA.Boost.speed() : 1;
+    var target = mag * SPEED * SPK; P.speed += (target - P.speed) * Math.min(1, dt * 10);
     if (mag > 0.01) {
       var want = Math.atan2(vx, vz), dA = ((want - P.face + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
       P.face += dA * Math.min(1, dt * 12);
@@ -1425,7 +1462,7 @@
       var r = collide(nx, nz); P.x = r.x; P.z = r.z;
     }
     // animate character
-    var walk = Math.min(1, P.speed / SPEED);
+    var walk = Math.min(1, P.speed / (SPEED * SPK));
     P.phase += dt * (4 + 7 * walk) * (walk > 0.05 ? 1 : 0);
     var sw = Math.sin(P.phase) * 0.7 * walk;
     player.position.set(P.x, 0, P.z); player.rotation.y = P.face;
@@ -1433,7 +1470,11 @@
     parts.body.position.y = Math.abs(Math.sin(P.phase)) * 0.06 * walk + (walk < 0.05 ? Math.sin(time * 2) * 0.015 : 0);
     parts.head.rotation.z = walk < 0.05 ? Math.sin(time * 1.3) * 0.05 : 0;
     ring.material.opacity = 0.55 + Math.sin(time * 4) * 0.25;
-    poseCarry(parts, sw, time); updateRemotes(dt);
+    poseCarry(parts, sw, time);
+    if (EMO.name && walk > 0.2) EMO.name = null; // walking cancels a dance emote
+    if (EMO.name) emotePose(parts, time - EMO.t0);
+    else if (EMO.was) { EMO.was = false; parts.body.rotation.set(0, 0, 0); parts.head.rotation.x = 0; parts.armL.rotation.z = 0; parts.armR.rotation.z = 0; parts.legL.rotation.z = 0; parts.legR.rotation.z = 0; }
+    updateRemotes(dt);
 
     // nearest cabinet
     var best = null, bd = 1e9;
@@ -1487,7 +1528,7 @@
     updateBroken(dt); updateGary(dt); updatePower(dt);
 
     // area label
-    var area = P.z > ROOM.maxZ + 0.2 ? 'hall' : P.x > DIV_X ? 'bonus' : 'main';
+    var area = regionAt(P.x, P.z);
     if (area !== Hub._area) { Hub._area = area; Hub._inBonus = area === 'bonus'; if (Hub.onArea) Hub.onArea(area === 'bonus', area); }
   }
 
@@ -1510,7 +1551,7 @@
 
   /* ---------- extension API (claw machines build into the hub with the same helpers) ---------- */
   function api() { return { T: T, scene: scene, mesh: mesh, box: box, cyl: cyl, sph: sph, plane: plane, lam: lam, basic: basic, sign: sign, decal: decal, mkCanvas: mkCanvas, canvasTex: canvasTex, neonText: neonText, font: font,
-    addSolid: addSolid, addWall: addWall, walls: walls, regItem: regItem, begin: begin, end: end, noAud: noAud, wallSign: wallSign, cabinets: cabinets, anims: anims, glowTex: glowTex, ROOM: ROOM, WING: WING, DIV_X: DIV_X, camera: function () { return camera; }, renderer: function () { return renderer; },
+    addSolid: addSolid, addWall: addWall, walls: walls, regItem: regItem, begin: begin, end: end, noAud: noAud, wallSign: wallSign, cabinets: cabinets, anims: anims, glowTex: glowTex, ROOM: ROOM, WING: WING, FOOD: FOOD, REGIONS: REGIONS, DIV_X: DIV_X, attract: function (id, g, w, h, t) { attract(id, g, w, h, t, {}); }, camera: function () { return camera; }, renderer: function () { return renderer; },
     pose: function () { return { x: P.x, z: P.z, face: P.face, speed: P.speed }; } }; }
 
   /* ---------- layout audit ---------- */
@@ -1526,8 +1567,13 @@
       { name: 'doorway lintel', minX: DIV_X - th / 2, maxX: DIV_X + th / 2, minY: 3.3, maxY: H, minZ: -DOOR, maxZ: DOOR },
       { name: 'south wall W of Hall door', minX: WING.minX - th, maxX: WING.doorX - WING.doorHW, minY: 0, maxY: H, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th },
       { name: 'south wall E of Hall door', minX: WING.doorX + WING.doorHW, maxX: WING.maxX, minY: 0, maxY: H, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th },
-      { name: 'Hall door lintel', minX: WING.doorX - WING.doorHW, maxX: WING.doorX + WING.doorHW, minY: WING.doorH, maxY: H, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th } ];
-    function inArea(p) { var inR = p.minX >= ROOM.minX - EPS && p.maxX <= ROOM.maxX + EPS && p.minZ >= ROOM.minZ - EPS && p.maxZ <= ROOM.maxZ + EPS, inW = p.minX >= WING.minX - EPS && p.maxX <= WING.maxX + EPS && p.minZ >= WING.minZ - EPS && p.maxZ <= WING.maxZ + EPS; return (inR || inW) && p.maxY <= ROOM.h + EPS; }
+      { name: 'Hall door lintel', minX: WING.doorX - WING.doorHW, maxX: WING.doorX + WING.doorHW, minY: WING.doorH, maxY: H, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th },
+      { name: 'south wall W of Food Court door', minX: ROOM.minX - th, maxX: FOOD.doorX - FOOD.doorHW, minY: 0, maxY: H, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th },
+      { name: 'south wall E of Food Court door', minX: FOOD.doorX + FOOD.doorHW, maxX: WING.doorX - WING.doorHW, minY: 0, maxY: H, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th },
+      { name: 'Food Court door lintel', minX: FOOD.doorX - FOOD.doorHW, maxX: FOOD.doorX + FOOD.doorHW, minY: FOOD.doorH, maxY: H, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th },
+      { name: 'Food Court / Hall wall', minX: FOOD.maxX, maxX: WING.minX, minY: 0, maxY: H, minZ: ROOM.maxZ, maxZ: WING.maxZ } ];
+    function within(p, r, my) { return p.minX >= r.minX - EPS && p.maxX <= r.maxX + EPS && p.minZ >= r.minZ - EPS && p.maxZ <= r.maxZ + EPS && p.maxY <= my + EPS; }
+    function inArea(p) { if (within(p, ROOM, ROOM.h) || within(p, WING, ROOM.h) || within(p, FOOD, ROOM.h)) return true; for (var q = 0; q < REGIONS.length; q++) if (within(p, REGIONS[q], REGIONS[q].maxY || ROOM.h)) return true; return false; }
     // 1) physical things clipping into each other or into the divider wall
     for (var i = 0; i < phys.length; i++) {
       for (var j = i + 1; j < phys.length; j++) if (ov(phys[i], phys[j])) out.overlaps.push([phys[i].name, phys[j].name]);
@@ -1547,16 +1593,26 @@
     // 4) collision boxes overlapping (two things claiming the same floor)
     var sol = solids.filter(function (b) { return b.name !== 'wall'; });
     for (i = 0; i < sol.length; i++) for (j = i + 1; j < sol.length; j++) if (sol[i].name !== sol[j].name && ov2(sol[i], sol[j], 0.01)) out.solidOverlaps.push([sol[i].name, sol[j].name]);
-    // 5) walkways: flood-fill the floor from the entrance; every cabinet / booth / counter spot must be reachable
-    var G = 0.1, nx = Math.round((ROOM.maxX - ROOM.minX) / G) + 1, nz = Math.round((WING.maxZ - ROOM.minZ) / G) + 1, free = new Uint8Array(nx * nz), seen = new Uint8Array(nx * nz);
+    // 5) walkways: flood-fill the floor from the entrance (and from each far-away area's arrival spot); every cabinet / booth / counter spot must be reachable
+    var G = 0.1;
     function clear(x, z) { for (var q = 0; q < solids.length; q++) { var b = solids[q], cx = Math.max(b.minX, Math.min(x, b.maxX)), cz = Math.max(b.minZ, Math.min(z, b.maxZ)); if ((x - cx) * (x - cx) + (z - cz) * (z - cz) < (PR - 0.01) * (PR - 0.01)) return false; } return true; }
-    for (var a = 0; a < nx; a++) for (var b2 = 0; b2 < nz; b2++) free[a * nz + b2] = clear(ROOM.minX + a * G, ROOM.minZ + b2 * G) ? 1 : 0;
-    var si = Math.round((SPAWN.x - ROOM.minX) / G), sk = Math.round((SPAWN.z - ROOM.minZ) / G), qu = [si * nz + sk]; seen[qu[0]] = 1;
-    while (qu.length) { var c = qu.pop(), ci = Math.floor(c / nz), ck = c % nz; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) { var ni = ci + d[0], nk = ck + d[1]; if (ni < 0 || nk < 0 || ni >= nx || nk >= nz) return; var id = ni * nz + nk; if (!seen[id] && free[id]) { seen[id] = 1; qu.push(id); } }); }
-    var reach = 0; for (a = 0; a < seen.length; a++) reach += seen[a]; out.reachableCells = reach;
+    function flood(r, sp) {
+      var nx = Math.round((r.maxX - r.minX) / G) + 1, nz = Math.round((r.maxZ - r.minZ) / G) + 1, free = new Uint8Array(nx * nz), seen = new Uint8Array(nx * nz);
+      for (var a = 0; a < nx; a++) for (var b2 = 0; b2 < nz; b2++) free[a * nz + b2] = clear(r.minX + a * G, r.minZ + b2 * G) ? 1 : 0;
+      var si = Math.round((sp.x - r.minX) / G), sk = Math.round((sp.z - r.minZ) / G), qu = [si * nz + sk]; seen[qu[0]] = 1;
+      while (qu.length) { var c = qu.pop(), ci = Math.floor(c / nz), ck = c % nz; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) { var ni = ci + d[0], nk = ck + d[1]; if (ni < 0 || nk < 0 || ni >= nx || nk >= nz) return; var id = ni * nz + nk; if (!seen[id] && free[id]) { seen[id] = 1; qu.push(id); } }); }
+      var reach = 0; for (a = 0; a < seen.length; a++) reach += seen[a];
+      return { r: r, nx: nx, nz: nz, seen: seen, reach: reach };
+    }
+    var fills = [flood({ minX: ROOM.minX, maxX: ROOM.maxX, minZ: ROOM.minZ, maxZ: WING.maxZ }, SPAWN)].concat(REGIONS.map(function (r) { return flood(r, r.spawn); }));
+    out.reachableCells = fills[0].reach; out.regionCells = {}; fills.slice(1).forEach(function (f) { out.regionCells[f.r.name] = f.reach; });
     cabinets.forEach(function (cb) {
-      var f = cb.front, r = cb.r || 1.45, okSpot = false, i0 = Math.round((f.x - ROOM.minX) / G), k0 = Math.round((f.z - ROOM.minZ) / G), rr = Math.ceil(r / G);
-      for (var di = -rr; di <= rr && !okSpot; di++) for (var dk = -rr; dk <= rr && !okSpot; dk++) { var ii = i0 + di, kk = k0 + dk; if (ii < 0 || kk < 0 || ii >= nx || kk >= nz) continue; if (Math.hypot(di * G, dk * G) < r - 0.1 && seen[ii * nz + kk]) okSpot = true; }
+      var f = cb.front, r = cb.r || 1.45, okSpot = false;
+      fills.forEach(function (F) {
+        if (okSpot || f.x < F.r.minX - r || f.x > F.r.maxX + r || f.z < F.r.minZ - r || f.z > F.r.maxZ + r) return;
+        var i0 = Math.round((f.x - F.r.minX) / G), k0 = Math.round((f.z - F.r.minZ) / G), rr = Math.ceil(r / G);
+        for (var di = -rr; di <= rr && !okSpot; di++) for (var dk = -rr; dk <= rr && !okSpot; dk++) { var ii = i0 + di, kk = k0 + dk; if (ii < 0 || kk < 0 || ii >= F.nx || kk >= F.nz) continue; if (Math.hypot(di * G, dk * G) < r - 0.1 && F.seen[ii * F.nz + kk]) okSpot = true; }
+      });
       if (!okSpot) out.unreachable.push(cb.id);
       if (!clear(f.x, f.z) && !cb.noStand) out.blockedSpots.push(cb.id);
     });
@@ -1581,6 +1637,7 @@
     LIGHTS = [[hl, 0.85], [al, 0.25], [dl, 0.55]];
     buildRoom(); buildSigns(); buildDecor(); buildCabinets(); buildAntenna();
     if (GA.Hall3D && GA.Hall3D.build) { try { GA.Hall3D.build(api()); } catch (e) { if (window.console) console.warn('Hall of Game Records failed to build', e); } }
+    if (GA.Areas && GA.Areas.build) { try { GA.Areas.build(api()); } catch (e) { if (window.console) console.warn('Food Court / Rooftop / Basement failed to build', e); } }
     buildGary(); buildPlayer(); setupInput();
     // restore position when coming back from a main game
     var saved = null; try { saved = JSON.parse(sessionStorage.getItem('grokArcade.pos') || 'null'); } catch (e) {}
@@ -1630,5 +1687,9 @@
   Hub.setLock = function (b) { lock = !!b; keys = {}; joy.x = joy.y = 0; joy.id = null; look.id = null; if (Hub._resetJoy) Hub._resetJoy(); };
   Hub.locked = function () { return lock; };
   Hub.setCamOverride = function (fn) { camOv = fn || null; };
-  Hub.ROOM = ROOM; Hub.DIV_X = DIV_X; Hub.WING = WING; Hub.area = function () { return Hub._area || 'main'; };
+  Hub.setEmote = function (n) { EMO.name = n || null; EMO.t0 = time; if (n) { EMO.was = true; P.speed = 0; } };
+  Hub.emote = function () { return EMO.name; };
+  Hub.addRegion = function (r) { REGIONS.push(r); return r; };
+  Hub.regionAt = function (x, z) { return regionAt(x, z); };
+  Hub.ROOM = ROOM; Hub.DIV_X = DIV_X; Hub.WING = WING; Hub.FOOD = FOOD; Hub.REGIONS = REGIONS; Hub.area = function () { return Hub._area || 'main'; };
 })();

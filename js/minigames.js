@@ -96,6 +96,8 @@
     if (isNew) GA.setBest(id, score);
     var tix = Math.max(1, Math.floor(score / (cur.ticketDiv || 1)));
     if (score <= 0) tix = 1;
+    var boost = GA.Boost && GA.Boost.onGameOver ? GA.Boost.onGameOver(id, tix) : null; // food court snacks / party-schedule bonuses
+    if (boost && boost.tix > tix) tix = boost.tix;
     var total = GA.addTickets(tix);
     if (GA.Prog) GA.Prog.onGameOver(id, score, isNew);
     if (GA.onTickets) GA.onTickets(total);
@@ -106,7 +108,7 @@
       $('mgOverScore').textContent = score;
       $('mgOverBest').textContent = Math.max(prev, score);
       $('mgNew').classList.toggle('hidden', !isNew);
-      $('mgTix').textContent = '+' + tix + (tix === 1 ? ' ticket' : ' tickets') + '  (total ' + total + ')';
+      $('mgTix').textContent = '+' + tix + (tix === 1 ? ' ticket' : ' tickets') + (boost && boost.label ? ' ' + boost.label : '') + '  (total ' + total + ')';
       $('mgOver').classList.remove('hidden');
       GA.Audio.play(isNew ? 'best' : 'lose');
     }, 750);

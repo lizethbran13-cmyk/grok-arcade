@@ -54,12 +54,22 @@
     show(); view = 'dir'; cur = null; $('hlNav').classList.add('hidden');
     $('hlTitle').textContent = '\uD83C\uDFDB\uFE0F HALL OF GAME RECORDS'; $('hlSub').textContent = 'Every Grok game \u00b7 ' + H.seenCount() + '/' + games().length + ' exhibits visited';
     $('hlTabs').innerHTML = '<span class="hlHint">Pick a game. Gus will (reluctantly) show you everything.</span>';
-    $('hlBody').innerHTML = '<div class="hlDir">' + games().map(function (g) {
+    var AH = GA.ARCADE_HISTORY || [], arc = AH.length ? '<button class="hlCard hlArc" id="hlArcCard" style="--c:#ff4fd8"><b>\uD83D\uDD79\uFE0F THE GROK ARCADE ITSELF</b><small>v' + esc(AH[AH.length - 1].ver) + ' \u00b7 ' + AH.length + ' updates \u00b7 newest: ' + esc(AH[AH.length - 1].title) + '</small></button>' : '';
+    $('hlBody').innerHTML = arc + '<div class="hlDir">' + games().map(function (g) {
       var dd = data(g.id), last = dd.history[dd.history.length - 1];
       return '<button class="hlCard" data-g="' + g.id + '" style="--c:' + g.color + '"><img src="' + dd.cover + '" alt="" loading="lazy"><b>' + esc(g.name) + '</b><small>v' + esc(last.ver) + ' \u00b7 ' + dd.history.length + ' updates \u00b7 ' + (dd.versions.length ? dd.versions.length + ' old' : 'new') + '</small></button>';
     }).join('') + '</div>';
     Array.prototype.forEach.call(document.querySelectorAll('.hlCard'), function (b) { b.addEventListener('click', function () { snd('click'); H.open(b.getAttribute('data-g')); }); });
+    if ($('hlArcCard')) $('hlArcCard').addEventListener('click', function () { snd('click'); H.openArcade(); });
     say('talk'); $('hlBody').scrollTop = 0;
+  };
+  H.openArcade = function () {
+    show(); view = 'arc'; cur = null; $('hlNav').classList.add('hidden'); var AH = GA.ARCADE_HISTORY || [];
+    $('hlTitle').textContent = '\uD83D\uDD79\uFE0F THE GROK ARCADE'; $('hlSub').textContent = AH.length + ' updates \u00b7 grok-arcade';
+    $('hlTabs').innerHTML = '<button class="pzTab" id="hlArcBack">\u25C0 All games</button>';
+    $('hlArcBack').addEventListener('click', function () { snd('click'); H.openDirectory(); });
+    $('hlBody').innerHTML = '<ol class="hlTime">' + AH.slice().reverse().map(function (e, i) { return '<li class="' + (i === 0 ? 'now' : '') + '"><div class="hlVer" style="--c:#ff4fd8">v' + esc(e.ver) + '</div><div><div class="hlDate">' + esc(e.date) + (i === 0 ? ' \u00b7 <b>NEWEST</b>' : '') + '</div><b class="hlEt">' + esc(e.title) + '</b><p>' + esc(e.text) + '</p></div></li>'; }).join('') + '</ol><div class="sbMeta center">Written from the grok-arcade update log by Gus. He was here for all of it. He remembers.</div>';
+    say(null, 'The Arcade. I remember when it was four cabinets and a carpet. Now there\u2019s a BASEMENT. My basement.'); $('hlBody').scrollTop = 0;
   };
   /* ---------- one exhibit ---------- */
   H.open = function (gid, t) {

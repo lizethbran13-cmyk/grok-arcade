@@ -69,6 +69,13 @@
     wire: function () { tone(1200, 0.05, 'square', 0.08); tone(1800, 0.06, 'square', 0.06, 0, 0.04); },
     spark: function () { noise(0.07, 0.05); },
     talk: function () { for (var i = 0; i < 4; i++) tone(260 + Math.random() * 160, 0.05, 'square', 0.05, 0, i * 0.07); },
+    win: function () { [523, 659, 784, 1046, 1318].forEach(function (f, i) { tone(f, 0.12, 'triangle', 0.12, 0, i * 0.06); }); },
+    bad: function () { tone(180, 0.16, 'square', 0.12, 120); },
+    ding: function () { tone(1318, 0.5, 'sine', 0.16); tone(1046, 0.7, 'sine', 0.12, 0, 0.18); },
+    firework: function () { noise(0.6, 0.22); tone(90, 0.4, 'sine', 0.2, 40); for (var i = 0; i < 6; i++) noise(0.05, 0.06, 0.25 + i * 0.07); },
+    tick: function () { tone(2400, 0.025, 'square', 0.06); },
+    burp: function () { tone(110, 0.45, 'sawtooth', 0.16, 70); tone(90, 0.4, 'square', 0.08, 60, 0.05); },
+    unlock: function () { tone(1600, 0.05, 'square', 0.1); tone(900, 0.08, 'square', 0.1, 0, 0.07); [659, 988, 1318].forEach(function (f, i) { tone(f, 0.14, 'triangle', 0.1, 0, 0.18 + i * 0.07); }); },
     best: function () { [784, 988, 1175, 1568].forEach(function (f, i) { tone(f, 0.14, 'square', 0.1, 0, i * 0.09); }); }
   };
   GA.Audio = {
@@ -76,6 +83,8 @@
     log: [],
     play: function (name) { GA.Audio.log.push(name); if (GA.Audio.log.length > 60) GA.Audio.log.shift(); if (!ctx || muted) return; var f = SFX[name]; if (f) { try { f(); } catch (e) {} } },
     isMuted: function () { return muted; },
+    raw: function () { ensure(); return { ctx: ctx, master: master }; }, // for the rooftop DJ booth / basement jukebox music
+
     setMuted: function (m) {
       muted = !!m; GA.store.set('muted', muted);
       if (master) master.gain.value = muted ? 0 : 0.5;

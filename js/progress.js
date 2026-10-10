@@ -29,7 +29,8 @@
   P.ownedIds = function () { return GA.PRIZES.filter(function (p) { return S.owned[p.id]; }).map(function (p) { return p.id; }); };
   P.redeem = function (id) {
     var pr = GA.findPrize(id); if (!pr) return { ok: false, why: 'unknown' };
-    if (pr.claw) return { ok: false, why: 'claw' }; // claw prizes are only won in the claw machines
+    if (pr.claw) return { ok: false, why: 'claw' };
+    if (pr.vault) return { ok: false, why: 'vault' }; // basement rares: safe / Rare Prize Vault only // claw prizes are only won in the claw machines
     if (S.owned[id]) return { ok: false, why: 'owned' };
     if (GA.getTickets() < pr.price) return { ok: false, why: 'tickets', need: pr.price - GA.getTickets() };
     if (!GA.spendTickets(pr.price)) return { ok: false, why: 'tickets' };
@@ -38,8 +39,8 @@
     return { ok: true, left: GA.getTickets() };
   };
   // no category = Prize Counter prizes only (claw-machine prizes have their own goals, so old goals don't move)
-  function nOwned(cat) { return GA.PRIZES.filter(function (p) { return S.owned[p.id] && (cat ? p.cat === cat : !p.claw); }).length; }
-  function nPrizes(cat) { return GA.PRIZES.filter(function (p) { return cat ? p.cat === cat : !p.claw; }).length; }
+  function nOwned(cat) { return GA.PRIZES.filter(function (p) { return S.owned[p.id] && (cat ? p.cat === cat : !p.claw && !p.vault); }).length; }
+  function nPrizes(cat) { return GA.PRIZES.filter(function (p) { return cat ? p.cat === cat : !p.claw && !p.vault; }).length; }
   /* claw machine wins: the prize goes straight onto your gallery shelf (a repeat catch gives 2 bonus tickets instead) */
   P.clawWin = function (id, machine) {
     var pr = GA.findPrize(id); if (!pr || !pr.claw) return { ok: false };
@@ -50,6 +51,12 @@
     if (GA.Hub && GA.Hub.refreshBoards) GA.Hub.refreshBoards();
     return { ok: true, dupe: dupe };
   };
+  /* Secret Basement / Rooftop rewards: put a prize on your shelf for free (safe -> Golden Key, Party Night -> Party Hat) */
+  P.grant = function (id) { var pr = GA.findPrize(id); if (!pr || S.owned[id]) return false; S.owned[id] = Date.now(); save(); check(); if (GA.Hub && GA.Hub.refreshBoards) GA.Hub.refreshBoards(); return true; };
+  /* the Rare Prize Vault in the Secret Basement sells vault prizes for tickets (only while you're down there) */
+  P.vaultBuy = function (id) { var pr = GA.findPrize(id); if (!pr || !pr.vault || !pr.price) return { ok: false, why: 'unknown' }; if (S.owned[id]) return { ok: false, why: 'owned' };
+    if (GA.getTickets() < pr.price) return { ok: false, why: 'tickets', need: pr.price - GA.getTickets() }; if (!GA.spendTickets(pr.price)) return { ok: false, why: 'tickets' };
+    S.owned[id] = Date.now(); save(); check(); if (GA.Hub && GA.Hub.refreshBoards) GA.Hub.refreshBoards(); return { ok: true, left: GA.getTickets() }; };
   P.clawPlay = function (machine) { st.ev.clawPlays = ev('clawPlays') + 1; save(); check(); };
 
   /* ---------- achievements ---------- */
@@ -72,7 +79,8 @@
     dink: [40, 'Dink Master', 'Score 40 in Dink Duel', '\uD83C\uDFD3'],
     hoop: [45, 'Hoop Hero', 'Score 45 in Hoop Frenzy', '\uD83C\uDFC0'],
     drift: [40, 'Drift King', 'Score 40 in Spark Drift', '\uD83C\uDFCE\uFE0F'],
-    meteor: [40, 'Disaster Master', 'Score 40 in Meteor Mayhem', '\u2604\uFE0F']
+    meteor: [40, 'Disaster Master', 'Score 40 in Meteor Mayhem', '\u2604\uFE0F'],
+    lockpick: [40, 'Master Locksmith', 'Score 40 in Lockpick Panic', '\uD83D\uDD10']
   };
   var A = [
     { id: 'first_ticket', cat: 'Tickets', icon: '\uD83C\uDF9F\uFE0F', name: 'First Ticket!', desc: 'Earn your first ticket in the Bonus Zone', p: function () { return [st.earned, 1]; } },
@@ -146,6 +154,17 @@
   A.push({ id: 'hat_on', cat: 'Prizes', icon: '\uD83E\uDDE2', name: 'Hat Day', desc: 'Wear a hat from the Prize Counter', p: function () { return [ev('wearHat') ? 1 : 0, 1]; } });
   A.push({ id: 'hub_friends', cat: 'Antenna', icon: '\uD83D\uDC6F', name: 'Arcade Buddies', desc: 'Walk around the arcade with a friend in your room', p: function () { return [ev('hubFriends') ? 1 : 0, 1]; } });
   A.push({ id: 'battle_win', cat: 'Antenna', icon: '\u2694\uFE0F', name: 'Arcade Rival', desc: 'Win a Bonus Zone battle against a friend', p: function () { return [ev('battleWin') ? 1 : 0, 1]; } });
+  // Food Court / Rooftop Party Deck / Secret Basement
+  A.push({ id: 'area_tour', cat: 'Arcade', icon: '\uD83D\uDDFA\uFE0F', name: 'Grand Tour', desc: 'Visit the Food Court, the Rooftop Party Deck and the Secret Basement', p: function () { return [['fcVisit', 'rfVisit', 'bsVisit'].filter(function (k) { return ev(k); }).length, 3]; } });
+  A.push({ id: 'fc_snack', cat: 'Arcade', icon: '\uD83C\uDF55', name: 'Snack Time', desc: 'Buy a snack at the Food Court Snack Bar', p: function () { return [ev('fcSnack') ? 1 : 0, 1]; } });
+  A.push({ id: 'fc_chef', cat: 'Arcade', icon: '\uD83D\uDC68\u200D\uD83C\uDF73', name: 'Sous Chef', desc: 'Cook a PERFECT pizza with Chef Gio', p: function () { return [ev('fcPerfect') ? 1 : 0, 1]; } });
+  A.push({ id: 'rf_party', cat: 'Arcade', icon: '\uD83C\uDF86', name: 'Party Animal', desc: 'Dance on the rooftop floor and launch a firework', p: function () { return [(ev('rfDance') ? 1 : 0) + (ev('rfFirework') ? 1 : 0), 2]; } });
+  A.push({ id: 'bs_key', cat: 'Arcade', icon: '\uD83D\uDD11', name: 'Finders Keepers', desc: 'Find Gus\u2019s hidden basement key', p: function () { return [ev('bsKey') ? 1 : 0, 1]; } });
+  A.push({ id: 'bs_pick', cat: 'Arcade', icon: '\uD83D\uDD13', name: 'Lock Picker', desc: 'Pick the lock on the basement door', p: function () { return [ev('bsPick') ? 1 : 0, 1]; } });
+  A.push({ id: 'bs_puzzle', cat: 'Arcade', icon: '\uD83E\uDDE9', name: 'Puzzle Master', desc: 'Fix the basement fuse box and crack Gus\u2019s code safe', p: function () { return [(ev('bsFuse') ? 1 : 0) + (ev('bsSafe') ? 1 : 0), 2]; } });
+  A.push({ id: 'bs_retro', cat: 'High Scores', icon: '\uD83D\uDCFA', name: 'Retro Legend', desc: 'Play both rare cabinets in the Secret Basement (Paddle Pong + Galaxy Groks)', p: function () { return [['rt_pong', 'rt_invaders'].filter(function (k) { return st.played[k] || best(k) > 0; }).length, 2]; } });
+  A.push({ id: 'party_set', cat: 'Prizes', icon: '\uD83E\uDD73', name: 'Life of the Party', desc: 'Own the Chef Gio Plush, the Rooftop Party Hat and the Mini Disco Ball', p: function () { return [['pl_chef', 'party_hat', 'disco_ball'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
+  A.push({ id: 'vault_rares', cat: 'Prizes', icon: '\uD83D\uDC8E', name: 'Vault Keeper', desc: 'Own both Basement Rares: Gus\u2019s Golden Key and the Mini Retro Cabinet', p: function () { return [['gold_key', 'retro_cab'].filter(function (k) { return S.owned[k]; }).length, 2]; } });
   GA.ACHIEVEMENTS = A;
 
   function prog(a) { var r = a.p(); return { cur: Math.min(r[0] || 0, r[1]), goal: r[1] }; }

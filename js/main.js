@@ -7,7 +7,7 @@
   var menuIsOpen = false, started = false, launching = false;
 
   GA.UI = { menuOpen: function () { return menuIsOpen; } };
-  function pzOpen() { return !!(GA.PZ && GA.PZ.isOpen()) || !!(GA.PV && GA.PV.isOpen()) || !!(GA.SB && GA.SB.isOpen()) || !!(GA.Claw && GA.Claw.isOpen()) || !!(GA.Hall && GA.Hall.isOpen()) || !!(GA.DLC && GA.DLC.isOpen()); }
+  function pzOpen() { return !!(GA.PZ && GA.PZ.isOpen()) || !!(GA.PV && GA.PV.isOpen()) || !!(GA.SB && GA.SB.isOpen()) || !!(GA.Claw && GA.Claw.isOpen()) || !!(GA.Hall && GA.Hall.isOpen()) || !!(GA.DLC && GA.DLC.isOpen()) || !!(GA.AreasUI && GA.AreasUI.isOpen()); }
   function hm() { return GA.HubMP && GA.HubMP.active() ? GA.HubMP : null; }
 
   function setTickets(n) { $('ticketCount').textContent = n; }
@@ -43,6 +43,7 @@
     if (cab.kind === 'exhibit') { hidePrompt(); GA.Hall.open(cab.gid); return; }
     if (cab.kind === 'gus') { hidePrompt(); GA.Hall.talk(); return; }
     if (cab.kind === 'dlc') { hidePrompt(); GA.DLC.open(); return; }
+    if (cab.ar && GA.AreasUI) { if (/^ar_retro$/.test(cab.kind) && GA.Fix.powerOut()) { GA.Fix.noPower(cab); return; } hidePrompt(); GA.AreasUI.open(cab); return; }
     if (cab.kind === 'mp' && GA.Fix.blocksHost()) { hidePrompt(); GA.Fix.openRepair(); return; }
     if (GA.Fix.powerOut()) { GA.Fix.noPower(cab); return; }
     if (cab.kind === 'claw') { hidePrompt(); if (GA.Claw) GA.Claw.open(cab.id); return; }
@@ -68,7 +69,8 @@
     if (!cab || !started || GA.MG.isOpen() || (GA.MP && GA.MP.isOpen()) || (GA.Fix && GA.Fix.isOpen()) || pzOpen()) { hidePrompt(); return; }
     var bonus = cab.kind === 'bonus', mp = cab.kind === 'mp';
     var special = null;
-    if (cab.kind === 'prize') { var pc = GA.Prog ? GA.Prog.counts() : { prizes: 0, prizeTotal: 0 }; special = { tag: 'PRIZE COUNTER', name: 'Redeem Tickets', desc: 'You have ' + GA.getTickets() + ' tickets. Trade them for plushies, models, trophies and more! (' + pc.prizes + '/' + pc.prizeTotal + ' collected)', btn: 'PRIZES', key: 'browse prizes', cls: 'prize', pb: 'pzPlay' }; }
+    if (cab.ar && GA.AreasUI) special = GA.AreasUI.prompt(cab);
+    else if (cab.kind === 'prize') { var pc = GA.Prog ? GA.Prog.counts() : { prizes: 0, prizeTotal: 0 }; special = { tag: 'PRIZE COUNTER', name: 'Redeem Tickets', desc: 'You have ' + GA.getTickets() + ' tickets. Trade them for plushies, models, trophies and more! (' + pc.prizes + '/' + pc.prizeTotal + ' collected)', btn: 'PRIZES', key: 'browse prizes', cls: 'prize', pb: 'pzPlay' }; }
     else if (cab.kind === 'gallery') { var gc = GA.Prog ? GA.Prog.counts() : { ach: 0, achTotal: 0, prizes: 0, prizeTotal: 0 }; special = { tag: 'ACHIEVEMENT GALLERY', name: 'Your Trophy Room', desc: 'Achievements ' + gc.ach + '/' + gc.achTotal + ' \u00b7 Prizes ' + gc.prizes + '/' + gc.prizeTotal + '. See your collection and what to unlock next!', btn: 'VIEW', key: 'open the gallery', cls: 'gallery', pb: 'galPlay' }; }
     else if (cab.kind === 'suggest') special = { tag: 'SUGGESTION BOOTH', name: 'Patch Suggestions', desc: 'Found a bug or have an idea for any game? Send a suggestion, then check the board to see what\u2019s being worked on!', btn: 'SUGGEST', key: 'make a suggestion', cls: 'gallery', pb: 'galPlay' };
     else if (cab.kind === 'exhibit') { var hd = GA.HALL_DATA[cab.gid], hl = hd.history[hd.history.length - 1]; special = { tag: 'HALL OF GAME RECORDS', name: cab.game.name, desc: hd.pics.length + ' pictures \u00b7 ' + hd.history.length + ' updates (newest v' + hl.ver + ') \u00b7 ' + (hd.versions.length ? hd.versions.length + ' playable old version' + (hd.versions.length > 1 ? 's' : '') : 'no old versions yet'), btn: 'VIEW', key: 'view the exhibit', cls: 'gallery', pb: 'galPlay' }; }
@@ -255,7 +257,7 @@
     GA.Fix.init();
     GA.Fix.onChange = function () { showPrompt(GA.Hub.near()); };
     GA.Hub.onNear = function (cab) { if (cab) GA.Audio.play('near'); showPrompt(cab); };
-    GA.Hub.onArea = function (bonus, area) { var a = $('areaLabel'), hall = area === 'hall'; a.textContent = hall ? 'HALL OF RECORDS' : bonus ? 'BONUS ZONE' : 'MAIN GAMES'; a.classList.toggle('bonus', bonus); a.classList.toggle('hall', hall); if (bonus && started && GA.Prog) GA.Prog.event('bonusZone'); };
+    GA.Hub.onArea = function (bonus, area) { var a = $('areaLabel'), hall = area === 'hall', AN = { food: 'FOOD COURT', roof: 'ROOFTOP PARTY', basement: 'SECRET BASEMENT' }; a.textContent = AN[area] || (hall ? 'HALL OF RECORDS' : bonus ? 'BONUS ZONE' : 'MAIN GAMES'); a.classList.toggle('bonus', bonus); a.classList.toggle('hall', hall); ['food', 'roof', 'basement'].forEach(function (k) { a.classList.toggle('ar_' + k, area === k); }); if (bonus && started && GA.Prog) GA.Prog.event('bonusZone'); };
 
     $('startBtn').addEventListener('click', start);
     $('title').addEventListener('click', function (e) { if (e.target === $('title')) start(); });

@@ -48,8 +48,8 @@
     openWhat = 'counter'; setTix();
     $('pzPanel').className = 'pzPanel counter';
     $('pzTitle').textContent = 'PRIZE COUNTER'; $('pzSub').textContent = 'Trade your tickets for prizes \u00b7 win tickets in the Bonus Zone';
-    tabs([{ id: 'all', name: 'All' }].concat(GA.PRIZE_CATS.filter(function (c) { return c.id !== 'claw'; })), tab, function (id) { tab = id; renderCounter(); $('pzScroll').scrollTop = 0; });
-    var have = GA.getTickets(), list = GA.PRIZES.filter(function (p) { return !p.claw && (tab === 'all' || p.cat === tab); }).slice().sort(function (a, b) { return a.price - b.price; });
+    tabs([{ id: 'all', name: 'All' }].concat(GA.PRIZE_CATS.filter(function (c) { return c.id !== 'claw' && c.id !== 'vault'; })), tab, function (id) { tab = id; renderCounter(); $('pzScroll').scrollTop = 0; });
+    var have = GA.getTickets(), list = GA.PRIZES.filter(function (p) { return !p.claw && !p.vault && (tab === 'all' || p.cat === tab); }).slice().sort(function (a, b) { return a.price - b.price; });
     var h = '<div class="pzGrid">';
     list.forEach(function (p) {
       var own = GA.Prog.owns(p.id), can = have >= p.price;
@@ -69,7 +69,7 @@
     $('pzToGallery').addEventListener('click', function () { snd('click'); renderGallery('shelves'); $('pzScroll').scrollTop = 0; });
   }
   function askRedeem(id) {
-    var p = GA.findPrize(id); if (!p || p.claw || GA.Prog.owns(id)) return;
+    var p = GA.findPrize(id); if (!p || p.claw || p.vault || GA.Prog.owns(id)) return;
     var have = GA.getTickets();
     if (have < p.price) { snd('buzz'); return; }
     pending = id;
@@ -105,7 +105,7 @@
           var own = GA.Prog.owns(p.id);
           var on = own && GA.Carry && GA.Carry.isOn(p.id);
           h += '<div class="slot' + (own ? ' owned' : '') + (on ? ' carried' : '') + '" data-slot="' + p.id + '" title="' + esc(p.name) + '"' + (own ? ' role="button" tabindex="0" aria-label="View ' + esc(p.name) + ' in 3D"' : '') + '><img alt="" src="' + GA.PrizeArt.url(p.id, 140, !own) + '">' + (own ? '<span class="slot3d">' + (on ? (GA.Prize3D.isHat(p.id) ? '\uD83E\uDDE2' : '\u270B') : '3D') + '</span>' : '') +
-            (own ? '<span class="slotName">' + esc(p.name.replace(/ Plush$/, '')) + '</span>' : '<span class="slotQ">?</span><span class="slotName dim">' + (p.claw ? '\uD83E\uDE9D CLAW' : TIX + ' ' + p.price) + '</span>') + '</div>';
+            (own ? '<span class="slotName">' + esc(p.name.replace(/ Plush$/, '')) + '</span>' : '<span class="slotQ">?</span><span class="slotName dim">' + (p.claw ? '\uD83E\uDE9D CLAW' : p.vault ? '\uD83D\uDD12 BASEMENT' : TIX + ' ' + p.price) + '</span>') + '</div>';
         });
         h += '</div><div class="shelfEdge"></div></div>';
       });
