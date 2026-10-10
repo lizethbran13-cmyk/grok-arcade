@@ -1761,3 +1761,18 @@ GA.HALL_DATA = {
 "noOld": "Grok Ratita Rescue just scurried in. No old versions yet. Please keep the cheese off the exhibits."
 }
 };
+/* the Arcade's own update history (from the grok-arcade git log, in plain words) - shown on the ARCADE card in Gus's directory */
+GA.ARCADE_HISTORY = [
+  { date: 'Oct 2', ver: '1.0', title: 'The Arcade opens', text: 'A neon 3D room with a few game cabinets you can walk up to and play.' },
+  { date: 'Oct 2', ver: '1.2', title: 'Play together', text: 'Online multiplayer, Grok Brawl, Grok FC and the Penalty Kick cabinet.' },
+  { date: 'Oct 3', ver: '1.5', title: 'Bonus Zone', text: 'Grok Land Party, Candy\u2019s Fetch, Rat Maze Dash and the Bonus Zone of mini games that pay tickets.' },
+  { date: 'Oct 7', ver: '2.0', title: 'Prizes & achievements', text: 'The Prize Counter, the Achievement Gallery, 3D prizes you can carry and wear, Skee-Ball and walking around together online.' },
+  { date: 'Oct 7', ver: '2.5', title: 'More cabinets', text: 'Grok Pets, Grok Life, Grok Dash and Grok Spooks cabinets, the Suggestion Booth, and lots of new bonus games and prizes.' },
+  { date: 'Oct 8', ver: '3.0', title: 'Claw machines', text: 'Two real claw machines with 18 claw-only prizes, Grok Blocks, Grok Rides and Rush Hour.' },
+  { date: 'Oct 9', ver: '3.5', title: 'Hall of Game Records', text: 'This very Hall, with Gus, every game\u2019s history and old versions, plus the DLC Machine 3000.' },
+  { date: 'Oct 9', ver: '3.8', title: 'Heists, pickleball & sports', text: 'Grok Heist Crew, Grok Pickleball and Grok Sports Command cabinets, bonus games #17-#19, DLC packs with free starter vouchers and a roomier bonus wall.' },
+  { date: 'Oct 9', ver: '3.9', title: 'Kart Party & Disaster Zone', text: 'The Grok Kart Party and Grok Disaster Zone cabinets, plus bonus games Spark Drift and Meteor Mayhem.' },
+  { date: 'Oct 9', ver: '4.0', title: 'Game Gallery, Food Court, Rooftop & Secret Basement', text: 'Three new places! A Food Court with Chef Gio, snacks that give boosts and a pizza oven you cook at. A Rooftop Party Deck with a DJ booth, dance emotes, fireworks and a weekly party schedule. And a Secret Basement retro arcade with rare cabinets, puzzles and rare prizes. Get in with Gus\u2019s key (it hides somewhere new every week) or pick the lock. Plus bonus game #20 Lockpick Panic. And every game cabinet moved into the new Game Gallery wing, sorted into themed rows and run by Gus Jr. the 2nd (Dad says no running).' },
+  { date: 'Oct 10', ver: '4.1', title: 'The Mysterious Attic', text: 'Gus was right! A hidden hatch that moves every 3 days, Gary\u2019s ladder, Gary\u2019s long-lost brother Larry in a new Maintenance Room, the vintage Ghost Lantern \u201983 cabinet (bonus #23), and a spooky (friendly!) attic: portraits whose eyes follow you, a music box, a toy room, a ghost tea party, the Cobweb Library, the Foggy Observatory, a weekly puzzle room, weekly mystery opuses and 5 attic rares. Plus MIMI THE BOT by Ratita Industries at the new Customer Relations desk (game finder, navigator, mystery hints, daily gift) and surprise power outages that make her… a little grumpy.' },
+  { date: 'Oct 10', ver: '4.2', title: 'Speed pass + Monster Hunters', text: 'Smoother on phones without looking worse (smart lights, rooms that only draw when you can see them, sharper when your phone has room), the Grok Monster Hunters cabinet, bonus game #24 Tame Rush, 5 Monster Hunters prizes and a new Hall exhibit.' }
+];
