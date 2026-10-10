@@ -7,7 +7,7 @@
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function snd(n) { if (GA.Audio) GA.Audio.play(n); }
-  function toast(m, ms) { if (GA.Fix && GA.Fix.toast) GA.Fix.toast(m, ms || 3600); }
+  function toast(m, ms) { if (GA.Fix && GA.Fix.toast) GA.Fix.toast(String(m).replace(/<[^>]+>/g, ''), ms || 3600); }
   RT.toast = toast;
   function S() { return RT.S(); }
   function save() { RT.save(); RT.refresh(); upd(); }

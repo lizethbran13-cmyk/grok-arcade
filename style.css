@@ -708,3 +708,15 @@ body.touch.near .atChip,body.arOn .atChip{display:none!important}
 @keyframes mmBlink{50%{opacity:.45}}
 .mimiNav.hidden,.mimiOut.hidden{display:none}
 .clBtn.shuf{background:linear-gradient(180deg,#7df9ff,#22d3ee);color:#06202a}
+/* Retro Arcade / Time Machine (5.0) */
+.tmChip{bottom:calc(max(14px,env(safe-area-inset-bottom)) + 156px);border-color:#a78bfa}
+body.touch .tmChip{top:calc(max(12px,env(safe-area-inset-top)) + 248px);bottom:auto}
+.tmWarp{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%,#fff 0,#f0abfc 12%,#7c3aed 38%,#1e1b4b 75%,#05030f 100%)}
+.tmWarp.on{animation:tmWarp 2.3s ease-in-out forwards}
+.tmWarp i{position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;border:4px solid rgba(255,255,255,.75);transform:translate(-50%,-50%);animation:tmRing 1.1s linear infinite}
+.tmWarp i:nth-child(2){animation-delay:.27s;border-color:rgba(103,232,249,.75)}.tmWarp i:nth-child(3){animation-delay:.55s}.tmWarp i:nth-child(4){animation-delay:.82s;border-color:rgba(250,204,21,.7)}
+.tmWarp b{font-size:64px;filter:drop-shadow(0 0 18px #fff);animation:tmSpin 1s linear infinite}
+@keyframes tmWarp{0%{opacity:0;transform:scale(1.4)}20%{opacity:1;transform:scale(1)}70%{opacity:1}100%{opacity:0}}
+@keyframes tmRing{0%{width:10px;height:10px;opacity:1}100%{width:160vmax;height:160vmax;opacity:0}}
+@keyframes tmSpin{to{transform:rotate(360deg)}}
+.arPanel.tmPanel{border-color:#a78bfa}
