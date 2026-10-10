@@ -6,8 +6,8 @@
    3. STATIC BATCHING: furniture that never moves is merged into a few big pieces per room (same look, way fewer draw calls).
       Anything the game moves, hides or recolors is spotted automatically and keeps drawing on its own.
    4. LOD: merged pieces far from the camera swap to lighter versions of round things (spheres, cylinders, rings).
-   5. AUTO-TUNE: the screen sharpness (pixel ratio) gently adjusts to hold ~60 fps. The menu's Graphics switch still works:
-      AUTO (default) / SHARP (always full sharpness) / SMOOTH (lighter, for older phones).
+   5. AUTO-TUNE never lowers the graphics: AUTO starts at the arcade's usual sharpness and goes SHARPER (up to the phone's
+      real resolution) when there is speed to spare. The menu's Graphics switch: AUTO (default) / SHARP / SMOOTH (opt-in only).
    6. MEMORY: rooms you haven't visited for 2 minutes give their GPU copies back (they come back on their own when you return).
    Debug: GA.Perf.stats(), GA.Perf.setMode('sharp'), ?gfx=sharp|smooth|auto, ?perf=off turns 2-4+6 off (for before/after). */
 (function () {
@@ -24,15 +24,15 @@
   var MODES = ['auto', 'sharp', 'smooth'], LABEL = { auto: 'AUTO', sharp: 'SHARP', smooth: 'SMOOTH' };
   var qm = /[?&]gfx=(auto|sharp|smooth)\b/.exec(location.search);
   var mode = qm ? qm[1] : ((GA.store && GA.store.get('gfx', null)) || 'auto'); if (MODES.indexOf(mode) < 0) mode = 'auto';
-  var PR = { max: 1.6, min: 1, cur: 1.6 };
-  function prFor(m) { return m === 'smooth' ? PR.min : PR.max; }
+  var PR = { max: 1.6, min: 1, cur: 1.6, base: 1.6, top: 1.6 }; // base = the sharpness the arcade always had; AUTO never goes below it
+  function prFor(m) { return m === 'smooth' ? PR.min : PR.base; }
   function setPR(v) { v = Math.round(v * 100) / 100; if (!R || Math.abs(R.getPixelRatio() - v) < 0.01) { ST.pr = v; return; } R.setPixelRatio(v); ST.pr = v; }
   PF.mode = function () { return mode; };
-  PF.setMode = function (m) { if (MODES.indexOf(m) < 0) return mode; mode = m; ST.mode = m; if (GA.store && !qm) GA.store.set('gfx', m); PR.cur = prFor(m); setPR(PR.cur); tune.win = []; tune.good = 0; LOD_D = m === 'smooth' ? 8 : MOBILE ? 12 : 16; label(); return mode; };
+  PF.setMode = function (m) { if (MODES.indexOf(m) < 0) return mode; mode = m; ST.mode = m; if (GA.store && !qm) GA.store.set('gfx', m); PR.cur = prFor(m); setPR(PR.cur); tune.win = []; tune.good = 0; LOD_D = m === 'smooth' ? 10 : MOBILE ? 18 : 22; label(); return mode; };
   function label() { var b = document.getElementById('menuGfx'); if (b) b.textContent = 'Graphics: ' + LABEL[mode]; }
   function wireBtn() {
     var foot = document.querySelector('#menu .menuFoot'); if (!foot || document.getElementById('menuGfx')) return;
-    var b = document.createElement('button'); b.id = 'menuGfx'; b.className = 'pill'; b.type = 'button'; b.title = 'AUTO keeps it smooth, SHARP is always full detail, SMOOTH is lighter for older phones';
+    var b = document.createElement('button'); b.id = 'menuGfx'; b.className = 'pill'; b.type = 'button'; b.title = 'AUTO: full detail, sharper when your phone has room. SHARP: always full detail. SMOOTH: optional lighter mode, only if you pick it';
     var mute = document.getElementById('menuMute'); if (mute && mute.nextSibling) foot.insertBefore(b, mute.nextSibling); else foot.appendChild(b);
     b.addEventListener('click', function () { PF.setMode(MODES[(MODES.indexOf(mode) + 1) % MODES.length]); if (GA.Audio) GA.Audio.play('click'); });
     label();
@@ -46,13 +46,15 @@
     if (tune.t < 1) return;
     var a = tune.win.slice().sort(function (x, y) { return x - y; }), med = a[Math.floor(a.length / 2)]; ST.fps = Math.round(1000 / med); tune.win = []; tune.t = 0;
     if (mode !== 'auto' || tune.cool > 0) return;
-    if (med > 21 && PR.cur > PR.min + 0.01) { PR.cur = Math.max(PR.min, PR.cur - (med > 30 ? 0.2 : 0.1)); setPR(PR.cur); tune.good = 0; tune.cool = 1.5; }
-    else if (med < 14.5) { if (++tune.good >= 3 && PR.cur < PR.max - 0.01) { PR.cur = Math.min(PR.max, PR.cur + 0.1); setPR(PR.cur); tune.good = 0; tune.cool = 2; } }
+    // AUTO only ever adds detail: with spare speed the screen gets sharper (up to the phone's real resolution, max 2x);
+    // if it gets busy it steps back, but never below the sharpness the arcade always had
+    if (med > 19 && PR.cur > PR.base + 0.01) { PR.cur = Math.max(PR.base, PR.cur - 0.1); setPR(PR.cur); tune.good = 0; tune.cool = 1.5; }
+    else if (med < 13.5) { if (++tune.good >= 3 && PR.cur < PR.top - 0.01) { PR.cur = Math.min(PR.top, PR.cur + 0.1); setPR(PR.cur); tune.good = 0; tune.cool = 2; } }
     else tune.good = 0;
   }
 
   /* ---------- 1. light pool ---------- */
-  var K = 4, POOL = [], VL = [], scanT = 0;
+  var K = 6, POOL = [], VL = [], scanT = 0;
   function effVis(o) { while (o) { if (!o.visible) return false; o = o.parent; } return true; }
   function scanLights() {
     S.traverse(function (o) { if (o.isPointLight && !o.userData.pfPool && !o.userData.pfSeen) { o.userData.pfSeen = true; o.layers.set(HIDE); VL.push({ l: o, s: 0 }); } });
@@ -121,7 +123,7 @@
   }
 
   /* ---------- 3. static batching ---------- */
-  var ROOTS = [], LOD_D = 12, CELL = 6, BUDGET = 4, OBSERVE = 4;
+  var ROOTS = [], LOD_D = 18, CELL = 6, BUDGET = 4, OBSERVE = 4;
   function snapOf(o) { var p = o.position, q = o.quaternion, s = o.scale, m = o.material, c = m && bakeKey(m) && m.color ? m.color.getHex() + (m.emissive ? m.emissive.getHex() * 7 : 0) : 0; return [p.x, p.y, p.z, q.x, q.y, q.z, q.w, s.x, s.y, s.z, o.visible ? 1 : 0, m ? m.id : 0, o.geometry ? o.geometry.id : 0, c]; }
   function changed(o) { var a = o.userData.pfSnap; if (!a) return false; var p = o.position, q = o.quaternion, s = o.scale;
     return a[0] !== p.x || a[1] !== p.y || a[2] !== p.z || a[3] !== q.x || a[4] !== q.y || a[5] !== q.z || a[6] !== q.w || a[7] !== s.x || a[8] !== s.y || a[9] !== s.z || a[10] !== (o.visible ? 1 : 0) || (o.material ? a[11] !== o.material.id : false) || (o.geometry ? a[12] !== o.geometry.id : false) || (a[13] ? a[13] !== o.material.color.getHex() + (o.material.emissive ? o.material.emissive.getHex() * 7 : 0) : false); }
@@ -253,11 +255,11 @@
     if (!g || g.userData.pfLo !== undefined) return g ? g.userData.pfLo : null; var p = g.parameters, lo = null;
     try {
       if (p) switch (g.type) {
-        case 'SphereGeometry': if (p.widthSegments > 10) lo = new T.SphereGeometry(p.radius, Math.max(8, p.widthSegments >> 1), Math.max(6, p.heightSegments >> 1), p.phiStart, p.phiLength, p.thetaStart, p.thetaLength); break;
-        case 'CylinderGeometry': if (p.radialSegments > 10) lo = new T.CylinderGeometry(p.radiusTop, p.radiusBottom, p.height, Math.max(8, p.radialSegments >> 1), p.heightSegments, p.openEnded, p.thetaStart, p.thetaLength); break;
-        case 'ConeGeometry': if (p.radialSegments > 10) lo = new T.ConeGeometry(p.radius, p.height, Math.max(8, p.radialSegments >> 1), p.heightSegments, p.openEnded, p.thetaStart, p.thetaLength); break;
-        case 'TorusGeometry': if (p.tubularSegments > 12) lo = new T.TorusGeometry(p.radius, p.tube, Math.max(4, p.radialSegments >> 1), Math.max(8, p.tubularSegments >> 1), p.arc); break;
-        case 'CircleGeometry': if (p.segments > 12) lo = new T.CircleGeometry(p.radius, Math.max(8, p.segments >> 1), p.thetaStart, p.thetaLength); break;
+        case 'SphereGeometry': if (p.widthSegments > 16) lo = new T.SphereGeometry(p.radius, Math.max(12, p.widthSegments >> 1), Math.max(8, p.heightSegments >> 1), p.phiStart, p.phiLength, p.thetaStart, p.thetaLength); break;
+        case 'CylinderGeometry': if (p.radialSegments > 16) lo = new T.CylinderGeometry(p.radiusTop, p.radiusBottom, p.height, Math.max(12, p.radialSegments >> 1), p.heightSegments, p.openEnded, p.thetaStart, p.thetaLength); break;
+        case 'ConeGeometry': if (p.radialSegments > 16) lo = new T.ConeGeometry(p.radius, p.height, Math.max(12, p.radialSegments >> 1), p.heightSegments, p.openEnded, p.thetaStart, p.thetaLength); break;
+        case 'TorusGeometry': if (p.tubularSegments > 20) lo = new T.TorusGeometry(p.radius, p.tube, Math.max(6, p.radialSegments >> 1), Math.max(12, p.tubularSegments >> 1), p.arc); break;
+        case 'CircleGeometry': if (p.segments > 20) lo = new T.CircleGeometry(p.radius, Math.max(12, p.segments >> 1), p.thetaStart, p.thetaLength); break;
       }
     } catch (e) { lo = null; }
     if (lo && !lo.attributes.uv && g.attributes.uv) lo = null;
@@ -284,8 +286,7 @@
 
   /* ---------- hooks ---------- */
   PF.init = function (o) {
-    O = o; R = o.renderer; S = o.scene; CAM = o.camera; O.far0 = CAM.far; MOBILE = !!o.mobile; PR.max = o.prMax || 1.6; PR.min = Math.min(PR.max, Math.max(1, Math.min(window.devicePixelRatio || 1, 1.0)));
-    if (MOBILE && PR.max > 1.25) PR.min = Math.max(PR.min, 1.0);
+    O = o; R = o.renderer; S = o.scene; CAM = o.camera; O.far0 = CAM.far; MOBILE = !!o.mobile; PR.max = PR.base = o.prMax || 1.6; PR.top = Math.max(PR.base, Math.min(window.devicePixelRatio || 1, 2)); PR.min = Math.min(PR.base, 1);
     PF.setMode(mode); initPool();
     if (on) {
       initZones();

@@ -412,7 +412,7 @@
       var dt = Math.min(0.05, Math.max(0, t - lastT)); lastT = t;
       if (t - last > 3) { last = t; Object.keys(M).forEach(function (k) { var mc = M[k]; if (mc.panelKey !== freeLeft(k) + ':' + daysLeft()) drawPanel(mc); if (!G && mc.period !== period()) buildPile(mc); }); }
       if (t - (C._lodT || 0) > 0.25) { C._lodT = t; var cam = api.camera && api.camera(); if (cam) Object.keys(M).forEach(function (k) { // far away: lighter prize models
-        var mc = M[k]; mc.g.getWorldPosition(lodV); var d = lodV.distanceTo(cam.position), far = !(G && cur === k) && !C.isOpen() && (mc.lodFar ? d > 6 : d > 7);
+        var mc = M[k]; mc.g.getWorldPosition(lodV); var d = lodV.distanceTo(cam.position), far = !(G && cur === k) && !C.isOpen() && (mc.lodFar ? d > 9 : d > 10);
         mc.lodFar = far; mc.items.forEach(function (o) { var L = o.mesh && o.mesh.userData.lod; if (L && L.lo.visible !== far) { L.lo.visible = far; L.hi.visible = !far; } }); }); }
       Object.keys(M).forEach(function (k) { var mc = M[k]; if (!mc.shufAnim) return; mc.shufAnim += dt; var busy = false;
         mc.items.forEach(function (o) { if (!o.mesh || o.dropT == null) return; var q = clamp((mc.shufAnim - o.dropT) / 0.45, 0, 1), e = 1 - q; o.mesh.position.y = o.y + 0.32 * e * e - (q > 0.7 ? Math.sin((q - 0.7) / 0.3 * Math.PI) * 0.012 : 0); if (q < 1) busy = true; else { o.mesh.position.y = o.y; o.dropT = null; } });
