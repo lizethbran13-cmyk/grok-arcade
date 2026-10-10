@@ -112,6 +112,7 @@
     A.cabinets.push(cab); CABS[o.id] = cab; return cab;
   }
   AT.cab = function (id) { return CABS[id]; };
+  AT.H = function () { return { ph: ph, lm: lm, gl: gl, add: add, bx: bx, cy: cy, sp: sp, cn: cn, to: to, cvs: cvs, glowText: glowText, texPlane: texPlane, bubble: bubble, inter: inter, prop: prop, reg: reg, solidOf: solidOf, rr: rr, F: F, mkRoot: mkRoot, R: R, A: A, rng: rng, hash: hash }; };
   AT.ids = function () { return Object.keys(CABS); };
   function moveCab(cab, x, z) { cab.x = x; cab.z = z; cab.front.set(x, 0, z); cab.group.position.set(x - cab.dir.x * 1.75, 0, z - cab.dir.z * 1.75); cab.group.updateMatrixWorld(true); cab.glowMesh.position.set(x, 0.03, z); }
   function bubble(par, y) {
@@ -497,7 +498,7 @@
         dust beams, hanging spiders, wandering ghosts). Floor furniture is audited + solid; small things
         sitting on furniture are decoration only.
      ========================================================================================= */
-  var CAM = { attic: { pitch: 0.66, dist: 4.6 }, attic2: { pitch: 0.62, dist: 4.8 }, attic3: { pitch: 0.55, dist: 5.4 }, maint: { pitch: 0.66, dist: 4.4 } };
+  var CAM = { attic: { pitch: 0.8, dist: 5.6 }, attic2: { pitch: 0.78, dist: 5.6 }, attic3: { pitch: 0.7, dist: 6.0 }, maint: { pitch: 0.82, dist: 5.2 } };
   AT.CAM = CAM;
   var FLAMES = [];
   function flame(par, x, y, z, s) { var f = add(par, sp(0.035 * (s || 1), 8), gl('#ffc14d'), x, y, z); f.scale.y = 1.8; FLAMES.push(f); var g2 = new T.Sprite(new T.SpriteMaterial({ map: A.glowTex, color: '#ffb347', transparent: true, opacity: 0.55, depthWrite: false, blending: T.AdditiveBlending })); g2.scale.set(0.45 * (s || 1), 0.45 * (s || 1), 1); g2.position.set(x, y, z); par.add(g2); return f; }
@@ -636,7 +637,7 @@
       GA.Areas.ARRIVE.maint = function () { go(MNT.spawn.x, MNT.spawn.z, 1, 0); };
       GA.Areas.ARRIVE.maint_back = function () { var c = CABS.at_mdoor; go(c.x - 0.6, c.z, -1, 0); }; }
     ['attic', 'attic2', 'attic3', 'maint'].forEach(function (k) { R[k].visible = false; live[k] = false; });
-    refreshInside(); refreshHatch(); AT.built = true; if (GA.AtticUI && GA.AtticUI.init) GA.AtticUI.init();
+    refreshInside(); refreshHatch(); AT.built = true; if (GA.Mimi && GA.Mimi.build) { try { GA.Mimi.build(); } catch (e) { if (window.console) console.warn('Mimi failed to build', e); } } if (GA.AtticUI && GA.AtticUI.init) GA.AtticUI.init();
   };
   AT.travel = function (where, cb) { if (GA.Areas && GA.Areas.travel) GA.Areas.travel(where, cb); };
   AT.frame = function (t, dt) {
@@ -646,6 +647,7 @@
     ANIM.any.forEach(function (f) { f(t, dt); }); if (live.attic) ANIM.attic.forEach(function (f) { f(t, dt); }); if (live.attic2) ANIM.attic2.forEach(function (f) { f(t, dt); }); if (live.attic3) ANIM.attic3.forEach(function (f) { f(t, dt); }); if (live.maint) ANIM.maint.forEach(function (f) { f(t, dt); });
     if (IN.wkKey !== AT.weekKey() + AT.weeklyDone()) refreshInside();
     if (AT.UIframe) AT.UIframe(t, dt, area);
+    if (R.mimi) { R.mimi.visible = !/^(attic|attic2|attic3|maint|roof|basement|gallery)$/.test(area); if (GA.Mimi && GA.Mimi.frame) GA.Mimi.frame(t, dt); }
   };
   AT.mood = function () { return { area: GA.Hub.area(), spot: AT.spotIndex(), theme: AT.theme().id }; };
 })();

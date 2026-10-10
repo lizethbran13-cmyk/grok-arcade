@@ -159,6 +159,10 @@
   A.push({ id: 'area_tour', cat: 'Arcade', icon: '\uD83D\uDDFA\uFE0F', name: 'Grand Tour', desc: 'Visit the Food Court, the Rooftop Party Deck and the Secret Basement', p: function () { return [['fcVisit', 'rfVisit', 'bsVisit'].filter(function (k) { return ev(k); }).length, 3]; } });
   A.push({ id: 'fc_snack', cat: 'Arcade', icon: '\uD83C\uDF55', name: 'Snack Time', desc: 'Buy a snack at the Food Court Snack Bar', p: function () { return [ev('fcSnack') ? 1 : 0, 1]; } });
   // The Mysterious Attic
+  A.push({ id: 'mimi_hi', cat: 'Attic', icon: '\uD83E\uDD16', name: 'New Best Friend', desc: 'Say hi to Mimi the Bot at Customer Relations', p: function () { return [ev('mimiTalk') ? 1 : 0, 1]; } });
+  A.push({ id: 'mimi_nav', cat: 'Attic', icon: '\uD83E\uDDED', name: 'Follow the Arrows', desc: 'Let Mimi guide you somewhere', p: function () { return [ev('mimiNav') ? 1 : 0, 1]; } });
+  A.push({ id: 'mimi_gift', cat: 'Attic', icon: '\uD83C\uDF81', name: 'Mimi\u2019s Gift', desc: 'Get Mimi\u2019s daily ticket gift', p: function () { return [ev('mimiGift') ? 1 : 0, 1]; } });
+  A.push({ id: 'mimi_reboot', cat: 'Attic', icon: '\u26A1', name: 'Have You Tried Turning It Off and On?', desc: 'Reset the main breaker during a power outage', p: function () { return [ev('mimiReboot') ? 1 : 0, 1]; } });
   A.push({ id: 'at_find', cat: 'Attic', icon: '\uD83D\uDD78\uFE0F', name: 'Something Creaks', desc: 'Find the hidden attic hatch', p: function () { return [ev('atFound') ? 1 : 0, 1]; } });
   A.push({ id: 'at_ladder', cat: 'Attic', icon: '\uD83E\uDE9C', name: 'Ladder Lugger', desc: 'Borrow Gary\u2019s ladder and set it up under the hatch', p: function () { return [(ev('atLadderGet') ? 1 : 0) + (ev('atLadder') ? 1 : 0), 2]; } });
   A.push({ id: 'at_fuse', cat: 'Attic', icon: '\u26A1', name: 'Fuse Fixer', desc: 'Sort Larry\u2019s fuse rack and install the fuse', p: function () { return [(ev('atFuse') ? 1 : 0) + (ev('atFuseIn') ? 1 : 0), 2]; } });

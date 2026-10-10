@@ -22,7 +22,7 @@
   UI.clueText = function (k) { return CLUE_TXT()[k]; };
 
   /* ---------- walk-up prompts ---------- */
-  UI.prompt = function (cab) { var s = S(), k = cab.kind;
+  UI.prompt = function (cab) { var s = S(), k = cab.kind; if (GA.Mimi && GA.Mimi.handles(k)) return GA.Mimi.prompt(cab);
     switch (k) {
       case 'at_hatch': if (!s.found) return { tag: '???', name: 'A cold draft from above\u2026', desc: 'Dust is drifting down from the ceiling, and something up there just creaked.', btn: 'LOOK UP', key: 'look up', cls: 'npc' };
         if (s.opened) return { tag: 'THE ATTIC', name: 'The attic hatch', desc: 'Gary\u2019s ladder leads up into the Mysterious Attic.', btn: 'CLIMB UP', key: 'climb up', cls: 'npc' };
@@ -57,7 +57,7 @@
   };
 
   /* ---------- interactions ---------- */
-  UI.open = function (cab) { var s = S(), k = cab.kind;
+  UI.open = function (cab) { var s = S(), k = cab.kind; if (GA.Mimi && GA.Mimi.handles(k)) return GA.Mimi.open(cab);
     if (k === 'at_hatch') return hatch();
     if (k === 'at_down') { snd('creak'); AT.travel('hatch'); return; }
     if (k === 'at_mdoor') { if (!s.maintTold) { snd('tick'); toast('\uD83D\uDEAA *knock knock* \u2026 a muffled voice: \u201CNot today! I\u2019m busy talking to Dennis!\u201D', 4200); return; } AT.travel('maint'); return; }
