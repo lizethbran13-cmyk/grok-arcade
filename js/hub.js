@@ -772,6 +772,27 @@
         g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('HOOP FRENZY', w / 2, 22);
         break;
       }
+      case 'disaster': {
+        // Disaster Zone: orange-purple storm sky, a purple kaiju stomping past the city, meteors streaking down, a lightning flash
+        var gd1 = g.createLinearGradient(0, 0, 0, h); gd1.addColorStop(0, '#3b0764'); gd1.addColorStop(0.55, '#ea580c'); gd1.addColorStop(0.56, '#4a5260'); gd1.addColorStop(1, '#334155'); g.fillStyle = gd1; g.fillRect(0, 0, w, h);
+        if (Math.sin(t * 2.3) > 0.93) { g.fillStyle = 'rgba(255,255,255,.35)'; g.fillRect(0, 0, w, h); g.strokeStyle = '#fde047'; g.lineWidth = 3; g.beginPath(); g.moveTo(w * 0.8, 30); g.lineTo(w * 0.74, 60); g.lineTo(w * 0.8, 62); g.lineTo(w * 0.72, h * 0.55); g.stroke(); }
+        var bc9 = ['#4cc9f0', '#f72585', '#ffca3a', '#8ac926', '#ff924c'];
+        for (i = 0; i < 6; i++) { var bh9 = 30 + (i * 23) % 40; g.fillStyle = bc9[i % 5]; g.fillRect(i * w / 6 + 2, h * 0.55 - bh9, w / 6 - 4, bh9); }
+        var kx9 = ((t * 18) % (w + 80)) - 40; g.fillStyle = '#7b5cd6'; g.beginPath(); g.ellipse(kx9, h * 0.42, 18, 26, 0, 0, 7); g.fill(); g.beginPath(); g.ellipse(kx9 + 10, h * 0.25, 12, 10, 0, 0, 7); g.fill(); g.fillStyle = '#5ff3ff'; for (i = 0; i < 3; i++) { g.beginPath(); g.moveTo(kx9 - 14, h * 0.3 + i * 9); g.lineTo(kx9 - 24, h * 0.27 + i * 9); g.lineTo(kx9 - 12, h * 0.36 + i * 9); g.fill(); }
+        g.fillStyle = '#111'; g.beginPath(); g.arc(kx9 + 14, h * 0.23, 2, 0, 7); g.fill();
+        for (i = 0; i < 4; i++) { var mk9 = ((t * 0.7 + i * 0.27) % 1), mx9 = (i * 47 + 30) % w + mk9 * 20, my9 = 34 + mk9 * (h * 0.5); g.strokeStyle = 'rgba(255,190,80,.7)'; g.lineWidth = 4; g.beginPath(); g.moveTo(mx9 - 16, my9 - 22); g.lineTo(mx9, my9); g.stroke(); g.fillStyle = '#8b5e3c'; g.beginPath(); g.arc(mx9, my9, 5, 0, 7); g.fill(); }
+        g.fillStyle = '#ffd23f'; for (i = 0; i < 6; i++) g.fillRect(i * w / 5 + 6, h * 0.8, w / 10, 3);
+        g.fillStyle = '#ff7b00'; rrF(g, w * 0.08, 6, w * 0.84, 26, 6); g.font = font(16); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK DISASTER ZONE', w / 2, 24);
+        break;
+      }
+      case 'meteor': {
+        g.fillStyle = '#3b0764'; g.fillRect(0, 0, w, h); var gm2 = g.createLinearGradient(0, 0, 0, h * 0.75); gm2.addColorStop(0, '#3b0764'); gm2.addColorStop(1, '#fb923c'); g.fillStyle = gm2; g.fillRect(0, 0, w, h * 0.75); g.fillStyle = '#4a5260'; g.fillRect(0, h * 0.75, w, h * 0.25);
+        var tx2 = w / 2 + Math.sin(t * 1.3) * w * 0.3, k2 = (t % 1.1) / 1.1; g.strokeStyle = 'rgba(255,40,60,' + (0.5 + 0.5 * Math.sin(t * 18)) + ')'; g.lineWidth = 2; g.beginPath(); g.ellipse(tx2, h * 0.78, 22, 6, 0, 0, 7); g.stroke();
+        g.fillStyle = '#8b5e3c'; g.beginPath(); g.arc(tx2, 20 + k2 * (h * 0.7), 7, 0, 7); g.fill(); g.fillStyle = 'rgba(255,170,60,.6)'; g.beginPath(); g.arc(tx2 - 5, 8 + k2 * (h * 0.7), 6, 0, 7); g.fill();
+        var px2 = w / 2 - Math.sin(t * 1.3) * w * 0.25; g.fillStyle = '#3b82f6'; g.fillRect(px2 - 4, h * 0.7, 8, 10); g.fillStyle = '#ef4444'; g.beginPath(); g.arc(px2, h * 0.68, 5, 0, 7); g.fill();
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('METEOR MAYHEM', w / 2, 22);
+        break;
+      }
       case 'dink': {
         g.fillStyle = '#2563eb'; g.fillRect(0, 0, w, h); g.fillStyle = '#16a34a'; g.fillRect(0, h * 0.42, w, h * 0.28);
         g.fillStyle = 'rgba(15,23,42,.6)'; g.fillRect(0, h * 0.5, w, 10); g.fillStyle = '#fff'; g.fillRect(0, h * 0.5 - 2, w, 3);

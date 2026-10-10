@@ -1552,5 +1552,76 @@ GA.HALL_DATA = {
 "cover": "assets/hall/kart/cover.webp",
 "quip": "Karts! In MY Hall! Chinchino did a purple drift right past my desk and I'm still finding sparks.",
 "noOld": "Grok Kart Party just crossed the finish line for the first time. No old versions yet. No drifting in the Hall."
+},
+"disaster": {
+"repo": "grok-disaster",
+"history": [
+{
+"date": "Oct 9",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A brand new bright cartoon 3D engine with soft shadows and glow, 4 maps (Area 51, Grok City, Sunny Beach, Pine Peak), 9 disasters (kaiju attack, lightning, meteors, tornado, flood/tsunami, earthquake, volcano, blizzard and an alien invasion), enterable buildings with real rooms, basements, a subway, a mine and a nuclear bunker, coins, a shop with upgrades and hats, trophies, and online co-op for up to 3."
+},
+{
+"date": "Oct 9",
+"ver": "1.1",
+"title": "A livelier town",
+"text": "The camera now goes inside bunkers, basements and houses. The towns got busy: townsfolk who run for cover, cars on the roads, birds, shop signs, flowers, props and distant hills. Flood water got real waves, foam and depth, and the tsunami became a giant curling wave."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/disaster/1.webp",
+"cap": "Roargon the kaiju stomps through Grok City",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/disaster/2.webp",
+"cap": "A tornado rips through Pine Peak",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/disaster/3.webp",
+"cap": "Tsunami! Climb the lifeguard tower",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/disaster/4.webp",
+"cap": "Safe in the Area 51 nuclear bunker",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/disaster/5.webp",
+"cap": "Alien invasion: run from the UFO beams",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/disaster/6.webp",
+"cap": "A volcano erupts behind the city",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/disaster/7.webp",
+"cap": "Flash flood: foam swirls around the town",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/disaster/8.webp",
+"cap": "Hide inside a house during a tornado",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/disaster/cover.webp",
+"quip": "A kaiju, a tornado AND aliens? I'm filing this one under 'Do Not Open Indoors'.",
+"noOld": "Grok Disaster Zone arrived in one piece (somehow). No old versions yet. Please keep the meteors out of the Hall."
 }
 };

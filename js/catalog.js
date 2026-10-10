@@ -40,7 +40,9 @@ GA.MAIN_GAMES = [
   { id: 'sports', mp: true, name: 'Grok Sports Command', desc: 'A giant 3D sports plaza with 10 sports: soccer, basketball, tennis, bowling, beach volleyball, mini golf, badminton, dodgeball, archery and table tennis! Easy touch controls, Assist Mode, ranks, trophies, and up to 3 friends online.',
     url: 'https://lizethbran13-cmyk.github.io/grok-sports/', color: '#2563eb', color2: '#facc15' },
   { id: 'kart', mp: true, name: 'Grok Kart Party', desc: 'A bright cartoony 3D kart racer! 8 tracks in 2 cups (city, canyon, candy, beach, haunted castle, snow, volcano, space), drifts and mini-turbos, ramps and gliders, 11 wacky items, Grand Prix, Time Trial ghosts, Balloon Battle and Coin Runners, 10 racers and kart parts to unlock, and online racing for up to 3.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-kart/', color: '#ff4fd8', color2: '#3ff0ff' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-kart/', color: '#ff4fd8', color2: '#3ff0ff' },
+  { id: 'disaster', mp: true, name: 'Grok Disaster Zone', desc: 'Survive cartoon disasters! A kaiju attack, tornadoes, meteors, tsunamis, lightning, volcanoes, quakes, blizzards and an alien invasion on 4 maps. Hide in bunkers, basements and rooftops, earn coins, buy upgrades, and team up with up to 3 friends online!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-disaster/', color: '#ff7b00', color2: '#7b5cd6' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -62,7 +64,8 @@ GA.BONUS_GAMES = [
   { id: 'laser', name: 'Laser Dash', desc: 'Sneak down the museum hall! Tap the top to JUMP the low lasers and the bottom to DUCK the high ones. Grab diamonds, don\u2019t trip the alarm! A Grok Heist Crew game.', color: '#ff3d6e', color2: '#a855f7' },
   { id: 'dink', name: 'Dink Duel', desc: 'The CPU dinks it over the net. Let it BOUNCE (it\u2019s the kitchen rule!), then tap to dink it back. Tap at the top of the hop for PERFECT. A Grok Pickleball game.', color: '#e6ff3b', color2: '#22c55e' },
   { id: 'hoop', name: 'Hoop Frenzy', desc: 'The hoop slides back and forth! Tap to shoot and lead the hoop so the ball drops right in. Swish = 3, rainbow money balls count double. A Grok Sports Command game.', color: '#f97316', color2: '#2563eb' },
-  { id: 'drift', name: 'Spark Drift', desc: 'Corners ahead! HOLD to drift and charge the sparks blue, orange, PURPLE, then let go for a mini-turbo. Hold too long and you spin out! A Grok Kart Party game.', color: '#c084fc', color2: '#ff4fd8' }
+  { id: 'drift', name: 'Spark Drift', desc: 'Corners ahead! HOLD to drift and charge the sparks blue, orange, PURPLE, then let go for a mini-turbo. Hold too long and you spin out! A Grok Kart Party game.', color: '#c084fc', color2: '#ff4fd8' },
+  { id: 'meteor', name: 'Meteor Mayhem', desc: 'Meteors rain on Grok City! Red circles show where they will land, so drag to run out of the way. Grab coins and gold stars, and score CLOSE CALLS for near misses. A Grok Disaster Zone game.', color: '#ff7b00', color2: '#7b5cd6' }
 ];
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };

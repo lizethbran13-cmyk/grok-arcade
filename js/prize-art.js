@@ -29,6 +29,8 @@
     { id: 'sw_band', cat: 'fun', name: 'Champ Sweatband', price: 30, desc: 'The blue Grok Sports Command headband with a gold star. Instantly 10% sportier.' },
     { id: 'kc_seeker', cat: 'fun', name: 'Seeker Keychain', price: 20, desc: 'The homing Seeker from Grok Kart Party: a little blue rocket-shell with a glowing eye. It always finds your keys.' },
     { id: 'kart_helmet', cat: 'fun', name: 'Racing Helmet', price: 35, desc: 'A glossy pink-and-cyan Grok Kart Party racing helmet with a checkered stripe and a lightning bolt. Safety first, speed second!' },
+    { id: 'kc_duck', cat: 'fun', name: 'Flood Duck Keychain', price: 20, desc: 'The rubber duck that floated through every Grok Disaster Zone flood, now on a keyring. Squeak!' },
+    { id: 'hard_hat', cat: 'fun', name: 'Survivor Hard Hat', price: 35, desc: 'A yellow Grok Disaster Zone hard hat with a headlamp. Meteors bounce right off. (Probably.)' },
     { id: 'pb_visor', cat: 'fun', name: 'Pickleball Visor', price: 35, desc: 'The green Grok Pickleball sun visor with a little ball pin. Instant pro look!' },
     { id: 'kc_banana', cat: 'fun', name: 'Banana Peel Keychain', price: 20, desc: 'The Grok Heist Crew guard-tripping banana peel, now on your keys. Slippery luck!' },
     { id: 'goggles_hat', cat: 'fun', name: 'Lookout Night-Vision Goggles', price: 35, desc: 'The Lookout\u2019s glowing green goggles from Grok Heist Crew. Wear them and spot every guard!' },
@@ -53,6 +55,7 @@
     { id: 'pl_gus', cat: 'plush', name: 'Grumpy Gus Plush', price: 70, desc: 'Gus the archivist, with his cardigan, bow tie, glasses and walrus mustache. Frowns even when you hug him.' },
     { id: 'pl_mvp', cat: 'plush', name: 'MVP Bear Plush', price: 60, desc: 'A cuddly bear in a #1 Grok Sports Command jersey, hugging a basketball. Most Valuable Plush!' },
     { id: 'pl_chinchino', cat: 'plush', name: 'Chinchino Racer Plush', price: 60, desc: 'Chinchino the fluffy chinchilla from Grok Kart Party in a little racing scarf, holding a tiny steering wheel. Extremely soft, surprisingly fast.' },
+    { id: 'pl_roargon', cat: 'plush', name: 'Roargon Plush', price: 65, desc: 'A squishy purple Roargon, the friendly-ish kaiju from Grok Disaster Zone, with glowing cyan back spikes.' },
     { id: 'pl_pickle', cat: 'plush', name: 'Pickle Pal Plush', price: 55, desc: 'A bumpy, smiley pickle in a sweatband holding its own tiny paddle. The Grok Pickleball mascot!' },
     { id: 'pl_baron', cat: 'plush', name: 'Baron Grumble Plush', price: 60, desc: 'The top-hatted, monocled villain of Grok Heist Crew, as a squishy plush. Still grumbling about his treasures.' },
     { id: 'pl_embercub', cat: 'plush', name: 'Embercub Plush', price: 55, desc: 'The fire-tail Grok Poke starter, extra squishy. Its tail glows (but never burns).' },
@@ -75,6 +78,7 @@
     { id: 'dlc_replica', cat: 'model', name: 'DLC Machine 3000 Replica', price: 210, desc: 'A desk-size DLC Machine 3000 with a spinning pink core, bubbling tubes and chasing lights. Prints nothing. Looks amazing.' },
     { id: 'gold_pin', cat: 'model', name: 'Golden Bowling Pin', price: 180, desc: 'A shiny golden bowling pin from the neon Grok Bowl alley, on a stand with a spinning ball. Strike!' },
     { id: 'kart_model', cat: 'model', name: 'Party Kart Replica', price: 190, desc: 'Grok\u2019s red Grok Kart Party racer on a checkered display stand, with spinning wheels and a purple mini-turbo flame.' },
+    { id: 'ufo_model', cat: 'model', name: 'Area 51 UFO Model', price: 190, desc: 'A shiny silver saucer from the Area 51 alien invasion, with spinning lights and a glowing tractor beam.' },
     { id: 'tr_paddle', cat: 'model', name: 'Golden Paddle Trophy', price: 190, desc: 'The Pickle Cup champion\u2019s golden paddle on a stand, with a ball bouncing on top. Kitchen not included.' },
     { id: 'moonstone', cat: 'model', name: 'Moonstone Diamond Replica', price: 210, desc: 'The glowing Moonstone Diamond from the City Museum heist, spinning on a velvet stand. (It\u2019s a replica. Probably.)' },
     { id: 'heist_van', cat: 'model', name: 'Getaway Van Replica', price: 220, desc: 'The Grok Heist Crew getaway van on a display stand: purple paint, gold HEIST stripe and a loot bag on the roof.' },
@@ -86,6 +90,7 @@
     { id: 'tr_gold', cat: 'trophy', name: 'Gold Trophy', price: 450, desc: 'The big one. Almost.' },
     { id: 'tr_sports', cat: 'trophy', name: 'Sports Command Cup', price: 320, desc: 'The big Grok Sports Command trophy: a golden cup with a soccer ball, basketball and tennis ball orbiting around it.' },
     { id: 'tr_kart', cat: 'trophy', name: 'Grand Prix Gold Cup', price: 320, desc: 'The Grok Kart Party Grand Prix trophy: a golden cup with a checkered flag and a racing wheel spinning on top.' },
+    { id: 'tr_disaster', cat: 'trophy', name: 'Disaster Survivor Cup', price: 330, desc: 'The Grok Disaster Zone survivor trophy: a golden cup with a meteor, a lightning bolt and a snowflake orbiting around it.' },
     { id: 'tr_ring', cat: 'trophy', name: 'Golden Ring Trophy', price: 350, desc: 'A giant spinning Grok Dash ring on a stand. Shiny!' },
     { id: 'golden_joy', cat: 'trophy', name: 'Golden Joystick', price: 750, desc: 'The legendary Golden Joystick. The ultimate prize!' }
   ];
@@ -736,6 +741,16 @@
     ball(g, 50, 32, 20, 24, '#ffcf3a'); g.strokeStyle = '#b45309'; g.lineWidth = 2; g.beginPath(); g.ellipse(50, 32, 20, 24, 0, 0, 7); g.stroke();
     shine(g, 42, 22, 6, 4, 0.6); pbBall(g, 76, 20, 7); sparkle(g, 20, 26, 6); sparkle(g, 82, 52, 4);
   }
+  /* ---------- Grok Disaster Zone prizes ---------- */
+  function kcDuck(g) { keyRing(g); ball(g, 50, 66, 18, 14, '#ffd60a'); ball(g, 60, 46, 11, 10, '#ffd60a'); g.fillStyle = '#ff7b00'; g.beginPath(); g.moveTo(69, 46); g.lineTo(80, 49); g.lineTo(69, 52); g.fill(); eye(g, 62, 43, 2.2); shine(g, 44, 58, 5, 3, 0.5); g.fillStyle = 'rgba(80,190,255,.6)'; g.beginPath(); g.ellipse(50, 80, 26, 5, 0, 0, 7); g.fill(); }
+  function hardHat(g) { shadow(g, 50, 84, 32); g.fillStyle = '#facc15'; g.beginPath(); g.ellipse(50, 74, 36, 9, 0, 0, 7); g.fill(); g.fillStyle = '#fde047'; g.beginPath(); g.arc(50, 70, 26, Math.PI, 0); g.fill(); g.fillStyle = '#eab308'; g.fillRect(47, 44, 6, 26); g.fillStyle = '#334155'; rr(g, 41, 54, 18, 12, 3); g.fill(); g.fillStyle = '#fffbe0'; g.beginPath(); g.arc(50, 60, 4.5, 0, 7); g.fill(); shine(g, 38, 56, 5, 7, 0.45); sparkle(g, 82, 36, 5); }
+  function plushRoargon(g) { shadow(g, 50, 92, 26); g.fillStyle = '#5ff3ff'; for (var i = 0; i < 4; i++) { g.beginPath(); g.moveTo(26 + i * 6, 48 + i * 6); g.lineTo(16 + i * 6, 40 + i * 7); g.lineTo(30 + i * 6, 56 + i * 6); g.fill(); }
+    ball(g, 50, 70, 22, 20, '#7b5cd6'); g.fillStyle = '#f7d27e'; g.beginPath(); g.ellipse(52, 74, 12, 14, 0, 0, 7); g.fill(); ball(g, 54, 38, 18, 16, '#8b6cf0'); g.fillStyle = '#7b5cd6'; g.beginPath(); g.ellipse(64, 44, 10, 7, 0, 0, 7); g.fill();
+    eye(g, 48, 34, 2.6); eye(g, 61, 34, 2.6); blush(g, 44, 42); g.fillStyle = '#fff'; g.beginPath(); g.moveTo(62, 48); g.lineTo(65, 52); g.lineTo(68, 48); g.fill(); ball(g, 30, 84, 10, 6, '#7b5cd6'); shine(g, 46, 28, 4, 6, 0.35); tag(g, 66, 78); }
+  function ufoModel(g) { standBase(g, '#1e293b', true); g.fillStyle = 'rgba(120,255,140,.35)'; g.beginPath(); g.moveTo(40, 46); g.lineTo(60, 46); g.lineTo(70, 78); g.lineTo(30, 78); g.fill();
+    var M = metal(g, 18, 82, '#c7d0dc'); g.fillStyle = M; g.beginPath(); g.ellipse(50, 42, 32, 10, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(155,231,255,.85)'; g.beginPath(); g.arc(50, 38, 13, Math.PI, 0); g.fill(); ball(g, 50, 34, 5, 6, '#7cff6b');
+    ['#ff4fd8', '#3ff0ff', '#ffe14d', '#ff4fd8', '#3ff0ff'].forEach(function (c, k) { g.fillStyle = c; g.beginPath(); g.arc(26 + k * 12, 44, 2.6, 0, 7); g.fill(); }); sparkle(g, 84, 22, 5); }
+  function trDisaster(g) { trophy(g, '#ffcf3a', true); ball(g, 20, 34, 8, 8, '#8b5e3c'); g.fillStyle = '#ff7b00'; g.beginPath(); g.arc(17, 31, 3, 0, 7); g.fill(); g.fillStyle = '#fde047'; g.beginPath(); g.moveTo(80, 18); g.lineTo(72, 34); g.lineTo(79, 34); g.lineTo(74, 48); g.lineTo(88, 28); g.lineTo(81, 28); g.lineTo(86, 18); g.fill(); star(g, 50, 11, 7, '#bde0fe', 6); }
   /* ---------- Grok Sports Command prizes ---------- */
   function bBall(g, x, y, r) { ball(g, x, y, r, r, '#f97316'); g.strokeStyle = 'rgba(60,25,5,.8)'; g.lineWidth = Math.max(1, r * 0.1); g.beginPath(); g.arc(x, y, r, 0, 7); g.moveTo(x - r, y); g.lineTo(x + r, y); g.moveTo(x, y - r); g.lineTo(x, y + r); g.stroke(); }
   function plushMvp(g) {
@@ -793,6 +808,7 @@
     pl_pickle: plushPickle, kc_pball: kcPball, pb_visor: pbVisor, tr_paddle: trPaddle,
     pl_chinchino: plushChin, kc_seeker: kcSeeker, kart_helmet: helmet, kart_model: kartModel, tr_kart: trKart,
     pl_mvp: plushMvp, kc_hoop: kcHoop, sw_band: swBand, gold_pin: goldPin, tr_sports: trSports,
+    kc_duck: kcDuck, hard_hat: hardHat, pl_roargon: plushRoargon, ufo_model: ufoModel, tr_disaster: trDisaster,
     pl_embercub: function (g) { plushCritter(g, 'embercub'); }, pl_puddlepup: function (g) { plushCritter(g, 'puddlepup'); }, pl_leafkit: function (g) { plushCritter(g, 'leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue, pl_gus: plushGus, kc_stamp: kcStamp, dlc_replica: dlcReplica,
     pl_zebra: plushZebra, pl_rhino: plushRhino, pl_leopard: plushLeopard, ranger_hat: rangerHat, kc_dart: kcDart, snow_globe: snowGlobe, rescue_truck: rescueTruck,
     pl_dash: function (g) { plushDash(g, 'grok'); }, pl_speedy: function (g) { plushDash(g, 'speedy'); }, pl_floaty: function (g) { plushDash(g, 'floaty'); },
