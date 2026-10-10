@@ -10,7 +10,12 @@
   var MAIN_STEP = GA.MAIN_GAMES.length > 15 ? 1.48 : GA.MAIN_GAMES.length > 14 ? 1.55 : GA.MAIN_GAMES.length > 13 ? 1.66 : GA.MAIN_GAMES.length > 12 ? 1.78 : GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 15 ? -17.22 : GA.MAIN_GAMES.length > 14 ? -16.95 : GA.MAIN_GAMES.length > 13 ? -17.0 : GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
   // more than 16 main cabinets: shrink them a little so they still fit side by side along the north wall (x -17.95..5.75), no overlaps
   var MAIN_K = 1; if (GA.MAIN_GAMES.length > 16) { MAIN_K = 23.7 / (1.44 * GA.MAIN_GAMES.length + 0.04 * (GA.MAIN_GAMES.length - 1)); MAIN_STEP = 1.48 * MAIN_K; MAIN_X0 = -17.95 + 0.72 * MAIN_K; }
-  var BONUS_K = 1, BONUS_STEP = 0; if (GA.BONUS_GAMES.length > 16) { BONUS_K = 23.2 / (1.44 * GA.BONUS_GAMES.length + 0.04 * (GA.BONUS_GAMES.length - 1)); BONUS_STEP = 1.48 * BONUS_K; }
+  /* bonus cabinets stay full size: up to BONUS_EAST on the east wall, then a second row on the bonus room's north wall
+     (under the raised BEST SCORES board), then a third row on the bonus side of the divider wall, clear of the doorway
+     (room for 27). Only past that do the east-wall cabinets squeeze. */
+  var BONUS_EAST = 15, BONUS_NORTH_X = [9.7, 11.2, 12.7, 14.2], BONUS_DIV_Z = [-9.2, -7.7, -6.2, -4.7, 4.7, 6.2, 7.7, 9.2];
+  var BONUS_CAP = BONUS_EAST + BONUS_NORTH_X.length + BONUS_DIV_Z.length;
+  var BONUS_K = 1, BONUS_STEP = 0; if (GA.BONUS_GAMES.length > BONUS_CAP) { var nE0 = GA.BONUS_GAMES.length - BONUS_CAP + BONUS_EAST; BONUS_K = 23.2 / (1.44 * nE0 + 0.04 * (nE0 - 1)); BONUS_STEP = 1.48 * BONUS_K; }
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -345,7 +350,8 @@
 
     // Best scores board in the bonus zone (north wall)
     var c2 = mkCanvas(768, 520); dynTex.scores = { c: c2, ctx: c2.getContext('2d'), tex: canvasTex(c2) };
-    var sb = new T.Mesh(plane(4.4, 3), new T.MeshBasicMaterial({ map: dynTex.scores.tex })); sb.position.set(11.6, 2.4, ROOM.minZ + 0.03); wallSign('BEST SCORES board', sb);
+    // raised above the overflow cabinet row on this wall, like a marquee
+    var sb = new T.Mesh(plane(3.6, 2.44), new T.MeshBasicMaterial({ map: dynTex.scores.tex })); sb.position.set(12.7, 3.68, ROOM.minZ + 0.03); wallSign('BEST SCORES board', sb);
     scoreBoardDraw();
     // a ticket machine next to scoreboard
     var tmx = 8.0, tmz = ROOM.minZ + 0.6;
@@ -881,8 +887,13 @@
     // main games: along the north wall, facing south
     GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    var nb = GA.BONUS_GAMES.length, stepB = BONUS_STEP || (nb > 15 ? 1.45 : nb > 14 ? 1.5 : nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4);
-    GA.BONUS_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2); });
+    var nAll = GA.BONUS_GAMES.length, nOver = BONUS_NORTH_X.length + BONUS_DIV_Z.length, nb = nAll > BONUS_EAST ? Math.max(BONUS_EAST, nAll - nOver) : nAll, stepB = BONUS_STEP || (nb > 15 ? 1.45 : nb > 14 ? 1.5 : nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4);
+    GA.BONUS_GAMES.forEach(function (gm, i) {
+      if (i < nb) return buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2);
+      var j = i - nb; // overflow rows: north wall of the bonus room (facing south), then the divider wall (facing east)
+      if (j < BONUS_NORTH_X.length) buildCabinet(gm, 'bonus', BONUS_NORTH_X[j], ROOM.minZ + 0.6, 0);
+      else buildCabinet(gm, 'bonus', DIV_X + 0.75, BONUS_DIV_Z[j - BONUS_NORTH_X.length], Math.PI / 2);
+    });
   }
 
   /* ---------- multiplayer antenna ---------- */

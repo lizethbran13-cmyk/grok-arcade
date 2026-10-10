@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   var T = THREE, A, W, H3 = GA.Hall3D = {};
-  var V = '20261009sc';
+  var V = '20261009br';
   var mats = {};
   function ph(c, s, e) { var k = 'p' + c + (s || 40) + (e || ''); return mats[k] || (mats[k] = new T.MeshPhongMaterial({ color: c, shininess: s || 40, specular: '#ffffff', emissive: e ? new T.Color(e) : new T.Color(0) })); }
   function gold() { return ph('#e8b84a', 90, '#3a2400'); }
