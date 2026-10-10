@@ -1635,5 +1635,6 @@ GA.ARCADE_HISTORY = [
   { date: 'Oct 8', ver: '3.0', title: 'Claw machines', text: 'Two real claw machines with 18 claw-only prizes, Grok Blocks, Grok Rides and Rush Hour.' },
   { date: 'Oct 9', ver: '3.5', title: 'Hall of Game Records', text: 'This very Hall, with Gus, every game\u2019s history and old versions, plus the DLC Machine 3000.' },
   { date: 'Oct 9', ver: '3.8', title: 'Heists, pickleball & sports', text: 'Grok Heist Crew, Grok Pickleball and Grok Sports Command cabinets, bonus games #17-#19, DLC packs with free starter vouchers and a roomier bonus wall.' },
+  { date: 'Oct 9', ver: '3.9', title: 'Kart Party', text: 'The Grok Kart Party cabinet and bonus game Spark Drift.' },
   { date: 'Oct 9', ver: '4.0', title: 'Food Court, Rooftop & Secret Basement', text: 'Three new places! A Food Court with Chef Gio, snacks that give boosts and a pizza oven you cook at. A Rooftop Party Deck with a DJ booth, dance emotes, fireworks and a weekly party schedule. And a Secret Basement retro arcade with rare cabinets, puzzles and rare prizes. Get in with Gus\u2019s key (it hides somewhere new every week) or pick the lock. Plus bonus game #20 Lockpick Panic.' }
 ];
