@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-11T17:05:00Z",
+  "updated": "2026-10-11T17:20:00Z",
   "items": [
     {
       "game": "puptown",
@@ -40,11 +40,12 @@
     {
       "issue": 29,
       "game": "ratita",
-      "name": "Pi-rat the Pirate Pack",
+      "name": "Pi-rat the Pirate Pack (live)",
       "size": "MEGA",
-      "what": "Grok Ratita Rescue MEGA: sail the Salty Cheddar with Captain Eye Patch and his cranky parrot Grumbles to 5 islands (puzzles, hazards, 5 bosses, treasure), plus a Dresser Shop with hats, clothes and fur skins.",
-      "stage": "building",
-      "when": "Playable in the Time Jumper"
+      "what": "Grok Ratita Rescue MEGA: sail the Salty Cheddar with Captain Eye Patch and Grumbles to 5 islands (puzzles, hazards, 5 bosses, treasure) plus the Dresser Shop. 175 tickets in the DLC Shop. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T17:20:00Z"
     },
     {
       "issue": 30,
@@ -110,18 +111,7 @@
       "when": "Oct 10"
     }
   ],
-  "previews": [
-    {
-      "id": "pirate-pack",
-      "game": "ratita",
-      "issue": 29,
-      "name": "Pi-rat the Pirate Pack",
-      "url": "previews/pirate-pack/",
-      "playable": true,
-      "built": "2026-10-11",
-      "notes": "Full campaign is playable: sail the Salty Cheddar, 5 islands, 5 bosses, Dresser Shop. Still polishing."
-    }
-  ],
+  "previews": [],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
@@ -133,6 +123,18 @@
       "built": "2026-10-11",
       "archived": "2026-10-11",
       "notes": "Early look! The whole town is walkable: square + fountain, 8 buildings to explore, Paw Park, the Golden Bone mystery and mini-games. Still being polished.",
+      "playable": true
+    },
+    {
+      "id": "pirate-pack",
+      "game": "ratita",
+      "issue": 29,
+      "name": "Pi-rat the Pirate Pack",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/pirate-pack-beta/",
+      "built": "2026-10-11",
+      "archived": "2026-10-11",
+      "notes": "Full campaign is playable: sail the Salty Cheddar, 5 islands, 5 bosses, Dresser Shop. Still polishing.",
       "playable": true
     }
   ],
