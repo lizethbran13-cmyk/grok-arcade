@@ -18,7 +18,9 @@
   function root(name) { var g = new T.Group(); g.name = name; A.scene.add(g); ROOTS.push(g); return g; }
   function glowFloor(g, c, w, d, x, z) { var m = new T.MeshBasicMaterial({ map: A.glowTex, color: c, transparent: true, opacity: 0.3, depthWrite: false, blending: T.AdditiveBlending }); var gl = add(g, new T.PlaneGeometry(w, d), m, x || 0, 0.03, z || 0); gl.rotation.x = -Math.PI / 2; gl.renderOrder = 2; A.noAud(gl); return m; }
   function cab(o) { // o: id, kind, name, desc, color, x, z (front), dir [dx,dz], r, group, glow
-    var c = { game: { id: o.id, name: o.name, desc: o.desc || '', color: o.color || '#ffe14d' }, kind: o.kind, ar: true, id: o.id, group: o.group, x: o.x, z: o.z, rot: 0,
+    // anchor: the hub's teleport (and menu GO TO) lands 1.75 in front of cab.group, so every spot gets its own little anchor node
+    var an = new T.Group(); an.name = 'anchor ' + o.id; an.position.set(o.x - o.dir[0] * 1.75, 0, o.z - o.dir[1] * 1.75); an.rotation.y = Math.atan2(o.dir[0], o.dir[1]); A.scene.add(an); an.updateMatrixWorld(true);
+    var c = { game: { id: o.id, name: o.name, desc: o.desc || '', color: o.color || '#ffe14d' }, kind: o.kind, ar: true, id: o.id, group: an, owner: o.group, x: o.x, z: o.z, rot: 0,
       front: new T.Vector3(o.x, 0, o.z), dir: new T.Vector3(o.dir[0], 0, o.dir[1]), glow: o.glow || new T.MeshBasicMaterial({ transparent: true, opacity: 0 }), nextDraw: Infinity, r: o.r || 1.1, data: o.data || {} };
     A.cabinets.push(c); CABS[o.id] = c; return c;
   }
@@ -255,7 +257,7 @@
     rows.forEach(function (y, ri) { if (ri === rows.length - 1) return; var z = z0 + 0.08; while (z < z1 - 0.1) { var w = 0.05 + R() * 0.05, h = 0.32 + R() * 0.18; if (Math.abs(((z - z0) % 1.533)) < 0.06) { z += 0.07; continue; } var lean = R() < 0.06 ? 0.25 : 0; list.push([x0 + 0.33, y + h / 2, z + w / 2, w, h, lean, pal[Math.floor(R() * pal.length)]]); z += w + 0.004 + (lean ? 0.08 : 0); } });
     var im = new T.InstancedMesh(new T.BoxGeometry(1, 1, 1), new T.MeshPhongMaterial({ color: '#ffffff', shininess: 20 }), list.length), m4 = new T.Matrix4(), q = new T.Quaternion(), e = new T.Euler(), v = new T.Vector3(), s = new T.Vector3(), cc = new T.Color();
     list.forEach(function (b, i) { e.set(b[5], 0, 0); q.setFromEuler(e); m4.compose(v.set(b[0], b[1], b[2]), q, s.set(0.34, b[4], b[3])); im.setMatrixAt(i, m4); im.setColorAt(i, cc.set(b[6])); n++; });
-    im.instanceMatrix.needsUpdate = true; if (im.instanceColor) im.instanceColor.needsUpdate = true; g.add(im); void mats;
+    im.instanceMatrix.needsUpdate = true; if (im.instanceColor) im.instanceColor.needsUpdate = true; im.frustumCulled = false; A.noAud(im); g.add(im); void mats; // (audit: the shelf boards around them carry the real bounds)
     // gold-leaf titles on the middle shelf + a "GAME HISTORY" plaque
     var pq = K.plaqueTex(512, 120, 'GAME HISTORY LIBRARY', 'borrow anything \u00b7 return it (Barnaby)', '#ffe14d'); var pm = K.planeM(1.6, 0.38, pq.tex, g, x0 + 0.62, 3.32, (z0 + z1) / 2); pm.rotation.y = Math.PI / 2;
     // rolling ladder on a brass rail
@@ -325,7 +327,7 @@
   /* ---------- 7. walk-in photo booth ---------- */
   var BOOTH = {};
   function photoBooth() {
-    var name = 'Photo booth', g = root(name), x0 = W.minX, x1 = 3.95, z0 = 43.2, z1 = 45.6, H = 2.7;
+    var name = 'Photo booth', g = root(name), x0 = W.minX + 0.1, x1 = 3.95, z0 = 43.2, z1 = 45.6, H = 2.7;
     var body = ph('#d61f45', 50), trim = K.chrome(), cur = new T.MeshPhongMaterial({ color: '#7f1d1d', shininess: 10, side: T.DoubleSide });
     add(g, bx(0.15, H, z1 - z0), body, x0 + 0.075, H / 2, (z0 + z1) / 2); // back (west) wall
     add(g, bx(x1 - x0, H, 0.15), body, (x0 + x1) / 2, H / 2, z0 + 0.075); add(g, bx(x1 - x0, H, 0.15), body, (x0 + x1) / 2, H / 2, z1 - 0.075);
@@ -353,7 +355,7 @@
     BOOTH = { g: g, flash: flash, fx: 3.45, fz: (z0 + z1) / 2, flashT: 0 };
     flash.visible = false;
     var gm = glowFloor(g, '#ff4fd8', 1.2, 1.6, 3.35, (z0 + z1) / 2);
-    seat('booth_stool', 'Photo booth stool', 3.45, (z0 + z1) / 2, -Math.PI / 2, 0.5, g, [x0 + 0.62, 1.42, (z0 + z1) / 2, 3.45, 1.05, (z0 + z1) / 2]);
+    seat('booth_stool', 'Photo booth stool', 3.45, (z0 + z1) / 2, -Math.PI / 2, 0.5, g, [x0 + 0.62, 1.5, (z0 + z1) / 2, 3.6, 1.32, (z0 + z1) / 2]);
     // the booth itself is the seat's cabinet: re-tag it so the prompt offers PHOTOS
     var sc = CABS.booth_stool; sc.kind = 'h2_photo'; sc.front.set(3.3, 0, (z0 + z1) / 2); sc.glow = gm; sc.r = 0.75; SEATS.booth_stool.fx = 3.3;
   }
@@ -373,7 +375,7 @@
     for (r = 0; r < 5; r++) for (c = 0; c < 9; c++) { var k = Math.floor(R() * 4); for (var f = 0; f < k; f++) fl.push([xw - 0.28, 0.92 + r * 0.46 + 0.17, 37.0 + c * 0.511 + 0.1 + f * 0.09 + R() * 0.03, R() * 0.3 - 0.15, pal[Math.floor(R() * pal.length)]]); }
     var im = new T.InstancedMesh(new T.BoxGeometry(0.36, 0.3, 0.025), new T.MeshPhongMaterial({ color: '#ffffff', shininess: 10 }), fl.length), m4 = new T.Matrix4(), q = new T.Quaternion(), e = new T.Euler(), v = new T.Vector3(), s1 = new T.Vector3(1, 1, 1), cc = new T.Color();
     fl.forEach(function (b, i) { e.set(b[3], 0, 0); q.setFromEuler(e); m4.compose(v.set(b[0], b[1], b[2]), q, s1); im.setMatrixAt(i, m4); im.setColorAt(i, cc.set(b[4])); });
-    im.instanceMatrix.needsUpdate = true; if (im.instanceColor) im.instanceColor.needsUpdate = true; g.add(im);
+    im.instanceMatrix.needsUpdate = true; if (im.instanceColor) im.instanceColor.needsUpdate = true; im.frustumCulled = false; A.noAud(im); g.add(im);
     var lab = K.cvs(1024, 96, function (c2, w, h) { c2.fillStyle = '#c9993a'; c2.fillRect(0, 0, w, h); c2.fillStyle = '#2a1a10'; c2.font = 'bold 44px Georgia,serif'; c2.textAlign = 'center'; c2.textBaseline = 'middle'; ['A\u2013F', 'G\u2013L', 'M\u2013R', 'S\u2013Z'].forEach(function (t, i) { c2.fillText(t, w * (i + 0.5) / 4, h / 2); }); });
     var lm = K.planeM(4.4, 0.2, lab.tex, g, xw - 0.5, 3.22, 39.3); lm.rotation.y = -Math.PI / 2;
     var top = K.plaqueTex(1024, 180, 'BARNABY\u2019S SORTING STATION', 'everything has a place \u00b7 even Gus', '#7df9a0', '#123020'); var tm = K.planeM(3.4, 0.6, top.tex, g, xw - 0.47, 3.65, 39.3); tm.rotation.y = -Math.PI / 2;
@@ -489,6 +491,7 @@
     return true;
   };
   H2.stand = function () { var s = st.sit; if (!s) return false; st.sit = null; GA.Hub.setCamOverride(null); if (GA.Hub.emote() === 'sit') GA.Hub.setEmote(null); GA.Hub.setPlayer(s.fx, s.fz); return true; };
+  H2.camera = function () { return A && A.camera(); };
   H2.renderNow = function () { var R = A && A.renderer(); if (R) R.render(A.scene, A.camera()); };
   H2.sitting = function () { return st.sit ? st.sit.id : null; };
   H2.inAnnex = function () { return st.inAnnex; };

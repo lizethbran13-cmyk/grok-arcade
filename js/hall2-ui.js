@@ -22,7 +22,7 @@
   function gusDist() { var p = GA.Hub.pose(), w = GA.Hub.WING; return Math.hypot(p.x - w.doorX, p.z - (w.minZ + 5.6)); }
   // Gus talks: speech bubble at his desk, and over the intercom when you're too far away to see it
   function gusSay(s, secs) { if (GA.Hall3D && GA.Hall3D.say) GA.Hall3D.say(s, secs || 4.5); if (gusDist() > 9) toast('\uD83D\uDCE2 GUS (intercom): \u201C' + s + '\u201D', 3600); UI.lastGus = s; return s; }
-  function barnSay(s, secs) { H2.say(s, secs || 4.5); var p = GA.Hub.pose(); if (Math.hypot(p.x - 16.3, p.z - 39.3) > 11) toast('\uD83E\uDDD3 BARNABY: \u201C' + s + '\u201D', 3400); UI.lastBarn = s; return s; }
+  function barnSay(s, secs) { H2.say(s, secs || 4.5); var p = GA.Hub.pose(); if (Math.hypot(p.x - 16.3, p.z - 39.3) > 11 && !(GA.AreasUI.kind && GA.AreasUI.kind())) toast('\uD83E\uDDD3 BARNABY: \u201C' + s + '\u201D', 3400); UI.lastBarn = s; return s; }
   UI.gusSay = gusSay; UI.barnSay = barnSay;
 
   /* ---------- lines ---------- */
@@ -261,9 +261,9 @@
     return true;
   }
   UI.takePhotos = function (cb) {
-    if (PB.busy) return false; PB.busy = true; H2.posing = true; close(true); GA.Hub.setLock(true);
+    if (PB.busy) return false; PB.busy = true; H2.posing = true; close(true); GA.Hub.setLock(true); var bz = (H2.SEATS.booth_stool || { z: 44.4 }).z; GA.Hub.setPlayer(3.72, bz); GA.Hub.setFace(-Math.PI / 2); // step to the tape mark so the whole you fits in the picture
     if (H2.sitting() !== 'booth_stool') H2.sit('booth_stool');
-    var poses = ['wave', 'robot', 'dance', 'jump'], shots = [], k = 0, R = GA.Hub.renderer(), cd = document.createElement('div'); cd.className = 'h2Count'; document.body.appendChild(cd);
+    var poses = ['wave', 'robot', 'dance', 'floss'], shots = [], k = 0, R = GA.Hub.renderer(), cd = document.createElement('div'); cd.className = 'h2Count'; document.body.appendChild(cd);
     gusSay(pick(['No flash photography! ...Fine. ONE strip.', 'Photos? In the archive? I suppose I\u2019ll allow it. Smile. Or don\u2019t. I never do.']), 3.5);
     function shot() {
       var n = 3; GA.Hub.setEmote('sit'); cd.textContent = n; cd.className = 'h2Count on';
@@ -276,16 +276,16 @@
       }, UI.photoTick || 600);
     }
     function grab() { // copy the 3D view right after a fresh frame (same task, so the picture is still there)
-      if (!R) return null; H2.renderNow(); var src = R.domElement, w = src.width, h = src.height, s = Math.min(w, h * 0.8), c = document.createElement('canvas'); c.width = 300; c.height = 240;
-      c.getContext('2d').drawImage(src, (w - s) / 2, (h - s * 0.8) / 2, s, s * 0.8, 0, 0, 300, 240); return c;
+      if (!R) return null; var cm = H2.camera(), f0 = cm.fov; cm.fov = 112; cm.updateProjectionMatrix(); H2.renderNow(); cm.fov = f0; cm.updateProjectionMatrix(); /* a wide booth lens: the booth is small */ var src = R.domElement, w = src.width, h = src.height, s = Math.min(w, h / 1.25), c = document.createElement('canvas'); c.width = 240; c.height = 300;
+      c.getContext('2d').drawImage(src, (w - s) / 2, (h - s * 1.25) / 2, s, s * 1.25, 0, 0, 240, 300); return c;
     }
     function done() {
-      cd.remove(); GA.Hub.setEmote('sit'); H2.posing = false; GA.Hub.setLock(false); PB.busy = false;
-      var f = FRAMES[PB.fr || 0], st = document.createElement('canvas'); st.width = 340; st.height = 1100; var g = st.getContext('2d');
-      g.fillStyle = f[2]; g.fillRect(0, 0, 340, 1100); g.strokeStyle = f[3]; g.lineWidth = 8; g.strokeRect(4, 4, 332, 1092);
-      shots.forEach(function (c, i) { g.drawImage(c, 20, 20 + i * 256, 300, 240); g.strokeStyle = f[3]; g.lineWidth = 3; g.strokeRect(20, 20 + i * 256, 300, 240); });
-      g.fillStyle = f[3]; g.textAlign = 'center'; g.font = 'bold 26px "Trebuchet MS",sans-serif'; g.fillText('GROK ARCADE', 170, 1056); g.font = 'bold 16px "Trebuchet MS",sans-serif'; g.fillText('HALL OF RECORDS \u00b7 ' + new Date().toLocaleDateString(), 170, 1082);
-      if (f[0] === 'spooky') { g.font = '40px serif'; g.fillText('\uD83D\uDC7B', 300, 60); } else if (f[0] === 'neon') { g.font = '34px serif'; g.fillText('\u2728', 300, 54); } else if (f[0] === 'gold') { g.font = '34px serif'; g.fillText('\uD83C\uDFC6', 300, 54); }
+      cd.remove(); H2.sit('booth_stool'); H2.posing = false; GA.Hub.setLock(false); PB.busy = false;
+      var f = FRAMES[PB.fr || 0], st = document.createElement('canvas'); st.width = 280; st.height = 1356; var g = st.getContext('2d');
+      g.fillStyle = f[2]; g.fillRect(0, 0, 280, 1356); g.strokeStyle = f[3]; g.lineWidth = 8; g.strokeRect(4, 4, 272, 1348);
+      shots.forEach(function (c, i) { g.drawImage(c, 20, 20 + i * 314, 240, 300); g.strokeStyle = f[3]; g.lineWidth = 3; g.strokeRect(20, 20 + i * 314, 240, 300); });
+      g.fillStyle = f[3]; g.textAlign = 'center'; g.font = 'bold 26px "Trebuchet MS",sans-serif'; g.fillText('GROK ARCADE', 140, 1306); g.font = 'bold 16px "Trebuchet MS",sans-serif'; g.fillText('HALL OF RECORDS \u00b7 ' + new Date().toLocaleDateString(), 140, 1334);
+      if (f[0] === 'spooky') { g.font = '40px serif'; g.fillText('\uD83D\uDC7B', 236, 66); } else if (f[0] === 'neon') { g.font = '34px serif'; g.fillText('\u2728', 236, 60); } else if (f[0] === 'gold') { g.font = '34px serif'; g.fillText('\uD83C\uDFC6', 236, 60); }
       var url = null; try { url = st.toDataURL('image/jpeg', 0.82); } catch (e) { }
       PB.url = url; PB.shots = shots.length; if (url) GA.store.set('h2Photo', url); ev('h2Photo');
       barnSay('Ooh, let me see! ...Beautiful! I\u2019m putting it on my fridge. I don\u2019t have a fridge. I\u2019ll get one!', 4);
