@@ -1786,6 +1786,78 @@ GA.HALL_DATA = {
 "quip": "Three rats ran through my Hall with a cheese wedge and a grappling hook. I didn't even know rats could zip-line.",
 "noOld": "Grok Ratita Rescue just scurried in. No old versions yet. Please keep the cheese off the exhibits."
 },
+"eatsville": {
+"repo": "grok-eatsville",
+"history": [
+{
+"date": "Oct 11",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A cartoon 3D restaurant tycoon on the Turbo engine (soft shadows, glow, real 3D props). Start as a trainee at Mega Munch and climb the ranks, or open your own diner right away. Cook, serve and clean, hire staff, design menus and decor, run delivery orders in your car, build and decorate your house, and grow a food empire against Mega Munch and Pizza Palooza. Keep every branch spotless for grumpy Inspector Grumbleton, survive the food critic, and fix the Ratita Industries kitchen gadgets when they go haywire. Explore mode, 10 hidden Golden Spatulas, and co-op for up to 3 friends online."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/eatsville/1.webp",
+"cap": "Lunch rush at the Main St Diner: customers waiting, the grill sizzling",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/eatsville/2.webp",
+"cap": "Driving around Eatsville (with traffic!)",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/eatsville/3.webp",
+"cap": "The Ratita Fry-o-Matic going haywire: tap FIX or call Snowie",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/eatsville/4.webp",
+"cap": "SURPRISE INSPECTION! Inspector Grumbleton and his clipboard",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/eatsville/5.webp",
+"cap": "The menu designer in the diner office",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/eatsville/6.webp",
+"cap": "Clocked in at Mega Munch, working up the ranks",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/eatsville/7.webp",
+"cap": "Decorating my house (and Candy came to visit)",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/eatsville/8.webp",
+"cap": "Eatsville at night, windows glowing",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/eatsville/9.webp",
+"cap": "Co-op: cooking with a friend in the same diner",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/eatsville/cover.webp",
+"quip": "A man with a clipboard inspected my Hall for three hours. He gave the dinosaur bones a B-minus. 'Dusty,' he said.",
+"noOld": "Grok Eatsville Tycoon just opened for business. No old versions yet. Please wipe your feet and wash your hands."
+
+},
 "puptown": {
 "repo": "grok-pup-town",
 "history": [
@@ -1949,5 +2021,6 @@ GA.ARCADE_HISTORY = [
   { date: 'Oct 11', ver: '5.2', title: 'Grok Ratita Industries HQ', text: 'The Grok Ratita Industries HQ cabinet in a brand-new HUBS & WORLDS section of the Game Gallery, bonus game #33 Crumb Patrol, 3 HQ prizes (Intern Badge Keychain, Candy Schnauzer Plush, HQ Glass Dome Cup), 2 achievements and a new Hall exhibit.' },
   { date: 'Oct 11', ver: '5.3', title: 'The Ratita Preview Center', text: 'A secret door behind the Food Court opens into Ratita Industries\u2019 Preview Center! Lili (Mimi\u2019s and Lily\u2019s very serious distant cousin) runs it. Posters of upcoming DLC, a live Scheduled Additions board, and the TIME JUMPER, which plays work-in-progress builds once they really work. It malfunctions sometimes (sparks, a GL1TCH R00M, quick fix jobs). Plus Lili\u2019s QA checklist, bonus game #32 Chrono Courier and 2 new rare prizes.' },
   { date: 'Oct 11', ver: '5.4', title: 'Time Jumper Save Booth', text: 'Lili\u2019s Save Vault in the Preview Center: when a game ships, its last Time Jumper preview is archived as its Final Beta, playable forever with its own save. Betas also appear in each game\u2019s Old Versions here in the Hall.' },
-  { date: 'Oct 11', ver: '5.5', title: 'Grok Pup Town', text: 'Candy\u2019s hometown opened: a cozy 3D dog town in HUBS & WORLDS, bonus #34 Bone Dig, the Golden Bone Keychain, Torty Plush and Golden Bone Cup, and a Hall exhibit. Its Time Jumper beta is the first game in Lili\u2019s Save Vault.' }
+  { date: 'Oct 11', ver: '5.5', title: 'Grok Pup Town', text: 'Candy\u2019s hometown opened: a cozy 3D dog town in HUBS & WORLDS, bonus #34 Bone Dig, the Golden Bone Keychain, Torty Plush and Golden Bone Cup, and a Hall exhibit. Its Time Jumper beta is the first game in Lili\u2019s Save Vault.' },
+  { date: 'Oct 11', ver: '5.6', title: 'Grok Eatsville Tycoon', text: 'A restaurant tycoon opened in LIFE SIMS: cook, serve and build a food empire in Eatsville, with bonus #37 Patty Panic, the Golden Spatula Keychain, the Inspector Grumbleton Plush, the Golden Burger Cup and a Hall exhibit.' }
 ];
