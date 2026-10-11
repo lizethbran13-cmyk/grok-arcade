@@ -720,3 +720,46 @@ body.touch .tmChip{top:calc(max(12px,env(safe-area-inset-top)) + 248px);bottom:a
 @keyframes tmRing{0%{width:10px;height:10px;opacity:1}100%{width:160vmax;height:160vmax;opacity:0}}
 @keyframes tmSpin{to{transform:rotate(360deg)}}
 .arPanel.tmPanel{border-color:#a78bfa}
+/* ---- Records Annex (booth #32): Barnaby, Sort-a-Thon, library, Stamp-O-Matic quiz, photo booth ---- */
+.arPanel.h2Panel{border-color:#e8b84a;box-shadow:0 0 26px rgba(232,184,74,.45)}
+.arNote.h2Barn{background:rgba(125,249,160,.13);border-left:4px solid #7df9a0;padding:8px 10px;border-radius:8px}
+.h2Face{position:relative;width:74px;height:74px;margin:2px auto 4px;border-radius:50%;background:#f3c9a8;box-shadow:0 0 0 4px #3f8f5a}
+.h2Face i{position:absolute;display:block}
+.h2Face .hair{left:-10px;right:-10px;top:14px;height:26px;border-radius:50%;background:radial-gradient(circle at 10% 50%,#f5f5f5 0 13px,transparent 14px),radial-gradient(circle at 90% 50%,#f5f5f5 0 13px,transparent 14px)}
+.h2Face .e1,.h2Face .e2{top:28px;width:9px;height:9px;border-radius:50%;background:#111827;box-shadow:0 0 0 3px #c9993a}.h2Face .e1{left:21px}.h2Face .e2{right:21px}
+.h2Face .sm{left:22px;right:22px;top:42px;height:16px;border:4px solid #7a2a2a;border-top:none;border-radius:0 0 30px 30px}
+.h2Face .bt{left:26px;right:26px;bottom:-12px;height:10px;background:#ffcf3a;clip-path:polygon(0 0,50% 50%,100% 0,100% 100%,50% 50%,0 100%)}
+.h2SortHud{display:flex;justify-content:space-between;font-weight:bold;font-size:17px;color:#ffe14d}
+.h2Bar{height:8px;border-radius:4px;background:rgba(255,255,255,.12);margin:6px 0 10px;overflow:hidden}.h2Bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#7df9a0,#ffe14d);transition:width .1s linear}
+.h2Folder{--c:#e8b85a;position:relative;margin:4px auto 8px;width:min(260px,80%);padding:20px 12px 16px;border-radius:6px 16px 10px 10px;background:linear-gradient(180deg,#f3cf86,#e8b85a);border-top:8px solid var(--c);color:#3a2216;text-align:center;box-shadow:0 6px 0 rgba(0,0,0,.3)}
+.h2Folder:before{content:'';position:absolute;left:12px;top:-20px;width:70px;height:14px;border-radius:6px 6px 0 0;background:var(--c)}
+.h2Folder small{display:block;font-size:11px;letter-spacing:1px;opacity:.7}.h2Folder b{display:block;font-size:26px;margin:2px 0}.h2Folder span{position:absolute;right:10px;top:8px;font:bold 22px Georgia,serif;color:#7f1d1d}
+.h2Folder.pop{animation:h2Pop .22s ease-out}.h2Folder.shake{animation:h2Shake .35s}
+@keyframes h2Pop{0%{transform:translateY(-14px) scale(.9);opacity:.3}100%{transform:none;opacity:1}}
+@keyframes h2Shake{0%,100%{transform:none}25%{transform:translateX(-9px) rotate(-2deg)}75%{transform:translateX(9px) rotate(2deg)}}
+.h2Msg{min-height:22px;text-align:center;font-size:14px;color:#c4f5d2;margin-bottom:8px}
+.h2Bins{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.h2Bin{min-height:64px;border-radius:12px;border:3px solid #c9993a;background:linear-gradient(180deg,#6b4226,#4a2c1a);color:#ffe9a0;font:bold 22px Georgia,serif;cursor:pointer;position:relative}
+.h2Bin i{position:absolute;left:50%;top:8px;width:40px;height:6px;margin-left:-20px;border-radius:3px;background:#cfd8e6}
+.h2Bin:active{transform:scale(.96)}
+.h2Big{text-align:center;font-size:38px;font-weight:900;color:#ffe14d;margin:8px 0;text-shadow:0 0 12px rgba(255,225,77,.5)}
+.h2Shelf{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.h2Book{--c:#ffe14d;text-align:left;min-height:68px;padding:8px 10px 8px 16px;border-radius:4px 10px 10px 4px;border:2px solid rgba(255,255,255,.18);border-left:8px solid var(--c);background:linear-gradient(90deg,rgba(0,0,0,.25),rgba(255,255,255,.04));color:#fff;cursor:pointer;font-family:var(--font)}
+.h2Book b{display:block;font-size:13.5px;line-height:1.25}.h2Book small{display:block;margin-top:3px;font-size:11px;color:#cbd5e1}
+.h2Page{--c:#ffe14d;background:#f5ecd8;color:#3a2216;border-radius:6px;padding:12px 14px;border-left:10px solid var(--c);box-shadow:inset 0 0 18px rgba(122,74,42,.25)}
+.h2Ch+.h2Ch{margin-top:10px;padding-top:10px;border-top:1px dashed #c9a87a}.h2Ch small{display:block;font-size:11px;color:#7a4a2a;letter-spacing:.5px}.h2Ch b{display:block;font:bold 17px Georgia,serif;margin:2px 0}.h2Ch p{margin:0;font-size:14px;line-height:1.45}
+.h2Q{text-align:center}.h2Q b{display:block;font-size:18px;line-height:1.3;margin:6px 0 10px}
+.h2QImg{display:block;margin:0 auto;max-width:100%;max-height:150px;border-radius:8px;border:3px solid #e8b84a;object-fit:contain;background:#000}
+.h2Opts{display:flex;flex-direction:column;gap:8px}
+.h2Opt{min-height:50px;border-radius:12px;border:2px solid #e8b84a;background:rgba(232,184,74,.12);color:#fff;font-size:16px;font-weight:bold;cursor:pointer;font-family:var(--font)}
+.h2Opt.right{background:#166534;border-color:#4ade80}.h2Opt.wrong{background:#7f1d1d;border-color:#f87171}.h2Opt:disabled{cursor:default}
+.arBody{position:relative}
+.h2StampMark{position:absolute;left:50%;top:40%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) rotate(-14deg) scale(2.2);font:900 40px "Trebuchet MS",sans-serif;letter-spacing:2px;padding:4px 16px;border:6px solid;border-radius:10px;background:rgba(255,243,196,.9)}
+.h2StampMark.on{animation:h2StampIn .32s ease-out forwards}.h2StampMark.ok{color:#15803d;border-color:#15803d}.h2StampMark.no{color:#d61f45;border-color:#d61f45}
+@keyframes h2StampIn{to{opacity:1;transform:translate(-50%,-50%) rotate(-14deg) scale(1)}}
+.h2Frames{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.h2Fr{--a:#fff;--b:#1a0a33;min-height:42px;padding:0 14px;border-radius:21px;border:3px solid var(--b);background:var(--a);color:var(--b);font-weight:bold;cursor:pointer;font-family:var(--font)}.h2Fr.on{box-shadow:0 0 0 3px #ffe14d}
+.h2Strip{text-align:center}.h2Strip img{height:min(46vh,340px);border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.5)}
+.arPanel a.pill.h2Save{display:inline-flex;align-items:center;text-decoration:none}
+.h2Count{position:fixed;left:50%;top:22%;transform:translate(-50%,-50%);z-index:60;font:900 64px "Trebuchet MS",sans-serif;color:#fff;-webkit-text-stroke:3px #ff4fd8;pointer-events:none;opacity:0}.h2Count.on{opacity:1}
+.h2Flash{position:fixed;inset:0;background:#fff;z-index:61;pointer-events:none;animation:h2Fl .38s ease-out forwards}@keyframes h2Fl{from{opacity:.95}to{opacity:0}}

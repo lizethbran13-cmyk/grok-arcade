@@ -205,6 +205,11 @@
   A.push({ id: 'bs_retro', cat: 'High Scores', icon: '\uD83D\uDCFA', name: 'Retro Legend', desc: 'Play both rare cabinets in the Secret Basement (Paddle Pong + Galaxy Groks)', p: function () { return [['rt_pong', 'rt_invaders'].filter(function (k) { return st.played[k] || best(k) > 0; }).length, 2]; } });
   A.push({ id: 'party_set', cat: 'Prizes', icon: '\uD83E\uDD73', name: 'Life of the Party', desc: 'Own the Chef Gio Plush, the Rooftop Party Hat and the Mini Disco Ball', p: function () { return [['pl_chef', 'party_hat', 'disco_ball'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'vault_rares', cat: 'Prizes', icon: '\uD83D\uDC8E', name: 'Vault Keeper', desc: 'Own both Basement Rares: Gus\u2019s Golden Key and the Mini Retro Cabinet', p: function () { return [['gold_key', 'retro_cab'].filter(function (k) { return S.owned[k]; }).length, 2]; } });
+  // Records Annex (booth #32)
+  A.push({ id: 'h2_sit', cat: 'Arcade', icon: '\uD83D\uDECB\uFE0F', name: 'No Loitering!', desc: 'Sit down in the Hall of Game Records (Gus will NOT like it)', p: function () { return [ev('h2Sit') ? 1 : 0, 1]; } });
+  A.push({ id: 'h2_sort', cat: 'High Scores', icon: '\uD83D\uDDC2\uFE0F', name: 'Barnaby\u2019s Best Helper', desc: 'File 12 folders in one round of Uncle Barnaby\u2019s Sort-a-Thon', p: function () { return [Math.min(12, ev('h2Sort')), 12]; } });
+  A.push({ id: 'h2_quiz', cat: 'Arcade', icon: '\uD83D\uDCEE', name: 'Rubber Stamp Genius', desc: 'Get all 5 right at the Stamp-O-Matic 5000 quiz', p: function () { return [ev('h2QuizPerfect') ? 1 : 0, 1]; } });
+  A.push({ id: 'h2_hunt', cat: 'Arcade', icon: '\uD83D\uDCC1', name: 'Lost & Found', desc: 'Find all 6 of Uncle Barnaby\u2019s lost files in one day', p: function () { return [ev('h2Hunt') ? 1 : 0, 1]; } });
   GA.ACHIEVEMENTS = A;
 
   function prog(a) { var r = a.p(); return { cur: Math.min(r[0] || 0, r[1]), goal: r[1] }; }

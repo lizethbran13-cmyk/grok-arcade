@@ -119,14 +119,15 @@
     var ce = add(shell, new T.PlaneGeometry(Wd, D), ph('#2a1810', 10), cx, H, cz); ce.rotation.x = Math.PI / 2;
     for (var x = w.minX + 2; x < w.maxX - 0.5; x += 2) add(shell, bx(0.18, 0.22, D), wood, x, H - 0.11, cz);
     for (var z = w.minZ + 2.2; z < w.maxZ - 0.5; z += 2.2) add(shell, bx(Wd, 0.2, 0.18), wood, cx, H - 0.1, z);
-    [[6, 16.4], [14, 16.4], [6, 22], [14, 22], [10, 20.6]].forEach(function (p) {
+    [[6, 16.4], [14, 16.4], [6, 22], [14, 22], [10, 20.6], [6, 28.4], [14, 28.4], [6, 36.4], [14, 36.4], [6, 44.6], [14, 44.6], [10, 45.2]].forEach(function (p) {
       add(shell, cy(0.012, 0.012, 0.9, 6), brass(), p[0], H - 0.45, p[1]);
       var sh = add(shell, new T.SphereGeometry(0.32, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), new T.MeshPhongMaterial({ color: '#c9993a', shininess: 80, side: T.DoubleSide }), p[0], H - 0.95, p[1]); void sh;
       add(shell, sp(0.13, 14), glowM('#fff3c4'), p[0], H - 1.0, p[1]);
       var gl = new T.Sprite(new T.SpriteMaterial({ map: A.glowTex, color: '#ffd98a', transparent: true, opacity: 0.55, depthWrite: false, blending: T.AdditiveBlending })); gl.scale.set(1.6, 1.6, 1); gl.position.set(p[0], H - 1.05, p[1]); shell.add(gl);
     });
     // a warm light for the wing (cheap: one hemisphere-ish point light above the middle)
-    var pl = new T.PointLight('#ffd9a0', 0.55, 16, 1.6); pl.position.set(cx, H - 0.6, cz); shell.add(pl);
+    // (booth #32) one warm light per half: the original Hall + the Records Annex behind it
+    [[cx, w.minZ + 6.8], [cx, w.minZ + 20.5], [cx, w.maxZ - 5.5]].forEach(function (q) { var pl = new T.PointLight('#ffd9a0', 0.55, 16, 1.6); pl.position.set(q[0], H - 0.6, q[1]); shell.add(pl); });
     // camera walls of the wing are added by the hub (outer box); add the visible door trim on both sides
     A.walls.push({ minX: w.minX - 0.4, maxX: w.minX, minY: -1, maxY: 99, minZ: w.minZ, maxZ: w.maxZ });
     A.walls.push({ minX: w.minX, maxX: w.maxX, minY: H - 0.3, maxY: 99, minZ: w.minZ, maxZ: w.maxZ }); // ceiling: keeps the camera inside the wing
@@ -376,13 +377,20 @@
     if (games.length > 21) slots.push([W.doorX + 3.6, W.minZ + 9.2, -Math.PI / 2]);
     // 23rd: free-standing just inside the entrance on the right, facing the room's centre
     if (games.length > 22) slots.push([W.doorX + 3.6, W.minZ + 2.2, -Math.PI / 2]);
+    // (booth #32) room to grow: 8 wall niches in the Records Annex (games #24-#31). Empty ones show a dust-sheeted "coming soon" pedestal.
+    var FUT = []; [0, 1, 2, 3].forEach(function (i) { FUT.push([W.minX, W.minZ + 16.2 + i * 2.1, Math.PI / 2]); FUT.push([W.maxX, W.minZ + 16.2 + i * 2.1, -Math.PI / 2]); });
+    FUT.forEach(function (f) { slots.push(f); });
     var par = A.scene;
     games.forEach(function (gm, i) { var s = slots[i]; if (!s) return; exhibit(gm, GA.HALL_DATA[gm.id], s[0], s[1], s[2]); });
+    H3.freeSlots = slots.slice(games.length).filter(function (s) { return FUT.indexOf(s) >= 0; });
+    H3.slotCount = slots.length;
     // wood pilasters between the exhibits
     for (var i = 0; i < 4; i++) { pilaster(par, W.minX, W.minZ + 3.2 + i * 2.0, Math.PI / 2); pilaster(par, W.maxX, W.minZ + 3.2 + i * 2.0, -Math.PI / 2); }
     if (games.length > 16) pilaster(par, W.minX, W.minZ + 11.2, Math.PI / 2); if (games.length > 17) pilaster(par, W.maxX, W.minZ + 11.2, -Math.PI / 2);
     for (i = 0; i < 5; i++) pilaster(par, W.minX + 3.84 + i * 2.08, W.maxZ, Math.PI);
     buildDesk(); buildDLC();
+    // (booth #32) the Records Annex: Uncle Barnaby, seats, reading nook, photo booth, Stamp-O-Matic, Exhibit of the Week, future niches
+    if (GA.Hall2 && GA.Hall2.build) { try { GA.Hall2.build(A, { ph: ph, gold: gold, brass: brass, chrome: chrome, add: add, bx: bx, cy: cy, sp: sp, to: to, cn: cn, cvs: cvs, rr: rr, plaqueTex: plaqueTex, planeM: planeM, darker: darker, EMB: EMB, ROOTS: ROOTS, pilaster: pilaster, free: H3.freeSlots, V: V }); } catch (e) { if (window.console) console.warn('Records Annex failed to build', e); } }
     var last = -1;
     A.anims.push(function (t) {
       var p = A.pose(), inWing = p.x > W.minX - 3 && p.z < W.maxZ + 3, inH = p.z > A.ROOM.maxZ - 3 && inWing;

@@ -105,7 +105,7 @@
           var own = GA.Prog.owns(p.id);
           var on = own && GA.Carry && GA.Carry.isOn(p.id);
           h += '<div class="slot' + (own ? ' owned' : '') + (on ? ' carried' : '') + '" data-slot="' + p.id + '" title="' + esc(p.name) + '"' + (own ? ' role="button" tabindex="0" aria-label="View ' + esc(p.name) + ' in 3D"' : '') + '><img alt="" src="' + GA.PrizeArt.url(p.id, 140, !own) + '">' + (own ? '<span class="slot3d">' + (on ? (GA.Prize3D.isHat(p.id) ? '\uD83E\uDDE2' : '\u270B') : '3D') + '</span>' : '') +
-            (own ? '<span class="slotName">' + esc(p.name.replace(/ Plush$/, '')) + '</span>' : '<span class="slotQ">?</span><span class="slotName dim">' + (p.claw ? '\uD83E\uDE9D CLAW' : p.vault ? '\uD83D\uDD12 BASEMENT' : TIX + ' ' + p.price) + '</span>') + '</div>';
+            (own ? '<span class="slotName">' + esc(p.name.replace(/ Plush$/, '')) + '</span>' : '<span class="slotQ">?</span><span class="slotName dim">' + (p.claw ? '\uD83E\uDE9D CLAW' : p.vault ? (p.hall ? '\uD83C\uDFDB\uFE0F HALL' : '\uD83D\uDD12 BASEMENT') : TIX + ' ' + p.price) + '</span>') + '</div>';
         });
         h += '</div><div class="shelfEdge"></div></div>';
       });

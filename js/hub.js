@@ -5,8 +5,8 @@
   var Hub = GA.Hub = {};
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
-  var WING = { minX: 2, maxX: 18, minZ: ROOM.maxZ + 0.4, maxZ: 26, doorX: 10, doorHW: 1.5, doorH: 3.3 }; // Hall of Game Records wing behind the bonus zone's south wall
-  var FOOD = { minX: ROOM.minX, maxX: WING.minX - 0.4, minZ: ROOM.maxZ + 0.4, maxZ: WING.maxZ, doorX: -11.6, doorHW: 1.5, doorH: 3.3 }; // Food Court behind the main hall's south wall (west of the Hall wing)
+  var WING = { minX: 2, maxX: 18, minZ: ROOM.maxZ + 0.4, maxZ: 48, doorX: 10, doorHW: 1.5, doorH: 3.3 }; // Hall of Game Records wing behind the bonus zone's south wall (booth #32: the Records Annex doubles it, z 26..48)
+  var FOOD = { minX: ROOM.minX, maxX: WING.minX - 0.4, minZ: ROOM.maxZ + 0.4, maxZ: 26, doorX: -11.6, doorHW: 1.5, doorH: 3.3 }; // Food Court behind the main hall's south wall (west of the Hall wing)
   var REGIONS = []; // far-away walk-in areas (rooftop deck, secret basement) registered by js/areas.js: {name,minX,maxX,minZ,maxZ,maxY,spawn:{x,z}}
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
   var MAIN_STEP = GA.MAIN_GAMES.length > 15 ? 1.48 : GA.MAIN_GAMES.length > 14 ? 1.55 : GA.MAIN_GAMES.length > 13 ? 1.66 : GA.MAIN_GAMES.length > 12 ? 1.78 : GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 15 ? -17.22 : GA.MAIN_GAMES.length > 14 ? -16.95 : GA.MAIN_GAMES.length > 13 ? -17.0 : GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
@@ -137,7 +137,7 @@
     addWall(-60, fL, -1, 99, ROOM.maxZ, ROOM.maxZ + th); addWall(fR, dL, -1, 99, ROOM.maxZ, ROOM.maxZ + th); addWall(dR, 60, -1, 99, ROOM.maxZ, ROOM.maxZ + th);
     walls.push({ minX: dL, maxX: dR, minY: WING.doorH, maxY: 99, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th });
     walls.push({ minX: fL, maxX: fR, minY: FOOD.doorH, maxY: 99, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th });
-    addWall(FOOD.maxX, WING.minX, -1, 99, ROOM.maxZ, WING.maxZ); addWall(WING.maxX, 60, -1, 99, ROOM.maxZ, 40); addWall(-60, 60, -1, 99, WING.maxZ, 40);
+    addWall(FOOD.maxX, WING.minX, -1, 99, ROOM.maxZ, WING.maxZ); addWall(WING.maxX, 60, -1, 99, ROOM.maxZ, WING.maxZ + 12); addWall(WING.minX - 0.4, 60, -1, 99, WING.maxZ, WING.maxZ + 12); addWall(-60, WING.minX - 0.4, -1, 99, FOOD.maxZ, WING.maxZ + 12); // the Food Court ends at z 26, the Hall wing runs on to its Records Annex
     walls.push({ minX: FOOD.minX, maxX: FOOD.maxX, minY: H - 0.3, maxY: 99, minZ: FOOD.minZ, maxZ: FOOD.maxZ }); // Food Court ceiling (keeps the camera inside)
     addWall(-60, ROOM.minX, -1, 99, -40, 40); addWall(ROOM.maxX, 60, -1, 99, -40, 40);
     // divider with a doorway into the Bonus Zone
@@ -1403,6 +1403,7 @@
       case 'robot': var st = Math.floor(t * 3) % 4; pp.armL.rotation.x = st < 2 ? -1.5 : 0; pp.armR.rotation.x = st % 2 ? -1.5 : 0; pp.armL.rotation.z = -0.1; pp.armR.rotation.z = 0.1; b.rotation.y = [0, 0.5, 0, -0.5][st]; pp.head.rotation.y = -[0, 0.5, 0, -0.5][st]; b.position.y = 0; break;
       case 'jump': var ph2 = (t * 1.8) % 1; b.position.y = Math.sin(ph2 * Math.PI) * 0.7; pp.armL.rotation.z = -2.6 * Math.sin(ph2 * Math.PI); pp.armR.rotation.z = 2.6 * Math.sin(ph2 * Math.PI); pp.legL.rotation.x = -0.5 * Math.sin(ph2 * Math.PI); pp.legR.rotation.x = -0.5 * Math.sin(ph2 * Math.PI); break;
       case 'floss': var f = Math.sin(t * 10); b.rotation.z = f * 0.12; pp.armL.rotation.x = 0.3; pp.armR.rotation.x = 0.3; pp.armL.rotation.z = f * 0.7; pp.armR.rotation.z = f * 0.7; b.position.y = Math.abs(f) * 0.05; break;
+      case 'sit': b.position.y = -0.17 + Math.sin(t * 2) * 0.006; pp.legL.rotation.x = -1.45; pp.legR.rotation.x = -1.45; pp.armL.rotation.x = -0.55; pp.armR.rotation.x = -0.55; pp.armL.rotation.z = 0.12; pp.armR.rotation.z = -0.12; pp.head.rotation.z = Math.sin(t * 0.9) * 0.05; break; // booth #32: Hall seats
       default: break;
     }
   }

@@ -48,7 +48,7 @@
 
   /* ---------- walk-up prompts ---------- */
   UI.prompt = function (cab) {
-    build(); var k = cab.kind, P = AR.party(); if (/^tm_/.test(k) && GA.RetroUI) return GA.RetroUI.prompt(cab); if (/^at_/.test(k) && GA.AtticUI) return GA.AtticUI.prompt(cab);
+    build(); var k = cab.kind, P = AR.party(); if (/^tm_/.test(k) && GA.RetroUI) return GA.RetroUI.prompt(cab); if (/^at_/.test(k) && GA.AtticUI) return GA.AtticUI.prompt(cab); if (/^h2_/.test(k) && GA.Hall2UI) return GA.Hall2UI.prompt(cab);
     switch (k) {
       case 'ar_snack': return { tag: 'FOOD COURT', name: 'Snack Bar', desc: 'Snacks give fun boosts: x2 tickets, run faster, lucky games! Pay with tickets or ' + COIN + ' coins (you have ' + AR.coins() + '). ' + (P.dow === 0 ? 'SNACK ATTACK MONDAY: half price!' : ''), btn: 'MENU', key: 'order a snack', cls: 'prize', pb: 'pzPlay' };
       case 'ar_chef': return { tag: 'FOOD COURT', name: 'Chef Gio', desc: 'The pizza chef! Help him cook at the brick oven to earn ' + COIN + ' coins and a Chef\u2019s Special boost.', btn: 'TALK', key: 'talk to Chef Gio', cls: 'npc' };
@@ -79,7 +79,7 @@
 
   /* ---------- open (E / PLAY) ---------- */
   UI.open = function (cab) {
-    build(); var k = cab.kind; cur = cab; if (/^tm_/.test(k) && GA.RetroUI) return GA.RetroUI.open(cab); if (/^at_/.test(k) && GA.AtticUI) return GA.AtticUI.open(cab);
+    build(); var k = cab.kind; cur = cab; if (/^tm_/.test(k) && GA.RetroUI) return GA.RetroUI.open(cab); if (/^at_/.test(k) && GA.AtticUI) return GA.AtticUI.open(cab); if (/^h2_/.test(k) && GA.Hall2UI) return GA.Hall2UI.open(cab);
     if (k === 'ar_snack') return openSnacks();
     if (k === 'ar_slushie') return quickBuy('slushie');
     if (k === 'ar_icecream') return quickBuy('icecream');
@@ -308,8 +308,8 @@
   };
   function onArea(area) { if (MUS.on && MUS.where && area !== MUS.where) stopMusic(); if (area !== 'roof') { if (UI.emotesOpen()) closeEmotes(); } drawMap(true); }
   var MAPS = {
-    arcade: { minX: -19, maxX: 19, minZ: -13, maxZ: 27, rooms: [['ARCADE', -18, 6, -12, 12, '#3ff0ff'], ['BONUS', 6, 18, -12, 12, '#ff4fd8'], ['HALL', 2, 18, 12.4, 26, '#ffe14d'], ['FOOD COURT', -18, 1.6, 12.4, 26, '#ff9a3a']],
-      marks: function () { return [['\uD83D\uDDBC\uFE0F', -6, -11], ['\uD83C\uDF55', -11.6, 12], ['\uD83C\uDFDB\uFE0F', 10, 12], ['\uD83D\uDED7', -17, 18.8], [AR.unlocked() ? '\uD83D\uDD13' : '\uD83D\uDD12', 1.2, 15], ['\uD83C\uDF9F\uFE0F', -6, 10.4]]; } },
+    arcade: { minX: -19, maxX: 19, minZ: -13, maxZ: 49, rooms: [['ARCADE', -18, 6, -12, 12, '#3ff0ff'], ['BONUS', 6, 18, -12, 12, '#ff4fd8'], ['HALL', 2, 18, 12.4, 26, '#ffe14d'], ['ANNEX', 2, 18, 26, 48, '#e8b84a'], ['FOOD COURT', -18, 1.6, 12.4, 26, '#ff9a3a']],
+      marks: function () { return [['\uD83D\uDDBC\uFE0F', -6, -11], ['\uD83C\uDF55', -11.6, 12], ['\uD83C\uDFDB\uFE0F', 10, 12], ['\uD83D\uDED7', -17, 18.8], [AR.unlocked() ? '\uD83D\uDD13' : '\uD83D\uDD12', 1.2, 15], ['\uD83C\uDF9F\uFE0F', -6, 10.4], ['\uD83E\uDDD3', 15.4, 39.3], ['\uD83D\uDCF8', 3, 44.4], ['\uD83D\uDECB\uFE0F', 10, 41]]; } },
     roof: { minX: -15, maxX: 15, minZ: -125, maxZ: -94, rooms: [['ROOFTOP PARTY DECK', -14, 14, -124, -95, '#ff4fd8']], marks: function () { return [['\uD83C\uDFA7', 0, -120.5], ['\uD83D\uDC83', 0, -113], ['\uD83C\uDF86', 10.3, -112], ['\uD83D\uDCC5', -12.9, -108], ['\uD83D\uDED7', 0, -96]]; } },
     gallery: { minX: 69, maxX: 103, minZ: -15, maxZ: 13, rooms: [['GAME GALLERY', 70, 102, -14, 12, '#3ff0ff']], marks: function () { return [['\uD83D\uDDFA\uFE0F', 80.7, -12.2], ['\uD83C\uDFC1', 94.7, -12.2], ['\uD83C\uDFC6', 100.2, -6], ['\u2728', 100.2, 4.1], ['\uD83C\uDFE1', 79.4, 10.2], ['\uD83C\uDF89', 91.6, 10.2], ['\uD83E\uDDE2', 74.6, 7.2], ['\u2B05\uFE0F', 71.2, -1]]; } },
     basement: { minX: -12, maxX: 12, minZ: 99, maxZ: 119, rooms: [['SECRET BASEMENT', -11, 11, 100, 118, '#4ade80']], marks: function () { return [['\uD83D\uDD79\uFE0F', -10.5, 109], ['\u26A1', 10.8, 104.6], ['\uD83D\uDD10', 5.6, 117.4], ['\uD83D\uDC8E', -0.6, 117.3], ['\uD83D\uDCBF', 7.6, 100.6], ['\u2B06\uFE0F', 0, 100.4]]; } }
