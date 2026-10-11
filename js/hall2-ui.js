@@ -292,7 +292,7 @@
       if (f[0] === 'spooky') { g.font = '40px serif'; g.fillText('\uD83D\uDC7B', 236, 66); } else if (f[0] === 'neon') { g.font = '34px serif'; g.fillText('\u2728', 236, 60); } else if (f[0] === 'gold') { g.font = '34px serif'; g.fillText('\uD83C\uDFC6', 236, 60); }
       var url = null; try { url = st.toDataURL('image/jpeg', 0.82); } catch (e) { }
       PB.url = url; PB.shots = shots.length; if (url) GA.store.set('h2Photo', url); ev('h2Photo');
-      barnSay('Ooh, let me see! ...Beautiful! I\u2019m putting it on my fridge. I don\u2019t have a fridge. I\u2019ll get one!', 4);
+      H2.say(UI.lastBarn = 'Ooh, let me see! ...Beautiful! I\u2019m putting it on my fridge. I don\u2019t have a fridge. I\u2019ll get one!', 4); // a bubble only: a toast would cover the strip
       openPhoto(); if (cb) cb(shots.length);
     }
     setTimeout(shot, 700); return true;
