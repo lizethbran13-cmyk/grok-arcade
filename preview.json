@@ -17,7 +17,7 @@
       "size": "New Game",
       "what": "A restaurant tycoon in the town of Eatsville: start as a small worker or open your own place, cook and serve, keep customers happy, build a house, drive around town and grow a restaurant empire. Keep every branch spotless for the grumpy health inspector, beat rival chains, and fix Ratita Industries kitchen gadgets when they go haywire. Co-op and Explore mode.",
       "stage": "building",
-      "when": "Building now"
+      "when": "Building now (try it in the Time Jumper)"
     },
     {
       "game": "relics",
@@ -138,7 +138,17 @@
       "when": "Oct 10"
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "eatsville",
+      "game": "eatsville",
+      "name": "Grok Eatsville Tycoon",
+      "url": "previews/eatsville/",
+      "playable": true,
+      "built": "2026-10-11",
+      "notes": "First playable: town + driving, own diner or Mega Munch job, cook/serve, Ratita breakdowns, surprise inspections, day reports. Co-op, delivery polish and more coming."
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
