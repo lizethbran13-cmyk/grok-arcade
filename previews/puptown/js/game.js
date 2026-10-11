@@ -279,7 +279,7 @@ export class Game {
     const k6 = c.snap ? 1 : 1 - Math.exp(-dt * 6); c.tgt.set(c.tgt.x + (tx - c.tgt.x) * (cn || c.chatT > 0 ? k6 : 1), c.snap ? ty : c.tgt.y + (ty - c.tgt.y) * (1 - Math.exp(-dt * (me.onGround ? 6 : 3))), c.tgt.z + (tz - c.tgt.z) * (cn || c.chatT > 0 ? k6 : 1)); c.chatT = cn ? 0.8 : Math.max(0, (c.chatT || 0) - dt);
     // camera distance along a pitch: walls/props stop it smoothly; indoors it also stays inside the room box, except it may slip out through the doorway
     const R0 = REGIONS.find((q) => q.id === this.region), drp = R0 && DOORS[R0.id], nearDoor = drp && Math.hypot(me.x - drp[0], me.z - drp[1]) < 4.5;
-    const big = (q) => q.cam !== false && !q.off && !q.nocam && !q.floor && !q.glass && !q.dyn && (q.max[1] - q.min[1]) > (R0 ? 0.9 : 1.2) && Math.max(q.max[0] - q.min[0], q.max[2] - q.min[2]) > (R0 ? 0.9 : 1.6);
+    const big = (q) => q.cam !== false && !q.off && !q.nocam && !q.floor && !q.glass && !q.dyn && (q.max[1] - q.min[1]) > (R0 ? 0.9 : 1.2) && Math.max(q.max[0] - q.min[0], q.max[2] - q.min[2]) > (R0 ? 0.9 : (q.max[1] - q.min[1]) > 2.5 ? 0.6 : 1.6); // tall posts/pillars count too (lamp posts stay see-through)
     const o2 = this._co || (this._co = new THREE.Vector3()), dv = this._cdv || (this._cdv = new THREE.Vector3());
     const distAt = (pit) => { dv.set(-Math.sin(c.yaw) * Math.cos(pit), Math.sin(pit), -Math.cos(c.yaw) * Math.cos(pit)); const sx = Math.cos(c.yaw) * 0.32, sz = -Math.sin(c.yaw) * 0.32; let dr = c.dist + 0.5;
       for (const k of [0, -1, 1]) { o2.set(c.tgt.x + sx * k, c.tgt.y, c.tgt.z + sz * k); dr = Math.min(dr, this.world.ray(o2, dv, c.dist + 0.5, big)); }
@@ -295,8 +295,9 @@ export class Game {
     const w3 = c.tgt.clone().addScaledVector(dir, c.cd); const gy = this.world.ground(w3.x, w3.z, w3.y + 0.5, 0.3).y; const minY = (gy > -1e8 ? gy : me.y) + 0.6; if (w3.y < minY) w3.y = minY;
     if (c.snap) { c.pos.copy(w3); c.snap = false; } else { const kx = 1 - Math.exp(-dt * 14), ky = 1 - Math.exp(-dt * 8); c.pos.x += (w3.x - c.pos.x) * kx; c.pos.z += (w3.z - c.pos.z) * kx; c.pos.y += (w3.y - c.pos.y) * ky; }
     if (R0 && c.tgt.x > R0.x0 + 0.3 && c.tgt.x < R0.x1 - 0.3 && c.tgt.z > R0.z0 + 0.3 && c.tgt.z < R0.z1 - 0.3) { const m = 0.3; c.pos.x = Math.max(R0.x0 + m, Math.min(R0.x1 - m, c.pos.x)); c.pos.z = Math.max(R0.z0 + m, Math.min(R0.z1 - m, c.pos.z)); c.pos.y = Math.min(R0.ceil - 0.2, c.pos.y); } // indoors the lens never leaves the room, even mid-glide
+    if (this.busS && this.bus) { const b = this.busS, m = 0.9, inB = c.pos.x > b.min[0] - m && c.pos.x < b.max[0] + m && c.pos.z > b.min[2] - m && c.pos.z < b.max[2] + m && c.pos.y < b.max[1] + m; this.bus.root.visible = !inB; } // never fill the screen with the inside of a passing Dog-Bus
     cam.position.copy(c.pos); if (c.shake > 0) { c.shake -= dt; cam.position.x += (Math.random() - 0.5) * c.shake; cam.position.y += (Math.random() - 0.5) * c.shake; }
-    cam.lookAt(c.tgt.x, c.tgt.y + 0.2, c.tgt.z); const fov = E.baseFov; if (Math.abs(cam.fov - fov) > 0.1) { cam.fov += (fov - cam.fov) * Math.min(1, dt * 3); cam.updateProjectionMatrix(); } }
+    cam.lookAt(c.tgt.x, c.tgt.y + 0.2, c.tgt.z); const fov = E.baseFov + (R0 && !this.chat ? (E.baseFov > 65 ? 10 : 8) : 0); /* small rooms: a slightly wider lens instead of a cramped close-up */ if (Math.abs(cam.fov - fov) > 0.1) { cam.fov += (fov - cam.fov) * Math.min(1, dt * 3); cam.updateProjectionMatrix(); } }
   // ------------------------------------------------ co-op
   addRemote(pid, info, slot) { if (this.players.has(pid)) return this.players.get(pid); const p = new Player({ rat: 'human', look: info.look, outfit: info.outfit, name: info.name, pid, slot }); p.addTo(this.scene); p.place(this.world.start); this.players.set(pid, p); this.hud.dirty = true; return p; }
   removeRemote(pid) { const p = this.players.get(pid); if (!p || p.local) return; p.removeFrom(this.scene); this.players.delete(pid); this.hud.dirty = true; }
