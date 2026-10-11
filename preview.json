@@ -4,11 +4,11 @@
   "items": [
     {
       "game": "arcade",
-      "name": "Ratita Preview Center",
+      "name": "Ratita Preview Center (live)",
       "what": "Lili's Preview Center behind the Food Court: posters, this board, the Time Jumper and bonus game #32 Chrono Courier.",
-      "stage": "building",
-      "when": "Oct 10",
-      "issue": 33
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T06:20:00Z"
     },
     {
       "issue": 27,
@@ -16,8 +16,8 @@
       "name": "Good Life Pack",
       "size": "Mini Pack",
       "what": "5 new outfits and a Ratita Industries shop that sells hammers, tablets and phones.",
-      "stage": "building",
-      "when": "In the lab now"
+      "stage": "queued",
+      "when": "Tomorrow"
     },
     {
       "issue": 28,
@@ -25,8 +25,8 @@
       "name": "Super Kart Expansion",
       "size": "Expansion",
       "what": "4 new racers, 2 new tracks and new time trials with ghosts and medals.",
-      "stage": "building",
-      "when": "In the lab now"
+      "stage": "queued",
+      "when": "Tomorrow"
     },
     {
       "issue": 29,
