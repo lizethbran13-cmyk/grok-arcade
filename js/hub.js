@@ -1353,7 +1353,7 @@
       var w = new T.Group(); grp.add(w); w.add(m); fit(m, s, ce, w); pp[key + 'Model'] = m;
     }
     slot('hand', pp.hand, c.hand, function (m, s, ce) { var k = 0.66 / Math.max(s.x, s.y, s.z, 0.01); m.scale.setScalar(k); m.position.set(-ce.x * k + 0.04, -ce.y * k + 0.1, -ce.z * k + 0.12); });
-    slot('head', pp.hatSlot, c.head, function (m, s, ce) { var hh = m.userData.hat || { y: 0, s: 0.75 }; m.scale.setScalar(hh.s); m.position.set(0, hh.y - 0.1 * hh.s, 0); });
+    slot('head', pp.hatSlot, c.head, function (m, s, ce) { var wr = m.userData.wear; if (wr) { m.scale.setScalar(wr.s); m.rotation.y = wr.ry || 0; m.position.set(0, wr.y - pp.hatSlot.position.y, wr.z || 0); return; } var hh = m.userData.hat || { y: 0, s: 0.75 }; m.scale.setScalar(hh.s); m.position.set(0, hh.y - 0.1 * hh.s, 0); }); // booth #37: per-hat seat (GA.Prize3D WEAR) so no hat sinks into the head
     slot('neck', pp.neck, c.neck, function (m, s) { var k = 0.4; m.scale.setScalar(k); m.position.set(0, 0.4 - s.y * k, 0.02); m.rotation.x = -0.12; });
     pp.cap.forEach(function (q) { q.visible = !c.head; });
   }

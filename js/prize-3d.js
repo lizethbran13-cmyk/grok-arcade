@@ -1177,14 +1177,25 @@
     tr_bronze: function () { return trophy('#cd7f32'); }, tr_silver: function () { return trophy('#c0c7d0'); }, tr_gold: function () { return trophy('#ffcf3a', true); }, golden_joy: goldenJoy
   };
   Object.keys(FIGHTERS).forEach(function (k) { BUILD['pl_' + k] = function () { return fighter(k); }; });
-  var HATS = { rr_goggles: 1, cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1, ears_hat: 1, goggles_hat: 1, pb_visor: 1, sw_band: 1, kart_helmet: 1, hard_hat: 1, party_hat: 1 };
+  var HATS = { rr_goggles: 1, cap: 1, propeller: 1, ranger_hat: 1, taxi_hat: 1, ears_hat: 1, goggles_hat: 1, pb_visor: 1, sw_band: 1, kart_helmet: 1, hard_hat: 1, party_hat: 1, raptor_helm: 1 };
+  /* How each hat sits on the arcade avatar's head (booth #37). The head is a 0.3 sphere with hair on top (crown at y 0.33),
+     so every hat needs its own size + seat height: s = scale, y = where the model's y=0 lands in head space,
+     z = nudge forward/back, ry = turn (some prize models face +x on the shelf). Hats must sit ON the head, never inside it. */
+  var WEAR = {
+    cap: { s: 0.86, y: 0.094 }, propeller: { s: 0.88, y: 0.092 }, ranger_hat: { s: 0.8, y: 0.08 },
+    party_hat: { s: 1.2, y: 0.23 }, taxi_hat: { s: 0.8, y: 0.27 },
+    goggles_hat: { s: 1.1, y: -0.066, ry: -Math.PI / 2 }, ears_hat: { s: 1.1, y: 0, ry: Math.PI / 2 },
+    pb_visor: { s: 1.1, y: 0.074, z: -0.03 }, sw_band: { s: 1.1, y: 0.08, z: -0.03 },
+    hard_hat: { s: 1.25, y: 0.04, z: -0.03 }, kart_helmet: { s: 1.1, y: -0.058, z: -0.02 },
+    rr_goggles: { s: 1.6, y: -0.022, z: 0.17 }, raptor_helm: { s: 1.3, y: 0.035, z: -0.03 }
+  };
 
   function build(id) {
     if (/^ach:/.test(id)) return medal(id.slice(4));
     var f = BUILD[id], g;
     try { g = f ? f() : null; } catch (e) { g = null; if (window.console) console.warn('prize model failed', id, e); }
     if (!g) { g = new T.Group(); add(g, starGeo(0.3, 0.13, 0.08), metal('#ffe14d'), 0, 0.5, 0); }
-    g.userData.id = id;
+    g.userData.id = id; if (WEAR[id]) g.userData.wear = WEAR[id];
     // measure so callers can scale (most models are ~1 unit tall)
     var bb = new T.Box3().setFromObject(g); g.userData.size = bb.getSize(new T.Vector3()); g.userData.center = bb.getCenter(new T.Vector3());
     return g;
@@ -1225,7 +1236,7 @@
     return g;
   }
 
-  GA.Prize3D = { build: build, medal: medal, isHat: function (id) { return !!HATS[id]; }, ids: Object.keys(BUILD),
+  GA.Prize3D = { build: build, medal: medal, isHat: function (id) { return !!HATS[id]; }, WEAR: WEAR, ids: Object.keys(BUILD),
     // extension point (claw machine prizes add their own models)
     register: function (id, fn) { BUILD[id] = fn; GA.Prize3D.ids = Object.keys(BUILD); },
     H: { add: add, sph: sph, box: box, cyl: cyl, cone: cone, tor: tor, lam: lam, shiny: shiny, metal: metal, glow: glow, grp: grp, rot: rot, eyes: eyes, blush: blush, smile: smile, tag: tag, starGeo: starGeo, G: G } };
