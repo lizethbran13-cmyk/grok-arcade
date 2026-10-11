@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-11T17:20:00Z",
+  "updated": "2026-10-11T17:55:00Z",
   "items": [
     {
       "game": "puptown",
@@ -31,11 +31,12 @@
     {
       "issue": 28,
       "game": "kart",
-      "name": "Super Kart Expansion",
+      "name": "Super Kart Expansion (live)",
       "size": "Expansion",
-      "what": "4 new racers, 2 new tracks and new time trials with ghosts and medals.",
-      "stage": "building",
-      "when": "In the lab now"
+      "what": "Grok Kart Party Expansion: 4 new racers (Luna, Pi-rat, Snowie, Candy), Ratita Labs Raceway + Torty's Garden Grand Prix in the new Ratita Cup, staff ghosts with medals, and the 10-rung Ratita Challenge Ladder.",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T17:55:00Z"
     },
     {
       "issue": 29,
