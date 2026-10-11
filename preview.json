@@ -4,12 +4,11 @@
   "items": [
     {
       "game": "puptown",
-      "name": "Grok Pup Town",
-      "what": "A brand new hub world: Candy's hometown! A cozy dog town with a bakery, park, groomer, fire station and Barkade, dog townsfolk, the Golden Bone mystery, fetch and agility mini-games, and co-op for 3.",
-      "stage": "building",
-      "when": "In the lab now",
-      "gname": "New hub",
-      "key": "puptown"
+      "name": "Grok Pup Town (live)",
+      "what": "Grok Pup Town: Candy's hometown, a cozy 3D dog town hub in HUBS & WORLDS, with bonus #34 Bone Dig and 3 Pup Town prizes. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T09:10:00Z"
     },
     {
       "game": "arcade",
@@ -109,18 +108,20 @@
       "when": "Oct 10"
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "puptown",
       "game": "puptown",
       "name": "Grok Pup Town",
-      "url": "previews/puptown/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/puptown-beta/",
       "built": "2026-10-11",
-      "notes": "Early look! The whole town is walkable: square + fountain, 8 buildings to explore, Paw Park, the Golden Bone mystery and mini-games. Still being polished."
+      "archived": "2026-10-11",
+      "notes": "Early look! The whole town is walkable: square + fountain, 8 buildings to explore, Paw Park, the Golden Bone mystery and mini-games. Still being polished.",
+      "playable": true
     }
   ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [],
   "archiveHelp": "Save Booth (Save Vault in the Preview Center): the LAST Time Jumper preview of every game that shipped, kept playable forever at archive/<id>-beta/ with its own grokBeta.<id>. save. Made with: node tools/make-preview.js --archive <id> (never delete previews). Each entry also shows in that game's Hall of Records Old Versions as 'Final Beta (Time Jumper)'."
 }

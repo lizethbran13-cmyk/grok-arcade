@@ -1829,7 +1829,7 @@ GA.HALL_DATA = {
 ],
 "cover": "assets/hall/puptown/cover.webp",
 "quip": "A corgi in a top hat came in asking if I had seen a Golden Bone. I said this is a MUSEUM, everything here is golden. He checked under every exhibit anyway.",
-"noOld": "Grok Pup Town just opened its doors. No old versions yet (its Time Jumper beta moves to the Save Vault at release). Please wipe your paws."
+"noOld": "Grok Pup Town just opened its doors. Its Time Jumper beta is in the Save Vault. Please wipe your paws."
 },
 "ratitahq": {
 "repo": "grok-ratita-hq",
@@ -1922,5 +1922,6 @@ GA.ARCADE_HISTORY = [
   { date: 'Oct 11', ver: '5.1', title: 'The Records Annex', text: 'The Hall of Game Records is twice as big! Gus\u2019s Uncle Barnaby (the nicest guy in the family) runs a Sorting Station with his Sort-a-Thon and a daily lost-files hunt. Plus an Exhibit of the Week, a reading nook with game history books, a walk-in photo booth, the Stamp-O-Matic 5000 quiz, a comfy lounge and benches you can sit on (Gus says NO LOITERING), 8 niches for future games, 4 achievements and 2 Hall rares.' },
   { date: 'Oct 11', ver: '5.2', title: 'Grok Ratita Industries HQ', text: 'The Grok Ratita Industries HQ cabinet in a brand-new HUBS & WORLDS section of the Game Gallery, bonus game #33 Crumb Patrol, 3 HQ prizes (Intern Badge Keychain, Candy Schnauzer Plush, HQ Glass Dome Cup), 2 achievements and a new Hall exhibit.' },
   { date: 'Oct 11', ver: '5.3', title: 'The Ratita Preview Center', text: 'A secret door behind the Food Court opens into Ratita Industries\u2019 Preview Center! Lili (Mimi\u2019s and Lily\u2019s very serious distant cousin) runs it. Posters of upcoming DLC, a live Scheduled Additions board, and the TIME JUMPER, which plays work-in-progress builds once they really work. It malfunctions sometimes (sparks, a GL1TCH R00M, quick fix jobs). Plus Lili\u2019s QA checklist, bonus game #32 Chrono Courier and 2 new rare prizes.' },
-  { date: 'Oct 11', ver: '5.4', title: 'Time Jumper Save Booth', text: 'Lili\u2019s Save Vault in the Preview Center: when a game ships, its last Time Jumper preview is archived as its Final Beta, playable forever with its own save. Betas also appear in each game\u2019s Old Versions here in the Hall.' }
+  { date: 'Oct 11', ver: '5.4', title: 'Time Jumper Save Booth', text: 'Lili\u2019s Save Vault in the Preview Center: when a game ships, its last Time Jumper preview is archived as its Final Beta, playable forever with its own save. Betas also appear in each game\u2019s Old Versions here in the Hall.' },
+  { date: 'Oct 11', ver: '5.5', title: 'Grok Pup Town', text: 'Candy\u2019s hometown opened: a cozy 3D dog town in HUBS & WORLDS, bonus #34 Bone Dig, the Golden Bone Keychain, Torty Plush and Golden Bone Cup, and a Hall exhibit. Its Time Jumper beta is the first game in Lili\u2019s Save Vault.' }
 ];
