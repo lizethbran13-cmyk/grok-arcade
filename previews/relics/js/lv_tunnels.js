@@ -4,7 +4,7 @@
 import { BUILD, PI, jeep } from './levels.js';
 import { PR } from './lvlkit.js';
 import { rbox } from './world.js';
-import { sph, cyl, cone, torus, gear } from './shapes.js';
+import { sph, cyl, cone, torus, gear, lathe, rcyl, tube } from './shapes.js';
 import { textGeo } from './text3d.js';
 import { rnd, rr, pick, shade, mix, fbm } from './props.js';
 const BRICK = 0x9a4a2e, BRICK2 = 0xb45f3c, TILEW = [0xe7e5e4, 0xd6d3d1, 0xf5f5f4], TILEG = [0x4d7c6f, 0x3f6b5f, 0x5a8a7c];
@@ -25,13 +25,30 @@ BUILD.tunnels = (w) => { w.music = 'tunnels'; w.killY = -12; w.camDist = 4.6; w.
     for (let z = 60; z > 36; z -= 10) { w.add('x', cyl(10), 0x374151, s * 7.6, 0, z, 0, 0, 0, 0.09, 4.6, 0.09); PR.lantern(w, s * 7.6, 4.8, z, 0xfde68a); } }
   w.solid(-25, 0, 34, -20.9, 14, 66, { nocam: true }); w.solid(20.9, 0, 34, 25, 14, 66, { nocam: true });
   jeep(w, 4, 0, 60, -0.3); PR.bench(w, -9.5, 0.18, 46, PI / 2); PR.barrel(w, 9.6, 0.18, 40, 0x16a34a); PR.crate(w, -9.4, 0.18, 38);
+  // ---- street detail pass: crosswalk, manholes with steam, hydrants, mailbox, news box, bins, phone booth, cafe, string lights, fire escapes, rooftops, a moon ----
+  for (let x = -6; x <= 6; x += 1.5) w.add('m', rbox(0.8, 0.02, 3, 0.01, 1), 0xf5f5f4, x, 0.02, 37.5);
+  for (const [x, z] of [[-2.5, 50], [3, 56], [1.5, 41]]) { w.add('x', rcyl(0.55, 0.05, 0.02, 28), 0x52525b, x, 0.0, z); for (let i = -2; i <= 2; i++) w.add('x', rbox(0.9, 0.06, 0.06, 0.01, 1), 0x3f3f46, x, 0.06, z + i * 0.18); }
+  const hydrant = (x, z) => { const T = w.tf(x, 0.18, z, 0); T.add('g', cyl(16), 0xdc2626, 0, 0, 0, 0, 0, 0, 0.18, 0.7, 0.18); T.add('g', sph(14), 0xdc2626, 0, 0.72, 0, 0, 0, 0, 0.2, 0.16, 0.2); T.add('x', cyl(10), 0xfacc15, 0, 0.88, 0, 0, 0, 0, 0.05, 0.1, 0.05); T.add('g', cyl(10), 0xb91c1c, 0, 0.45, 0, 0, 0, PI / 2, 0.08, 0.5, 0.08); T.add('g', rcyl(0.24, 0.08, 0.02, 16), 0xb91c1c, 0, 0, 0); };
+  hydrant(-7.9, 54); hydrant(7.9, 42);
+  { const T = w.tf(7.9, 0.18, 56, -PI / 2); T.add('g', rbox(0.6, 0.9, 0.5, 0.15, 2), 0x1d4ed8, 0, 0.75, 0); T.add('g', cyl(16), 0x1d4ed8, 0, 1.2, 0, PI / 2, 0, 0, 0.3, 0.6, 0.3); T.add('x', cyl(8), 0x1e3a8a, 0, 0, 0, 0, 0, 0, 0.06, 0.3, 0.06); T.add('m', rbox(0.3, 0.04, 0.02, 0.01, 1), 0x111827, 0, 1.25, 0.3); T.solid(-0.3, 0, -0.3, 0.3, 1.5, 0.3); }
+  { const T = w.tf(-7.9, 0.18, 42.5, PI / 2); T.add('g', rbox(0.55, 1.0, 0.45, 0.06, 2), 0xf59e0b, 0, 0.6, 0); T.add('e', rbox(0.45, 0.35, 0.02, 0.01, 1), 0xdbeafe, 0, 0.95, 0.23); T.add('m', rbox(0.4, 0.28, 0.01, 0.01, 1), 0xfafaf9, 0, 0.95, 0.215); for (const sx of [-0.2, 0.2]) T.add('x', cyl(8), 0x374151, sx, 0, 0, 0, 0, 0, 0.03, 0.6, 0.03); }
+  for (const [x, z] of [[11.6, 58.5], [-11.6, 45.5], [11.6, 38.2]]) { const T = w.tf(x, 0.18, z, 0); T.add('x', lathe([[0.001, 0], [0.28, 0], [0.32, 0.85], [0.001, 0.85]], 24, 'bin'), 0x6b7280, 0, 0, 0); T.add('x', lathe([[0.001, 0.85], [0.35, 0.85], [0.28, 0.98], [0.001, 1.02]], 24, 'binlid'), 0x9ca3af, 0, 0, 0); for (let i = 0; i < 4; i++) T.add('x', torus(0.02, 24), 0x4b5563, 0, 0.15 + i * 0.22, 0, PI / 2, 0, 0, 0.3, 0.3, 0.3); }
+  { const T = w.tf(11.4, 0.18, 52, -PI / 2); T.add('g', rbox(1.2, 2.5, 1.2, 0.08, 2), 0xdc2626, 0, 1.25, 0); T.add('e', rbox(0.9, 1.7, 0.02, 0.01, 1), 0xdbeafe, 0, 1.3, 0.61); T.add('l', rbox(1.0, 0.25, 0.04, 0.02, 1), 0xfef9c3, 0, 2.3, 0.6, 0, 0, 0, 1, 1, 1, 1.0); T.add('g', rbox(1.3, 0.2, 1.3, 0.06, 1), 0xb91c1c, 0, 2.6, 0); T.add('x', rbox(0.3, 0.4, 0.15, 0.03, 1), 0x111827, 0, 1.4, 0); T.solid(-0.6, 0, -0.6, 0.6, 2.7, 0.6); const tg = textGeo('PHONE', 0.13, 0.03); if (tg) T.add('m', tg, 0xb91c1c, 0, 2.23, 0.63); }
+  for (const z of [62, 47.5]) { const x = 11.2; w.add('x', cyl(8), 0x374151, x, 0.18, z, 0, 0, 0, 0.04, 1.8, 0.04); w.add('f', cone(16), z > 50 ? 0xdc2626 : 0x0ea5e9, x, 1.98, z, 0, 0, 0, 1.0, 0.45, 1.0); w.add('m', rcyl(0.4, 0.05, 0.02, 20), 0xf5f5f4, x, 0.9, z); w.add('x', cyl(8), 0x374151, x, 0.18, z, 0, 0, 0, 0.03, 0.72, 0.03);
+    for (const dz of [-0.75, 0.75]) { w.add('m', rcyl(0.2, 0.04, 0.01, 14), 0x7c4a1e, x - 0.3, 0.6, z + dz); w.add('x', cyl(6), 0x374151, x - 0.3, 0.18, z + dz, 0, 0, 0, 0.02, 0.42, 0.02); } }
+  for (const z of [60, 52, 44]) { const pts = []; for (let i = 0; i <= 10; i++) { const t = i / 10; pts.push([-12 + 24 * t, 7.2 - Math.sin(t * PI) * 1.1, z]); } w.add('m', tube(pts, 0.02, 30, 4), 0x1f2937, 0, 0, 0); for (let i = 1; i < 10; i++) w.add('l', sph(8), pick([0xfde68a, 0xfca5a5, 0x93c5fd, 0x86efac]), pts[i][0], pts[i][1] - 0.12, z, 0, 0, 0, 0.11, 0.13, 0.11, 1.4); }
+  for (const s of [-1, 1]) for (const z of [62, 46]) { const x = s * 12.15; for (let fy = 3.4; fy < 9; fy += 2.6) { w.add('x', rbox(0.9, 0.06, 2.6, 0.02, 1), 0x1f2937, x - s * 0.3, fy, z); w.add('x', rbox(0.04, 0.9, 2.6, 0.01, 1), 0x1f2937, x - s * 0.72, fy + 0.45, z); for (let k = -1; k <= 1; k++) w.add('x', cyl(6), 0x1f2937, x - s * 0.72, fy, z + k * 1.25, 0, 0, 0, 0.025, 0.9, 0.025); } w.add('x', rbox(0.06, 2.6, 0.5, 0.01, 1), 0x374151, x - s * 0.5, 3.4 + 1.3, z + 1.0, 0.45, 0, 0); }
+  for (const s of [-1, 1]) for (const [z, h] of [[62, 9], [54, 12], [46, 11], [38, 9]]) { const x = s * 17.5; w.add('m', rbox(1, 1.6, 1, 0.06, 1), 0x7c2d12, x + s * 1.5, h + 0.75, z + 2); w.add('m', rbox(1.2, 0.2, 1.2, 0.04, 1), 0x57534e, x + s * 1.5, h + 1.6, z + 2);
+    if ((z | 0) % 16 === 6) { w.add('m', rcyl(1.0, 1.5, 0.05, 20), 0x92400e, x, h + 2.2, z - 1.5); w.add('m', cone(20), 0x78350f, x, h + 3.7, z - 1.5, 0, 0, 0, 1.1, 0.6, 1.1); for (const a of [0, 2.1, 4.2]) w.add('x', cyl(6), 0x374151, x + Math.cos(a) * 0.8, h, z - 1.5 + Math.sin(a) * 0.8, 0, 0, 0, 0.05, 2.2, 0.05); } }
+  w.add('l', sph(32), 0xfef9c3, -18, 26, 90, 0, 0, 0, 3.2, 3.2, 3.2, 1.2); w.add('l', sph(20), 0xfde68a, -18, 26, 89.8, 0, 0, 0, 4.4, 4.4, 0.1, 0.25);
+  for (const [x, z, col] of [[-12.2, 59, 0xf472b6], [12.2, 50, 0x22d3ee]]) { const tg = textGeo(x < 0 ? 'DINER' : 'HOTEL', 0.5, 0.12); if (tg) w.add('l', tg, col, x - Math.sign(x) * 0.05, 4.6, z, 0, x < 0 ? PI / 2 : -PI / 2, 0, 1, 1, 1, 1.5); w.add('m', rbox(0.15, 0.9, 3.2, 0.04, 1), 0x1f2937, x - Math.sign(x) * 0.02, 4.7, z); }
   // the sealed station entrance: a brick wall with an arched portal
   PR.stoneWall(w, 'x', 33.5, -21, 21, 12, BRICK, { holes: [[-3, 3, 5]], col2: BRICK2, bh: 0.6, bl: 1.3 }); { const sg = textGeo('OLD LINE 7 - CLOSED 1923', 0.42, 0.12); w.add('m', rbox(9, 1.0, 0.2, 0.06, 1), 0x1e3a8a, 0, 6.55, 34.0); if (sg) w.add('m', sg, 0xfef3c7, 0, 6.35, 34.12); }
   w.add('m', rbox(7.6, 0.7, 0.5, 0.1, 2), 0x57534e, 0, 5.35, 34.1); for (const x of [-3.4, 3.4]) w.add('m', rbox(0.7, 5, 0.5, 0.1, 2), 0x57534e, x, 2.5, 34.1); { const sg = 0; void sg; } for (const x of [-2.6, 0, 2.6]) w.add('f', rbox(2.6, 0.18, 0.04, 0.02, 1), 0xfacc15, x, 1.1 + (x === 0 ? 0.4 : 0), 34.2, 0, 0, x * 0.1);
   w.martinaSpec = { x: -5, y: 0, z: 50, yaw: 0.8, s: 0.42, label: '🐢 Talk to Torty' };
   w.martinaSay = () => { const L = ['"Torty reporting! The Clockwork Compass is hidden in the old Line 7 depot, deep under Grokville."', '"The Relic Patrol has officers in the station. Hide behind crates and barrels (ACT)!"', '"The track switches need BOTH levers pulled before the gate opens."', '"I heard a train whistle down there... but Line 7 closed a hundred years ago! Vintage?"']; w._mi = ((w._mi ?? -1) + 1) % L.length; return L[w._mi]; };
   w.talk(-9, 45, 3, 54, 'martina', '"Psst! Explorer! Torty here. Press ACT next to me for subway tips."');
-  w.officers([{ x: -4, z: 44, path: [[-4, 44], [4, 44], [4, 40], [-4, 40]] }], [-20, 34, 20, 56]); w.hideSpot(-5.5, 0, 38, 'barrel'); w.hideSpot(5.5, 0, 47, 'crate');
+  w.officers([{ x: -4, z: 44, sight: 8, path: [[-4, 44], [4, 44], [4, 40], [-4, 40]] }], [-20, 34, 20, 56]); w.hideSpot(-5.5, 0, 38, 'barrel'); w.hideSpot(5.5, 0, 47, 'crate');
   w.hint(-6, 52, 6, 56, '🚨 A Relic Patrol officer guards the old station. Sneak around the flashlight or hide (ACT).');
   for (let z = 54; z > 36; z -= 3) w.coin(2.5, 0, z); w.treasure(-9.5, 0.18, 62); w.animal('rat', 8, 0.18, 52, { range: 3 }); w.cp(0, 0, 36, PI);
   // ---------------- B: abandoned station platform (z 32..-14) ----------------
@@ -42,7 +59,7 @@ BUILD.tunnels = (w) => { w.music = 'tunnels'; w.killY = -12; w.camDist = 4.6; w.
   for (const z of [24, 8, -6]) { w.add('f', rbox(0.06, 2, 3, 0.02, 1), pick([0xfef3c7, 0xfde68a, 0xfecaca]), 13.45, 2.2, z); w.add('x', rbox(0.04, 1.6, 2.6, 0.01, 1), pick([0x1d4ed8, 0xdc2626, 0x7c3aed]), 13.42, 2.2, z); }
   { const T = w.tf(13.4, 4.4, 14, -PI / 2); T.add('m', torus(0.12, 40), 0xd4a017, 0, 0, 0, 0, 0, 0, 1.1, 1.1, 1); T.add('m', rcylX(), 0xfef3c7, 0, 0, 0.02, PI / 2, 0, 0, 1.0, 0.06, 1.0); }
   lamps(w, 5, 30, -14, 8, 6.2); lamps(w, -9, 26, -14, 10, 6.2, 0xbfdbfe);
-  w.officers([{ x: 4, z: 20, path: [[4, 20], [10, 20], [10, 4], [4, 4]] }, { x: 8, z: -2, path: [[8, -2], [0, -2], [0, -10], [8, -10]] }], [-3.5, -13, 13, 31]);
+  w.officers([{ x: 5, z: 16, path: [[5, 16], [10, 16], [10, 4], [5, 4]] }, { x: 8, z: -2, path: [[8, -2], [0, -2], [0, -10], [8, -10]] }], [-3.5, -13, 13, 31]);
   for (const [x, z] of [[1, 28], [12, 12], [2, 8], [12, -6], [-0.5, -12]]) w.hideSpot(x, 0, z, pick(['crate', 'barrel']));
   w.hint(-3, 27, 3, 31, '🫥 Two officers patrol the platform. Duck behind the crates and barrels between their flashlights!');
   w.evidence(11.8, 0, 28.5); for (let z = 28; z > -12; z -= 4) w.coin(0.2, 0, z); w.coinLine(-9, 0.7, 23, -9, 0.7, 13, 4); w.treasure(-9, 0.7, 16);
@@ -60,13 +77,13 @@ BUILD.tunnels = (w) => { w.music = 'tunnels'; w.killY = -12; w.camDist = 4.6; w.
   for (const [x, z] of [[-4, -50], [4, -18], [-10, -50]]) { w.add('x', cyl(10), 0x374151, x, 0, z, 0, 0, 0, 0.07, 3, 0.07); w.add('l', sph(10), pick([0xef4444, 0x22c55e, 0xfacc15]), x, 3.1, z, 0, 0, 0, 0.16); }
   { const sg = textGeo('SWITCH YARD', 0.45, 0.1); if (sg) w.add('m', sg, 0xfef3c7, 0, 6.0, -51.4); }
   lamps(w, 0, -20, -52, 8, 6.2); w.treasure(14, 0, -19); w.coinLine(-12, 0, -22, -12, 0, -48, 6); w.coinLine(12, 0, -24, 12, 0, -40, 4);
-  w.animal('rat', -8, 0, -40, { range: 3 }); w.animal('rat', 8, 0, -26, { range: 3 }); w.animal('bat', 0, 4, -46, { range: 3 }); w.cp(0, 0, -18, PI, 2.4);
+  w.animal('rat', -5, 0, -47, { range: 3 }); w.animal('rat', 9, 0, -36, { range: 3 }); w.animal('bat', 0, 4, -46, { range: 3 }); w.cp(0, 0, -18, PI, 2.4);
   // ---------------- D: flooded tunnel with a falling walkway (z -54..-82) ----------------
   room(w, -6, -82, 6, -54, 7, { S: [[-2.5, 2.5, 5.2]], N: [[-2.5, 2.5, 5]] });
   PR.ground(w, -6, -58, 6, -54, 0, grime); PR.ground(w, -6, -82, 6, -74, 0, grime);
   w.add('m', rbox(12, 0.1, 16, 0.05, 1), 0x155e75, 0, -6, -66); w.add('l', rbox(11, 0.02, 15, 0.02, 1), 0x0891b2, 0, -5.93, -66, 0, 0, 0, 1, 1, 1, 0.25); w.water(-6, -12, -74, 6, -5.6, -58);
-  w.bridge(0, -58, 0, -74, 0, 2.4, true); w.sideWall(-1.4, -6, -74, -1.25, 3, -58); w.sideWall(1.25, -6, -74, 1.4, 3, -58);
-  w.hook(4, 5.6, -66, false); w.add('m', cyl(8), 0x9ca3af, 4, 6.3, -66, 0, 0, 0, 0.04, 0.7, 0.04); PR.mossyBlock(w, 4.4, -6, -66, 1.8, 5.6, 1.8, 0x6b6560); w.treasure(4.4, -0.4, -66);
+  w.bridge(0, -58, 0, -74, 0, 2.4, true); w.sideWall(-1.4, -6, -74, -1.25, 1.0, -58); w.sideWall(1.25, -6, -74, 1.4, 1.0, -58);
+  w.hook(4, 5.8, -66, false, [4.4, 0.2, -66]); w.add('m', cyl(8), 0x9ca3af, 4, 6.3, -66, 0, 0, 0, 0.04, 0.7, 0.04); PR.mossyBlock(w, 4.4, -6, -66, 2.0, 6.2, 2.0, 0x6b6560); w.treasure(4.4, 0.2, -66);
   w.hint(-3, -57, 3, -54.5, '🌊 The old walkway crumbles once you step on it. Keep running! (A treasure waits on the side pillar: use the ring.)');
   w.coinLine(0, 0.3, -59, 0, 0.3, -73, 6); lamps(w, -4.8, -56, -82, 6, 5.4, 0xbfdbfe); w.cp(0, 0, -55.5, PI, 1.5); w.cp(0, 0, -76, PI, 1.5);
   // ---------------- E: clockwork room (z -84..-112) ----------------

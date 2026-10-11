@@ -177,7 +177,7 @@
       "url": "previews/relics/",
       "playable": true,
       "built": "2026-10-11",
-      "notes": "All 5 expeditions playable: Temple of the Jade Monkey, Crystal Owl Caverns, The Clockwork Subway, Pyramid of the Sun Scarab and Vintage's Sky Fortress (puzzles, traps, Relic Patrol sneaking, 5 Professor Vintage boss machines, escape chases), plus the Relic Museum hub and 3-player co-op. WIP: polish pass ongoing."
+      "notes": "All 5 expeditions playable: Temple of the Jade Monkey, Crystal Owl Caverns, The Clockwork Subway, Pyramid of the Sun Scarab and Vintage's Sky Fortress (puzzles, traps, Relic Patrol sneaking, 5 Professor Vintage boss machines each with a signature move, escape chases), plus the Relic Museum hub with themed treasure cases and 3-player co-op. Newest: richer tombs, grotto, subway street, sky hangar and fortress; smoother boss hits. WIP: polish ongoing."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

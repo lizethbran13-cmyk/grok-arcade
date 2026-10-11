@@ -41,11 +41,11 @@ export const EVIDENCE = {
   finale: ['Vintage\u2019s master plan (with doodles)', 'Signed confession he forgot to hide', 'The real Relic Patrol arrest list'],
 };
 export const BOSSES = {
-  chopper: { n: 'Vintage\u2019s Vine-Chopper', hp: 3, r: 2.6, h: 3.6, moves: ['lob', 'charge', 'lob'], proj: 0x84cc16, sp: 3.2, spawn: 'monkey' },
-  drill: { n: 'The Drill-o-Matic 3000', hp: 4, r: 2.6, h: 3.8, moves: ['hop', 'lob', 'ring'], proj: 0xa78bfa, sp: 3, spawn: 'bat' },
-  express: { n: 'The Vintage Express', hp: 4, r: 2.8, h: 3.6, moves: ['charge', 'ring', 'charge', 'lob'], proj: 0xf59e0b, sp: 3.4, spawn: 'rat' },
-  mummy: { n: 'Mecha-Mummy Vintage', hp: 5, r: 2.8, h: 4.6, moves: ['hop', 'lob', 'charge', 'spawn'], proj: 0xfde68a, sp: 3, spawn: 'scorpion' },
-  zeppelin: { n: 'Professor Vintage (Sky Suit)', hp: 6, r: 2.6, h: 4.2, moves: ['lob', 'hop', 'ring', 'charge', 'spawn'], proj: 0xf0abfc, sp: 3.4, spawn: 'bat' },
+  chopper: { n: 'Vintage\u2019s Vine-Chopper', hp: 3, r: 2.6, h: 3.6, moves: ['lob', 'gust', 'charge', 'lob', 'gust'], proj: 0x84cc16, sig: 'gust', sp: 3.2, spawn: 'monkey' },
+  drill: { n: 'The Drill-o-Matic 3000', hp: 4, r: 2.6, h: 3.8, moves: ['burrow', 'lob', 'ring', 'burrow', 'hop'], proj: 0xa78bfa, sig: 'burrow', sp: 3, spawn: 'bat' },
+  express: { n: 'The Vintage Express', hp: 4, r: 2.8, h: 3.6, moves: ['rampage', 'ring', 'charge', 'lob'], proj: 0xf59e0b, sig: 'rampage', sp: 3.4, spawn: 'rat' },
+  mummy: { n: 'Mecha-Mummy Vintage', hp: 5, r: 2.8, h: 4.6, moves: ['laser', 'hop', 'lob', 'laser', 'charge', 'spawn'], proj: 0xfde68a, sig: 'laser', sp: 3, spawn: 'scorpion' },
+  zeppelin: { n: 'Professor Vintage (Sky Suit)', hp: 6, r: 2.6, h: 4.2, moves: ['rain', 'lob', 'hop', 'rain', 'ring', 'charge', 'spawn'], proj: 0xf0abfc, sig: 'rain', sp: 3.4, spawn: 'bat' },
 };
 // shop upgrades (paid in gold coins)
 export const UPGRADES = [

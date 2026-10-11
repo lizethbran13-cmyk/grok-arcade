@@ -40,6 +40,9 @@ export const PR = {
   stoneRoom(w, x0, z0, x1, z1, h, col, o = {}) { const th = o.th || 1.0, d = o.doors || {}, y = o.y || 0, oo = (s) => Object.assign({ th, y }, o.wall || {}, { holes: d[s] || [] });
     PR.stoneWall(w, 'x', z0 - th / 2, x0 - th, x1 + th, h, col, oo('N')); PR.stoneWall(w, 'x', z1 + th / 2, x0 - th, x1 + th, h, col, oo('S'));
     PR.stoneWall(w, 'z', x0 - th / 2, z0, z1, h, col, oo('W')); PR.stoneWall(w, 'z', x1 + th / 2, z0, z1, h, col, oo('E'));
+    // door thresholds: floor through the wall thickness so you can never fall between two rooms
+    for (const [side, hs] of Object.entries(d)) for (const hl of hs) { const [a0, a1] = hl; let bx0, bx1, bz0, bz1; if (side === 'N') { bx0 = a0; bx1 = a1; bz0 = z0 - th - 0.05; bz1 = z0 + 0.05; } else if (side === 'S') { bx0 = a0; bx1 = a1; bz0 = z1 - 0.05; bz1 = z1 + th + 0.05; } else if (side === 'W') { bz0 = a0; bz1 = a1; bx0 = x0 - th - 0.05; bx1 = x0 + 0.05; } else { bz0 = a0; bz1 = a1; bx0 = x1 - 0.05; bx1 = x1 + th + 0.05; }
+      w.add('m', rbox(bx1 - bx0, 0.3, bz1 - bz0, 0.04, 1), shade(col, 0.78), (bx0 + bx1) / 2, y - 0.15, (bz0 + bz1) / 2); w.solid(bx0, y - 0.3, bz0, bx1, y, bz1); }
     if (o.ceil !== false) { w.add('w', rbox(x1 - x0 + th * 2, 0.8, z1 - z0 + th * 2, 0.1, 1), o.ceilCol || shade(col, 0.7), (x0 + x1) / 2, y + h + 0.4, (z0 + z1) / 2); w.solid(x0 - th, y + h, z0 - th, x1 + th, y + h + 0.8, z1 + th, { nofloor: true, ceil: true });
       if (o.beams) for (let x = x0 + 3; x < x1 - 1; x += o.beams) w.add('m', rbox(0.5, 0.5, z1 - z0, 0.08, 1), shade(col, 0.6), x, y + h - 0.2, (z0 + z1) / 2); } },
   pillar(w, x, y, z, h, col, o = {}) { const r = o.r || 0.55; w.add('m', rbox(r * 2.6, 0.4, r * 2.6, 0.08, 1), shade(col, 0.85), x, y + 0.2, z); w.add('m', rbox(r * 2.2, 0.25, r * 2.2, 0.06, 1), col, x, y + 0.52, z);
@@ -94,6 +97,22 @@ export const PR = {
   monkeyStatue(w, x, y, z, ry = 0, col = 0x9a9a7a, s = 1) { const T = w.tf(x, y, z, ry, s); T.slab('m', shade(col, 0.85), 0, 0, 0, 1.6, 0.8, 1.6, 0.1); T.add('m', sph(20), col, 0, 1.6, 0, 0, 0, 0, 0.7, 0.85, 0.6); T.add('m', sph(20), col, 0, 2.7, 0, 0, 0, 0, 0.55); T.add('m', sph(16), shade(col, 1.1), 0, 2.6, 0.38, 0, 0, 0, 0.38, 0.3, 0.25);
     [-1, 1].forEach((sd) => { T.add('m', sph(12), col, sd * 0.55, 2.8, 0, 0, 0, 0, 0.2, 0.22, 0.1); T.add('m', capsule(12), col, sd * 0.65, 1.7, 0.2, -0.6, 0, sd * 0.3, 0.3, 0.9, 0.3); T.add('g', sph(10), 0x34d399, sd * 0.18, 2.8, 0.48, 0, 0, 0, 0.1, 0.1, 0.05, 0.5); });
     T.solid(-0.8, 0, -0.8, 0.8, 3.2, 0.8); },
+  // standing fire bowl on a bronze tripod (decor light source)
+  fireBowl(w, x, y, z, s = 1, flame = 0xff9a3c, light = true) { const T = w.tf(x, y, z, 0, s), B = 0xb7791f;
+    for (let i = 0; i < 3; i++) { const a = i / 3 * PI * 2; T.add('x', cyl(10), 0x7c4a1e, Math.cos(a) * 0.32, 0, Math.sin(a) * 0.32, Math.sin(a) * 0.22, 0, -Math.cos(a) * 0.22, 0.05, 1.25, 0.05); T.add('x', sph(10), B, Math.cos(a) * 0.42, 0.02, Math.sin(a) * 0.42, 0, 0, 0, 0.09, 0.06, 0.09); }
+    T.add('x', torus(0.06, 28), B, 0, 0.62, 0, PI / 2, 0, 0, 0.36, 0.36, 0.36); T.add('x', lathe([[0.001, 0], [0.25, 0.02], [0.55, 0.22], [0.66, 0.42], [0.6, 0.46], [0.001, 0.3]], 32, 'fbowl'), 0xd4a017, 0, 1.15, 0);
+    T.add('x', torus(0.05, 32), 0xfacc15, 0, 1.59, 0, PI / 2, 0, 0, 0.64, 0.64, 0.64); T.add('m', sph(12), 0x3f2a1a, 0, 1.5, 0, 0, 0, 0, 0.5, 0.12, 0.5);
+    for (const [dx, dz, h, k] of [[0, 0, 0.95, 1], [0.18, 0.1, 0.6, 0.8], [-0.17, -0.08, 0.7, 0.8], [0.04, -0.2, 0.5, 0.7]]) T.add('l', cone(14), k > 0.9 ? 0xffd27a : flame, dx, 1.52, dz, 0, 0, 0, 0.22 * k, h, 0.22 * k, 1.6);
+    T.solid(-0.45, 0, -0.45, 0.45, 1.6, 0.45); if (light) w.lights.push({ x, y: y + 2.2 * s, z, c: flame, i: 14, d: 13 }); },
+  // seated jackal guardian (Anubis-style), smooth lathe body, gold collar and ears tips
+  jackal(w, x, y, z, ry = 0, s = 1) { const T = w.tf(x, y, z, ry, s), c = 0x1f2937, g = 0xfacc15; T.slab('m', 0xd6b370, 0, 0, 0, 1.5, 0.7, 2.2, 0.1); T.add('x', rbox(1.56, 0.12, 2.26, 0.04, 1), g, 0, 0.7, 0);
+    T.add('g', lathe([[0.001, 0], [0.55, 0], [0.6, 0.45], [0.42, 1.3], [0.28, 1.75], [0.001, 1.8]], 28, 'jkbody'), c, 0, 0.7, -0.15); T.add('g', capsule(14), c, -0.28, 1.0, 0.45, 0.3, 0, 0, 0.26, 0.5, 0.26); T.add('g', capsule(14), c, 0.28, 1.0, 0.45, 0.3, 0, 0, 0.26, 0.5, 0.26);
+    T.add('g', sph(20), c, 0, 2.62, -0.05, 0, 0, 0, 0.36, 0.38, 0.4); T.add('g', cone(16), c, 0, 2.55, 0.32, PI / 2, 0, 0, 0.17, 0.62, 0.15); T.add('g', sph(10), 0x111827, 0, 2.55, 0.92, 0, 0, 0, 0.07);
+    for (const sd of [-1, 1]) { T.add('g', cone(10), c, sd * 0.17, 3.05, -0.08, 0, 0, sd * -0.12, 0.12, 0.55, 0.07); T.add('x', cone(8), g, sd * 0.2, 3.38, -0.08, 0, 0, sd * -0.12, 0.05, 0.18, 0.04); T.add('l', sph(10), 0xfde047, sd * 0.15, 2.7, 0.28, 0, 0, 0, 0.05, 0.035, 0.03, 1.2); }
+    T.add('x', torus(0.09, 32), g, 0, 2.18, -0.1, PI / 2, 0, 0, 0.42, 0.44, 0.42); T.add('x', torus(0.06, 32), 0x1d4ed8, 0, 2.08, -0.1, PI / 2, 0, 0, 0.45, 0.47, 0.45); T.add('x', rcyl(0.08, 0.8, 0.02, 10), g, 0.55, 1.1, 0.35, 0.1, 0, 0); T.add('x', torus(0.04, 16), g, 0.55, 1.95, 0.39, 0, 0, 0, 0.12, 0.12, 0.12);
+    T.solid(-0.75, 0, -1.1, 0.75, 3.2, 1.1); },
+  // concentric water ripples (flat glowing rings) + foam
+  ripples(w, x, y, z, n = 3, r = 1, col = 0xbae6fd) { for (let i = 0; i < n; i++) w.add('l', torus(0.03, 40), col, x, y, z, PI / 2, 0, 0, r * (0.5 + i * 0.45), r * (0.5 + i * 0.45), 0.3, 0.35 - i * 0.08); },
   catStatue(w, x, y, z, ry = 0, s = 1) { const T = w.tf(x, y, z, ry, s); const c = 0x1f2937, g = 0xfacc15; T.slab('m', 0xd6b370, 0, 0, 0, 1.4, 0.6, 2.0, 0.1); T.add('g', lathe([[0.001, 0], [0.5, 0], [0.55, 0.4], [0.4, 1.2], [0.25, 1.6], [0.001, 1.65]], 28, 'catbody'), c, 0, 0.6, -0.1);
     T.add('g', sph(18), c, 0, 2.5, 0.05, 0, 0, 0, 0.36, 0.34, 0.34); [-1, 1].forEach((sd) => { T.add('g', cone(10), c, sd * 0.2, 2.7, 0.0, 0, 0, -sd * 0.25, 0.12, 0.35, 0.08); T.add('l', sph(10), 0x34d399, sd * 0.13, 2.55, 0.33, 0, 0, 0, 0.06, 0.05, 0.03, 0.8); });
     T.add('x', torus(0.15, 24), g, 0, 2.05, 0.05, PI / 2, 0, 0, 0.32, 0.32, 0.3); T.add('x', sph(10), g, 0, 2.6 - 0.28, 0.4, 0, 0, 0, 0.04); T.add('g', tube([[0.3, 0.7, -0.4], [0.6, 0.7, 0.2], [0.4, 0.75, 0.7]], 0.08, 12, 8), c, 0, 0, 0); T.solid(-0.7, 0, -1, 0.7, 2.9, 1); },

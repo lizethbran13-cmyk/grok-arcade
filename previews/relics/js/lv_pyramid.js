@@ -4,7 +4,7 @@
 import { BUILD, PI, jeep } from './levels.js';
 import { PR } from './lvlkit.js';
 import { rbox } from './world.js';
-import { sph, cyl, cone, tube } from './shapes.js';
+import { sph, cyl, cone, tube, lathe, torus, rcyl } from './shapes.js';
 import { textGeo } from './text3d.js';
 import { rnd, rr, pick, shade, mix, fbm } from './props.js';
 const SAND = 0xe9c98a, SST = 0xd6b370, SST2 = 0xe4c88e, GOLD = 0xfacc15;
@@ -41,15 +41,25 @@ BUILD.pyramid = (w) => { w.music = 'pyramid'; w.killY = -12; w.camDist = 4.8; w.
   for (const z of [20, 8]) { PR.pillar(w, -6, 0, z, 8, SST2, { r: 0.6 }); PR.pillar(w, 6, 0, z, 8, SST2, { r: 0.6 }); }
   PR.sarcophagus(w, -9, 0, 14, 0); PR.sarcophagus(w, 9, 0, 14, 0); PR.catStatue(w, -9, 0, 1, 0); PR.catStatue(w, 9, 0, 1, 0);
   for (const [x, z] of [[-11, 26], [11, 26], [-11, -2.5], [11, -2.5]]) PR.urn(w, x, 0, z, 1.0 + rnd() * 0.3, pick([0x1d4ed8, 0xb45309, 0x0e7490]));
+  // ---- entrance hall detail pass: wall reliefs, painted floor runner, jackals at the inner door, fire bowls, sand drifts, offerings, lintel ----
+  for (const z of [17, 4]) { PR.relief(w, 'z', -11.6, z, 3.0, 4.4, 2.6, 1, SST2, pick(['sun', 'mix'])); PR.relief(w, 'z', 11.6, z, 3.0, 4.4, 2.6, -1, SST2, pick(['sun', 'mix'])); }
+  w.add('m', rbox(2.6, 0.03, 30, 0.01, 1), 0x7f1d1d, 0, 0.015, 12); w.add('x', rbox(0.12, 0.035, 30, 0.01, 1), GOLD, -1.25, 0.02, 12); w.add('x', rbox(0.12, 0.035, 30, 0.01, 1), GOLD, 1.25, 0.02, 12);
+  for (let z = 25; z > -2; z -= 2.4) { w.add('x', rbox(0.55, 0.04, 0.55, 0.01, 1), Math.round(z / 2.4) % 2 ? 0x1e3a8a : GOLD, 0, 0.025, z, 0, PI / 4, 0); }
+  PR.jackal(w, -3.6, 0, -2.2, 0, 0.8); PR.jackal(w, 3.6, 0, -2.2, 0, 0.8);
+  w.add('m', rbox(6, 0.9, 1.4, 0.08, 1), SST, 0, 4.5, -3.6); w.add('x', rbox(6.1, 0.12, 0.1, 0.02, 1), GOLD, 0, 4.9, -2.85); { const sg = textGeo('THE SUN SCARAB SLEEPS', 0.24, 0.06); if (sg) w.add('x', sg, GOLD, 0, 4.3, -2.86); }
+  for (const [x, z] of [[-3.8, 25.5], [3.8, 25.5]]) PR.fireBowl(w, x, 0, z, 0.85, 0xff9a3c, false);
+  for (const [x, z, sc] of [[-10.6, 24.5, 1.4], [10.4, 27, 1.2], [-10.8, 6, 1.0], [10.6, -2.8, 1.3]]) PR.dune(w, x, 0, z, sc * 2, sc * 0.5, sc * 1.6, 0xe9c98a);
+  for (const [x, z, sc] of [[-10.6, 8, 0.7], [10.6, 19, 0.8], [-6, -2.6, 0.6], [6, -2.6, 0.6]]) PR.goldPile(w, x, 0, z, sc);
+  for (const z of [20, 8]) for (const x of [-6, 6]) { w.add('x', rbox(1.5, 0.16, 1.5, 0.03, 1), GOLD, x, 7.2, z); w.add('m', lathe([[0.45, 0], [0.9, 0.5], [0.75, 0.62], [0.001, 0.62]], 24, 'lotuscap'), 0x15803d, x, 6.55, z); }
   w.hint(-4, 22, 4, 27, '🔦 Torches flicker in here. Your TORCH helps in the dark corners!'); w.coinRing(0, 0, 14, 2.6, 8); w.treasure(-9, 1.0, 14); w.cp(0, 0, 25, PI);
   PR.ground(w, -2.5, -26, 2.5, -4, 0, floorF); room(w, -2, -26, 2, -5, 4.4, { S: [[-2, 2, 4]], N: [[-2, 2, 4]] }, { th: 1, wall: { col2: SST2, bh: 0.8, bl: 1.8 } });
   for (const [z, ph] of [[-9, 0], [-14, 0.33], [-19, 0.66]]) w.dartWall(-1.8, 0, z, [1, 0], 3.8, 2.4, ph, 2, 1.2);
   w.hint(-2, -7, 2, -4.5, '🎯 Darts! Watch the red lights, then dash between volleys.'); w.coinLine(0, 0, -7, 0, 0, -24, 6); w.cp(0, 0, -5.5, PI, 1.4);
   // ---------------- C: quicksand chamber (z -28..-62) ----------------
   room(w, -18, -62, 18, -28, 10, { S: [[-2, 2, 4]], N: [[-2.5, 2.5, 5.2]] }); PR.tiles(w, -18, -36, 18, -28, 0, [0xd9b77c, 0xc9a66a], 2); PR.tiles(w, -18, -62, 18, -52, 0, [0xd9b77c, 0xc9a66a], 2);
-  PR.ground(w, -18, -52, 18, -36, -0.6, sandF, { bump: 0 }); w.quicksand(-18, -52, 18, -36, -0.55);
-  w.mover(-4, -0.6, -40, [2.4, 0.7, 2.4], [8, 0, 0], 4.5, 0, SST2); w.mover(4, -0.6, -44.5, [2.4, 0.7, 2.4], [-8, 0, 0], 4.5, 0.5, SST2); w.mover(-4, -0.6, -49, [2.4, 0.7, 2.4], [8, 0, 0], 4.5, 0.25, SST2);
-  w.hook(12, 7, -44, false); w.add('m', cyl(8), 0xc2a26f, 12, 7.4, -44, 0, 0, 0, 0.04, 2.6, 0.04);
+  PR.ground(w, -18, -52, 18, -36, -0.36, sandF, { bump: 0 }); w.quicksand(-18, -52, 18, -36, -0.32); // shallow enough to step back out onto the tiles
+  w.mover(-4, -0.6, -40, [2.8, 0.7, 2.8], [8, 0, 0], 6.5, 0, SST2); w.mover(4, -0.6, -44.5, [2.8, 0.7, 2.8], [-8, 0, 0], 6.5, 0.5, SST2); w.mover(-4, -0.6, -49, [2.8, 0.7, 2.8], [8, 0, 0], 6.5, 0.12, SST2);
+  w.hook(12, 6.4, -44, false, [15.2, 1.8, -44]); w.add('m', cyl(8), 0xc2a26f, 12, 6.8, -44, 0, 0, 0, 0.04, 2.6, 0.04);
   PR.mossyBlock(w, 15.5, -0.6, -44, 3, 2.4, 3, SST2); w.treasure(15.5, 1.8, -44); w.coinLine(-4, 0.4, -40, 4, 0.4, -49, 5);
   w.hint(-6, -35, 6, -30, '🟨 Ride the sliding stones over the quicksand! (There\u2019s a treasure ledge by the golden ring.)');
   for (const x of [-17.2, 17.2]) for (const z of [-32, -58]) PR.torchSconce(w, x, 3.6, z, x < 0 ? PI / 2 : -PI / 2); glyphs(w, 'x', -61.4, -16, 16, 4, -1);
@@ -80,10 +90,20 @@ BUILD.pyramid = (w) => { w.music = 'pyramid'; w.killY = -12; w.camDist = 4.8; w.
   for (let x = -18; x <= 18; x += 6) w.add('m', rbox(0.7, 0.7, 46, 0.08, 1), 0x6b4f2e, x, 11.65, -117);
   for (const [x, z] of [[-8, -100], [8, -100], [-8, -128], [8, -128]]) PR.urn(w, x, 0, z, 1.1, pick([0x1d4ed8, 0xb45309, 0x0e7490]));
   PR.sarcophagus(w, -9, 0, -136, 0); PR.sarcophagus(w, 9, 0, -136, 0); PR.catStatue(w, -15, 0, -137, 0, 1.4); PR.catStatue(w, 15, 0, -137, 0, 1.4);
+  // ---- richer burial-chamber floor: raised dais before the relic, side colonnade, jackal guardians, fire bowls, floor mosaic ----
+  w.slab('m', SST, 0, 0, -131.3, 14, 0.22, 4.2, 0.06); w.slab('m', SST2, 0, 0.22, -131.9, 11, 0.2, 3.0, 0.06); w.add('x', rbox(14.1, 0.05, 0.12, 0.02, 1), GOLD, 0, 0.22, -129.2); w.add('x', rbox(11.1, 0.05, 0.12, 0.02, 1), GOLD, 0, 0.42, -130.4);
+  for (const x of [-6.6, 6.6]) { PR.fireBowl(w, x, 0.22, -130.4, 1.0); }
+  for (const x of [-4.6, 4.6]) PR.obelisk(w, x, 0.42, -132.6, 3.4, SST2);
+  { const R0 = 6.5; for (let i = 0; i < 24; i++) { const a = i / 24 * PI * 2; w.add('x', rbox(0.5, 0.03, 1.6, 0.01, 1), i % 2 ? GOLD : 0x1d4ed8, Math.sin(a) * R0, 0.015, -114 + Math.cos(a) * R0, 0, a, 0); } w.add('x', torus(0.08, 64), GOLD, 0, 0.02, -114, PI / 2, 0, 0, 7.4, 7.4, 0.4); w.add('x', torus(0.08, 64), GOLD, 0, 0.02, -114, PI / 2, 0, 0, 5.6, 5.6, 0.4);
+    w.add('x', rcyl(1.6, 0.03, 0.01, 40), GOLD, 0, 0.005, -114); for (let i = 0; i < 12; i++) { const a = i / 12 * PI * 2; w.add('x', rbox(0.18, 0.03, 1.4, 0.01, 1), 0xf59e0b, Math.sin(a) * 2.5, 0.01, -114 + Math.cos(a) * 2.5, 0, a, 0); } }
+  for (const x of [-17.6, 17.6]) for (const z of [-108, -124]) { PR.pillar(w, x, 0, z, 12, SST, { r: 0.5 }); w.add('x', rbox(1.4, 0.18, 1.4, 0.03, 1), GOLD, x, 6.2, z); }
+  for (const [x, z, ry] of [[-17.8, -100.5, PI / 2], [17.8, -100.5, -PI / 2], [-17.8, -131, PI / 2], [17.8, -131, -PI / 2]]) PR.jackal(w, x, 0, z, ry, 0.9);
+  for (const [x, z] of [[-14.5, -98.5], [14.5, -98.5], [-17.6, -116], [17.6, -116]]) PR.fireBowl(w, x, 0, z, 0.9, 0xff9a3c, Math.abs(z + 116) < 1);
+  for (const [x, z] of [[-12.5, -139], [12.5, -139], [-3.5, -139.2], [3.5, -139.2]]) PR.urn(w, x, 0, z, 0.9, pick([0x1d4ed8, 0xb45309, 0x0e7490]));
   PR.stairs(w, 0, 0, -133, PI, 3, 0.4, 0.9, 6, SST2); w.slab('m', SST2, 0, 0, -137.2, 6, 1.2, 3, 0.1); w.add('x', sph(24), 0xd4a017, 0, 1.2, -137.2, 0, 0, 0, 0.8, 0.1, 0.8);
   w.relicPos = [0, 2.6, -137.2]; w.bossSpec = { type: 'mummy', x: 0, y: 0, z: -116, yaw: 0, arena: [-18, -131, 18, -97] };
   w.talk(-6, -99, 6, -94.5, 'vintage', '"Behold, MECHA-MUMMY VINTAGE! Wrapped in only the finest bandages. Mwahaha... *cough* ...sand."');
-  w.coinRing(0, 0, -114, 7, 16); w.heartP(-18, 0, -106); w.heartP(18, 0, -124); w.evidence(-18.5, 0, -138); w.cp(0, 0, -96, PI);
+  w.coinRing(0, 0, -114, 7, 16); w.heartP(-18, 0, -106); w.heartP(15.6, 0, -124); w.evidence(-18.5, 0, -138); w.cp(0, 0, -96, PI);
   room(w, 22, -132, 46, -126, 5, { W: [[-132, -126, 5]], E: [[-132, -126, 5]] }); PR.ground(w, 20, -132, 46, -126, 0, floorF); for (const x of [26, 34, 42]) { PR.torchSconce(w, x, 2.8, -131.4, 0); PR.torchSconce(w, x + 4, 2.8, -126.6, PI); }
   PR.ground(w, 46, -150, 74, -108, 0, sandF, { bump: 0.2 }); w.solid(45, 0, -151, 75, 14, -150, { nocam: true }); w.solid(74, 0, -151, 75, 14, -107, { nocam: true }); w.solid(45, 0, -108, 75, 14, -107, { nocam: true });
   w.solid(45, 0, -150, 46, 14, -132, { nocam: true }); w.solid(45, 0, -126, 46, 14, -108, { nocam: true });

@@ -16,8 +16,8 @@ export function dropPlank(g, p, remote) { if (p.st !== 'ok') { if (remote && p.s
 export function stepTraps(dt, g) { const w = g.world, me = g.me, T = g.T; const alive = me.respawnT <= 0 && me.caughtT <= 0;
   // ---- boulders ----
   for (const b of w.boulders) { const tz = b.trig;
-    if (b.st === 'wait') { if (alive && me.x > tz[0] && me.x < tz[2] && me.z > tz[1] && me.z < tz[3] && Math.abs(me.y - b.path[0][1]) < 6) triggerBoulder(g, b); }
-    else if (b.st === 'rumble') { b.t += dt; b.obj.position.x = b.x + Math.sin(b.t * 60) * 0.06; if (b.t > b.delay) { b.st = 'roll'; b.t = 0; } }
+    if (b.st === 'wait') { const inT = alive && me.x > tz[0] && me.x < tz[2] && me.z > tz[1] && me.z < tz[3] && Math.abs(me.y - b.path[0][1]) < 6; if (inT && !b.wasIn) triggerBoulder(g, b); b.wasIn = inT; } // only re-arms once you step out of the trigger
+    else if (b.st === 'rumble') { b.wasIn = true; b.t += dt; b.obj.position.x = b.x + Math.sin(b.t * 60) * 0.06; if (b.t > b.delay) { b.st = 'roll'; b.t = 0; } }
     else if (b.st === 'roll') { const q = b.path[b.i + 1]; if (!q) { b.st = 'crash'; b.t = 0; sfx('boom'); g.fx.puff(b.x, b.y - b.r + 0.3, b.z, 22, 0xd6d3d1); g.cam.shake = 0.5; }
       else { const dx = q[0] - b.x, dy = q[1] + b.r - b.y, dz = q[2] - b.z, d = Math.hypot(dx, dy, dz); const st = b.sp * dt; if (d <= st) { b.x = q[0]; b.y = q[1] + b.r; b.z = q[2]; b.i++; } else { b.x += dx / d * st; b.y += dy / d * st; b.z += dz / d * st; }
         b.obj.position.set(b.x, b.y, b.z); if (b.look === 'cart') { b.obj.rotation.y = Math.atan2(dx, dz); b.obj.rotation.z = Math.sin(g.T * 30) * 0.03; } else { const ax = new THREE.Vector3(dz, 0, -dx).normalize(); b.obj.rotateOnWorldAxis(ax, st / b.r); } if (Math.random() < 0.4) g.fx.puff(b.x, b.y - b.r, b.z, 2, 0xd6d3d1); g.cam.shake = Math.max(g.cam.shake, Math.max(0, 0.25 - Math.hypot(me.x - b.x, me.z - b.z) * 0.012));

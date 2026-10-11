@@ -35,7 +35,8 @@ BUILD.hub = (w) => { w.env = Object.assign({}, ENV.museum); w.music = 'hub'; w.c
   // treasure cases along the side walls
   LEVELS.forEach((L, li) => { const side = li % 2 ? 1 : -1, zc = -14 + Math.floor(li / 2) * 10 + (li === 4 ? 0 : 0); const xw = side * 21.6;
     w.add('m', rbox(1.4, 1.0, 8.6, 0.08, 1), 0x7c4a1e, xw, 0.5, zc); w.solid(xw - 0.7, 0, zc - 4.3, xw + 0.7, 1.0, zc + 4.3); w.add('e', rbox(1.2, 1.0, 8.4, 0.05, 1), 0xe0f2fe, xw, 1.5, zc); w.add('x', rbox(1.3, 0.06, 8.5, 0.02, 1), 0xd4a017, xw, 2.02, zc);
-    const got = S.treasures[L.id] || []; for (let k = 0; k < 5; k++) { const z = zc - 3.4 + k * 1.7; w.add('g', rcyl(0.25, 0.06, 0.02, 16), 0xfef3c7, xw, 1.0, z); if (got.includes(k)) { w.add('x', sph(14), [0xffc83d, 0x22d3ee, 0xf472b6, 0x4ade80, 0xa78bfa][k], xw, 1.35, z, 0, 0, 0, 0.22, 0.28, 0.22); w.add('l', sph(8), 0xfff7c2, xw, 1.65, z, 0, 0, 0, 0.06, 0.06, 0.06, 0.6); } else w.add('m', sph(10), 0x9ca3af, xw, 1.2, z, 0, 0, 0, 0.08); }
+    const got = S.treasures[L.id] || []; for (let k = 0; k < 5; k++) { const z = zc - 3.4 + k * 1.7; w.add('g', rcyl(0.25, 0.06, 0.02, 16), 0xfef3c7, xw, 1.0, z); w.add('x', torus(0.02, 20), 0xd4a017, xw, 1.06, z, PI / 2, 0, 0, 0.26, 0.26, 1); if (got.includes(k)) { caseTreasure(w, L.id, k, xw, 1.08, z); w.add('l', sph(8), 0xfff7c2, xw, 1.75, z, 0, 0, 0, 0.05, 0.05, 0.05, 0.6); } else w.add('m', sph(10), 0x9ca3af, xw, 1.2, z, 0, 0, 0, 0.08); }
+    caseDress(w, L, li, xw, zc, side);
     const lab = textGeo(L.place.toUpperCase(), 0.22, 0.05); if (lab) w.add('g', lab, 0x7c2d12, xw - side * 0.75, 0.4, zc, 0, -side * PI / 2, 0);
     w.kiosks.push({ id: 'treasures:' + L.id, x: xw - side * 1.6, y: 0, z: zc, r: 2.2, dy: 2.5, label: `🏺 ${L.place} treasures (${got.length}/5)`, fn: (app) => app.openKiosk('treasures', L.id) }); });
   // dino skeleton centrepiece + rope barrier
@@ -79,3 +80,27 @@ export function jeep(w, x, y, z, ry = 0, col = 0x65a30d) { const T = w.tf(x, y, 
   [-1, 1].forEach((s) => [-1, 1].forEach((b) => { T.add('m', rcyl(0.48, 0.38, 0.12, 24), 0x1f2937, s * 1.15, 0.48, b * 1.45, 0, 0, PI / 2); T.add('x', rcyl(0.24, 0.4, 0.05, 16), 0xd1d5db, s * 1.16, 0.48, b * 1.45, 0, 0, PI / 2); }));
   T.add('m', rcyl(0.48, 0.3, 0.12, 24), 0x1f2937, 0, 1.0, -2.3, PI / 2, 0, 0); T.add('f', rbox(2.0, 0.5, 1.4, 0.2, 2), 0x7c4a1e, 0, 1.3, -1.0); T.add('l', sph(10), 0xfff4c0, -0.8, 0.9, 2.22, 0, 0, 0, 0.18, 0.18, 0.08, 1); T.add('l', sph(10), 0xfff4c0, 0.8, 0.9, 2.22, 0, 0, 0, 0.18, 0.18, 0.08, 1);
   T.add('x', torus(0.08, 24), 0x374151, -0.5, 1.9, 0.9, -0.5, 0, 0, 0.35, 0.35, 0.35); T.solid(-1.2, 0, -2.3, 1.2, 1.6, 2.3); }
+
+// ---- museum treasure cases: themed backdrop, brass frame + legs, spotlights, end dioramas, and real little treasure models ----
+function caseDress(w, L, li, xw, zc, side) { const col = parseInt(L.col.slice(1), 16), back = xw + side * 0.95, ry = -side * PI / 2;
+  w.add('m', rbox(0.12, 2.6, 9.2, 0.05, 1), shade(col, 0.45), back, 2.6, zc); w.add('x', rbox(0.16, 0.12, 9.3, 0.03, 1), 0xd4a017, back, 3.95, zc); w.add('x', rbox(0.16, 0.12, 9.3, 0.03, 1), 0xd4a017, back, 1.25, zc);
+  const tg = textGeo(L.place.toUpperCase(), 0.3, 0.06); if (tg) w.add('x', tg, 0xfde68a, back - side * 0.08, 3.5, zc, 0, ry, 0);
+  for (const dz of [-4.25, 4.25]) for (const dx of [-0.6, 0.6]) w.add('x', cyl(10), 0xd4a017, xw + dx, 0, zc + dz, 0, 0, 0, 0.05, 2.02, 0.05);
+  for (const y of [1.0, 2.0]) for (const dx of [-0.62, 0.62]) w.add('x', rbox(0.06, 0.06, 8.6, 0.02, 1), 0xd4a017, xw + dx, y, zc);
+  for (const dz of [-2.6, 0, 2.6]) { w.add('x', cyl(8), 0x374151, xw, 3.2, zc + dz, 0, 0, 0, 0.02, 1.6, 0.02); w.add('x', cone(16), 0x374151, xw, 3.0, zc + dz, PI, 0, 0, 0.2, 0.28, 0.2); w.add('l', sph(10), 0xfff7d6, xw, 2.85, zc + dz, 0, 0, 0, 0.1, 0.05, 0.1, 1.2); }
+  const ez = [zc - 4.0, zc + 4.0];
+  if (L.id === 'jungle') { for (const z of ez) { for (let i = 0; i < 3; i++) w.add('s', leaf(), 0x16a34a, xw + (i - 1) * 0.2, 1.05, z, -0.9, i * 2, 0, 0.35, 0.5, 0.35); } }
+  if (L.id === 'caves') for (const z of ez) { for (let i = 0; i < 4; i++) w.add('l', cyl(6, 0.0), [0xa78bfa, 0x67e8f9, 0xf0abfc, 0x93c5fd][i], xw + (i - 1.5) * 0.18, 1.02, z + (i % 2) * 0.12, (i - 1.5) * 0.25, 0, 0.15, 0.07, 0.3 + i * 0.06, 0.07, 0.6); w.add('m', blobGeo(li * 9 + 3, 0.25, 1), 0x6b5b7b, xw, 1.02, z, 0, 0, 0, 0.28, 0.14, 0.24); }
+  if (L.id === 'tunnels') for (const z of ez) { w.add('x', rbox(0.6, 0.03, 0.05, 0.01, 1), 0x9ca3af, xw, 1.03, z - 0.1); w.add('x', rbox(0.6, 0.03, 0.05, 0.01, 1), 0x9ca3af, xw, 1.03, z + 0.1); w.add('g', rbox(0.22, 0.16, 0.34, 0.04, 1), 0x0f766e, xw, 1.12, z); w.add('x', gear(8), 0xb45309, xw, 1.4, z, 0, PI / 2, 0, 0.14, 0.14, 0.04); }
+  if (L.id === 'pyramid') for (const z of ez) { w.add('m', cone(4), 0xe4c88e, xw, 1.02, z, 0, PI / 4, 0, 0.32, 0.4, 0.32); w.add('x', cone(4), 0xfacc15, xw, 1.34, z, 0, PI / 4, 0, 0.08, 0.1, 0.08); w.add('m', sph(12), 0xe9c98a, xw + 0.25, 1.0, z + 0.15, 0, 0, 0, 0.2, 0.05, 0.16); }
+  if (L.id === 'finale') for (const z of ez) { w.add('m', sph(12), 0xffffff, xw, 1.1, z, 0, 0, 0, 0.3, 0.12, 0.22); w.add('g', sph(16), 0x7e22ce, xw, 1.55, z, 0, 0, 0, 0.13, 0.13, 0.3); w.add('x', rbox(0.06, 0.05, 0.12, 0.01, 1), 0xfacc15, xw, 1.38, z); }
+}
+function caseTreasure(w, id, k, x, y, z) { const G = 0xd4a017;
+  if (id === 'caves') { const c = [0xa78bfa, 0x67e8f9, 0xf0abfc, 0x93c5fd, 0xfde047][k]; for (let i = 0; i < 3; i++) w.add('l', cyl(6, 0.0), c, x + (i - 1) * 0.07, y, z, 0, 0, (i - 1) * 0.35, 0.06, 0.3 + (i === 1 ? 0.15 : 0), 0.06, 0.7); w.add('x', rcyl(0.12, 0.04, 0.01, 12), G, x, y, z); return; }
+  if (id === 'tunnels') { if (k % 2 === 0) { w.add('x', torus(0.03, 24), G, x, y + 0.22, z, 0, PI / 2, 0, 0.17, 0.17, 1); w.add('m', rcyl(0.15, 0.03, 0.01, 20), 0xfef3c7, x, y + 0.22, z, 0, 0, PI / 2); w.add('x', rbox(0.02, 0.1, 0.01, 0.005, 1), 0x111827, x - 0.03, y + 0.25, z); w.add('x', torus(0.015, 12), G, x, y + 0.42, z, 0, PI / 2, 0, 0.04, 0.04, 1); } else { w.add('x', gear(10), [0xb45309, 0xd4a017][k % 2], x, y + 0.2, z, 0, PI / 2, 0, 0.2, 0.2, 0.05); w.add('x', sph(8), 0x9ca3af, x, y + 0.2, z, 0, 0, 0, 0.04); } return; }
+  if (id === 'pyramid') { if (k === 0 || k === 3) { w.add('g', sph(16), k ? 0x0e7490 : 0x15803d, x, y + 0.08, z, 0, 0, 0, 0.12, 0.08, 0.17); w.add('x', rbox(0.01, 0.04, 0.3, 0.005, 1), G, x, y + 0.14, z); for (const s of [-1, 1]) w.add('x', cyl(6), G, x + s * 0.12, y + 0.04, z, 0, 0, s * 1.1, 0.012, 0.14, 0.012); }
+    else if (k === 1) { w.add('x', torus(0.03, 20), G, x, y + 0.38, z, 0, PI / 2, 0, 0.08, 0.1, 1); w.add('x', rbox(0.05, 0.3, 0.05, 0.01, 1), G, x, y + 0.15, z); w.add('x', rbox(0.05, 0.05, 0.24, 0.01, 1), G, x, y + 0.27, z); }
+    else { w.add('x', cone(4), G, x, y, z, 0, PI / 4, 0, 0.16, 0.26, 0.16); w.add('l', sph(8), 0x22d3ee, x, y + 0.27, z, 0, 0, 0, 0.03, 0.03, 0.03, 1); } return; }
+  if (id === 'finale') { if (k % 2 === 0) { w.add('g', sph(16), [0x7e22ce, 0xdb2777, 0x22c55e][k / 2], x, y + 0.3, z, 0, 0, 0, 0.13, 0.15, 0.13); w.add('m', rbox(0.07, 0.06, 0.07, 0.01, 1), 0x7c4a1e, x, y + 0.08, z); for (const s of [-1, 1]) w.add('x', cyl(4), 0xe5e7eb, x + s * 0.04, y + 0.11, z, 0, 0, s * 0.3, 0.004, 0.12, 0.004); }
+    else { w.add('x', sph(10), G, x, y + 0.22, z, 0, 0, 0, 0.04); for (let i = 0; i < 3; i++) w.add('g', rbox(0.035, 0.18, 0.01, 0.01, 1), 0x9333ea, x, y + 0.22, z, i * 2.1, PI / 2, 0); w.add('x', cyl(6), 0x374151, x, y, z, 0, 0, 0, 0.012, 0.22, 0.012); } return; }
+  w.add('x', sph(14), [0xffc83d, 0x22d3ee, 0xf472b6, 0x4ade80, 0xa78bfa][k], x, y + 0.27, z, 0, 0, 0, 0.22, 0.28, 0.22); }

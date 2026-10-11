@@ -17,7 +17,7 @@ export function kit(w) {
     evidence(x, y, z) { return E({ k: 'evidence', x, y: y + 1.0, z, n: nE++ }); },
     heartP(x, y, z) { return E({ k: 'heart', x, y: y + 0.8, z }); },
     cp(x, y, z, yaw = 0, side = 2.6) { w.checkpoints.push({ x, y, z, yaw, side }); }, // trigger on the path; the flag stands `side` metres to the right of it
-    hook(x, y, z, post = true) { w.hooks.push({ x, y, z }); if (post) { w.add('m', cyl(10), 0x6b4423, x, y + 0.45, z, 0, 0, 0, 0.06, 0.6, 0.06); } },
+    hook(x, y, z, post = true, land = null) { w.hooks.push({ x, y, z, land }); if (post) { w.add('m', cyl(10), 0x6b4423, x, y + 0.45, z, 0, 0, 0, 0.06, 0.6, 0.06); } },
     animal(type, x, y, z, o) { w.enemies.push({ type, x, y, z, o }); },
     officers(list, bounds, o = {}) { w.officerSpecs.push({ list, bounds, o }); },
     talk(x0, z0, x1, z1, who, msg, o = {}) { w.talks.push(Object.assign({ min: [x0, -50, z0], max: [x1, 200, z1], who, msg }, o)); },

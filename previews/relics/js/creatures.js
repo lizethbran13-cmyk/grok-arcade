@@ -107,8 +107,14 @@ export function makeMech(type) { const root = new THREE.Group(), body = new THRE
     b.x.add(rcyl(0.35, 1.2, 0.08, 24), 0x1f2937, 0, 2.4, 1.2); b.x.add(rcyl(0.5, 0.25, 0.08, 24), brass, 0, 3.5, 1.2); b.g.add(P.rbox, Bc, 0, 2.6, -1.6, 0, 0, 0, 2.4, 2.0, 1.8);
     for (let i = 0; i < 3; i++) [-1, 1].forEach((s) => b.x.add(rcyl(0.55, 0.2, 0.06, 28), 0xdc2626, s * 1.15, 0.55, -1.4 + i * 1.2, 0, 0, PI / 2)); b.x.add(cone(24), 0x9ca3af, 0, 0.45, 2.4, PI / 2 + 0.6, 0, 0, 1.1, 0.7, 0.5); }
   else if (type === 'zeppelin') { // hover-pod under a little purple balloon
-    b.g.add(P.sphere, A, 0, 1.4, 0, 0, 0, 0, 1.3, 0.9, 1.3); b.x.add(P.torus, brass, 0, 1.3, 0, PI / 2, 0, 0, 1.3, 1.3, 0.8); b.g.add(P.sphere, Bc, 0, 5.2, 0, 0, 0, 0, 1.9, 1.3, 2.6);
-    for (let i = 0; i < 4; i++) b.m.add(P.cyl, 0x6b4423, Math.cos(i * PI / 2 + 0.8) * 1.1, 2.2, Math.sin(i * PI / 2 + 0.8) * 1.1, 0, 0, 0, 0.03, 2.4, 0.03);
+    b.g.add(P.sphere, A, 0, 1.4, 0, 0, 0, 0, 1.3, 0.9, 1.3); b.x.add(P.torus, brass, 0, 1.3, 0, PI / 2, 0, 0, 1.3, 1.3, 0.8); const env = new THREE.Color(), lo = new THREE.Color(0x6b21a8), hi = new THREE.Color(0xfbcfe8), st = new THREE.Color(0xc026d3);
+    b.g.addFn(new THREE.SphereGeometry(1, 48, 32), (c, x, y, z) => { const v = (y - 5.2) / 1.5, gore = Math.cos(Math.atan2(x, y - 5.2) * 6) > 0; env.set(gore ? Bc : 0xd946ef); if (v < 0) c.copy(env).lerp(lo, Math.min(1, -v * 0.6)); else c.copy(env).lerp(hi, v * v * 0.35); }, 0, 5.2, 0, 0, 0, 0, 2.1, 1.5, 2.7);
+    b.x.add(P.torus, brass, 0, 5.2, 0, PI / 2, 0, 0, 2.12, 2.72, 0.5); b.x.add(P.torus, brass, 0, 4.0, 0, PI / 2, 0, 0, 1.25, 1.6, 0.5); b.x.add(P.sphere, brass, 0, 6.62, 0, 0, 0, 0, 0.3, 0.16, 0.3);
+    [-1, 1].forEach((s) => b.g.add(P.rboxS, 0x9333ea, 0, 5.3 + (s > 0 ? 0.9 : 0), -2.5, 0, 0, s > 0 ? 0 : PI / 2, 0.08, 1.2, 1.1)); b.g.add(P.rboxS, 0x9333ea, 0, 5.2, -2.5, 0, 0, PI / 2, 0.08, 1.2, 1.1);
+    for (let i = 0; i < 8; i++) { const a = i * PI / 4 + 0.39, x0 = Math.cos(a) * 1.25, z0 = Math.sin(a) * 1.25, x1 = Math.cos(a) * 1.5, z1 = Math.sin(a) * 1.5, dx = x1 - x0, dz = z1 - z0, L = Math.hypot(dx, 2.0, dz); b.m.add(P.cyl, 0xc2a26f, (x0 + x1) / 2, 2.95, (z0 + z1) / 2, dz / L, 0, -dx / L, 0.045, L, 0.045); }
+    b.m.add(torus(0.08, 40), 0x8a5a2b, 0, 1.95, 0, PI / 2, 0, 0, 1.45, 1.45, 1); b.m.add(torus(0.08, 40), 0x8a5a2b, 0, 0.75, 0, PI / 2, 0, 0, 1.3, 1.3, 1);
+    for (let i = 0; i < 14; i++) { const a = i / 14 * PI * 2; b.m.add(P.cyl, i % 2 ? 0xa16207 : 0x8a5a2b, Math.cos(a) * 1.38, 0.75, Math.sin(a) * 1.38, 0, 0, 0, 0.05, 1.2, 0.05); }
+    b.x.add(rcyl(0.18, 0.5, 0.04, 16), 0x9ca3af, 0, 1.3, -1.45, PI / 2, 0, 0); parts.prop = (() => { const m = MB(); for (let i = 0; i < 3; i++) m.g.add(P.rboxS, 0xf0abfc, Math.cos(i * 2.094) * 0.45, Math.sin(i * 2.094) * 0.45, 0, 0, 0, i * 2.094, 0.9, 0.16, 0.05); m.x.add(P.sphere, brass, 0, 0, 0, 0, 0, 0, 0.12); return toGroup(m); })(); parts.prop.position.set(0, 1.3, -1.95); body.add(parts.prop);
     [-1, 1].forEach((s) => { b.x.add(rcyl(0.3, 0.6, 0.05, 20), 0x9ca3af, s * 1.4, 1.2, -0.3, PI / 2, 0, 0); b.l.add(P.sphere, 0x67e8f9, s * 1.4, 1.2, -0.95, 0, 0, 0, 0.22, 0.22, 0.1, 1.2); }); }
   else { // walker pod on two legs
     b.g.add(P.sphere, A, 0, 2.0, 0, 0, 0, 0, 1.25, 1.0, 1.15); b.x.add(P.torus, brass, 0, 1.9, 0, PI / 2, 0, 0, 1.25, 1.2, 0.7); b.x.add(rcyl(0.25, 1.0, 0.06, 20), 0x374151, -0.7, 2.6, -0.6); b.x.add(rcyl(0.38, 0.2, 0.06, 20), brass, -0.7, 3.6, -0.6);
@@ -125,7 +131,7 @@ export function makeMech(type) { const root = new THREE.Group(), body = new THRE
   body.add(toGroup(b)); return Object.assign({ root, body, type, t: 0 }, parts); }
 export function animMech(r, dt, st) { r.t += dt; const t = r.t; const walk = st === 'move' || st === 'attack' ? 1 : 0.2;
   if (r.legs) r.legs.forEach((g, i) => { g.rotation.x = Math.sin(t * 6 + i * PI) * 0.5 * walk; }); if (r.claws) r.claws.forEach((g, i) => { g.rotation.x = st === 'attack' ? -0.6 + Math.sin(t * 10 + i) * 0.4 : Math.sin(t * 2 + i) * 0.15; });
-  if (r.rotor) r.rotor.rotation.y += dt * (st === 'tired' ? 2 : 18); if (r.drill) r.drill.rotation.z += dt * (st === 'tired' ? 1 : 16);
+  if (r.rotor) r.rotor.rotation.y += dt * (st === 'tired' ? 2 : 18); if (r.drill) r.drill.rotation.z += dt * (st === 'tired' ? 1 : 16); if (r.prop) r.prop.rotation.z += dt * (st === 'tired' ? 1.5 : 14);
   r.body.position.y = r.type === 'zeppelin' ? Math.sin(t * 2) * 0.3 + 0.6 : Math.abs(Math.sin(t * 6)) * 0.08 * walk;
   r.body.rotation.z = st === 'tired' ? Math.sin(t * 5) * 0.12 : 0; r.vintage.rotation.y = Math.sin(t * 2) * 0.4; r.vintage.position.y += ((st === 'tired' ? -0.25 : 0) + (r.vintage.userData.y0 ??= r.vintage.position.y) - r.vintage.position.y) * Math.min(1, dt * 5); }
 // ---------------------------------------------------------------- relics, pickups, trap parts

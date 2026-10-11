@@ -13,7 +13,7 @@ import { Game } from './game.js';
 import { Player } from './player.js';
 import { $ } from './util.js';
 import { loadFont } from './text3d.js';
-const app = window.__lr = { state: 'boot', paused: true, game: null, ready: false, simSpeed: 1 };
+const app = window.__lr = { IN, state: 'boot', paused: true, game: null, ready: false, simSpeed: 1 };
 function setLoad(p, t) { const b = $('loadBar'); if (b) b.style.width = p + '%'; if (t) $('loadTxt').textContent = t; }
 async function boot() {
   setLoad(15, 'Dusting off the map…');

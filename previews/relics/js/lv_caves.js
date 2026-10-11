@@ -50,6 +50,16 @@ BUILD.caves = (w) => { w.music = 'caves'; w.killY = -12; w.camDist = 4.6; w.dark
   PR.mossyBlock(w, 16, -1.2, -38, 3, 1.5, 3, ROCK2); w.treasure(16, 0.3, -38); w.coinLine(9, 0.2, -35.6, 9, 0.2, -40.4, 3);
   w.hook(0, 7.2, -38, false); w.add('m', cyl(8), 0xc2a26f, 0, 9.6, -38, 0, 0, 0, 0.04, 2.4, 0.04); PR.stalactite(w, 0, 12, -38, 2);
   w.hint(-4, -33, 4, -28, '🪢 A golden ring over the water: run and tap WHIP to swing. Or hop the stones on the right!'); w.coinLine(0, 1.4, -35, 0, 1.4, -41, 4);
+  // ---- grotto river detail: depth shading (deep channel, shallow lips), glowing current streaks, ripples, foam, bank rocks + crystal clusters, pebbles, moss ----
+  w.add('m', rbox(44, 0.05, 3.2, 0.02, 1), 0x0c4a6e, 0, -0.62, -38); w.add('m', rbox(44, 0.05, 1.2, 0.02, 1), 0x7dd3fc, 0, -0.43, -34.7); w.add('m', rbox(44, 0.05, 1.2, 0.02, 1), 0x7dd3fc, 0, -0.43, -41.3);
+  w.add('e', rbox(44, 0.04, 2.2, 0.02, 1), 0x0369a1, 0, -0.36, -38);
+  for (let i = 0; i < 26; i++) { const x = rr(-21, 21), z = rr(-41, -35); w.add('l', rbox(rr(1.2, 3.4), 0.01, 0.07, 0.005, 1), pick([0x7dd3fc, 0xbae6fd, 0xa5f3fc]), x, -0.33, z, 0, rr(-0.06, 0.06), 0, 1, 1, 1, 0.45); }
+  for (const [x, z, r] of [[9, -35.6, 1.1], [11.5, -38, 1.1], [9, -40.4, 1.1], [16, -38, 1.7], [-6, -37, 0.8], [-14, -39.5, 0.9], [4, -40.5, 0.7], [-19, -36, 0.8]]) PR.ripples(w, x, -0.32, z, 3, r);
+  for (let x = -21; x < 21; x += 1.3) { w.add('l', sph(10), 0xf0f9ff, x + rr(-0.3, 0.3), -0.34, -34.15, 0, 0, 0, rr(0.25, 0.5), 0.04, 0.14, 0.4); w.add('l', sph(10), 0xf0f9ff, x + rr(-0.3, 0.3), -0.34, -41.85, 0, 0, 0, rr(0.25, 0.5), 0.04, 0.14, 0.4); }
+  for (const zb of [-33.6, -42.4]) for (let i = 0; i < 16; i++) { const x = rr(-21, 21); if (Math.abs(x) < 3.6 || (x > 7 && x < 13.5)) continue; PR.caveRock(w, x, 0, zb + rr(-0.5, 0.5), rr(0.35, 0.8), ROCK2); }
+  for (const [x, z, sc, c] of [[-5.6, -32.4, 1.0, 0], [-11, -31.6, 1.3, 1], [-17, -32.8, 1.1, 2], [5.4, -31.8, 0.9, 1], [18.6, -32.2, 1.2, 0], [-8.6, -43.8, 1.1, 2], [6, -44.2, 1.0, 0], [19, -43.6, 1.3, 1], [-18.5, -44, 0.9, 0]]) PR.crystal(w, x, 0, z, sc, CR[c % CR.length], c === 1);
+  for (let i = 0; i < 60; i++) { const x = rr(-21, 21), z = pick([rr(-33.8, -27), rr(-49, -42.2)]); if (Math.abs(x) < 3.2) continue; w.add('m', sph(8), mix(0x6b5b7b, 0x9d8fbf, rnd()), x, 0.02, z, rnd(), rnd() * 6, 0, rr(0.08, 0.2), rr(0.05, 0.1), rr(0.08, 0.2)); }
+  for (let i = 0; i < 14; i++) { const x = pick([-1, 1]) * rr(4, 20), z = pick([rr(-33.5, -29), rr(-47, -42.5)]); w.add('m', blobGeo((i * 7) & 63, 0.15, 1), pick([0x4d7c0f, 0x65a30d, 0x0f766e]), x, 0.01, z, 0, rnd() * 6, 0, rr(0.6, 1.3), 0.06, rr(0.5, 1.0)); }
   for (let i = 0; i < 26; i++) PR.stalactite(w, rr(-21, 21), 12, rr(-61, -11), rr(1.2, 3.2), 0x8b7aa0);
   for (const [x, z, h] of [[-16, -14, 2.6], [15, -16, 3.2], [-19, -30, 2.2], [19, -28, 2.8], [-15, -50, 3], [14, -55, 2.4], [-6, -58, 1.8], [6, -46, 1.6]]) PR.stalagmite(w, x, 0, z, h);
   crystals(w, -21, -61, 21, -11, 46, (x, z) => Math.abs(x) < 5 || (z < -33 && z > -43) || (x < -12 && x > -20 && z < -16 && z > -26));

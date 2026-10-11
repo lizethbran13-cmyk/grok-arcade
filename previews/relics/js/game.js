@@ -52,7 +52,7 @@ export class Game {
   alivePlayers() { const a = []; for (const p of this.players.values()) if (p.respawnT <= 0 && p.caughtT <= 0) a.push(p); return a; }
   toastMsg(m) { this.hud.toast(m); }
   // ------------------------------------------------ frame
-  update(dt) {
+  update(dt) { if (this.timers && this.timers.length) { const due = []; this.timers = this.timers.filter((q) => (q.t -= dt) > 0 || (due.push(q), false)); for (const q of due) q.fn(); }
     if (this.done) { this.render(dt); this.updateCam(dt); return; }
     this.T += dt; this.tally.time += dt; const w = this.world, me = this.me;
     for (const m of w.movers) { const k = 0.5 - 0.5 * Math.cos((this.T / m.period + m.phase) * PI * 2); const nx = m.base[0] + m.off[0] * k, ny = m.base[1] + m.off[1] * k, nz = m.base[2] + m.off[2] * k;
@@ -70,7 +70,7 @@ export class Game {
     for (const q of w.zonesAt(me.x, me.y + 0.3, me.z)) { if (q.type === 'hint' && !this.hints.has(q)) { this.hints.add(q); this.hud.hint(q.msg); } if (q.type === 'door' && !this.app.paused) this.act = { kind: 'door', id: q.level, label: q.label }; }
     for (const t of w.talks) if (!this.talked.has(t) && me.x > t.min[0] && me.x < t.max[0] && me.z > t.min[2] && me.z < t.max[2] && (!t.when || t.when(this))) { this.talked.add(t); this.hud.say(t.who, t.msg); if (t.fn) t.fn(this); }
     this.collectNear(me, dt); this.updateAct(inp);
-    const dg = this.actors.dangerTo(me); if (dg) { if (dg.push) me.knock(dg.push, 6); else if (dg.hurt) me.hurt(this, dg.hurt, 'hit'); }
+    const dg = this.actors.dangerTo(me); if (dg) { if (dg.gust) { const dx = me.x - dg.gust.x, dz = me.z - dg.gust.z, d = Math.hypot(dx, dz) || 1; me.vx += dx / d * 60 * dg.k * dt; me.vz += dz / d * 60 * dg.k * dt; } else if (dg.push) me.knock(dg.push, 6); else if (dg.hurt) me.hurt(this, dg.hurt, 'hit'); }
     for (const p of this.players.values()) if (!p.local) { p.remoteUpdate(dt); p.updateBlob(w); }
     if (this.host) this.actors.step(dt); else this.actors.lerpRemote(dt);
     if (this.host) this.hostLogic(dt);
@@ -136,8 +136,10 @@ export class Game {
     for (const c of cand) { const dx = c.x - p.x, dz = c.z - p.z, d = Math.hypot(dx, dz) - c.r; if (d < bd && d < R && Math.abs(c.y - p.y) < 3 && (dx * fx + dz * fz) / (Math.hypot(dx, dz) || 1) > 0.25) { bd = d; best = c; } }
     for (const lv of this.world.levers) if (!lv.on && Math.hypot(lv.x - p.x, lv.z - p.z) < R + 1.5 && Math.abs(lv.y - p.y) < 3) { best = best || { lever: lv, x: lv.x, y: lv.y + 1, z: lv.z }; }
     p.whipTo = best ? { x: best.x, y: best.y, z: best.z } : { x: p.x + fx * R, y: p.y + 1.1, z: p.z + fz * R };
-    if (best) { p.yaw = Math.atan2(best.x - p.x, best.z - p.z); setTimeout(() => { if (best.lever) this.puzzle('lever', best.lever.id); else this.dealDamage(best.id, 1, p); sfx('crack'); this.fx.burst(best.x, best.y, best.z, 0xffffff, 8, 3); }, 120); }
-    else setTimeout(() => { sfx('crack'); this.fx.burst(p.whipTo.x, p.whipTo.y, p.whipTo.z, 0xfde68a, 5, 2); }, 120); }
+    if (best) { p.yaw = Math.atan2(best.x - p.x, best.z - p.z); this.later(0.12, () => { if (best.lever) this.puzzle('lever', best.lever.id); else this.dealDamage(best.id, 1, p); sfx('crack'); this.fx.burst(best.x, best.y, best.z, 0xffffff, 8, 3); }); }
+    else this.later(0.12, () => { sfx('crack'); this.fx.burst(p.whipTo.x, p.whipTo.y, p.whipTo.z, 0xfde68a, 5, 2); }); }
+  // game-time timers (whip crack lands 0.12 s of GAME time later, so a frame hitch can never make a hit miss the boss's tired window)
+  later(t, fn) { (this.timers || (this.timers = [])).push({ t, fn }); }
   dealDamage(id, dmg, from) { if (this.host) this.actors.damage(id, dmg, from); else this.net.send({ t: 'hit', id, dmg }); }
   hookTarget(p) { const rng = p.whipRange; let best = null, bs = -1e9; const fx = Math.sin(p.yaw), fz = Math.cos(p.yaw);
     for (const h of this.world.hooks) { const dx = h.x - p.x, dy = h.y - p.y, dz = h.z - p.z, dh = Math.hypot(dx, dz), d = Math.hypot(dx, dy, dz); if (d > rng || dh < 1.0 || dy < 1.2) continue; const fr = (dx * fx + dz * fz) / (dh || 1); if (fr < -0.2) continue; const sc = fr * 4 - d * 0.3;
