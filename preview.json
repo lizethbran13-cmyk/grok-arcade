@@ -3,6 +3,15 @@
   "updated": "2026-10-11",
   "items": [
     {
+      "game": "puptown",
+      "name": "Grok Pup Town",
+      "what": "A brand new hub world: Candy's hometown! A cozy dog town with a bakery, park, groomer, fire station and Barkade, dog townsfolk, the Golden Bone mystery, fetch and agility mini-games, and co-op for 3.",
+      "stage": "building",
+      "when": "In the lab now",
+      "gname": "New hub",
+      "key": "puptown"
+    },
+    {
       "game": "arcade",
       "name": "Ratita Preview Center (live)",
       "what": "Lili's Preview Center behind the Food Court: posters, this board, the Time Jumper and bonus game #32 Chrono Courier.",
