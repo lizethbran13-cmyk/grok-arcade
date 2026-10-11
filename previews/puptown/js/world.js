@@ -52,7 +52,7 @@ export class World {
     const P = (lx, ly, lz) => [x + (lx * c + lz * sn) * s, y + ly * s, z + (-lx * sn + lz * c) * s];
     return { s, ry, P,
       add(bucket, geom, col, lx = 0, ly = 0, lz = 0, rx = 0, rry = 0, rz = 0, sx = 1, sy = sx, sz = sx, em = 0) { _m2.multiplyMatrices(base, mtx(lx, ly, lz, rx, rry, rz, sx, sy, sz)); return w._part(bucket, geom, col, _m2.clone(), em); },
-      box(bucket, col, lx, ly, lz, bw, bh, bd, r = 0.08, em = 0, seg = 2) { return this.add(bucket, rbox(bw, bh, bd, r, seg), col, lx, ly + bh / 2, lz, 0, 0, 0, 1, 1, 1, em); },
+      box(bucket, col, lx, ly, lz, bw, bh, bd, r = 0.08, em = 0, seg = 2) { if (r * s < 0.03) seg = 1; return this.add(bucket, rbox(bw, bh, bd, r, seg), col, lx, ly + bh / 2, lz, 0, 0, 0, 1, 1, 1, em); },
       solid(lx0, ly0, lz0, lx1, ly1, lz1, o) { const a = P(lx0, ly0, lz0), b = P(lx1, ly1, lz1), d = P(lx0, ly0, lz1), e = P(lx1, ly0, lz0);
         return w.solid(Math.min(a[0], b[0], d[0], e[0]), Math.min(a[1], b[1]), Math.min(a[2], b[2], d[2], e[2]), Math.max(a[0], b[0], d[0], e[0]), Math.max(a[1], b[1]), Math.max(a[2], b[2], d[2], e[2]), o); },
       // solid box + matching rounded visual (local, bottom-centred)
@@ -60,7 +60,7 @@ export class World {
     };
   }
   // world-space rounded slab with collider; x,z centre, y bottom
-  slab(bucket, col, x, y, z, w, h, d, r = 0.1, o, em = 0, seg = 2) { this.add(bucket, rbox(w, h, d, r, seg), col, x, y + h / 2, z, 0, 0, 0, 1, 1, 1, em); return o === false ? null : this.solid(x - w / 2, y, z - d / 2, x + w / 2, y + h, z + d / 2, o); }
+  slab(bucket, col, x, y, z, w, h, d, r = 0.1, o, em = 0, seg = 2) { if (r < 0.03) seg = 1; this.add(bucket, rbox(w, h, d, r, seg), col, x, y + h / 2, z, 0, 0, 0, 1, 1, 1, em); return o === false ? null : this.solid(x - w / 2, y, z - d / 2, x + w / 2, y + h, z + d / 2, o); }
   // ---- colliders ----
   solid(x0, y0, z0, x1, y1, z1, o) {
     const s = Object.assign({ min: [x0, y0, z0], max: [x1, y1, z1] }, o || {});

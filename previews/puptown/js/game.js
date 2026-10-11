@@ -60,8 +60,8 @@ export class Game {
   // ------------------------------------------------ townsfolk
   buildNPCs() { const w = this.world; this.npcs = NPCS.map((d) => { const L = d.look; let rig, kind = 'dog', markY = 1.4;
       if (L.rat) { rig = makeRat(L.rat, L.hat || 'none', { pack: false, extras: L.extras || [], noBlaster: true }); rig.root.scale.setScalar(1.35); kind = 'rat'; markY = 1.6; }
-      else if (L.martina) { rig = makeMartina(); kind = 'martina'; rig.root.scale.multiplyScalar(1.15); markY = 2.3; }
-      else if (L.kitten) { rig = makeKitten(); kind = 'kitten'; rig.root.scale.setScalar(1.4); markY = 1.3; }
+      else if (L.martina) { rig = makeMartina(); kind = 'martina'; rig.root.scale.multiplyScalar(0.27); markY = 1.0; /* desert tortoise: knee-high to the 2.1 m visitor */ }
+      else if (L.kitten) { rig = makeKitten(); kind = 'kitten'; rig.root.scale.setScalar(0.8); markY = 0.9; }
       else { rig = makePup(L.b, { hat: L.hat, hatC: L.hatC, neck: L.neck, neckC: L.neckC, glasses: L.glasses, tint: L.tint, seed: d.id.length * 13 + d.id.charCodeAt(0) }); rig.root.scale.setScalar(L.s || 1); markY = (1.15 + (L.b === 'greatdane' ? 0.5 : 0)) * (L.s || 1); }
       const g = w.ground(d.at[0], d.at[1], 20, 0.1).y; const y = d.y != null ? d.y + (d.y < 1 && d.region !== 'out' ? 0.12 : 0) : (g > -50 ? g : 0);
       const n = { d, id: d.id, rig, kind, x: d.at[0], y, z: d.at[1], yaw: d.at[2], x0: d.at[0], z0: d.at[1], y0: y, yaw0: d.at[2], region: d.region, wp: 0, markY };
@@ -82,7 +82,7 @@ export class Game {
     if (id === 'rex') return !S.talks.rex; if (id === 'dash') return !S.talks.dash; if (['luna', 'pirat', 'snowie'].includes(id)) return !S.rats[id];
     if (['pepper', 'rascal', 'fifi'].includes(id)) return q >= 1 && q < 3 && !(S.sus[id] | 0); if (id === 'suds') return (S.sus.rascal | 0) === 1; if (id === 'ace') return (S.sus.fifi | 0) === 1; return false; }
   updateNPCs(dt) { const me = this.me, T = this.T;
-    for (const n of this.npcs) { const vis = !n.hidden && this.vis.has(n.region === 'out' ? 'out' : n.region); n.rig.root.visible = vis; n.mark.visible = false; if (!vis) continue;
+    for (const n of this.npcs) { const vis = !n.hidden && this.vis.has(n.region === 'out' ? 'out' : n.region) && !(n.region === 'out' && this.region !== 'out' && (me.x - n.x) ** 2 + (me.z - n.z) ** 2 > 625); n.rig.root.visible = vis; n.mark.visible = false; if (!vis) continue;
       const near = Math.hypot(me.x - n.x, me.z - n.z) < 4 && Math.abs(me.y - n.y) < 3; let sp = 0; const talking = this.chat && this.chat.npc === n;
       if (n.d.walk && !talking && !near) { const p = n.d.walk[n.wp]; const dx = p[0] - n.x, dz = p[1] - n.z, d = Math.hypot(dx, dz); const v = n.id === 'lola' ? 4.5 : n.kind === 'martina' ? 0.8 : 2.4;
         if (d < 0.3) n.wp = (n.wp + 1) % n.d.walk.length; else { n.x += dx / d * v * dt; n.z += dz / d * v * dt; let t = Math.atan2(dx, dz) - n.yaw; while (t > PI) t -= PI * 2; while (t < -PI) t += PI * 2; n.yaw += t * Math.min(1, dt * 8); sp = v; }
@@ -101,7 +101,7 @@ export class Game {
   // ------------------------------------------------ dynamic bits
   buildDyn() { const w = this.world, s = w.spots;
     // golden biscuits (instanced, spinning bone-shaped cookies)
-    { const b = MB(); b.g.add(P.capsule, 0xffc928, 0, 0, 0, 0, 0, PI / 2, 0.5, 0.9, 0.5); [-1, 1].forEach((x) => [-1, 1].forEach((y) => b.g.add(P.sphere, 0xffc928, x * 0.62, y * 0.28, 0, 0, 0, 0, 0.36))); const geo = toGroup(b).children[0].geometry;
+    { const b = MB(); b.g.add(capsule(14), 0xffc928, 0, 0, 0, 0, 0, PI / 2, 0.5, 0.9, 0.5); [-1, 1].forEach((x) => [-1, 1].forEach((y) => b.g.add(sph(14), 0xffc928, x * 0.62, y * 0.28, 0, 0, 0, 0, 0.36))); const geo = toGroup(b).children[0].geometry;
       this.biscIM = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ color: 0xffd23f, metalness: 0.8, roughness: 0.25, emissive: 0x7a5200, emissiveIntensity: 0.45 }), w.gears.length); this.biscIM.castShadow = true; this.biscIM.frustumCulled = false; this.add(this.biscIM); }
     this.biscGot = new Set(S.gears); this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion(); this._e = new THREE.Euler(); this._s = new THREE.Vector3(); this._p = new THREE.Vector3();
     // Candy's squeaky toys (pink bones)
@@ -262,7 +262,7 @@ export class Game {
     else if (o.kind === 'wardrobe') ui.wardrobe();
     else if (o.kind === 'bus') { if (this.busSt.stop !== this.stopMap[o.stop]) { this.toastMsg('🚌 Not here yet! Watch for the wiggly yellow bus.'); return; } const to = this.world.spots.stops[1 - o.stop]; sfx('honk'); ui.fade(() => { this.me.place([to[0], 0.1, to[1] + (o.stop ? 1.6 : -1.6)], o.stop ? 0 : PI); this.cam.snap = true; this.cam.yaw = this.me.yaw; }); if (!S.flags.bus) { S.flags.bus = 1; persist(); this.badge('bus'); } this.toastMsg('🚌 Wheee! Next stop: ' + (o.stop ? 'Paw Park!' : 'Town Hall!')); }
     else if (o.kind === 'book') { S.flags.book = S.flags.book ? 0 : 1; persist(); sfx('door'); if (S.flags.book) this.toastMsg('📕 *click* The bookcase slides open!'); }
-    else if (o.kind === 'plant') { if (S.plants.includes(o.i)) return; S.plants.push(o.i); persist(); sfx('part'); this.fx.burst(o.x, 1, o.z + 1, 0xffc928, 14, 4); this.toastMsg(`🌻 Sunflower planted! (${S.plants.length}/4)` + (S.plants.length >= 4 ? ' Tell Martina!' : '')); }
+    else if (o.kind === 'plant') { if (S.plants.includes(o.i)) return; S.plants.push(o.i); persist(); sfx('part'); this.fx.burst(o.x, 1, o.z + 1, 0xffc928, 14, 4); this.toastMsg(`🌻 Sunflower planted! (${S.plants.length}/4)` + (S.plants.length >= 4 ? ' Tell Torty (Martina)!' : '')); }
     else if (o.kind === 'mg') { if (o.id === 'fetch') { if (this.fetch) this.endFetch(true); else this.startFetch(); } else if (o.id === 'agility') { if (this.agil) { this.endAgility(true); this.toastMsg('🏁 Run cancelled'); } else this.startAgility(); } else ui.minigame(o.id, this); }
     else if (o.kind === 'fun') { this._fun = ((this._fun | 0) + 1) % o.msgs.length; this.toastMsg(o.msgs[this._fun]); sfx(o.sfx || 'squeak'); } }
   onSpin(p) { if (Math.random() < 0.5) this.fx.burst(p.x, p.y + 1, p.z, 0xff6fcf, 8, 3); }
@@ -272,19 +272,24 @@ export class Game {
     if (IN.camDX || IN.camDY) { c.yaw -= IN.camDX * 0.0085 * sens * (S.opts.invertX ? -1 : 1); c.pitch = Math.max(-0.1, Math.min(1.15, c.pitch + IN.camDY * 0.005 * sens)); IN.camDX = IN.camDY = 0; }
     const manual = performance.now() - IN.lastCam < 1500;
     if (!manual && me.speed > 1) { let d = me.yaw - c.yaw; while (d > PI) d -= PI * 2; while (d < -PI) d += PI * 2; if (Math.abs(d) < 2.2) c.yaw += d * Math.min(1, dt * 0.9 * (me.speed / 7)); }
-    const indoor = this.region !== 'out'; const want = this.chat ? 6.2 : indoor ? 8.0 : 10.8; c.dist += (want - c.dist) * Math.min(1, dt * 2);
+    const indoor = this.region !== 'out'; const want = this.chat ? 6.2 : indoor ? 8.6 : 10.8; c.dist += (want - c.dist) * Math.min(1, dt * 2);
     const cn = this.chat && this.chat.npc; let tx = me.x, tz = me.z, ty = me.y + me.hgt * 0.8;
     if (cn) { const a = Math.atan2(me.x - cn.x, me.z - cn.z); let dy = a + 1.15 + PI - c.yaw; while (dy > PI) dy -= PI * 2; while (dy < -PI) dy += PI * 2; c.yaw += dy * Math.min(1, dt * 3); c.pitch += (0.32 - c.pitch) * Math.min(1, dt * 3); tx = me.x * 0.45 + cn.x * 0.55; tz = me.z * 0.45 + cn.z * 0.55; ty = Math.max(ty - 0.35, cn.y + (cn.markY || 1.2) * 0.7); }
     const k6 = c.snap ? 1 : 1 - Math.exp(-dt * 6); c.tgt.set(c.tgt.x + (tx - c.tgt.x) * (cn || c.chatT > 0 ? k6 : 1), c.snap ? ty : c.tgt.y + (ty - c.tgt.y) * (1 - Math.exp(-dt * (me.onGround ? 6 : 3))), c.tgt.z + (tz - c.tgt.z) * (cn || c.chatT > 0 ? k6 : 1)); c.chatT = cn ? 0.8 : Math.max(0, (c.chatT || 0) - dt);
-    const pp = Math.min(1.15, c.pitch + (c.boost || 0)); const dir = new THREE.Vector3(-Math.sin(c.yaw) * Math.cos(pp), Math.sin(pp), -Math.cos(c.yaw) * Math.cos(pp));
-    const indoorR0 = REGIONS.find((q) => q.id === this.region); const dr = indoorR0 && DOORS[indoorR0.id]; const indoorR = indoorR0 && !(dr && Math.hypot(me.x - dr[0], me.z - dr[1]) < 3.2) ? indoorR0 : null;
-    const big = (q) => q.cam !== false && !q.off && !q.nocam && !q.floor && !q.glass && !q.dyn && (q.max[1] - q.min[1]) > (indoorR ? 0.9 : 1.2) && Math.max(q.max[0] - q.min[0], q.max[2] - q.min[2]) > (indoorR ? 0.9 : 1.6);
-    const sx = Math.cos(c.yaw) * 0.32, sz = -Math.sin(c.yaw) * 0.32; let d = c.dist + 0.5; const o2 = this._co || (this._co = new THREE.Vector3());
-    for (const k of [0, -1, 1]) { o2.set(c.tgt.x + sx * k, c.tgt.y, c.tgt.z + sz * k); d = Math.min(d, this.world.ray(o2, dir, c.dist + 0.5, big)); }
-    if (indoorR) { const m = 0.5, lo = [indoorR.x0 + m, indoorR.y0, indoorR.z0 + m], hi = [indoorR.x1 - m, indoorR.ceil - 0.3, indoorR.z1 - m], O = [c.tgt.x, c.tgt.y, c.tgt.z], Dd = [dir.x, dir.y, dir.z];
-      for (let i = 0; i < 3; i++) { if (Math.abs(Dd[i]) < 1e-6) continue; const t = ((Dd[i] > 0 ? hi[i] : lo[i]) - O[i]) / Dd[i]; if (t >= 0) d = Math.min(d, t + 0.45); } }
-    d = Math.max(1.0, Math.min(c.dist, d - 0.45));
-    c.boost = (c.boost || 0) + (((indoorR && d < c.dist * 0.7 && !this.chat) ? 0.35 : 0) - (c.boost || 0)) * Math.min(1, dt * 1.5);
+    // camera distance along a pitch: walls/props stop it smoothly; indoors it also stays inside the room box, except it may slip out through the doorway
+    const R0 = REGIONS.find((q) => q.id === this.region), drp = R0 && DOORS[R0.id], nearDoor = drp && Math.hypot(me.x - drp[0], me.z - drp[1]) < 4.5;
+    const big = (q) => q.cam !== false && !q.off && !q.nocam && !q.floor && !q.glass && !q.dyn && (q.max[1] - q.min[1]) > (R0 ? 0.9 : 1.2) && Math.max(q.max[0] - q.min[0], q.max[2] - q.min[2]) > (R0 ? 0.9 : 1.6);
+    const o2 = this._co || (this._co = new THREE.Vector3()), dv = this._cdv || (this._cdv = new THREE.Vector3());
+    const distAt = (pit) => { dv.set(-Math.sin(c.yaw) * Math.cos(pit), Math.sin(pit), -Math.cos(c.yaw) * Math.cos(pit)); const sx = Math.cos(c.yaw) * 0.32, sz = -Math.sin(c.yaw) * 0.32; let dr = c.dist + 0.5;
+      for (const k of [0, -1, 1]) { o2.set(c.tgt.x + sx * k, c.tgt.y, c.tgt.z + sz * k); dr = Math.min(dr, this.world.ray(o2, dv, c.dist + 0.5, big)); }
+      let d = dr; if (R0) { const m = 0.45, lo = [R0.x0 + m, R0.y0, R0.z0 + m], hi = [R0.x1 - m, R0.ceil - 0.35, R0.z1 - m], O = [c.tgt.x, c.tgt.y, c.tgt.z], Dd = [dv.x, dv.y, dv.z]; let db = 1e9;
+        for (let i = 0; i < 3; i++) { if (Math.abs(Dd[i]) < 1e-6) continue; const t = ((Dd[i] > 0 ? hi[i] : lo[i]) - O[i]) / Dd[i]; if (t >= 0) db = Math.min(db, t + 0.45); }
+        d = Math.min(dr, db); }
+      return Math.max(1.4, Math.min(c.dist, d - 0.45)); };
+    const base = c.pitch + (R0 && !this.chat ? 0.12 : 0); const dBase = this.chat ? c.dist : distAt(base);
+    const bT = this.chat ? 0 : Math.max(0, Math.min(R0 ? 0.6 : 0.3, (1 - dBase / c.dist) * (R0 ? 1.0 : 0.5)));
+    c.boost = (c.boost || 0) + (bT - (c.boost || 0)) * Math.min(1, dt * (bT > (c.boost || 0) ? 2.5 : 1.2));
+    const pp = Math.min(1.2, base + c.boost); const d = distAt(pp); const dir = new THREE.Vector3().copy(dv);
     if (c.cd == null || c.snap) c.cd = d; else if (d < c.cd - 0.05) c.cd += (d - c.cd) * Math.min(1, dt * 9); else if (d > c.cd + 0.35) c.cd += (d - c.cd) * Math.min(1, dt * 2.2);
     const w3 = c.tgt.clone().addScaledVector(dir, c.cd); const gy = this.world.ground(w3.x, w3.z, w3.y + 0.5, 0.3).y; const minY = (gy > -1e8 ? gy : me.y) + 0.6; if (w3.y < minY) w3.y = minY;
     if (c.snap) { c.pos.copy(w3); c.snap = false; } else { const kx = 1 - Math.exp(-dt * 14), ky = 1 - Math.exp(-dt * 8); c.pos.x += (w3.x - c.pos.x) * kx; c.pos.z += (w3.z - c.pos.z) * kx; c.pos.y += (w3.y - c.pos.y) * ky; }

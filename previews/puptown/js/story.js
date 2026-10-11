@@ -3,7 +3,7 @@ import { S, persist } from './save.js';
 const PI = Math.PI;
 export const HATS = [
   { id: 'none', n: 'No Hat', how: 'Always yours' }, { id: 'ears', n: 'Puppy Ears Headband', how: "Find Candy's 3 squeaky toys" }, { id: 'fire', n: 'Fire Helmet', how: 'Rescue Mittens the kitten' },
-  { id: 'flower', n: 'Sunflower', how: "Plant Martina's 4 sunflowers" }, { id: 'visor', n: 'Fetch Visor', how: 'Score 60+ at fetch' }, { id: 'chef', n: 'Baker Hat', how: 'Bake 3 perfect treats' },
+  { id: 'flower', n: 'Sunflower', how: "Plant Torty's 4 sunflowers" }, { id: 'visor', n: 'Fetch Visor', how: 'Score 60+ at fetch' }, { id: 'chef', n: 'Baker Hat', how: 'Bake 3 perfect treats' },
   { id: 'party', n: 'Party Hat', how: 'Find 12 golden biscuits' }, { id: 'detective', n: 'Detective Hat', how: 'Solve the Golden Bone mystery' }, { id: 'wizard', n: 'Wizard Hat', how: 'Find 5 secrets' },
   { id: 'crown', n: 'Gold Crown', how: 'Every biscuit + the mystery' },
 ];
@@ -30,7 +30,7 @@ export const NPCS = [
   N('hush', 'Professor Hush (Librarian)', { b: 'basset', glasses: true, neck: 'bowtie', neckC: 0x16a34a }, [-30.6, -29.2, PI / 2], 'library'),
   N('page', 'Page (Bookworm)', { b: 'collie', glasses: 0xff4fa0, neck: 'scarf', neckC: 0xff8a3d }, [-24.4, -29.8, PI], 'library', { mode: 'sit' }),
   N('scout', 'Scout (Beagle)', { b: 'beagle', hat: 'grad', tint: { fur: 0xc98a4a } }, [-21.5, -35.4, PI], 'library', { mode: 'sit' }),
-  N('martina', 'Martina (Desert Tortoise)', { martina: 1 }, [36.6, 17.2, PI + 0.6], 'garden'),
+  N('martina', 'Martina "Torty" (Tortoise)', { martina: 1 }, [36.6, 17.2, PI + 0.6], 'garden'),
   N('sunny', 'Sunny (Shop Helper)', { b: 'golden', hat: 'straw' }, [30.6, 7.6, PI / 2], 'garden'),
   N('clover', 'Clover (Shiba)', { b: 'shiba', neck: 'scarf', neckC: 0x16a34a }, [33, 11.4, 0], 'garden', { walk: [[29.5, 11.2], [36.5, 11.2], [36.5, 14.6], [29.5, 14.6]] }),
   N('candy', 'Candy (Mini Schnauzer)', { b: 'schnauzer', s: 1.05 }, [-37.8, 34, PI / 2], 'candy', { y: 0.2 }),
@@ -67,7 +67,7 @@ export const SUSPECTS = [{ id: 'pepper', n: 'Pepper the beagle', why: 'Loves tre
 export function boneStep() { const q = S.q.bone | 0, n = BONE_CLUES.filter((c) => S.clues[c]).length;
   if (q === 0) return 'Mayor Biscuit needs help! Visit Town Hall.'; if (q === 1) return `Find clues about the Golden Bone (${n}/5). Ask the townsfolk!`;
   if (q === 2) return 'Tiny paws, the letter N, a party hat… head to Candy\'s backyard on Maple Lane!'; if (q === 3) return 'Bring the Golden Bone back to Mayor Biscuit at Town Hall!'; return 'Case closed! Party in the square!'; }
-export function sideTasks() { return [[S.flags.toys, `Find Candy's 3 squeaky toys (${S.toys.length}/3)`], [S.flags.kitten, 'Rescue Mittens from the tall tree in Paw Park'], [S.flags.garden, `Plant Martina's sunflowers (${S.plants.length}/4)`],
+export function sideTasks() { return [[S.flags.toys, `Find Candy's 3 squeaky toys (${S.toys.length}/3)`], [S.flags.kitten, 'Rescue Mittens from the tall tree in Paw Park'], [S.flags.garden, `Plant Torty's sunflowers (Martina) (${S.plants.length}/4)`],
   [S.flags.fetch, `Score 60+ at fetch with Rex (best ${S.best.fetch | 0})`], [S.flags.agility, `Finish the agility course in under 40 s (best ${S.best.agility ? S.best.agility.toFixed(1) + ' s' : '--'})`], [S.flags.groom, 'Groom a pup at Fluff & Puff'],
   [(S.best.bake | 0) >= 3, `Bake 3 perfect treats (best ${S.best.bake | 0}/3)`], [S.flags.barkade, 'Beat a high score at the Barkade'], [Object.keys(S.rats).length >= 3, `Say hi to the Ratita founders (${Object.keys(S.rats).length}/3)`], [S.flags.bus, 'Ride the Dog-Bus']]; }
 export function talk(id, G) {
@@ -111,14 +111,14 @@ export function talk(id, G) {
       if (q >= 1 && !S.clues.card) lines.push([null, 'A tiny someone borrowed two very interesting books yesterday. The checkout cards are on my desk.']); return { lines }; }
     case 'page': return { lines: L(cyc(['I\'m reading "The Mystery of the Missing Squeak". I bet the cat did it.', 'Books are like walks for your brain!', 'Did you know there\'s a book on the shelf that\'s not really a book? Look for the odd red one.'])) };
     case 'scout': return { lines: L(cyc(['Studying for my Good Boy exam. Sit, stay, roll over, file taxes.', 'Shhh, Professor Hush is watching. He\'s always watching. With his ears.'])) };
-    case 'martina': { const p = S.plants.length; const lines = L(cyc(['Oh, hello there. I\'m Martina. I moved here from Ratita Industries\' desert dome. Pup Town has much better weather.', 'Slow and steady grows the garden, dear.', 'I\'ve been gardening for 47 years. Tortoises are patient.']));
+    case 'martina': { const p = S.plants.length; const lines = L(cyc(['Oh, hello there. I\'m Martina. Candy calls me Torty, so you may too. I moved here from Ratita Industries\' desert dome. Pup Town has much better weather.', 'Slow and steady grows the garden, dear.', 'I\'ve been gardening for 47 years. Tortoises are patient.']));
       if (!S.flags.garden && p < 4) lines.push([null, `Would you help me? Plant 4 sunflowers in the community garden beds outside the shop, on the corner. (${p}/4 planted)`]);
-      else if (!S.flags.garden) { lines.push([null, 'All four sunflowers! They\'re beautiful. Here, a sunflower for your hat, dear.']); return { lines, fx: () => { S.flags.garden = 1; persist(); G.giveHat('flower'); G.badge('garden'); } }; }
+      else if (!S.flags.garden) { lines.push([null, 'All four sunflowers! They\'re beautiful. Here, a sunflower for your hat, dear. From your friend Torty.']); return { lines, fx: () => { S.flags.garden = 1; persist(); G.giveHat('flower'); G.badge('garden'); } }; }
       return { lines }; }
-    case 'sunny': return { lines: L(cyc(['Welcome to Martina\'s Garden Shop! Every plant is happy here. We talk to them.', 'Martina\'s corner is nice and toasty. Tortoises love warm sand.', 'The sunflower seeds are free for the community garden!'])) };
-    case 'clover': return { lines: L(cyc(['Watering, watering, watering… I love this job.', 'Fun fact: shibas and plants both enjoy sunshine and being left alone. Kidding! Hi!'])) };
+    case 'sunny': return { lines: L(cyc(['Welcome to Martina\'s Garden Shop! Every plant is happy here. We talk to them.', 'Torty\'s corner is nice and toasty. Tortoises love warm sand. (Everyone calls Martina "Torty" now. Candy started it.)', 'The sunflower seeds are free for the community garden!'])) };
+    case 'clover': return { lines: L(cyc(['Watering, watering, watering… Torty says plants grow faster if you hum. I hum ALL day.', 'Fun fact: shibas and plants both enjoy sunshine and being left alone. Kidding! Hi!'])) };
     case 'candy': {
-      const t = S.toys.length; const lines = L(cyc(['*happy wiggle* Hi hi hi! I\'m Candy! Welcome to my house! This is my bed. That\'s also my bed. The couch? Also mine.', 'I visit Ratita Industries a lot. I\'m Head of Ruffsources there! But this is my home.', 'Is it someone\'s birthday soon? Everyone keeps whispering and stopping when I walk in…']));
+      const t = S.toys.length; const lines = L(cyc(['*happy wiggle* Hi hi hi! I\'m Candy! Welcome to my house! This is my bed. That\'s also my bed. The couch? Also mine.', 'I visit Ratita Industries a lot. I\'m Head of Ruffsources there! But this is my home.', 'Is it someone\'s birthday soon? Everyone keeps whispering and stopping when I walk in…', 'Have you met Torty? That\'s my nickname for Martina! She\'s the best tortoise in the whole world. Her garden shop smells like sunshine.', 'Torty lets me nap in her warm sand corner. Don\'t tell Suds, he says I come back sandy.']));
       if (!S.flags.toys) { if (t >= 3) { lines.push([null, 'MY SQUEAKY TOYS! All three! *SQUEAK SQUEAK SQUEAK* You\'re my best friend! Here, wear these!']); return { lines, fx: () => { S.flags.toys = 1; persist(); G.giveHat('ears'); G.badge('toys'); } }; } lines.push([null, `I lost my 3 squeaky toys somewhere in town. Pink bones! Can you find them? (${t}/3)`]); }
       if (q >= 4) lines.push([null, 'A BIRTHDAY PARTY for ME?! And Nugget did all this?! Best. Day. EVER!']); return { lines }; }
     case 'nugget': if (q === 2) return { lines: L('Eep! You found me! I\'m Nugget. I\'m… um… digging. For no reason.', 'Okay okay. I took the Golden Bone. But only to BORROW it! It\'s Candy\'s birthday and it\'s the shiniest thing in town!', 'I ordered a pupcake, borrowed books on presents and digging, and hid it in the park… then here. I just wanted Candy to be happy!', 'Will you take it back to the Mayor? And… maybe tell him why? I\'m sorry!'), fx: () => G.gotBone() };
@@ -138,9 +138,9 @@ export function talk(id, G) {
     case 'lola': return { lines: L(cyc(['*pant pant* Can\'t chat… doing laps… 47 down!', 'Running keeps me spotty! I mean sporty!'])) };
     case 'pancake': return { lines: L(cyc(['I\'m on vacation! I came all the way from Barkington to see the Golden Bone. And it\'s gone. Typical!', 'Say cheese! *click* Oops, that was my thumb.', 'Your town is lovely. Do you live here? Oh, you\'re visiting too!'])) };
     case 'bruno': return { lines: L(cyc(['Waitin\' for the Dog-Bus. It comes round every couple minutes. Hop on at the stop!', 'The Dog-Bus wags its tail when it\'s happy. Which is always.'])) };
-    case 'luna': case 'pirat': case 'snowie': { S.rats[id] = 1; persist(); const nr = Object.keys(S.rats).length; const t = { luna: ['Hey, it\'s you! Visiting Pup Town too? Candy invited us for the weekend!', 'I\'m thinking of opening a Ratita Industries branch here. Pup Town Labs. Pawsome Labs?', 'The Golden Bone? Hmm, Candy wouldn\'t take it. She\'d just lick it.'],
+    case 'luna': case 'pirat': case 'snowie': { S.rats[id] = 1; persist(); const nr = Object.keys(S.rats).length; const t = { luna: ['Hey, it\'s you! Visiting Pup Town too? Candy invited us for the weekend!', 'I\'m thinking of opening a Ratita Industries branch here. Pup Town Labs. Pawsome Labs?', 'The Golden Bone? Hmm, Candy wouldn\'t take it. She\'d just lick it.', 'Torty moved here from our desert dome! I miss her slow little waves in the hallway.'],
         pirat: ['Arr! Pup Town be a fine port! The dogs here be very friendly. Too friendly. I\'ve been licked six times.', 'I could build them a robot bone polisher! Or a robot bone. Hmm.', 'That Dog-Bus is excellent engineering. Wiggly, but excellent.'],
-        snowie: ['HI HI HI! I love it here! Everyone is so FLUFFY!', 'Candy showed me her bed! She has seven beds!', 'I heard there might be a party! I LOVE parties!'] }[id];
+        snowie: ['HI HI HI! I love it here! Everyone is so FLUFFY!', 'Candy showed me her bed! She has seven beds!', 'I heard there might be a party! I LOVE parties!', 'Did you visit Torty?! She gave me a lettuce leaf. I\'m saving it forever. (I ate it.)'] }[id];
       const lines = L(cyc(t)); if (nr >= 3 && !S.badges.rats) return { lines, fx: () => G.badge('rats') }; return { lines }; }
     case 'mittens': if (!S.flags.kittenDown) return { lines: L('Mew! Mew mew! (Translation: I came up for a bird and now the ground is VERY far away.)', '*Mittens hops into your arms* Purrrrr…'), fx: () => G.rescueKitten() };
       return { lines: L(cyc(['Mew! (Thank you!)', 'Purrrr…', 'Mew? (Is that a bird? No. I\'ve learned my lesson.)'])) };

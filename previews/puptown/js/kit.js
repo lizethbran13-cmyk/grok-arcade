@@ -13,7 +13,7 @@ export function scaled(w, X, Y, Z, s) {
   return { s, add(b, g, c, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx, em = 0) { const p = Pm(x, y, z); return w.add(b, g, c, p[0], p[1], p[2], rx, ry, rz, sx * s, sy * s, sz * s, em); },
     addFn(b, g, fn, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx) { const p = Pm(x, y, z); return w.addFn(b, g, fn, p[0], p[1], p[2], rx, ry, rz, sx * s, sy * s, sz * s); },
     tf(x, y, z, ry = 0, sc = 1) { const p = Pm(x, y, z); const T = w.tf(p[0], p[1], p[2], ry, sc * s); const P0 = T.P; T.P = (a, b, c) => { const q = P0(a, b, c); return [(q[0] - X) / s, (q[1] - Y) / s, (q[2] - Z) / s]; }; return T; },
-    slab(b, c, x, y, z, ww, h, d, r = 0.1, o, em = 0, seg = 2) { const p = Pm(x, y, z); w.add(b, rbox(ww * s, h * s, d * s, r * s, seg), c, p[0], p[1] + h * s / 2, p[2], 0, 0, 0, 1, 1, 1, em); return o === false ? null : w.solid(p[0] - ww * s / 2, p[1], p[2] - d * s / 2, p[0] + ww * s / 2, p[1] + h * s, p[2] + d * s / 2, o); },
+    slab(b, c, x, y, z, ww, h, d, r = 0.1, o, em = 0, seg = 2) { if (r * s < 0.03) seg = 1; const p = Pm(x, y, z); w.add(b, rbox(ww * s, h * s, d * s, r * s, seg), c, p[0], p[1] + h * s / 2, p[2], 0, 0, 0, 1, 1, 1, em); return o === false ? null : w.solid(p[0] - ww * s / 2, p[1], p[2] - d * s / 2, p[0] + ww * s / 2, p[1] + h * s, p[2] + d * s / 2, o); },
     solid(x0, y0, z0, x1, y1, z1, o) { const a = Pm(x0, y0, z0), b = Pm(x1, y1, z1); return w.solid(a[0], a[1], a[2], b[0], b[1], b[2], o); },
     lights: { push(l) { const p = Pm(l.x, l.y, l.z); w.lights.push(Object.assign({}, l, { x: p[0], y: p[1], z: p[2], d: Math.max(8, (l.d || 30) * s), i: Math.max(6, (l.i || 30) * s * 0.6) })); } }, solids: w.solids, anims: w.anims };
 }
@@ -28,7 +28,7 @@ export function wall(w, axis, at, from, to, h, col, holes = [], o = {}) {
   const th = o.th || TH, b = o.bucket || 'w', Y = o.y || 0;
   for (const [a, c, y0, y1] of segs) { if (c - a < 0.01 || y1 - y0 < 0.01) continue; const m = (a + c) / 2, L = c - a;
     if (axis === 'x') w.slab(b, col, m, Y + y0, at, L, y1 - y0, th, 0.06, { wall: true }); else w.slab(b, col, at, Y + y0, m, th, y1 - y0, L, 0.06, { wall: true });
-    if (y0 === 0 && !o.noBase) [-1, 1].forEach((sd) => { if (axis === 'x') w.add('g', rbox(L, 0.28, 0.08, 0.03), o.base || 0xf8fafc, m, Y + 0.14, at + sd * (th / 2 + 0.03)); else w.add('g', rbox(0.08, 0.28, L, 0.03), o.base || 0xf8fafc, at + sd * (th / 2 + 0.03), Y + 0.14, m); }); }
+    if (y0 === 0 && !o.noBase) [-1, 1].forEach((sd) => { if (axis === 'x') w.add('g', rbox(L, 0.28, 0.08, 0.03, 1), o.base || 0xf8fafc, m, Y + 0.14, at + sd * (th / 2 + 0.03)); else w.add('g', rbox(0.08, 0.28, L, 0.03, 1), o.base || 0xf8fafc, at + sd * (th / 2 + 0.03), Y + 0.14, m); }); }
   if (!o.noTrim) [-1, 1].forEach((sd) => { const m = (from + to) / 2, L = to - from; if (axis === 'x') w.add('g', rbox(L, 0.18, 0.1, 0.04), o.trim || 0xffffff, m, Y + h - 0.09, at + sd * (th / 2 + 0.04)); else w.add('g', rbox(0.1, 0.18, L, 0.04), o.trim || 0xffffff, at + sd * (th / 2 + 0.04), Y + h - 0.09, m); });
   // door frames + glass panes in window holes
   for (const hl0 of hs) { const hl = [hl0[0], hl0[1], hl0[2] + Y, hl0[3] + (hl0[3] > 0 || Y ? Y : 0), hl0[4]]; const m = (hl[0] + hl[1]) / 2, L = hl[1] - hl[0], fc = o.frame || 0xffffff; if (hl0[5] === 'noframe') continue;

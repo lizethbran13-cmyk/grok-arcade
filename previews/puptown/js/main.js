@@ -50,5 +50,7 @@ function frame(now) {
   render(dt);
 }
 app.sim = (sec) => { const g = app.game; const n = Math.round(sec * 60); for (let i = 0; i < n; i++) g.update(1 / 60); };
+// the arcade's WORK IN PROGRESS banner (preview builds only) sits top-left: push the HUD below it instead of under it
+setInterval(() => { const b = document.getElementById('ratitaWip'); const h = b ? Math.ceil(b.getBoundingClientRect().bottom) + 2 : 0; const v = h ? h + 'px' : '0px'; if (document.documentElement.style.getPropertyValue('--wip') !== v) document.documentElement.style.setProperty('--wip', v); }, 500);
 app.S = S; app.E = E; app.IN = IN;
 boot().catch((e) => { console.error(e); $('loadTxt').textContent = 'Oops: ' + e.message; });

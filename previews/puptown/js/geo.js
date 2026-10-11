@@ -7,6 +7,8 @@ const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Eule
 export class Builder {
   constructor() { this.parts = []; }
   add(geom, color, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx, emissive = 0) {
+    // size-aware tessellation: tiny parts (eyes, noses, toes, buttons) don't need 600-triangle spheres; same look, far fewer triangles
+    { const m = Math.max(Math.abs(sx), Math.abs(sy), Math.abs(sz)); if (geom === P.sphere && m < 0.16) geom = m < 0.07 ? TESS.s : TESS.m; else if (geom === P.capsule && m < 0.2) geom = TESS.c; }
     let g = geom.index ? geom.toNonIndexed() : geom.clone();
     if (!g.attributes.uv) g.setAttribute('uv', new THREE.Float32BufferAttribute(new Float32Array(g.attributes.position.count * 2), 2));
     if (!g.attributes.normal) g.computeVertexNormals();
@@ -29,6 +31,7 @@ export class Builder {
   build() { const g = mergeGeometries(this.parts, false); g.computeBoundingSphere(); this.parts.forEach((p) => p.dispose()); this.parts = []; return g; }
 }
 // shared high-poly primitives
+const TESS = { s: new THREE.SphereGeometry(1, 10, 7), m: new THREE.SphereGeometry(1, 14, 9), c: new THREE.CapsuleGeometry(0.5, 1, 4, 12) };
 export const P = {
   sphere: new THREE.SphereGeometry(1, 22, 14),
   sphereLo: new THREE.SphereGeometry(1, 16, 10),
