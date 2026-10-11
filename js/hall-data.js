@@ -1107,6 +1107,12 @@ GA.HALL_DATA = {
 "ver": "2.1",
 "title": "New rides + homes",
 "text": "BMX, road bike, scooter, moped, go-kart, cruiser, sport bike and jet ski, plus 3 houses with garages."
+},
+{
+"date": "Oct 11",
+"ver": "3.0",
+"title": "Grok Rides Remastered",
+"text": "Rebuilt from scratch on the Tempest engine: a bigger map with the Sunny Shores beach town and a winding mountain road, detailed 3D buildings you can walk into, smarter traffic, rain and puddles, gas stations and a car wash, street races, deliveries, and new rides: helicopter, seaplane, hovercraft, ice cream truck, fire truck, tow truck, hot air balloon and the Ratita hover-car. Bonus game #35 Sparkle Car Wash."
 }
 ],
 "versions": [
@@ -1138,49 +1144,61 @@ GA.HALL_DATA = {
 "pics": [
 {
 "src": "assets/hall/rides/1.webp",
-"cap": "Night driving with headlights",
-"w": 444,
-"h": 960
+"cap": "Grok City Main Street in the Tempest look",
+"w": 960,
+"h": 444
 },
 {
 "src": "assets/hall/rides/2.webp",
-"cap": "Sport bike wheelie",
-"w": 444,
-"h": 960
+"cap": "Downtown Grok City from above",
+"w": 960,
+"h": 444
 },
 {
 "src": "assets/hall/rides/3.webp",
-"cap": "Grok City traffic",
-"w": 444,
-"h": 960
+"cap": "Ice cream truck on the Sunny Shores beach road",
+"w": 960,
+"h": 444
 },
 {
 "src": "assets/hall/rides/4.webp",
-"cap": "Racing through the city",
-"w": 390,
-"h": 844
+"cap": "Flying the helicopter over the city",
+"w": 960,
+"h": 444
 },
 {
 "src": "assets/hall/rides/5.webp",
-"cap": "Your own garage",
-"w": 444,
-"h": 960
+"cap": "Ratita hover-car on the boulevard",
+"w": 960,
+"h": 444
 },
 {
 "src": "assets/hall/rides/6.webp",
-"cap": "Inside Burger Blast",
-"w": 444,
-"h": 960
+"cap": "Night drive under the street lamps",
+"w": 960,
+"h": 444
 },
 {
 "src": "assets/hall/rides/7.webp",
-"cap": "Jet ski",
-"w": 444,
-"h": 960
+"cap": "Rain, puddles and wet roads",
+"w": 960,
+"h": 444
+},
+{
+"src": "assets/hall/rides/8.webp",
+"cap": "Sport bike on the mountain road",
+"w": 960,
+"h": 444
+},
+{
+"src": "assets/hall/rides/9.webp",
+"cap": "Inside Burger Blast",
+"w": 960,
+"h": 444
 }
 ],
 "cover": "assets/hall/rides/cover.webp",
-"quip": "Monster trucks. In MY museum. Wipe the tires first.",
+"quip": "Monster trucks AND a hot air balloon now. In MY museum. Wipe the tires first, and no parking on the exhibits.",
 "noOld": ""
 },
 "poke": {

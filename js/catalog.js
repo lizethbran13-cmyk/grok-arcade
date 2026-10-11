@@ -29,7 +29,7 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-spooks/', color: '#5dff8a', color2: '#b06bff' },
   { id: 'blocks', mp: true, name: 'Grok Blocks', desc: 'A blocky wildlife rescue! Explore 5 biomes, calm 18 kinds of animals with darts, chase runners in your truck and outsmart poachers. Co-op online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-blocks/', color: '#4ade80', color2: '#fbbf24' },
-  { id: 'rides', mp: true, name: 'Grok Rides', desc: 'Free-roam driving in a big world: city, town, desert, icy tundra and a mountain! Drive cars, trucks, a limo, a monster truck, boats, helicopters, planes and hot air balloons. Race NPCs or friends, do jobs for cash. Co-op online!',
+  { id: 'rides', mp: true, name: 'Grok Rides', desc: 'REMASTERED on the Tempest engine! A huge free-roam world: Grok City, Pine Hollow, the Sunny Shores beach town, the desert, icy tundra and a winding mountain road. 31 rides: cars, buses, bikes, a monster truck, boats, a helicopter, seaplane, hovercraft, hot air balloon, the Ratita hover-car, plus an ice cream truck, fire truck and tow truck with real jobs. Street races, deliveries, police chases, gas stations, a car wash, rain and puddles, day and night, 3 homes and co-op for 3!',
     url: 'https://lizethbran13-cmyk.github.io/grok-rides/', color: '#ff4fd8', color2: '#38bdf8' },
   { id: 'poke', mp: true, name: 'Grok Poke', desc: 'A big 3D adventure: explore 7 regions, befriend 39 critters, real-time battles, 5 dungeons with bosses, towns you can walk into, and trade or explore with friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-poke/', color: '#5dd66f', color2: '#ffd23f' },
@@ -91,6 +91,8 @@ GA.BONUS_GAMES = [
   { id: 'crumbs', name: 'Crumb Patrol', desc: 'You\u2019re Sweepy the robo-vac! Drag to steer around the Ratita HQ caf\u00e9, slurp up crumbs and cheese, DON\u2019T suck up the Golden Gouda, dodge goo puddles and move out from under the big sneaker shadows before they stomp. A Grok Ratita Industries HQ game.', color: '#ff8a3d', color2: '#3ff0ff' },
   /* #34: Bone Dig (Pup Town), on the Bonus Zone wall */
   { id: 'dig', name: 'Bone Dig', desc: 'Help Candy dig up Paw Park! PRESS AND HOLD a dirt mound to dig. Bones, biscuits and the rare GOLDEN BONE score points, but WIGGLY mounds hide a sprinkler that soaks Candy. A Grok Pup Town game.', color: '#86dc93', color2: '#ffd23f' },
+  /* #35: Sparkle Car Wash (Grok Rides Remastered), on the Bonus Zone wall */
+  { id: 'wash', name: 'Sparkle Car Wash', desc: 'Muddy cars roll through the Sparkle Car Wash! DRAG over the mud splats to scrub them off before each car rolls out. Spotless cars score a bonus, GOLDEN cars count double, and hands off the WET PAINT cars! A Grok Rides Remastered game.', color: '#38bdf8', color2: '#f472b6' },
 ];
 /* bonus games that have a cabinet on the Bonus Zone wall (1983 retro games live in the old arcade instead) */
 GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era && !g.room; }); };

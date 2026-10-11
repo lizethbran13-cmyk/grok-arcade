@@ -16,7 +16,7 @@
   /* bonus cabinets stay full size: up to BONUS_EAST on the east wall, then a second row on the bonus room's north wall
      (under the raised BEST SCORES board), then a third row on the bonus side of the divider wall, clear of the doorway
      (room for 27). Only past that do the east-wall cabinets squeeze. */
-  var BONUS_EAST = 15, BONUS_NORTH_X = [9.7, 11.2, 12.7, 14.2], BONUS_DIV_Z = [-9.2, -7.7, -6.2, -4.7, 4.7, 6.2, 7.7, 9.2];
+  var BONUS_EAST = 16, BONUS_NORTH_X = [9.7, 11.2, 12.7, 14.2], BONUS_DIV_Z = [-9.2, -7.7, -6.2, -4.7, 4.7, 6.2, 7.7, 9.2];
   var BONUS_CAP = BONUS_EAST + BONUS_NORTH_X.length + BONUS_DIV_Z.length;
   var BONUS_K = 1, BONUS_STEP = 0; if (GA.wallBonus().length > BONUS_CAP) { var nE0 = GA.wallBonus().length - BONUS_CAP + BONUS_EAST; BONUS_K = 23.2 / (1.44 * nE0 + 0.04 * (nE0 - 1)); BONUS_STEP = 1.48 * BONUS_K; }
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
@@ -907,6 +907,8 @@
         var cx3 = w * 0.55 + Math.sin(t * 2) * 6; g.fillStyle = '#ff4fd8'; g.fillRect(cx3 - 22, h - 42, 44, 12); g.fillRect(cx3 - 12, h - 52, 24, 10); g.fillStyle = '#bfe8ff'; g.fillRect(cx3 - 9, h - 50, 18, 7);
         g.fillStyle = '#111'; g.beginPath(); g.arc(cx3 - 13, h - 29, 5, 0, 7); g.arc(cx3 + 13, h - 29, 5, 0, 7); g.fill();
         g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#9d174d'; g.fillText('GROK RIDES', w / 2, 24);
+        g.save(); g.translate(w / 2, 40); g.rotate(-0.05); g.fillStyle = '#7c3aed'; rrF(g, -52, -9, 104, 18, 6); g.font = font(11); g.fillStyle = '#fff'; g.fillText('REMASTERED', 0, 4); g.restore();
+        var ix = ((t * 26) % (w + 80)) - 40; g.fillStyle = '#f8fafc'; rrF(g, ix - 18, h - 58, 36, 16, 5); g.fillStyle = '#fbcfe8'; g.beginPath(); g.arc(ix - 4, h - 62, 5, 0, 7); g.fill(); g.fillStyle = '#d4a373'; g.beginPath(); g.moveTo(ix - 8, h - 60); g.lineTo(ix, h - 60); g.lineTo(ix - 4, h - 52); g.fill();
         break;
       }
       case 'rush': {
@@ -1023,7 +1025,7 @@
       var nw = GA.Areas.newestGame(), sc2 = buildCabinet(nw, 'main', GA.Areas.SPOT.x, ROOM.minZ + 0.6, 0, 1); sc2.spot = true;
     } else GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
     // bonus games: along the east wall of the bonus room, facing west
-    var nAll = GA.wallBonus().length, nOver = BONUS_NORTH_X.length + BONUS_DIV_Z.length, nb = nAll > BONUS_EAST ? Math.max(BONUS_EAST, nAll - nOver) : nAll, stepB = BONUS_STEP || (nb > 15 ? 1.45 : nb > 14 ? 1.5 : nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4);
+    var nAll = GA.wallBonus().length, nOver = BONUS_NORTH_X.length + BONUS_DIV_Z.length, nb = nAll > BONUS_EAST ? Math.max(BONUS_EAST, nAll - nOver) : nAll, stepB = BONUS_STEP || (nb > 15 ? 1.46 : nb > 14 ? 1.5 : nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4);
     GA.wallBonus().forEach(function (gm, i) {
       if (i < nb) return buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2);
       var j = i - nb; // overflow rows: north wall of the bonus room (facing south), then the divider wall (facing east)
