@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-11T21:52:00Z",
+  "updated": "2026-10-11T22:45:00Z",
   "items": [
     {
       "game": "rides",
@@ -43,6 +43,25 @@
       "stage": "shipped",
       "when": "Oct 11",
       "shippedAt": "2026-10-11T06:20:00Z"
+    },
+    {
+      "issue": 40,
+      "game": "grid",
+      "name": "Super Grid Expansion (live)",
+      "size": "Expansion",
+      "what": "Grok Grid: Sky Islands, Candy Kingdom and Volcano Run, 4 new cars, boost pads + items, and the Super Grid Hub you can drive around (Garage, Pit Stop Cafe, stunt park, Torty, 12 Golden Lug Nuts).",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T22:45:00Z"
+    },
+    {
+      "issue": 39,
+      "game": "sports",
+      "name": "Ratita Stadium Night",
+      "size": "Expansion",
+      "what": "Grok Sports Command: a night match at the new Ratita Stadium.",
+      "stage": "building",
+      "when": "In the lab now"
     },
     {
       "issue": 27,
