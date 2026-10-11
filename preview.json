@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-11T20:55:00Z",
+  "updated": "2026-10-11T21:35:00Z",
   "items": [
     {
       "game": "rides",
@@ -140,15 +140,6 @@
   ],
   "previews": [
     {
-      "id": "eatsville",
-      "game": "eatsville",
-      "name": "Grok Eatsville Tycoon",
-      "url": "previews/eatsville/",
-      "playable": true,
-      "built": "2026-10-11",
-      "notes": "First playable: town + driving, own diner or Mega Munch job, cook/serve, Ratita breakdowns, surprise inspections, day reports. Co-op, delivery polish and more coming."
-    },
-    {
       "id": "relics",
       "game": "relics",
       "name": "Grok Lost Relics",
@@ -156,6 +147,15 @@
       "playable": true,
       "built": "2026-10-11",
       "notes": "First playable: the Relic Museum hub + expedition 1, Temple of the Jade Monkey (river swing, Relic Patrol sneaking, gate puzzle, rope bridge, dart/spike/boulder traps, statue puzzle, Vine-Chopper boss, escape chase). 4 more expeditions coming."
+    },
+    {
+      "id": "eatsville",
+      "game": "eatsville",
+      "name": "Grok Eatsville Tycoon",
+      "url": "previews/eatsville/",
+      "playable": true,
+      "built": "2026-10-11",
+      "notes": "Co-op for 3 is in! Plus delivery orders, house decorating (paint, floors, furniture), the food critic, 10 hidden Golden Spatulas, cozier diners and a smoother phone feel."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

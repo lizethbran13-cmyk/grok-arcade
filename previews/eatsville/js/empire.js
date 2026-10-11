@@ -99,7 +99,7 @@ export function newDay() {
   // schedule today's surprise inspection + critic visit
   const keys = Object.keys(S.branches); S.today = { insp: null, critic: null, deliv: 0 };
   if (keys.length && S.mode !== 'explore' && S.day >= 2 && Math.random() < 0.75) S.today.insp = { key: keys[(Math.random() * keys.length) | 0], at: 600 + Math.random() * 600 | 0, done: false };
-  if (keys.length && S.day >= 3 && Math.random() < 0.4) S.today.critic = { key: keys[(Math.random() * keys.length) | 0], at: 660 + Math.random() * 480 | 0, done: false };
+  if (keys.length && S.day >= 2 && (S.day === 2 || Math.random() < 0.4)) S.today.critic = { key: keys[(Math.random() * keys.length) | 0], at: 660 + Math.random() * 480 | 0, done: false };
   candidates(); persist(); return report;
 }
 export function ensureToday() { if (!S.today) S.today = { insp: S.mode !== 'explore' && Object.keys(S.branches).length && S.day >= 2 ? { key: Object.keys(S.branches)[0], at: 720, done: false } : null, critic: null, deliv: 0 }; }

@@ -14,17 +14,20 @@ import { dishModel, DISH, STATIONS } from './food.js';
 import { animRat, makeMartina, animMartina, makeCandy, animCandy } from './ratmodels.js';
 import { initDecorCull, decorCull, makeVisTest, warmShaders } from './perf.js';
 import { initFx, burst, stepFx, clearFx, floatText, stepFloats, clearFloats } from './fx.js';
-import { S, setS, persist, newDay, ensureToday, autopilotHour, offsiteInspection, branchFor, branchKey, EV, isOpen, fmtTime, MIN_PER_SEC, BEDTIME, DAY_START, rankUp, news } from './empire.js';
+import { S, setS, persist, loadSave, newGame, newDay, ensureToday, autopilotHour, offsiteInspection, branchFor, branchKey, EV, isOpen, fmtTime, MIN_PER_SEC, BEDTIME, DAY_START, rankUp, news } from './empire.js';
 import { RestSim } from './sim.js';
+import { ROADS as ROADS_ } from './data.js';
 import { BLD, BUILDINGS, OUTFITS, CAR, CAREER, LOTS, RIVALS } from './data.js';
 import * as U from './ui.js';
 import { Net } from './net.js';
+import { MB, toGroup, XB } from './kit.js';
+import { P as GP } from './geo.js';
 const PI = Math.PI;
 export const G = { state: 'boot', where: 'town', room: null, sim: null, bid: null, yaw: 0, camT: 0, t: 0, lastHour: -1, carState: null, carModel: null, driving: false, deliv: null, remote: {}, paused: false };
 const ENV = {
-  day: { sunDir: [0.5, 0.85, 0.35], skyTop: 0x2f86e0, skyMid: 0x9fd4ff, skyBot: 0xd8f0ff, fog: 0xc4e6ff, fogD: 0.0042, sunI: 2.9, sunColor: 0xfff4e0, hemiSky: 0xd8ecff, hemiGround: 0x6b8a4a, hemiI: 0.65, exposure: 1.0, envI: 0.9, sunDisc: 1, bloomT: 1.05, bloomS: 0.45 },
-  dusk: { sunDir: [0.85, 0.28, 0.25], skyTop: 0x433a8f, skyMid: 0xff9e6e, skyBot: 0xffd2a0, fog: 0xffc6a0, fogD: 0.0045, sunI: 2.1, sunColor: 0xffb070, hemiSky: 0xffc8a8, hemiGround: 0x5a4a6a, hemiI: 0.55, exposure: 1.0, envI: 0.75, sunDisc: 1, bloomT: 0.95, bloomS: 0.55 },
-  night: { sunDir: [-0.35, 0.75, 0.4], skyTop: 0x0a1030, skyMid: 0x1b2a5c, skyBot: 0x2c3c70, fog: 0x1e2c50, fogD: 0.0045, sunI: 0.7, sunColor: 0xa8bcff, hemiSky: 0x5a6aa8, hemiGround: 0x2a2a40, hemiI: 0.45, exposure: 1.05, envI: 0.45, stars: 1, moon: 1, bloomT: 0.8, bloomS: 0.65 },
+  day: { sunDir: [0.5, 0.85, 0.35], skyTop: 0x1f74d8, skyMid: 0x7cc2ff, skyBot: 0xbfe4ff, fog: 0xa8d4ff, fogD: 0.0026, sunI: 3.0, sunColor: 0xfff2dc, hemiSky: 0xcfe6ff, hemiGround: 0x5f7f3e, hemiI: 0.5, exposure: 0.95, envI: 0.75, sunDisc: 1, bloomT: 1.2, bloomS: 0.3 },
+  dusk: { sunDir: [0.85, 0.28, 0.25], skyTop: 0x433a8f, skyMid: 0xff9e6e, skyBot: 0xffd2a0, fog: 0xffb890, fogD: 0.003, sunI: 2.1, sunColor: 0xffb070, hemiSky: 0xffc8a8, hemiGround: 0x5a4a6a, hemiI: 0.55, exposure: 1.0, envI: 0.75, sunDisc: 1, bloomT: 0.95, bloomS: 0.55 },
+  night: { sunDir: [-0.35, 0.75, 0.4], skyTop: 0x0a1030, skyMid: 0x1b2a5c, skyBot: 0x2c3c70, fog: 0x1e2c50, fogD: 0.0032, sunI: 0.7, sunColor: 0xa8bcff, hemiSky: 0x5a6aa8, hemiGround: 0x2a2a40, hemiI: 0.45, exposure: 1.05, envI: 0.45, stars: 1, moon: 1, bloomT: 0.8, bloomS: 0.65 },
   room: { sunDir: [0.3, 1, 0.55], skyTop: 0x3b2f4a, skyMid: 0x5a4660, skyBot: 0x6b5468, fog: 0x4a3c55, fogD: 0.0012, sunI: 1.9, sunColor: 0xfff1dc, hemiSky: 0xfff6ea, hemiGround: 0x8a7a6a, hemiI: 0.6, exposure: 0.95, envI: 0.6, envLight: 0xffffff, bloomT: 1.1, bloomS: 0.35 },
 };
 let curEnv = null; function env(k) { if (curEnv === k) return; curEnv = k; setEnvironment(ENV[k]); }
@@ -39,10 +42,11 @@ async function boot() {
   G.pModel = new THREE.Group(); E.scene.add(G.pModel);
   G.arrow = makeArrow(); E.scene.add(G.arrow); G.arrow.visible = false;
   G.signGrp = new THREE.Group(); E.scene.add(G.signGrp); G.trafficInit = false;
+  buildSpatulas();
   env('day'); E.camera.position.set(-30, 40, -10); E.camera.lookAt(0, 0, 0);
   warmShaders(E.renderer, E.scene, E.camera); step(100, 'Open for business!');
   setTimeout(() => $('loading').classList.add('gone'), 200);
-  U.UI.C = C; G.state = 'title'; titleCam(); U.title(C);
+  Net.init(G, C, { myLook: () => (S && S.look ? lookFromSave() : { skin: 0xf2c29b, hair: 0x5a3820, hairStyle: 'short', shirt: 0x3b82f6, pants: 0x334155, shoes: 0x222222, brows: 'happy' }), afterSim: (r) => afterSim(r, null) }); U.UI.C = C; G.state = 'title'; titleCam(); U.title(C);
   document.addEventListener('pointerdown', () => { initAudio(); applySound(); }, { once: false });
   let last = performance.now(); const loop = (now) => { requestAnimationFrame(loop); const dt = Math.min(0.05, (now - last) / 1000); last = now; frame(dt); }; requestAnimationFrame(loop);
   const p = new URLSearchParams(location.search); if (p.get('mp') && window.GrokNet) Net.fromUrl(C);
@@ -55,20 +59,23 @@ export const C = {
   start(isNew) { G.state = 'play'; ensureToday(); G.lastHour = Math.floor(S.time / 60); restyle(); respawnCar(false); rebuildTownSigns(); setupTraffic(); U.close();
     const sp = BLD.home; placeOutside('home'); $('hud').classList.remove('hidden'); $('touch').classList.remove('hidden'); playMusic('kitchen'); applySound();
     if (isNew) setTimeout(() => S.mode === 'worker' ? banner('👋 Welcome to Eatsville!', 'Your new job: head to MEGA MUNCH (west) and clock in with Manager Mo') : S.mode === 'explore' ? banner('🗺️ Explore mode', 'Go anywhere, buy anything. Every door opens!') : banner('👋 Welcome to Eatsville!', 'Your diner is on Main St (east). Hop in your car and go cook!'), 600);
+    if (!S.seen.ctl) { S.seen.ctl = 1; setTimeout(() => toast('👈 Drag on the left side to walk · swipe the right side to look around · tap the big orange button to do things'), 4200); }
     G.navTarget = S.mode === 'worker' && !S.branches.A ? 'mega' : 'lotA'; },
   coop() { Net.lobby(C); }, net: () => Net.code(), quit() { Net.leave(); U.close(); G.state = 'title'; leaveRoom(true); $('hud').classList.add('hidden'); $('touch').classList.add('hidden'); U.title(C); },
   changed(key, rebuild) { persist(); if (G.sim && branchKey(G.bid) === key) { G.sim.br = S.branches[key]; if (rebuild) rebuildRoom(); } rebuildTownSigns(); Net.pushState && Net.pushState(); },
   rebuildRoom, rebuildTownSigns, respawnCar, restyle, sound: applySound,
   clockIn() { S.career.shift = true; S.career.tips = 0; S.career.served = 0; S.career.shiftStart = S.time; G.sim.career = true; G.sim.staff = G.sim.staff.filter((f) => f.role !== 'cook').concat(G.sim.staff.filter((f) => f.role === 'cook').slice(0, 1)); banner('⏱️ Clocked in!', 'Cook what customers order. Manager Mo is watching…'); },
   clockOut() { const c = S.career; const hrs = Math.max(1, (S.time - c.shiftStart) / 60); const pay = Math.round(CAREER[c.rank].wage * Math.min(1, hrs / 4)) + c.tips; S.money += pay; c.shift = false; if (G.sim) G.sim.career = false; persist(); banner('💵 Shift done! +$' + pay, c.served + ' customers served · ' + c.tips + ' in tips'); sfx('buy'); },
-  delivery: () => G.deliv,
+  delivery: () => G.deliv, title: () => U.title(C),
+  hostStart() { if (G.state === 'play') return; const had = loadSave(); if (!had) newGame('own'); C.start(!had); },
+  changedRemote() { rebuildTownSigns(); if (G.sim && G.sim.clientOf) { const k = branchKey(G.bid); if (k && S.branches[k]) G.sim.br = S.branches[k]; } },
   newDelivery(key) { const hs = ['h1', 'h2', 'h3', 'h4']; const br = S.branches[key]; const d = br.menu[(Math.random() * br.menu.length) | 0]; G.deliv = { dish: d, house: hs[(Math.random() * hs.length) | 0], key, bag: false, t0: S.time }; toast('📱 New delivery: ' + DISH[d].e + ' for ' + BLD[G.deliv.house].name); },
 };
 // ---------------- player ----------------
 const P = { x: 0, z: 0, ry: 0, sp: 0, carry: null, model: null };
 G.P = P;
 function lookFromSave() { const L = S.look, o = OUTFITS.find((x) => x.id === L.outfit) || OUTFITS[0]; return { skin: L.skin, hair: L.hair, hairStyle: o.hat === 'helmet' || o.hat === 'dino' ? 'short' : L.hairStyle, shirt: L.shirt ? parseInt(L.shirt.slice(1), 16) : o.shirt, pants: o.pants, shoes: 0x222222, hat: o.hat, hatCol: o.hatCol, apron: o.apron, coat: o.coat, glasses: o.glasses, brows: 'happy' }; }
-function restyle() { if (P.model) G.pModel.remove(P.model); P.model = makePerson(lookFromSave()); G.pModel.add(P.model); P.carryKey = null; }
+function restyle() { if (P.model) G.pModel.remove(P.model); P.model = makePerson(lookFromSave()); G.pModel.add(P.model); P.carryKey = null; Net.sendLook && Net.sendLook(); }
 function setCarryModel() { const R = P.model && P.model.userData.rig; if (!R) return; const want = P.carry || null; if (P.carryKey === want) return; P.carryKey = want; R.hold.clear(); if (want) { const m = dishModel(want === 'dirty' ? 'dirty' : want, want === 'bag' ? 1.2 : 1.6); R.hold.add(m); } }
 function placeOutside(bid) { const d = T.doors.find((x) => x.bid === bid); P.x = d.x + Math.sin(d.ry) * 1.2; P.z = d.z + Math.cos(d.ry) * 1.2; P.ry = d.ry; G.yaw = d.ry + PI; G.camD = null; G.snapCam = true; }
 // ---------------- car ----------------
@@ -77,6 +84,16 @@ function respawnCar(near, atHome) { const def = CAR[S.car] || CAR.hatch; const o
   if (near && G.where === 'town' && !atHome && !old) { G.carState.x = P.x + 3; G.carState.z = P.z; }
   if (near && G.bid === 'cars') { const d = T.doors.find((x) => x.bid === 'cars'); G.carState.x = d.x + 6; G.carState.z = d.z + 4.5; G.carState.ry = PI / 2; }
   if (G.carModel) E.scene.remove(G.carModel); G.carModel = makeCar(def.kind, def.col); E.scene.add(G.carModel); poseCar(G.carModel, G.carState, 0); G.carModel.visible = G.where === 'town'; }
+// ---------------- hidden Golden Spatulas (10 collectibles, great in Explore mode) ----------------
+function buildSpatulas() { G.spats = []; const b = MB(); const x = new XB(b); x.p('g', GP.cyl, 0x8b5a2b, 0, -0.45, 0, 0, 0, 0, 0.07, 0.7, 0.07); x.p('x', GP.cyl, 0xffd23f, 0, -0.08, 0, 0, 0, 0, 0.05, 0.12, 0.05);
+  x.p('x', GP.rboxS, 0xffd23f, 0, 0.25, 0, 0, 0, 0, 0.5, 0.5, 0.06); for (let i = 0; i < 3; i++) x.p('x', GP.rboxS, 0xb8860b, -0.14 + i * 0.14, 0.3, 0.035, 0, 0, 0, 0.05, 0.32, 0.02); const proto = toGroup(b);
+  proto.traverse((o) => { if (o.isMesh) { o.userData.shared = 1; if (o.material && o.material.emissive) { o.material = o.material.clone(); o.material.emissive.setHex(0xffb000); o.material.emissiveIntensity = 0.55; } } });
+  const cand = []; for (const a of ROADS_) for (const c of ROADS_) for (const [sx, sz] of [[1, 1], [-1, -1], [1, -1], [-1, 1]]) cand.push([a + sx * 7.6, c + sz * 7.6]);
+  let seed = 7; const r = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }; for (let i = cand.length - 1; i > 0; i--) { const j = (r() * (i + 1)) | 0; [cand[i], cand[j]] = [cand[j], cand[i]]; }
+  for (const [px, pz] of cand) { if (G.spats.length >= 10) break; if (collideTown(px, pz, 0.8).hit || G.spats.some((q) => Math.hypot(q.x - px, q.z - pz) < 25)) continue; const m = proto.clone(); m.scale.setScalar(1.7); m.position.set(px, 1.2, pz); E.scene.add(m); G.spats.push({ id: G.spats.length, x: px, z: pz, m }); } }
+function stepSpatulas(dt) { if (!G.spats || !S) return; const got = S.spatulas || (S.spatulas = []); for (const sp of G.spats) { const have = got.includes(sp.id); sp.m.visible = !have && G.where === 'town'; if (have) continue;
+    sp.m.rotation.y = G.t * 2; sp.m.position.y = 1.6 + Math.sin(G.t * 3 + sp.id) * 0.2; if (G.where === 'town' && Math.hypot(P.x - sp.x, P.z - sp.z) < (G.driving ? 2.6 : 1.6)) { got.push(sp.id); sfx('win'); burst('sparkle', sp.x, 1.4, sp.z, 18); burst('confetti', sp.x, 1.6, sp.z, 12);
+      const bonus = S.mode === 'explore' ? 0 : 50; S.money += bonus; banner('✨ Golden Spatula ' + got.length + '/10!', got.length === 10 ? 'You found them ALL! Trophy unlocked 🏆' : (bonus ? '+$' + bonus + ' · ' : '') + 'They are hidden on street corners all over Eatsville'); if (got.length === 10) S.trophies++; persist(); } } }
 // ---------------- town signs (owned lots, for-sale, grades) ----------------
 function rebuildTownSigns() { G.signGrp.clear(); if (!S) return;
   for (const b of BUILDINGS) { if (b.lot) { const br = S.branches[b.lot]; G.signGrp.add(makeLotSign(b, br ? br.name.toUpperCase() : null, br ? b.col2 : 0, br ? 0 : (b.lot === 'A' && S.mode === 'worker' ? 800 : LOTS[b.lot].price)));
@@ -152,13 +169,14 @@ function doAction(A) {
   if (A.a === 'enter') { if (G.driving) return; enterBuilding(A.d.bid); return; }
   if (A.a === 'exitCar') { exitCar(); return; }
   if (A.a === 'bag') { P.carry = 'bag'; G.deliv.bag = true; sfx('pop'); toast('🛍️ Bagged! Drive it to ' + BLD[G.deliv.house].name); return; }
-  if (A.a === 'deliver') { const mins = S.time - G.deliv.t0; const tip = Math.round((15 + Math.max(0, 60 - mins * 0.5)) * ((CAR[S.car] || {}).deliv || 1)); const base = DISH[G.deliv.dish].price; S.money += base + tip; S.deliveries++; P.carry = null; G.deliv = null; sfx('buy'); burst('confetti', P.x, 1.5, P.z); floatText('+$' + (base + tip), P.x, 2.2, P.z, 'cash'); toast('🛵 Delivered! +$' + (base + tip) + ' (tip $' + tip + ')'); persist(); return; }
+  if (A.a === 'deliver') { const mins = S.time - G.deliv.t0; const tip = Math.round((15 + Math.max(0, 60 - mins * 0.5)) * ((CAR[S.car] || {}).deliv || 1)); const base = DISH[G.deliv.dish].price; if (!Net.earn(base + tip, 'deliv')) { S.money += base + tip; S.stats.earned += base + tip; S.deliveries++; } P.carry = null; G.deliv = null; sfx('buy'); burst('confetti', P.x, 1.5, P.z); floatText('+$' + (base + tip), P.x, 2.2, P.z, 'cash'); toast('🛵 Delivered! +$' + (base + tip) + ' (tip $' + tip + ')'); persist(); return; }
   if (A.a === 'sim') { const r = Net.isClient() ? Net.act(lx, lz) : G.sim.act(Net.pid(), lx, lz); afterSim(r, A.q); return; }
   if (A.a === 'spot') spotAction(A.s);
 }
-function afterSim(r, q) { if (!r) return; const s = { serve: 'heart', cook: 'click', take: 'pop', fix: 'hit', clean: 'splat', toss: 'land', wash: 'splash', hands: 'splash', deny: 'deny' }[r]; if (s) sfx(s);
+function afterSim(r, q) { if (!r) return; if (r === 'fix' && !q) { sfx('hit'); burst('sparkle', P.x, 1.2, P.z, 4); return; } const s = { serve: 'heart', cook: 'click', take: 'pop', fix: 'hit', clean: 'splat', toss: 'land', wash: 'splash', hands: 'splash', deny: 'deny' }[r]; if (s) sfx(s);
   if (r === 'serve') burst('heart', P.x, 1.6, P.z); if (r === 'clean' || r === 'wash' || r === 'hands') burst('clean', P.x, 0.6, P.z); if (r === 'fix') burst('sparkle', IX + q.s.x, 1.2, q.s.z, 4); }
 function spotAction(s) {
+  if (Net.isClient() && ['office', 'buyLot', 'bank', 'mayor', 'hire', 'stock', 'ratitaShop', 'carShop', 'homeDecor', 'fines', 'quiz', 'bed', 'garage'].includes(s.kind)) { toast('🌐 Your host runs the company. Ask them to do that!'); return; }
   const br = G.room.kind === 'rest' ? branchFor(G.bid) : null; const key = br && branchKey(G.bid);
   switch (s.kind) {
     case 'exit': exitBuilding(); break;
@@ -199,6 +217,7 @@ function hourly() {
   for (const [k, br] of Object.entries(S.branches)) if (k !== liveKey && isOpen()) autopilotHour(k, br);
   const td = S.today; if (td && td.insp && !td.insp.done && S.time >= td.insp.at) { td.insp.done = true; const br = S.branches[td.insp.key]; if (br) { if (liveKey === td.insp.key && G.sim) G.sim.startInspection(); else offsiteInspection(td.insp.key, br); } }
   if (td && td.critic && !td.critic.done && S.time >= td.critic.at) { if (liveKey === td.critic.key && G.sim) { if (G.sim.spawnSpecial('critic')) td.critic.done = true; } else if (S.time > td.critic.at + 120) { td.critic.done = true; const br = S.branches[td.critic.key]; if (br) { const stars = Math.max(1, Math.min(5, Math.round(br.rep / 22 + (br.sanitation > 75 ? 1 : 0)))); S.reviews.unshift({ day: S.day, name: br.name, stars, text: stars >= 4 ? 'Ate here while the owner was out. Still lovely!' : 'The owner was away and it showed.' }); br.rep += (stars - 3) * 2; EV.push({ t: 'review', stars, text: 'Gourmet Gustavo visited ' + br.name + ' while you were out.', name: br.name }); } } }
+  if (!G.deliv && isOpen() && S.today && G.sim && !G.sim.rival && branchKey(G.bid) && Math.random() < (S.today.deliv ? 0.3 : 0.6)) { S.today.deliv = (S.today.deliv || 0) + 1; C.newDelivery(branchKey(G.bid)); banner('📱 RING RING! Delivery order', 'Cook ' + DISH[G.deliv.dish].e + ', bag it at the register, then drive it over. Fast = big tips!'); sfx('ding'); }
   rebuildTownSigns(); persist(); Net.pushState && Net.pushState();
 }
 // ---------------- events -> UI ----------------
@@ -260,7 +279,7 @@ function messModel(m) { if (m.kind === 'plate') { const g = dishModel('dirty', 1
   const g = new THREE.Group(); if (m.kind === 'spill') { const s = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.55, 0.03, 28), new THREE.MeshPhysicalMaterial({ color: [0x7dd3fc, 0xc2853f, 0xff7ab8][m.id % 3], roughness: 0.05, clearcoat: 1, transparent: true, opacity: 0.85 })); s.scale.set(1, 1, 0.7 + (m.id % 5) * 0.08); s.position.y = 0.025; g.add(s); for (let i = 0; i < 3; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 8), s.material); d.scale.y = 0.2; d.position.set(Math.cos(i * 2) * 0.6, 0.02, Math.sin(i * 2) * 0.5); g.add(d); } }
   else { for (let i = 0; i < 3; i++) { const b = new THREE.Mesh(new THREE.IcosahedronGeometry(0.12, 1), MATS.m); b.position.set((i - 1) * 0.22, 0.1, (i % 2) * 0.15); b.castShadow = true; g.add(b); } const c = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.18, 16), new THREE.MeshStandardMaterial({ color: 0xef4444 })); c.rotation.z = PI / 2; c.position.set(0.1, 0.07, -0.2); g.add(c); }
   return g; }
-function staffModel(f) { if (f.cameo === 'torty') { const r = makeMartina(); r.root.scale.setScalar(0.38); r.root.userData.mart = r; return r.root; } if (f.cameo === 'pirat') { const m = ratNPC('pirat'); m.scale.setScalar(1.6); return m; } if (f.cameo === 'candy') { const r = makeCandy(); r.root.userData.candyRig = r; return r.root; }
+function staffModel(f) { if (f.cameo === 'torty') { const r = makeMartina(); r.root.scale.setScalar(0.38); r.root.userData.mart = r; return r.root; } if (f.cameo === 'pirat') { const m = ratNPC('pirat'); m.scale.setScalar(1.6); return m; } if (f.cameo === 'candy') { const r = makeCandy(); r.root.scale.setScalar(0.55); r.root.userData.candyRig = r; return r.root; }
   const L = { cook: { shirt: 0xffffff, hat: 'chef', apron: 0xf1f5f9 }, waiter: { shirt: 0xffffff, coat: 0x111827, bowtie: 0xdc2626 }, janitor: { shirt: 0x3b82f6, hat: 'cap', hatCol: 0x3b82f6 }, manager: { shirt: 0xffffff, coat: 0x334155, tie: 0x14b8a6 } }[f.role] || {};
   const r = rng(f.name.length * 31 + f.id.length); return makePerson(Object.assign(randomLook(r), { kid: false, glasses: false }, L, f.role === 'cook' && G.sim && G.sim.rival ? { apron: G.sim.br.brand.trim, hat: 'cap', hatCol: G.sim.br.brand.seat } : {})); }
 function animAny(m, dt, sp, st) { if (m.userData.rig) animPerson(m, dt, Object.assign({ speed: sp }, st)); else if (m.userData.ratRig) animRat(m.userData.ratRig, dt, { speed: sp * 2 }); else if (m.userData.mart) animMartina(m.userData.mart, dt, sp); else if (m.userData.candyRig) animCandy(m.userData.candyRig, dt, sp * 2, 'happy'); }
@@ -274,6 +293,10 @@ function frame(dt) {
   // input
   if (edge('menu')) U.UI.open ? U.close() : U.pauseMenu(C);
   const mv = U.UI.open ? { x: 0, y: 0 } : readMove(); const A = U.UI.open ? null : currentAction();
+  { // target ring under whatever the action button will use
+    if (!G.ring) { G.ring = new THREE.Mesh(new THREE.TorusGeometry(0.75, 0.07, 10, 40), new THREE.MeshBasicMaterial({ color: 0xffe14d, transparent: true, opacity: 0.85, depthWrite: false })); G.ring.rotation.x = -PI / 2; E.scene.add(G.ring); }
+    const q = A && A.q; const tg = q && (q.s || q.c || q.m); const sp = A && A.a === 'spot' && A.s; const t = tg || sp; G.ring.visible = !!t && G.where === 'room';
+    if (G.ring.visible) { G.ring.position.set(IX + t.x, 0.06, t.z + (q && q.s ? 0.35 : 0)); const k = 1 + Math.sin(G.t * 6) * 0.08; G.ring.scale.set(k, k, k); G.ring.material.color.setHex(q && q.a === 'fix' ? 0xff4f6d : 0xffe14d); } }
   const ab = $('bAct'); ab.classList.toggle('hidden', !!G.driving); if (A) { ab.classList.remove('dim'); if (ab.dataset.l !== A.label) { ab.dataset.l = A.label; ab.innerHTML = '<span>' + A.label + '</span>'; } } else { ab.classList.add('dim'); if (ab.dataset.l !== '') { ab.dataset.l = ''; ab.innerHTML = '<span>✋</span>'; } }
   if (edge('act') && !U.UI.open) doAction(A);
   // car button
@@ -299,7 +322,7 @@ function stepTown(dt, mv) {
     if (G.camT <= 0 && Math.abs(c.v) > 2) G.yaw += wrapAng(c.ry + (c.v < 0 ? PI : 0) - G.yaw) * Math.min(1, dt * 2.2); }
   else { P.model.visible = true; movePlayer(dt, mv, (x, z, r) => collideTown(x, z, r)); }
   P.model.position.set(P.x, G.driving ? 0 : 0.18 * onWalk(P.x, P.z), P.z); P.model.rotation.y = P.ry; animPerson(P.model, dt, { speed: P.sp, carry: !!P.carry });
-  stepTraffic(dt, vis); decorCull(T, E.camera, E.sun.position, E.scene.fog ? E.scene.fog.density : 0);
+  stepSpatulas(dt); stepTraffic(dt, vis); decorCull(T, E.camera, E.sun.position, E.scene.fog ? E.scene.fog.density : 0);
   // camera
   const dist = G.driving ? 12 : 8, h = G.driving ? 5.5 : 4.2; _fwd.set(Math.sin(G.yaw), 0, Math.cos(G.yaw)); const tx = P.x, tz = P.z;
   let cd = dist; for (let i = 1; i <= 16; i++) { const f = dist * i / 16, sx = tx - _fwd.x * f, sz = tz - _fwd.z * f; if (T.colliders.some((c) => c.h !== 0 && sx > c.x0 - 0.4 && sx < c.x1 + 0.4 && sz > c.z0 - 0.4 && sz < c.z1 + 0.4)) { cd = Math.max(1.6, f - dist / 16); break; } }
@@ -319,9 +342,9 @@ function stepRoom(dt, mv) {
   P.model.visible = true; P.model.position.set(P.x, 0, P.z); P.model.rotation.y = P.ry; animPerson(P.model, dt, { speed: P.sp, carry: !!P.carry });
   for (const n of R.npcs) { if (n.m.userData.rig) animPerson(n.m, dt, { speed: 0, wave: n.anim === 'wave' && Math.sin(G.t * 0.7 + n.x) > 0.6, work: n.anim === 'work', angry: n.anim === 'angry' }); else animAny(n.m, dt, 0, {}); }
   // camera: dollhouse view from the open front
-  const lx = P.x - IX; const tx = IX + clamp(lx, -R.W / 2 + 4.5, R.W / 2 - 4.5), tz = clamp(P.z, -R.D / 2 + 3.5, R.D / 2 - 3);
-  const cam = E.camera; const cx = tx, cy = 9.6, cz = tz + 8.8; if (G.snapRoom !== R) { cam.position.set(cx, cy, cz); G.snapRoom = R; } cam.position.x = damp(cam.position.x, cx, 6, dt); cam.position.y = damp(cam.position.y, cy, 6, dt); cam.position.z = damp(cam.position.z, cz, 6, dt);
-  cam.lookAt(tx, 0.8, tz - 1.0); cam.fov = E.baseFov - 4; cam.updateProjectionMatrix(); followShadow(tx, 0, tz);
+  const lx = P.x - IX; const tx = IX + clamp(lx, -R.W / 2 + 4.5, R.W / 2 - 4.5), tz = clamp(P.z, -R.D / 2 + 2.6, R.D / 2 - 2.4);
+  const cam = E.camera; const cx = tx, cy = 7.4, cz = tz + 7.2; if (G.snapRoom !== R) { cam.position.set(cx, cy, cz); G.snapRoom = R; } cam.position.x = damp(cam.position.x, cx, 6, dt); cam.position.y = damp(cam.position.y, cy, 6, dt); cam.position.z = damp(cam.position.z, cz, 6, dt);
+  cam.lookAt(tx, 1.0, tz - 1.3); cam.fov = E.baseFov - 2; cam.updateProjectionMatrix(); followShadow(tx, 0, tz);
   if (G.deliv && G.deliv.bag && R.bid === G.deliv.house) {} }
 // ---------------- HUD ----------------
 let hudT = 0;
@@ -336,5 +359,5 @@ function hud() { hudT -= 1; if (hudT > 0) return; hudT = 6;
   else if (G.where === 'town' && G.deliv && G.deliv.bag) { const d = T.doors.find((x) => x.bid === G.deliv.house); const ang = Math.atan2(d.x - P.x, d.z - P.z) - G.yaw; nav.classList.remove('hidden'); nav.innerHTML = `<i style="transform:rotate(${-ang}rad)">⬆</i> ${titleCase(BLD[G.deliv.house].name)} · ${Math.round(Math.hypot(d.x - P.x, d.z - P.z))}m`; } else nav.classList.add('hidden');
 }
 // test hooks
-window.__G = { G, C, P, get S() { return S; }, E, T, enterBuilding, exitBuilding, sleep, U, currentAction, doAction };
+window.__G = { G, C, P, Net, get S() { return S; }, E, T, enterBuilding, exitBuilding, sleep, U, currentAction, doAction };
 boot();

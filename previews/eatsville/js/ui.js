@@ -2,7 +2,7 @@
 import { $, esc } from './util.js';
 import { S, persist, newGame, hasSave, loadSave, candidates, lotPrice, buyLot, buyoutPrice, canBuyout, buyout, avgPrice, ambience, fmtTime, news, branchFor, branchKey } from './empire.js';
 import { DISHES, DISH, STATIONS } from './food.js';
-import { LOTS, RIVALS, CAREER, CARS, CAR, OUTFITS, DECOR, THEMES, STAFF_ROLES, BLD } from './data.js';
+import { LOTS, RIVALS, CAREER, CARS, CAR, OUTFITS, DECOR, THEMES, STAFF_ROLES, BLD , HOME_PAINT, HOME_FLOOR, HOME_FAB, HOME_ITEMS } from './data.js';
 export const UI = { open: false, C: null };
 const money = (n) => '$' + Math.round(n).toLocaleString();
 export function close() { const u = $('ui'); u.innerHTML = ''; u.classList.remove('open'); UI.open = false; if (UI.C && UI.C.onClose) UI.C.onClose(); }
@@ -156,11 +156,25 @@ export function outfits(C, owned) {
     if (a === 'wear') L.outfit = v; if (a === 'shirt') L.shirt = v || null; if (a === 'skin') L.skin = parseInt(v.slice(1), 16); if (a === 'hair') L.hair = parseInt(v.slice(1), 16); if (a === 'style') L.hairStyle = v;
     persist(); C.restyle(); outfits(C, owned); });
 }
-export function homeDecor(C) {
-  const lv = S.homeLevel || 0; const up = [1200, 3000][lv];
-  panel('🏠 MY HOUSE', row(`<b>${['Cozy Cottage', 'Family House', 'Mega Mansion'][lv]}</b><small>bigger rooms + more decor spots</small>`, lv < 2 ? btn('up', '', 'Upgrade ' + money(up), 'mbtn2 sm', S.money < up) : 'MAX') + `<h3>DECOR (${S.homeDecor.length}/4)</h3><div class="grid3">` +
-    DECOR.map((d) => `<button class="dish" data-a="buy" data-v="${d.id}" ${S.money < d.price || S.homeDecor.length >= 4 ? 'disabled' : ''}><b>${d.n}</b><small>${money(d.price)}</small></button>`).join('') + '</div>' + (S.homeDecor.length ? btn('undo', '', '↩ Remove last decor', 'mbtn2 sm') : ''),
-  (a, v) => { if (a === 'up' && S.money >= up) { S.money -= up; S.homeLevel = lv + 1; C.sfx('win'); } if (a === 'buy') { const d = DECOR.find((x) => x.id === v); if (S.money >= d.price) { S.money -= d.price; S.homeDecor.push(v); C.sfx('buy'); } } if (a === 'undo') S.homeDecor.pop(); persist(); C.rebuildRoom(); homeDecor(C); });
+export function homeDecor(C, tab = 'style') {
+  const lv = S.homeLevel || 0; const up = [1200, 3000][lv]; const H = S.home || (S.home = {}); const slots = [4, 6, 8][lv]; const free = S.mode === 'explore';
+  const tabs = `<div class="seg">${[['style', '🎨 Style'], ['furn', '🛋️ Furniture'], ['house', '🏡 House']].map(([k, n]) => `<button data-a="tab" data-v="${k}" class="${tab === k ? 'on' : ''}">${n}</button>`).join('')}</div>`;
+  let body = tabs;
+  if (tab === 'style') body += `<h3>WALL PAINT ($20)</h3><div class="seg wrap">${HOME_PAINT.map((p) => `<button data-a="wall" data-v="${p.id}" class="${H.wall === p.id ? 'on' : ''}"><i class="dot" style="background:#${p.c.toString(16).padStart(6, '0')}"></i>${p.n}</button>`).join('')}</div>
+    <h3>FLOOR ($40)</h3><div class="seg wrap">${HOME_FLOOR.map((f) => `<button data-a="floor" data-v="${f.id}" class="${(H.floor || 'wood') === f.id ? 'on' : ''}">${f.n}</button>`).join('')}</div>
+    <h3>SOFA, BED + CURTAINS (free)</h3><div class="seg wrap">${HOME_FAB.map((c, i) => `<button data-a="fab" data-v="${i}" class="swb ${(H.fab || 0) === i ? 'on' : ''}" style="background:#${c.toString(16).padStart(6, '0')}">${(H.fab || 0) === i ? '✔' : '&nbsp;'}</button>`).join('')}</div>`;
+  if (tab === 'furn') { const all = DECOR.map((d) => ({ id: d.id, n: d.n, price: d.price })).concat(HOME_ITEMS);
+    body += `<h3>FURNITURE (${S.homeDecor.length}/${slots} spots)</h3><div class="grid3">` + all.map((d) => `<button class="dish" data-a="buy" data-v="${d.id}" ${(!free && S.money < d.price) || S.homeDecor.length >= slots ? 'disabled' : ''}><b>${d.n}</b><small>${free ? 'free' : money(d.price)}</small></button>`).join('') + '</div>' + (S.homeDecor.length ? btn('undo', '', '↩ Remove last piece', 'mbtn2 sm') : '') + (S.homeDecor.length >= slots && lv < 2 ? '<p class="sub">Out of spots! Upgrade the house for more room.</p>' : ''); }
+  if (tab === 'house') body += row(`<b>${['Cozy Cottage', 'Family House', 'Mega Mansion'][lv]}</b><small>${slots} furniture spots · bigger rooms each level</small>`, lv < 2 ? btn('up', '', 'Upgrade ' + money(up), 'mbtn2 sm', !free && S.money < up) : 'MAX');
+  const pay = (v) => { if (free) return true; if (S.money < v) { C.toast('Not enough money', true); return false; } S.money -= v; return true; };
+  panel('🏠 MY HOUSE', body, (a, v) => { if (a === 'tab') return homeDecor(C, v);
+    if (a === 'up' && pay(up)) { S.homeLevel = lv + 1; C.sfx('win'); }
+    if (a === 'wall' && H.wall !== v && pay(20)) { H.wall = v; C.sfx('buy'); }
+    if (a === 'floor' && H.floor !== v && pay(40)) { H.floor = v; C.sfx('buy'); }
+    if (a === 'fab') { H.fab = +v; C.sfx('pop'); }
+    if (a === 'buy') { const d = DECOR.find((x) => x.id === v) || HOME_ITEMS.find((x) => x.id === v); if (d && S.homeDecor.length < slots && pay(d.price)) { S.homeDecor.push(v); C.sfx('buy'); } }
+    if (a === 'undo') S.homeDecor.pop();
+    persist(); C.rebuildRoom(); homeDecor(C, tab); });
 }
 export function empire(C) {
   const bs = myBranches(); const mine = bs.reduce((a, [k, b]) => a + b.rep, 0); const tot = mine + Object.values(S.rivals).filter((r) => !r.owned).reduce((a, r) => a + r.rep, 0) || 1;
@@ -170,7 +184,7 @@ export function empire(C) {
   body += row('🏆 Trophies', '<b>' + S.trophies + '</b>') + row('🍽️ Total served', '<b>' + S.stats.served + '</b>') + row('💳 Loan', '<b>' + money(S.loan) + '</b>');
   panel('📈 MY EMPIRE', body);
 }
-export function trophies(C) { const t = [['First restaurant', Object.keys(S.branches).length >= 1], ['3 restaurants', Object.keys(S.branches).length >= 3], ['Grade A!', S.stats.aGrades > 0], ['5-star review', !!S.seen.five], ['100 customers served', S.stats.served >= 100], ['Manager at Mega Munch', S.career.rank >= 4], ['10 deliveries', S.deliveries >= 10], ['Food Emperor', !!S.seen.emperor]];
+export function trophies(C) { const t = [['First restaurant', Object.keys(S.branches).length >= 1], ['3 restaurants', Object.keys(S.branches).length >= 3], ['Grade A!', S.stats.aGrades > 0], ['5-star review', !!S.seen.five], ['100 customers served', S.stats.served >= 100], ['Manager at Mega Munch', S.career.rank >= 4], ['10 deliveries', S.deliveries >= 10], ['Food Emperor', !!S.seen.emperor], ['All 10 Golden Spatulas (' + (S.spatulas || []).length + '/10)', (S.spatulas || []).length >= 10]];
   panel('🏆 TROPHY SHELF', t.map(([n, ok]) => row((ok ? '🏆 ' : '🔒 ') + '<b>' + n + '</b>', ok ? '✅' : '')).join('')); }
 export function garage(C) { panel('🚗 MY GARAGE', S.cars.map((id) => row(`<b>${CAR[id].n}</b>`, S.car === id ? '🔑' : btn('use', id, 'Drive this', 'mbtn2 sm'))).join('') + '<p class="sub">Buy more cars at Wheelie Deals.</p>', (a, v) => { if (a === 'use') { S.car = v; persist(); C.respawnCar(true, true); C.toast('🚗 ' + CAR[v].n + ' is waiting outside your house'); } garage(C); }); }
 export function tv(C) { panel('📺 EATSVILLE NEWS', '<div class="feed">' + S.news.slice(0, 8).map((n) => `<p><small>Day ${n.day}</small> ${esc(n.text)}</p>`).join('') + '</div>' + `<p class="sub">Weather: sunny with a chance of meatballs.</p>`); }

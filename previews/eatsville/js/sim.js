@@ -87,12 +87,12 @@ export class RestSim {
   // what the action button would do for this player at (x,z) room-local
   query(pid, x, z) {
     const carry = this.carry[pid] || null; const near = (o, r) => Math.hypot(o.x - x, o.z - z) < r;
-    if (carry && carry !== 'burnt' && carry !== 'dirty' && carry !== 'bag') { const c = this.cust.find((c) => c.st === 'wait' && near(c, 1.6) && c.dish === carry); if (c) return { a: 'serve', c, label: 'Serve ' + DISH[carry].e }; }
-    for (const s of Object.values(this.st)) { if (!near(s, 1.25)) continue;
+    if (carry && carry !== 'burnt' && carry !== 'dirty' && carry !== 'bag') { const c = this.cust.find((c) => c.st === 'wait' && near(c, 1.9) && c.dish === carry); if (c) return { a: 'serve', c, label: 'Serve ' + DISH[carry].e }; }
+    { let bs = null, bd = 1.45; for (const s of Object.values(this.st)) { const d = Math.hypot(s.x - x, s.z - z); if (d < bd) { bd = d; bs = s; } } for (const s of bs ? [bs] : []) {
       if (s.broken) return { a: 'fix', s, label: 'FIX! ' + s.fixN + '/5' };
       if (s.ready && !carry) return { a: 'take', s, label: 'Take ' + (s.ready === 'burnt' ? '🔥' : DISH[s.ready].e) };
       if (!s.cook && !s.ready && !carry) { const d = this.pickDish(s.id); if (d) return { a: 'cook', s, d, label: 'Cook ' + DISH[d].e }; return { a: 'none', label: 'Not on menu' }; }
-      if (s.cook) return { a: 'none', label: 'Cooking…' }; }
+      if (s.cook) return { a: 'none', label: 'Cooking… ' + Math.round(s.cook.t / s.cook.T * 100) + '%' }; } }
     if (carry === 'burnt' || carry === 'dirty' || (carry && carry !== 'bag')) { const tr = this.R.spots.find((p) => p.kind === 'trash'); if (tr && near(tr, 1.4)) return { a: 'toss', label: 'Toss 🗑️' }; }
     const sk = this.R.spots.find((p) => p.kind === 'sink'); if (sk && near(sk, 1.4)) { if (carry === 'dirty') return { a: 'wash', label: 'Wash plate 🫧' }; if (!carry) return { a: 'hands', label: 'Wash hands 🧼' }; }
     if (!carry) { let best = null, bd = 1.4; for (const m of this.mess) { const d = Math.hypot(m.x - x, m.z - z); if (d < bd) { bd = d; best = m; } } if (best) return { a: 'clean', m: best, label: best.kind === 'plate' ? 'Pick up plate' : 'Clean 🧽' }; }

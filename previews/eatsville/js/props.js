@@ -7,6 +7,22 @@ const PI = Math.PI;
 const steel = 0xd6dbe3, dark = 0x1f2937, wood = 0xb7793f, woodD = 0x8b5a2b;
 function txt(x, s, size, col, px, py, pz, k = 'g', maxW = 0, em = 0) { const g = textGeo(s, size, size * 0.25); if (!g) return; const sc = maxW ? Math.min(1, maxW / g.userData.w) : 1; x.p(k, g, col, px, py, pz, 0, 0, 0, sc, sc, 1, em); }
 export const PR = {
+  tableTop(x, o = {}) { // flower vase + ketchup/mustard + napkin holder (sits on a table top at y=0.78)
+    const y = o.y || 0.78; x.p('g', lathe([[0, 0], [0.07, 0], [0.09, 0.08], [0.05, 0.2], [0.06, 0.24], [0, 0.24]], 18), o.vase || 0x60a5fa, 0, y, 0);
+    x.p('x', P.cyl, 0x15803d, 0, y + 0.32, 0, 0, 0, 0, 0.012, 0.22, 0.012); x.p('g', P.sphere, o.flower || 0xff6b9a, 0, y + 0.45, 0, 0, 0, 0, 0.07, 0.06, 0.07); x.p('g', P.sphere, 0xffe14d, 0, y + 0.46, 0.035, 0, 0, 0, 0.03, 0.03, 0.03);
+    for (const [dx, c] of [[0.22, 0xdc2626], [0.3, 0xfacc15]]) { x.p('g', P.capsule, c, dx, y + 0.11, -0.12, 0, 0, 0, 0.09, 0.12, 0.09); x.p('g', P.cone, c, dx, y + 0.25, -0.12, 0, 0, 0, 0.025, 0.06, 0.025); }
+    x.p('x', P.rboxS, 0xcbd5e1, -0.25, y + 0.07, -0.1, 0, 0, 0, 0.16, 0.14, 0.08); x.p('m', P.rboxS, 0xffffff, -0.25, y + 0.1, -0.1, 0, 0, 0, 0.13, 0.12, 0.05); return null; },
+  cakeDome(x, o = {}) { const y = o.y || 0.97; x.p('g', rcyl(0.26, 0.03, 0.01), 0xffffff, 0, y, 0); x.p('x', P.cyl, 0xe5e7eb, 0, y - 0.05, 0, 0, 0, 0, 0.05, 0.1, 0.05);
+    x.p('g', rcyl(0.18, 0.16, 0.04), o.cake || 0xf9a8d4, 0, y + 0.03, 0); x.p('g', rcyl(0.185, 0.04, 0.02), 0xffffff, 0, y + 0.17, 0); for (let i = 0; i < 6; i++) x.p('g', P.sphere, 0xdc2626, Math.cos(i) * 0.12, y + 0.23, Math.sin(i) * 0.12, 0, 0, 0, 0.025, 0.025, 0.025);
+    x.p('g', lathe([[0, 0.42], [0.12, 0.4], [0.22, 0.3], [0.25, 0.1], [0.25, 0], [0.24, 0], [0.24, 0.1], [0.21, 0.29], [0.11, 0.39], [0, 0.41]], 28), 0xdbeafe, 0, y + 0.03, 0); x.p('x', P.sphere, 0xe5e7eb, 0, y + 0.47, 0, 0, 0, 0, 0.04, 0.04, 0.04); return null; },
+  potRack(x, o = {}) { const w = o.w || 4; x.p('x', P.cyl, 0x9ca3af, 0, 0, 0, 0, 0, PI / 2, 0.03, w, 0.03); const n = Math.round(w / 0.7);
+    for (let i = 0; i < n; i++) { const dx = -w / 2 + (i + 0.5) * w / n; const big = i % 2; x.p('x', P.cyl, 0x6b7280, dx, -0.14, 0, 0, 0, 0, 0.008, 0.28, 0.008);
+      if (i % 3 === 2) { x.p('x', P.cyl, 0xa16207, dx, -0.38, 0, 0, 0, 0, 0.012, 0.22, 0.012); x.p('x', P.sphere, 0x9ca3af, dx, -0.55, 0, 0, 0, 0, 0.08, 0.06, 0.03); }
+      else { x.p('x', lathe([[0, 0], [0.16 + big * 0.05, 0], [0.18 + big * 0.05, 0.16], [0.17 + big * 0.05, 0.17], [0, 0.17]], 22), big ? 0xb45309 : 0xcbd5e1, dx, -0.48, 0); x.p('x', P.cyl, 0x111827, dx + 0.22 + big * 0.05, -0.33, 0, 0, 0, PI / 2, 0.02, 0.18, 0.02); } } return null; },
+  easel(x, o = {}) { for (const s of [-1, 1]) x.p('m', P.cyl, woodD, s * 0.32, 0.65, 0.1, -0.12, 0, s * 0.08, 0.035, 1.3, 0.035); x.p('m', P.cyl, woodD, 0, 0.6, -0.22, 0.35, 0, 0, 0.03, 1.2, 0.03);
+    x.p('m', P.rboxS, woodD, 0, 1.0, 0.13, -0.12, 0, 0, 0.8, 0.95, 0.05); x.p('m', P.rboxS, 0x1f3b2d, 0, 1.0, 0.16, -0.12, 0, 0, 0.7, 0.85, 0.02);
+    txt(x, o.t1 || 'TODAY', 0.1, 0xfef08a, 0, 1.25, 0.2, 'n', 0.6, 0.4); txt(x, o.t2 || 'SPECIAL!', 0.09, 0xffffff, 0, 1.07, 0.18, 'n', 0.62, 0.4); x.p('g', P.sphere, 0xff6b9a, -0.15, 0.85, 0.17, 0, 0, 0, 0.06, 0.06, 0.02); x.p('g', P.sphere, 0x60a5fa, 0.15, 0.85, 0.17, 0, 0, 0, 0.06, 0.06, 0.02); return [0.45, 0.3]; },
+  tipJar(x, o = {}) { const y = o.y || 0.97; x.p('g', lathe([[0, 0], [0.09, 0], [0.1, 0.18], [0.08, 0.2], [0, 0.2]], 20), 0xbae6fd, 0, y, 0); for (let i = 0; i < 4; i++) x.p('x', rcyl(0.035, 0.01, 0.004), 0xfacc15, (i % 2 - 0.5) * 0.06, y + 0.03 + i * 0.025, (i > 1 ? 0.02 : -0.02)); return null; },
   counter(x, o = {}) { const w = o.w || 2, c = o.col || 0xffffff; x.p('m', P.rboxS, c, 0, 0.45, 0, 0, 0, 0, w, 0.9, 0.8); x.p('g', P.rboxS, o.top || 0xe5e7eb, 0, 0.93, 0, 0, 0, 0, w + 0.08, 0.07, 0.88);
     for (let i = 0; i < Math.max(1, Math.round(w / 0.9)); i++) { const dx = -w / 2 + (i + 0.5) * w / Math.max(1, Math.round(w / 0.9)); x.p('m', P.rboxS, c, dx, 0.45, 0.41, 0, 0, 0, w / Math.max(1, Math.round(w / 0.9)) - 0.08, 0.75, 0.02); x.p('x', P.capsule, steel, dx, 0.7, 0.44, 0, 0, PI / 2, 0.04, 0.2, 0.04); } return [w / 2, 0.45]; },
   grill(x, o = {}) { PR.counter(x, { w: 1.6, col: 0x9ca3af, top: 0x4b5563 }); for (let i = 0; i < 6; i++) x.p('x', P.cyl, 0x111827, 0, 0.98, -0.3 + i * 0.12, 0, 0, PI / 2, 0.02, 1.3, 0.02);

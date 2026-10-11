@@ -67,3 +67,10 @@ export const CAMEOS = [
   { id: 'pirat', n: 'Pi-rat', role: 'cook', skill: 4, wage: 55, blurb: 'Cooks like a pirate: fast, loud, lots of "ARR".' },
   { id: 'candy', n: 'Candy', role: 'janitor', skill: 4, wage: 22, blurb: 'Schnauzer zoomies = squeaky clean floors.' },
 ];
+
+// House customizing: paint, floors, furniture colours + extra home-only furniture
+export const HOME_PAINT = [{ id: 'cream', n: 'Cream', c: 0xfff1e6 }, { id: 'sky', n: 'Sky', c: 0xdbeafe }, { id: 'mint', n: 'Mint', c: 0xd1fae5 }, { id: 'peach', n: 'Peach', c: 0xffe4d6 }, { id: 'lilac', n: 'Lilac', c: 0xf3e8ff }, { id: 'lemon', n: 'Lemon', c: 0xfef9c3 }, { id: 'night', n: 'Midnight', c: 0x334155 }];
+export const HOME_FLOOR = [{ id: 'wood', n: 'Wood', k: 'wood', c: 0x8b5cf6 }, { id: 'tileB', n: 'Blue tile', k: 'tile', c: 0x93c5fd }, { id: 'tileP', n: 'Pink tile', k: 'tile', c: 0xf9a8d4 }, { id: 'checkG', n: 'Green check', k: 'check', c: 0x4ade80 }, { id: 'checkR', n: 'Diner check', k: 'check', c: 0xef4444 }];
+export const HOME_FAB = [0x8b5cf6, 0x3b82f6, 0x10b981, 0xf97316, 0xef4444, 0xec4899, 0xfacc15, 0x475569];
+export const HOME_ITEMS = [{ id: 'books', n: 'Bookcase', price: 60, prop: 'shelf', o: { w: 1.6, h: 1.8, items: 'books' } }, { id: 'lamp', n: 'Cozy Lamp', price: 30, prop: 'lamp' }, { id: 'sofa2', n: 'Comfy Sofa', price: 90, prop: 'sofa' },
+  { id: 'trophyCase', n: 'Trophy Stand', price: 70, prop: 'podium' }, { id: 'robot', n: 'Ratita Helper Bot', price: 260, prop: 'robot' }, { id: 'cake', n: 'Cake Stand', price: 25, prop: 'cakeDome', o: { y: 0.01 } }];
