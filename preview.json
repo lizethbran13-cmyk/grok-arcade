@@ -23,9 +23,9 @@
       "game": "relics",
       "name": "Grok Lost Relics",
       "size": "New Game",
-      "what": "An urban-explorer adventure: dive into caves, tunnels, pyramids and jungles, solve puzzles, dodge booby traps and escape wild animals while racing the evil Professor Vintage for ancient relics, and the authorities think YOU are the bad guy! Co-op multiplayer.",
+      "what": "Be an urban explorer with a whip and a torch! Swing over croc rivers, sneak past the Relic Patrol (they think YOU'RE the thief), dodge boulders, darts and spike floors, solve temple puzzles and beat Professor Vintage's crazy machines to save 5 ancient relics for the museum. Co-op for 3. First expedition is playable in the Time Jumper!",
       "stage": "building",
-      "when": "Building now"
+      "when": "Building now: playable in the Time Jumper"
     },
     {
       "game": "puptown",
@@ -147,6 +147,15 @@
       "playable": true,
       "built": "2026-10-11",
       "notes": "First playable: town + driving, own diner or Mega Munch job, cook/serve, Ratita breakdowns, surprise inspections, day reports. Co-op, delivery polish and more coming."
+    },
+    {
+      "id": "relics",
+      "game": "relics",
+      "name": "Grok Lost Relics",
+      "url": "previews/relics/",
+      "playable": true,
+      "built": "2026-10-11",
+      "notes": "First playable: the Relic Museum hub + expedition 1, Temple of the Jade Monkey (river swing, Relic Patrol sneaking, gate puzzle, rope bridge, dart/spike/boulder traps, statue puzzle, Vine-Chopper boss, escape chase). 4 more expeditions coming."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
