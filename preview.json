@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-11T22:45:00Z",
+  "updated": "2026-10-11",
   "items": [
     {
       "game": "rides",
@@ -43,6 +43,16 @@
       "stage": "shipped",
       "when": "Oct 11",
       "shippedAt": "2026-10-11T06:20:00Z"
+    },
+    {
+      "issue": 38,
+      "game": "puptown",
+      "name": "Ratita Super Expansion (live)",
+      "size": "MEGA Expansion",
+      "what": "Grok Pup Town: Ratita Row opens east of Paw Park! 5 enterable buildings + the Test Yard, The Missing Prototype mystery with Luna, Pi-rat, Snowie and Torty, 4 new mini-games, a Cheese Coin gadget store and 12 Golden Gears.",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T22:55:00Z"
     },
     {
       "issue": 40,
