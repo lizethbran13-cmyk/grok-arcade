@@ -1800,7 +1800,7 @@ GA.HALL_DATA = {
 "pics": [
 {
 "src": "assets/hall/eatsville/1.webp",
-"cap": "Lunch rush at the Main St Diner: customers waiting, the grill sizzling",
+"cap": "Lunch rush at the Main St Diner, with the big menu board and neon OPEN sign",
 "w": 390,
 "h": 844
 },
@@ -1836,7 +1836,7 @@ GA.HALL_DATA = {
 },
 {
 "src": "assets/hall/eatsville/7.webp",
-"cap": "Decorating my house (and Candy came to visit)",
+"cap": "My house: kitchen, living room, bed nook and Candy",
 "w": 390,
 "h": 844
 },
@@ -1855,7 +1855,7 @@ GA.HALL_DATA = {
 ],
 "cover": "assets/hall/eatsville/cover.webp",
 "quip": "A man with a clipboard inspected my Hall for three hours. He gave the dinosaur bones a B-minus. 'Dusty,' he said.",
-"noOld": "Grok Eatsville Tycoon just opened for business. No old versions yet. Please wipe your feet and wash your hands."
+"noOld": "Grok Eatsville Tycoon just opened for business. Its Time Jumper beta is in the Save Vault. Please wash your hands."
 
 },
 "puptown": {
