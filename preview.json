@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-11T22:05:00Z",
+  "updated": "2026-10-11T21:52:00Z",
   "items": [
     {
       "game": "rides",
@@ -24,7 +24,7 @@
       "game": "relics",
       "name": "Grok Lost Relics",
       "size": "New Game",
-      "what": "Be an urban explorer with a whip and a torch! Swing over croc rivers, sneak past the Relic Patrol (they think YOU'RE the thief), dodge boulders, darts and spike floors, solve temple puzzles and beat Professor Vintage's crazy machines to save 5 ancient relics for the museum. Co-op for 3. First expedition is playable in the Time Jumper!",
+      "what": "Be an urban explorer with a whip and a torch! Swing over croc rivers, sneak past the Relic Patrol (they think YOU'RE the thief), dodge boulders, darts and spike floors, solve temple puzzles and beat Professor Vintage's crazy machines to save 5 ancient relics for the museum. Co-op for 3. All 5 expeditions are playable in the Time Jumper!",
       "stage": "building",
       "when": "Building now: playable in the Time Jumper"
     },
@@ -147,7 +147,7 @@
       "url": "previews/relics/",
       "playable": true,
       "built": "2026-10-11",
-      "notes": "First playable: the Relic Museum hub + expedition 1, Temple of the Jade Monkey (river swing, Relic Patrol sneaking, gate puzzle, rope bridge, dart/spike/boulder traps, statue puzzle, Vine-Chopper boss, escape chase). 4 more expeditions coming."
+      "notes": "All 5 expeditions playable: Temple of the Jade Monkey, Crystal Owl Caverns, The Clockwork Subway, Pyramid of the Sun Scarab and Vintage's Sky Fortress (puzzles, traps, Relic Patrol sneaking, 5 Professor Vintage boss machines, escape chases), plus the Relic Museum hub and 3-player co-op. WIP: polish pass ongoing."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

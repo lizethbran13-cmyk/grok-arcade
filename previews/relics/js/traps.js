@@ -1,3 +1,4 @@
+import { rbox } from './world.js';
 // Booby traps runtime: every client animates them from the shared clock; hits only ever hurt your own explorer.
 import * as THREE from 'three';
 import { boulderGeo, makeDart } from './creatures.js';
@@ -6,7 +7,7 @@ import { sfx } from './audio.js';
 import { inView } from './perf.js';
 const PI = Math.PI;
 export function initTraps(g) { const w = g.world;
-  for (const b of w.boulders) { const m = toGroup(boulderGeo()); m.scale.setScalar(b.r); g.scene.add(m); g.extra.push(m); b.obj = m; resetBoulder(b); }
+  for (const b of w.boulders) { const m = b.look === 'cart' ? cartMesh(b.r) : toGroup(boulderGeo()); if (b.look !== 'cart') m.scale.setScalar(b.r); if (b.tint) m.traverse((o) => { if (o.material && o.material.color) { o.material = o.material.clone(); o.material.color.lerp(new THREE.Color(b.tint), 0.55); } }); g.scene.add(m); g.extra.push(m); b.obj = m; resetBoulder(b); }
   g.dartPool = []; g.dartsLive = [];
   for (const d of w.darts) d.last = Math.floor(g.T / d.period + d.phase); }
 function resetBoulder(b) { b.st = 'wait'; b.t = 0; b.i = 0; b.x = b.path[0][0]; b.y = b.path[0][1] + b.r; b.z = b.path[0][2]; if (b.obj) { b.obj.position.set(b.x, b.y, b.z); b.obj.visible = true; } }
@@ -19,7 +20,7 @@ export function stepTraps(dt, g) { const w = g.world, me = g.me, T = g.T; const 
     else if (b.st === 'rumble') { b.t += dt; b.obj.position.x = b.x + Math.sin(b.t * 60) * 0.06; if (b.t > b.delay) { b.st = 'roll'; b.t = 0; } }
     else if (b.st === 'roll') { const q = b.path[b.i + 1]; if (!q) { b.st = 'crash'; b.t = 0; sfx('boom'); g.fx.puff(b.x, b.y - b.r + 0.3, b.z, 22, 0xd6d3d1); g.cam.shake = 0.5; }
       else { const dx = q[0] - b.x, dy = q[1] + b.r - b.y, dz = q[2] - b.z, d = Math.hypot(dx, dy, dz); const st = b.sp * dt; if (d <= st) { b.x = q[0]; b.y = q[1] + b.r; b.z = q[2]; b.i++; } else { b.x += dx / d * st; b.y += dy / d * st; b.z += dz / d * st; }
-        b.obj.position.set(b.x, b.y, b.z); const ax = new THREE.Vector3(dz, 0, -dx).normalize(); b.obj.rotateOnWorldAxis(ax, st / b.r); if (Math.random() < 0.4) g.fx.puff(b.x, b.y - b.r, b.z, 2, 0xd6d3d1); g.cam.shake = Math.max(g.cam.shake, Math.max(0, 0.25 - Math.hypot(me.x - b.x, me.z - b.z) * 0.012));
+        b.obj.position.set(b.x, b.y, b.z); if (b.look === 'cart') { b.obj.rotation.y = Math.atan2(dx, dz); b.obj.rotation.z = Math.sin(g.T * 30) * 0.03; } else { const ax = new THREE.Vector3(dz, 0, -dx).normalize(); b.obj.rotateOnWorldAxis(ax, st / b.r); } if (Math.random() < 0.4) g.fx.puff(b.x, b.y - b.r, b.z, 2, 0xd6d3d1); g.cam.shake = Math.max(g.cam.shake, Math.max(0, 0.25 - Math.hypot(me.x - b.x, me.z - b.z) * 0.012));
         if (alive && Math.hypot(me.x - b.x, me.z - b.z) < b.r + 0.3 && me.y < b.y + b.r && me.y + 1.7 > b.y - b.r) { if (me.hurt(g, { x: b.x - dx, z: b.z - dz }, 'boulder')) { me.knock({ x: b.x - dx / d, z: b.z - dz / d }, 11); g.toastMsg('SQUISH! (cartoon-style, you\u2019re fine) 🪨'); } } } }
     else if (b.st === 'crash') { b.t += dt; if (b.t > 0.4) b.obj.visible = false; if (b.t > 4) resetBoulder(b); } }
   // ---- spikes ----
@@ -43,3 +44,11 @@ export function stepTraps(dt, g) { const w = g.world, me = g.me, T = g.T; const 
     if (warn && Math.random() < 0.3) g.fx.emit(j.x + (Math.random() - 0.5) * 0.3, j.y + 0.2, j.z + (Math.random() - 0.5) * 0.3, 0, 2, 0, 0.08, 0x9ca3af, 0.5, 0, 1);
     if (on && alive && Math.hypot(me.x - j.x, me.z - j.z) < 0.75 && me.y < j.y + 2.6 && me.y > j.y - 0.5) me.hurt(g, { x: j.x, z: j.z }, 'hot'); } }
 function fireDart(g, x, y, z, dir, len) { let m = g.dartPool.pop(); if (!m) { m = makeDart(); g.scene.add(m); g.extra.push(m); } m.visible = true; m.position.set(x, y, z); m.rotation.set(0, Math.atan2(dir[0], dir[1]), 0); g.dartsLive.push({ m, x, y, z, dir, L: len, t: 0 }); }
+
+// runaway mine cart / subway handcar: rounded tub on wheels, full of rocks (sits on its path, doesn't roll over)
+function cartMesh(r) { const g = new THREE.Group(), M = (c, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.55, metalness: 0.2 }, o));
+  const tub = new THREE.Mesh(rbox(2.2, 1.3, 3.0, 0.25, 3), M(0x8a4b2a)); tub.position.y = -r + 1.25; tub.castShadow = true; g.add(tub);
+  const rim = new THREE.Mesh(rbox(2.35, 0.18, 3.15, 0.08, 2), M(0x9ca3af, { metalness: 0.7, roughness: 0.3 })); rim.position.y = -r + 1.95; g.add(rim);
+  for (let i = 0; i < 5; i++) { const k = new THREE.Mesh(new THREE.IcosahedronGeometry(0.42, 1), M(0x78716c)); k.position.set((i % 3 - 1) * 0.6, -r + 2.05, (i - 2) * 0.5); g.add(k); }
+  for (const a of [-1, 1]) for (const b of [-1, 1]) { const wl = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.25, 20), M(0x374151, { metalness: 0.6 })); wl.rotation.z = Math.PI / 2; wl.position.set(a * 1.05, -r + 0.42, b * 1.0); g.add(wl); }
+  const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.2, 14, 10), new THREE.MeshBasicMaterial({ color: 0xffe066 })); lamp.position.set(0, -r + 1.4, 1.55); g.add(lamp); return g; }

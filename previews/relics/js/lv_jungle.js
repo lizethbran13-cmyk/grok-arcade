@@ -14,7 +14,7 @@ function jungleFill(w, x0, z0, x1, z1, n, keep) { for (let i = 0; i < n; i++) { 
 function wallsOfRoom(w, x0, z0, x1, z1, h, d = {}, o = {}) { PR.stoneRoom(w, x0, z0, x1, z1, h, o.col || STONE, Object.assign({ doors: d, ceilCol: 0x6f6a58, wall: { col2: STONE2, bh: 0.7, bl: 1.4, skip: 0.1 } }, o)); }
 BUILD.jungle = (w) => { w.music = 'jungle'; w.killY = -12; w.camDist = 4.8;
   w.env = { fog: 0xb6e2c4, fogD: 0.0058, skyMid: 0xa8e0c0, hemiGround: 0x4f7a32 };
-  w.start = [0, 0, 56]; w.startYaw = PI;
+  w.start = [0, 0, 56]; w.startYaw = PI; w.grassKeep = (x, z) => Math.abs(x - pathX(z)) < 3.4 || (z < -36 && z > -76 && Math.abs(x) < 9) || (Math.abs(x) < 14.5 && z < -19.5 && z > -36);
   // ---------------- A: base camp (z 62..20) ----------------
   PR.ground(w, -42, 20, 42, 64, 0, jg, { bump: 0.25 }); w.solid(-43, 0, 64, 43, 14, 65, { nocam: true });
   [-1, 1].forEach((s) => w.solid(s > 0 ? 42 : -43, 0, -210, s > 0 ? 43 : -42, 14, 65, { nocam: true }));
@@ -65,8 +65,23 @@ BUILD.jungle = (w) => { w.music = 'jungle'; w.killY = -12; w.camDist = 4.8;
   PR.relief(w, 'x', -35.5, -16, 1.5, 6, 2.2, 1, STONE2, 'monkey'); PR.relief(w, 'x', -35.5, 16, 1.5, 6, 2.2, 1, STONE2, 'mix');
   w.hint(-14, -30, 14, -22, '⭐ Both star plates must be pressed at once! Push the stone block (walk into it) onto one and stand on the other.');
   for (let x = -6; x <= 6; x += 2) w.coin(x, 0, -20); w.coinRing(-9, 0.06, -28, 1.8, 6);
-  jungleFill(w, -40, -34, 40, 6, 55, (x, z) => (Math.abs(x) < 22 && z > -30) || Math.abs(x - pathX(z)) < 5);
-  PR.grassTufts(w, -40, -36, 40, 6, 0.02, 700);
+  // denser ruins: crumbling wall stubs, fallen column drums, broken stairs, root-wrapped blocks, moss and flowers around the plaza edges
+  for (const [x, z, len, h, ax] of [[-24, 2, 7, 2.2, 'z'], [24, 0, 6, 1.6, 'z'], [-28, -12, 8, 3, 'z'], [28, -14, 7, 2.4, 'z'], [-20, -31, 6, 2, 'x'], [21, -31, 6, 2.6, 'x'], [-33, -4, 5, 1.4, 'x'], [33, -24, 5, 1.8, 'x']]) {
+    const T = ax === 'x' ? [x - len / 2, x + len / 2] : [z - len / 2, z + len / 2]; PR.stoneWall(w, ax, ax === 'x' ? z : x, T[0], T[1], h, STONE, { col2: STONE2, th: 0.8 });
+    for (let i = 0; i < 3; i++) w.add('f', blobGeo(i + (x | 0) & 63, 0.3, 1), MOSS, (ax === 'x' ? x + rr(-len / 2, len / 2) : x), h + 0.05, (ax === 'z' ? z + rr(-len / 2, len / 2) : z), 0, 0, 0, rr(0.5, 0.9), 0.25, rr(0.5, 0.9)); }
+  for (const [x, z, ry] of [[-21, -16, 0.4], [22, -4, 1.2], [-11, -32, 1.9], [16, 4, 2.6], [-26, -26, 0.9], [27, -30, 2.2]]) { for (let i = 0; i < 3; i++) { w.add('m', rcyl(0.55, 0.9, 0.08, 20), shade(STONE2, 0.92 + i * 0.05), x + Math.sin(ry) * i * 1.0, 0.55, z + Math.cos(ry) * i * 1.0, PI / 2, ry, 0); } w.solid(x - 1.2, 0, z - 1.2, x + 1.2, 1.1, z + 1.2); }
+  // the middle of the plaza: a broken jade altar the patrols walk around, low wall stubs and vines between the bushes
+  PR.mossyBlock(w, 0, 0, -13, 4, 0.8, 3, STONE); PR.mossyBlock(w, 0, 0.8, -13, 2.4, 0.7, 1.8, STONE2); PR.monkeyStatue(w, 0, 1.5, -13, PI, 0x34d399, 0.55); PR.flowers(w, 2.6, 0, -11, 5, 1); PR.fern(w, -2.4, 0, -14.5, 1);
+  for (const [x, z, len, h] of [[-15, -6, 4, 1.2], [15, -9, 4, 1.4], [-15, -18, 3, 0.9], [16, -15, 3, 1.1]]) { PR.stoneWall(w, 'z', x, z - len / 2, z + len / 2, h, STONE2, { col2: STONE, th: 0.7 }); w.add('f', blobGeo((x * 3 | 0) & 63, 0.3, 1), MOSS, x, h, z, 0, 0, 0, 0.5, 0.2, len * 0.35); }
+  for (const [x, z] of [[-11, -0.5], [11, -6], [-5, -22], [6, -22]]) { PR.rock(w, x, 0, z, 0.5 + rnd() * 0.3, 0x8a8a7a, false); PR.fern(w, x + 0.8, 0, z + 0.6, 0.8); }
+  for (const x of [-34, -26, -16, 16, 26, 34]) PR.jungleTree(w, x + rr(-2, 2), 0, -39 - rr(0, 2), 1.1 + rnd() * 0.3);
+  PR.stairs(w, -24, 0, -22, PI / 2, 3, 0.35, 0.8, 4, STONE2); PR.stairs(w, 24, 0, -2, -PI / 2, 3, 0.35, 0.8, 4, STONE2);
+  for (const [x, z] of [[-30, -6], [30, -8], [-25, -34], [26, -36], [-32, 4], [32, 4], [-36, -20], [36, -16]]) { PR.mossyBlock(w, x, 0, z, rr(1.8, 2.6), rr(1.2, 2.4), rr(1.8, 2.6), pick([STONE, STONE2])); PR.fern(w, x + 1.4, 0, z + 1.2, 1.1); }
+  for (const [x, z] of [[-22, 6], [22, 6], [-16, -36], [16, -36], [-30, -28], [30, -2], [-12, 4], [12, -34]]) PR.urn(w, x, 0, z, 0.8 + rnd() * 0.4, pick([0xc2703d, 0xb45309, 0x9a3412]));
+  for (let i = 0; i < 18; i++) { const x = pick([-1, 1]) * rr(16, 38), z = rr(-34, 6); PR.flowers(w, x, 0, z, 6, 1.4); }
+  for (const [x, z] of [[-25, -6], [25, -20], [-30, -18], [31, -28]]) PR.jungleTree(w, x, 0, z, 1.0 + rnd() * 0.3);
+  jungleFill(w, -40, -34, 40, 6, 85, (x, z) => (Math.abs(x) < 22 && z > -30) || Math.abs(x - pathX(z)) < 5);
+  PR.grassTufts(w, -40, -36, 40, 6, 0.02, 1100);
   w.animal('snake', -22, 0, 0, { range: 4, axis: 'z' }); w.animal('monkey', 24, 0, -8, { range: 3 });
   // ---------------- D: the gorge + rope bridge (z -38..-76) ----------------
   w.cp(0, 0, -39.5, PI);
@@ -113,7 +128,7 @@ BUILD.jungle = (w) => { w.music = 'jungle'; w.killY = -12; w.camDist = 4.8;
   for (const [z, ph] of [[-95, 0], [-99.5, 0.33], [-104, 0.66]]) w.dartWall(-2.1, 0, z, [1, 0], 4.6, 2.4, ph, 2, 1.4);
   // safe niches on the east side
   for (const zc of [-97.5, -103.5]) { w.slab('w', STONE, 5, 0, zc, 1, 4, 3.2, 0.05); w.slab('w', STONE, 3.75, 0, zc - 1.3, 2.5, 4, 0.6, 0.05); w.slab('w', STONE, 3.75, 0, zc + 1.3, 2.5, 4, 0.6, 0.05); w.coin(3.6, 0, zc); PR.torchSconce(w, 4.45, 2.4, zc, -PI / 2); }
-  w.hint(-2, -94, 2, -92, '🎯 Dart wall! Watch the timing and duck into the side niches.'); w.cp(0, 0, -93, PI);
+  w.hint(-2, -94, 2, -92, '🎯 Dart wall! Watch the timing and duck into the side niches.'); w.cp(0, 0, -93, PI, 1.7);
   wallX(-108, -21, 21, [[-2, 2, 4]]);
   // side rooms off the entrance hall (solid fill so the dart corridor is a corridor)
   w.solid(-21, 0, -108, -2.5, H, -92, { nocam: false }); w.solid(5.5, 0, -108, 21, H, -92);
@@ -129,7 +144,7 @@ BUILD.jungle = (w) => { w.music = 'jungle'; w.killY = -12; w.camDist = 4.8;
   w.hint(-21, -122, 21, -117, '🗿 Turn the three monkey statues (ACT) so they all face the jade mural on the far wall!');
   wallX(-122, -21, 21, [[-2, 2, 4]]); w.door('mDoor', 0, 0, -122, 4, 4, 1.05, ['S:monkeys'], 0x6f8f5a, '🐒 The monkey door slides open!');
   // E4 boulder corridor (x -2.5..2.5, z -122..-148), niche halfway
-  w.cp(0, 0, -124, PI);
+  w.cp(0, 0, -124, PI, 1.7);
   wallZ(-2.5, -148, -122); wallZ(2.5, -148, -122, [[-136, -132, 4]]);
   w.solid(-21, 0, -148, -2.5, H, -122); w.solid(2.5, 0, -148, 21, H, -136); w.solid(2.5, 0, -132, 21, H, -122);
   w.slab('w', STONE, 7.5, 0, -134, 1, H, 4.2, 0.05); w.slab('w', STONE, 5, 0, -136.5, 4.4, H, 1, 0.05); w.slab('w', STONE, 5, 0, -131.5, 4.4, H, 1, 0.05); PR.torchSconce(w, 6.9, 2.6, -134, -PI / 2);

@@ -4,6 +4,10 @@ import { E, setEnvironment, followShadow } from './engine.js';
 import { World, clearWorldCaches } from './world.js';
 import { buildLevel } from './levels.js';
 import './lv_jungle.js';
+import './lv_caves.js';
+import './lv_tunnels.js';
+import './lv_pyramid.js';
+import './lv_finale.js';
 import { Player } from './player.js';
 import { Actors } from './actors.js';
 import { FX } from './fx.js';
@@ -24,8 +28,8 @@ export class Game {
     PG = PG || pickupGeos();
     const w = this.world = new World(); w.game = this; buildLevel(levelId, w, this.seed); w.finalize(this.scene);
     setEnvironment(w.env); this.fx = new FX(this.scene); this.actors = new Actors(this); this.actors.spawnAll(w);
-    this.extra = []; this.buildPickups(); this.lightPool = new LightPool(this.scene, w.lights, 4);
-    this.torchLight = new THREE.PointLight(0xffb060, 0, 14, 1.4); this.scene.add(this.torchLight); this.extra.push(this.torchLight);
+    this.extra = []; this.buildPickups(); this.lightPool = new LightPool(this.scene, w.lights, w.lightN || 4);
+    this.torchLight = new THREE.PointLight(0xffb060, 0, 14, 1.4); this.scene.add(this.torchLight); this.extra.push(this.torchLight); this.fill = new THREE.PointLight(0xfff0dc, 0, 10, 1.3); this.scene.add(this.fill); this.extra.push(this.fill); this.indoorT = 0;
     initTraps(this);
     this.players = new Map(); this.me = new Player({ hero: S.hero, outfit: S.outfit, name: S.name || 'You', local: true, pid: opts.pid || 'me' }); this.me.addTo(this.scene); this.me.place(w.start, w.startYaw || 0); this.me.cp = w.start.slice(); this.me.cpYaw = w.startYaw || 0;
     if (opts.slot) { const a = opts.slot * 2.1; this.me.x += Math.cos(a) * 1.3; this.me.z += Math.sin(a) * 1.3; }
@@ -41,7 +45,7 @@ export class Game {
   buildPickups() { const w = this.world; this.inst = {};
     for (const k of ['coin', 'treasure', 'evidence', 'heart']) { const list = w.ents.filter((e) => e.k === k); if (!list.length) continue; const mat = k === 'evidence' ? MATS.m : k === 'treasure' || k === 'coin' ? MATS.x : MATS.g;
       const im = new THREE.InstancedMesh(PG[k], mat, list.length); im.castShadow = k !== 'coin'; im.frustumCulled = false; list.forEach((e, i) => { e.ii = i; if (k === 'treasure' && this.L && (S.treasures[this.L.id] || []).includes(e.n)) e.old = true; if (k === 'evidence' && this.L && (S.evidence[this.L.id] || []).includes(e.n)) e.old = true; }); this.scene.add(im); this.extra.push(im); this.inst[k] = { im, list }; }
-    this.cps = w.checkpoints.map((c) => { const m = makeCheckpoint(); m.root.position.set(c.x, c.y, c.z); m.root.rotation.y = c.yaw || 0; this.scene.add(m.root); this.extra.push(m.root); c.obj = m; return c; });
+    this.cps = w.checkpoints.map((c) => { const m = makeCheckpoint(); const sd = c.side ?? 2.6, fx = c.x - Math.cos(c.yaw || 0) * sd, fz = c.z + Math.sin(c.yaw || 0) * sd; const gy = w.ground(fx, fz, c.y + 2, 0.3); m.root.position.set(fx, gy && gy.y > -50 ? gy.y : c.y, fz); m.root.rotation.y = c.yaw || 0; this.scene.add(m.root); this.extra.push(m.root); c.obj = m; return c; });
     for (const h of w.hooks) { const m = makeHook(); m.position.set(h.x, h.y, h.z); this.scene.add(m); this.extra.push(m); h.obj = m; }
     if (w.relicPos) { const r = makeRelic(this.L ? this.L.relic : 'jade'); r.position.set(...w.relicPos); r.visible = !w.bossSpec; this.scene.add(r); this.extra.push(r); this.relic = r; }
     if (w.escape) { const b = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 30, 32, 1, true), new THREE.MeshBasicMaterial({ color: 0x86efac, transparent: true, opacity: 0.18, depthWrite: false, side: THREE.DoubleSide, toneMapped: false })); const e = w.escape; b.position.set((e[0] + e[2]) / 2, e[4] + 15, (e[1] + e[3]) / 2); b.visible = false; this.scene.add(b); this.extra.push(b); this.beacon = b; } }
@@ -76,6 +80,9 @@ export class Game {
   }
   render(dt) { const me = this.me; this.fx.update(dt); followShadow(me.x, me.y, me.z); this.lightPool.update(dt, me.x, me.y + 2, me.z); this.world.updateLod(E.camera.position.x, E.camera.position.y, E.camera.position.z);
     const L = this.torchLight, on = me.torch && me.respawnT <= 0; const want = on ? (this.world.dark ? 26 : 12) * (1 + up('torch') * 0.25) : 0; L.intensity += (want - L.intensity) * Math.min(1, dt * 8); L.distance = 14 + up('torch') * 4;
+    // hero fill light: under a roof the hero would read dark in the shade, so a soft warm light rides between hero and camera
+    this.indoorT -= dt; if (this.indoorT <= 0) { this.indoorT = 0.25; const w = this.world; this.indoor = w.near(me.x - 0.2, me.z - 0.2, me.x + 0.2, me.z + 0.2, []).some((q) => !q.off && q.min[1] > me.y + 2 && q.min[1] < me.y + 14 && me.x > q.min[0] && me.x < q.max[0] && me.z > q.min[2] && me.z < q.max[2]); }
+    { const F = this.fill, c = E.camera.position, want = this.indoor ? (this.world.fillI || 2.6) : 0; F.intensity += (want - F.intensity) * Math.min(1, dt * 4); F.position.set(me.x + (c.x - me.x) * 0.8, me.y + 2.6, me.z + (c.z - me.z) * 0.8); }
     if (on) { const f = me.rig.torch.userData.flame; f.getWorldPosition(L.position); L.intensity *= 0.94 + Math.sin(this.T * 23) * 0.04 + Math.sin(this.T * 37) * 0.03; } }
   // ------------------------------------------------ puzzles (host decides)
   hostLogic(dt) { const w = this.world; const ps = this.alivePlayers();
@@ -117,6 +124,7 @@ export class Game {
     for (const k in this.inst) { const { im, list } = this.inst[k]; for (const e of list) { const sc = e.got ? 0 : e.old ? 0.75 : 1; q.setFromAxisAngle(upv, t * (k === 'coin' ? 3 : 1.5) + e.id); v.set(e.x, e.y + Math.sin(t * 3 + e.id) * 0.12, e.z); s.setScalar(sc); m.compose(v, q, s); im.setMatrixAt(e.ii, m); } im.instanceMatrix.needsUpdate = true; }
     if (this.relic && this.relic.visible) { this.relic.rotation.y = t * 1.2; this.relic.position.y = this.world.relicPos[1] + Math.sin(t * 2) * 0.15; if (Math.random() < 0.3) this.fx.sparkle(this.relic.position.x, this.relic.position.y, this.relic.position.z, 0xfff1a8); }
     for (const h of this.world.hooks) { const on = h === this.hookT; h.obj.scale.setScalar(on ? 1.25 + Math.sin(t * 10) * 0.1 : 1); h.obj.rotation.y = t * 0.8; }
+    if (this.world.beams) for (const b of this.world.beams) b.obj.visible = this.solved.has(b.group);
     for (const st of this.world.statues) { const want = st.rot * PI / 2; let d = want - st.obj.rotation.y; st.obj.rotation.y += d * Math.min(1, dt * 6); }
     for (const pl of this.world.plates) if (pl.obj) pl.obj.position.y += ((pl.on ? pl.y + 0.02 : pl.y + 0.12) - pl.obj.position.y) * Math.min(1, dt * 10);
     for (const lv of this.world.levers) if (lv.obj) lv.obj.rotation.z += ((lv.on ? -0.6 : 0.6) - lv.obj.rotation.z) * Math.min(1, dt * 8);

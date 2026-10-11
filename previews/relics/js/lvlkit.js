@@ -16,7 +16,7 @@ export function kit(w) {
     treasure(x, y, z) { return E({ k: 'treasure', x, y: y + 0.9, z, n: nT++ }); },
     evidence(x, y, z) { return E({ k: 'evidence', x, y: y + 1.0, z, n: nE++ }); },
     heartP(x, y, z) { return E({ k: 'heart', x, y: y + 0.8, z }); },
-    cp(x, y, z, yaw = 0) { w.checkpoints.push({ x, y, z, yaw }); },
+    cp(x, y, z, yaw = 0, side = 2.6) { w.checkpoints.push({ x, y, z, yaw, side }); }, // trigger on the path; the flag stands `side` metres to the right of it
     hook(x, y, z, post = true) { w.hooks.push({ x, y, z }); if (post) { w.add('m', cyl(10), 0x6b4423, x, y + 0.45, z, 0, 0, 0, 0.06, 0.6, 0.06); } },
     animal(type, x, y, z, o) { w.enemies.push({ type, x, y, z, o }); },
     officers(list, bounds, o = {}) { w.officerSpecs.push({ list, bounds, o }); },
@@ -42,7 +42,10 @@ export function kit(w) {
       for (let i = 0; i < 5; i++) w.add('m', blobGeo(i + 90, 0.3, 1), 0x292524, x + Math.cos(i * 1.3) * 0.25, y + 1.35, z + Math.sin(i * 1.3) * 0.25, 0, 0, 0, 0.18);
       b.obj = w.dynObj((T) => { T.add('l', sph(14), 0xff8a1f, 0, 0, 0, 0, 0, 0, 0.45, 0.6, 0.45, 1.5); T.add('l', cone(14), 0xffe066, 0, 0.1, 0, 0, 0, 0, 0.3, 1.1, 0.3, 2); }); b.obj.position.set(x, y + 1.6, z); b.obj.visible = false; return b; },
     statue(id, group, x, y, z, rot, target, kind = 'arrow') { const st = { id, group, x, y, z, rot: rot | 0, target: target | 0 }; w.statues.push(st); w.add('m', rbox(1.4, 0.6, 1.4, 0.1, 1), 0x8a7a5a, x, y + 0.3, z); w.solid(x - 0.7, y, z - 0.7, x + 0.7, y + 2.6, z + 0.7);
-      st.obj = w.dynObj((T) => { T.add('m', rcyl(0.5, 1.6, 0.12, 24), 0xb7a77a, 0, 0, 0); T.add('m', sph(18), 0xb7a77a, 0, 1.9, 0, 0, 0, 0, 0.48); T.add('g', sph(10), 0x34d399, -0.17, 2.0, 0.42, 0, 0, 0, 0.09, 0.09, 0.05, 0.6); T.add('g', sph(10), 0x34d399, 0.17, 2.0, 0.42, 0, 0, 0, 0.09, 0.09, 0.05, 0.6); T.add('m', cone(12), 0xd6b370, 0, 1.0, 0.5, PI / 2, 0, 0, 0.22, 0.5, 0.22); });
+      st.obj = w.dynObj((T) => { if (kind === 'mirror') { T.add('m', rcyl(0.45, 1.0, 0.1, 24), 0xd6b370, 0, 0, 0); T.add('x', torus(0.08, 32), 0xd4a017, 0, 1.75, 0.15, 0, 0, 0, 0.62, 0.62, 0.8); T.add('x', sph(28), 0xfff7cc, 0, 1.75, 0.18, 0, 0, 0, 0.58, 0.58, 0.08); T.add('m', cyl(10), 0xa16207, 0, 1.0, 0, 0, 0, 0, 0.08, 0.5, 0.08); T.add('g', cone(12), 0xfacc15, 0, 1.75, 0.6, PI / 2, 0, 0, 0.12, 0.3, 0.12); return; }
+        if (kind === 'clock') { T.add('m', rcyl(0.45, 1.3, 0.1, 24), 0x57534e, 0, 0, 0); T.add('x', torus(0.1, 32), 0xd4a017, 0, 1.9, 0, PI / 2, 0, 0, 0.7, 0.7, 0.9); T.add('m', rcyl(0.62, 0.12, 0.05, 32), 0xfef3c7, 0, 1.84, 0); T.add('x', rbox(0.12, 0.08, 0.7, 0.03, 1), 0x1f2937, 0, 1.98, 0.3); T.add('x', cone(8), 0xdc2626, 0, 1.98, 0.7, PI / 2, 0, 0, 0.12, 0.25, 0.08); T.add('x', sph(10), 0xd4a017, 0, 2.0, 0, 0, 0, 0, 0.1); return; }
+        if (kind === 'owl') { T.add('m', rcyl(0.5, 1.4, 0.12, 24), 0x8b7aa0, 0, 0, 0); T.add('m', sph(20), 0x9d8fbf, 0, 1.75, 0, 0, 0, 0, 0.55, 0.6, 0.5); [-1, 1].forEach((sd) => { T.add('g', sph(12), 0xc4b5fd, sd * 0.2, 1.95, 0.4, 0, 0, 0, 0.15, 0.15, 0.06, 0.8); T.add('m', cone(8), 0x9d8fbf, sd * 0.28, 2.35, 0, 0, 0, sd * -0.3, 0.1, 0.3, 0.1); }); T.add('m', cone(8), 0xfacc15, 0, 1.8, 0.5, PI / 2, 0, 0, 0.07, 0.18, 0.07); return; }
+        T.add('m', rcyl(0.5, 1.6, 0.12, 24), 0xb7a77a, 0, 0, 0); T.add('m', sph(18), 0xb7a77a, 0, 1.9, 0, 0, 0, 0, 0.48); T.add('g', sph(10), 0x34d399, -0.17, 2.0, 0.42, 0, 0, 0, 0.09, 0.09, 0.05, 0.6); T.add('g', sph(10), 0x34d399, 0.17, 2.0, 0.42, 0, 0, 0, 0.09, 0.09, 0.05, 0.6); T.add('m', cone(12), 0xd6b370, 0, 1.0, 0.5, PI / 2, 0, 0, 0.22, 0.5, 0.22); });
       st.obj.position.set(x, y + 0.6, z); st.obj.rotation.y = st.rot * PI / 2; return st; },
     // ---- booby traps ----
     // spike floor tile area: spikes pop up on a timer (with a warning rumble first)
@@ -54,7 +57,7 @@ export function kit(w) {
     dartWall(x, y, z, dir, len, period = 2.2, phase = 0, n = 3, span = 3) { const d = { x, y, z, dir, len, period, phase, n, span, fired: -1 }; w.darts.push(d); const along = [dir[1], -dir[0]];
       for (let i = 0; i < n; i++) { const o = (n === 1 ? 0 : (i / (n - 1) - 0.5)) * span; const sx = x + along[0] * o, sz = z + along[1] * o; w.add('m', rbox(0.5, 0.5, 0.5, 0.08, 1), 0x57534e, sx, y + 0.95, sz); w.add('m', rcyl(0.12, 0.2, 0.03, 14), 0x111827, sx + dir[0] * 0.2, y + 1.2, sz + dir[1] * 0.2, PI / 2, Math.atan2(dir[0], dir[1]), 0); w.add('m', sph(10), 0xef4444, sx, y + 1.5, sz, 0, 0, 0, 0.08); } return d; },
     // rolling boulder along a path, triggered by a zone (player must reach the safe alcove / end)
-    boulder(trig, path, r = 2.2, o = {}) { const b = { trig, path, r, st: 'wait', t: 0, i: 0, x: path[0][0], y: path[0][1] + r, z: path[0][2], rot: 0, sp: o.sp || 8.5, delay: o.delay || 0.6, id: w.boulders.length }; w.boulders.push(b); return b; },
+    boulder(trig, path, r = 2.2, o = {}) { const b = { trig, path, r, st: 'wait', t: 0, i: 0, x: path[0][0], y: path[0][1] + r, z: path[0][2], rot: 0, sp: o.sp || 8.5, delay: o.delay || 0.6, id: w.boulders.length, look: o.look || 'rock', tint: o.tint }; w.boulders.push(b); return b; },
     // rope bridge whose planks wobble then drop after you step on them (they come back)
     bridge(x0, z0, x1, z1, y, width = 2.4, collapse = true) { const L = Math.hypot(x1 - x0, z1 - z0), n = Math.round(L / 0.8), ry = Math.atan2(x1 - x0, z1 - z0); const ux = (x1 - x0) / L, uz = (z1 - z0) / L;
       for (let i = 0; i < n; i++) { const t = (i + 0.5) / n, cx = x0 + (x1 - x0) * t, cz = z0 + (z1 - z0) * t, sag = Math.sin(t * PI) * 0.3; const hw = width / 2, hl = 0.36;
@@ -74,6 +77,8 @@ export function kit(w) {
       j.obj = w.dynObj((T) => { const c = kind === 'fire' ? [0xff7a1f, 0xffe066] : [0xe0f2fe, 0xffffff]; T.add('l', cone(16), c[0], 0, 0, 0, 0, 0, 0, 0.5, 2.6, 0.5, 1.2); T.add('l', cone(16), c[1], 0, 0, 0, 0, 0, 0, 0.28, 1.8, 0.28, 2); }); j.obj.position.set(x, y + 0.1, z); j.obj.visible = false; return j; },
     quicksand(x0, z0, x1, z1, y) { w.zone('sand', x0, y - 3, z0, x1, y + 0.6, z1); w.add('m', rbox(x1 - x0, 0.12, z1 - z0, 0.05, 1), 0xd9b26f, (x0 + x1) / 2, y + 0.0, (z0 + z1) / 2);
       for (let i = 0; i < (x1 - x0) * (z1 - z0) / 6; i++) w.add('m', torus(0.12, 20), 0xc49a52, x0 + rnd() * (x1 - x0), y + 0.06, z0 + rnd() * (z1 - z0), PI / 2, 0, 0, 0.3 + rnd() * 0.5, 0.3 + rnd() * 0.5, 0.2); },
+    // glowing light beam between points, shown once statue group `group` is solved (mirror puzzles)
+    beam(group, pts, col = 0xfff3a0) { const b = { group, obj: w.dynObj((T) => { for (let i = 0; i < pts.length - 1; i++) { const [x0, y0, z0] = pts[i], [x1, y1, z1] = pts[i + 1]; T.add('l', tube([[x0, y0, z0], [x1, y1, z1]], 0.12, 2, 10), col, 0, 0, 0, 0, 0, 0, 1, 1, 1, 3); } }) }; b.obj.visible = false; (w.beams = w.beams || []).push(b); return b; },
     dynObj(build) { const sub = new World(); build(sub.tf(0, 0, 0), sub); const g = new THREE.Group(); sub.finalize(g); w.group.add(g); return g; },
     mover(x, y, z, size, off, period, phase = 0, col = 0xa8a29e) { const s = w.solid(x - size[0] / 2, y, z - size[2] / 2, x + size[0] / 2, y + size[1], z + size[2] / 2, { dyn: true });
       const obj = w.dynObj((T) => { T.box('m', col, 0, 0, 0, size[0], size[1], size[2], 0.12); T.add('l', star(), 0x86efac, 0, size[1] + 0.01, 0, -PI / 2, 0, 0, 0.35, 0.35, 0.1, 0.3); }); w.movers.push({ s, base: [x - size[0] / 2, y, z - size[2] / 2], off, period, phase, obj, size }); return s; },
