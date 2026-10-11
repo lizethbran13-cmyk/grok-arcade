@@ -1759,6 +1759,77 @@ GA.HALL_DATA = {
 "cover": "assets/hall/ratita/cover.webp",
 "quip": "Three rats ran through my Hall with a cheese wedge and a grappling hook. I didn't even know rats could zip-line.",
 "noOld": "Grok Ratita Rescue just scurried in. No old versions yet. Please keep the cheese off the exhibits."
+},
+"ratitahq": {
+"repo": "grok-ratita-hq",
+"history": [
+{
+"date": "Oct 11",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A bright cartoon 3D hub world in the Turbo look (soft shadows, glow, real 3D props). You're the new intern at Ratita Industries, with your own customizable human (skin, hair, clothes). Explore the glass-dome Grand Atrium, Gadget Lab, Goo Lab, Cheese Caf\u00e9, offices, Robotics, Cheese R&D, Security, the Lounge, Candy's Department of Canine Ruffsources and Luna, Pi-rat and Snowie's Executive Suite. Meet 40+ rats, mice, hamsters, bunnies and dogs, watch live tests in the Test Yard, solve The Great Gouda Heist and The Secret Gardener, find Martina's hidden Desert Dome, and video-call Mimi, Lily and Lili. Co-op for 3 online."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/ratitahq/1.webp",
+"cap": "Your first day as the new intern",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratitahq/2.webp",
+"cap": "The glass-dome Grand Atrium",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratitahq/3.webp",
+"cap": "Luna, Pi-rat and Snowie\u2019s Executive Suite",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratitahq/4.webp",
+"cap": "Candy\u2019s Department of Canine Ruffsources",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratitahq/5.webp",
+"cap": "Lunch at the Cheese Caf\u00e9",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratitahq/6.webp",
+"cap": "Prototypes in the Gadget Lab",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratitahq/7.webp",
+"cap": "Live Robot Trials in the Test Yard",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratitahq/8.webp",
+"cap": "Martina\u2019s secret Desert Dome",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ratitahq/9.webp",
+"cap": "Video-calling Mimi back at the Arcade",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/ratitahq/cover.webp",
+"quip": "A new intern walked into my Hall with a visitor badge and asked where the cheese lab was. I said this is a MUSEUM. She said \u201cso\u2026 no cheese?\u201d",
+"noOld": "Grok Ratita Industries HQ just clocked in. No old versions yet. Please wipe your paws at the door."
 }
 };
 /* the Arcade's own update history (from the grok-arcade git log, in plain words) - shown on the ARCADE card in Gus's directory */
@@ -1777,5 +1848,6 @@ GA.ARCADE_HISTORY = [
   { date: 'Oct 10', ver: '4.2', title: 'Speed pass + Monster Hunters', text: 'Smoother on phones without looking worse (smart lights, rooms that only draw when you can see them, sharper when your phone has room), the Grok Monster Hunters cabinet, bonus game #24 Tame Rush, 5 Monster Hunters prizes and a new Hall exhibit.' },
   { date: 'Oct 10', ver: '4.3', title: 'Grok Ratita Rescue', text: 'The Grok Ratita Rescue cabinet in the Party wing, bonus game #25 Tail Swing, 5 Ratita prizes and a new Hall exhibit.' },
   { date: 'Oct 10', ver: '5.0', title: 'Retro Arcade & Time Machine', text: 'A secret tunnel somewhere under the arcade leads to Lily the Bot (Mimi\u2019s sister, by Ratita Industries) and her Chrono-Gate: visit the OLD Grok Arcade of 1983 with young Gary, Larry and a younger (still grumpy) Gus. Six new retro bonus games (#26-#31), a time machine that sometimes breaks (thanks, Dale), weekly hidden parts to get home, and 5 rare Time Machine prizes.' },
-  { date: 'Oct 11', ver: '5.1', title: 'The Records Annex', text: 'The Hall of Game Records is twice as big! Gus\u2019s Uncle Barnaby (the nicest guy in the family) runs a Sorting Station with his Sort-a-Thon and a daily lost-files hunt. Plus an Exhibit of the Week, a reading nook with game history books, a walk-in photo booth, the Stamp-O-Matic 5000 quiz, a comfy lounge and benches you can sit on (Gus says NO LOITERING), 8 niches for future games, 4 achievements and 2 Hall rares.' }
+  { date: 'Oct 11', ver: '5.1', title: 'The Records Annex', text: 'The Hall of Game Records is twice as big! Gus\u2019s Uncle Barnaby (the nicest guy in the family) runs a Sorting Station with his Sort-a-Thon and a daily lost-files hunt. Plus an Exhibit of the Week, a reading nook with game history books, a walk-in photo booth, the Stamp-O-Matic 5000 quiz, a comfy lounge and benches you can sit on (Gus says NO LOITERING), 8 niches for future games, 4 achievements and 2 Hall rares.' },
+  { date: 'Oct 11', ver: '5.2', title: 'Grok Ratita Industries HQ', text: 'The Grok Ratita Industries HQ cabinet in a brand-new HUBS & WORLDS section of the Game Gallery, bonus game #33 Crumb Patrol, 3 HQ prizes (Intern Badge Keychain, Candy Schnauzer Plush, HQ Glass Dome Cup), 2 achievements and a new Hall exhibit.' }
 ];

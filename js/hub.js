@@ -834,6 +834,20 @@
         g.fillStyle = '#ff4fa0'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK RATITA RESCUE', w / 2, 24);
         break;
       }
+      case 'ratitahq': {
+        // Ratita Industries HQ: campus with a glass dome, an intern walking past, rats waving, a rocket launching in the test yard
+        var grq = g.createLinearGradient(0, 0, 0, h); grq.addColorStop(0, '#7dd3fc'); grq.addColorStop(0.6, '#e0f2fe'); grq.addColorStop(0.61, '#86efac'); grq.addColorStop(1, '#4ade80'); g.fillStyle = grq; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#fff1f7'; g.fillRect(w * 0.12, h * 0.38, w * 0.76, h * 0.26); g.fillStyle = '#ff4fa0'; g.fillRect(w * 0.12, h * 0.36, w * 0.76, 5);
+        g.fillStyle = 'rgba(191,232,255,.9)'; g.beginPath(); g.ellipse(w * 0.5, h * 0.37, w * 0.2, h * 0.17, 0, Math.PI, 0); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 1.5; for (i = -2; i <= 2; i++) { g.beginPath(); g.moveTo(w * 0.5 + i * w * 0.08, h * 0.37); g.quadraticCurveTo(w * 0.5 + i * w * 0.04, h * 0.22, w * 0.5, h * 0.2); g.stroke(); }
+        g.fillStyle = '#ff4fa0'; g.beginPath(); g.arc(w * 0.5, h * 0.2, 4, 0, 7); g.fill(); g.fillStyle = '#7dd3fc'; for (i = 0; i < 6; i++) g.fillRect(w * 0.16 + i * w * 0.115, h * 0.44, w * 0.07, h * 0.07);
+        g.fillStyle = '#ff8a3d'; g.fillRect(w * 0.45, h * 0.54, w * 0.1, h * 0.1);
+        var ry2 = h * 0.3 - ((t * 30) % (h * 0.4)); g.fillStyle = '#e5e7eb'; g.beginPath(); g.ellipse(w * 0.86, ry2, 5, 11, 0, 0, 7); g.fill(); g.fillStyle = '#ff8a3d'; g.beginPath(); g.moveTo(w * 0.86 - 4, ry2 + 10); g.lineTo(w * 0.86, ry2 + 20 + Math.sin(t * 30) * 3); g.lineTo(w * 0.86 + 4, ry2 + 10); g.fill();
+        var ix = (t * 26) % (w + 40) - 20, iy = h * 0.74; g.fillStyle = '#334155'; g.fillRect(ix - 4, iy + 6, 3, 10 + Math.sin(t * 10) * 2); g.fillRect(ix + 1, iy + 6, 3, 10 - Math.sin(t * 10) * 2); g.fillStyle = '#ff4fa0'; rrF(g, ix - 6, iy - 6, 12, 14, 4); g.fillStyle = '#e0a87c'; g.beginPath(); g.arc(ix, iy - 11, 6, 0, 7); g.fill(); g.fillStyle = '#2b1d14'; g.beginPath(); g.arc(ix, iy - 13, 6, Math.PI, 0); g.fill();
+        ['#a9afbd', '#c99a6b', '#fbfbff'].forEach(function (c, k) { var rx = w * (0.22 + k * 0.1), ry = h * 0.8 - Math.abs(Math.sin(t * 4 + k)) * 5; g.fillStyle = c; g.beginPath(); g.ellipse(rx, ry, 8, 6, 0, 0, 7); g.fill(); g.beginPath(); g.arc(rx + 6, ry - 6, 5, 0, 7); g.fill(); g.fillStyle = '#f9a8d4'; g.beginPath(); g.arc(rx + 4, ry - 11, 2.5, 0, 7); g.fill(); g.fillStyle = c; });
+        g.fillStyle = '#8a9099'; g.fillRect(w * 0.68, h * 0.78, 16, 9); g.fillRect(w * 0.68 + 12, h * 0.73, 9, 9); g.fillStyle = '#e8eaee'; g.fillRect(w * 0.68 + 17, h * 0.79, 5, 4);
+        g.fillStyle = '#ff8a3d'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(13); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('RATITA INDUSTRIES HQ', w / 2, 24);
+        break;
+      }
       case 'swing': {
         g.fillStyle = '#fff3e0'; g.fillRect(0, 0, w, h); g.fillStyle = '#f28c8c'; g.fillRect(0, h * 0.82, w, h * 0.18);
         for (i = 0; i < 3; i++) { var rxs = ((i * w / 2.4) - (t * 30) % (w / 2.4)) + 30; g.fillStyle = '#9ca3af'; g.fillRect(rxs - 1, 30, 2, h * 0.3 - 40); g.strokeStyle = '#3ff0ff'; g.lineWidth = 3; g.beginPath(); g.arc(rxs, h * 0.3, 7, 0, 7); g.stroke(); }

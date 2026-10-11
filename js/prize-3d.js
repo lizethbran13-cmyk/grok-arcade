@@ -956,6 +956,23 @@
   function ratitaCup() { var g = trophy('#ffcf3a', true), oldTick = g.userData.tick; var o = grp(g, 0, 0.75, 0); cheese3(o, 0.6, 0.34, 0, 0);
     var gr = add(o, cyl(0.06, 0.06, 0.025, 10), shiny('#3ff0ff', 80), -0.17, 0, 0.29); gr.rotation.x = Math.PI / 2; var cr = grp(o, -0.17, 0.02, -0.29); for (var i = 0; i < 5; i++) { var a = i / 5 * Math.PI * 2; add(cr, cone(0.012, 0.04, 6), shiny('#ffd23f', 90), Math.cos(a) * 0.035, 0.02, Math.sin(a) * 0.035); } add(cr, cyl(0.04, 0.04, 0.02, 14), shiny('#ffd23f', 90), 0, 0, 0);
     g.userData.tick = function (t) { if (oldTick) oldTick(t); o.rotation.y = t * 0.8; o.position.y = 0.75 + Math.sin(t * 2) * 0.03; gr.rotation.y = t * 2; }; return g; }
+
+  /* ---------- Grok Ratita Industries HQ prizes ---------- */
+  function kcBadge3() { var g = new T.Group(); keyRing(g, 0.9); var o = grp(g, 0, 0.45, 0); add(o, box(0.05, 0.12, 0.01), lam('#ff4fa0'), 0, 0.2, 0);
+    add(o, box(0.26, 0.32, 0.025), lam('#ffffff'), 0, 0, 0); add(o, box(0.26, 0.07, 0.03), lam('#ff4fa0'), 0, 0.125, 0); var hd = grp(o, 0, -0.01, 0.02); add(hd, sph(0.06, 18), lam('#a9afbd'), 0, 0, 0, 1, 0.9, 0.5);
+    [-1, 1].forEach(function (s) { add(hd, sph(0.028, 12), lam('#f9a8d4'), s * 0.05, 0.045, 0, 1, 1, 0.4); add(hd, sph(0.01, 8), lam('#16101f'), s * 0.02, 0.01, 0.028); }); add(o, box(0.18, 0.02, 0.03), lam('#1f2937'), 0, -0.11, 0);
+    g.userData.tick = function (t) { o.rotation.y = Math.sin(t * 1.4) * 0.5; }; return g; }
+  function candyPlush() { var g = new T.Group(), b = grp(g, 0, 0, 0), Gr = lam('#8a9099'), Dk = lam('#4b5058'), Lt = lam('#e8eaee');
+    add(b, sph(0.16, 24), Gr, 0, 0.15, 0, 1, 0.85, 1.25); add(b, sph(0.14, 20), Dk, 0, 0.21, -0.02, 1, 0.5, 1.15); [[-0.08, 0.12], [0.08, 0.12], [-0.08, -0.12], [0.08, -0.12]].forEach(function (q) { add(b, sph(0.05, 12), Lt, q[0], 0.04, q[1], 1, 0.8, 1.1); });
+    add(b, cyl(0.025, 0.02, 0.06, 10), Dk, 0, 0.27, -0.2); var hd = grp(b, 0, 0.34, 0.14); add(hd, box(0.19, 0.17, 0.18), Gr, 0, 0, 0); add(hd, box(0.13, 0.1, 0.13), Gr, 0, -0.03, 0.11);
+    add(hd, sph(0.07, 16), Lt, 0, -0.09, 0.14, 1, 1, 0.9); [-1, 1].forEach(function (s) { add(hd, sph(0.04, 12), Lt, s * 0.035, -0.03, 0.18, 1, 0.65, 0.8); add(hd, sph(0.04, 12), Lt, s * 0.045, 0.06, 0.09, 1, 0.55, 0.9); add(hd, sph(0.06, 12), Dk, s * 0.1, 0.05, 0, 0.5, 0.25, 1); add(hd, sph(0.016, 10), lam('#16101f'), s * 0.04, 0.025, 0.093); });
+    add(hd, box(0.045, 0.03, 0.03), lam('#111111'), 0, 0.0, 0.18); tag(b, 0.12, 0.1, 0.1); var col = add(b, tor(0.09, 0.018, 7, 8, 24), lam('#ff4fa0'), 0, 0.28, 0.1); col.rotation.x = Math.PI / 2 - 0.4;
+    g.userData.tick = function (t) { hd.rotation.z = Math.sin(t * 1.6) * 0.12; }; return g; }
+  function hqCup() { var g = trophy('#ffcf3a', true), oldTick = g.userData.tick; var o = grp(g, 0, 0.95, 0);
+    var dm = add(g, sph(0.2, 28), new T.MeshPhongMaterial({ color: '#bfe8ff', transparent: true, opacity: 0.45, shininess: 120, specular: '#ffffff' }), 0, 0.93, 0, 1, 0.8, 1); dm.scale.set(1, 0.8, 1); add(g, tor(0.2, 0.015, 7, 8, 32), metal('#ff4fa0'), 0, 0.93, 0).rotation.x = Math.PI / 2;
+    for (var i = 0; i < 4; i++) { var r = add(g, tor(0.2, 0.006, Math.PI, 6, 24), lam('#ffffff'), 0, 0.93, 0, 1, 0.8, 1); r.rotation.y = i * Math.PI / 4; }
+    add(g, sph(0.025, 12), metal('#ff4fa0'), 0, 1.1, 0); var gr = add(o, cyl(0.06, 0.06, 0.025, 10), shiny('#3ff0ff', 80), -0.3, 0, 0); gr.rotation.x = Math.PI / 2; cheese3(o, 0.5, 0.3, 0, 0);
+    g.userData.tick = function (t) { if (oldTick) oldTick(t); o.rotation.y = t * 0.8; gr.rotation.y = t * 2; }; return g; }
   /* ---------- Grok Sports Command prizes ---------- */
   function bBall(par, r, x, y, z) { var b = add(par, sph(r, 24), shiny('#f97316', 30), x, y, z); var L = lam('#3b1d0a');
     [0, Math.PI / 2].forEach(function (a) { var m = add(b, tor(r * 1.002, r * 0.04, 7, 6, 36), L); m.rotation.y = a; }); var e = add(b, tor(r * 1.002, r * 0.04, 7, 6, 36), L); e.rotation.x = Math.PI / 2; return b; }
@@ -1138,7 +1155,7 @@
     pl_chinchino: chinPlush, kc_seeker: seekerKc, kart_helmet: racingHelmet, kart_model: partyKart, tr_kart: kartCup,
     pl_mvp: mvpPlush, kc_hoop: kcHoop, sw_band: sweatband, gold_pin: goldenPin, tr_sports: sportsCup,
     kc_duck: kcDuck, hard_hat: hardHat, pl_roargon: roargonPlush, ufo_model: ufoModel, tr_disaster: disasterCup,
-    kc_cheese: kcCheese, rr_goggles: rrGoggles, pl_pirat: piratPlush, md_martina: martinaFig, tr_ratita: ratitaCup,
+    kc_cheese: kcCheese, rr_goggles: rrGoggles, pl_pirat: piratPlush, md_martina: martinaFig, tr_ratita: ratitaCup, kc_badge: kcBadge3, pl_candy: candyPlush, tr_hq: hqCup,
     kc_puffhorn: kcPuffhorn, raptor_helm: raptorHelm, pl_mochi: mochiPlush, starfang_statue: starfangStatue, tr_hunters: huntersCup,
     pl_chef: chefPlush, party_hat: partyHat, disco_ball: discoBall, gold_key: goldKey, retro_cab: retroCabModel,
     pl_embercub: function () { return critterPlush('embercub'); }, pl_puddlepup: function () { return critterPlush('puddlepup'); }, pl_leafkit: function () { return critterPlush('leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue, pl_gus: gusPlush, kc_stamp: kcStamp, dlc_replica: dlcReplica,

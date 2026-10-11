@@ -104,6 +104,9 @@
     { id: 'pl_pirat', cat: 'plush', name: 'Pi-rat Plush', price: 65, desc: 'A squishy Pi-rat, the one-eyed explorer from Grok Ratita Rescue, winking with his happy closed eye and a red bandana.' },
     { id: 'md_martina', cat: 'model', name: 'Martina & Friends Figure', price: 180, desc: 'Martina the desert tortoise giving Luna, Pi-rat and Snowie a ride on her shell. Her head bobs!' },
     { id: 'tr_ratita', cat: 'trophy', name: 'House Rescued Cup', price: 330, desc: 'The Grok Ratita Rescue trophy: a golden cup with a cheese wedge, a gear and a tiny rat crown orbiting it.' },
+    { id: 'kc_badge', cat: 'fun', name: 'Intern Badge Keychain', price: 25, desc: 'Your very own Ratita Industries HQ intern badge on a pink lanyard clip. Access level: snacks.' },
+    { id: 'pl_candy', cat: 'plush', name: 'Candy Schnauzer Plush', price: 70, desc: 'Candy, Head of Canine Ruffsources: a squishy salt-and-pepper miniature schnauzer with a fluffy silver beard and bushy eyebrows.' },
+    { id: 'tr_hq', cat: 'trophy', name: 'HQ Glass Dome Cup', price: 340, desc: 'The Grok Ratita Industries HQ trophy: a golden cup crowned with a tiny glass dome, while a gear and a Golden Gouda orbit it.' },
     { id: 'tr_hunters', cat: 'trophy', name: 'Monster Hunters Cup', price: 330, desc: 'The Grok Monster Hunters master trophy: a golden cup with a crossed sword and hammer, and a star, a paw and a heart orbiting it.' },
     { id: 'tr_ring', cat: 'trophy', name: 'Golden Ring Trophy', price: 350, desc: 'A giant spinning Grok Dash ring on a stand. Shiny!' },
     { id: 'golden_joy', cat: 'trophy', name: 'Golden Joystick', price: 750, desc: 'The legendary Golden Joystick. The ultimate prize!' },
@@ -767,6 +770,18 @@
   function mdMartina(g) { standBase(g, '#7c4a22', true); ball(g, 50, 58, 30, 20, '#a16207'); g.fillStyle = '#ca8a04'; for (var i = 0; i < 4; i++) { g.beginPath(); g.arc(34 + i * 11, 54 + (i % 2) * 4, 5, 0, 7); g.fill(); } ball(g, 82, 64, 9, 8, '#a3a37a'); eye(g, 85, 61, 1.8);
     ['#a9afbd', '#c99a6b', '#fbfbff'].forEach(function (c, k) { ball(g, 36 + k * 14, 36, 6, 5, c); ball(g, 34 + k * 14, 32, 2, 2, '#f9a8d4'); }); }
   function trRatita(g) { trophy(g, '#ffcf3a', true); cheeseW(g, 20, 30, 0.6); g.fillStyle = '#3ff0ff'; g.beginPath(); g.arc(82, 26, 7, 0, 7); g.fill(); g.fillStyle = '#1e293b'; g.beginPath(); g.arc(82, 26, 3, 0, 7); g.fill(); star(g, 50, 11, 7, '#ff4fa0', 5); }
+
+  /* ---------- Grok Ratita Industries HQ prizes ---------- */
+  function kcBadge(g) { keyRing(g); g.fillStyle = '#ff4fa0'; g.fillRect(46, 30, 8, 14); g.fillStyle = '#ffffff'; g.beginPath(); g.roundRect ? g.roundRect(30, 42, 40, 48, 6) : g.rect(30, 42, 40, 48); g.fill(); g.strokeStyle = '#ff4fa0'; g.lineWidth = 3; g.stroke();
+    g.fillStyle = '#ff4fa0'; g.fillRect(30, 42, 40, 10); ball(g, 50, 66, 9, 8, '#a9afbd'); ball(g, 43, 59, 4, 4, '#f9a8d4'); ball(g, 57, 59, 4, 4, '#f9a8d4'); eye(g, 47, 65, 1.6); eye(g, 53, 65, 1.6);
+    g.fillStyle = '#1f2937'; g.fillRect(36, 80, 28, 3); g.fillRect(40, 85, 20, 2); shine(g, 38, 50, 3, 6, 0.4); }
+  function plushCandy(g) { shadow(g, 50, 92, 28); var Gr = '#8a9099', Dk = '#4b5058', Lt = '#e8eaee';
+    ball(g, 50, 72, 24, 17, Gr); ball(g, 50, 66, 20, 9, Dk); ball(g, 34, 86, 7, 6, Lt); ball(g, 66, 86, 7, 6, Lt); ball(g, 72, 62, 4, 6, Dk);
+    g.fillStyle = Gr; g.beginPath(); g.roundRect ? g.roundRect(32, 26, 36, 32, 9) : g.rect(32, 26, 36, 32); g.fill(); ball(g, 50, 52, 12, 10, Lt); ball(g, 44, 50, 7, 5, Lt); ball(g, 56, 50, 7, 5, Lt);
+    ball(g, 30, 34, 7, 9, Dk); ball(g, 70, 34, 7, 9, Dk); ball(g, 42, 34, 7, 3, Lt); ball(g, 58, 34, 7, 3, Lt); eye(g, 43, 39, 2.6); eye(g, 57, 39, 2.6);
+    g.fillStyle = '#111'; g.beginPath(); g.ellipse(50, 45, 4, 3, 0, 0, 7); g.fill(); g.strokeStyle = '#ff4fa0'; g.lineWidth = 4; g.beginPath(); g.arc(50, 58, 15, 0.3, Math.PI - 0.3); g.stroke(); ball(g, 50, 72, 3, 3, '#ffd23f'); tag(g, 66, 78); }
+  function trHq(g) { trophy(g, '#ffcf3a', true); g.fillStyle = 'rgba(191,232,255,.85)'; g.beginPath(); g.arc(50, 22, 13, Math.PI, 0); g.fill(); g.strokeStyle = '#ffffff'; g.lineWidth = 1.5; for (var i = -1; i <= 1; i++) { g.beginPath(); g.moveTo(50 + i * 7, 22); g.quadraticCurveTo(50 + i * 4, 10, 50, 9); g.stroke(); }
+    g.fillStyle = '#ff4fa0'; g.fillRect(36, 22, 28, 3); g.beginPath(); g.arc(50, 9, 2.5, 0, 7); g.fill(); cheeseW(g, 18, 34, 0.55); g.fillStyle = '#3ff0ff'; g.beginPath(); g.arc(83, 30, 6, 0, 7); g.fill(); g.fillStyle = '#1e293b'; g.beginPath(); g.arc(83, 30, 2.5, 0, 7); g.fill(); sparkle(g, 76, 14, 4); }
   /* ---------- Grok Disaster Zone prizes ---------- */
   function kcDuck(g) { keyRing(g); ball(g, 50, 66, 18, 14, '#ffd60a'); ball(g, 60, 46, 11, 10, '#ffd60a'); g.fillStyle = '#ff7b00'; g.beginPath(); g.moveTo(69, 46); g.lineTo(80, 49); g.lineTo(69, 52); g.fill(); eye(g, 62, 43, 2.2); shine(g, 44, 58, 5, 3, 0.5); g.fillStyle = 'rgba(80,190,255,.6)'; g.beginPath(); g.ellipse(50, 80, 26, 5, 0, 0, 7); g.fill(); }
   function hardHat(g) { shadow(g, 50, 84, 32); g.fillStyle = '#facc15'; g.beginPath(); g.ellipse(50, 74, 36, 9, 0, 0, 7); g.fill(); g.fillStyle = '#fde047'; g.beginPath(); g.arc(50, 70, 26, Math.PI, 0); g.fill(); g.fillStyle = '#eab308'; g.fillRect(47, 44, 6, 26); g.fillStyle = '#334155'; rr(g, 41, 54, 18, 12, 3); g.fill(); g.fillStyle = '#fffbe0'; g.beginPath(); g.arc(50, 60, 4.5, 0, 7); g.fill(); shine(g, 38, 56, 5, 7, 0.45); sparkle(g, 82, 36, 5); }
@@ -869,7 +884,7 @@
     pl_chinchino: plushChin, kc_seeker: kcSeeker, kart_helmet: helmet, kart_model: kartModel, tr_kart: trKart,
     pl_mvp: plushMvp, kc_hoop: kcHoop, sw_band: swBand, gold_pin: goldPin, tr_sports: trSports,
     kc_duck: kcDuck, hard_hat: hardHat, pl_roargon: plushRoargon, ufo_model: ufoModel, tr_disaster: trDisaster,
-    kc_cheese: kcCheese, rr_goggles: rrGoggles, pl_pirat: plushPirat, md_martina: mdMartina, tr_ratita: trRatita,
+    kc_cheese: kcCheese, rr_goggles: rrGoggles, pl_pirat: plushPirat, md_martina: mdMartina, tr_ratita: trRatita, kc_badge: kcBadge, pl_candy: plushCandy, tr_hq: trHq,
     kc_puffhorn: kcPuffhorn, raptor_helm: raptorHelm, pl_mochi: plushMochi, starfang_statue: starfangArt, tr_hunters: trHunters,
     pl_chef: plushChef, party_hat: partyHat, disco_ball: discoBall, gold_key: goldKeyArt, retro_cab: retroCabArt,
     pl_embercub: function (g) { plushCritter(g, 'embercub'); }, pl_puddlepup: function (g) { plushCritter(g, 'puddlepup'); }, pl_leafkit: function (g) { plushCritter(g, 'leafkit'); }, kc_orb: kcOrb, ears_hat: earsHat, shiny_statue: shinyStatue, pl_gus: plushGus, kc_stamp: kcStamp, dlc_replica: dlcReplica,
