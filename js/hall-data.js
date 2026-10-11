@@ -1722,63 +1722,63 @@ GA.HALL_DATA = {
 "date": "Oct 11",
 "ver": "1.0",
 "title": "Opening day",
-"text": "A bright cartoon 3D exploration adventure on the Turbo engine (soft shadows, ambient occlusion and glow). Max, Zoe and Kai are explorers framed by the sneaky Professor Vintage, so the Relic Patrol chases THEM. A walk-in Grok Relic Museum hub with relic cases, a dino skeleton, Torty\u2019s Gear Shop, a wardrobe and a journal. Expedition 1, the Temple of the Jade Monkey: a croc river with whip swinging, Relic Patrol sneaking and bush hiding, a star-plate gate puzzle with a push block, a collapsing rope bridge, swinging logs, a dart corridor, a spike floor, a monkey statue puzzle, a rolling boulder and the Vine-Chopper boss, then a funny escape chase to Torty\u2019s jeep. Whip, torch, outfits, upgrades, evidence and co-op for 3."
+"text": "A bright cartoon 3D exploration adventure on the Turbo engine (soft shadows, ambient occlusion and glow). Max, Zoe and Kai are explorers framed by the sneaky Professor Vintage, so the Relic Patrol chases THEM. A walk-in Grok Relic Museum hub with relic cases, a dino skeleton, Torty\u2019s Gear Shop, a wardrobe and a journal. Five expeditions: the Temple of the Jade Monkey (croc-river whip swings, a star-plate gate, a collapsing rope bridge, the Vine-Chopper), Crystal Owl Caverns (a runaway mine cart, the crystal grotto, brazier and owl puzzles, the Drill-o-Matic 3000), The Clockwork Subway (a night street, a runaway handcar, a flooded tunnel, the clock puzzle, the Vintage Express), the Pyramid of the Sun Scarab (quicksand, dart corridors, sun mirrors, Mecha-Mummy Vintage) and Vintage\u2019s Sky Fortress (cloud hops, a rope bridge, the hangar and the Sky Suit balloon). Each boss has its own signature move, and every relic ends in a funny Relic Patrol escape chase. Whip, torch, outfits, upgrades, evidence, themed museum cases and co-op for 3."
 }
 ],
 "versions": [],
 "pics": [
 {
 "src": "assets/hall/relics/1.webp",
-"cap": "Grok Relic Museum: your home base, with relic cases, Torty’s Gear Shop and the expedition map",
+"cap": "Grok Relic Museum: themed treasure cases for every expedition, under the big dino skeleton",
 "w": 390,
 "h": 844
 },
 {
 "src": "assets/hall/relics/2.webp",
-"cap": "Base camp in the Emerald Jungle: Torty’s tents, a campfire and cheeky monkeys",
+"cap": "Temple of the Jade Monkey: crossing the rope bridge into the jungle ruins",
 "w": 390,
 "h": 844
 },
 {
 "src": "assets/hall/relics/3.webp",
-"cap": "The croc river: hop the mossy stones or whip the golden ring and swing over",
+"cap": "Crystal Owl Caverns: the glowing crystal grotto and its underground river",
 "w": 390,
 "h": 844
 },
 {
 "src": "assets/hall/relics/4.webp",
-"cap": "Sneaking past the Relic Patrol in the jungle ruins (hide in the bushes!)",
+"cap": "Professor Vintage’s Drill-o-Matic 3000 burrows up in the cave arena",
 "w": 390,
 "h": 844
 },
 {
 "src": "assets/hall/relics/5.webp",
-"cap": "The star-plate gate puzzle: push the stone block and stand on the other plate",
+"cap": "The Clockwork Subway: a night street outside the sealed Old Line 7 station",
 "w": 390,
 "h": 844
 },
 {
 "src": "assets/hall/relics/6.webp",
-"cap": "Temple of the Jade Monkey: stepped stone temple with vines and torches",
+"cap": "Pyramid of the Sun Scarab: the hieroglyph hall, with jackal guards at the inner door",
 "w": 390,
 "h": 844
 },
 {
 "src": "assets/hall/relics/7.webp",
-"cap": "The spike floor room, lit by your torch",
+"cap": "The burial chamber: Mecha-Mummy Vintage waits by the raised relic dais",
 "w": 390,
 "h": 844
 },
 {
 "src": "assets/hall/relics/8.webp",
-"cap": "Professor Vintage’s Vine-Chopper boss in the temple courtyard",
+"cap": "Vintage’s Sky Fortress: the Sky Suit balloon boss on the top deck above the clouds",
 "w": 390,
 "h": 844
 }
 ],
 "cover": "assets/hall/relics/cover.webp",
 "quip": "An explorer swung through my Hall on a whip yelling \u2018IT BELONGS IN A MUSEUM!\u2019 This IS a museum. I gave him a map.",
-"noOld": "Grok Lost Relics was just dug up. No old versions yet. Please wipe your boots, the jungle mud gets everywhere."
+"noOld": "Grok Lost Relics was just dug up. Its Time Jumper beta is in the Save Vault. Please wipe your boots, the jungle mud gets everywhere."
 },
 "ratita": {
 "repo": "grok-ratita",
