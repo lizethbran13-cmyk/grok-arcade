@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-11",
+  "updated": "2026-10-11T16:40:00Z",
   "items": [
     {
       "game": "puptown",
@@ -21,11 +21,12 @@
     {
       "issue": 27,
       "game": "life",
-      "name": "Good Life Pack",
+      "name": "Good Life Pack (live)",
       "size": "Mini Pack",
-      "what": "5 new outfits and a Ratita Industries shop that sells hammers, tablets and phones.",
-      "stage": "building",
-      "when": "In the lab now"
+      "what": "Grok Life Mini Pack: the Ratita Industries Gadget Shop with 8 working gadgets (Fix-It Hammer, RatPhone 5 drone delivery, Tablet remote work, Hover-Board, Bubble Shield and more) plus 5 Ratita outfits.",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T16:40:00Z"
     },
     {
       "issue": 28,
