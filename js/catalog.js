@@ -50,7 +50,9 @@ GA.MAIN_GAMES = [
   { id: 'ratitahq', mp: true, name: 'Grok Ratita Industries HQ', desc: 'A cartoony 3D hub world! You\u2019re the new intern at Ratita Industries: meet Luna, Pi-rat and Snowie, explore labs, the Cheese Caf\u00e9, the glass-dome Atrium and the Test Yard, solve two mysteries, find Candy\u2019s Ruffsources department and a hidden friend, and video-call Mimi, Lily and Lili. Customize your intern. Explore with up to 3 friends online.',
     url: 'https://lizethbran13-cmyk.github.io/grok-ratita-hq/', color: '#ff8a3d', color2: '#3ff0ff' },
   { id: 'puptown', mp: true, name: 'Grok Pup Town', desc: 'A cozy cartoon 3D dog town, Candy\u2019s hometown! Explore the town square and fountain, Bone App\u00e9tit bakery, Paw Park, the Fluff & Puff groomer, the Pup Fire Station, the Barkade, the library, Town Hall, Candy\u2019s house and Torty\u2019s garden shop. Meet 30+ dog townsfolk, ride the Dog-Bus, bake treats, groom pups, run the agility course and solve the mystery of the stolen Golden Bone. Explore with up to 3 friends online!',
-    url: 'https://lizethbran13-cmyk.github.io/grok-pup-town/', color: '#ff8fc8', color2: '#ffd23f' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-pup-town/', color: '#ff8fc8', color2: '#ffd23f' },
+  { id: 'eatsville', mp: true, name: 'Grok Eatsville Tycoon', desc: 'A cartoon 3D restaurant tycoon in the town of Eatsville! Start as a trainee at Mega Munch and work your way up, or open your own diner right away. Cook and serve, hire staff, design menus and decor, run deliveries in your car, build and decorate your house, and grow a food empire against Mega Munch and Pizza Palooza. Keep every branch spotless for grumpy Inspector Grumbleton, and fix the Ratita Industries kitchen gadgets when they go haywire. Explore mode, 10 hidden Golden Spatulas, and co-op for up to 3 friends online!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-eatsville/', color: '#ff7a3d', color2: '#14b8a6' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -91,6 +93,9 @@ GA.BONUS_GAMES = [
   { id: 'crumbs', name: 'Crumb Patrol', desc: 'You\u2019re Sweepy the robo-vac! Drag to steer around the Ratita HQ caf\u00e9, slurp up crumbs and cheese, DON\u2019T suck up the Golden Gouda, dodge goo puddles and move out from under the big sneaker shadows before they stomp. A Grok Ratita Industries HQ game.', color: '#ff8a3d', color2: '#3ff0ff' },
   /* #34: Bone Dig (Pup Town), on the Bonus Zone wall */
   { id: 'dig', name: 'Bone Dig', desc: 'Help Candy dig up Paw Park! PRESS AND HOLD a dirt mound to dig. Bones, biscuits and the rare GOLDEN BONE score points, but WIGGLY mounds hide a sprinkler that soaks Candy. A Grok Pup Town game.', color: '#86dc93', color2: '#ffd23f' },
+  /* #36 is reserved for Boulder Run (Grok Lost Relics) */
+  /* #37: Patty Panic (Grok Eatsville Tycoon), on the Bonus Zone wall */
+  { id: 'flip', name: 'Patty Panic', desc: 'Work the grill at the Main St Diner! TAP patties when they glow GOLDEN to flip them, then again to serve. Don\u2019t let them burn, catch the patties the Ratita grill LAUNCHES into the air, and wipe the grease before Inspector Grumbleton notices. A Grok Eatsville Tycoon game.', color: '#ff7a3d', color2: '#14b8a6' },
   /* #35: Sparkle Car Wash (Grok Rides Remastered), on the Bonus Zone wall */
   { id: 'wash', name: 'Sparkle Car Wash', desc: 'Muddy cars roll through the Sparkle Car Wash! DRAG over the mud splats to scrub them off before each car rolls out. Spotless cars score a bonus, GOLDEN cars count double, and hands off the WET PAINT cars! A Grok Rides Remastered game.', color: '#38bdf8', color2: '#f472b6' },
 ];

@@ -849,6 +849,22 @@
         g.fillStyle = '#ff8fc8'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK PUP TOWN', w / 2, 24);
         break;
       }
+      case 'eatsville': {
+        // Grok Eatsville Tycoon: a diner storefront with a striped awning and neon sign, a burger on the roof, steam, a car driving past and Inspector Grumbleton peeking with his clipboard
+        var gev = g.createLinearGradient(0, 0, 0, h); gev.addColorStop(0, '#5fb6ff'); gev.addColorStop(0.6, '#c8ecff'); gev.addColorStop(0.61, '#9ca3af'); gev.addColorStop(0.75, '#6b7280'); gev.addColorStop(0.76, '#374151'); gev.addColorStop(1, '#1f2937'); g.fillStyle = gev; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#f8fafc'; rrF(g, w * 0.12, h * 0.3, w * 0.76, h * 0.31, 6); g.fillStyle = '#14b8a6'; g.fillRect(w * 0.12, h * 0.52, w * 0.76, h * 0.09);
+        for (i = 0; i < 8; i++) { g.fillStyle = i % 2 ? '#ffffff' : '#ff7a3d'; g.beginPath(); g.moveTo(w * 0.1 + i * w * 0.1, h * 0.36); g.lineTo(w * 0.2 + i * w * 0.1, h * 0.36); g.lineTo(w * 0.2 + i * w * 0.1, h * 0.41); g.arc(w * 0.15 + i * w * 0.1, h * 0.41, w * 0.05, 0, Math.PI); g.fill(); }
+        g.fillStyle = '#bae6fd'; g.fillRect(w * 0.17, h * 0.44, w * 0.2, h * 0.08); g.fillRect(w * 0.63, h * 0.44, w * 0.2, h * 0.08); g.fillStyle = '#ff7a3d'; g.fillRect(w * 0.44, h * 0.43, w * 0.12, h * 0.18); g.fillStyle = '#fde68a'; g.fillRect(w * 0.46, h * 0.45, w * 0.08, h * 0.07);
+        var bx3 = w * 0.5, by3 = h * 0.22 + Math.sin(t * 2) * 2; g.fillStyle = '#e8a65a'; g.beginPath(); g.arc(bx3, by3, w * 0.13, Math.PI, 0); g.fill(); g.fillStyle = '#4ade80'; g.fillRect(bx3 - w * 0.14, by3, w * 0.28, 4); g.fillStyle = '#facc15'; g.fillRect(bx3 - w * 0.13, by3 + 4, w * 0.26, 4); g.fillStyle = '#7c3f1d'; rrF(g, bx3 - w * 0.13, by3 + 8, w * 0.26, 10, 4); g.fillStyle = '#e8a65a'; rrF(g, bx3 - w * 0.12, by3 + 18, w * 0.24, 8, 4);
+        g.fillStyle = '#fff'; for (i = 0; i < 5; i++) { g.beginPath(); g.arc(bx3 - 18 + i * 9, by3 - w * 0.08, 1.6, 0, 7); g.fill(); }
+        g.fillStyle = 'rgba(255,255,255,.75)'; for (i = 0; i < 3; i++) { var sy = h * 0.3 - ((t * 20 + i * 14) % 40); g.beginPath(); g.arc(w * 0.78 + Math.sin(t * 3 + i) * 4, sy, 5 + i, 0, 7); g.fill(); }
+        var gx3 = w * 0.06, gy3 = h * 0.5 + Math.abs(Math.sin(t * 1.3)) * -6; g.fillStyle = '#1f2937'; g.fillRect(gx3, gy3 - 18, 18, 4); g.fillRect(gx3 + 3, gy3 - 26, 12, 9); g.fillStyle = '#f2c29b'; g.beginPath(); g.arc(gx3 + 9, gy3 - 9, 7, 0, 7); g.fill(); g.fillStyle = '#6b4423'; g.fillRect(gx3 + 3, gy3 - 6, 12, 3); g.fillStyle = '#d6b88a'; g.fillRect(gx3 + 14, gy3 - 4, 9, 12); g.fillStyle = '#fff'; g.fillRect(gx3 + 15, gy3 - 2, 7, 9);
+        var cx4 = ((t * 34) % (w + 80)) - 50, cy4 = h * 0.84; g.fillStyle = '#ef4444'; rrF(g, cx4, cy4, 48, 16, 6); rrF(g, cx4 + 10, cy4 - 9, 26, 11, 5); g.fillStyle = '#bfe8ff'; g.fillRect(cx4 + 14, cy4 - 7, 8, 7); g.fillRect(cx4 + 24, cy4 - 7, 8, 7); g.fillStyle = '#111'; g.beginPath(); g.arc(cx4 + 11, cy4 + 16, 5, 0, 7); g.arc(cx4 + 37, cy4 + 16, 5, 0, 7); g.fill();
+        g.fillStyle = '#facc15'; for (i = 0; i < 5; i++) g.fillRect(((i * w / 4 - t * 34) % (w + 40) + w + 40) % (w + 40) - 20, h * 0.93, 18, 3);
+        g.fillStyle = '#ff7a3d'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(14); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK EATSVILLE', w / 2, 24);
+        g.save(); g.translate(w / 2, 42); g.rotate(-0.04); g.fillStyle = '#14b8a6'; rrF(g, -40, -9, 80, 18, 6); g.font = font(11); g.fillStyle = '#fff'; g.fillText('TYCOON', 0, 4); g.restore();
+        break;
+      }
       case 'ratitahq': {
         // Ratita Industries HQ: campus with a glass dome, an intern walking past, rats waving, a rocket launching in the test yard
         var grq = g.createLinearGradient(0, 0, 0, h); grq.addColorStop(0, '#7dd3fc'); grq.addColorStop(0.6, '#e0f2fe'); grq.addColorStop(0.61, '#86efac'); grq.addColorStop(1, '#4ade80'); g.fillStyle = grq; g.fillRect(0, 0, w, h);

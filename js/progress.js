@@ -84,6 +84,7 @@
     crumbs: [35, 'Spotless', 'Score 35 in Crumb Patrol', '\uD83E\uDDF9'],
     dig: [35, 'Top Dog Digger', 'Score 35 in Bone Dig', '\uD83E\uDDB4'],
     wash: [35, 'Shine Master', 'Score 35 in Sparkle Car Wash', '\uD83E\uDEE7'],
+    flip: [35, 'Grill Master', 'Score 35 in Patty Panic', '\uD83C\uDF54'],
     tame: [60, 'Monster Tamer', 'Score 60 in Tame Rush', '\uD83D\uDC32'],
     tm_munch: [150, 'Maze Muncher', 'Score 150 in Munch Maze \u201980', '\uD83D\uDFE3'],
     tm_swoop: [60, 'Swoop Stopper', 'Score 60 in Star Swoopers \u201981', '\uD83D\uDE80'],
@@ -165,6 +166,8 @@
   A.push({ id: 'dig_deep', cat: 'High Scores', icon: '\uD83D\uDC3E', name: 'Dig Dog', desc: 'Dig up 30 mounds in one game of Bone Dig', p: function () { return [ev('dig30') ? 1 : 0, 1]; } });
   A.push({ id: 'wash_ten', cat: 'High Scores', icon: '\uD83D\uDE97', name: 'Squeaky Clean', desc: 'Send 10 spotless cars out of one game of Sparkle Car Wash', p: function () { return [ev('wash10') ? 1 : 0, 1]; } });
   A.push({ id: 'rides_remaster', cat: 'Prizes', icon: '\uD83D\uDE81', name: 'Remastered Road Crew', desc: 'Own the Ratita Hover-Car Keychain, the Scoop Truck Plush and the Remastered Cup', p: function () { return [['kc_hovercar', 'pl_scoop', 'tr_rides2'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
+  A.push({ id: 'flip_25', cat: 'High Scores', icon: '\uD83C\uDF73', name: 'Order Up!', desc: 'Serve 25 burgers in one game of Patty Panic', p: function () { return [ev('flip25') ? 1 : 0, 1]; } });
+  A.push({ id: 'eats_tycoon', cat: 'Prizes', icon: '\uD83C\uDF54', name: 'Eatsville Tycoon', desc: 'Own the Golden Spatula Keychain, the Inspector Grumbleton Plush and the Golden Burger Cup', p: function () { return [['kc_spatula', 'pl_grumble', 'tr_eatsville'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'pup_pal', cat: 'Prizes', icon: '\uD83D\uDC36', name: 'Pup Town Pal', desc: 'Own the Golden Bone Keychain, the Torty Plush and the Golden Bone Cup', p: function () { return [['kc_goldbone', 'pl_torty', 'tr_puptown'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'tame_three', cat: 'High Scores', icon: '\uD83D\uDC96', name: 'Beast Friend', desc: 'Tame 3 monsters in one game of Tame Rush', p: function () { return [ev('tame3') ? 1 : 0, 1]; } });
   A.push({ id: 'hunter_master', cat: 'Prizes', icon: '\uD83D\uDDE1\uFE0F', name: 'Master Hunter', desc: 'Own the Mochi Buddy Plush, the Starfang Statue and the Monster Hunters Cup', p: function () { return [['pl_mochi', 'starfang_statue', 'tr_hunters'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
