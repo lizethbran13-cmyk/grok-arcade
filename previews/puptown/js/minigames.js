@@ -22,10 +22,10 @@ export function bake(ui, game, panel, done) { const R = () => ({ shape: (Math.ra
   const step = () => { if (k >= 3) return finish(); const o = orders[k];
     panel(`<h2>🧁 TREAT BAKERY · ORDER ${k + 1}/3</h2><div class="mgRow"><div class="ticket"><b>${cust[k * 2 % 6]} wants:</b><canvas id="bT" width="180" height="140"></canvas><small>${SHAPES[o.shape]} · ${FN[o.frost]} · ${TN[o.top]}</small></div>
       <div class="ticket"><b>Your treat:</b><canvas id="bY" width="180" height="140"></canvas></div></div>
-      <h3>SHAPE</h3><div class="seg">${SHAPES.map((s, i) => `<button data-s="${i}" class="${cur.shape === i ? 'on' : ''}">${['🦴', '🧁', '🍩', '🍪'][i]}</button>`).join('')}</div>
-      <h3>FROSTING</h3><div class="seg">${FROST.map((c, i) => `<button data-f="${i}" class="${cur.frost === i ? 'on' : ''}" style="background:${c}">${FN[i]}</button>`).join('')}</div>
+      <h3>SHAPE</h3><div class="seg bkShape">${SHAPES.map((s, i) => `<button data-s="${i}" class="${cur.shape === i ? 'on' : ''}"><i>${['🦴', '🧁', '🍩', '🍪'][i]}</i><small>${s}</small></button>`).join('')}</div>
+      <h3>FROSTING</h3><div class="seg">${FROST.map((c, i) => `<button data-f="${i}" class="bkFrost${cur.frost === i ? ' on' : ''}" style="background:${c}${i === 2 ? ';color:#fff;text-shadow:0 1px 2px #000' : ''}">${FN[i]}</button>`).join('')}</div>
       <h3>TOPPING</h3><div class="seg">${TN.map((t, i) => `<button data-t="${i}" class="${cur.top === i ? 'on' : ''}">${t}</button>`).join('')}</div>
-      <div class="btnRow"><button class="mbtn2" id="bX">QUIT</button><button class="go" id="bGo">🔥 INTO THE OVEN</button></div>`, (c) => {
+      <div class="btnRow bkBtns"><button class="mbtn2 sm" id="bX">QUIT</button><button class="go" id="bGo">🔥 INTO THE OVEN</button></div>`, (c) => {
       const d = (id, t) => { const cv = $q(c, id), g = cv.getContext('2d'); g.clearRect(0, 0, 180, 140); drawTreat(g, 90, 70, 0.95, t); }; d('#bT', o); d('#bY', cur);
       c.querySelectorAll('[data-s]').forEach((b) => b.onclick = () => { sfx('click'); cur.shape = +b.dataset.s; step(); }); c.querySelectorAll('[data-f]').forEach((b) => b.onclick = () => { sfx('click'); cur.frost = +b.dataset.f; step(); }); c.querySelectorAll('[data-t]').forEach((b) => b.onclick = () => { sfx('click'); cur.top = +b.dataset.t; step(); });
       $q(c, '#bX').onclick = () => { sfx('click'); done(); }; $q(c, '#bGo').onclick = () => { sfx('click'); oven(); }; }); };

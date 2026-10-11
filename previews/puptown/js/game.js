@@ -269,6 +269,7 @@ export class Game {
   hookTarget() { return null; }
   // ------------------------------------------------ camera (pulled back; never clips through walls; indoor rooms clamp the lens inside)
   updateCam(dt) { const c = this.cam, me = this.me, cam = E.camera, sens = (S.opts.camSens || 1);
+    if (c.reg !== this.region) { if (c.reg !== undefined) c.snap = true; c.reg = this.region; } // walking through a door: clean cut instead of sliding through the wall
     if (IN.camDX || IN.camDY) { c.yaw -= IN.camDX * 0.0085 * sens * (S.opts.invertX ? -1 : 1); c.pitch = Math.max(-0.1, Math.min(1.15, c.pitch + IN.camDY * 0.005 * sens)); IN.camDX = IN.camDY = 0; }
     const manual = performance.now() - IN.lastCam < 1500;
     if (!manual && me.speed > 1) { let d = me.yaw - c.yaw; while (d > PI) d -= PI * 2; while (d < -PI) d += PI * 2; if (Math.abs(d) < 2.2) c.yaw += d * Math.min(1, dt * 0.9 * (me.speed / 7)); }
@@ -285,14 +286,15 @@ export class Game {
       let d = dr; if (R0) { const m = 0.45, lo = [R0.x0 + m, R0.y0, R0.z0 + m], hi = [R0.x1 - m, R0.ceil - 0.35, R0.z1 - m], O = [c.tgt.x, c.tgt.y, c.tgt.z], Dd = [dv.x, dv.y, dv.z]; let db = 1e9;
         for (let i = 0; i < 3; i++) { if (Math.abs(Dd[i]) < 1e-6) continue; const t = ((Dd[i] > 0 ? hi[i] : lo[i]) - O[i]) / Dd[i]; if (t >= 0) db = Math.min(db, t + 0.45); }
         d = Math.min(dr, db); }
-      return Math.max(1.4, Math.min(c.dist, d - 0.45)); };
+      return Math.max(R0 ? 0.8 : 1.4, Math.min(c.dist, d - 0.45)); }; // indoors it may come close (never out through a wall)
     const base = c.pitch + (R0 && !this.chat ? 0.12 : 0); const dBase = this.chat ? c.dist : distAt(base);
-    const bT = this.chat ? 0 : Math.max(0, Math.min(R0 ? 0.6 : 0.3, (1 - dBase / c.dist) * (R0 ? 1.0 : 0.5)));
+    const bT = this.chat ? 0 : Math.max(0, Math.min(R0 ? 0.78 : 0.3, (1 - dBase / c.dist) * (R0 ? 1.1 : 0.5)));
     c.boost = (c.boost || 0) + (bT - (c.boost || 0)) * Math.min(1, dt * (bT > (c.boost || 0) ? 2.5 : 1.2));
     const pp = Math.min(1.2, base + c.boost); const d = distAt(pp); const dir = new THREE.Vector3().copy(dv);
     if (c.cd == null || c.snap) c.cd = d; else if (d < c.cd - 0.05) c.cd += (d - c.cd) * Math.min(1, dt * 9); else if (d > c.cd + 0.35) c.cd += (d - c.cd) * Math.min(1, dt * 2.2);
     const w3 = c.tgt.clone().addScaledVector(dir, c.cd); const gy = this.world.ground(w3.x, w3.z, w3.y + 0.5, 0.3).y; const minY = (gy > -1e8 ? gy : me.y) + 0.6; if (w3.y < minY) w3.y = minY;
     if (c.snap) { c.pos.copy(w3); c.snap = false; } else { const kx = 1 - Math.exp(-dt * 14), ky = 1 - Math.exp(-dt * 8); c.pos.x += (w3.x - c.pos.x) * kx; c.pos.z += (w3.z - c.pos.z) * kx; c.pos.y += (w3.y - c.pos.y) * ky; }
+    if (R0 && c.tgt.x > R0.x0 + 0.3 && c.tgt.x < R0.x1 - 0.3 && c.tgt.z > R0.z0 + 0.3 && c.tgt.z < R0.z1 - 0.3) { const m = 0.3; c.pos.x = Math.max(R0.x0 + m, Math.min(R0.x1 - m, c.pos.x)); c.pos.z = Math.max(R0.z0 + m, Math.min(R0.z1 - m, c.pos.z)); c.pos.y = Math.min(R0.ceil - 0.2, c.pos.y); } // indoors the lens never leaves the room, even mid-glide
     cam.position.copy(c.pos); if (c.shake > 0) { c.shake -= dt; cam.position.x += (Math.random() - 0.5) * c.shake; cam.position.y += (Math.random() - 0.5) * c.shake; }
     cam.lookAt(c.tgt.x, c.tgt.y + 0.2, c.tgt.z); const fov = E.baseFov; if (Math.abs(cam.fov - fov) > 0.1) { cam.fov += (fov - cam.fov) * Math.min(1, dt * 3); cam.updateProjectionMatrix(); } }
   // ------------------------------------------------ co-op

@@ -123,3 +123,8 @@ h3{margin:12px 2px 6px;font-size:13px;letter-spacing:2px;opacity:.85;font-weight
 .mgP .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.mgP .seg button{min-width:0;padding:8px 2px;font-size:12px;border-radius:12px}
 .mgP .seg button.on{outline:3px solid #ffe14d;outline-offset:1px}
 .mgP .btnRow{margin-top:10px}.mgP .hs{font-weight:900;align-self:center}
+/* treat bakery: roomier picker (bigger emoji + labels, readable frosting names, slimmer action row) */
+.mgP .bkShape button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px 5px}.bkShape i{font-style:normal;font-size:30px;line-height:1}.bkShape small{font-size:11px;text-transform:capitalize;opacity:.9}
+.mgP .seg button.bkFrost{color:#3b1d00;text-shadow:0 1px 0 rgba(255,255,255,.6);font-size:12px;padding:12px 2px}
+.mgP h3{margin:8px 0 4px}.mgP .seg button{min-height:44px}
+.mgP .bkBtns{align-items:stretch}.mgP .bkBtns .mbtn2{flex:0 0 30%}.mgP .bkBtns .go{flex:1;font-size:17px;padding:11px 8px}
