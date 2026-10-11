@@ -11,6 +11,22 @@
       "when": "Building now (try it in the Time Jumper)"
     },
     {
+      "game": "eatsville",
+      "name": "Grok Eatsville Tycoon",
+      "size": "New Game",
+      "what": "A restaurant tycoon in the town of Eatsville: start as a small worker or open your own place, cook and serve, keep customers happy, build a house, drive around town and grow a restaurant empire. Keep every branch spotless for the grumpy health inspector, beat rival chains, and fix Ratita Industries kitchen gadgets when they go haywire. Co-op and Explore mode.",
+      "stage": "building",
+      "when": "Building now"
+    },
+    {
+      "game": "relics",
+      "name": "Grok Lost Relics",
+      "size": "New Game",
+      "what": "An urban-explorer adventure: dive into caves, tunnels, pyramids and jungles, solve puzzles, dodge booby traps and escape wild animals while racing the evil Professor Vintage for ancient relics, and the authorities think YOU are the bad guy! Co-op multiplayer.",
+      "stage": "building",
+      "when": "Building now"
+    },
+    {
       "game": "puptown",
       "name": "Grok Pup Town (live)",
       "what": "Grok Pup Town: Candy's hometown, a cozy 3D dog town hub in HUBS & WORLDS, with bonus #34 Bone Dig and 3 Pup Town prizes. Its Time Jumper beta lives on in the Save Vault.",
