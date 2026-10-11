@@ -526,7 +526,7 @@
 
   /* ---------- TIME JUMPER SAVE BOOTH: Lili's 'Save Vault' terminal. It keeps the LAST preview of every game that shipped
      (preview.json "archive" -> archive/<id>-beta/), playable forever with its own save. Slots fill with cartridges as betas arrive. ---------- */
-  var VX = -4.4, VZ = 40.75, VT = { slots: [] }; PR.VAULT = { x: VX, z: VZ };
+  var VX = -2.6, VZ = 40.75, VT = { slots: [] }; PR.VAULT = { x: VX, z: VZ };
   function vault() {
     var g = grp('Time Jumper Save Booth'); g.position.set(VX, 0, VZ); g.rotation.y = Math.PI; VT.g = g; // local +z = the front (faces the Time Jumper queue)
     var body = ph('#14b8a6', 70, '#03302c'), dark = ph('#0f172a', 50), trim = ph('#fb7185', 90), gold = ph('#fbbf24', 110, '#3a2600'), steel = chrome();
