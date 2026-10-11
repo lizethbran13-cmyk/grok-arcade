@@ -284,7 +284,7 @@
     add(g, cy(0.02, 0.02, 0.5, 8), trim, 0.5, 2.6, -0.3); var dish = add(g, new T.SphereGeometry(0.14, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2.5), new T.MeshPhongMaterial({ color: '#e9e2ff', side: T.DoubleSide, shininess: 80 }), 0.5, 2.88, -0.3); dish.rotation.x = -1.2;
     // marquee with chasing bulbs
     var mq = cvs(512, 128, function (c, w, h) { var gr = c.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, '#2a0b4a'); gr.addColorStop(0.5, '#4a0f6a'); gr.addColorStop(1, '#2a0b4a'); c.fillStyle = gr; c.fillRect(0, 0, w, h); A.neonText(c, 'DLC MACHINE 3000', w / 2, h * 0.42, 54, pink, w - 30); c.font = 'bold 22px "Trebuchet MS",sans-serif'; c.fillStyle = yel; c.textAlign = 'center'; c.fillText('INVENT \u00b7 PRINT \u00b7 UNLOCK', w / 2, h * 0.82); });
-    planeM(1.62, 0.42, mq.tex, g, 0, 2.0, 0.41);
+    planeM(1.62, 0.405, mq.tex, g, 0, 2.0, 0.41);
     var bulbs = []; for (var i = 0; i < 18; i++) { var t = i / 18, bxp, byp; if (t < 0.5) { bxp = -0.85 + t * 2 * 1.7; byp = 2.25; } else { bxp = 0.85 - (t - 0.5) * 2 * 1.7; byp = 1.75; } var bl = add(g, sp(0.035, 10), glowM(i % 2 ? yel : '#ffffff'), bxp, byp, 0.43); bulbs.push(bl); }
     // CRT screen
     add(g, bx(1.12, 0.78, 0.06), ph('#111111', 40), 0, 1.3, 0.42);
@@ -295,7 +295,7 @@
     var lever = new T.Group(); lever.position.set(0.62, 0.92, 0.55); g.add(lever); add(lever, cy(0.025, 0.025, 0.42, 10), trim, 0, 0.21, 0); add(lever, sp(0.07, 14), ph('#ff3d5a', 100), 0, 0.44, 0); add(g, cy(0.08, 0.08, 0.06, 14), trim, 0.62, 0.9, 0.55);
     add(g, bx(0.6, 0.08, 0.06), ph('#05020c', 10), 0, 0.55, 0.42); var slotGlow = add(g, bx(0.56, 0.02, 0.01), glowM(yel), 0, 0.55, 0.455);
     var tk = cvs(256, 96, function (c, w, h) { c.fillStyle = '#fff3c4'; c.fillRect(0, 0, w, h); c.strokeStyle = '#ff4fd8'; c.lineWidth = 6; c.setLineDash([10, 6]); c.strokeRect(6, 6, w - 12, h - 12); c.setLineDash([]); c.fillStyle = '#4a0f6a'; c.font = 'bold 30px "Trebuchet MS",sans-serif'; c.textAlign = 'center'; c.fillText('DLC TICKET', w / 2, 44); c.font = 'bold 18px sans-serif'; c.fillText('\u2605 APPROVED (maybe) \u2605', w / 2, 74); });
-    var ticket = planeM(0.5, 0.2, tk.tex, g, 0, 0.5, 0.47); ticket.material.side = T.DoubleSide; ticket.rotation.x = -1.2; ticket.visible = false;
+    var ticket = planeM(0.5, 0.1875, tk.tex, g, 0, 0.5, 0.47); ticket.material.side = T.DoubleSide; ticket.rotation.x = -1.2; ticket.visible = false;
     g.updateMatrixWorld(true);
     A.addSolid(x - 1.25, x + 1.25, W.minZ, z + 0.85, 'DLC Machine 3000');
     A.regItem('DLC Machine 3000', 'booth', g);

@@ -123,7 +123,7 @@
       var n = K.free.length, num = 24 + i;
       var pq = K.plaqueTex(512, 150, 'COMING SOON', 'reserved for game #' + num + ' \u00b7 Gus is "thrilled"', '#bfe9ff', '#1d1430'); K.planeM(1.3, 0.38, pq.tex, g, 0, 3.0, 0.11);
       add(g, bx(1.0, 0.7, 0.04), ph('#3b2a50', 10), 0, 2.2, 0.11); add(g, bx(1.08, 0.78, 0.03), K.gold(), 0, 2.2, 0.09);
-      canvasPlane(g, 256, 180, 0.94, 0.64, function (c, w, h) { c.fillStyle = '#120a22'; c.fillRect(0, 0, w, h); c.strokeStyle = 'rgba(191,233,255,.35)'; c.setLineDash([10, 8]); c.lineWidth = 4; c.strokeRect(14, 14, w - 28, h - 28); c.setLineDash([]); c.fillStyle = '#bfe9ff'; c.font = 'bold 96px Georgia,serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('?', w / 2, h / 2 + 6); }, 0, 2.2, 0.135);
+      canvasPlane(g, 256, 180, 0.94, 0.661, function (c, w, h) { c.fillStyle = '#120a22'; c.fillRect(0, 0, w, h); c.strokeStyle = 'rgba(191,233,255,.35)'; c.setLineDash([10, 8]); c.lineWidth = 4; c.strokeRect(14, 14, w - 28, h - 28); c.setLineDash([]); c.fillStyle = '#bfe9ff'; c.font = 'bold 96px Georgia,serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('?', w / 2, h / 2 + 6); }, 0, 2.2, 0.135);
       // pedestal under a dust sheet + little "PLEASE WAIT" stanchions
       add(g, cy(0.36, 0.42, 0.12, 24), ph('#efe6d8', 60), 0, 0.06, 0.62); add(g, cy(0.3, 0.3, 0.78, 24), ph('#f4ede2', 70), 0, 0.51, 0.62);
       var sheet = add(g, new T.ConeGeometry(0.44, 0.5, 18, 1, true), new T.MeshPhongMaterial({ color: '#e9e4f5', shininess: 10, side: T.DoubleSide }), 0, 1.15, 0.62); sheet.scale.set(1, 1, 0.9); void n;
@@ -159,12 +159,16 @@
     for (i = 0; i < 8; i++) { var a2 = i / 8 * Math.PI * 2 + Math.PI / 8; add(g, cy(0.08, 0.1, 0.04, 12), K.brass(), Math.cos(a2) * 1.75, 0.02, Math.sin(a2) * 1.75); add(g, cy(0.018, 0.018, 0.8, 8), K.brass(), Math.cos(a2) * 1.75, 0.42, Math.sin(a2) * 1.75); add(g, sp(0.045, 10), K.brass(), Math.cos(a2) * 1.75, 0.84, Math.sin(a2) * 1.75); }
     // easel sign (front) with the game's cover + name
     var ez = -1.55, sg = new T.Group(); sg.position.set(0, 0, ez); sg.rotation.y = Math.PI; g.add(sg);
-    [-0.5, 0.5].forEach(function (sx) { var l = add(sg, bx(0.05, 1.9, 0.05), ph('#5b3520', 30), sx, 0.95, 0.05); l.rotation.x = -0.08; });
-    add(sg, bx(1.2, 0.9, 0.05), K.gold(), 0, 1.5, 0); add(sg, bx(1.12, 0.06, 0.08), ph('#5b3520', 30), 0, 1.02, 0.04);
-    var tl = K.plaqueTex(512, 120, 'EXHIBIT OF THE WEEK', gm.name, col, '#2a0f30'); K.planeM(1.1, 0.26, tl.tex, sg, 0, 1.78, 0.03);
-    var cover = new T.TextureLoader().load(dd.cover + '?v=' + K.V); K.planeM(0.86, 0.5, cover, sg, 0, 1.39, 0.03);
+    // the cover keeps its real shape (GA.Pics.frame): tall games get a tall easel board, wide games a wide one. Never stretched.
+    var cvu = dd.cover + '?v=' + K.V, ca = GA.Pics ? GA.Pics.aspect(dd.cover) : 16 / 9, fz = GA.Pics ? GA.Pics.fit(ca, 1.08, ca < 1 ? 1.2 : 0.62) : [1.08, 0.61], pw = fz[0], phh = fz[1];
+    var pb = 1.1, top = pb + phh + 0.42, bw = Math.max(1.2, pw + 0.16);
+    [-0.5, 0.5].forEach(function (sx) { var l = add(sg, bx(0.05, top + 0.08, 0.05), ph('#5b3520', 30), sx * Math.max(1, bw - 0.2), (top + 0.08) / 2, 0.05); l.rotation.x = -0.06; });
+    add(sg, bx(bw, top - pb + 0.14, 0.05), ph('#3a2216', 30), 0, (pb + top) / 2 - 0.02, -0.01); add(sg, bx(bw - 0.08, 0.06, 0.08), ph('#5b3520', 30), 0, pb - 0.08, 0.04);
+    var tl = K.plaqueTex(512, 120, 'EXHIBIT OF THE WEEK', gm.name, col, '#2a0f30'); K.planeM(1.1, 0.258, tl.tex, sg, 0, top - 0.17, 0.03);
+    if (GA.Pics) { var fr = GA.Pics.frame(sg, cvu, { x: 0, y: pb + phh / 2 + 0.02, z: 0.0, maxW: 1.08, maxH: ca < 1 ? 1.2 : 0.62, trim: K.gold(), border: 0.04 }); H2.eotwFrame = fr; }
+    else K.planeM(pw, phh, new T.TextureLoader().load(cvu), sg, 0, pb + phh / 2, 0.03);
     var last = dd.history[dd.history.length - 1];
-    canvasPlane(sg, 512, 96, 1.1, 0.2, function (c, w, h) { c.fillStyle = '#f5ecd8'; c.fillRect(0, 0, w, h); c.fillStyle = '#3a2216'; c.font = 'bold 30px Georgia,serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('v' + last.ver + ' \u00b7 ' + dd.history.length + ' updates \u00b7 new pick every Monday', w / 2, h / 2); }, 0, 0.88, 0.05);
+    canvasPlane(sg, 512, 96, 1.1, 0.206, function (c, w, h) { c.fillStyle = '#f5ecd8'; c.fillRect(0, 0, w, h); c.fillStyle = '#3a2216'; c.textAlign = 'center'; c.textBaseline = 'middle'; var ft = 'v' + last.ver + ' \u00b7 ' + dd.history.length + ' updates \u00b7 new pick every Monday', fs = 30; do { c.font = 'bold ' + fs + 'px Georgia,serif'; fs -= 2; } while (fs > 14 && c.measureText(ft).width > w - 24); c.fillText(ft, w / 2, h / 2); }, 0, 0.88, 0.05);
     // overhead chandelier (not audited, it's up in the ceiling)
     var ch = new T.Group(); g.add(ch); A.noAud(ch);
     add(ch, cy(0.015, 0.015, 0.7, 6), K.brass(), 0, 4.65, 0); add(ch, new T.TorusGeometry(0.75, 0.04, 8, 36), K.gold(), 0, 4.2, 0).rotation.x = Math.PI / 2; add(ch, new T.TorusGeometry(0.45, 0.03, 8, 30), K.gold(), 0, 4.05, 0).rotation.x = Math.PI / 2;
@@ -236,8 +240,8 @@
       add(g, bx(1.08, 0.03, 0.68), K.brass(), 0, 1.36, 0);
       add(g, bx(0.98, 0.02, 0.58), ph('#7f1d1d', 10), 0, 0.9, 0); caseProps(g, q[2]);
       var lbl = ['FIRST FLIGHT (2026)', 'SPORTS NIGHT', 'SPOOKY & SNEAKY', 'SHINY THINGS'][i];
-      canvasPlane(g, 256, 48, 0.5, 0.09, function (c, w, h) { c.fillStyle = '#c9993a'; c.fillRect(0, 0, w, h); c.fillStyle = '#2a1a10'; c.font = 'bold 26px Georgia,serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(lbl, w / 2, h / 2); }, 0, 0.7, 0.355);
-      canvasPlane(g, 256, 48, 0.5, 0.09, function (c, w, h) { c.fillStyle = '#c9993a'; c.fillRect(0, 0, w, h); c.fillStyle = '#2a1a10'; c.font = 'bold 26px Georgia,serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(lbl, w / 2, h / 2); }, 0, 0.7, -0.355, Math.PI);
+      canvasPlane(g, 256, 48, 0.5, 0.094, function (c, w, h) { c.fillStyle = '#c9993a'; c.fillRect(0, 0, w, h); c.fillStyle = '#2a1a10'; c.font = 'bold 26px Georgia,serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(lbl, w / 2, h / 2); }, 0, 0.7, 0.355);
+      canvasPlane(g, 256, 48, 0.5, 0.094, function (c, w, h) { c.fillStyle = '#c9993a'; c.fillRect(0, 0, w, h); c.fillStyle = '#2a1a10'; c.font = 'bold 26px Georgia,serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(lbl, w / 2, h / 2); }, 0, 0.7, -0.355, Math.PI);
       reg(name, g); solid(q[0] - 0.57, q[0] + 0.57, q[1] - 0.37, q[1] + 0.37, name);
     });
   }
@@ -376,7 +380,7 @@
     var im = new T.InstancedMesh(new T.BoxGeometry(0.36, 0.3, 0.025), new T.MeshPhongMaterial({ color: '#ffffff', shininess: 10 }), fl.length), m4 = new T.Matrix4(), q = new T.Quaternion(), e = new T.Euler(), v = new T.Vector3(), s1 = new T.Vector3(1, 1, 1), cc = new T.Color();
     fl.forEach(function (b, i) { e.set(b[3], 0, 0); q.setFromEuler(e); m4.compose(v.set(b[0], b[1], b[2]), q, s1); im.setMatrixAt(i, m4); im.setColorAt(i, cc.set(b[4])); });
     im.instanceMatrix.needsUpdate = true; if (im.instanceColor) im.instanceColor.needsUpdate = true; im.frustumCulled = false; A.noAud(im); g.add(im);
-    var lab = K.cvs(1024, 96, function (c2, w, h) { c2.fillStyle = '#c9993a'; c2.fillRect(0, 0, w, h); c2.fillStyle = '#2a1a10'; c2.font = 'bold 44px Georgia,serif'; c2.textAlign = 'center'; c2.textBaseline = 'middle'; ['A\u2013F', 'G\u2013L', 'M\u2013R', 'S\u2013Z'].forEach(function (t, i) { c2.fillText(t, w * (i + 0.5) / 4, h / 2); }); });
+    var lab = K.cvs(2048, 93, function (c2, w, h) { c2.fillStyle = '#c9993a'; c2.fillRect(0, 0, w, h); c2.fillStyle = '#2a1a10'; c2.font = 'bold 50px Georgia,serif'; c2.textAlign = 'center'; c2.textBaseline = 'middle'; ['A\u2013F', 'G\u2013L', 'M\u2013R', 'S\u2013Z'].forEach(function (t, i) { c2.fillText(t, w * (i + 0.5) / 4, h / 2); }); });
     var lm = K.planeM(4.4, 0.2, lab.tex, g, xw - 0.5, 3.22, 39.3); lm.rotation.y = -Math.PI / 2;
     var top = K.plaqueTex(1024, 180, 'BARNABY\u2019S SORTING STATION', 'everything has a place \u00b7 even Gus', '#7df9a0', '#123020'); var tm = K.planeM(3.4, 0.6, top.tex, g, xw - 0.47, 3.65, 39.3); tm.rotation.y = -Math.PI / 2;
     // L-shaped desk with a little conveyor belt carrying folders + in/out trays + a pneumatic tube up to the ceiling ("GUS MAIL")
@@ -491,7 +495,7 @@
     return true;
   };
   H2.stand = function () { var s = st.sit; if (!s) return false; st.sit = null; GA.Hub.setCamOverride(null); if (GA.Hub.emote() === 'sit') GA.Hub.setEmote(null); GA.Hub.setPlayer(s.fx, s.fz); return true; };
-  H2.camera = function () { return A && A.camera(); };
+  H2.camera = function () { return A && A.camera(); }; H2.scene = function () { return A && A.scene; };
   H2.renderNow = function () { var R = A && A.renderer(); if (R) R.render(A.scene, A.camera()); };
   H2.sitting = function () { return st.sit ? st.sit.id : null; };
   H2.inAnnex = function () { return st.inAnnex; };

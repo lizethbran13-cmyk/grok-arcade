@@ -202,13 +202,17 @@
 
   /* ---------- Stamp-O-Matic quiz ---------- */
   var QZ = UI.quiz = { on: false };
+  // a game's catalog blurb with its own name blanked out (the cover pictures all have the title on them, too easy!)
+  function clue(g) { var t = String(g.desc || ''), cut = t.search(/[.!?](\s|$)/); if (cut > 30 && cut < 150) t = t.slice(0, cut + 1); else if (t.length > 150) t = t.slice(0, 147).replace(/\s+\S*$/, '') + '\u2026';
+    String(g.name).split(/\s+/).filter(function (w) { return w.length > 2 && !/^grok$/i.test(w); }).forEach(function (w) { t = t.replace(new RegExp('\\b' + w.replace(/[^\w]/g, '') + '\\w*', 'gi'), '???'); }); return t; }
+  UI.clue = clue;
   function makeQuestions() {
     var gs = H2.games().filter(function (g) { var d = GA.HALL_DATA[g.id]; return d && d.history.length; }), qs = [], used = {};
     function others(g, n) { return shuffle(gs.filter(function (x) { return x.id !== g.id; })).slice(0, n); }
     var kinds = shuffle(['pic', 'upd', 'ver', 'pic', 'upd', 'count']).slice(0, 5);
     kinds.forEach(function (k) {
       var g; var tries = 0; do { g = pick(gs); tries++; } while (used[g.id] && tries < 20); used[g.id] = 1; var d = GA.HALL_DATA[g.id];
-      if (k === 'pic') { var ch = shuffle([g].concat(others(g, 2))); qs.push({ q: 'Which game is this?', img: d.cover, opts: ch.map(function (x) { return x.name; }), a: ch.indexOf(g) }); }
+      if (k === 'pic') { var ch = shuffle([g].concat(others(g, 2))); qs.push({ q: 'Which game is this? \u201C' + clue(g) + '\u201D', opts: ch.map(function (x) { return x.name; }), a: ch.indexOf(g) }); }
       else if (k === 'upd') { var e = pick(d.history), ch2 = shuffle([g].concat(others(g, 2).filter(function (o) { return !GA.HALL_DATA[o.id].history.some(function (h) { return h.title === e.title; }); }))); if (ch2.length < 3) ch2 = shuffle([g].concat(others(g, 2))); qs.push({ q: 'Which game had the update \u201C' + e.title + '\u201D?', opts: ch2.map(function (x) { return x.name; }), a: ch2.indexOf(g) }); }
       else if (k === 'ver') { var v = 'v' + d.history[d.history.length - 1].ver, pool = {}; gs.forEach(function (x) { var hv = GA.HALL_DATA[x.id].history; pool['v' + hv[hv.length - 1].ver] = 1; }); ['v1.0', 'v2.0', 'v3.0', 'v1.5', 'v2.5', 'v4.0'].forEach(function (z) { pool[z] = 1; }); delete pool[v]; var wr = shuffle(Object.keys(pool)).slice(0, 2), ch3 = shuffle([v].concat(wr)); qs.push({ q: 'What version is ' + g.name + ' on right now?', opts: ch3, a: ch3.indexOf(v) }); }
       else { var n = d.history.length, ws = shuffle([n + 1, n + 2, Math.max(1, n - 1), n + 3].filter(function (x) { return x !== n; })).slice(0, 2), ch4 = shuffle([n].concat(ws)); qs.push({ q: 'How many updates does ' + g.name + ' have in its history?', opts: ch4.map(String), a: ch4.indexOf(n) }); }
