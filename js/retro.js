@@ -38,7 +38,7 @@
   /* ---------- hidden spots (never shown to players) ---------- */
   // supplies Dale "dropped" in the present arcade (4 picked per breakdown: 3 fuses + 1 tele juice)
   var SUP = [{ a: 'tunnel', x: -24.5, z: 104.0, y: 0.05 }, { a: 'tunnel', x: -37.5, z: 108.0, y: 0.05 }, { a: 'basement', x: -4.6, z: 103.6, y: 0.05 }, { a: 'basement', x: 2.6, z: 114.2, y: 0.05 },
-    { a: 'food', x: 4.6, z: 21.8, y: 0.05 }, { a: 'main', x: -8.0, z: -1.6, y: 0.05 }, { a: 'bonus', x: 11.6, z: -2.4, y: 0.05 }, { a: 'gallery', x: 80.0, z: 7.2, y: 0.05 }];
+    { a: 'food', x: -0.6, z: 22.6, y: 0.05 }, { a: 'main', x: -8.0, z: -1.6, y: 0.05 }, { a: 'bonus', x: 11.6, z: -2.4, y: 0.05 }, { a: 'gallery', x: 80.0, z: 7.2, y: 0.05 }];
   RT.SUP = SUP;
   RT.supPick = function () { var r = rng(hash('tm-fix:' + RT.weekKey() + ':' + S.breaks)), ord = SUP.map(function (_, i) { return i; }); for (var i = ord.length - 1; i > 0; i--) { var j = Math.floor(r() * (i + 1)), t = ord[i]; ord[i] = ord[j]; ord[j] = t; } return ord.slice(0, 4); };
   RT.supKind = function (slot) { return slot === 3 ? 'juice' : 'fuse'; };
