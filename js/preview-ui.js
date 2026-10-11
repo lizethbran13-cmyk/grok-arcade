@@ -45,6 +45,9 @@
     fixed: ['Fixed. You are an excellent intern. Unpaid. Well. Paid in tickets.', 'Repair logged. Your name goes in the report. Spelled correctly, even.', 'Good work. I will tell Mimi it was me.'],
     selfFix: ['Fine, I will do it. Stand back. Further. Further. Okay.', 'Leave it to me. I have fixed this exact thing 41 times this week.'],
     calib: ['Calibration complete. You traveled three seconds into the future. Welcome. It is basically the same.', 'Calibration jump successful. All your atoms came back. I counted. Mostly.', 'Jump logged. You are now 0.0001 percent more futuristic.'],
+    vault: ['That is the Save Vault. When a game ships, its last Time Jumper preview goes in a cartridge and stays playable forever. I do not throw things away. I archive them.', 'Every beta in the Vault keeps its own save, separate from the real game. Your real progress stays safe. I checked. Then I checked my checking.', 'The Vault is the Time Jumper Save Booth. Mimi wanted to call it the Beta Bin. I said no. Firmly.', 'A Final Beta is history. Slightly buggy history. That is the best kind.'],
+    vaultEmpty: ['The Save Vault is empty. Nothing has shipped out of the Jumper yet. Ten slots, zero cartridges. Very tidy. I hate it.', 'Nothing archived yet. When a preview game really ships, its last beta goes in a slot. Until then, I polish the slots.'],
+    vaultPend: ['That blinking amber cartridge? A game that is in the Jumper right now. The day it ships, its final beta clicks into the Vault. Click.'],
     glitchBack: ['You are back. You were in the GL1TCH R00M. Do not tell Mimi it exists. She will want to decorate it.', 'Welcome back. That room is not on the map. Officially, it does not exist. Unofficially, it has cheese.']
   };
   UI.lastLili = null;
@@ -99,6 +102,7 @@
     if (k === 'pv_chrono') return { tag: 'BONUS #32', name: 'Chrono Courier', desc: 'Send Ratita Industries parcels through the right time portal. Leave the glitchy ones alone!', btn: 'PLAY', key: 'play Chrono Courier', cls: 'prize', pb: 'pzPlay' };
     if (k === 'pv_gexit') return { tag: 'GL1TCH R00M', name: 'Exit portal', desc: 'Jump back to the Ratita Preview Center. No harm done!', btn: 'JUMP<br>BACK', key: 'jump back', cls: 'prize', pb: 'pzPlay' };
     if (k === 'pv_gcheese') return { tag: 'GL1TCH R00M', name: 'Glitch cheese', desc: 'A cheese wedge that exists in three timelines at once. Grab it!', btn: 'GRAB', key: 'grab the cheese', cls: 'prize', pb: 'pzPlay' };
+    if (k === 'pv_vault') { var na = (m.archive || []).length, np = (m.pending || []).length; return { tag: 'TIME JUMPER SAVE BOOTH', name: 'Save Vault', desc: na ? na + ' final beta' + (na > 1 ? 's' : '') + ' archived, playable forever (own save).' + (np ? ' ' + np + ' more waiting in the Jumper.' : '') : 'Nothing archived yet.' + (np ? ' ' + m.pending[0].name + ' is in the Jumper now (will be archived at release).' : ''), btn: 'OPEN', key: 'open the Save Vault', cls: 'gallery', pb: 'galPlay' }; }
     if (k === 'pv_part') return { tag: 'LOOSE PART', name: 'The missing cheese-cog!', desc: 'It popped out of the Time Jumper. Grab it and bring it back to the console.', btn: 'GRAB', key: 'grab the cog', cls: 'prize', pb: 'pzPlay' };
     return null;
   };
@@ -112,16 +116,32 @@
     if (k === 'pv_gexit') { close(true); return glitchBack(); }
     if (k === 'pv_gcheese') { close(true); return grabCheese(); }
     if (k === 'pv_part') { close(true); return grabPart(); }
+    if (k === 'pv_vault') return openVault();
   };
 
   /* ---------- Lili ---------- */
+  /* ---------- the Save Vault (Time Jumper Save Booth) ---------- */
+  function vaultLine() { var m = M(); return !(m.archive || []).length ? pick((m.pending || []).length ? L.vaultEmpty.concat(L.vaultPend) : L.vaultEmpty) : pick(L.vault); }
+  function openVault() {
+    var m = M(), Ar = m.archive || [], Pn = m.pending || [], s = vaultLine(); lili(s); ev('pvVault');
+    var html = liliNote(s) + '<div class="pvWip pvVaultWip">\uD83D\uDCBE Final betas keep their <b>own separate save</b> (not the real game\u2019s). Your real saves are safe. Betas may be buggy: they are history!</div>';
+    if (Ar.length) html += Ar.map(function (p, i) { return '<div class="pvPrev pvBetaRow"><div><b>\uD83D\uDCBE ' + esc(p.name) + '</b><span>' + esc(p.label) + ' \u00b7 ' + esc(p.gname) + (p.archived ? ' \u00b7 archived ' + esc(p.archived) : '') + '</span>' + (p.notes ? '<i>' + esc(p.notes) + '</i>' : '') + '</div><button class="bigBtn" id="pvBeta' + i + '" disabled>CHECKING\u2026</button></div>'; }).join('');
+    else html += '<div class="pvEmpty"><div class="pvBig">\uD83D\uDDC4\uFE0F</div><b>Nothing archived yet.</b><p>When a game that was in the Time Jumper really ships, its last preview is archived here as its <b>Final Beta (Time Jumper)</b>, playable forever. It also shows up in that game\u2019s Old Versions in the Hall of Records.</p></div>';
+    if (Pn.length) html += '<h4 class="pvVaultH">\u23F3 Waiting in the Time Jumper</h4>' + Pn.map(function (p) { return '<div class="pvPrev pvPendRow"><div><b>' + esc(p.name) + '</b><span>' + esc(p.vault) + '</span></div><span class="pvTag">IN THE JUMPER</span></div>'; }).join('');
+    show('pv_vault', 'SAVE VAULT', 'Time Jumper Save Booth \u00b7 ' + Ar.length + ' archived \u00b7 ' + Pn.length + ' waiting', html, '<button class="bigBtn" id="pvOk">BACK</button>');
+    on('pvOk', function () { close(); });
+    Ar.forEach(function (p, i) { GA.PVD.check(p).then(function (ok) { var b = $('pvBeta' + i); if (!b) return; b.disabled = !ok; b.textContent = ok ? '\u25B6 PLAY BETA' : 'OFFLINE'; if (ok) b.onclick = function () { playBeta(p); }; }); });
+  }
+  UI.openVault = openVault;
+  function playBeta(p) { ev('pvBeta'); lili('Final Beta loading. Separate save. Mind the bugs. They are vintage.'); toast('\uD83D\uDCBE Loading the ' + p.name + ' Final Beta (its own save)', 2400); close(true); GA.Hub.savePos(); var f = $('fade'); if (f) f.classList.add('on'); setTimeout(function () { UI._nav(p.url); }, 380); setTimeout(function () { if (f) f.classList.remove('on'); }, 4000); }
+  UI.playBeta = playBeta;
   function openLili(line) {
     var q = qa(); if (!q.hi) mark('hi');
     var s = line || pick(L.hi); lili(s);
     show('pv_lili', 'LILI', 'Ratita Industries \u00b7 Quality Assurance \u00b7 Mimi\u2019s & Lily\u2019s distant cousin', liliNote(s) +
-      '<div class="pvAsk"><button id="pvA_who">\uD83E\uDD16 Who are you?</button><button id="pvA_cousins">\uD83D\uDC2D Your cousins?</button><button id="pvA_jumper">\u23F3 The Time Jumper?</button><button id="pvA_next">\uD83D\uDCC5 What\u2019s next?</button><button id="pvA_gus">\uD83D\uDDC4\uFE0F Gus?</button><button id="pvA_barnaby">\uD83C\uDF6A Barnaby?</button></div>' + qaHtml(),
+      '<div class="pvAsk"><button id="pvA_who">\uD83E\uDD16 Who are you?</button><button id="pvA_cousins">\uD83D\uDC2D Your cousins?</button><button id="pvA_jumper">\u23F3 The Time Jumper?</button><button id="pvA_next">\uD83D\uDCC5 What\u2019s next?</button><button id="pvA_gus">\uD83D\uDDC4\uFE0F Gus?</button><button id="pvA_barnaby">\uD83C\uDF6A Barnaby?</button><button id="pvA_vault">\uD83D\uDCBE The Save Vault?</button></div>' + qaHtml(),
       '<button class="bigBtn" id="pvBye">BYE, LILI</button>');
-    ['who', 'cousins', 'jumper', 'next', 'gus', 'barnaby'].forEach(function (k) { on('pvA_' + k, function () { snd('point'); openLili(k === 'jumper' && !M().previews.length ? pick(L.jumper.concat(L.empty)) : pick(L[k])); }); });
+    ['who', 'cousins', 'jumper', 'next', 'gus', 'barnaby', 'vault'].forEach(function (k) { on('pvA_' + k, function () { snd('point'); openLili(k === 'jumper' && !M().previews.length ? pick(L.jumper.concat(L.empty)) : k === 'vault' ? vaultLine() : pick(L[k])); }); });
     on('pvBye', function () { lili(pick(['Goodbye. Touch nothing on the way out.', 'Farewell. Come back when there is something new. I will know first.', 'Bye. Tell Mimi I said... hello. Normally. Not with emojis.'])); close(); });
   }
   UI.openLili = openLili;

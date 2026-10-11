@@ -13,7 +13,7 @@
   function load(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
   function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   // bundled fallback (a copy of preview.json at ship time) so a first offline visit still has a schedule
-  PV.FALLBACK = { updated: '2026-10-10', items: [
+  PV.FALLBACK = { updated: '2026-10-10', archive: [], items: [
     { game: 'arcade', name: 'Ratita Preview Center (live)', stage: 'shipped', when: 'Oct 11' }, { issue: 27, game: 'life', name: 'Good Life Pack', stage: 'queued', when: 'Tomorrow' }, { issue: 28, game: 'kart', name: 'Super Kart Expansion', stage: 'queued', when: 'Tomorrow' },
     { issue: 29, game: 'ratita', name: 'Pi-rat the Pirate Pack', stage: 'queued', when: 'Tomorrow' }, { issue: 30, game: 'detective', name: 'Midnight Express', stage: 'queued', when: 'Tomorrow' },
     { issue: 31, game: 'party', name: 'Fiesta Fits', stage: 'queued', when: 'Tomorrow' },     { game: 'ratitahq', name: 'Ratita HQ (live)', stage: 'shipped', when: 'Oct 11', shippedAt: '2026-10-11T05:00:00Z' }, { issue: 32, game: 'arcade', name: 'Records Annex', stage: 'shipped', when: 'Oct 10' }], previews: [] };
@@ -65,9 +65,24 @@
     var shippedIssue = {}; out.forEach(function (x) { if (x.stage === 'shipped' && x.issue) shippedIssue[x.issue] = 1; });
     M.previews = (J.previews || []).filter(function (p) { return p && p.playable === true && p.id && PV.safeUrl(p.url) && !(p.issue && shippedIssue[p.issue]); })
       .map(function (p) { return Object.assign({}, p, { url: PV.safeUrl(p.url), gname: PV.gameName(p.game) }); });
+    // Save Booth: the LAST preview of every game that shipped, archived forever (archive/<id>-beta/, own grokBeta.<id>. saves)
+    M.archive = (J.archive || []).filter(function (p) { return p && p.id && PV.safeUrl(p.url); })
+      .map(function (p) { return Object.assign({}, p, { url: PV.safeUrl(p.url), gname: PV.gameName(p.game), label: p.label || PV.BETA_LABEL }); });
+    var arch = {}; M.archive.forEach(function (p) { arch[p.id] = 1; });
+    M.previews = M.previews.filter(function (p) { return !arch[p.id]; });
+    M.pending = M.previews.map(function (p) { return Object.assign({}, p, { vault: 'In the Jumper now (will be archived at release)' }); });
     M.updated = J.updated || ''; M.src = PV.state.src; M.live = !!iss;
     PV._model = M; return M;
   };
+
+  /* ---------- Save Booth betas -> the game's Hall of Records 'Old Versions' ---------- */
+  PV.BETA_LABEL = 'Final Beta (Time Jumper)';
+  PV.betasFor = function (gid) { var m = PV.model(); return (m.archive || []).filter(function (p) { return p.game === gid; }).map(function (p) {
+    return { label: 'beta-' + p.id, ver: 'Final Beta', title: p.label + (p.archived ? ' \u00b7 archived ' + p.archived : ''), url: p.url, thumb: PV.cover(gid) || 'icon.svg', beta: true, notes: p.notes || '' }; }); };
+  PV.mergeBetas = function (gid, d) { if (!d || !Array.isArray(d.versions)) return d; var b = PV.betasFor(gid), sig = b.map(function (v) { return v.label + v.url; }).join('|');
+    if (d._betaSig === sig) return d; d.versions = b.concat(d.versions.filter(function (v) { return !v.beta; })); d._betaSig = sig; return d; }; // the beta came before the real release, so it sits first (oldest)
+  function mergeAll() { var H = GA.HALL_DATA; if (H) Object.keys(H).forEach(function (k) { PV.mergeBetas(k, H[k]); }); }
+  PV.listeners.push(mergeAll);
 
   /* ---------- loading ---------- */
   PV.setJson = function (j, src) { if (j && Array.isArray(j.items)) { PV.state.json = j; PV.state.jsonSrc = src || 'file'; if (src !== 'cache') store(K_JSON, { t: Date.now(), j: j }); changed(); } };

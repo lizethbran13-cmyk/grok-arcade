@@ -521,7 +521,77 @@
     reg('Rolling tool cart', g); solid(x - 0.55, x + 0.55, z - 0.45, z + 0.45, 'Rolling tool cart');
   }
   function clutter() { toolCart(); plant('Board plant', -1.0, 35.9, false); lounge(); wipRow(); gadgetTable('Gadget table 1', -10.6, 30.35, 0); gadgetTable('Gadget table 2', -7.6, 29.95, 1); gadgetTable('Gadget table 3', -14.6, 43.6, 2); gadgetTable('Gadget table 4', -9.6, 44.0, 3); gadgetTable('Gadget table 5', -4.6, 43.8, 4); gadgetTable('Gadget table 6', -14.6, 33.9, 5);
-    holoTable(); kiosk(); shelves(); holoShip(); crateStacks(); cables(); banners(); }
+    holoTable(); kiosk(); shelves(); holoShip(); crateStacks(); cables(); banners(); vault(); }
+
+
+  /* ---------- TIME JUMPER SAVE BOOTH: Lili's 'Save Vault' terminal. It keeps the LAST preview of every game that shipped
+     (preview.json "archive" -> archive/<id>-beta/), playable forever with its own save. Slots fill with cartridges as betas arrive. ---------- */
+  var VX = -4.4, VZ = 40.75, VT = { slots: [] }; PR.VAULT = { x: VX, z: VZ };
+  function vault() {
+    var g = grp('Time Jumper Save Booth'); g.position.set(VX, 0, VZ); g.rotation.y = Math.PI; VT.g = g; // local +z = the front (faces the Time Jumper queue)
+    var body = ph('#14b8a6', 70, '#03302c'), dark = ph('#0f172a', 50), trim = ph('#fb7185', 90), gold = ph('#fbbf24', 110, '#3a2600'), steel = chrome();
+    // plinth + glow strip
+    add(g, bx(1.78, 0.12, 0.86), dark, 0, 0.06, 0); add(g, bx(1.7, 0.03, 0.02), gl('#5eead4'), 0, 0.1, 0.43);
+    // main cabinet with rounded side columns (Ratita house style, like Lili's desk)
+    add(g, bx(1.36, 1.86, 0.62), body, 0, 0.12 + 0.93, -0.02);
+    [-1, 1].forEach(function (sd) { add(g, cy(0.17, 0.17, 1.86, 22), trim, sd * 0.7, 0.12 + 0.93, 0.02); add(g, cy(0.19, 0.19, 0.05, 22), gold, sd * 0.7, 2.0, 0.02); add(g, sp(0.12, 16), gold, sd * 0.7, 2.06, 0.02);
+      for (var k = 0; k < 4; k++) add(g, bx(0.02, 0.03, 0.3), dark, sd * 0.875, 0.5 + k * 0.09, 0.02); }); // vents
+    // arched crown (half drum) + floppy-disk emblem
+    var cr = add(g, new T.CylinderGeometry(0.36, 0.36, 1.36, 28, 1, false, 0, Math.PI), body, 0, 1.98, -0.02); cr.rotation.z = Math.PI / 2; cr.rotation.y = 0;
+    var cr2 = add(g, new T.CylinderGeometry(0.37, 0.37, 0.05, 28, 1, false, 0, Math.PI), gold, 0, 1.98, 0.3); cr2.rotation.x = Math.PI / 2; cr2.rotation.y = Math.PI / 2; cr2.rotation.z = 0;
+    var fd = new T.Group(); fd.position.set(0, 2.12, 0.33); g.add(fd); add(fd, bx(0.34, 0.34, 0.03), ph('#1e3a8a', 60), 0, 0, 0); add(fd, bx(0.18, 0.11, 0.035), steel, 0.02, 0.11, 0.003); add(fd, bx(0.04, 0.07, 0.04), dark, 0.06, 0.11, 0.004);
+    add(fd, bx(0.24, 0.13, 0.035), ph('#f8fafc', 30), 0, -0.07, 0.003); VT.disk = fd;
+    // neon name sign (1.4 x 0.3 m at 4.67:1)
+    var sg = cvs(560, 120, function (c, w, h) { c.fillStyle = '#04201e'; rr(c, 3, 3, w - 6, h - 6, 22); c.fill(); c.strokeStyle = '#fbbf24'; c.lineWidth = 5; c.stroke(); neon(c, 'SAVE VAULT', w / 2, h / 2 - 8, 60, '#5eead4', w - 40); txt(c, 'TIME JUMPER SAVE BOOTH \u00b7 RATITA INDUSTRIES', w / 2, h - 18, 17, '#fda4af'); });
+    planeM(1.4, 0.3, sg.tex, g, 0, 2.72, 0.0); add(g, bx(0.04, 0.4, 0.04), steel, -0.5, 2.42, 0.0); add(g, bx(0.04, 0.4, 0.04), steel, 0.5, 2.42, 0.0); add(g, bx(1.44, 0.34, 0.03), dark, 0, 2.72, -0.02);
+    // the glowing list screen (0.92 x 0.6 m, canvas 614 x 400), tilted back in a bezel
+    var sc = new T.Group(); sc.position.set(0, 1.52, 0.37); sc.rotation.x = -0.16; g.add(sc); add(sc, bx(1.04, 0.72, 0.06), dark, 0, 0, 0); add(sc, bx(1.08, 0.04, 0.08), trim, 0, 0.38, 0); add(sc, bx(1.08, 0.04, 0.08), trim, 0, -0.38, 0);
+    VT.scr = cvs(614, 400); planeM(0.92, 0.6, VT.scr.tex, sc, 0, 0, 0.032);
+    [[-0.5, 0.34], [0.5, 0.34], [-0.5, -0.34], [0.5, -0.34]].forEach(function (q) { add(sc, sp(0.018, 8), steel, q[0], q[1], 0.035); });
+    // tape reels behind a little window (left) + status lamps (right), above the slots
+    var win = add(g, bx(0.46, 0.24, 0.02), new T.MeshPhongMaterial({ color: '#a5f3fc', transparent: true, opacity: 0.25, shininess: 150 }), -0.42, 0.25, 0.31); void win; add(g, bx(0.5, 0.28, 0.02), dark, -0.42, 0.25, 0.295);
+    VT.reels = []; [-0.53, -0.31].forEach(function (rx) { var r = new T.Group(); r.position.set(rx, 0.25, 0.305); g.add(r); add(r, cy(0.095, 0.095, 0.012, 24), ph('#334155', 60), 0, 0, 0).rotation.x = Math.PI / 2; add(r, cy(0.065, 0.065, 0.016, 20), ph('#3f2a1d', 20), 0, 0, 0).rotation.x = Math.PI / 2;
+      for (var k = 0; k < 3; k++) { var sp2 = add(r, bx(0.012, 0.18, 0.02), steel, 0, 0, 0.006); sp2.rotation.z = k * Math.PI / 3; } add(r, cy(0.02, 0.02, 0.03, 10), gold, 0, 0, 0.004).rotation.x = Math.PI / 2; VT.reels.push(r); });
+    add(g, bx(0.22, 0.006, 0.006), ph('#3f2a1d', 20), -0.42, 0.17, 0.307);
+    VT.lamps = []; ['#4ade80', '#fbbf24', '#fb7185'].forEach(function (c2, i) { add(g, cy(0.035, 0.035, 0.03, 14), dark, 0.4 + i * 0.1, 0.25, 0.31).rotation.x = Math.PI / 2; var l = add(g, sp(0.028, 12), gl(c2), 0.4 + i * 0.1, 0.25, 0.33); VT.lamps.push(l); });
+    // cartridge slots: 2 rows x 5 (the bay), each a dark recess; a cartridge sticks out when a beta is archived there
+    add(g, bx(1.2, 0.46, 0.05), ph('#0b1324', 40), 0, 0.62, 0.29);
+    var CART = ['#fb7185', '#5eead4', '#fbbf24', '#a78bfa', '#4ade80'];
+    for (var rI = 0; rI < 2; rI++) for (var k = 0; k < 5; k++) { var sx = -0.46 + k * 0.23, sy = 0.73 - rI * 0.22, sl = new T.Group(); sl.position.set(sx, sy, 0.31); g.add(sl);
+      add(sl, bx(0.19, 0.07, 0.03), ph('#020617', 20), 0, 0, 0); add(sl, bx(0.17, 0.012, 0.02), gl('#164e63'), 0, -0.045, 0.006); // slot mouth + under-glow
+      var ca = new T.Group(); sl.add(ca); add(ca, bx(0.16, 0.13, 0.07), ph(CART[(rI * 5 + k) % 5], 60), 0, 0.02, 0.03); add(ca, bx(0.12, 0.07, 0.005), ph('#f8fafc', 20), 0, 0.03, 0.068); add(ca, bx(0.16, 0.02, 0.07), ph('#1e293b', 40), 0, 0.09, 0.03);
+      var led = add(sl, sp(0.012, 8), gl('#334155'), 0.08, -0.045, 0.02); ca.visible = false; VT.slots.push({ ca: ca, led: led, g: sl }); }
+    // control ledge: keyboard, big SAVE button, a lever
+    var ld = new T.Group(); ld.position.set(0, 1.08, 0.42); ld.rotation.x = 0.28; g.add(ld); add(ld, bx(1.2, 0.05, 0.28), dark, 0, 0, 0); add(ld, bx(1.22, 0.02, 0.02), trim, 0, 0.02, 0.14);
+    var keys = [], km = new T.InstancedMesh(new T.BoxGeometry(0.045, 0.02, 0.04), ph('#e2e8f0', 40), 30), m4 = new T.Matrix4(); for (var i = 0; i < 30; i++) { m4.makeTranslation(-0.36 + (i % 10) * 0.055, 0.035, -0.08 + Math.floor(i / 10) * 0.05); km.setMatrixAt(i, m4); } ld.add(km); km.instanceMatrix.needsUpdate = true; void keys;
+    add(ld, cy(0.07, 0.08, 0.04, 22), dark, 0.42, 0.04, 0); VT.btn = add(ld, cy(0.055, 0.055, 0.04, 22), ph('#fb7185', 90, '#5a0d1b'), 0.42, 0.07, 0);
+    var lv = new T.Group(); lv.position.set(-0.5, 0.03, 0.02); ld.add(lv); add(lv, bx(0.08, 0.03, 0.08), steel, 0, 0, 0); var arm = add(lv, cy(0.012, 0.012, 0.16, 8), steel, 0, 0.08, 0); arm.rotation.x = 0.4; add(lv, sp(0.03, 12), gold, 0, 0.15, 0.06);
+    // Ratita logo plate + hazard stripe on the plinth + a cable to the floor runs
+    var lg = cvs(256, 96, function (c, w, h) { c.fillStyle = '#0b3b38'; rr(c, 2, 2, w - 4, h - 4, 14); c.fill(); mouse(c, 46, 56, 22, '#d6a26b'); txt(c, 'RATITA', 150, 36, 30, '#fbbf24'); txt(c, 'INDUSTRIES', 150, 66, 18, '#5eead4'); });
+    planeM(0.34, 0.1275, lg.tex, g, 0.04, 0.25, 0.312);
+    var hz = cvs(512, 32, function (c, w, h) { for (var i2 = 0; i2 < 16; i2++) { c.fillStyle = i2 % 2 ? '#111827' : '#facc15'; c.beginPath(); c.moveTo(i2 * 32, 0); c.lineTo(i2 * 32 + 32, 0); c.lineTo(i2 * 32 + 16, h); c.lineTo(i2 * 32 - 16, h); c.fill(); } });
+    planeM(1.76, 0.055, hz.tex, g, 0, 0.06, 0.432);
+    var cb = new T.Mesh(new T.TubeGeometry(new T.CatmullRomCurve3([new T.Vector3(0.55, 0.5, -0.33), new T.Vector3(0.62, 0.15, -0.55), new T.Vector3(0.9, 0.035, -0.8), new T.Vector3(1.3, 0.035, -0.9)]), 20, 0.03, 8), ph('#a78bfa', 40)); g.add(cb);
+    reg('Time Jumper Save Booth', g, 'booth'); solid(VX - 0.92, VX + 0.92, VZ - 0.5, VZ + 0.46, 'Time Jumper Save Booth');
+    inter({ id: 'pv_vault', kind: 'pv_vault', name: 'Save Vault', desc: 'The Time Jumper Save Booth: the last beta of every game that shipped, playable forever.', col: '#5eead4', x: VX, z: VZ - 1.05, dir: [0, -1], r: 1.1, gw: 1.5, gh: 1.0 });
+    ANIM.push(function (t) { var on = VT.n > 0 || VT.p > 0; VT.reels.forEach(function (r, i) { r.rotation.z = -t * (on ? 2.2 : 0.4) * (i ? 1.15 : 1); });
+      VT.lamps[0].visible = Math.sin(t * 2.4) > -0.6; VT.lamps[1].visible = VT.p > 0 ? Math.sin(t * 5) > 0 : true; VT.lamps[2].visible = VT.n === 0 && Math.sin(t * 1.3) > 0.2;
+      VT.disk.position.y = 2.12 + Math.sin(t * 1.6) * 0.012; VT.slots.forEach(function (sl, i) { if (sl.pend) sl.led.material = gl(Math.sin(t * 5 + i) > 0 ? '#fbbf24' : '#3f2a00'); }); });
+    drawVault(null);
+  }
+  function drawVault(model) {
+    if (!VT.scr) return; model = model || (PV() && PV().model()); var A2 = (model && model.archive) || [], P2 = (model && model.pending) || [];
+    VT.n = A2.length; VT.p = P2.length;
+    VT.slots.forEach(function (sl, i) { sl.pend = false; if (i < A2.length) { sl.ca.visible = true; sl.ca.position.z = 0; sl.led.material = gl('#4ade80'); } else if (i < A2.length + P2.length) { sl.ca.visible = true; sl.ca.position.z = 0.05; sl.pend = true; } else { sl.ca.visible = false; sl.led.material = gl('#334155'); } });
+    VT.scr.redraw(function (c, w, h) { c.fillStyle = '#021b1a'; c.fillRect(0, 0, w, h); c.strokeStyle = '#2dd4bf'; c.lineWidth = 4; rr(c, 6, 6, w - 12, h - 12, 18); c.stroke();
+      neon(c, '\uD83D\uDCBE SAVE VAULT', w / 2, 40, 40, '#5eead4', w - 60); txt(c, 'final betas, playable forever \u00b7 own save', w / 2, 76, 18, '#99f6e4');
+      var y = 104, rows = A2.slice(0, 4).map(function (p) { return ['\uD83D\uDCBE', p.name, 'Final Beta \u00b7 archived ' + (p.archived || ''), '#4ade80']; });
+      if (!A2.length) { c.fillStyle = 'rgba(251,113,133,.12)'; rr(c, 22, y, w - 44, 92, 14); c.fill(); txt(c, 'NOTHING ARCHIVED YET', w / 2, y + 34, 30, '#fda4af'); txt(c, 'when a game ships, its last Time Jumper preview lands here', w / 2, y + 68, 17, '#fecdd3'); y += 108; }
+      P2.slice(0, Math.max(1, 3 - rows.length)).forEach(function (p) { rows.push(['\u23F3', p.name, 'in the Jumper now \u00b7 archived at release', '#fbbf24']); });
+      rows.slice(0, 4).forEach(function (r) { c.fillStyle = 'rgba(255,255,255,.06)'; rr(c, 22, y, w - 44, 58, 12); c.fill(); txt(c, r[0], 52, y + 29, 28, r[3]); fitTxt(c, r[1], 84, y + 20, 24, '#ffffff', w - 130, 'left'); fitTxt(c, r[2], 84, y + 44, 17, r[3], w - 130, 'left'); y += 66; });
+      txt(c, A2.length + ' archived \u00b7 ' + P2.length + ' waiting \u00b7 ' + (10 - Math.min(10, A2.length + P2.length)) + ' empty slots', w / 2, h - 24, 17, '#94a3b8'); });
+  }
+  PR.drawVault = drawVault;
 
   /* ---------- the cheese-cog that pops out during a 'loose part' malfunction ---------- */
   PR.PART_SPOTS = [[-14.0, 37.5], [-5.6, 45.3], [-1.3, 33.2], [-12.2, 43.0], [-3.0, 34.4], [-6.0, 31.8]];
@@ -546,7 +616,7 @@
     R = new T.Group(); R.name = 'area:preview'; A.scene.add(R);
     shell(); entrance(); desk(); jumper(); board(); racks(); bench(); crates(); logoWall(); planters(); cabinet32(); clutter(); partBuild(); glitchRoom();
     var M = GA.PVD ? GA.PVD.model() : null; PR.buildPosters(M); drawBoard(M); drawKiosk(M); drawClock();
-    if (GA.PVD) GA.PVD.onChange(function () { var m2 = GA.PVD.model(); PR.buildPosters(m2); drawBoard(m2); drawKiosk(m2); drawHolo(); drawConsole(); if (PR.onData) PR.onData(m2); });
+    if (GA.PVD) GA.PVD.onChange(function () { var m2 = GA.PVD.model(); PR.buildPosters(m2); drawBoard(m2); drawKiosk(m2); drawVault(m2); drawHolo(); drawConsole(); if (PR.onData) PR.onData(m2); });
     R.updateMatrixWorld(true); A.anims.push(frame); st.built = true; PR.built = true;
   };
   var dummy = new T.Object3D(), tmpC = new T.Color();

@@ -23,7 +23,7 @@
   function snd(n) { try { GA.Audio.play(n); } catch (e) {} }
   var openNow = false, cur = null, tab = 'pics', pic = 0, pester = 0, view = 'dir';
   function games() { return GA.MAIN_GAMES.filter(function (g) { return GA.HALL_DATA && GA.HALL_DATA[g.id]; }); }
-  function data(id) { return GA.HALL_DATA[id]; }
+  function data(id) { var d = GA.HALL_DATA[id]; return d && GA.PVD && GA.PVD.mergeBetas ? GA.PVD.mergeBetas(id, d) : d; } // + the Save Booth's Final Beta
   function say(k, txt) { var t = txt || L.line(k); var el = $('hlGus'); if (el) el.textContent = t; if (GA.Hall3D && GA.Hall3D.say) GA.Hall3D.say(t, 5); H.lastLine = t; return t; }
   function seen(id) { var s = GA.store.get('hallSeen', {}); if (!s[id]) { s[id] = 1; GA.store.set('hallSeen', s); } var n = Object.keys(s).length; if (GA.Prog) GA.Prog.event('hallSeen', n); return n; }
   H.seenCount = function () { return Object.keys(GA.store.get('hallSeen', {})).length; };
@@ -96,7 +96,8 @@
     } else {
       if (!dd.versions.length) h = '<div class="sbEmpty">\uD83D\uDDC4\uFE0F ' + esc(dd.noOld || 'No old versions yet.') + '</div>';
       else h = '<div class="hlWarn">\uD83D\uDCBE Old versions keep their <b>own separate save</b>, so your newest ' + esc(g.name) + ' progress stays safe. Some old versions may not have newer features (or online play) yet.</div>' +
-        '<div class="hlVers">' + dd.versions.slice().reverse().map(function (v) { return '<div class="hlVcard"><img src="' + v.thumb + '" alt="" loading="lazy"><div class="hlVinfo"><b>Version ' + esc(v.ver) + '</b><span>' + esc(v.title) + '</span></div><button class="bigBtn alt hlOld" data-l="' + v.label + '">\u25B6 PLAY v' + esc(v.ver) + '</button></div>'; }).join('') + '</div>';
+        '<div class="hlVers">' + dd.versions.slice().reverse().map(function (v) { if (v.beta) return '<div class="hlVcard hlBeta"><img src="' + v.thumb + '" alt="" loading="lazy"><div class="hlVinfo"><b>\uD83D\uDCBE ' + esc(GA.PVD ? GA.PVD.BETA_LABEL : 'Final Beta') + '</b><span>' + esc(v.title) + ' \u00b7 from Lili\u2019s Save Booth</span></div><button class="bigBtn alt hlOld" data-l="' + v.label + '">\u25B6 PLAY BETA</button></div>';
+        return '<div class="hlVcard"><img src="' + v.thumb + '" alt="" loading="lazy"><div class="hlVinfo"><b>Version ' + esc(v.ver) + '</b><span>' + esc(v.title) + '</span></div><button class="bigBtn alt hlOld" data-l="' + v.label + '">\u25B6 PLAY v' + esc(v.ver) + '</button></div>'; }).join('') + '</div>';
       h += '<div class="hlBtns"><button class="bigBtn" id="hlPlay">\u25B6 PLAY NEWEST</button></div>';
     }
     $('hlBody').innerHTML = h; $('hlBody').scrollTop = 0;
@@ -119,9 +120,9 @@
   H.playOld = function (gid, label) {
     var dd = data(gid), v = dd && dd.versions.find(function (x) { return x.label === label; }); if (!v) return false;
     H.lastOld = v.url; if (GA.Prog) GA.Prog.event('oldVersion');
-    say(null, 'Version ' + v.ver + '. Vintage. Separate save, as promised. Off you go.');
+    say(null, v.beta ? 'The Final Beta, from Lili\u2019s Save Booth. Separate save. She made me promise to say that.' : 'Version ' + v.ver + '. Vintage. Separate save, as promised. Off you go.');
     close(true);
-    GA.launchMain({ id: gid, name: GA.findGame(gid).name + ' v' + v.ver, url: v.url });
+    GA.launchMain({ id: gid, name: GA.findGame(gid).name + (v.beta ? ' (Final Beta)' : ' v' + v.ver), url: v.url });
     return true;
   };
   function close(silent) {
