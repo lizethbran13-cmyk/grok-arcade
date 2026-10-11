@@ -7,6 +7,7 @@
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
   var WING = { minX: 2, maxX: 18, minZ: ROOM.maxZ + 0.4, maxZ: 48, doorX: 10, doorHW: 1.5, doorH: 3.3 }; // Hall of Game Records wing behind the bonus zone's south wall (booth #32: the Records Annex doubles it, z 26..48)
   var FOOD = { minX: ROOM.minX, maxX: WING.minX - 0.4, minZ: ROOM.maxZ + 0.4, maxZ: 26, doorX: -11.6, doorHW: 1.5, doorH: 3.3 }; // Food Court behind the main hall's south wall (west of the Hall wing)
+  var PREV = { minX: ROOM.minX, maxX: WING.minX - 0.4, minZ: FOOD.maxZ + 0.4, maxZ: WING.maxZ, doorX: -0.77, doorHW: 0.72, doorH: 3.0, h: 5.6 }; // Ratita Preview Center: behind the Food Court, door between the slushie machine and the ice cream freezer
   var REGIONS = []; // far-away walk-in areas (rooftop deck, secret basement) registered by js/areas.js: {name,minX,maxX,minZ,maxZ,maxY,spawn:{x,z}}
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
   var MAIN_STEP = GA.MAIN_GAMES.length > 15 ? 1.48 : GA.MAIN_GAMES.length > 14 ? 1.55 : GA.MAIN_GAMES.length > 13 ? 1.66 : GA.MAIN_GAMES.length > 12 ? 1.78 : GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 15 ? -17.22 : GA.MAIN_GAMES.length > 14 ? -16.95 : GA.MAIN_GAMES.length > 13 ? -17.0 : GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
@@ -137,7 +138,7 @@
     addWall(-60, fL, -1, 99, ROOM.maxZ, ROOM.maxZ + th); addWall(fR, dL, -1, 99, ROOM.maxZ, ROOM.maxZ + th); addWall(dR, 60, -1, 99, ROOM.maxZ, ROOM.maxZ + th);
     walls.push({ minX: dL, maxX: dR, minY: WING.doorH, maxY: 99, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th });
     walls.push({ minX: fL, maxX: fR, minY: FOOD.doorH, maxY: 99, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th });
-    addWall(FOOD.maxX, WING.minX, -1, 99, ROOM.maxZ, WING.maxZ); addWall(WING.maxX, 60, -1, 99, ROOM.maxZ, WING.maxZ + 12); addWall(WING.minX - 0.4, 60, -1, 99, WING.maxZ, WING.maxZ + 12); addWall(-60, WING.minX - 0.4, -1, 99, FOOD.maxZ, WING.maxZ + 12); // the Food Court ends at z 26, the Hall wing runs on to its Records Annex
+    addWall(FOOD.maxX, WING.minX, -1, 99, ROOM.maxZ, WING.maxZ); addWall(WING.maxX, 60, -1, 99, ROOM.maxZ, WING.maxZ + 12); addWall(WING.minX - 0.4, 60, -1, 99, WING.maxZ, WING.maxZ + 12); addWall(-60, WING.minX - 0.4, -1, 99, PREV.maxZ, WING.maxZ + 12); addWall(-60, PREV.minX, -1, 99, FOOD.maxZ, PREV.maxZ); addWall(PREV.minX, PREV.doorX - PREV.doorHW, -1, 99, FOOD.maxZ, PREV.minZ); addWall(PREV.doorX + PREV.doorHW, WING.minX - 0.4, -1, 99, FOOD.maxZ, PREV.minZ); walls.push({ minX: PREV.doorX - PREV.doorHW, maxX: PREV.doorX + PREV.doorHW, minY: PREV.doorH, maxY: 99, minZ: FOOD.maxZ, maxZ: PREV.minZ }); walls.push({ minX: PREV.minX, maxX: PREV.maxX, minY: PREV.h - 0.3, maxY: 99, minZ: PREV.minZ, maxZ: PREV.maxZ }); // the Food Court ends at z 26 (its back wall has the Preview Center door), the Hall wing runs on to its Records Annex
     walls.push({ minX: FOOD.minX, maxX: FOOD.maxX, minY: H - 0.3, maxY: 99, minZ: FOOD.minZ, maxZ: FOOD.maxZ }); // Food Court ceiling (keeps the camera inside)
     addWall(-60, ROOM.minX, -1, 99, -40, 40); addWall(ROOM.maxX, 60, -1, 99, -40, 40);
     // divider with a doorway into the Bonus Zone
@@ -1403,7 +1404,7 @@
   /* ---------- areas + dance emotes ---------- */
   function regionAt(x, z) {
     for (var i = 0; i < REGIONS.length; i++) { var r = REGIONS[i]; if (x >= r.minX - 1 && x <= r.maxX + 1 && z >= r.minZ - 1 && z <= r.maxZ + 1) return r.name; }
-    if (z > ROOM.maxZ + 0.2) return x < FOOD.maxX + 0.2 ? 'food' : 'hall';
+    if (z > ROOM.maxZ + 0.2) return x < FOOD.maxX + 0.2 ? (z > FOOD.maxZ + 0.2 ? 'preview' : 'food') : 'hall';
     return x > DIV_X ? 'bonus' : 'main';
   }
   var EMO = { name: null, t0: 0, was: false };
@@ -1618,7 +1619,7 @@
 
   /* ---------- extension API (claw machines build into the hub with the same helpers) ---------- */
   function api() { return { T: T, scene: scene, mesh: mesh, box: box, cyl: cyl, sph: sph, plane: plane, lam: lam, basic: basic, sign: sign, decal: decal, mkCanvas: mkCanvas, canvasTex: canvasTex, neonText: neonText, font: font,
-    addSolid: addSolid, addWall: addWall, walls: walls, regItem: regItem, begin: begin, end: end, noAud: noAud, wallSign: wallSign, cabinets: cabinets, anims: anims, glowTex: glowTex, ROOM: ROOM, WING: WING, FOOD: FOOD, REGIONS: REGIONS, DIV_X: DIV_X, attract: function (id, g, w, h, t) { attract(id, g, w, h, t, {}); }, camera: function () { return camera; }, renderer: function () { return renderer; },
+    addSolid: addSolid, addWall: addWall, walls: walls, regItem: regItem, begin: begin, end: end, noAud: noAud, wallSign: wallSign, cabinets: cabinets, anims: anims, glowTex: glowTex, ROOM: ROOM, PREV: PREV, WING: WING, FOOD: FOOD, REGIONS: REGIONS, DIV_X: DIV_X, attract: function (id, g, w, h, t) { attract(id, g, w, h, t, {}); }, camera: function () { return camera; }, renderer: function () { return renderer; },
     pose: function () { return { x: P.x, z: P.z, face: P.face, speed: P.speed }; } }; }
 
   /* ---------- layout audit ---------- */
@@ -1638,9 +1639,12 @@
       { name: 'south wall W of Food Court door', minX: ROOM.minX - th, maxX: FOOD.doorX - FOOD.doorHW, minY: 0, maxY: H, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th },
       { name: 'south wall E of Food Court door', minX: FOOD.doorX + FOOD.doorHW, maxX: WING.doorX - WING.doorHW, minY: 0, maxY: H, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th },
       { name: 'Food Court door lintel', minX: FOOD.doorX - FOOD.doorHW, maxX: FOOD.doorX + FOOD.doorHW, minY: FOOD.doorH, maxY: H, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th },
-      { name: 'Food Court / Hall wall', minX: FOOD.maxX, maxX: WING.minX, minY: 0, maxY: H, minZ: ROOM.maxZ, maxZ: WING.maxZ } ];
+      { name: 'Food Court / Hall wall', minX: FOOD.maxX, maxX: WING.minX, minY: 0, maxY: H, minZ: ROOM.maxZ, maxZ: WING.maxZ },
+      { name: 'Food Court / Preview wall W', minX: PREV.minX, maxX: PREV.doorX - PREV.doorHW, minY: 0, maxY: H, minZ: FOOD.maxZ, maxZ: PREV.minZ },
+      { name: 'Food Court / Preview wall E', minX: PREV.doorX + PREV.doorHW, maxX: PREV.maxX, minY: 0, maxY: H, minZ: FOOD.maxZ, maxZ: PREV.minZ },
+      { name: 'Preview door lintel', minX: PREV.doorX - PREV.doorHW, maxX: PREV.doorX + PREV.doorHW, minY: PREV.doorH, maxY: H, minZ: FOOD.maxZ, maxZ: PREV.minZ } ];
     function within(p, r, my) { return p.minX >= r.minX - EPS && p.maxX <= r.maxX + EPS && p.minZ >= r.minZ - EPS && p.maxZ <= r.maxZ + EPS && p.maxY <= my + EPS; }
-    function inArea(p) { if (within(p, ROOM, ROOM.h) || within(p, WING, ROOM.h) || within(p, FOOD, ROOM.h)) return true; for (var q = 0; q < REGIONS.length; q++) if (within(p, REGIONS[q], REGIONS[q].maxY || ROOM.h)) return true; return false; }
+    function inArea(p) { if (within(p, ROOM, ROOM.h) || within(p, WING, ROOM.h) || within(p, FOOD, ROOM.h) || within(p, PREV, PREV.h)) return true; for (var q = 0; q < REGIONS.length; q++) if (within(p, REGIONS[q], REGIONS[q].maxY || ROOM.h)) return true; return false; }
     // 1) physical things clipping into each other or into the divider wall
     for (var i = 0; i < phys.length; i++) {
       for (var j = i + 1; j < phys.length; j++) if (ov(phys[i], phys[j])) out.overlaps.push([phys[i].name, phys[j].name]);
@@ -1706,6 +1710,7 @@
     if (GA.Hall3D && GA.Hall3D.build) { try { GA.Hall3D.build(api()); } catch (e) { if (window.console) console.warn('Hall of Game Records failed to build', e); } }
     if (GA.Areas && GA.Areas.build) { try { GA.Areas.build(api()); } catch (e) { if (window.console) console.warn('Food Court / Rooftop / Basement failed to build', e); } }
     if (GA.Attic && GA.Attic.build) { try { GA.Attic.build(api()); } catch (e) { if (window.console) console.warn('Attic failed to build', e); } }
+    if (GA.Preview && GA.Preview.build) { try { GA.Preview.build(api()); } catch (e) { if (window.console) console.warn('Ratita Preview Center failed to build', e); } }
     buildGary(); buildPlayer(); setupInput();
     // restore position when coming back from a main game
     var saved = null; try { saved = JSON.parse(sessionStorage.getItem('grokArcade.pos') || 'null'); } catch (e) {}
@@ -1759,6 +1764,7 @@
   Hub.setEmote = function (n) { EMO.name = n || null; EMO.t0 = time; if (n) { EMO.was = true; P.speed = 0; } };
   Hub.emote = function () { return EMO.name; };
   Hub.addRegion = function (r) { REGIONS.push(r); return r; };
+  Hub.solidsNear = function (x, z, r) { r = r || 0.6; return solids.filter(function (b) { return x > b.minX - r && x < b.maxX + r && z > b.minZ - r && z < b.maxZ + r; }).map(function (b) { return b.name + ' ' + [b.minX, b.maxX, b.minZ, b.maxZ].map(function (v) { return +v.toFixed(2); }).join(','); }); }; // debug / tests
   Hub.regionAt = function (x, z) { return regionAt(x, z); };
-  Hub.ROOM = ROOM; Hub.DIV_X = DIV_X; Hub.WING = WING; Hub.FOOD = FOOD; Hub.REGIONS = REGIONS; Hub.area = function () { return Hub._area || 'main'; };
+  Hub.ROOM = ROOM; Hub.PREV = PREV; Hub.DIV_X = DIV_X; Hub.WING = WING; Hub.FOOD = FOOD; Hub.REGIONS = REGIONS; Hub.area = function () { return Hub._area || 'main'; };
 })();

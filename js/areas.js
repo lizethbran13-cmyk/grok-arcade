@@ -94,7 +94,7 @@
     function wall(w, h, x, y, z, ry, mat) { var m = add(sh, new T.PlaneGeometry(w, h), mat, x, y, z); m.rotation.y = ry; return m; }
     var tileM = function (len) { var t2 = st.clone(); t2.needsUpdate = true; t2.repeat.set(len / 2, 1.3 / 1.0); return new T.MeshLambertMaterial({ map: t2 }); };
     // west / south / east inner walls: cream plaster above, subway tile wainscot, red trim + neon line
-    var sides = [ [D, f.minX + 0.01, cz, Math.PI / 2], [W, cx, f.maxZ - 0.01, Math.PI], [D, f.maxX - 0.01, cz, -Math.PI / 2] ];
+    var sides = [ [D, f.minX + 0.01, cz, Math.PI / 2], [D, f.maxX - 0.01, cz, -Math.PI / 2] ];
     sides.forEach(function (sd) { var len = sd[0]; var ox = sd[1], oz = sd[2], ry = sd[3];
       wall(len, H - 1.3, ox, 1.3 + (H - 1.3) / 2, oz, ry, plaster); wall(len, 1.3, ox, 0.65, oz, ry, tileM(len));
       var nx = Math.sin(ry) * 0.03, nz = Math.cos(ry) * 0.03, tr = add(sh, bx(Math.abs(Math.cos(ry)) > 0.5 ? len : 0.06, 0.1, Math.abs(Math.cos(ry)) > 0.5 ? 0.06 : len), ph('#c0392b', 40), ox + nx, 1.34, oz + nz); void tr;
@@ -103,6 +103,10 @@
     var dl = f.doorX - f.doorHW, dr = f.doorX + f.doorHW, zN = f.minZ + 0.01;
     [[f.minX, dl], [dr, f.maxX]].forEach(function (s2) { var len = s2[1] - s2[0], mx = (s2[0] + s2[1]) / 2; wall(len, H - 1.3, mx, 1.3 + (H - 1.3) / 2, zN, 0, plaster); wall(len, 1.3, mx, 0.65, zN, 0, tileM(len)); add(sh, bx(len, 0.1, 0.06), ph('#c0392b', 40), mx, 1.34, zN + 0.03); add(sh, bx(len, 0.06, 0.05), gl('#ffb347'), mx, H - 0.35, zN + 0.03); });
     wall(f.doorHW * 2, H - f.doorH, f.doorX, f.doorH + (H - f.doorH) / 2, zN, 0, plaster);
+    // south inner wall with the Ratita Preview Center doorway (between the slushie machine and the ice cream freezer)
+    var PV = A.PREV, pl0 = PV.doorX - PV.doorHW, pr0 = PV.doorX + PV.doorHW, zS = f.maxZ - 0.01;
+    [[f.minX, pl0], [pr0, f.maxX]].forEach(function (s2) { var len = s2[1] - s2[0], mx = (s2[0] + s2[1]) / 2; wall(len, H - 1.3, mx, 1.3 + (H - 1.3) / 2, zS, Math.PI, plaster); wall(len, 1.3, mx, 0.65, zS, Math.PI, tileM(len)); add(sh, bx(len, 0.1, 0.06), ph('#c0392b', 40), mx, 1.34, zS - 0.03); add(sh, bx(len, 0.06, 0.05), gl('#ffb347'), mx, H - 0.35, zS - 0.03); });
+    wall(PV.doorHW * 2, H - PV.doorH, PV.doorX, PV.doorH + (H - PV.doorH) / 2, zS, Math.PI, plaster);
     // warm lights: one point light + pendant lamps
     var pl = new T.PointLight('#ffd9a0', 0.6, 22, 1.5); pl.position.set(cx, H - 0.8, cz); sh.add(pl);
     void th;
@@ -284,7 +288,7 @@
     slush = { tanks: tanks };
     inter({ id: 'fc_slushie', kind: 'ar_slushie', area: 'food', name: 'Turbo Slushie', col: '#3ff0ff', x: x0, z: z0 - 1.6, dir: [0, -1], r: 1.2 });
     // ice cream freezer with a giant cone on top
-    var x1 = 0.35, z1 = 25.2, f = prop('food', 'Ice Cream Freezer', x1, z1, 0);
+    var x1 = 0.8, z1 = 25.2, f = prop('food', 'Ice Cream Freezer', x1, z1, 0); // nudged east for the Preview Center door
     add(f, bx(1.5, 0.95, 0.95), ph('#ffffff', 50), 0, 0.47, 0); for (i = 0; i < 6; i++) add(f, bx(0.24, 0.94, 0.01), ph(i % 2 ? '#ff8fd0' : '#ffffff', 30), -0.6 + i * 0.24, 0.47, 0.48);
     add(f, bx(1.4, 0.04, 0.85), new T.MeshPhongMaterial({ color: '#dff6ff', transparent: true, opacity: 0.35, shininess: 140 }), 0, 0.98, 0);
     ['#ff8fd0', '#fff1c4', '#7a4a2a', '#a3ff3f', '#ffb347', '#c4b5fd'].forEach(function (col, k) { add(f, bx(0.38, 0.12, 0.3), ph(col, 20), -0.45 + (k % 3) * 0.45, 0.88, -0.17 + Math.floor(k / 3) * 0.36); add(f, sp(0.12, 12), ph(col, 20), -0.45 + (k % 3) * 0.45, 0.93, -0.17 + Math.floor(k / 3) * 0.36).scale.set(1.3, 0.4, 1); });

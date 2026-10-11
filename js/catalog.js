@@ -83,10 +83,12 @@ GA.BONUS_GAMES = [
   { id: 'tm_toad', era: 1983, name: 'Toad Road \u201981', desc: 'A 1983 cabinet! Tap to hop, swipe to hop sideways. Cross the busy road, ride the logs and turtles, fill all 5 lily pads. Found in the OLD Grok Arcade.', color: '#4ade80', color2: '#facc15' },
   { id: 'tm_centi', era: 1983, name: 'Centi-Bug \u201981', desc: 'A 1983 cabinet! Drag your bug zapper (it fires by itself) and split the Centi-Bug snaking through the mushrooms. Watch the spider! Found in the OLD Grok Arcade.', color: '#22c55e', color2: '#ec4899' },
   { id: 'tm_pogo', era: 1983, name: 'Pogo Pete \u201983', desc: 'A brand-new 1983 game! Pete bounces on his pogo stick by himself; drag to steer him onto the clouds and climb as high as you can. Found in the OLD Grok Arcade.', color: '#60a5fa', color2: '#f97316' },
-  { id: 'tm_tangle', era: 1983, name: 'Time Tangle \u201983', desc: 'Lily\u2019s own game! Tap when the clock hand is inside the glowing slice. It speeds up and flips direction every hit. Found in the OLD Grok Arcade.', color: '#a78bfa', color2: '#facc15' }
+  { id: 'tm_tangle', era: 1983, name: 'Time Tangle \u201983', desc: 'Lily\u2019s own game! Tap when the clock hand is inside the glowing slice. It speeds up and flips direction every hit. Found in the OLD Grok Arcade.', color: '#a78bfa', color2: '#facc15' },
+  /* #32: lives in the Ratita Preview Center (behind the Food Court), not on the Bonus Zone wall */
+  { id: 'chrono', room: 'preview', name: 'Chrono Courier', desc: 'Ratita Industries time-mail! Send each parcel through the portal for its era (dinos, 1983, today, the future). Leave the glitchy ones alone, and watch out: the portals SHUFFLE! Cabinet in the Ratita Preview Center.', color: '#5eead4', color2: '#fb7185' },
 ];
 /* bonus games that have a cabinet on the Bonus Zone wall (1983 retro games live in the old arcade instead) */
-GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era; }); };
+GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era && !g.room; }); };
 /* games that support online multiplayer through the Multiplayer Antenna */
 GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };
 /* dev/test only: localStorage 'grokArcade.devUrls' = {"brawl":"http://127.0.0.1:8821/"} points games at local servers */

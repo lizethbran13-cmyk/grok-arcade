@@ -14,7 +14,7 @@
   'use strict';
   var T = THREE, PF = GA.Perf = {};
   var R = null, S = null, CAM = null, O = null, on = !/[?&]perf=off\b/.test(location.search), MOBILE = false;
-  var HIDE = 31, HUB_AREAS = { main: 1, bonus: 1, hall: 1, food: 1 };
+  var HIDE = 31, HUB_AREAS = { main: 1, bonus: 1, hall: 1, food: 1, preview: 1 };
   var HUB_BOX = { minX: -19.5, maxX: 19.5, minZ: -13.5, maxZ: 49.5 }; // z to 49.5: the Hall wing's Records Annex (booth #32)
   var ST = PF._st = { lights: 0, pool: 0, chunks: 0, merged: 0, dyn: 0, roots: 0, lo: 0, freedMB: 0, disposed: 0, pr: 0, mode: 'auto', fps: 0 };
   var tmpV = new T.Vector3(), tmpV2 = new T.Vector3(), tmpM = new T.Matrix4(), tmpN = new T.Matrix3(), frustum = new T.Frustum(), projM = new T.Matrix4(), sph = new T.Sphere();
@@ -110,8 +110,8 @@
     }
     // rooms that can't see each other: the Hall wing and the Food Court share a solid wall
     mask(HUBG, function () { return !HUB_AREAS[curArea]; });
-    if (HALLG) mask(HALLG, function () { return curArea === 'food'; });
-    HUBG.children.forEach(function (c) { if (c.name === 'area:food') mask(c, function () { return curArea === 'hall'; }); });
+    if (HALLG) mask(HALLG, function () { return curArea === 'food' || curArea === 'preview'; });
+    HUBG.children.forEach(function (c) { if (c.name === 'area:food') mask(c, function () { return curArea === 'hall'; }); if (c.name === 'area:preview') mask(c, function () { return curArea !== 'food' && curArea !== 'preview'; }); });
   }
   var curArea = 'main';
   // visibility mask: the game still switches the object on/off as before, this only adds "and not while you're in X"

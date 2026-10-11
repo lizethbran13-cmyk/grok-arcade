@@ -90,7 +90,8 @@
     tm_pogo: [30, 'Cloud Climber', 'Score 30 in Pogo Pete \u201983', '\u2601\uFE0F'],
     tm_tangle: [40, 'Time Keeper', 'Score 40 in Time Tangle \u201983', '\u23F0'],
     lockpick: [40, 'Master Locksmith', 'Score 40 in Lockpick Panic', '\uD83D\uDD10'],
-    ghost: [45, 'Lantern Legend', 'Score 45 in Ghost Lantern \u201983', '\uD83C\uDFEE']
+    ghost: [45, 'Lantern Legend', 'Score 45 in Ghost Lantern \u201983', '\uD83C\uDFEE'],
+    chrono: [30, 'Right On Time', 'Score 30 in Chrono Courier', '\u23F1\uFE0F']
   };
   var A = [
     { id: 'first_ticket', cat: 'Tickets', icon: '\uD83C\uDF9F\uFE0F', name: 'First Ticket!', desc: 'Earn your first ticket in the Bonus Zone', p: function () { return [st.earned, 1]; } },
@@ -213,6 +214,9 @@
   A.push({ id: 'h2_sort', cat: 'High Scores', icon: '\uD83D\uDDC2\uFE0F', name: 'Barnaby\u2019s Best Helper', desc: 'File 12 folders in one round of Uncle Barnaby\u2019s Sort-a-Thon', p: function () { return [Math.min(12, ev('h2Sort')), 12]; } });
   A.push({ id: 'h2_quiz', cat: 'Arcade', icon: '\uD83D\uDCEE', name: 'Rubber Stamp Genius', desc: 'Get all 5 right at the Stamp-O-Matic 5000 quiz', p: function () { return [ev('h2QuizPerfect') ? 1 : 0, 1]; } });
   A.push({ id: 'h2_hunt', cat: 'Arcade', icon: '\uD83D\uDCC1', name: 'Lost & Found', desc: 'Find all 6 of Uncle Barnaby\u2019s lost files in one day', p: function () { return [ev('h2Hunt') ? 1 : 0, 1]; } });
+  // Ratita Preview Center
+  A.push({ id: 'pv_qa', cat: 'Arcade', icon: '\uD83D\uDCCB', name: 'Sneak Peek', desc: 'Finish Lili\u2019s QA checklist in the Ratita Preview Center', p: function () { return [ev('pvQA') ? 1 : 0, 1]; } });
+  A.push({ id: 'pv_glitch', cat: 'Arcade', icon: '\u26A1', name: 'Glitch Tourist', desc: 'Survive a Time Jumper malfunction (Ratita Industries apologizes)', p: function () { return [ev('pvGlitch') ? 1 : 0, 1]; } });
   GA.ACHIEVEMENTS = A;
 
   function prog(a) { var r = a.p(); return { cur: Math.min(r[0] || 0, r[1]), goal: r[1] }; }
