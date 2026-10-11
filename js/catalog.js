@@ -45,6 +45,8 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-disaster/', color: '#ff7b00', color2: '#7b5cd6' },
   { id: 'hunters', mp: true, name: 'Grok Monster Hunters', desc: 'A cartoony 3D co-op monster hunting adventure! Tame 13 big monsters across 6 regions (forest, canyon, marsh, volcano, frozen peaks and the Starfall Summit boss) with 5 weapons, combos, dodge rolls and lock-on. Forge gear, cook meals, decorate your house in Pawprint Village, bring your buddy Mochi, and hunt with up to 3 friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-hunters/', color: '#f59e0b', color2: '#22d3ee' },
+  { id: 'relics', mp: true, name: 'Grok Lost Relics', desc: 'Be an urban explorer with a whip and a torch! Swing over croc rivers, sneak past the Relic Patrol (they think YOU are the thief), dodge rolling boulders, dart walls and spike floors, solve temple puzzles and beat Professor Vintage\u2019s crazy machines to bring 5 ancient relics home to your museum. Outfits, a journal, gear upgrades and co-op for 3!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-lost-relics/', color: '#22c55e', color2: '#facc15' },
   { id: 'ratita', mp: true, name: 'Grok Ratita Rescue', desc: 'A cartoony 3D platformer! Play as Luna, Pi-rat or Snowie and sneak through a GIANT house: kitchen, living room, vents, garden, garage, toy room and attic. Grab cheese, rescue baby rats, earn Ratita Industries gadgets (glider, grapple tail, jet tail...), dodge Candy the schnauzer and beat 7 goofy bosses. Martina the tortoise helps out! Co-op for 3 online.',
     url: 'https://lizethbran13-cmyk.github.io/grok-ratita/', color: '#ff4fa0', color2: '#ffd23f' },
   { id: 'ratitahq', mp: true, name: 'Grok Ratita Industries HQ', desc: 'A cartoony 3D hub world! You\u2019re the new intern at Ratita Industries: meet Luna, Pi-rat and Snowie, explore labs, the Cheese Caf\u00e9, the glass-dome Atrium and the Test Yard, solve two mysteries, find Candy\u2019s Ruffsources department and a hidden friend, and video-call Mimi, Lily and Lili. Customize your intern. Explore with up to 3 friends online.',
@@ -93,11 +95,12 @@ GA.BONUS_GAMES = [
   { id: 'crumbs', name: 'Crumb Patrol', desc: 'You\u2019re Sweepy the robo-vac! Drag to steer around the Ratita HQ caf\u00e9, slurp up crumbs and cheese, DON\u2019T suck up the Golden Gouda, dodge goo puddles and move out from under the big sneaker shadows before they stomp. A Grok Ratita Industries HQ game.', color: '#ff8a3d', color2: '#3ff0ff' },
   /* #34: Bone Dig (Pup Town), on the Bonus Zone wall */
   { id: 'dig', name: 'Bone Dig', desc: 'Help Candy dig up Paw Park! PRESS AND HOLD a dirt mound to dig. Bones, biscuits and the rare GOLDEN BONE score points, but WIGGLY mounds hide a sprinkler that soaks Candy. A Grok Pup Town game.', color: '#86dc93', color2: '#ffd23f' },
-  /* #36 is reserved for Boulder Run (Grok Lost Relics) */
-  /* #37: Patty Panic (Grok Eatsville Tycoon), on the Bonus Zone wall */
-  { id: 'flip', name: 'Patty Panic', desc: 'Work the grill at the Main St Diner! TAP patties when they glow GOLDEN to flip them, then again to serve. Don\u2019t let them burn, catch the patties the Ratita grill LAUNCHES into the air, and wipe the grease before Inspector Grumbleton notices. A Grok Eatsville Tycoon game.', color: '#ff7a3d', color2: '#14b8a6' },
   /* #35: Sparkle Car Wash (Grok Rides Remastered), on the Bonus Zone wall */
   { id: 'wash', name: 'Sparkle Car Wash', desc: 'Muddy cars roll through the Sparkle Car Wash! DRAG over the mud splats to scrub them off before each car rolls out. Spotless cars score a bonus, GOLDEN cars count double, and hands off the WET PAINT cars! A Grok Rides Remastered game.', color: '#38bdf8', color2: '#f472b6' },
+  /* #36: Boulder Run (Grok Lost Relics), on the Bonus Zone wall */
+  { id: 'boulder', name: 'Boulder Run', desc: 'A giant boulder is rolling after you down a temple corridor! TAP left or right to hop between 3 lanes, dodge spike tiles and fallen pillars, and grab coins and golden Jade Monkey idols. Every trap lets the boulder roll closer! A Grok Lost Relics game.', color: '#22c55e', color2: '#facc15' },
+  /* #37: Patty Panic (Grok Eatsville Tycoon), on the Bonus Zone wall */
+  { id: 'flip', name: 'Patty Panic', desc: 'Work the grill at the Main St Diner! TAP patties when they glow GOLDEN to flip them, then again to serve. Don\u2019t let them burn, catch the patties the Ratita grill LAUNCHES into the air, and wipe the grease before Inspector Grumbleton notices. A Grok Eatsville Tycoon game.', color: '#ff7a3d', color2: '#14b8a6' },
 ];
 /* bonus games that have a cabinet on the Bonus Zone wall (1983 retro games live in the old arcade instead) */
 GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era && !g.room; }); };

@@ -807,6 +807,27 @@
         g.fillStyle = '#f59e0b'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK MONSTER HUNTERS', w / 2, 24);
         break;
       }
+      case 'relics': {
+        // Lost Relics: jungle temple at dusk, explorer with a fedora cracking a whip, rolling boulder, golden idol glowing on top, title banner
+        var gr1 = g.createLinearGradient(0, 0, 0, h); gr1.addColorStop(0, '#0ea5e9'); gr1.addColorStop(0.55, '#fde68a'); gr1.addColorStop(0.56, '#4caf2f'); gr1.addColorStop(1, '#2f7a2a'); g.fillStyle = gr1; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#9c9a82'; for (i = 0; i < 4; i++) g.fillRect(w * 0.5 - 60 + i * 12, h * 0.3 + i * h * 0.065, 120 - i * 24, h * 0.07); g.fillStyle = '#3f3a2a'; g.fillRect(w * 0.5 - 10, h * 0.45, 20, h * 0.11);
+        var gl = 0.5 + Math.sin(t * 4) * 0.3; g.fillStyle = 'rgba(52,211,153,' + gl + ')'; g.beginPath(); g.arc(w * 0.5, h * 0.27, 13, 0, 7); g.fill(); g.fillStyle = '#34d399'; g.beginPath(); g.arc(w * 0.5, h * 0.27, 7, 0, 7); g.fill();
+        for (i = 0; i < 3; i++) { var px8 = (i * 83 + 20) % w; g.fillStyle = '#7a5a3a'; g.fillRect(px8 - 3, h * 0.36, 6, h * 0.2); g.fillStyle = '#16a34a'; g.beginPath(); g.arc(px8, h * 0.35, 18, 0, 7); g.fill(); }
+        var bx8 = ((t * 40) % (w + 120)) - 60, ex8 = bx8 + 50; g.fillStyle = '#8a8170'; g.beginPath(); g.arc(bx8, h * 0.72, 22, 0, 7); g.fill(); g.strokeStyle = '#6b6352'; g.lineWidth = 3; g.beginPath(); g.arc(bx8 + Math.cos(t * 6) * 9, h * 0.72 + Math.sin(t * 6) * 9, 6, 0, 7); g.stroke();
+        g.fillStyle = '#8b5a2b'; g.fillRect(ex8 - 5, h * 0.7, 10, 13); g.fillStyle = '#6b5a45'; g.fillRect(ex8 - 5, h * 0.7 + 13, 4, 8 + Math.sin(t * 16) * 2); g.fillRect(ex8 + 1, h * 0.7 + 13, 4, 8 - Math.sin(t * 16) * 2); g.fillStyle = '#f1c7a0'; g.beginPath(); g.arc(ex8, h * 0.67, 6, 0, 7); g.fill();
+        g.fillStyle = '#7a5230'; g.fillRect(ex8 - 9, h * 0.65 - 1, 18, 3); g.fillRect(ex8 - 5, h * 0.65 - 7, 10, 7); g.strokeStyle = '#5b3a1e'; g.lineWidth = 2; g.beginPath(); g.moveTo(ex8 + 5, h * 0.7); g.quadraticCurveTo(ex8 + 22, h * 0.6 + Math.sin(t * 8) * 8, ex8 + 34, h * 0.66); g.stroke();
+        g.fillStyle = '#16a34a'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(16); g.textAlign = 'center'; g.fillStyle = '#fde047'; g.fillText('GROK LOST RELICS', w / 2, 24);
+        break;
+      }
+      case 'boulder': {
+        g.fillStyle = '#c8b48a'; g.fillRect(0, 0, w, h); g.fillStyle = '#7d7a62'; g.fillRect(0, 0, w * 0.08, h); g.fillRect(w * 0.92, 0, w * 0.08, h);
+        var of9 = (t * 60) % 30; for (var yy9 = -30 + of9; yy9 < h; yy9 += 30) { g.fillStyle = 'rgba(0,0,0,.08)'; g.fillRect(w * 0.08, yy9, w * 0.84, 2); }
+        var ln9 = Math.round((Math.sin(t * 1.3) + 1)), lx9 = w * (0.25 + ln9 * 0.25); g.fillStyle = '#e5e7eb'; for (i = 0; i < 3; i++) { var sy9 = ((t * 60 + i * 50) % (h + 40)) - 20, sl = (ln9 + 1 + i) % 3; if (sl === ln9) continue; var sx9 = w * (0.25 + sl * 0.25); g.beginPath(); g.moveTo(sx9 - 8, sy9 + 6); g.lineTo(sx9, sy9 - 8); g.lineTo(sx9 + 8, sy9 + 6); g.fill(); }
+        g.fillStyle = '#8b5a2b'; g.fillRect(lx9 - 5, h * 0.55, 10, 12); g.fillStyle = '#f1c7a0'; g.beginPath(); g.arc(lx9, h * 0.52, 5, 0, 7); g.fill(); g.fillStyle = '#7a5230'; g.fillRect(lx9 - 8, h * 0.5, 16, 3);
+        g.fillStyle = '#8a8170'; g.beginPath(); g.arc(w / 2, h + 10 - Math.sin(t * 3) * 3, w * 0.34, 0, 7); g.fill();
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('BOULDER RUN', w / 2, 22);
+        break;
+      }
       case 'tame': {
         g.fillStyle = '#c8f4ff'; g.fillRect(0, 0, w, h); var gt2 = g.createLinearGradient(0, 0, 0, h * 0.75); gt2.addColorStop(0, '#1ea7ff'); gt2.addColorStop(1, '#c8f4ff'); g.fillStyle = gt2; g.fillRect(0, 0, w, h * 0.75); g.fillStyle = '#6cc24a'; g.fillRect(0, h * 0.75, w, h * 0.25);
         var mx2 = w / 2 + Math.sin(t * 1.1) * w * 0.22, k3 = (t % 1.4) / 1.4; g.strokeStyle = 'rgba(255,40,60,' + (0.5 + 0.5 * Math.sin(t * 18)) + ')'; g.lineWidth = 2; g.beginPath(); g.ellipse(mx2 + 20, h * 0.78, 26 * (0.4 + k3 * 0.6), 6, 0, 0, 7); g.stroke();

@@ -1715,6 +1715,71 @@ GA.HALL_DATA = {
 "quip": "A cat in a helmet tamed a giant fluffy rhino right outside my Hall. It wanted a belly rub. I filed a complaint.",
 "noOld": "Grok Monster Hunters just set up camp. No old versions yet. Please leave the Starfang outside."
 },
+"relics": {
+"repo": "grok-lost-relics",
+"history": [
+{
+"date": "Oct 11",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A bright cartoon 3D exploration adventure on the Turbo engine (soft shadows, ambient occlusion and glow). Max, Zoe and Kai are explorers framed by the sneaky Professor Vintage, so the Relic Patrol chases THEM. A walk-in Grok Relic Museum hub with relic cases, a dino skeleton, Torty\u2019s Gear Shop, a wardrobe and a journal. Expedition 1, the Temple of the Jade Monkey: a croc river with whip swinging, Relic Patrol sneaking and bush hiding, a star-plate gate puzzle with a push block, a collapsing rope bridge, swinging logs, a dart corridor, a spike floor, a monkey statue puzzle, a rolling boulder and the Vine-Chopper boss, then a funny escape chase to Torty\u2019s jeep. Whip, torch, outfits, upgrades, evidence and co-op for 3."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/relics/1.webp",
+"cap": "Grok Relic Museum: your home base, with relic cases, Torty’s Gear Shop and the expedition map",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/relics/2.webp",
+"cap": "Base camp in the Emerald Jungle: Torty’s tents, a campfire and cheeky monkeys",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/relics/3.webp",
+"cap": "The croc river: hop the mossy stones or whip the golden ring and swing over",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/relics/4.webp",
+"cap": "Sneaking past the Relic Patrol in the jungle ruins (hide in the bushes!)",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/relics/5.webp",
+"cap": "The star-plate gate puzzle: push the stone block and stand on the other plate",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/relics/6.webp",
+"cap": "Temple of the Jade Monkey: stepped stone temple with vines and torches",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/relics/7.webp",
+"cap": "The spike floor room, lit by your torch",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/relics/8.webp",
+"cap": "Professor Vintage’s Vine-Chopper boss in the temple courtyard",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/relics/cover.webp",
+"quip": "An explorer swung through my Hall on a whip yelling \u2018IT BELONGS IN A MUSEUM!\u2019 This IS a museum. I gave him a map.",
+"noOld": "Grok Lost Relics was just dug up. No old versions yet. Please wipe your boots, the jungle mud gets everywhere."
+},
 "ratita": {
 "repo": "grok-ratita",
 "history": [
@@ -2022,5 +2087,6 @@ GA.ARCADE_HISTORY = [
   { date: 'Oct 11', ver: '5.3', title: 'The Ratita Preview Center', text: 'A secret door behind the Food Court opens into Ratita Industries\u2019 Preview Center! Lili (Mimi\u2019s and Lily\u2019s very serious distant cousin) runs it. Posters of upcoming DLC, a live Scheduled Additions board, and the TIME JUMPER, which plays work-in-progress builds once they really work. It malfunctions sometimes (sparks, a GL1TCH R00M, quick fix jobs). Plus Lili\u2019s QA checklist, bonus game #32 Chrono Courier and 2 new rare prizes.' },
   { date: 'Oct 11', ver: '5.4', title: 'Time Jumper Save Booth', text: 'Lili\u2019s Save Vault in the Preview Center: when a game ships, its last Time Jumper preview is archived as its Final Beta, playable forever with its own save. Betas also appear in each game\u2019s Old Versions here in the Hall.' },
   { date: 'Oct 11', ver: '5.5', title: 'Grok Pup Town', text: 'Candy\u2019s hometown opened: a cozy 3D dog town in HUBS & WORLDS, bonus #34 Bone Dig, the Golden Bone Keychain, Torty Plush and Golden Bone Cup, and a Hall exhibit. Its Time Jumper beta is the first game in Lili\u2019s Save Vault.' },
-  { date: 'Oct 11', ver: '5.6', title: 'Grok Eatsville Tycoon', text: 'A restaurant tycoon opened in LIFE SIMS: cook, serve and build a food empire in Eatsville, with bonus #37 Patty Panic, the Golden Spatula Keychain, the Inspector Grumbleton Plush, the Golden Burger Cup and a Hall exhibit.' }
+  { date: 'Oct 11', ver: '5.6', title: 'Grok Eatsville Tycoon', text: 'A restaurant tycoon opened in LIFE SIMS: cook, serve and build a food empire in Eatsville, with bonus #37 Patty Panic, the Golden Spatula Keychain, the Inspector Grumbleton Plush, the Golden Burger Cup and a Hall exhibit.' },
+  { date: 'Oct 11', ver: '5.7', title: 'Grok Lost Relics', text: 'The Grok Lost Relics cabinet joined the Game Gallery, with bonus game #36 Boulder Run, three new prizes (Jade Monkey Keychain, Professor Vintage Plush, Lost Relics Cup), the Boulder Dodger, Coin Sprinter and Relic Keeper achievements, and a new Hall of Game Records exhibit.' }
 ];

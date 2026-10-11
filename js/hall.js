@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   var T = THREE, A, W, H3 = GA.Hall3D = {};
-  var V = '20261010rr';
+  var V = '20261011lr36';
   var mats = {};
   function ph(c, s, e) { var k = 'p' + c + (s || 40) + (e || ''); return mats[k] || (mats[k] = new T.MeshPhongMaterial({ color: c, shininess: s || 40, specular: '#ffffff', emissive: e ? new T.Color(e) : new T.Color(0) })); }
   function gold() { return ph('#e8b84a', 90, '#3a2400'); }
@@ -64,6 +64,9 @@
       var whs = []; [[-0.13, 0.11], [0.13, 0.11], [-0.13, -0.11], [0.13, -0.11]].forEach(function (q) { var w = add(k, cy(0.05, 0.05, 0.05, 16), ph('#1f2433', 30), q[0], -0.03, q[1]); w.rotation.z = Math.PI / 2; whs.push(w); });
       [-1, 1].forEach(function (sd) { add(k, sp(0.02, 8), ph('#c084fc', 10, '#c084fc'), sd * 0.05, 0, -0.19); });
       add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = k; },
+    relics: function (g) { var k = new T.Group(); k.position.y = 0.3; g.add(k); var jd = ph('#34d399', 110, '#043a26'); add(k, sp(0.1, 24), jd, 0, 0, 0); add(k, sp(0.085, 22), jd, 0, 0.15, 0); [-1, 1].forEach(function (s) { add(k, sp(0.035, 12), jd, s * 0.085, 0.17, 0); add(k, sp(0.014, 8), ph('#064e3b', 60), s * 0.03, 0.17, 0.075); });
+      var o = new T.Group(); o.position.y = 0.32; g.add(o); add(o, cy(0.07, 0.07, 0.012, 20), ph('#7a5230', 20), 0.22, 0.02, 0); add(o, cy(0.04, 0.045, 0.05, 18), ph('#7a5230', 20), 0.22, 0.05, 0); var wh = add(o, to(0.05, 0.01), ph('#5b3a1e', 20), -0.22, 0.02, 0); wh.rotation.x = Math.PI / 2;
+      add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
     hunters: function (g) { var k = new T.Group(); k.position.y = 0.32; g.add(k); add(k, sp(0.12, 24), ph('#22d3ee', 70), 0, 0, 0).scale.set(1.25, 0.9, 0.9); add(k, sp(0.075, 20), ph('#22d3ee', 70), 0.15, 0.09, 0);
       [-0.02, 0.02].forEach(function (z) { add(k, sp(0.016, 8), ph('#111827', 80), 0.21, 0.11, z); }); for (var i = 0; i < 3; i++) { var c = add(k, new T.ConeGeometry(0.03, 0.08, 8), ph('#facc15', 90, '#5a4a00'), -0.06 + i * 0.06, 0.12, 0); void c; }
       var o = new T.Group(); o.position.y = 0.32; g.add(o); var sw = add(o, new T.BoxGeometry(0.02, 0.22, 0.01), ph('#e2e8f0', 120), 0.24, 0.02, 0); sw.rotation.z = 0.5; add(o, sp(0.03, 10), ph('#fde047', 60, '#5a4a00'), -0.22, 0.05, 0.1); add(o, sp(0.03, 10), ph('#f472b6', 60), -0.1, 0.02, -0.22);
