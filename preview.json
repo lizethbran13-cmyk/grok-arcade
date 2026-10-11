@@ -61,11 +61,12 @@
     {
       "issue": 31,
       "game": "party",
-      "name": "Fiesta Fits",
+      "name": "Fiesta Fits (live)",
       "size": "Mini Pack",
-      "what": "6 new skins (a Ratita mascot suit, party-hat Gus, a disco astronaut), hats, trails, dance emotes, a confetti cannon and a party horn.",
-      "stage": "building",
-      "when": "In the lab now"
+      "what": "Grok Land Party Mini Pack: 6 new skins (Ratita Mascot, Party-Hat Gus, Disco Astronaut and more), 6 hats, 6 trails, 4 dance emotes, a confetti cannon and a bouncy party horn.",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T17:45:00Z"
     },
     {
       "game": "ratitahq",
