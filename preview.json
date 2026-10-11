@@ -48,11 +48,12 @@
     {
       "issue": 30,
       "game": "detective",
-      "name": "Midnight Express",
+      "name": "Midnight Express (live)",
       "size": "Expansion",
-      "what": "A mystery on a fancy overnight train: who stole the Golden Cheese? Walk-in train cars, a corkboard, Disguise mode and co-op clues.",
-      "stage": "queued",
-      "when": "Tomorrow"
+      "what": "Grok Detective Expansion: who stole the Golden Cheese? 5 walk-in train cars, 6 suspects with alibis, fingerprint dusting, a clue corkboard, Disguise mode, co-op clue sharing and a big reveal.",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T16:30:00Z"
     },
     {
       "issue": 31,
@@ -60,8 +61,8 @@
       "name": "Fiesta Fits",
       "size": "Mini Pack",
       "what": "6 new skins (a Ratita mascot suit, party-hat Gus, a disco astronaut), hats, trails, dance emotes, a confetti cannon and a party horn.",
-      "stage": "queued",
-      "when": "Tomorrow"
+      "stage": "building",
+      "when": "In the lab now"
     },
     {
       "game": "ratitahq",
