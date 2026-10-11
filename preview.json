@@ -67,11 +67,12 @@
     {
       "issue": 39,
       "game": "sports",
-      "name": "Ratita Stadium Night",
+      "name": "Ratita Stadium Night (live)",
       "size": "Expansion",
-      "what": "Grok Sports Command: a night match at the new Ratita Stadium.",
-      "stage": "building",
-      "when": "In the lab now"
+      "what": "Grok Sports Command: the night-lights Ratita Stadium with Ice Hockey, Glow Mini-Golf, Cheese Curling, the Ratita Mascot Race and the Ratita Cup tournament (4 cheese cups to win).",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-12T00:10:00Z"
     },
     {
       "issue": 27,

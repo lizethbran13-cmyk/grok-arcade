@@ -37,7 +37,7 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-heist/', color: '#a855f7', color2: '#ffd23f' },
   { id: 'pickle', mp: true, name: 'Grok Pickleball', desc: 'Real 3D pickleball with easy swipe-to-hit controls and an Assist Mode! Serve, dink and smash on 5 courts, beat 8 rivals in the Pickle Cup, play 4 mini games, and team up with friends online (up to 3).',
     url: 'https://lizethbran13-cmyk.github.io/grok-pickleball/', color: '#22c55e', color2: '#e6ff3b' },
-  { id: 'sports', mp: true, name: 'Grok Sports Command', desc: 'A giant 3D sports plaza with 10 sports: soccer, basketball, tennis, bowling, beach volleyball, mini golf, badminton, dodgeball, archery and table tennis! Easy touch controls, Assist Mode, ranks, trophies, and up to 3 friends online.',
+  { id: 'sports', mp: true, name: 'Grok Sports Command', desc: 'A giant 3D sports plaza with 10 sports: soccer, basketball, tennis, bowling, beach volleyball, mini golf, badminton, dodgeball, archery and table tennis! NEW DLC: Ratita Stadium Night (hockey, glow golf, cheese curling, mascot race + the Ratita Cup). Easy touch controls, Assist Mode, ranks, trophies, and up to 3 friends online.',
     url: 'https://lizethbran13-cmyk.github.io/grok-sports/', color: '#2563eb', color2: '#facc15' },
   { id: 'kart', mp: true, name: 'Grok Kart Party', desc: 'A bright cartoony 3D kart racer! 8 tracks in 2 cups (city, canyon, candy, beach, haunted castle, snow, volcano, space), drifts and mini-turbos, ramps and gliders, 11 wacky items, Grand Prix, Time Trial ghosts, Balloon Battle and Coin Runners, 10 racers and kart parts to unlock, and online racing for up to 3.',
     url: 'https://lizethbran13-cmyk.github.io/grok-kart/', color: '#ff4fd8', color2: '#3ff0ff' },
