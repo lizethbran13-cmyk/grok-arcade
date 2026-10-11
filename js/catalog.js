@@ -30,7 +30,7 @@ GA.MAIN_GAMES = [
   { id: 'blocks', mp: true, name: 'Grok Blocks', desc: 'A blocky wildlife rescue! Explore 5 biomes, calm 18 kinds of animals with darts, chase runners in your truck and outsmart poachers. Co-op online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-blocks/', color: '#4ade80', color2: '#fbbf24' },
   { id: 'rides', mp: true, name: 'Grok Rides', desc: 'REMASTERED on the Tempest engine! A huge free-roam world: Grok City, Pine Hollow, the Sunny Shores beach town, the desert, icy tundra and a winding mountain road. 31 rides: cars, buses, bikes, a monster truck, boats, a helicopter, seaplane, hovercraft, hot air balloon, the Ratita hover-car, plus an ice cream truck, fire truck and tow truck with real jobs. Street races, deliveries, police chases, gas stations, a car wash, rain and puddles, day and night, 3 homes and co-op for 3!',
-    url: 'https://lizethbran13-cmyk.github.io/grok-rides/', color: '#ff4fd8', color2: '#38bdf8' },
+    url: 'https://lizethbran13-cmyk.github.io/grok-rides-remastered/', color: '#ff4fd8', color2: '#38bdf8' },
   { id: 'poke', mp: true, name: 'Grok Poke', desc: 'A big 3D adventure: explore 7 regions, befriend 39 critters, real-time battles, 5 dungeons with bosses, towns you can walk into, and trade or explore with friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-poke/', color: '#5dd66f', color2: '#ffd23f' },
   { id: 'heist', mp: true, name: 'Grok Heist Crew', desc: 'A cartoony co-op stealth heist! Pick Hacker, Lookout, Acrobat or Muscle, sneak past guards, hack doors and lasers and grab Baron Grumble\u2019s treasures from 5 heists. Up to 3 friends online!',

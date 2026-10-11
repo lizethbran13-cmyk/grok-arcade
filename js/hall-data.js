@@ -1139,6 +1139,14 @@ GA.HALL_DATA = {
 "commit": "bfc0bc0",
 "url": "https://lizethbran13-cmyk.github.io/grok-rides/versions/v2/",
 "thumb": "assets/hall/rides/v-v2.webp"
+},
+{
+"label": "original",
+"ver": "2.1",
+"title": "The original Grok Rides (before Remastered)",
+"commit": "6ddec82",
+"url": "https://lizethbran13-cmyk.github.io/grok-rides/",
+"thumb": "assets/hall/rides/v-v2-1.webp"
 }
 ],
 "pics": [
@@ -1192,7 +1200,7 @@ GA.HALL_DATA = {
 },
 {
 "src": "assets/hall/rides/9.webp",
-"cap": "Inside Burger Blast",
+"cap": "Inside Burger Blast: kitchen, menu boards and booths",
 "w": 960,
 "h": 444
 }
