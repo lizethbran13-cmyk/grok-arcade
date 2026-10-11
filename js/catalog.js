@@ -48,7 +48,9 @@ GA.MAIN_GAMES = [
   { id: 'ratita', mp: true, name: 'Grok Ratita Rescue', desc: 'A cartoony 3D platformer! Play as Luna, Pi-rat or Snowie and sneak through a GIANT house: kitchen, living room, vents, garden, garage, toy room and attic. Grab cheese, rescue baby rats, earn Ratita Industries gadgets (glider, grapple tail, jet tail...), dodge Candy the schnauzer and beat 7 goofy bosses. Martina the tortoise helps out! Co-op for 3 online.',
     url: 'https://lizethbran13-cmyk.github.io/grok-ratita/', color: '#ff4fa0', color2: '#ffd23f' },
   { id: 'ratitahq', mp: true, name: 'Grok Ratita Industries HQ', desc: 'A cartoony 3D hub world! You\u2019re the new intern at Ratita Industries: meet Luna, Pi-rat and Snowie, explore labs, the Cheese Caf\u00e9, the glass-dome Atrium and the Test Yard, solve two mysteries, find Candy\u2019s Ruffsources department and a hidden friend, and video-call Mimi, Lily and Lili. Customize your intern. Explore with up to 3 friends online.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-ratita-hq/', color: '#ff8a3d', color2: '#3ff0ff' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-ratita-hq/', color: '#ff8a3d', color2: '#3ff0ff' },
+  { id: 'puptown', mp: true, name: 'Grok Pup Town', desc: 'A cozy cartoon 3D dog town, Candy\u2019s hometown! Explore the town square and fountain, Bone App\u00e9tit bakery, Paw Park, the Fluff & Puff groomer, the Pup Fire Station, the Barkade, the library, Town Hall, Candy\u2019s house and Torty\u2019s garden shop. Meet 30+ dog townsfolk, ride the Dog-Bus, bake treats, groom pups, run the agility course and solve the mystery of the stolen Golden Bone. Explore with up to 3 friends online!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-pup-town/', color: '#ff8fc8', color2: '#ffd23f' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -87,6 +89,8 @@ GA.BONUS_GAMES = [
   { id: 'chrono', room: 'preview', name: 'Chrono Courier', desc: 'Ratita Industries time-mail! Send each parcel through the portal for its era (dinos, 1983, today, the future). Leave the glitchy ones alone, and watch out: the portals SHUFFLE! Cabinet in the Ratita Preview Center.', color: '#5eead4', color2: '#fb7185' },
   /* #33: Crumb Patrol (Ratita HQ), on the Bonus Zone wall */
   { id: 'crumbs', name: 'Crumb Patrol', desc: 'You\u2019re Sweepy the robo-vac! Drag to steer around the Ratita HQ caf\u00e9, slurp up crumbs and cheese, DON\u2019T suck up the Golden Gouda, dodge goo puddles and move out from under the big sneaker shadows before they stomp. A Grok Ratita Industries HQ game.', color: '#ff8a3d', color2: '#3ff0ff' },
+  /* #34: Bone Dig (Pup Town), on the Bonus Zone wall */
+  { id: 'dig', name: 'Bone Dig', desc: 'Help Candy dig up Paw Park! PRESS AND HOLD a dirt mound to dig. Bones, biscuits and the rare GOLDEN BONE score points, but WIGGLY mounds hide a sprinkler that soaks Candy. A Grok Pup Town game.', color: '#86dc93', color2: '#ffd23f' },
 ];
 /* bonus games that have a cabinet on the Bonus Zone wall (1983 retro games live in the old arcade instead) */
 GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era && !g.room; }); };

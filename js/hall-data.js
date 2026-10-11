@@ -1760,6 +1760,77 @@ GA.HALL_DATA = {
 "quip": "Three rats ran through my Hall with a cheese wedge and a grappling hook. I didn't even know rats could zip-line.",
 "noOld": "Grok Ratita Rescue just scurried in. No old versions yet. Please keep the cheese off the exhibits."
 },
+"puptown": {
+"repo": "grok-pup-town",
+"history": [
+{
+"date": "Oct 11",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A cozy cartoon 3D dog town in the Turbo look (soft shadows, glow, real 3D props): Candy's hometown! Walk the town square and fountain, visit Bone App\u00e9tit, Paw Park, the Fluff & Puff groomer, the Pup Fire Station, the Barkade, the Pawsome Library, Town Hall, Candy's house and Torty's garden shop. Meet 30+ dog townsfolk (and visitors Luna, Pi-rat and Snowie), ride the Dog-Bus, bake treats, groom pups, play fetch and the agility course, and solve the mystery of the stolen Golden Bone. Day and golden-evening light. Co-op for 3 online. It spent its beta in Lili's Time Jumper first."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/puptown/1.webp",
+"cap": "Town square: the fountain, Town Hall clock tower and the townsfolk",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/puptown/2.webp",
+"cap": "Town Hall, where the Golden Bone went missing",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/puptown/3.webp",
+"cap": "Bone App\u00e9tit, Chef Croissant's bakery",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/puptown/4.webp",
+"cap": "Baking treats for customers in the Treat Bakery",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/puptown/5.webp",
+"cap": "Paw Park and the agility course",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/puptown/6.webp",
+"cap": "Torty's garden shop (knee-high, as a desert tortoise should be!)",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/puptown/7.webp",
+"cap": "Candy's house, with Candy on her big comfy bed",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/puptown/8.webp",
+"cap": "The Barkade: air hockey and arcade cabinets",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/puptown/9.webp",
+"cap": "Golden evening in the town square",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/puptown/cover.webp",
+"quip": "A corgi in a top hat came in asking if I had seen a Golden Bone. I said this is a MUSEUM, everything here is golden. He checked under every exhibit anyway.",
+"noOld": "Grok Pup Town just opened its doors. No old versions yet (its Time Jumper beta moves to the Save Vault at release). Please wipe your paws."
+},
 "ratitahq": {
 "repo": "grok-ratita-hq",
 "history": [

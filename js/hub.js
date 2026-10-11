@@ -835,6 +835,20 @@
         g.fillStyle = '#ff4fa0'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK RATITA RESCUE', w / 2, 24);
         break;
       }
+      case 'puptown': {
+        // Grok Pup Town: town hall with a clock tower, the fountain, bunting, Candy trotting past and the Dog-Bus rolling by
+        var gpt = g.createLinearGradient(0, 0, 0, h); gpt.addColorStop(0, '#7dc8ff'); gpt.addColorStop(0.55, '#ffe0f0'); gpt.addColorStop(0.56, '#f6d9c4'); gpt.addColorStop(1, '#f3c7a8'); g.fillStyle = gpt; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#fff8ef'; g.fillRect(w * 0.18, h * 0.32, w * 0.64, h * 0.22); g.fillStyle = '#e8b04a'; g.beginPath(); g.moveTo(w * 0.14, h * 0.33); g.lineTo(w * 0.5, h * 0.22); g.lineTo(w * 0.86, h * 0.33); g.fill(); g.fillStyle = '#fff8ef'; g.fillRect(w * 0.43, h * 0.1, w * 0.14, h * 0.14);
+        g.fillStyle = '#ffcf3a'; g.beginPath(); g.arc(w * 0.5, h * 0.1, w * 0.07, Math.PI, 0); g.fill(); g.fillStyle = '#fff'; g.beginPath(); g.arc(w * 0.5, h * 0.17, w * 0.045, 0, 7); g.fill(); g.strokeStyle = '#1e293b'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(w * 0.5, h * 0.17); g.lineTo(w * 0.5 + Math.cos(t) * w * 0.03, h * 0.17 + Math.sin(t) * w * 0.03); g.stroke();
+        g.fillStyle = '#f1e4d3'; for (i = 0; i < 6; i++) g.fillRect(w * 0.22 + i * w * 0.105, h * 0.35, w * 0.035, h * 0.19);
+        ['#ff8fc8', '#ffd23f', '#7dd3fc', '#86efac'].forEach(function (c, k) { for (var j = 0; j < 4; j++) { var bx0 = w * 0.05 + (k * 4 + j) * w * 0.058; g.fillStyle = c; g.beginPath(); g.moveTo(bx0, h * 0.27); g.lineTo(bx0 + w * 0.05, h * 0.27); g.lineTo(bx0 + w * 0.025, h * 0.31); g.fill(); } });
+        g.fillStyle = '#e2e8f0'; g.beginPath(); g.ellipse(w * 0.5, h * 0.66, w * 0.26, h * 0.06, 0, 0, 7); g.fill(); g.fillStyle = '#60c5ff'; g.beginPath(); g.ellipse(w * 0.5, h * 0.655, w * 0.21, h * 0.04, 0, 0, 7); g.fill();
+        g.fillStyle = 'rgba(255,255,255,.85)'; for (i = 0; i < 5; i++) { var fy = h * 0.58 - Math.abs(Math.sin(t * 3 + i)) * h * 0.05; g.beginPath(); g.arc(w * (0.44 + i * 0.03), fy, 2.5, 0, 7); g.fill(); }
+        var bx2 = (t * 30) % (w + 90) - 70, by2 = h * 0.8; g.fillStyle = '#ffd23f'; rrF(g, bx2, by2, 64, 22, 7); g.fillStyle = '#7dd3fc'; for (i = 0; i < 3; i++) g.fillRect(bx2 + 8 + i * 17, by2 + 4, 12, 8); g.fillStyle = '#1e293b'; g.beginPath(); g.arc(bx2 + 14, by2 + 23, 5, 0, 7); g.arc(bx2 + 50, by2 + 23, 5, 0, 7); g.fill(); g.fillStyle = '#c99a6b'; g.beginPath(); g.arc(bx2 + 66, by2 + 2, 6, 0, 7); g.fill();
+        var cx2 = w - ((t * 22) % (w + 40)) + 20, cy2 = h * 0.72 - Math.abs(Math.sin(t * 8)) * 3; g.fillStyle = '#8a9099'; g.fillRect(cx2 - 9, cy2, 18, 9); g.fillRect(cx2 - 15, cy2 - 7, 9, 9); g.fillStyle = '#e8eaee'; g.fillRect(cx2 - 16, cy2 + 1, 6, 4); g.fillStyle = '#4b5058'; g.fillRect(cx2 - 9, cy2 + 9, 3, 5); g.fillRect(cx2 + 6, cy2 + 9, 3, 5); g.fillStyle = '#ff4fa0'; g.fillRect(cx2 - 7, cy2, 3, 9);
+        g.fillStyle = '#ff8fc8'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK PUP TOWN', w / 2, 24);
+        break;
+      }
       case 'ratitahq': {
         // Ratita Industries HQ: campus with a glass dome, an intern walking past, rats waving, a rocket launching in the test yard
         var grq = g.createLinearGradient(0, 0, 0, h); grq.addColorStop(0, '#7dd3fc'); grq.addColorStop(0.6, '#e0f2fe'); grq.addColorStop(0.61, '#86efac'); grq.addColorStop(1, '#4ade80'); g.fillStyle = grq; g.fillRect(0, 0, w, h);
