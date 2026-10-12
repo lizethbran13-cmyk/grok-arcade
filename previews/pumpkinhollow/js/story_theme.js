@@ -1,4 +1,4 @@
-import * as OD from './boodata.js?v=ph10';
+import * as OD from './boodata.js?v=ph11';
 // Pumpkin Hollow: names, mystery and every line of dialogue (original writing). Plugged into story.js by the theme build.
 export const NAMES = { torty: 'Torty (Martina) · Spook-Proof Lab', mama: 'Mama Ghost Rosalind', papa: 'Papa Ghost Basil', gramps: 'Grandpa Boo', pebble: 'Wisp (the littlest ghost)', candy: 'Candy (Mini Schnauzer)', luna: 'Luna (Ratita Industries CEO)', pirat: 'Pi-rat (Chief Inventor)', snowie: 'Snowie (Head of Fun)',
   mayor: 'Mayor Shiverton', rocky: 'Rattles (Ghost Mail Runner)', sam: 'Conductor Creak', tilly: 'Granny Wailsworth', bert: 'Bertram the Banshee', lizzy: 'Lizzie Lanternlight', pip: 'Pip (ghost kid)', squeak: 'Squeak (ghost kid)', zip: 'Zip (Ghost Train)', picA: 'Daisy (midnight picnic)', picB: 'Doug Dreary', picC: 'Tamsin (sipping witch brew)', picD: 'Rocco Rattlebones',

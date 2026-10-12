@@ -1,9 +1,9 @@
 // Boo Row (Pumpkin Hollow only): a new spooky street of walk-in shops on fresh land east of Spooky Street.
 // Real 3D props only (merged into the room's batched meshes, reusing the shared shape caches); one mini-activity per shop.
-import { S, persist } from './save.js?v=ph10';
-import { sfx } from './audio.js?v=ph10';
-import { panel } from './ui.js?v=ph10';
-import * as D from './boodata.js?v=ph10';
+import { S, persist } from './save.js?v=ph11';
+import { sfx } from './audio.js?v=ph11';
+import { panel } from './ui.js?v=ph11';
+import * as D from './boodata.js?v=ph11';
 const PI = Math.PI;
 const $a = (c, s) => [...c.querySelectorAll(s)], $q = (c, s) => c.querySelector(s);
 const sh = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -72,7 +72,7 @@ function stripe(id, A, G, done) { const C = A.cols, L = C.length; let n = 0, liv
   const draw = () => panel(`<h2>${A.t}</h2><p class="sub">Next layer: <b>${C[n % L][0]}</b> · ${'❤️'.repeat(lives)}</p><p>${bar()}</p><div>${sh(C.map((_, k) => k)).map((k) => `<button data-k="${k}" style="font:bold 18px system-ui;padding:16px;margin:6px;border-radius:16px;border:0;min-width:96px;background:${C[k][1]};color:${C[k][2]}">${C[k][0]}</button>`).join('')}</div>`, (c) => { $a(c, 'button').forEach((b) => b.onclick = () => { if (+b.dataset.k === n % L) { n++; sfx('pop'); if (n >= A.need) { win(G, 'b_' + id); return result(A.t + ' ✅', `${A.need} perfect layers`, A.pass, done); } draw(); } else { lives--; sfx('bump'); if (lives <= 0) return result(A.t, 'Out of order!', 'Yellow, orange, white, then start again. Try again!', done); draw(); } }); }, 'mgP');
   draw(); }
 function grid(id, A, G, done) { let sc = 0, t = 25, over = false; panel(`<h2>${A.t}</h2><p class="sub">Got <b id="sc">0</b>/${A.need} · ⏱️ <b id="tt">${t}</b>s · tap the ${A.what}!</p><div id="gg" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:320px;margin:0 auto">${[...Array(9)].map((_, k) => `<button data-k="${k}" style="aspect-ratio:1/1;font-size:38px;border-radius:16px;border:0;background:#3b2a55"></button>`).join('')}</div>`, (c) => { $a(c, '#gg button').forEach((b) => b.onclick = () => { if (b.dataset.v) { sc++; b.dataset.v = ''; b.textContent = '✨'; sfx('pop'); const e = document.getElementById('sc'); if (e) e.textContent = sc; if (sc >= A.need) end(); } else sfx('bump'); }); }, 'mgP');
-  const tick = setInterval(() => { const e = document.getElementById('tt'); if (!e) { over = true; clearInterval(tick); return; } t -= 0.6; e.textContent = Math.max(0, t | 0); const bs = [...document.querySelectorAll('#gg button')]; bs.forEach((b) => { if (!b.dataset.v) b.textContent = ''; }); for (let k = 0; k < 2; k++) { const b = bs[(Math.random() * bs.length) | 0]; if (b && !b.dataset.v) { b.dataset.v = '1'; b.textContent = A.icon; } } if (t <= 0) end(); }, 600);
+  const tick = setInterval(() => { const e = document.getElementById('tt'); if (!e) { over = true; clearInterval(tick); return; } t -= 0.6; e.textContent = Math.max(0, t | 0); const bs = [...document.querySelectorAll('#gg button')]; bs.forEach((b) => { if (b.dataset.v) { b.dataset.age = (+b.dataset.age || 0) + 1; if (+b.dataset.age >= 3) { b.dataset.v = ''; b.dataset.age = 0; } } if (!b.dataset.v) b.textContent = ''; }); for (let k = 0; k < 2; k++) { const b = bs[(Math.random() * bs.length) | 0]; if (b && !b.dataset.v) { b.dataset.v = '1'; b.dataset.age = 0; b.textContent = A.icon; } } if (t <= 0) end(); }, 600);
   function end() { if (over) return; over = true; clearInterval(tick); const good = sc >= A.need; if (good) win(G, 'b_' + id); result(good ? A.t + ' ✅' : A.t, `${sc} ${A.what}`, good ? A.pass : A.hint, done); } }
 function sum(id, A, G, done) { let q = 0, ok = 0; const step = () => { if (q >= 5) { const good = ok >= A.need; if (good) win(G, 'b_' + id); return result(good ? A.t + ' ✅' : A.t, `${ok}/5 trays right`, good ? A.pass : A.hint, done); }
     const big = (Math.random() * 3) | 0, sm = 1 + ((Math.random() * 5) | 0), tot = big * 5 + sm; const opts = sh([tot, tot + 1, Math.max(1, tot - 2)]);

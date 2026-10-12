@@ -1,7 +1,7 @@
 // Household prop library. Every prop is real smooth geometry (no image textures), batched into the room,
 // and registers simple box colliders so rats can climb it. Units: 1 = ~13 cm (a rat is ~0.6 tall).
-import { rbox } from './world.js?v=ph10';
-import { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, blade, blobGeo } from './shapes.js?v=ph10';
+import { rbox } from './world.js?v=ph11';
+import { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, blade, blobGeo } from './shapes.js?v=ph11';
 const PI = Math.PI;
 let seed = 1; const R = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 export function propSeed(s) { seed = s | 0 || 1; }
@@ -307,6 +307,6 @@ export const PR = {
   globe(w, x, y, z) { w.add('m', rcyl(1, 0.3, 0.1, 20), 0x8b5a2b, x, y, z); w.add('x', cyl(8), 0xd4a017, x, y + 0.3, z, 0, 0, 0, 0.12, 1, 0.12); w.addFn('g', sph(28), (c, px, py, pz) => c.set(Math.sin(px * 3.1) * Math.cos(pz * 2.7) + Math.sin(py * 2.3) > 0.4 ? 0x22c55e : 0x3b82f6), x, y + 2.6, z, 0.4, 0, 0, 1.4); w.add('x', torus(0.04, 30, PI * 1.4), 0xd4a017, x, y + 2.6, z, 0, PI / 2, 0.4, 1.6, 1.6, 1.6); w.solid(x - 1.2, y, z - 1.2, x + 1.2, y + 4, z + 1.2); },
   web(w, x, y, z, ry = 0, s = 3) { const T = w.tf(x, y, z, ry, s); for (let i = 0; i < 6; i++) { const a = i / 6 * PI / 2; T.add('m', cyl(4), 0xf1f5f9, 0, 0, 0, 0, 0, -a - 0.0, 0.015, 1.6, 0.015); } for (let k = 1; k <= 3; k++) T.add('m', torus(0.012, 12, PI / 2), 0xf1f5f9, 0, 0, 0, PI / 2 * 0, 0, -PI / 2, k * 0.45, k * 0.45, k * 0.45); },
 };
-import { star, heart } from './shapes.js?v=ph10';
+import { star, heart } from './shapes.js?v=ph11';
 
 for (const k_ of Object.keys(PR)) { const f_ = PR[k_]; PR[k_] = function (w, ...a) { const W = w && (w._part ? w : w._W); if (!W || W._gk) return f_.call(this, w, ...a); W._gk = 'PR:' + k_; W._gres = false; W._gdy = 0; try { return f_.call(this, w, ...a); } finally { W._gk = null; W._gdy = 0; } }; }

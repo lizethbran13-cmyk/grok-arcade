@@ -1,7 +1,7 @@
 // Pumpkin Hollow 2D mini-games (overlay panels): Shell Polish (Shell Shop), Prickly Pear Catch (Garden Market), Bubble Pop (Spa).
 // The two big ones (Broomstick Derby, Pumpkin Rush) are real 3D games in the world (game.js). Canvases keep a fixed aspect (CSS scales width, height auto).
-import { S, persist } from './save.js?v=ph10';
-import { sfx } from './audio.js?v=ph10';
+import { S, persist } from './save.js?v=ph11';
+import { sfx } from './audio.js?v=ph11';
 const $q = (c, s) => c.querySelector(s);
 function loop(cv, f) { let lt = performance.now(), alive = true; const tick = () => { if (!alive || !cv.isConnected) return; requestAnimationFrame(tick); const n = performance.now(); const dt = Math.min(0.05, (n - lt) / 1000); lt = n; f(dt); }; requestAnimationFrame(tick); return () => alive = false; }
 const rr = (g, x, y, w, h, r) => { g.beginPath(); g.roundRect(x, y, w, h, r); };

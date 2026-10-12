@@ -1,7 +1,7 @@
 // Pumpkin Hollow townsfolk, what they say, side tasks and the mystery "Who swiped the Moon Lantern?". Pure data + helpers.
-import { S, persist } from './save.js?v=ph10';
-import * as TS from './story_theme.js?v=ph10';
-import * as BD from './boodata.js?v=ph10';
+import { S, persist } from './save.js?v=ph11';
+import * as TS from './story_theme.js?v=ph11';
+import * as BD from './boodata.js?v=ph11';
 const PI = Math.PI;
 export const HATS = [
   { id: 'none', n: 'No Hat', how: 'Always yours' }, { id: 'pupears', n: 'Schnauzer Ears', how: "Find Candy's 3 squeaky pumpkin toys" }, { id: 'flower', n: 'Spooky Moonflower', how: "Plant Mama Rosa's 4 moonflowers" },
