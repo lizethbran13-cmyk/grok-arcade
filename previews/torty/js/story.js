@@ -1,5 +1,5 @@
 // Torty Town townsfolk, what they say, side tasks and the mystery "Who swiped the Sunstone?". Pure data + helpers.
-import { S, persist } from './save.js?v=tt1';
+import { S, persist } from './save.js?v=tt2';
 const PI = Math.PI;
 export const HATS = [
   { id: 'none', n: 'No Hat', how: 'Always yours' }, { id: 'pupears', n: 'Schnauzer Ears', how: "Find Candy's 3 squeaky cactus toys" }, { id: 'flower', n: 'Desert Marigold', how: "Plant Mama Rosa's 4 marigolds" },

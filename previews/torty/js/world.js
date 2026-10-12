@@ -1,9 +1,9 @@
 // World: batched static geometry (chunked per material), colliders, zones and queries.
 import * as THREE from 'three';
-import { compact } from './compact.js?v=tt1';
+import { compact } from './compact.js?v=tt2';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { MATS } from './mats.js?v=tt1';
+import { MATS } from './mats.js?v=tt2';
 
 const CH = 22, CELL = 8;
 const _m = new THREE.Matrix4(), _m2 = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3(), _c = new THREE.Color(), _n = new THREE.Matrix3();
