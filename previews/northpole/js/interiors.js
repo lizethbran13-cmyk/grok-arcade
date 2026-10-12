@@ -1,7 +1,7 @@
 // Grok North Pole Village interiors: 18 walk-in buildings, each packed with real 3D props (and something to do).
 import * as THREE from 'three';
-import * as K from './kit.js?v=np2';
-import { claypot, lettuce, stall, tcrate, shade, SUN, prism, agave, barrel, prickly, tortStatue, lanternString } from './town.js?v=np2';
+import * as K from './kit.js?v=np3';
+import { claypot, lettuce, stall, tcrate, shade, SUN, prism, agave, barrel, prickly, tortStatue, lanternString } from './town.js?v=np3';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, pick, PR } = K;
 const R = K.R, PI = Math.PI, FL = 0.12;
 const art = (w, axis, at, c, y, W, H, side, k) => PR.frame(K.scaled(w, 0, FL, 0, 0.25), axis, (at + side * 0.25) / 0.25, c / 0.25, y / 0.25, W / 0.25, H / 0.25, side, k);
@@ -40,7 +40,7 @@ function hall(w) { w.region = 'hall'; const I = w.I, S = w.spots;
   // mayor's desk on a low stage (north), flags, portraits, banners
   w.slab('m', 0x9a6a42, 0, FL, -61.6, 12, 0.5, 3.6, 0.08); for (let i = 0; i < 2; i++) w.slab('m', 0xb07a45, 0, FL, -59.5 + i * 0.4, 4, 0.17 + (1 - i) * 0.17, 0.4, 0.04, { cam: false }); w.add('f', rbox(12, 0.03, 3.4, 0.02), 0x0f766e, 0, FL + 0.51, -61.6);
   { const T = w.tf(0, FL + 0.5, -62, 0); T.slab('m', 0x7c4a1e, 0, 0, 0, 3.4, 0.75, 1.3, 0.08); T.box('x', 0xd4a017, 0, 0.3, 0.66, 1.4, 0.3, 0.02, 0.04); T.add('x', star(), 0xffd23f, 0, 0.45, 0.68, 0, 0, 0, 0.12, 0.12, 0.04); T.box('m', 0xffffff, -0.9, 0.75, 0, 0.6, 0.02, 0.45, 0.01); T.add('x', rcyl(0.06, 0.2, 0.01, 12), 0xd4a017, 1.1, 0.75, -0.2); T.add('g', lathe([[0, 0], [0.1, 0], [0.12, 0.2], [0, 0.22]], 12, 'ink'), 0x1e3a8a, 0.7, 0.75, 0.1); T.box('f', 0xb91c1c, 0, 0, -1.0, 1.0, 1.4, 0.9, 0.2); T.box('f', 0xb91c1c, 0, 1.0, -1.4, 1.1, 1.3, 0.25, 0.12); }
-  sign3d(w, 'NORTH POLE  EST. SLOWLY', 0, 4.6, -63.4, 0, 0.32, 0xd4a017, 0x0f766e);
+  sign3d(w, 'NORTH POLE  EST. COZILY', 0, 4.6, -63.4, 0, 0.32, 0xd4a017, 0x0f766e);
   [-5, 5].forEach((x, i) => { w.add('x', cyl(8), 0xd4a017, x, FL + 0.5, -62.6, 0, 0, 0, 0.05, 3.4, 0.05); w.add('f', rbox(1.0, 1.6, 0.04, 0.02), i ? 0x2dd4bf : 0xffb020, x + 0.55, FL + 3.0, -62.6); w.add('l', sph(10), 0xffd23f, x + 0.55, FL + 3.1, -62.56, 0, 0, 0, 0.25, 0.25, 0.04, 0.4); w.add('x', sph(8), 0xd4a017, x, FL + 4.0, -62.6, 0, 0, 0, 0.1); });
   for (let i = 0; i < 4; i++) art(w, 'z', -11.7, -60 + i * 4.2, 3.1, 1.6, 2.0, 1, i); for (let i = 0; i < 4; i++) art(w, 'z', 11.7, -60 + i * 4.2, 3.1, 1.6, 2.0, -1, i + 4); clock(w, 'x', -63.7, 5.5, 4.0, 1);
   // festival pews (tortoise height), aisle rug, lanterns, potted palms, trophy cabinet, model of the town
@@ -49,7 +49,7 @@ function hall(w) { w.region = 'hall'; const I = w.I, S = w.spots;
   { const T = w.tf(-9.8, FL, -52, PI / 2); T.slab('m', 0x7c4a1e, 0, 0, 0, 3.4, 2.4, 0.7, 0.06); T.box('e', 0xdff6ff, 0, 0.3, 0.3, 3.2, 2.0, 0.04, 0.02); for (let i = 0; i < 6; i++) { const p = T.P(-1.2 + (i % 3) * 1.2, 0.5 + Math.floor(i / 3) * 0.95, 0); w.add('x', lathe([[0, 0], [0.12, 0], [0.04, 0.12], [0.05, 0.26], [0.18, 0.4], [0.16, 0.5], [0, 0.48]], 16, 'trophy'), i % 2 ? 0xffd23f : 0xcbd5e1, p[0], p[1], p[2]); } }
   { const x = 9.2, z = -50; w.slab('m', 0x9a6a3e, x, FL, z, 2.4, 0.85, 3.6, 0.08); w.add('m', rbox(2.2, 0.06, 3.4, 0.03), 0xf0cf98, x, FL + 0.88, z); w.add('e', rcyl(0.3, 0.02, 0.01, 20), 0x38bdf8, x, FL + 0.9, z); for (let i = 0; i < 9; i++) w.add('g', rbox(0.25, 0.2 + (i % 3) * 0.08, 0.25, 0.04), SUN[i % 8], x - 0.8 + (i % 3) * 0.8, FL + 0.95, z - 1.3 + Math.floor(i / 3) * 1.3); w.add('m', torus(0.2, 32), 0xd2693c, x, FL + 0.92, z + 1.2, PI / 2, 0, 0, 0.5, 0.3, 0.2); }
   lanternString(w, [[-11, 5.6, -44], [0, 5.0, -48], [11, 5.6, -44]], SUN, 12); lanternString(w, [[-11, 5.6, -58], [0, 5.0, -56], [11, 5.6, -58]], SUN, 12);
-  I({ kind: 'fun', x: 9.2, y: 0, z: -50, r: 2.4, label: '🗺️ Look at the town model', msgs: ['🗺️ A tiny North Pole Village! Even the tiny tortoises are moving slowly.', '🗺️ Someone added a tiny lettuce to every rooftop.'] });
+  I({ kind: 'fun', x: 9.2, y: 0, z: -50, r: 2.4, label: '🗺️ Look at the town model', msgs: ['🗺️ A tiny North Pole Village! Even the tiny elves are moving cozily.', '🗺️ Someone added a tiny cookie to every rooftop.'] });
   shell(w, -9.8, 2.6, -52.4); }
 // ------------------------------------------------------------------------------------------------ SANTA UPDATE NEWSROOM
 function library(w) { w.region = 'library'; const I = w.I;
@@ -67,7 +67,7 @@ function library(w) { w.region = 'library'; const I = w.I;
   { const T = counter(w, -30.2, -53.5, -PI / 2, 3.2, 0x8a5a32); register(w, T, 0.9); books(w, -30.3, FL + 1.13, -54.4, 6, 'z'); w.add('x', rcyl(0.06, 0.18, 0.02, 10), 0x7c2d12, -30.2, FL + 1.13, -52.6); }
   { const x = -36, z = -47.2; w.add('m', rbox(1.4, 0.06, 0.6, 0.02), 0x9a6a3e, x, FL + 0.7, z); w.add('m', rbox(1.4, 0.06, 0.6, 0.02), 0x9a6a3e, x, FL + 0.3, z); [-1, 1].forEach((s) => [-1, 1].forEach((t) => w.add('m', torus(0.4, 12), 0x334155, x + s * 0.6, FL + 0.1, z + t * 0.25, 0, PI / 2, 0, 0.1, 0.1, 0.1))); books(w, x - 0.6, FL + 0.73, z, 9); books(w, x - 0.6, FL + 0.33, z, 8); w.solid(x - 0.7, 0, z - 0.3, x + 0.7, FL + 0.8, z + 0.3, { cam: false }); }
   K.rug(w, -37, -44, 0, 6, 2.2, 0xffd23f, 0xfff1d6); for (let i = 0; i < 6; i++) hh('toyBlock', w, -39 + i * 0.8, -43.6, 0.2, 0, 2, 0, SUN[i]); hh('teddy', w, -35.4, -43.3, 0.18, 0, PI);
-  sign3d(w, 'QUIET PLEASE (WHISPER SLOWLY)', -37, 4.6, -57.0, 0, 0.18, 0x1e3a8a, 0xfff1d6); [[-46, -42.5], [-28, -42.5]].forEach(([x, z]) => bigPlant(w, x + (x < -40 ? 0.9 : -0.9), z - 0.8, 1.1)); sconce(w, 'z', -45.7, -46, 3.0, 1); sconce(w, 'z', -28.3, -46, 3.0, -1);
+  sign3d(w, 'QUIET PLEASE (WHISPER COZILY)', -37, 4.6, -57.0, 0, 0.18, 0x1e3a8a, 0xfff1d6); [[-46, -42.5], [-28, -42.5]].forEach(([x, z]) => bigPlant(w, x + (x < -40 ? 0.9 : -0.9), z - 0.8, 1.1)); sconce(w, 'z', -45.7, -46, 3.0, 1); sconce(w, 'z', -28.3, -46, 3.0, -1);
   shell(w, -38, 3.9, -57.0); }
 // ------------------------------------------------------------------------------------------------ MRS. CLAUS’S KITCHEN
 function cafe(w) { w.region = 'cafe'; const I = w.I;
@@ -78,7 +78,7 @@ function cafe(w) { w.region = 'cafe'; const I = w.I;
   { const T2 = w.tf(37, FL, -57.0, 0); T2.slab('x', 0xcbd5e1, -2.5, 0, 0, 2.4, 0.95, 0.9, 0.06); for (let i = 0; i < 4; i++) T2.add('x', torus(0.25, 16), 0x334155, -3.1 + (i % 2) * 1.1, 0.97, -0.2 + Math.floor(i / 2) * 0.4, PI / 2, 0, 0, 0.18, 0.18, 0.1); T2.add('x', lathe([[0, 0], [0.3, 0], [0.32, 0.4], [0, 0.4]], 18, 'pot'), 0x94a3b8, -3.1, 0.98, -0.2); T2.add('l', sph(8), 0xff6b35, -2.0, 0.98, 0.2, 0, 0, 0, 0.14, 0.02, 0.14, 0.4);
     T2.slab('g', 0xf1f5f9, 3.6, 0, 0, 1.2, 2.4, 0.8, 0.1); T2.box('x', 0x94a3b8, 3.15, 1.2, 0.41, 0.06, 0.6, 0.04, 0.02); shelf(w, 37.5, -57.5, 0, 2.6, 2.6, 0x9a6a3e); jars(w, 36.6, FL + 1.6, -57.4, 4); }
   // menu board (3D letters + leaf slabs)
-  { w.add('m', rbox(4.6, 1.6, 0.1, 0.06), 0x14532d, 37, 3.6, -57.85); sign3d(w, 'TODAY: GINGERBREAD', 37, 3.95, -57.78, 0, 0.22, 0xffffff, 0x14532d); sign3d(w, 'TOMORROW: LETTUCE', 37, 3.35, -57.78, 0, 0.18, 0xbbf7d0, 0x14532d); }
+  { w.add('m', rbox(4.6, 1.6, 0.1, 0.06), 0x14532d, 37, 3.6, -57.85); sign3d(w, 'TODAY: GINGERBREAD', 37, 3.95, -57.78, 0, 0.22, 0xffffff, 0x14532d); sign3d(w, 'TOMORROW: COOKIE', 37, 3.35, -57.78, 0, 0.18, 0xbbf7d0, 0x14532d); }
   // tables with chairs, a cozy booth, hanging plants, wall tiles
   [[31, -47], [35, -46], [39, -47], [43, -46], [31, -44], [43, -43.5]].forEach(([x, z], i) => { K.tableR(w, x, z, 0.7, 0.8, 0xffffff, 0x16a34a); for (let k = 0; k < 2; k++) K.chair(w, x + (k ? 1.0 : -1.0), FL, z, k ? -PI / 2 : PI / 2, SUN[(i + k) % 8]); lettuceDish(w, x - 0.2, 0.82, z); w.add('g', lathe([[0, 0], [0.06, 0], [0.07, 0.2], [0, 0.2]], 12, 'glass'), 0xbbf7d0, x + 0.25, 0.8, z + 0.15); });
   K.sofa(w, 29.4, -50.5, PI / 2, 0x16a34a, 0x4ade80, 14); lowTable(w, 31, -50.5, 0.6, 0xffffff, 0.75);
@@ -121,8 +121,8 @@ function market(w) { w.region = 'market'; const I = w.I;
   for (let i = 0; i < 6; i++) hangPlant(w, 53 + i * 3.6, 6.0, -12.5); for (let i = 0; i < 6; i++) hangPlant(w, 53 + i * 3.6, 6.0, -21.5);
   lanternString(w, [[50.5, 5.6, -27.5], [62, 4.8, -18], [73.5, 5.6, -27.5]], SUN, 14); lanternString(w, [[50.5, 5.6, -10.5], [62, 4.8, -18], [73.5, 5.6, -10.5]], SUN, 14);
   // Prickly Pear Catch booth (mini-game)
-  { const T = counter(w, 52.2, -11.6, PI / 2, 2.6, 0xe11d48, 0xfff1d6); T.add('m', lathe([[0, 0], [0.4, 0], [0.48, 0.3], [0, 0.32]], 18, 'basketBig'), 0xc8925c, 0, 1.13, 0.0); for (let k = 0; k < 6; k++) { const p = T.P(-0.2 + (k % 3) * 0.2, 1.35, (k / 3 | 0) * 0.2 - 0.1); w.add('g', sph(10), 0xe11d48, p[0], p[1], p[2], 0, 0, 0, 0.12, 0.14, 0.12); } sign3d(w, 'PRICKLY PEAR CATCH', 50.7, 3.0, -11.6, PI / 2, 0.2, 0xffffff, 0xe11d48); }
-  I({ kind: 'mg', game: 'catch', x: 53.4, y: 0, z: -11.6, r: 2.2, label: '🍐 Play Prickly Pear Catch' });
+  { const T = counter(w, 52.2, -11.6, PI / 2, 2.6, 0xe11d48, 0xfff1d6); T.add('m', lathe([[0, 0], [0.4, 0], [0.48, 0.3], [0, 0.32]], 18, 'basketBig'), 0xc8925c, 0, 1.13, 0.0); for (let k = 0; k < 6; k++) { const p = T.P(-0.2 + (k % 3) * 0.2, 1.35, (k / 3 | 0) * 0.2 - 0.1); w.add('g', sph(10), 0xe11d48, p[0], p[1], p[2], 0, 0, 0, 0.12, 0.14, 0.12); } sign3d(w, 'GUMDROP CATCH', 50.7, 3.0, -11.6, PI / 2, 0.2, 0xffffff, 0xe11d48); }
+  I({ kind: 'mg', game: 'catch', x: 53.4, y: 0, z: -11.6, r: 2.2, label: '❄️ Play Snowball Catch' });
   for (let i = 0; i < 6; i++) tcrate(w, 72.6 - (i % 2) * 1.0, FL, -11.6 - Math.floor(i / 2) * 1.0, 0.85, 0xd8a15a, i % 2 ? 'fruit' : 'lettuce');
   { const x = 66.5, z = -11.4; w.add('x', cyl(8), 0x94a3b8, x, FL, z, 0, 0, 0, 0.04, 1.6, 0.04); w.add('x', torus(0.1, 20), 0x94a3b8, x, FL + 1.6, z, 0, 0, 0, 0.18, 0.18, 0.2); w.add('x', lathe([[0, 0], [0.35, 0.05], [0.38, 0.12], [0, 0.1]], 16, 'scale'), 0xcbd5e1, x, FL + 1.1, z); }
   shell(w, 62, 2.2, -17.5); }
@@ -131,7 +131,7 @@ function shellShop(w) { w.region = 'shellshop'; const I = w.I;
   // polishing station: a shell on a spin stand, cloths, polish jars
   { const x = 84, z = -20; w.slab('m', 0xe0f2fe, x, FL, z, 3.4, 0.85, 1.4, 0.08); w.add('x', rcyl(0.5, 0.15, 0.04, 24), 0xcbd5e1, x, FL + 0.85, z); const A = 0.6, pr = []; for (let k = 0; k <= 12; k++) { const t = PI / 2 - k / 12 * PI / 2; pr.push([Math.max(0.0001, A * Math.sin(t)), 0.45 * Math.cos(t)]); } pr[pr.length - 1][0] = 0; w.add('g', lathe(pr, 32, 'demoShell'), 0xd1a05e, x, FL + 1.0, z, 0, 0, 0, 1, 1, 1.2); for (let i = 0; i < 6; i++) { const a = i / 6 * PI * 2; w.add('g', sph(10), 0xb98545, x + Math.cos(a) * 0.32, FL + 1.32, z + Math.sin(a) * 0.38, 0, 0, 0, 0.18, 0.06, 0.2); }
     jars(w, x - 1.4, FL + 0.87, z - 0.3, 3); for (let i = 0; i < 3; i++) w.add('f', rbox(0.4, 0.04, 0.3, 0.02), [0xfbcfe8, 0xbae6fd, 0xfef3c7][i], x + 1.0, FL + 0.87 + i * 0.04, z + 0.2, 0, i * 0.4, 0); w.add('l', sph(8), 0xffffff, x + 0.3, FL + 1.45, z + 0.2, 0, 0, 0, 0.06, 0.06, 0.06, 1); }
-  I({ kind: 'mg', game: 'polish', x: 84, y: 0, z: -18.6, r: 2.2, label: '✨ Polish a shell (mini-game)' });
+  I({ kind: 'mg', game: 'polish', x: 84, y: 0, z: -18.6, r: 2.2, label: '✨ Polish a ornament (mini-game)' });
   // display of shell cozies & decorations on stepped shelves
   for (let r = 0; r < 3; r++) { w.slab('m', 0xfbcfe8, 87.5, FL + r * 0.5, -23.2 + r * 0.4, 6, 0.5, 1.2, 0.06, { cam: false }); for (let i = 0; i < 6; i++) { const x = 85 + i * 1.0, y = FL + (r + 1) * 0.5, z = -23.2 + r * 0.4; const A = 0.3, pr = []; for (let k = 0; k <= 8; k++) { const t = PI / 2 - k / 8 * PI / 2; pr.push([Math.max(0.0001, A * Math.sin(t)), 0.24 * Math.cos(t)]); } pr[pr.length - 1][0] = 0; w.add('g', lathe(pr, 20, 'cozy'), SUN[(i + r * 2) % 8], x, y, z); w.add('g', star(), 0xffffff, x, y + 0.26, z, 0, 0, 0, 0.07, 0.07, 0.03); } }
   // sticker / decoration bins, mirror, waiting bench, counter
@@ -175,15 +175,15 @@ function fossil(w) { w.region = 'fossil'; const I = w.I;
   [[74.6, 13], [74.6, 17], [74.6, 21], [89.4, 13], [89.4, 17], [89.4, 21]].forEach(([x, z], i) => { w.slab('m', 0x7c4a1e, x, FL, z, 1.6, 1.0, 1.6, 0.06); w.add('e', rbox(1.5, 0.9, 1.5, 0.05), 0xdff6ff, x, FL + 1.45, z); w.add('m', rbox(1.4, 0.04, 1.4, 0.02), 0x1e3a8a, x, FL + 1.02, z);
     if (i % 3 === 0) for (let k = 0; k < 3; k++) w.add('g', torus(0.45, 20), 0xe9c46a, x - 0.4 + k * 0.4, FL + 1.25, z, 0, 0, 0, 0.18 - k * 0.03, 0.18 - k * 0.03, 0.15); else if (i % 3 === 1) { w.add('m', torus(0.4, 20), 0xc8a26a, x, FL + 1.1, z, PI / 2, 0, 0, 0.4, 0.4, 0.3); for (let k = 0; k < 4; k++) w.add('g', sph(12), 0xfff4dc, x + Math.cos(k * 1.6) * 0.17, FL + 1.22, z + Math.sin(k * 1.6) * 0.17, 0, 0, 0, 0.14, 0.18, 0.14); } else w.add('g', blobGeo(i, 0.25, 1), 0xffb020, x, FL + 1.3, z, 0, 0, 0, 0.25, 0.22, 0.2, 0.2); });
   // timeline wall + explorer gear + kids' dig box
-  for (let i = 0; i < 7; i++) { w.add('g', rbox(2.2, 1.4, 0.06, 0.04), [0xfef3c7, 0xfde68a, 0xfcd34d, 0xfbbf24, 0xf59e0b, 0xd97706, 0xb45309][i], 73.5 + i * 2.6, 3.3, 27.6); w.add('m', sph(10), 0x7c2d12, 73.5 + i * 2.6, 3.3, 27.55, 0, 0, 0, 0.3, 0.3, 0.05); } sign3d(w, 'A VERY, VERY SLOW HISTORY', 82, 4.6, 27.5, PI, 0.24, 0x7c2d12, 0xfff1d6);
+  for (let i = 0; i < 7; i++) { w.add('g', rbox(2.2, 1.4, 0.06, 0.04), [0xfef3c7, 0xfde68a, 0xfcd34d, 0xfbbf24, 0xf59e0b, 0xd97706, 0xb45309][i], 73.5 + i * 2.6, 3.3, 27.6); w.add('m', sph(10), 0x7c2d12, 73.5 + i * 2.6, 3.3, 27.55, 0, 0, 0, 0.3, 0.3, 0.05); } sign3d(w, 'A VERY, VERY COZY HISTORY', 82, 4.6, 27.5, PI, 0.24, 0x7c2d12, 0xfff1d6);
   { const x = 76, z = 25.5; w.add('m', rbox(3.0, 0.45, 2.0, 0.12), 0x9a6a3e, x, FL + 0.22, z); w.add('m', rbox(2.7, 0.05, 1.7, 0.03), 0xf0cf98, x, FL + 0.45, z); w.solid(x - 1.5, 0, z - 1, x + 1.5, 0.45, z + 1, { cam: false }); for (let i = 0; i < 4; i++) w.add('g', capsule(8), 0xfff4dc, x - 0.8 + i * 0.5, FL + 0.48, z + Math.sin(i) * 0.3, PI / 2, 0, i, 0.08, 0.3, 0.08); w.add('m', cyl(8), 0x7c4a1e, x + 1.0, FL + 0.5, z - 0.5, 0, 0, 1.2, 0.03, 0.5, 0.03); }
-  I({ kind: 'fun', x: 76, y: 0, z: 24, r: 2, label: '🦴 Dig in the kids\' fossil box', msgs: ['🦴 You found a fossil… of a lettuce leaf! Very rare.', '🦴 A tiny ancient shell! (It\'s a button.)'] });
+  I({ kind: 'fun', x: 76, y: 0, z: 24, r: 2, label: '🦴 Dig in the kids\' fossil box', msgs: ['🦴 You found a fossil… of a cookie leaf! Very rare.', '🦴 A tiny ancient ornament! (It\'s a button.)'] });
   { const x = 89.5, z = 26; w.add('m', rcyl(0.3, 0.06, 0.02, 16), 0x7c4a1e, x, FL, z); w.add('m', cyl(8), 0x7c4a1e, x, FL, z, 0, 0, 0, 0.04, 1.6, 0.04); w.add('m', rcyl(0.55, 0.05, 0.02, 24), 0xf2cf7a, x, FL + 1.65, z); w.add('m', sph(12), 0xf2cf7a, x, FL + 1.7, z, 0, 0, 0, 0.3, 0.22, 0.3); w.add('f', rbox(0.5, 0.6, 0.3, 0.1), 0x16a34a, x + 0.6, FL + 0.3, z); }
   for (let i = 0; i < 3; i++) K.bench(w, 76 + i * 6, 12, 0, 0x7c4a1e); bigPlant(w, 73, 11.2, 1); bigPlant(w, 91, 11.2, 1);
   shell(w, 82, 2.6, 20.5); }
 // ------------------------------------------------------------------------------------------------ TORTY'S FAMILY BURROW
 function burrow(w) { w.region = 'burrow'; const I = w.I, S = w.spots;
-  // partitions: living room (south), kitchen (east), Torty's old room (north-west), Gramps' nook (north-east)
+  // partitions: living room (south), kitchen (east), Torty's old room (north-west), Grandpa' nook (north-east)
   wall(w, 'x', -20.5, -69.7, -48.3, 4.7, 0xfbe6c8, [D(-66, -63.6, 3.0), D(-55.5, -53.1, 3.0)], { th: 0.2, frame: 0xff6fcf }); wall(w, 'z', -59, -29.7, -20.6, 4.7, 0xfbe6c8, [], { th: 0.2 });
   // living room: round rug, sofa + cushions, low table with lettuce feast, fireplace, family photos
   rugR(w, -62, -14.8, 3.0, 0xff6fcf, 0xfff1d6); K.sofa(w, -66.6, -14.8, PI / 2, 0xdb2777, 0xf9a8d4, 16); lowTable(w, -62, -14.8, 1.1, 0xc58b52, 0.5);
@@ -191,7 +191,7 @@ function burrow(w) { w.region = 'burrow'; const I = w.I, S = w.spots;
   for (let k = 0; k < 5; k++) { const a = k / 5 * PI * 2 + 0.6; pouf(w, -62 + Math.cos(a) * 1.9, -14.8 + Math.sin(a) * 1.9, SUN[k]); }
   { const x = -58.7, z = -13; w.add('m', rbox(0.6, 2.2, 2.4, 0.1), 0xc2563c, x - 0.05, FL + 1.1, z); w.add('m', rbox(0.5, 1.0, 1.4, 0.08), 0x3b1f14, x - 0.3, FL + 0.5, z); w.add('l', sph(10), 0xff8a3d, x - 0.5, FL + 0.25, z, 0, 0, 0, 0.35, 0.18, 0.5, 0.8); w.add('m', rbox(0.8, 0.12, 2.8, 0.04), 0x7c4a1e, x - 0.1, FL + 2.25, z); w.solid(x - 0.5, 0, z - 1.2, x + 0.3, 2.3, z + 1.2); for (let i = 0; i < 3; i++) w.add('g', lathe([[0, 0], [0.1, 0], [0.12, 0.3], [0, 0.3]], 12, 'vase'), SUN[i * 2], x - 0.15, FL + 2.37, z - 0.8 + i * 0.8); w.lights.push({ x: x - 1, y: 1, z, c: 0xff9a3d, i: 5, d: 6 }); }
   for (let i = 0; i < 5; i++) art(w, 'x', -10.3, -69 + i * 1.6, 2.4 + (i % 2) * 0.5, 1.0, 0.8, -1, i); art(w, 'z', -69.7, -16, 2.4, 1.6, 1.2, 1, 6);
-  sign3d(w, 'HOME SWEET SHELL', -64, 3.6, -20.3, 0, 0.2, 0xdb2777, 0xfff1d6);
+  sign3d(w, 'HOME SWEET HOME', -64, 3.6, -20.3, 0, 0.2, 0xdb2777, 0xfff1d6);
   // kitchen: counters, stove with a pot of lettuce soup, sink, fridge, herb pots, dining table
   { const T = w.tf(-49.2, FL, -16, -PI / 2); T.slab('m', 0xfff1d6, 0, 0, 0, 7, 0.95, 0.8, 0.06); T.box('m', 0xc58b52, 0, 0.95, 0, 7.1, 0.08, 0.9, 0.03); T.add('x', torus(0.25, 16), 0x334155, -1.6, 1.05, 0, PI / 2, 0, 0, 0.2, 0.2, 0.1); T.add('x', lathe([[0, 0], [0.3, 0], [0.32, 0.38], [0, 0.38]], 18, 'pot'), 0xef4444, -1.6, 1.06, 0); T.add('g', sph(10), 0x86efac, -1.6, 1.42, 0, 0, 0, 0, 0.26, 0.04, 0.26); T.add('e', rbox(0.8, 0.1, 0.5, 0.02), 0x7dd3fc, 0.8, 1.0, 0); T.add('x', cyl(8), 0xcbd5e1, 0.8, 1.0, -0.3, 0, 0, 0, 0.03, 0.4, 0.03);
     T.slab('g', 0xbbf7d0, 3.0, 0, 0, 1.1, 2.3, 0.8, 0.12); for (let i = 0; i < 4; i++) { const p = T.P(-3 + i * 0.4, 1.0, -0.2); claypot(w, p[0], p[2], 0.35, SUN[i], 'flower', p[1]); } }
@@ -202,12 +202,12 @@ function burrow(w) { w.region = 'burrow'; const I = w.I, S = w.spots;
   for (let i = 0; i < 12; i++) w.add('l', star(), pick([0xfff1a8, 0xffd6e8, 0xbfe9ff]), -69.6 + 0.02, 2.2 + (i % 4) * 0.5, -28.8 + Math.floor(i / 4) * 1.6 + (i % 2) * 0.4, 0, PI / 2, 0, 0.12, 0.12, 0.03, 0.2);
   art(w, 'z', -59.2, -25.5, 2.5, 1.6, 1.1, -1, 3); rugR(w, -64.5, -25, 1.6, 0xff6fcf, 0xfef3c7); sign3d(w, "TORTY'S ROOM", -64.3, 3.5, -20.75, PI, 0.16, 0xffffff, 0xdb2777);
   I({ kind: 'fun', x: -64, y: 0, z: -25, r: 2.2, label: "🖼️ Look at Torty's old drawings", msgs: ['🖼️ A crayon drawing: Torty and four friends. One is a fluffy dog, three are rats in lab coats!', '🖼️ "When I grow up I want to go FAST." (Underlined three times.)'] });
-  // Gramps' nook (NE): rocking chair, bookshelf, cookie jar (a secret), Pebble's little bed (empty!)
+  // Gramps' nook (NE): rocking chair, bookshelf, cookie jar (a secret), Tinsel's little bed (empty!)
   { const x = -52, z = -26; const T = w.tf(x, FL, z, PI * 0.8); for (const s of [-1, 1]) T.add('m', torus(0.08, 20, PI * 0.6), 0x7c4a1e, s * 0.5, 0.2, 0, 0, PI / 2, PI * 0.7, 1.0, 0.5, 1); T.box('m', 0x9a6a3e, 0, 0.4, 0, 1.0, 0.1, 0.9, 0.04); T.box('m', 0x9a6a3e, 0, 0.45, -0.45, 1.0, 1.0, 0.1, 0.04); T.add('f', rbox(0.9, 0.15, 0.8, 0.06), 0x16a34a, 0, 0.55, 0); T.solid(-0.5, 0, -0.5, 0.5, 0.9, 0.5, { cam: false }); }
   shelf(w, -55.2, -29.4, 0, 3.0, 3.0, 0x8a5a32); { const x = -49, z = -28.8; w.add('m', rbox(1.2, 1.0, 0.8, 0.06), 0x9a6a3e, x, FL + 0.5, z); w.add('e', lathe([[0, 0], [0.2, 0], [0.22, 0.32], [0.1, 0.38], [0, 0.38]], 16, 'cjar'), 0xdff6ff, x, FL + 1.02, z); for (let k = 0; k < 4; k++) w.add('m', rcyl(0.08, 0.03, 0.01, 12), 0xc8925c, x + (k % 2) * 0.08 - 0.04, FL + 1.05 + k * 0.05, z); w.solid(x - 0.6, 0, z - 0.4, x + 0.6, 1.4, z + 0.4, { cam: false });
-    w.secrets.push({ id: 'cookies', x, y: 0, z: z + 1.2, r: 1.2, msg: '🍪 Secret: Gramps\' cactus-cookie jar! (He says one cookie a day. He means one cookie an HOUR.)' }); }
-  { const x = -55, z = -23; w.add('m', rcyl(0.7, 0.25, 0.1, 24), 0x9a6a3e, x, FL, z); w.add('f', rcyl(0.6, 0.15, 0.06, 24), 0x7dd3fc, x, FL + 0.2, z); w.add('f', sph(10), 0xffffff, x - 0.3, FL + 0.38, z, 0, 0, 0, 0.18, 0.08, 0.15); sign3d(w, 'PEBBLE', x, FL + 0.55, z + 0.72, 0, 0.1, 0xffffff, 0x0ea5e9); S.pebbleBed = [x, z]; }
-  I({ kind: 'glyph', id: 'g2', x: -52, y: 0, z: -24.6, r: 2.0, label: '🪑 Ask Gramps about the old legend', npc: 'gramps' });
+    w.secrets.push({ id: 'cookies', x, y: 0, z: z + 1.2, r: 1.2, msg: '🍪 Secret: Grandpa\' candy-cane-cookie jar! (He says one cookie a day. He means one cookie an HOUR.)' }); }
+  { const x = -55, z = -23; w.add('m', rcyl(0.7, 0.25, 0.1, 24), 0x9a6a3e, x, FL, z); w.add('f', rcyl(0.6, 0.15, 0.06, 24), 0x7dd3fc, x, FL + 0.2, z); w.add('f', sph(10), 0xffffff, x - 0.3, FL + 0.38, z, 0, 0, 0, 0.18, 0.08, 0.15); sign3d(w, 'TINSEL', x, FL + 0.55, z + 0.72, 0, 0.1, 0xffffff, 0x0ea5e9); S.pebbleBed = [x, z]; }
+  I({ kind: 'glyph', id: 'g2', x: -52, y: 0, z: -24.6, r: 2.0, label: '🪑 Ask Grandpa about the old legend', npc: 'gramps' });
   hangPlant(w, -62, 4.4, -14.8); sconce(w, 'z', -69.7, -24, 2.8, 1);
   shell(w, -49, 1.7, -28.8); shell(w, -66.5, 0.5, -11.2); }
 // ------------------------------------------------------------------------------------------------ SHELBY'S BURROW (a turtle artist who loves water)
@@ -217,7 +217,7 @@ function shelby(w) { w.region = 'shelby'; const I = w.I;
   for (let i = 0; i < 4; i++) pouf(w, -88 + i * 1.6, -16, SUN[i + 4], 0.5); tortBed(w, -81, -24.5, PI, 0x22c55e, 0xfef3c7); rugR(w, -86, -16.5, 2.4, 0x22c55e, 0xfff1d6);
   { const T = w.tf(-79.2, FL, -15, -PI / 2); T.slab('m', 0xfff1d6, 0, 0, 0, 3.5, 0.95, 0.8, 0.06); T.box('m', 0x22c55e, 0, 0.95, 0, 3.6, 0.08, 0.9, 0.03); T.add('g', lathe([[0, 0], [0.2, 0], [0.24, 0.26], [0, 0.28]], 14, 'kettle'), 0x14b8a6, -0.8, 1.03, 0); jars(w, -79.3, FL + 1.03, -14.6, 3, 'z'); }
   for (let i = 0; i < 6; i++) art(w, i < 3 ? 'z' : 'x', i < 3 ? -78.3 : -25.7, i < 3 ? -22 + i * 2.2 : -91 + (i - 3) * 2.6, 2.5, 1.2, 1.0, i < 3 ? -1 : 1, i); hangPlant(w, -86, 4.2, -20); claypot(w, -80, -11.4, 1.0, 0x2dd4bf, 'cactus');
-  I({ kind: 'fun', x: -86, y: 0, z: -22.6, r: 2.2, label: '🎨 Look at Shelby\'s paintings', msgs: ['🎨 A painting of the sunset. It took Shelby 3 years. Worth it.', '🎨 "Self-portrait with lettuce." Bold.'] });
+  I({ kind: 'fun', x: -86, y: 0, z: -22.6, r: 2.2, label: '🎨 Look at Shelby\'s paintings', msgs: ['🎨 A painting of the northern lights. It took Shelby 3 years. Worth it.', '🎨 "Self-portrait with cookie." Bold.'] });
   shell(w, -92.6, 2.8, -18); }
 // ------------------------------------------------------------------------------------------------ ELF ACADEMY (OATH + CODE)
 function school(w) { w.region = 'school'; const I = w.I;
@@ -227,7 +227,7 @@ function school(w) { w.region = 'school'; const I = w.I;
   for (let i = 0; i < 8; i++) { const x = -69.4, z = 12 + i * 1.6; w.add('m', rbox(0.7, 1.2, 1.4, 0.04), 0x9a6a3e, x, FL + 0.6, z); w.add('f', rbox(0.4, 0.5, 0.6, 0.12), SUN[i], x + 0.2, FL + 0.8, z); } w.solid(-69.8, 0, 11.2, -69, 1.3, 25, { cam: false });
   for (let i = 0; i < 10; i++) { w.add('x', cyl(6), 0x94a3b8, -68 + i * 1.6, 4.0, 14.5, 0, 0, 0, 0.01, 0.8, 0.01); w.add('l', i % 2 ? star() : sph(10), SUN[i % 8], -68 + i * 1.6, 3.8, 14.5, 0, 0, 0, 0.2, 0.2, 0.06, 0.15); }
   K.rug(w, -53.5, 14, 0, 4, 3, 0xef4444, 0xfef3c7); for (let i = 0; i < 5; i++) hh('toyBlock', w, -55 + i * 0.7, 13.6, 0.22, i, 2, 0, SUN[i + 1]); clock(w, 'z', -50.3, 18, 3.4, -1); bigPlant(w, -51, 25, 1);
-  I({ kind: 'fun', x: -60, y: 0, z: 23.5, r: 2.4, label: '📝 Read the chalkboard', msgs: ['📝 Today\'s lesson: "How to win a race (keep going)."', '📝 Homework: take a nap in the sun. Extra credit: a longer nap.'] });
+  I({ kind: 'fun', x: -60, y: 0, z: 23.5, r: 2.4, label: '📝 Read the chalkboard', msgs: ['📝 Today\'s lesson: "How to win a race (keep going)."', '📝 Homework: take a nap in the star. Extra credit: a longer nap.'] });
   shell(w, -69.4, 1.5, 24.6); }
 // ------------------------------------------------------------------------------------------------ COCOA HOT SPRING
 function spa(w) { w.region = 'spa'; const I = w.I, S = w.spots;
@@ -243,7 +243,7 @@ function spa(w) { w.region = 'spa'; const I = w.I, S = w.spots;
   { const x = -14.5, z = -96; w.add('m', rcyl(1.0, 0.8, 0.12, 28), 0xe8d5b5, x, FL, z); w.add('e', new THREE.CircleGeometry(0.85, 28).rotateX(-PI / 2), 0x67e8f9, x, FL + 0.75, z); for (let i = 0; i < 6; i++) w.add('e', sph(10), 0xe0ffff, x + Math.cos(i) * 0.5, FL + 0.9 + (i % 3) * 0.15, z + Math.sin(i) * 0.5, 0, 0, 0, 0.1 + (i % 2) * 0.06); w.solid(x - 1, 0, z - 1, x + 1, 0.8, z + 1, { cam: false }); sign3d(w, 'BUBBLE POP', x, 2.6, z - 1.2, 0, 0.22, 0xffffff, 0x0f766e); }
   I({ kind: 'mg', game: 'bubbles', x: -14.5, y: 0, z: -97.6, r: 2.0, label: '🫧 Play Bubble Pop' });
   for (let i = 0; i < 4; i++) claypot(w, -35 + i * 0.01 + (i % 2) * 24.2, -113 + Math.floor(i / 2) * 0.01, 1.2, 0x2dd4bf, 'agave'); for (let i = 0; i < 5; i++) hangPlant(w, -32 + i * 4, 5.4, -98.5);
-  sign3d(w, 'RELAX. SLOWLY.', -23, 4.4, -113.6, 0, 0.3, 0x0f766e, 0xeafcf8); wallTiles(w, 'x', -113.7, -32, -27, 1.4, 1, [0x5eead4, 0xffffff, 0x14b8a6]);
+  sign3d(w, 'RELAX. COZILY.', -23, 4.4, -113.6, 0, 0.3, 0x0f766e, 0xeafcf8); wallTiles(w, 'x', -113.7, -32, -27, 1.4, 1, [0x5eead4, 0xffffff, 0x14b8a6]);
   shell(w, -12.6, 1.0, -100); }
 // ------------------------------------------------------------------------------------------------ NORTH POLE FLIGHT COMMAND HQ
 function obs(w) { w.region = 'obs'; const I = w.I;
@@ -265,9 +265,9 @@ function club(w) { w.region = 'club'; const I = w.I;
   { const T = counter(w, -15, 76, 0, 4.4, 0xe2733f); for (let i = 0; i < 4; i++) { const p = T.P(-1.5 + i, 1.13, 0); w.add('g', lathe([[0, 0], [0.08, 0], [0.1, 0.25], [0, 0.25]], 12, 'glassT'), [0x86efac, 0xfde68a, 0xfbcfe8, 0xbfdbfe][i], p[0], p[1], p[2]); } shelf(w, -15, 74.6, 0, 3.6, 2.2, 0xffffff); jars(w, -16.5, FL + 1.4, 74.6, 4); }
   for (let i = 0; i < 5; i++) { const x = -27 + i * 1.1, z = 75; w.add('g', sph(14), SUN[i], x, FL + 1.6, z, 0, 0, 0, 0.42, 0.32, 0.46); w.add('g', rbox(0.12, 0.2, 0.6, 0.03), 0xffffff, x, FL + 1.85, z); } w.add('m', rbox(6, 0.12, 0.5, 0.04), 0x7c4a1e, -24.8, FL + 1.25, 74.6);
   { const x = -22, z = 81; w.slab('g', 0x334155, x, FL, z, 1.4, 0.35, 3.0, 0.08, { cam: false }); w.add('m', rbox(1.1, 0.04, 2.7, 0.02), 0x111827, x, FL + 0.37, z); [-0.6, 0.6].forEach((o) => w.add('x', cyl(8), 0xcbd5e1, x + o, FL + 0.35, z - 1.3, 0, 0, 0, 0.04, 1.0, 0.04)); w.add('g', rbox(1.3, 0.3, 0.1, 0.04), 0xe2733f, x, FL + 1.35, z - 1.3); }
-  for (let i = 0; i < 4; i++) art(w, 'x', 74.3, -27 + i * 3.6, 3.0, 2.0, 1.4, 1, i + 1); sign3d(w, 'SLOW IS THE NEW FAST', -21, 4.4, 89.8, PI, 0.24, 0xe2733f, 0xfff7ed);
+  for (let i = 0; i < 4; i++) art(w, 'x', 74.3, -27 + i * 3.6, 3.0, 2.0, 1.4, 1, i + 1); sign3d(w, 'COZY IS THE NEW FAST', -21, 4.4, 89.8, PI, 0.24, 0xe2733f, 0xfff7ed);
   { const x = -18, z = 80; w.add('m', rbox(3, 0.06, 2, 0.02), 0x7cc96a, x, FL + 0.9, z); w.add('m', torus(0.18, 40), 0xd2693c, x, FL + 0.94, z, PI / 2, 0, 0, 1.1, 0.7, 0.25); w.slab('m', 0x9a6a3e, x, FL, z, 3.1, 0.88, 2.1, 0.05); }
-  I({ kind: 'fun', x: -18, y: 0, z: 81.5, r: 2, label: '🏁 Study the race plan', msgs: ['🏁 The plan: "1. Start. 2. Keep going. 3. Finish." Classic.', '🏁 Coach scribbled: "Cheer on the beat = turbo shell!"'] });
+  I({ kind: 'fun', x: -18, y: 0, z: 81.5, r: 2, label: '🏁 Study the race plan', msgs: ['🏁 The plan: "1. Start. 2. Keep going. 3. Finish." Classic.', '🏁 Coach scribbled: "Cheer on the beat = turbo sleigh!"'] });
   shell(w, -29.2, 2.8, 79.4); }
 // ------------------------------------------------------------------------------------------------ REINDEER STABLES
 function barn(w) { w.region = 'barn'; const I = w.I;
@@ -280,7 +280,7 @@ function barn(w) { w.region = 'barn'; const I = w.I;
   // hayloft (high shelf) + a sleepy lizard napping on a bale
   w.add('m', rbox(17, 0.25, 4, 0.05), 0x8a5a32, -95, 4.2, 58); for (let i = 0; i < 5; i++) { w.add('m', cyl(8), 0x7c4a1e, -103 + i * 4, FL, 56.2, 0, 0, 0, 0.1, 4.1, 0.1); w.solid(-103.1 + i * 4, 0, 56.1, -102.9 + i * 4, 4.2, 56.3, { cam: false }); w.add('m', rbox(1.6, 1.1, 1.2, 0.2), 0xe9c46a, -102 + i * 3.6, 4.9, 58.6); }
   lanternString(w, [[-103.5, 5.4, 45], [-95, 4.8, 52], [-86.5, 5.4, 45]], SUN, 10);
-  I({ kind: 'fun', x: -95, y: 0, z: 49.6, r: 2.4, label: '🚜 Honk the tortoise-tractor', msgs: ['🚜 HONK… (it goes 1 km per hour. Downhill.)', '🚜 The tractor\'s name is "Speedy". It is not.'] });
+  I({ kind: 'fun', x: -95, y: 0, z: 49.6, r: 2.4, label: '🚜 Honk the elf-tractor', msgs: ['🚜 HONK… (it goes 1 km per hour. Downhill.)', '🚜 The tractor\'s name is "Speedy". It is not.'] });
   shell(w, -102, 5.7, 58.6); }
 // ------------------------------------------------------------------------------------------------ GREENHOUSE
 function green(w) { w.region = 'green'; const I = w.I;

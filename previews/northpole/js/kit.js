@@ -1,10 +1,10 @@
 // Ratita Industries HQ prop kit: rat-scale offices, labs and yard gear. Real smooth geometry everywhere (rounded boxes,
 // lathes, tubes); every prop batches into its room's merged meshes and registers simple colliders.
 import * as THREE from 'three';
-import { rbox } from './world.js?v=np2';
-import { PR, propSeed, rnd, pick } from './props.js?v=np2';
-import { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, wedge, gear, star, heart, blobGeo } from './shapes.js?v=np2';
-import { textGeo } from './text3d.js?v=np2';
+import { rbox } from './world.js?v=np3';
+import { PR, propSeed, rnd, pick } from './props.js?v=np3';
+import { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, wedge, gear, star, heart, blobGeo } from './shapes.js?v=np3';
+import { textGeo } from './text3d.js?v=np3';
 const PI = Math.PI;
 export const R = rnd;
 // ---------- scaled proxy so the big household prop library can be reused at rat scale ----------

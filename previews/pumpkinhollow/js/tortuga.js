@@ -1,9 +1,9 @@
-// TORTUGA TECH SPOOKY LAB: Torty's own company. "We test it. We make it tougher. (We know durability: we have shells.)"
+// TORTUGA TECH SPOOKY LAB: Torty's own company. "We test it. We make it tougher. (We know durability: we have lanterns.)"
 // A big walk-in HQ (lobby with the shell logo, CEO office, drop tower lab, crush press lab, heat + sand-blast chamber, shell-armor workshop)
 // plus an outdoor Toughness Test Yard with live, cartoony tests and a Ratita Industries gadget corner. Real 3D geometry only.
 import * as THREE from 'three';
-import * as K from './kit.js?v=ph2';
-import { building, tortStatue, claypot, tcrate, shade, SUN, sunShell, palm, flagString, wedge3 } from './town.js?v=ph2';
+import * as K from './kit.js?v=ph3';
+import { building, tortStatue, claypot, tcrate, shade, SUN, sunShell, palm, flagString, wedge3 } from './town.js?v=ph3';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI, FL = 0.12, TEAL = 0x0f9d8a, SHELLC = [0x6e4524, 0xb98545, 0xd1a05e], HZ = 0xfacc15;
 const art = (w, axis, at, c, y, W, H, side, k) => K.PR.frame(K.scaled(w, 0, FL, 0, 0.25), axis, (at + side * 0.25) / 0.25, c / 0.25, y / 0.25, W / 0.25, H / 0.25, side, k);
@@ -34,7 +34,7 @@ export function tortuga(w) { const I = w.I, S = w.spots; S.tt = {};
   wall(w, 'x', -56, x0 + 0.2, x1 - 0.2, H - 0.1, wc, [D(63.6, 66.4, 3.4), D(76.6, 79.4, 3.4), D(84.4, 86.6, 3.4)], opt);
   wall(w, 'z', 72, -67.8, -56, H - 0.1, wc, [], opt); wall(w, 'z', 84, -67.8, -56, H - 0.1, wc, [], opt);
   [['DROP TOWER LAB', 65, 0xef4444], ['ARMOR WORKSHOP', 78, TEAL], ['CEO', 85.5, 0xffb020]].forEach(([t, x, c]) => sign3d(w, t, x, 3.9, -55.8, 0, 0.17, 0xffffff, c));
-  sign3d(w, 'TEST LABS', 70.15, 3.9, -49, PI / 2, 0.16, 0xffffff, 0xef4444); sign3d(w, 'HEAT + SAND LAB', 86.85, 3.9, -49, -PI / 2, 0.15, 0xffffff, 0xff8a3d); sign3d(w, 'CRUSH PRESS', 65, 3.9, -56.2, PI, 0.16, 0xffffff, 0x7c3aed);
+  sign3d(w, 'TEST LABS', 70.15, 3.9, -49, PI / 2, 0.16, 0xffffff, 0xef4444); sign3d(w, 'HEAT + FOG LAB', 86.85, 3.9, -49, -PI / 2, 0.15, 0xffffff, 0xff8a3d); sign3d(w, 'CRUSH PRESS', 65, 3.9, -56.2, PI, 0.16, 0xffffff, 0x7c3aed);
   // ================= LOBBY (70..87, -56..-42): clear entry path, reception to the side, warm terracotta + teal palette
   { const cx = 78.5;
     // warm wainscot + teal band on the lobby walls (real 3D panels), so the room isn't a white box
@@ -65,7 +65,7 @@ export function tortuga(w) { const I = w.I, S = w.spots; S.tt = {};
     panel(w, 61.4, -44.2, PI * 0.75); K.monitor(w, null, 61.6, FL + 1.1, -44.6, 0.8, 0x4ade80); gauge(w, 60.25, 2.6, -47, PI / 2, 0x22c55e); gauge(w, 60.25, 2.6, -48.2, PI / 2, 0xef4444);
     K.shelf(w, 60.6, -53.5, PI / 2, 3.0, 2.4); for (let k = 0; k < 6; k++) tcrate(w, 60.8, FL + 0.1 + Math.floor(k / 3) * 1.1, -54.6 + (k % 3) * 1.0, 0.45, pick([0xd8a15a, 0xc58b52]), 'none');
     [[68.6, -54.6, 0xef4444], [67.6, -55, 0x3b82f6], [68.8, -43.4, 0xffd23f]].forEach(([x, z, c]) => K.PR.ball(K.scaled(w, x, FL, z, 0.12), 0, 2.2, 0, 2.2, c, 0xffffff));
-    K.cone3(w, 62.4, -51.8); K.cone3(w, 67.6, -51.9); I({ kind: 'fun', x: cx, y: 0, z: cz + 2.6, r: 2.2, label: '⬇️ Watch the drop test', sfx: 'splat', msgs: ['⬇️ CLONK! The armored shell box: not a scratch. ✅', '⬇️ BOING! The rubber lettuce bounced 3 times. ✅', '⬇️ THUNK! A pillow fell. Engineers clap politely.', '⬇️ Drop #4,082: still tough. 🐢'] }); sunShell(w, 69.2, FL + 2.4, -55.2); }
+    K.cone3(w, 62.4, -51.8); K.cone3(w, 67.6, -51.9); I({ kind: 'fun', x: cx, y: 0, z: cz + 2.6, r: 2.2, label: '⬇️ Watch the drop test', sfx: 'splat', msgs: ['⬇️ CLONK! The armored lantern box: not a scratch. ✅', '⬇️ BOING! The rubber pumpkin bounced 3 times. ✅', '⬇️ THUNK! A pillow fell. Engineers clap politely.', '⬇️ Drop #4,082: still tough. 🐢'] }); sunShell(w, 69.2, FL + 2.4, -55.2); }
   // ================= HEAT + SAND-BLAST CHAMBER (87..96, -56..-42)
   { const cx = 92.2, cz = -50; S.tt.blast = [cx, FL + 1.6, cz];
     // glass chamber with glowing heater coils, a sand-blast nozzle, a test shell on a turntable
@@ -76,7 +76,7 @@ export function tortuga(w) { const I = w.I, S = w.spots; S.tt = {};
     sign3d(w, 'HOT! (BUT FRIENDLY)', cx, 3.9, cz - 1.95, 0, 0.12, 0xffffff, 0xef4444); panel(w, 88.6, -45, -PI / 2, [0xef4444, 0xff8a3d, 0xffd23f]); gauge(w, 95.75, 2.4, -44.2, -PI / 2, 0xef4444); K.PR.towelRoll && 0;
     for (let k = 0; k < 4; k++) w.add('m', lathe([[0, 0], [0.32, 0], [0.34, 0.6], [0.3, 0.7], [0, 0.7]], 18, 'sandbag'), 0xe9c48f, 88.4 + k * 0.75, FL, -55.2); w.add('m', blobGeo(4, 0.25, 1), 0xf0cf98, 90, FL, -54.4, 0, 0, 0, 1.0, 0.3, 0.6);
     K.shelf(w, 95.4, -44.8, -PI / 2, 2.4, 2.2, 0.6, 0x64748b); for (let k = 0; k < 6; k++) K.beaker(w, 95.3, FL + 0.95 + Math.floor(k / 3) * 0.7, -45.6 + (k % 3) * 0.7, [0xff6b35, 0xffd23f, 0xef4444][k % 3]);
-    I({ kind: 'fun', x: cx - 2.8, y: 0, z: cz, r: 2.2, label: '🔥 Peek into the heat chamber', sfx: 'click', msgs: ['🔥 120° and the shell is just… relaxing. Like a spa day.', '🌪️ Sand-blast test: 3 hours of desert wind. Shell rating: shiny!', '🔥 The marshmallow control sample did NOT pass.'] }); }
+    I({ kind: 'fun', x: cx - 2.8, y: 0, z: cz, r: 2.2, label: '🔥 Peek into the heat chamber', sfx: 'click', msgs: ['🔥 120° and the lantern is just… relaxing. Like a spa day.', '🌪️ Fog-blast test: 3 hours of spooky wind. Lantern rating: shiny!', '🔥 The marshmallow control sample did NOT pass.'] }); }
   // ================= CRUSH PRESS LAB (60..72, -68..-56)
   { const cx = 66, cz = -62.5; S.tt.press = [cx, FL, cz]; K.hazard(w, cx, cz, 4.6, 4.0);
     [-1.9, 1.9].forEach((a) => { w.add('x', rbox(0.5, H - 0.4, 0.8, 0.08), 0x7c3aed, cx + a, FL + (H - 0.4) / 2, cz); w.solid(cx + a - 0.25, 0, cz - 0.4, cx + a + 0.25, H, cz + 0.4); });
@@ -85,7 +85,7 @@ export function tortuga(w) { const I = w.I, S = w.spots; S.tt = {};
     // squished vs survived: flattened cans, a pancaked cardboard box, a perfectly fine shell-armored box
     for (let k = 0; k < 4; k++) w.add('x', rcyl(0.18, 0.05, 0.02, 16), pick([0xef4444, 0x22c55e, 0x3b82f6]), 69.6 + (k % 2) * 0.5, FL + 0.03, -66.8 + Math.floor(k / 2) * 0.5, 0, 0, 0); w.add('m', rbox(1.2, 0.12, 1.2, 0.02), 0xc9a06a, 61.6, FL + 0.06, -66.4, 0, 0.3, 0);
     { const T = w.tf(62.2, FL, -58.4, 0); T.slab('m', 0xb98545, 0, 0, 0, 1.0, 0.9, 1.0, 0.1); for (let k = 0; k < 4; k++) T.add('g', new THREE.CylinderGeometry(0.22, 0.2, 0.06, 6), SHELLC[k % 3], -0.25 + (k % 2) * 0.5, 0.5 + Math.floor(k / 2) * 0.3, 0.52, PI / 2, 0, 0); T.solid(-0.5, 0, -0.5, 0.5, 0.9, 0.5); }
-    sign3d(w, 'SURVIVED 9000 SQUISHES', 62.2, 1.4, -57.85, 0, 0.07, 0x111827, 0xfef3c7); I({ kind: 'fun', x: cx, y: 0, z: cz + 2.4, r: 2.2, label: '🗜️ Watch the crush press', sfx: 'door', msgs: ['🗜️ SQUISH… nope! The shell-armored gadget pushes back. ✅', '🗜️ The grape did not make it. RIP grape. 🍇', '🗜️ 9,001 squishes. Still tough!'] }); sunShell(w, 71.2, FL + 0.6, -67.2); }
+    sign3d(w, 'SURVIVED 9000 SQUISHES', 62.2, 1.4, -57.85, 0, 0.07, 0x111827, 0xfef3c7); I({ kind: 'fun', x: cx, y: 0, z: cz + 2.4, r: 2.2, label: '🗜️ Watch the crush press', sfx: 'door', msgs: ['🗜️ SQUISH… nope! The iron-plated gadget pushes back. ✅', '🗜️ The grape did not make it. RIP grape. 🍇', '🗜️ 9,001 squishes. Still tough!'] }); sunShell(w, 71.2, FL + 0.6, -67.2); }
   // ================= SHELL-ARMOR WORKSHOP (72..84, -68..-56): the "Make It Tougher" station
   { K.labBench(w, 75.5, -64.5, 0, 3.6); K.labBench(w, 80.5, -64.5, 0, 3.6); K.PR.pegboard(K.scaled(w, 0, FL, 0, 0.25), 'x', -67.8 / 0.25, 78 / 0.25, 1.2 / 0.25, 10 / 0.25, 2.2 / 0.25, 1);
     // rack of colourful shell-armor plates (hex scutes in every colour)
@@ -137,7 +137,7 @@ export function tortuga(w) { const I = w.I, S = w.spots; S.tt = {};
   { const T = w.tf(123.6, 0, -61, -PI / 2); [-1.6, 1.6].forEach((a) => T.add('x', cyl(10), 0x334155, a, 0, 0, 0, 0, 0, 0.1, 3.0, 0.1)); T.add('g', rbox(3.8, 1.8, 0.3, 0.14), 0x1f2937, 0, 3.6, 0); T.add('l', rbox(3.4, 1.3, 0.06, 0.04), 0x064e3b, 0, 3.6, 0.17, 0, 0, 0, 1, 1, 1, 0.4); } sign3d(w, 'TOUGHNESS 100%', 123.4, 3.85, -61, -PI / 2, 0.2, 0x4ade80, 0x064e3b); sign3d(w, 'TESTS TODAY: 47', 123.4, 3.3, -61, -PI / 2, 0.13, 0xffd23f, 0x064e3b);
   { const x = 121.5, z = -52; S.tt.ratita = [x, z]; K.labBench(w, x, z, PI / 2, 3.6, { body: 0xfdf2f8, top: 0xff4fa0 }); gadget(w, 'goggles', x, 0.97, z - 1.1, 1.1, -PI / 2); gadget(w, 'wheel', x, 0.97, z, 1.1, -PI / 2); gadget(w, 'popper', x, 0.97, z + 1.1, 1.1);
     w.add('x', cyl(8), 0x94a3b8, x - 0.4, 0, z - 2.2, 0, 0, 0, 0.05, 3.2, 0.05); w.add('x', cyl(8), 0x94a3b8, x - 0.4, 0, z + 2.2, 0, 0, 0, 0.05, 3.2, 0.05); w.add('f', rbox(0.05, 0.8, 4.4, 0.02), 0xff4fa0, x - 0.4, 2.8, z); sign3d(w, 'RATITA × TORTUGA', x - 0.45, 2.8, z, -PI / 2, 0.15, 0xffffff, 0xff4fa0);
-    I({ kind: 'fun', x: x - 1.6, y: 0, z, r: 2.2, label: '🐀 Ratita gadgets: getting shell-tested', sfx: 'squeak', msgs: ["🔭 Luna's Star Goggles: passed the drop test! ✅", "🛞 Pi-rat's Turbo Wheel: survived 50 rolls down the ramp! ✅", "🎉 Snowie's Party Popper: heat test… it POPPED. Confetti everywhere. Still counts! ✅"] }); }
+    I({ kind: 'fun', x: x - 1.6, y: 0, z, r: 2.2, label: '🐀 Ratita gadgets: getting lantern-tested', sfx: 'squeak', msgs: ["🔭 Luna's Star Goggles: passed the drop test! ✅", "🛞 Pi-rat's Turbo Wheel: survived 50 rolls down the ramp! ✅", "🎉 Snowie's Party Popper: heat test… it POPPED. Confetti everywhere. Still counts! ✅"] }); }
   // yard clutter: cone rows, crate stacks, sandbags, barrels, a tool cart, test dummies waiting their turn, water cooler, shade palms
   for (let i = 0; i < 6; i++) K.cone3(w, 103 + i * 1.2, -70.6); for (let i = 0; i < 4; i++) K.cone3(w, 112.6, -60 + i * 1.3);
   [[124.4, -70.4], [102.6, -44.0], [124.4, -44.6]].forEach(([x, z], j) => { tcrate(w, x, 0, z, 0.8, 0xd8a15a, 'none'); tcrate(w, x + 0.95, 0, z, 0.8, 0xc58b52, 'none'); tcrate(w, x + 0.45, 0.82, z, 0.65, j ? 0xe6b06a : 0xc58b52, 'none'); });

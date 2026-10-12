@@ -1,7 +1,7 @@
 // HUD: area name, Snowflakes, current objective, prompts, toasts, timers.
-import { $, esc } from './util.js?v=np2';
-import { S } from './save.js?v=np2';
-import { sunStep } from './story.js?v=np2';
+import { $, esc } from './util.js?v=np3';
+import { S } from './save.js?v=np3';
+import { sunStep } from './story.js?v=np3';
 export class HUD {
   constructor() { this.dirty = true; this.toasts = $('toast'); }
   region(n) { const e = $('hArea'); if (e && e.textContent !== n) { e.textContent = n; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } }
@@ -16,7 +16,7 @@ export class HUD {
   throwMode(on) { const b = $('tBlast'); if (b) b.classList.toggle('big', !!on); }
   update(dt, g) { const key = g.biscGot.size + '|' + S.q.sun + '|' + Object.keys(S.sus).map((k) => S.sus[k]).join('') + '|' + Object.keys(S.clues).length + '|' + g.players.size + '|' + S.toys.length + '|' + S.plants.length;
     if (key === this.key && !this.dirty) return; this.key = key; this.dirty = false;
-    $('hGears').textContent = g.biscGot.size + '/' + g.world.gears.length; $('hKeys').innerHTML = S.toys.length && !S.flags.toys ? `<span class="chip">🌵 ${S.toys.length}/3</span>` : '';
+    $('hGears').textContent = g.biscGot.size + '/' + g.world.gears.length; $('hKeys').innerHTML = S.toys.length && !S.flags.toys ? `<span class="chip">🎁 ${S.toys.length}/3</span>` : '';
     $('hGoal').textContent = (S.q.sun | 0) < 4 ? '☀️ ' + sunStep() : '⭐ Explore! Snowflakes, secrets, mini-games and friends.';
     const ps = [...g.players.values()]; $('hPlayers').innerHTML = ps.length > 1 ? ps.map((p) => `<span>${esc(p.name)}</span>`).join('') : ''; }
 }

@@ -50,3 +50,7 @@ export function dress(w, K) { const R = K.R, P = Math.PI; w.region = 'out';
   caves.forEach(([x0, x1, z0, z1, cy], k) => { w.region = ['u_tunnel', 'u_crystal', 'u_grotto', 'u_hall'][k]; for (let i = 0; i < 22; i++) bat(w, K, x0 + 1 + R() * (x1 - x0 - 2), cy - 0.4, z0 + 1 + R() * (z1 - z0 - 2), 1.3, R() * 6);
     for (let i = 0; i < 5; i++) web(w, K, x0 + 1.5 + R() * (x1 - x0 - 3), cy - 2, z0 + 0.3, 0, 1.4); });
   w.region = 'out'; }
+// themed interiors: cobwebs in the corners, candle clusters, a pumpkin, bats hanging from the ceiling, in every walk-in building
+export function dressInside(w, K, REGIONS) { for (const r of REGIONS) { if (r.under) continue; w.region = r.id; const c = [[r.x0 + 0.9, r.z0 + 0.9, 0], [r.x1 - 0.9, r.z0 + 0.9, Math.PI / 2], [r.x1 - 0.9, r.z1 - 0.9, Math.PI], [r.x0 + 0.9, r.z1 - 0.9, -Math.PI / 2]];
+  c.forEach(([x, z, a], i) => { web(w, K, x, r.ceil - 0.7, z, a + Math.PI / 4, 0.8); if (i % 2 === 0) { for (let k = 0; k < 3; k++) { const h = 0.25 + k * 0.12; w.add('g', K.cyl(10), 0xf3ead2, x + (k - 1) * 0.16, 0.02, z + (k % 2) * 0.12, 0, 0, 0, 0.05, h, 0.05); w.add('g', K.sph(8), 0xffb347, x + (k - 1) * 0.16, h + 0.07, z + (k % 2) * 0.12, 0, 0, 0, 0.035, 0.06, 0.035, 2.6); } } else pumpkin(w, K, x, 0, z, 0.55); });
+  for (let k = 0; k < 3; k++) bat(w, K, r.x0 + (r.x1 - r.x0) * (k + 1) / 4, r.ceil - 0.35, (r.z0 + r.z1) / 2 + (k - 1) * 1.5, 0.9, k); } w.region = 'out'; }

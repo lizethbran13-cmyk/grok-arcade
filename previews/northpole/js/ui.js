@@ -1,11 +1,11 @@
 // Menus & panels: title, pause, journal, dialog, clue cards, finale, town map, Style Station, mini-game launcher.
-import { $, esc } from './util.js?v=np2';
-import { S, persist, resetSave } from './save.js?v=np2';
-import { sfx, setSound } from './audio.js?v=np2';
-import { HATS, BADGES, SUN_CLUES, SUSPECTS, clueText, sunStep, sideTasks, hint } from './story.js?v=np2';
-import { REGIONS, DOORS, AREAS, STOPS, TRACK } from './town.js?v=np2';
-import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=np2';
-import * as MG from './minigames.js?v=np2';
+import { $, esc } from './util.js?v=np3';
+import { S, persist, resetSave } from './save.js?v=np3';
+import { sfx, setSound } from './audio.js?v=np3';
+import { HATS, BADGES, SUN_CLUES, SUSPECTS, clueText, sunStep, sideTasks, hint } from './story.js?v=np3';
+import { REGIONS, DOORS, AREAS, STOPS, TRACK } from './town.js?v=np3';
+import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=np3';
+import * as MG from './minigames.js?v=np3';
 const hex = (c) => '#' + c.toString(16).padStart(6, '0');
 export function panel(html, mount, cls = '') { const ui = $('ui'); { const t = $('toast'); if (t && !ui.classList.contains('open')) { t.innerHTML = ''; t.classList.add('low'); } } /* menus open with a clean screen (no reward pills over their header) */ ui.innerHTML = `<div class="panel ${cls}">${html}</div>`; ui.classList.add('open'); if (mount) mount(ui.firstChild); return ui.firstChild; }
 export function closePanel() { const ui = $('ui'); ui.innerHTML = ''; ui.classList.remove('open'); const t = $('toast'); if (t && !t.children.length) t.classList.remove('low'); }
@@ -16,7 +16,7 @@ export class UI {
   open() { this.app.busy = true; } done() { this.app.busy = false; closePanel(); }
   title() { const app = this.app; const ui = $('ui'); ui.classList.add('open'); app.preview = false; ui.innerHTML = `<div class="title">
       <div class="logo"><span class="l0">GROK</span><span class="l1">NORTH POLE</span><span class="l2">AN EXPLORABLE NORTH POLE</span></div>
-      <p class="tag">Visit Torty's sunny desert hometown, where everything moves at turtle pace! Meet her family, race, farm, and solve: Who silenced the Sleigh Bells?</p>
+      <p class="tag">Visit Torty's snowy snowy hometown, where everything moves at elf pace! Meet her family, race, farm, and solve: Who silenced the Sleigh Bells?</p>
       <div class="tBtns"><button class="go" id="tPlay">▶ ${S.made ? 'BACK TO NORTH POLE' : 'VISIT NORTH POLE'}</button><button class="mbtn2" id="tLook">👤 CUSTOMIZE YOUR VISITOR</button><button class="mbtn2" id="tOnline">🌐 EXPLORE WITH FRIENDS</button><button class="mbtn2" id="tOpts">⚙️ OPTIONS</button></div>
       <p class="foot">A Grok hub · up to 3 players</p></div>`;
     on(ui, '#tPlay', () => { if (!S.made) return this.custom(() => app.play(), true); app.play(); }); on(ui, '#tLook', () => this.custom(() => this.title())); on(ui, '#tOnline', () => app.net.lobby()); on(ui, '#tOpts', () => this.options(() => this.title())); }
@@ -56,7 +56,7 @@ export class UI {
     const next = (e) => { e && e.preventDefault(); sfx('click'); i++; if (i >= lines.length) { ui.classList.remove('on'); ui.onclick = null; this.app.busy = false; window.removeEventListener('keydown', key); setTimeout(done, 30); } else show(); };
     const key = (e) => { if (e.code === 'Space' || e.code === 'KeyE' || e.code === 'Enter') next(e); }; ui.onclick = next; setTimeout(() => window.addEventListener('keydown', key), 150); show(); }
   clue(id, text, nw) { this.open(); sfx(nw ? 'check' : 'click'); panel(`<h2>🔍 ${nw ? 'NEW CLUE!' : 'CLUE'}</h2><p class="clueTx">${esc(text)}</p><button class="go" id="cOk">GOT IT</button>`, (c) => on(c, '#cOk', () => this.done()), 'clueP'); }
-  finale() { setTimeout(() => { this.open(); sfx('win'); panel(`<div class="fin"><h2>☀️ CASE CLOSED!</h2><h3>Who silenced the Sleigh Bells?</h3><p>${esc('It was little Pebble, Torty\'s baby brother! He only BORROWED it to warm the hot spring for Gramps\' chilly old shell. Now the Sleigh Bells is home, and the Sunset Festival is starting in the square!')}</p><p class="rew">🎁 Detective Hat + Sleigh Bells Detective badge</p><button class="go" id="fOk">🌅 TO THE FESTIVAL!</button></div>`, (c) => on(c, '#fOk', () => this.done()), 'finP'); }, 400); }
+  finale() { setTimeout(() => { this.open(); sfx('win'); panel(`<div class="fin"><h2>🔔 CASE CLOSED!</h2><h3>Who silenced the Sleigh Bells?</h3><p>${esc('It was little Tinsel, the littlest elf! She only BORROWED them so Grandpa Tannenbaum could hear the bells ring one more time from the hilltop. Now the Sleigh Bells are home. Next: get everything ready for the sleigh launch!')}</p><p class="rew">🎁 Detective Earmuffs + Sleigh Bells Detective badge</p><button class="go" id="fOk">🎄 BACK TO WORK, ELF!</button></div>`, (c) => on(c, '#fOk', () => this.done()), 'finP'); }, 400); }
   fade(mid) { const f = $('fade'); f.classList.add('on'); this.app.busy = true; setTimeout(() => { mid(); setTimeout(() => { f.classList.remove('on'); this.app.busy = false; }, 250); }, 450); }
   // ---------------- video call
   // ---------------- town map (drawn at the real shape of the town)
@@ -73,7 +73,7 @@ export class UI {
       x.font = '14px system-ui'; STOPS.forEach((s2) => x.fillText('🐦', X(s2[0]), Z(s2[1]) + 5));
       const me = g.me; if (!g.under) { x.fillStyle = '#ff4fa0'; x.strokeStyle = '#fff'; x.lineWidth = 3; x.beginPath(); x.arc(X(me.x), Z(me.z), 7, 0, 7); x.fill(); x.stroke(); }
       on(c, '#mBack', () => { if (back) back(); else this.done(); }); }); }
-  express(g, from) { this.open(); panel(`<h2>🐦 NORTH POLE EXPRESS</h2><p class="sub">Meep meep! Where to? (Free, fast and a little windy.)</p><div class="tBtns">${STOPS.map((s2, i) => `<button class="mbtn2" data-i="${i}" ${i === from ? 'disabled' : ''}>${s2[3]}${i === from ? ' (you are here)' : ''}</button>`).join('')}<button class="mbtn2" id="eX">✖ STAY HERE</button></div>`, (c) => {
+  express(g, from) { this.open(); panel(`<h2>🚂 NORTH POLE EXPRESS</h2><p class="sub">All aboard! Where to? (Free, fast and a little frosty.)</p><div class="tBtns">${STOPS.map((s2, i) => `<button class="mbtn2" data-i="${i}" ${i === from ? 'disabled' : ''}>${s2[3]}${i === from ? ' (you are here)' : ''}</button>`).join('')}<button class="mbtn2" id="eX">✖ STAY HERE</button></div>`, (c) => {
       c.querySelectorAll('[data-i]').forEach((b) => b.onclick = () => { if (+b.dataset.i === from) return; sfx('click'); this.done(); g.travel(+b.dataset.i); }); on(c, '#eX', () => this.done()); }); }
   wardrobe() { this.open(); const app = this.app; panel(`<div class="topBar"><button class="back" id="wBack">◀</button><h2>👕 STYLE STATION</h2></div><button class="mbtn2" id="wLook">👤 CHANGE HAIR, SKIN &amp; CLOTHES</button><h3>HATS</h3><div class="hats">${HATS.map((h) => `<button data-h="${h.id}" class="${S.outfit === h.id ? 'on' : ''} ${S.hats[h.id] ? '' : 'lock'}"><b>${S.hats[h.id] ? esc(h.n) : '🔒 ' + esc(h.n)}</b><small>${esc(h.how)}</small></button>`).join('')}</div>`, (c) => {
       on(c, '#wLook', () => this.custom(() => this.wardrobe()));

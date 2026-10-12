@@ -49,3 +49,8 @@ export function dress(w, K) { const R = K.R; w.region = 'out';
   [[150, 176, -6, 6, -27], [176, 204, -16, 16, -23.5], [178, 206, 16, 42, -22.5], [204, 232, -14, 14, -24]].forEach(([x0, x1, z0, z1, cy], k) => { w.region = ['u_tunnel', 'u_crystal', 'u_grotto', 'u_hall'][k];
     for (let i = 0; i < 26; i++) w.add('l', K.cone(6), 0xbfe9ff, x0 + 1 + R() * (x1 - x0 - 2), cy - 0.5, z0 + 1 + R() * (z1 - z0 - 2), Math.PI, 0, 0, 0.12, 0.9 + R(), 0.12, 0.6); });
   w.region = 'out'; }
+// themed interiors: a little decorated tree, presents, a wreath and a string of warm bulbs under the ceiling, in every walk-in building
+export function dressInside(w, K, REGIONS) { for (const r of REGIONS) { if (r.under) continue; w.region = r.id; const s = Math.min(0.42, (r.ceil - 0.6) / 7.5);
+  tree(w, K, r.x0 + 1.4, r.z0 + 1.4, s); for (let k = 0; k < 3; k++) present(w, K, r.x0 + 0.9 + k * 0.7, 0, r.z0 + 2.6 + (k % 2) * 0.4, 0.5 + k * 0.1, [0xef4444, 0x22c55e, 0x3b82f6][k]);
+  for (let x = r.x0 + 1; x < r.x1 - 0.5; x += 0.9) { w.add('g', K.sph(8), [0xef4444, 0xffd23f, 0x22c55e, 0x38bdf8][Math.round(x) & 3], x, r.ceil - 0.45 - Math.sin((x - r.x0) * 1.3) * 0.08, r.z1 - 0.35, 0, 0, 0, 0.07, 0.09, 0.07, 2.2); }
+  w.add('m', K.torus(0.25, 24), 0x166534, r.x1 - 0.3, r.ceil - 1.6, (r.z0 + r.z1) / 2, 0, Math.PI / 2, 0, 0.45, 0.45, 0.6); w.add('g', K.sph(8), 0xdc2626, r.x1 - 0.26, r.ceil - 2.05, (r.z0 + r.z1) / 2, 0, 0, 0, 0.12, 0.09, 0.06); } w.region = 'out'; }

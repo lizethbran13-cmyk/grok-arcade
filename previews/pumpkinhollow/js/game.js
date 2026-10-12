@@ -1,24 +1,27 @@
 // Grok Pumpkin Hollow runtime: the town, players, townsfolk, the shuttle cart, ambient desert life, day -> sunset, collectibles,
 // the Moon Lantern mystery, the Broomstick Derby + Pumpkin Rush (3D mini-games), a hidden puzzle, co-op hooks.
 import * as THREE from 'three';
-import { makeFolk, animFolk } from './folk.js?v=ph2';
-import { LIGHT as THL, TH as THM } from './theme.js?v=ph2';
-import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=ph2';
-import { World } from './world.js?v=ph2';
-import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=ph2';
-import { UY } from './under.js?v=ph2';
-import { Player } from './player.js?v=ph2';
-import { FX } from './fx.js?v=ph2';
-import { makeRat, animRat, MB, toGroup } from './models.js?v=ph2';
-import { makePup, animPup, birdGeo } from './dogs.js?v=ph2';
-import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=ph2';
-import { P } from './geo.js?v=ph2';
-import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=ph2';
-import { updateFrustum, inView, LightPool } from './perf.js?v=ph2';
-import { sfx, playMusic } from './audio.js?v=ph2';
-import { S, persist } from './save.js?v=ph2';
-import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=ph2';
-import { readMove, edge, held, IN } from './input.js?v=ph2';
+import { makeFolk, animFolk } from './folk.js?v=ph3';
+import { holAct } from './holiday.js?v=ph3';
+import { GLYPH_TXT } from './story_theme.js?v=ph3';
+import { LIGHT as THL, TH as THM } from './theme.js?v=ph3';
+import { panel } from './ui.js?v=ph3';
+import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=ph3';
+import { World } from './world.js?v=ph3';
+import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=ph3';
+import { UY } from './under.js?v=ph3';
+import { Player } from './player.js?v=ph3';
+import { FX } from './fx.js?v=ph3';
+import { makeRat, animRat, MB, toGroup } from './models.js?v=ph3';
+import { makePup, animPup, birdGeo } from './dogs.js?v=ph3';
+import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=ph3';
+import { P } from './geo.js?v=ph3';
+import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=ph3';
+import { updateFrustum, inView, LightPool } from './perf.js?v=ph3';
+import { sfx, playMusic } from './audio.js?v=ph3';
+import { S, persist } from './save.js?v=ph3';
+import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=ph3';
+import { readMove, edge, held, IN } from './input.js?v=ph3';
 const PI = Math.PI;
 const TOYS = [[60, 0, 76], [-70, 0, 61], [108, 0, -4]];
 const DAY = 420; // seconds per day -> sunset cycle
@@ -44,7 +47,7 @@ export class Game {
   sfx(n) { sfx(n); }
   // ------------------------------------------------ townsfolk
   buildNPCs() { const w = this.world; this.npcs = NPCS.map((d) => { const L = d.look; let rig, kind, markY;
-      if (!['torty','mama','papa','gramps','pebble','candy','luna','pirat','snowie'].includes(d.id) && !L.rat && !L.dog) { const v = [...d.id].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 8; rig = makeFolk(THM.id, d.id === 'mayor' && THM.snow ? 99 : v); rig.root.scale.setScalar(1.0); kind = 'folk'; markY = 2.0; if (!d._hn) { d._hn = 1; const fn = d.n.split(/[ (]/)[0]; d.n = (d.id === 'mayor' ? '' : (v % 4 === 3 ? 'Pumpkinhead ' : 'Ghost ')) + d.n; } }
+      if (!['torty','candy','luna','pirat','snowie'].includes(d.id) && !L.rat && !L.dog) { const v = [...d.id].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 8; rig = makeFolk(THM.id, d.id === 'mayor' && THM.snow ? 99 : v); rig.root.scale.setScalar(d.id === 'pebble' || (L.s && L.s < 0.2) ? 0.62 : d.id === 'mayor' ? 1.2 : 1.0); kind = 'folk'; markY = 2.0; }
       else if (L.rat) { rig = makeRat(L.rat, L.hat || 'none', { pack: false, extras: L.extras || [], noBlaster: true }); rig.root.scale.setScalar(1.35); kind = 'rat'; markY = 1.6; }
       else if (L.dog) { rig = makePup(L.dog, { seed: 7 }); rig.root.scale.setScalar(L.s || 1); kind = 'dog'; markY = 1.2; }
       else if (L.bird) { rig = makeRoadrunner(L.bird); rig.root.scale.setScalar(L.s || 0.6); kind = 'bird'; markY = 1.6 * (L.s || 0.6); }
@@ -95,7 +98,7 @@ export class Game {
     { const SL = new THREE.SphereGeometry(1, 18, 10), CL = new THREE.CapsuleGeometry(0.5, 1, 3, 10); const b = MB(); b.g.add(SL, 0xffc928, 0, 0, 0, 0, 0, 0, 0.9, 0.9, 0.28); for (let i = 0; i < 7; i++) { const a = -PI / 2 + (i - 3) * 0.32; b.g.add(CL, 0xffe066, Math.cos(a + PI) * 0.0 + Math.sin(a) * 0.4, -Math.cos(a) * 0.4 * -1 + 0.0, 0.2, 0, 0, a, 0.16, 0.85, 0.08); } b.g.add(P.rbox, 0xffc928, 0, -0.85, 0, 0, 0, 0, 0.5, 0.3, 0.2); const geo = toGroup(b).children[0].geometry;
       this.shellIM = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ color: 0xffd23f, metalness: 0.8, roughness: 0.25, emissive: 0x7a5200, emissiveIntensity: 0.5 }), w.gears.length); this.shellIM.castShadow = true; this.shellIM.frustumCulled = false; this.add(this.shellIM); }
     this.biscGot = new Set(S.gears); this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion(); this._e = new THREE.Euler(); this._s = new THREE.Vector3(); this._p = new THREE.Vector3();
-    // Candy's squeaky cactus toys
+    // Candy's squeaky bone toys
     const toy = () => { const b = MB(); b.g.add(P.capsule, 0x4ade80, 0, 0.25, 0, 0, 0, 0, 0.24, 0.32, 0.24); [-1, 1].forEach((s2) => b.g.add(P.capsule, 0x4ade80, s2 * 0.22, 0.32, 0, 0, 0, s2 * 0.6, 0.12, 0.2, 0.12)); b.g.add(P.sphere, 0xff5d8f, 0, 0.62, 0, 0, 0, 0, 0.1); [-1, 1].forEach((s2) => b.g.add(P.sphere, 0x111111, s2 * 0.07, 0.32, 0.12, 0, 0, 0, 0.03)); return toGroup(b); };
     this.toys = TOYS.map((p, i) => { const m = this.add(toy()); m.position.set(p[0], p[1] + 0.3, p[2]); m.scale.setScalar(1.3); m.visible = !S.toys.includes(i); return { i, p, m }; });
     // THE MOON LANTERN
@@ -162,7 +165,7 @@ export class Game {
     if (this.field) this.field.visible = !this.under && Math.hypot(c.x + 100, c.z - 94) < 85; }
   areaLabel() { const r = REGIONS.find((q) => q.id === this.region); return r ? r.name : areaName(this.me.x, this.me.z); }
   // ------------------------------------------------ frame
-  update(dt) { this.T += dt; const w = this.world, me = this.me; if (this.wx) { const p = this.wx.geometry.attributes.position, a = p.array, sp = THM.snow ? 1.6 : 0.25; for (let i = 0; i < a.length; i += 3) { a[i + 1] -= sp * dt * (0.7 + (i % 7) * 0.08); a[i] += Math.sin(this.T + i) * dt * 0.3; if (a[i + 1] < -6) a[i + 1] += 30; } p.needsUpdate = true; this.wx.position.set(me.x, me.y + 8, me.z); this.wx.visible = this.region === 'out' && !this.under; }
+  update(dt) { this.T += dt; const w = this.world, me = this.me; if (this._fly) { const t = this._flyT += dt, f = this._fly; f.position.set(22 - t * 2.5, 0.6 + Math.max(0, t - 1) ** 1.6 * 2.2, -80 - t * 9); f.rotation.x = -Math.min(0.5, t * 0.12); if (Math.random() < dt * 30) this.fx.sparkle(f.position.x, f.position.y, f.position.z + 1.5, 0xffd23f); if (t > 16) { this.scene.remove(f); this._fly = null; } } if (this.wx) { const p = this.wx.geometry.attributes.position, a = p.array, sp = THM.snow ? 1.6 : 0.25; for (let i = 0; i < a.length; i += 3) { a[i + 1] -= sp * dt * (0.7 + (i % 7) * 0.08); a[i] += Math.sin(this.T + i) * dt * 0.3; if (a[i + 1] < -6) a[i + 1] += 30; } p.needsUpdate = true; this.wx.position.set(me.x, me.y + 8, me.z); this.wx.visible = this.region === 'out' && !this.under; }
     const mv = this.app.paused || this.chat ? { x: 0, y: 0 } : readMove();
     const free = !this.app.paused && !this.chat && !this.app.busy;
     const inp = free ? { mx: mv.x, my: mv.y, jumpP: edge('jump'), jumpH: held('jump'), spinP: edge('spin'), blastP: edge('blast'), hookP: false, actP: edge('act') } : { mx: 0, my: 0 };
@@ -175,7 +178,7 @@ export class Game {
     this.net.tick && this.net.tick(dt, this);
     this.updateCam(dt); this.render(dt); this.hud.update(dt, this); this.lightPool.update(dt, me.x, me.y + 2, me.z); }
   render(dt) { this.fx.update(dt); followShadow(this.me.x, this.me.y, this.me.z); this.light(dt); }
-  pond(me) { const [cx, cz, rx, rz] = this.world.spots.pond; const dx = (me.x - cx) / (rx - 0.6), dz = (me.z - cz) / (rz - 0.6); if (dx * dx + dz * dz < 1 && me.y < 0.05 && me.onGround) { if (!this._wet) { this._wet = true; sfx('splat'); this.fx.burst(me.x, 0.1, me.z, 0x7dd3fc, 18, 5); this.toastMsg('🐢 Splash! The pond turtles politely nudge you back to shore.'); const a = Math.atan2(dz, dx); me.place([cx + Math.cos(a) * (rx + 1.4), 0.1, cz + Math.sin(a) * (rz + 1.4)], me.yaw); } } else this._wet = false;
+  pond(me) { const [cx, cz, rx, rz] = this.world.spots.pond; const dx = (me.x - cx) / (rx - 0.6), dz = (me.z - cz) / (rz - 0.6); if (dx * dx + dz * dz < 1 && me.y < 0.05 && me.onGround) { if (!this._wet) { this._wet = true; sfx('splat'); this.fx.burst(me.x, 0.1, me.z, 0x7dd3fc, 18, 5); this.toastMsg('🐢 Splash! The pond ghosts politely nudge you back to shore.'); const a = Math.atan2(dz, dx); me.place([cx + Math.cos(a) * (rx + 1.4), 0.1, cz + Math.sin(a) * (rz + 1.4)], me.yaw); } } else this._wet = false;
     for (const p of this.world.spots.pools || []) { const ex = (me.x - p[0]) / p[3], ez = (me.z - p[2]) / p[4]; if (ex * ex + ez * ez < 1 && Math.abs(me.y - p[1]) < 0.4) { if (!this._warm) { this._warm = true; this.toastMsg('♨️ Ahhh… warm and fizzy!'); sfx('splat'); } return; } } this._warm = false; }
   // day -> golden desert sunset cycle (host time, so co-op players share the sky). Pure tone, never a quality change.
   dayK() { const o = (this.net.online && this.hostTod) || S.opts.tod || 'auto'; if ((S.q.sun | 0) >= 4 && o === 'auto') return 1; if (o === 'day') return 0; if (o === 'evening') return 1; const p = (this.T / DAY) % 1; return p < 0.5 ? 0 : p < 0.6 ? (p - 0.5) / 0.1 : p < 0.9 ? 1 : 1 - (p - 0.9) / 0.1; }
@@ -226,7 +229,7 @@ export class Game {
   offerRace() { if (this.race) return; this.race = { t: -3.5, A: [PI / 2 - 0.02, PI / 2 - 0.02, PI / 2 - 0.02, PI / 2 - 0.02], v: [0, 0, 0, 0], boost: 0, beat: 0, last: 4, combo: 0, done: false }; this.toastMsg('🏁 Broomstick Derby! Tap 📣 CHEER when the ring over Speedy #3 turns GREEN.'); sfx('check'); }
   updateRace(dt) { const R = this.race; if (!R) { this.cheerRing.visible = false; return; } R.t += dt; const end = PI / 2 + PI * 2;
     if (R.t < 0) { const c = Math.ceil(-R.t); if (c !== R.last && c <= 3) { R.last = c; this.toastMsg(c + '…'); sfx('click'); } this.hud.timer('🏁 ' + Math.max(1, c)); this.placeRacers(dt); return; }
-    if (R.last > 0) { R.last = 0; this.toastMsg('🏁 GO! (slowly)'); sfx('win'); }
+    if (R.last > 0) { R.last = 0; this.toastMsg('🏁 GO! (spookily)'); sfx('win'); }
     R.beat = (R.t % 0.9) / 0.9; const inWin = R.beat > 0.72 || R.beat < 0.06; R.boost = Math.max(0, R.boost - dt * 0.012);
     for (let i = 0; i < 4; i++) { if (R.A[i] >= end) continue; const base = i === 2 ? 0.098 + R.boost : [0.122, 0.116, 0, 0.119][i] + Math.sin(R.t * (0.7 + i * 0.3) + i) * 0.012; R.A[i] = Math.min(end, R.A[i] + base * dt); if (R.A[i] >= end && R.place == null && i === 2) R.place = R.A.filter((a, j) => j !== 2 && a >= end).length + 1; }
     this.placeRacers(dt, R.A); const sp = this.racers[2].root.position; this.cheerRing.visible = true; this.cheerRing.position.set(sp.x, 1.4 + Math.sin(R.t * 7) * 0.05, sp.z); this.cheerRing.material.color.set(inWin ? 0x4ade80 : 0xffffff); this.cheerRing.scale.setScalar(inWin ? 1.25 : 0.9 + R.beat * 0.25);
@@ -237,46 +240,48 @@ export class Game {
     this.toastMsg(place === 1 ? '🏆 SPEEDY WINS THE BROOMSTICK DERBY!' : `🏁 Speedy finished ${['1st', '2nd', '3rd', '4th'][place - 1]}! Talk to Pi-rat to race again.`); S.best.race = Math.max(S.best.race | 0, 5 - place); persist();
     if (place === 1 && !S.flags.race) { S.flags.race = 1; persist(); this.giveHat('racer'); this.badge('race'); } }
   // ------------------------------------------------ PUMPKIN RUSH (3D): plant, water and pick lettuce in 60 s
-  offerFarm() { if (this.rush) return; this.rush = { t: 60, n: 0 }; this.plots.forEach((p) => { p.st = 0; p.t = 0; }); this.toastMsg('🥬 Pumpkin Rush! Plant 🌱 → water 💧 → wait → pick 🥬. 60 seconds!'); sfx('check'); }
+  offerFarm() { if (this.rush) return; this.rush = { t: 60, n: 0 }; this.plots.forEach((p) => { p.st = 0; p.t = 0; }); this.toastMsg('🎃 Pumpkin Rush! Plant 🌱 → water 💧 → wait → pick 🥬. 60 seconds!'); sfx('check'); }
   updateRush(dt) { const R = this.rush; this.plots.forEach((p) => { if (p.st === 2) { p.t += dt; if (p.t >= (R ? 6 : 12)) p.st = 3; } const gk = p.st === 2 ? 0.25 + p.t / 6 * 0.75 : p.st === 3 ? 1.05 + Math.sin(this.T * 4) * 0.04 : 0.001; p.head.scale.setScalar(p.head.scale.x + (gk - p.head.scale.x) * Math.min(1, dt * 5)); p.sprout.visible = p.st === 2 && p.t < 1.2; p.seeds.visible = p.st === 1; });
-    if (!R) return; R.t -= dt; this.hud.timer(`🥬 ${Math.ceil(Math.max(0, R.t))} s · ${R.n} picked`); if (R.t <= 0) { this.rush = null; this.hud.timer(''); const nb = R.n > (S.best.farm | 0); S.best.farm = Math.max(S.best.farm | 0, R.n); persist(); this.toastMsg(`🥬 Time! ${R.n} lettuces${nb ? ' · NEW BEST!' : ''}`); sfx('win'); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 30); if (R.n >= 8 && !S.flags.farm) { S.flags.farm = 1; persist(); this.giveHat('chef'); this.badge('farm'); } } }
-  plotAct(o) { const p = this.plots[o.i]; if (!this.rush) { this.toastMsg('🥬 Talk to Farmer Fern to start Pumpkin Rush!'); return; } if (p.st === 0) { p.st = 1; sfx('click'); this.fx.puff(o.x, 0.4, o.z, 5, 0x8a5a32); } else if (p.st === 1) { p.st = 2; p.t = 0; sfx('splat'); this.fx.burst(o.x, 0.8, o.z, 0x7dd3fc, 12, 3); } else if (p.st === 3) { p.st = 0; p.t = 0; this.rush.n++; sfx('part'); this.fx.burst(o.x, 0.6, o.z, 0x4ade80, 12, 4); } }
+    if (!R) return; R.t -= dt; this.hud.timer(`🎃 ${Math.ceil(Math.max(0, R.t))} s · ${R.n} picked`); if (R.t <= 0) { this.rush = null; this.hud.timer(''); const nb = R.n > (S.best.farm | 0); S.best.farm = Math.max(S.best.farm | 0, R.n); persist(); this.toastMsg(`🎃 Time! ${R.n} pumpkins${nb ? ' · NEW BEST!' : ''}`); sfx('win'); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 30); if (R.n >= 8 && !S.flags.farm) { S.flags.farm = 1; persist(); this.giveHat('chef'); this.badge('farm'); } } }
+  plotAct(o) { const p = this.plots[o.i]; if (!this.rush) { this.toastMsg('🎃 Talk to Farmer Fern to start Pumpkin Rush!'); return; } if (p.st === 0) { p.st = 1; sfx('click'); this.fx.puff(o.x, 0.4, o.z, 5, 0x8a5a32); } else if (p.st === 1) { p.st = 2; p.t = 0; sfx('splat'); this.fx.burst(o.x, 0.8, o.z, 0x7dd3fc, 12, 3); } else if (p.st === 3) { p.st = 0; p.t = 0; this.rush.n++; sfx('part'); this.fx.burst(o.x, 0.6, o.z, 0x4ade80, 12, 4); } }
   // ------------------------------------------------ collecting
   collect() { const me = this.me, G = this.world.gears;
     for (let i = 0; i < G.length; i++) { if (this.biscGot.has(i)) continue; const p = G[i]; if (Math.abs(me.x - p[0]) < 0.8 && Math.abs(me.z - p[2]) < 0.8 && me.y + me.hgt + 0.25 > p[1] && me.y < p[1] + 0.6) { this.biscGot.add(i); S.gears = [...this.biscGot]; persist(); sfx('part'); this.fx.sparkle(p[0], p[1], p[2], 0xffd23f); this.fx.burst(p[0], p[1], p[2], 0xffd23f, 10, 4);
         const n = this.biscGot.size; this.toastMsg(`🐚 Candy Corn ${n}/${G.length}`); if (n >= 20) this.giveHat('party'); if (n >= G.length) { this.badge('shells'); this.checkCrown(); } this.hud.dirty = true; } }
-    this.toys.forEach((t) => { if (!t.m.visible) return; if (Math.hypot(me.x - t.p[0], me.z - t.p[2]) < 0.9 && Math.abs(me.y - t.p[1]) < 1.6) { t.m.visible = false; S.toys.push(t.i); persist(); sfx('squeak'); this.fx.burst(t.p[0], t.p[1] + 0.4, t.p[2], 0x4ade80, 12); this.toastMsg(`🌵 *SQUEAK!* Candy's toy ${S.toys.length}/3`); this.hud.dirty = true; } }); }
+    this.toys.forEach((t) => { if (!t.m.visible) return; if (Math.hypot(me.x - t.p[0], me.z - t.p[2]) < 0.9 && Math.abs(me.y - t.p[1]) < 1.6) { t.m.visible = false; S.toys.push(t.i); persist(); sfx('squeak'); this.fx.burst(t.p[0], t.p[1] + 0.4, t.p[2], 0x4ade80, 12); this.toastMsg(`🕸️ *SQUEAK!* Candy's toy ${S.toys.length}/3`); this.hud.dirty = true; } }); }
   secretsCheck() { const me = this.me; for (const s of this.world.secrets) { if (S.secrets.includes(s.id)) continue; if (Math.hypot(me.x - s.x, me.z - s.z) < s.r && Math.abs(me.y - s.y) < 2.5) { S.secrets.push(s.id); persist(); sfx('win'); this.fx.confetti(me.x, me.y + 1.5, me.z, 40); this.toastMsg(s.msg + ` (${S.secrets.length}/${this.world.secrets.length})`); if (S.secrets.length >= 5) { this.giveHat('wizard'); this.badge('secrets'); } } } }
   // ------------------------------------------------ rewards + story
   giveHat(id) { if (S.hats[id]) return; S.hats[id] = 1; persist(); const h = HATS.find((q) => q.id === id); this.toastMsg(`🎩 New hat: ${h ? h.n : id}! (Wear it from the pause menu)`); sfx('win'); }
   badge(id) { if (S.badges[id]) return; S.badges[id] = 1; persist(); this.toastMsg('🏅 Badge: ' + BADGES[id]); }
   checkCrown() { if (S.hats.crown) return; if ((S.q.sun | 0) >= 4 && this.biscGot.size >= this.world.gears.length) { S.hats.crown = 1; persist(); setTimeout(() => { this.toastMsg('👑 GOLD CROWN! Pumpkin Hollow\'s greatest hero!'); sfx('win'); }, 1500); } }
-  addClue(id) { const nw = !S.clues[id]; S.clues[id] = 1; persist(); this.app.ui.clue(id, clueText(id), nw); if ((S.q.sun | 0) === 0 && nw) setTimeout(() => this.toastMsg('🤔 Hmm… Mayor Shelldon at Town Hall might know what this is about.'), 600); this.recheck(); }
+  addClue(id) { const nw = !S.clues[id]; S.clues[id] = 1; persist(); this.app.ui.clue(id, clueText(id), nw); if ((S.q.sun | 0) === 0 && nw) setTimeout(() => this.toastMsg('🤔 Hmm… Mayor Shiverton at Town Hall might know what this is about.'), 600); this.recheck(); }
   recheck() { if ((S.q.sun | 0) === 1 && SUN_CLUES.every((c) => S.clues[c])) { S.q.sun = 2; persist(); this.placeStory(); this.sunPos(); setTimeout(() => this.toastMsg('💡 All 5 clues! Tiny footprints, a "P", warm rocks, a picnic… up Haunted Hill!'), 500); } this.hud.dirty = true; }
-  gotSun() { S.q.sun = 3; persist(); this.sunPos(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 50); sfx('win'); this.toastMsg('☀️ You have the MOON LANTERN! Carry it back to Mayor Shelldon.'); this.npc.pebble.hidden = true; this.hud.dirty = true; }
+  gotSun() { S.q.sun = 3; persist(); this.sunPos(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 50); sfx('win'); this.toastMsg('☀️ You have the MOON LANTERN! Carry it back to Mayor Shiverton.'); this.npc.pebble.hidden = true; this.hud.dirty = true; }
   solveSun() { S.q.sun = 4; persist(); this.sunPos(); this.placeStory(); this.party.visible = true; this.giveHat('detective'); this.badge('sun'); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 120); this.app.ui.finale(); this.checkCrown(); this.hud.dirty = true; }
   // ------------------------------------------------ interaction prompt
   updateAct() { const me = this.me; let best = null, bd = 1e9;
     for (const o of this.world.inter) { const d = Math.hypot(me.x - o.x, me.z - o.z); if (d < o.r && Math.abs(me.y - o.y) < 2 && d < bd) { bd = d; best = o; } }
     if (best && best.kind === 'plant' && S.plants.includes(best.i)) best = null;
-    if (best && best.kind === 'plot') { const p = this.plots[best.i]; best = Object.assign({}, best, { label: !this.rush ? '🥬 Lettuce plot (ask Farmer Fern)' : ['🌱 Plant a seed', '💧 Water it', '⏳ Growing…', '🥬 PICK IT!'][p.st] }); }
+    if (best && best.kind === 'plot') { const p = this.plots[best.i]; best = Object.assign({}, best, { label: !this.rush ? '🎃 Pumpkin plot (ask Farmer Fern)' : ['🌱 Plant a seed', '💧 Water it', '⏳ Growing…', '🎃 PICK IT!'][p.st] }); }
     if (best && best.kind === 'dial') best = Object.assign({}, best, { label: `🪨 Turn dial ${best.i + 1} (now ${GLYPH.syms[this.dialA[best.i]]})` });
     if (S.flags.door && this.world.spots.sdoor && !this.under) { const [dx, dz] = this.world.spots.sdoor; const d = Math.hypot(me.x - (dx - 1.2), me.z - dz); if (d < 1.8 && d < bd) { bd = d; best = { kind: 'descend', label: '🕳️ Step through the old door' }; } }
-    if (best && best.kind === 'moonstone' && S.flags.moon) best = Object.assign({}, best, { label: '🌙 The Moonstone hums softly' });
+    if (best && best.kind === 'moonstone' && S.flags.moon) best = Object.assign({}, best, { label: '🌙 The Star Lantern hums softly' });
     for (const n of this.npcs) { if (!n.rig.root.visible || n.override) continue; const r = n.kind === 'tort' ? 2.6 : n.kind === 'bird' ? 2.4 : 2.3; const d = Math.hypot(me.x - n.x, me.z - n.z); if (d < r && Math.abs(me.y - n.y) < 2.2 && d - 0.2 < bd) { bd = d; best = { kind: 'npc', npc: n, label: '💬 Talk to ' + n.d.n.split(' (')[0] }; } }
     if (this.race && this.race.t >= 0) best = { kind: 'cheer', label: '📣 CHEER!' };
     this.act = best; this.hud.setAct(this.chat ? null : best); }
-  doAct(o) { const ui = this.app.ui; if (o.kind !== 'cheer') sfx('click');
+  holOffer(id) { setTimeout(() => holAct(id, this), 50); }
+  holLaunch() { S.flags.launch = 1; persist(); this.badge('launch'); const s = this._fly = new THREE.Group(); const red = new THREE.MeshStandardMaterial({ color: 0xc81e1e }), gold = new THREE.MeshStandardMaterial({ color: 0xffd23f, emissive: 0x806000 }), brown = new THREE.MeshStandardMaterial({ color: 0x8a5a32 }); const body = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.9, 3), red); s.add(body); const run = new THREE.Mesh(new THREE.BoxGeometry(2, 0.1, 3.4), gold); run.position.y = -0.55; s.add(run); for (let i = 0; i < 9; i++) { const d = new THREE.Mesh(new THREE.CapsuleGeometry(0.3, 0.8, 4, 10), brown); d.rotation.x = Math.PI / 2; d.position.set(i === 8 ? 0 : (i % 2 ? 0.6 : -0.6), 0.2, 3 + (i >> 1) * 1.6 + (i === 8 ? 1.6 : 0)); s.add(d); if (i === 8) { const n = new THREE.Mesh(new THREE.SphereGeometry(0.15, 10, 8), new THREE.MeshStandardMaterial({ color: 0xff2020, emissive: 0xff2020, emissiveIntensity: 2 })); n.position.set(0, 0.3, d.position.z + 0.7); s.add(n); } } s.position.set(22, 0.6, -80); this.scene.add(s); this._flyT = 0; this.cam.shake = 0.5; sfx('win'); this.toastMsg('🛷 3… 2… 1… LIFT-OFF! Santa\'s sleigh is flying!'); setTimeout(() => { this.app.ui.open(); panel(`<div class="fin"><h2>🛷 LAUNCH NIGHT!</h2><h3>Santa\'s sleigh is in the sky</h3><p>The letters are sorted, the reindeer are fed, the Sleigh Bells are back and Flight Command is tracking every chimney. You did it, elf!</p><button class="go" id="fx">MERRY CHRISTMAS!</button></div>`, (c) => { c.querySelector('#fx').onclick = () => { this.app.ui.done(); }; }); }, 7000); }
+  doAct(o) { const ui = this.app.ui; if (o.kind !== 'cheer') sfx('click'); if (o.kind === 'hol') { holAct(o.id, this); return; }
     if (o.kind === 'cheer') this.cheer();
     else if (o.kind === 'npc') { const r = talk(o.npc.id, this); this.chat = { npc: o.npc }; ui.dialog(o.npc.d.n, r.lines, () => { this.chat = null; if (r.fx) r.fx(); this.recheck(); }); }
-    else if (o.kind === 'clue') { if (o.id === 'lemon') { const t = talk('taffy', this); this.toastMsg(t.lines[0][1]); if (t.fx) t.fx(); return; } if ((S.q.sun | 0) === 0) { this.toastMsg('🤔 Something\'s odd here. Maybe talk to Mayor Shelldon first.'); } this.addClue(o.id); }
-    else if (o.kind === 'glyph') { const t = { g1: '📜 The ancient book: "Three stones guard the hall of our ancestors. The FIRST shows the one who walks slowly: the SHELL."', g2: '', g3: '🗺️ The very old star chart, in faded paint: "…and the LAST stone shows the BAT, who watches the caves below."' }[o.id]; if (o.id === 'g2') { const n = this.npc.gramps; const r = talk('gramps', this); this.chat = { npc: n }; ui.dialog(n.d.n, r.lines, () => { this.chat = null; }); } else this.toastMsg(t); S.flags[o.id] = 1; persist(); }
-    else if (o.kind === 'dial') { this.dialA[o.i] = (this.dialA[o.i] + 1) % 4; S.dials = this.dialA.slice(); persist(); sfx('door'); if (!S.flags.door && GLYPH.answer.every((a, i) => this.dialA[i] === a)) { S.flags.door = 1; persist(); this.cam.shake = 0.6; setTimeout(() => { sfx('win'); this.toastMsg('🪨 RUMBLE… the carved stone sinks into the sand!'); }, 400); } }
+    else if (o.kind === 'clue') { if (o.id === 'lemon') { const t = talk('taffy', this); this.toastMsg(t.lines[0][1]); if (t.fx) t.fx(); return; } if ((S.q.sun | 0) === 0) { this.toastMsg('🤔 Something\'s odd here. Maybe talk to Mayor Shiverton first.'); } this.addClue(o.id); }
+    else if (o.kind === 'glyph') { const t = { g1: GLYPH_TXT.g1, g2: '', g3: GLYPH_TXT.g3 }[o.id]; if (o.id === 'g2') { const n = this.npc.gramps; const r = talk('gramps', this); this.chat = { npc: n }; ui.dialog(n.d.n, r.lines, () => { this.chat = null; }); } else this.toastMsg(t); S.flags[o.id] = 1; persist(); }
+    else if (o.kind === 'dial') { this.dialA[o.i] = (this.dialA[o.i] + 1) % 4; S.dials = this.dialA.slice(); persist(); sfx('door'); if (!S.flags.door && GLYPH.answer.every((a, i) => this.dialA[i] === a)) { S.flags.door = 1; persist(); this.cam.shake = 0.6; setTimeout(() => { sfx('win'); this.toastMsg('🪨 RUMBLE… the carved stone sinks into the fog!'); }, 400); } }
     else if (o.kind === 'descend') { sfx('door'); ui.fade(() => { this.me.place([154, UY + 0.1, 0], PI / 2); this.cam.yaw = PI / 2; this.cam.snap = true; }); if (!S.flags.under) { S.flags.under = 1; persist(); setTimeout(() => this.toastMsg('🕳️ Ancient tunnels… nobody has walked here in a very, very long time.'), 900); } }
     else if (o.kind === 'climb') { ui.fade(() => { const [dx, dz] = this.world.spots.sdoor; this.me.place([dx - 2.6, 0.1, dz], -PI / 2); this.cam.yaw = -PI / 2; this.cam.snap = true; }); }
-    else if (o.kind === 'relic') { if (S.badges.grotto) { this.toastMsg('🐚 The golden shell glows warmly. Slow and steady!'); return; } if (!S.secrets.includes('grotto')) S.secrets.push('grotto'); persist(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 60); this.badge('grotto'); this.toastMsg('🐚 The Golden Shell of the first Chief Tester! Badge: Grotto Explorer'); return; }
-    else if (o.kind === 'moonstone') { if (S.flags.moon) { this.toastMsg('🌙 The Moonstone glows. Somewhere above, the Moon Lantern glows back.'); return; } S.flags.moon = 1; if (!S.secrets.includes('hall')) S.secrets.push('hall'); persist(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 100); sfx('win'); this.toastMsg('🌙 The Moonstone! The Hall of the Lantern Keepers remembers you.'); this.giveHat('shellcrown'); this.badge('ancient'); if (S.secrets.length >= 5) { this.giveHat('wizard'); this.badge('secrets'); } }
-    else if (o.kind === 'plant') { if (S.plants.includes(o.i)) return; S.plants.push(o.i); persist(); sfx('part'); this.fx.burst(o.x, 1, o.z - 1, 0xff9a1f, 14, 4); this.toastMsg(`🌼 Marigold planted! (${S.plants.length}/4)` + (S.plants.length >= 4 ? ' Tell Mama Rosa!' : '')); }
+    else if (o.kind === 'relic') { if (S.badges.grotto) { this.toastMsg('🐚 The golden lantern glows warmly. Spooky and steady!'); return; } if (!S.secrets.includes('grotto')) S.secrets.push('grotto'); persist(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 60); this.badge('grotto'); this.toastMsg('🐚 The Golden Lantern of the first Chief Tester! Badge: Grotto Explorer'); return; }
+    else if (o.kind === 'moonstone') { if (S.flags.moon) { this.toastMsg('🌙 The Star Lantern glows. Somewhere above, the Moon Lantern glows back.'); return; } S.flags.moon = 1; if (!S.secrets.includes('hall')) S.secrets.push('hall'); persist(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 100); sfx('win'); this.toastMsg('🌙 The Star Lantern! The Hall of the Lantern Keepers remembers you.'); this.giveHat('shellcrown'); this.badge('ancient'); if (S.secrets.length >= 5) { this.giveHat('wizard'); this.badge('secrets'); } }
+    else if (o.kind === 'plant') { if (S.plants.includes(o.i)) return; S.plants.push(o.i); persist(); sfx('part'); this.fx.burst(o.x, 1, o.z - 1, 0xff9a1f, 14, 4); this.toastMsg(`🌼 Moonflower planted! (${S.plants.length}/4)` + (S.plants.length >= 4 ? ' Tell Mama Rosa!' : '')); }
     else if (o.kind === 'plot') this.plotAct(o);
     else if (o.kind === 'express') ui.express(this, o.i);
     else if (o.kind === 'mg') ui.minigame(o.game, this);
