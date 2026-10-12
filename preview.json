@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-12T05:20:00Z",
+  "updated": "2026-10-11T22:55:00-07:00",
   "items": [
     {
       "game": "torty",
@@ -187,7 +187,7 @@
       "url": "previews/torty/",
       "playable": true,
       "built": "2026-10-12",
-      "notes": "Early look! Torty's sunny desert hometown: Oasis Square + pond, Market Street, the Burrows (meet Torty's family), Hot Spring Hill, the Slow-Mo Racetrack and Lettuce Farm, plus TORTUGA TECH INC., Torty's own durability-testing company (drop tower, crush press, heat lab, live Test Yard, Make It Tougher). 19 walk-in buildings, the Sunstone mystery, turtle racing, Harvest Rush, shell polishing and more. Now much lighter on phone memory. Still being polished."
+      "notes": "WIP build: oasis square, Market Street, the Burrows, Hot Spring Hill, Slow-Mo Derby, lettuce farm, dunes, Tortuga Tech Inc. campus, NEW Old Adobe Quarter (bakery, music hall, toy shop) and Fiesta Plaza (cinema, ice cream, taco truck). Lighter on memory: loads with about half the peak memory, flat while exploring."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

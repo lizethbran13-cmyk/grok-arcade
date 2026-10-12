@@ -1,11 +1,12 @@
 // Grok Torty Town: Martina "Torty"'s desert-oasis hometown. A palm-ringed Oasis Square, Market Street, the Burrows (homes),
 // Hot Spring Hill, the Slow-Mo Racetrack, the Lettuce Farm and the Dunes & Canyon edge. 18 enterable buildings, each its own
 // culled region; outdoors batch into big merged chunks, tiny decor goes into far-culled "detail" chunks. All real 3D geometry.
-import { tortuga } from './tortuga.js?v=tt2';
+import { tortuga } from './tortuga.js?v=tt3';
+import { districts } from './districts.js?v=tt3';
 import * as THREE from 'three';
-import * as K from './kit.js?v=tt2';
-import { interiors } from './interiors.js?v=tt2';
-import { underground } from './under.js?v=tt2';
+import * as K from './kit.js?v=tt3';
+import { interiors } from './interiors.js?v=tt3';
+import { underground } from './under.js?v=tt3';
 const { wall, D, G, floor, ceiling, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, star, heart, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; let I = null;
 export const FL = 0.02;
@@ -28,14 +29,21 @@ export const REGIONS = [
   { id: 'club', x0: -30, x1: -12, z0: 74, z1: 90, y0: -1, y1: 7, ceil: 5.0, name: "🏁 Racers' Clubhouse" },
   { id: 'barn', x0: -104, x1: -86, z0: 44, z1: 60, y0: -1, y1: 9, ceil: 6.6, name: '🥬 Lettuce Barn' },
   { id: 'green', x0: -80, x1: -66, z0: 70, z1: 82, y0: -1, y1: 8, ceil: 5.4, name: '🪴 Greenhouse' },
+  { id: 'bakery', x0: -116, x1: -100, z0: -74, z1: -60, y0: -1, y1: 7, ceil: 4.8, name: '🥐 Desert Bloom Bakery' },
+  { id: 'music', x0: -92, x1: -72, z0: -74, z1: -58, y0: -1, y1: 9, ceil: 6.0, name: '🥁 Shell & Drum Music Hall' },
+  { id: 'toys', x0: -114, x1: -98, z0: -116, z1: -102, y0: -1, y1: 7, ceil: 4.8, name: "🧸 Shelly's Toy Burrow" },
+  { id: 'cinema', x0: 48, x1: 66, z0: 44, z1: 60, y0: -1, y1: 8, ceil: 5.6, name: '🎬 Slowmotion Picture House' },
+  { id: 'icecream', x0: 68, x1: 79, z0: 44, z1: 56, y0: -1, y1: 7, ceil: 4.6, name: '🍦 Cactus Cream' },
   { id: 'tortuga', x0: 60, x1: 96, z0: -68, z1: -42, y0: -1, y1: 8, ceil: 6.4, tone: 0.84, name: '🐢 Tortuga Tech Inc.' },
   // the hidden place (below the world, reached by a secret)
   { id: 'u_tunnel', x0: 150, x1: 176, z0: -6, z1: 6, y0: -34, y1: -24, ceil: -26.0, name: '🕳️ Ancient Tunnels', under: true },
   { id: 'u_crystal', x0: 176, x1: 204, z0: -16, z1: 16, y0: -34, y1: -20, ceil: -22.5, name: '💎 Crystal Cavern', under: true },
+  { id: 'u_grotto', x0: 178, x1: 206, z0: 16, z1: 42, y0: -34, y1: -20, ceil: -21.5, name: '🍄 Glowshroom Grotto', under: true },
   { id: 'u_hall', x0: 204, x1: 232, z0: -14, z1: 14, y0: -34, y1: -20, ceil: -23.0, name: '🐢 Hall of the Ancestors', under: true },
 ];
-export const NEAR = { u_tunnel: ['u_crystal'], u_crystal: ['u_tunnel', 'u_hall'], u_hall: ['u_crystal'] };
+export const NEAR = { u_tunnel: ['u_crystal'], u_crystal: ['u_tunnel', 'u_hall', 'u_grotto'], u_hall: ['u_crystal'], u_grotto: ['u_crystal'] };
 export const AREAS = [
+  { x0: -128, x1: -60, z0: -128, z1: -40, name: '🏺 Old Adobe Quarter' }, { x0: 46, x1: 80, z0: 32, z1: 62, name: '🎉 Fiesta Plaza' },
   { x0: -34, x1: 34, z0: -38, z1: 36, name: '🌴 Oasis Square' }, { x0: 30, x1: 120, z0: -32, z1: 32, name: '🛍️ Market Street' },
   { x0: -122, x1: -30, z0: -36, z1: 32, name: '🏡 The Burrows' }, { x0: -60, x1: 60, z0: -132, z1: -66, name: '♨️ Hot Spring Hill' },
   { x0: -36, x1: 80, z0: 62, z1: 130, name: '🏁 Slow-Mo Racetrack' }, { x0: -132, x1: -40, z0: 34, z1: 132, name: '🥬 Lettuce Farm' },
@@ -43,10 +51,10 @@ export const AREAS = [
 ];
 export function regionAt(x, y, z) { for (const r of REGIONS) if (x >= r.x0 && x <= r.x1 && z >= r.z0 && z <= r.z1 && y >= r.y0 && y <= r.y1) return r.id; return 'out'; }
 export function areaName(x, z) { for (const a of AREAS) if (x >= a.x0 && x <= a.x1 && z >= a.z0 && z <= a.z1) return a.name; return '🐢 Torty Town'; }
-export const DOORS = { tortuga: [78, -42], hall: [0, -42], library: [-37, -42], cafe: [37, -42], post: [-38, 40], inn: [37, 40], market: [62, -10], shellshop: [87, -10], pottery: [106, -10], sweets: [57, 10], fossil: [82, 10],
+export const DOORS = { bakery: [-108, -74], music: [-82, -74], toys: [-106, -102], cinema: [57, 44], icecream: [73.5, 44], tortuga: [78, -42], hall: [0, -42], library: [-37, -42], cafe: [37, -42], post: [-38, 40], inn: [37, 40], market: [62, -10], shellshop: [87, -10], pottery: [106, -10], sweets: [57, 10], fossil: [82, 10],
   burrow: [-59, -10], shelby: [-86, -10], school: [-60, 10], spa: [-23, -94], obs: [22, -98], club: [-12, 82], barn: [-86, 52], green: [-73, 70] };
 // Roadrunner Express stops (fast travel) [x, z, yaw, name]
-export const STOPS = [[6, 30, PI, '🌴 Oasis Square'], [114, 8, -PI / 2, '🛍️ Market Street'], [-112, 8, PI / 2, '🏡 The Burrows'], [6, -84, PI, '♨️ Hot Spring Hill'], [6, 66, 0, '🏁 Racetrack'], [-78, 38, PI / 2, '🥬 Lettuce Farm'], [100, 62, -PI / 2, '🏜️ Dunes & Canyon'], [84, -36, PI, '🐢 Tortuga Tech']];
+export const STOPS = [[6, 30, PI, '🌴 Oasis Square'], [114, 8, -PI / 2, '🛍️ Market Street'], [-112, 8, PI / 2, '🏡 The Burrows'], [6, -84, PI, '♨️ Hot Spring Hill'], [6, 66, 0, '🏁 Racetrack'], [-78, 38, PI / 2, '🥬 Lettuce Farm'], [100, 62, -PI / 2, '🏜️ Dunes & Canyon'], [84, -36, PI, '🐢 Tortuga Tech'], [-94, -72, PI, '🏺 Old Adobe Quarter'], [68, 30.5, PI, '🎉 Fiesta Plaza']];
 // ------------------------------------------------------------------------------------------------ shared helpers
 export const shade = (c, k) => { const C = new THREE.Color(c); C.multiplyScalar(k); return C.getHex(); };
 const prismCache = new Map();
@@ -159,7 +167,7 @@ export function buildTown(w) {
   w.env = { sunDir: [0.42, 0.8, 0.42], sunColor: 0xfff0d0, sunI: 2.7, hemiSky: 0xd8ecff, hemiGround: 0xc9a46a, hemiI: 0.6, skyTop: 0x2f8dff, skyMid: 0x9fd6ff, skyBot: 0xffe9c4, fog: 0xf3dcc0, fogD: 0.0032, exposure: 1.0, envI: 0.85, bloomT: 1.0, bloomS: 0.38, sunDisc: 1 };
   I = (o) => { w.inter.push(o); return o; }; w.I = I;
   w.region = 'shell'; ground(w); w.region = 'out'; square(w); market(w); burrows(w); hill(w); track(w); farm(w); dunes(w); border(w);
-  shells(w); interiors(w); tortuga(w); underground(w); w.region = 'out'; expressStops(w); w.region = 'shell';
+  shells(w); interiors(w); tortuga(w); districts(w); underground(w); w.region = 'out'; expressStops(w); w.region = 'shell';
   w.start = [0, 0.2, 21]; w.startYaw = PI; w.camDist = 9.5;
   return w; }
 export function tcrate(w, x, y, z, s = 1, col = 0xd8a15a, top = 'lettuce') { const T = w.tf(x, y, z, R() * 0.3, s); T.slab('m', col, 0, 0, 0, 1, 0.8, 1, 0.06); [-1, 1].forEach((sd) => { T.box('m', shade(col, 0.8), 0, 0.05, sd * 0.505, 0.9, 0.12, 0.03, 0.02); T.box('m', shade(col, 0.8), 0, 0.62, sd * 0.505, 0.9, 0.12, 0.03, 0.02); T.box('m', shade(col, 0.8), sd * 0.505, 0.05, 0, 0.03, 0.12, 0.9, 0.02); T.box('m', shade(col, 0.8), sd * 0.505, 0.62, 0, 0.03, 0.12, 0.9, 0.02); });
@@ -296,7 +304,8 @@ function hill(w) { const S = w.spots;
   for (let i = 0; i < 4; i++) palm(w, X0 - 2 + (i % 2) * (X1 - X0 + 4), -102 - Math.floor(i / 2) * 16, 0.95, 0.4);
   sign3d(w, 'HOT SPRINGS', 2, 2.0, -96.5, 0, 0.3, 0xffffff, 0x0f766e); w.add('m', cyl(10), 0x7c4a1e, 0.2, 0, -96.6, 0, 0, 0, 0.1, 2.0, 0.1); w.add('m', cyl(10), 0x7c4a1e, 3.8, 0, -96.6, 0, 0, 0, 0.1, 2.0, 0.1);
   // backdrop mesas
-  for (let i = 0; i < 9; i++) mesa(w, -60 + i * 15, -127, 14, 10 + (i % 3) * 3, 8, pick([0xd9824a, 0xc96f3a, 0xe08f55]));
+  for (let i = 0; i < 9; i++) { const x = -60 + i * 15; if (x < 30) mesa(w, x, -127, 14, 10 + (i % 3) * 3, 8, pick([0xd9824a, 0xc96f3a, 0xe08f55])); }
+  for (let i = 0; i < 8; i++) w.add('m', sph(24), pick([0xe8c48c, 0xdfb57c, 0xeccd98]), 34 + i * 13, -2, -131, 0, 0, 0, 9.5, 8 + (i % 3) * 2, 8);
   [[2, 3.6, -126.5], [-5, 1.0, -104.5], [18, 1.0, -92], [-30, 1.2, -90], [9, 2.0, -110]].forEach((p) => sunShell(w, ...p));
   w.secrets.push({ id: 'peak', x: 9, y: 2.4, z: -125, r: 2.0, msg: '♨️ Secret: the tiny top-top spring! Perfect for one very small tortoise' });
 }
@@ -347,10 +356,10 @@ function dunes(w) { const S = w.spots;
     for (let i = 0; i < 4; i++) w.add('m', torus(0.06, 40, PI * 0.9), 0xe6b97a, x, h * (0.2 + i * 0.18), z, PI / 2, 0, 0.3 * i, rx * (0.96 - i * 0.18), rz * (0.96 - i * 0.18), 0.2); w.solid(x - rx * 0.7, 0, z - rz * 0.7, x + rx * 0.7, h * 0.8, z + rz * 0.7, { cam: false }); };
   secretDoor(w); dune(110, 50, 7, 5, 3.2); dune(94, 74, 9, 6, 4.2); dune(114, 82, 6, 8, 3.6); dune(92, 110, 8, 6, 3.8); dune(116, 118, 7, 5, 3.0); dune(76, 124, 6, 5, 2.6);
   // canyon wall (east) with the rock arch + rim mesas (north-east)
-  for (let i = 0; i < 18; i++) if (Math.abs(-124 + i * 14.5 + 58) > 32) mesa(w, 128, -124 + i * 14.5, 8, 11 + (i % 3) * 3, 15, pick([0xd9824a, 0xc96f3a, 0xe08f55]));
+  for (let i = 0; i < 18; i++) { const z = -124 + i * 14.5; if (z > -20) mesa(w, 128, z, 8, 11 + (i % 3) * 3, 15, pick([0xd9824a, 0xc96f3a, 0xe08f55])); else w.add('m', sph(24), pick([0xe8c48c, 0xdfb57c, 0xeccd98]), 131, -2, z, 0, 0, 0, 9, 9 + (i % 3) * 2.5, 9.5); } // calm rolling dunes behind Tortuga Tech instead of stacked cliffs
   { const x = 108, z = 100; [-3.4, 3.4].forEach((o) => { w.add('m', blobGeo(7, 0.12, 2), 0xd9824a, x, 3, z + o, 0, 0, 0, 1.4, 3.2, 1.3); w.solid(x - 1.2, 0, z + o - 1.1, x + 1.2, 6, z + o + 1.1); }); w.add('m', torus(0.32, 32, PI), 0xd9824a, x, 5.2, z, 0, PI / 2, 0, 3.6, 2.2, 2.8);
     w.secrets.push({ id: 'arch', x, y: 0, z, r: 1.8, msg: '🌄 Secret: the Whispering Arch! Say "slow and steady" and it echoes back' }); }
-  for (let i = 0; i < 7; i++) mesa(w, 66 + i * 10, -98 - (i % 2) * 8, 9, 6 + (i % 3) * 2.5, 7, pick([0xd9824a, 0xe08f55]));
+  for (let i = 0; i < 9; i++) w.add('m', sph(24), pick([0xe8c48c, 0xdfb57c, 0xeccd98]), 64 + i * 8, -1.4, -100 - (i % 2) * 6, 0, 0, 0, 6.5, 3.6 + (i % 3) * 1.1, 5.5); // soft dunes (calm backdrop behind the Test Yard)
   for (let i = 0; i < 16; i++) { const x = 64 + R() * 60, z = -86 - R() * 36; if (i % 3 === 0) saguaro(w, x, z, 1.2 + R() * 0.6); else if (i % 3 === 1) bigRock(w, x, z, 1 + R()); else prickly(w, x, z, 1.3); }
   for (let i = 0; i < 14; i++) { const x = 84 + R() * 36, z = 36 + R() * 90; if (Math.hypot(x - 108, z - 100) < 6) continue; if (i % 2) saguaro(w, x, z, 1.1 + R() * 0.7); else barrel(w, x, z, 1.1); }
   // sand-sled hill (a gentle ramp you can slide down)
@@ -368,7 +377,7 @@ export function wedge3(W, H, L) { const s = new THREE.Shape(); s.moveTo(-L / 2, 
 // ------------------------------------------------------------------------------------------------ the valley rim (keeps everyone inside, looks like a canyon)
 function border(w) { for (let i = 0; i < 18; i++) { mesa(w, -126 + i * 14.6, 128, 15, 9 + (i % 4) * 2.5, 8, pick([0xd9824a, 0xc96f3a, 0xe08f55])); mesa(w, -128, -116 + i * 13.5, 8, 9 + (i % 3) * 3, 14, pick([0xd9824a, 0xc96f3a, 0xe08f55])); }
   w.solid(-134, 0, -134, 134, 30, -129, { wall: true }); w.solid(-134, 0, 129, 134, 30, 134, { wall: true }); w.solid(-134, 0, -134, -129, 30, 134, { wall: true }); w.solid(129, 0, -134, 134, 30, 134, { wall: true });
-  for (let i = 0; i < 40; i++) { const x = -120 + R() * 240, z = -120 + R() * 240; if (Math.hypot(x, z) < 40 || (Math.abs(z) < 34 && Math.abs(x) < 122) || (x > -40 && x < 80 && z > 62) || (x < -40 && z > 34) || (Math.abs(x) < 40 && z < -66) || Math.hypot(x - 108, z - 100) < 8 || (x > 54 && z > -84 && z < -30)) continue; w.detail = true; K.rock(w, x, z, 0.5 + R() * 0.5, pick([0xc9a27a, 0xd8b48a])); w.detail = false; }
+  for (let i = 0; i < 40; i++) { const x = -120 + R() * 240, z = -120 + R() * 240; if (Math.hypot(x, z) < 40 || (Math.abs(z) < 34 && Math.abs(x) < 122) || (x > -40 && x < 80 && z > 62) || (x < -40 && z > 34) || (Math.abs(x) < 40 && z < -66) || Math.hypot(x - 108, z - 100) < 8 || (x > 54 && z > -84 && z < -30) || (x < -58 && z < -40) || (x > 44 && x < 82 && z > 30 && z < 64)) continue; w.detail = true; K.rock(w, x, z, 0.5 + R() * 0.5, pick([0xc9a27a, 0xd8b48a])); w.detail = false; }
 }
 // ------------------------------------------------------------------------------------------------ Roadrunner Express stops
 function expressStops(w) { w.region = 'out'; STOPS.forEach(([x, z, yaw, nm], i) => { const T = w.tf(x, 0, z, yaw); T.slab('m', 0xe8b07a, 0, 0, -1.2, 3.4, 0.25, 1.4, 0.08, { cam: false }); [-1.5, 1.5].forEach((s) => T.box('m', 0x7c4a1e, s, 0.25, -1.6, 0.15, 2.6, 0.15, 0.04)); T.add('m', prism(3.8, 0.7, 1.4), 0x2563eb, 0, 2.85, -1.4);

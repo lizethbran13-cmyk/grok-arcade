@@ -1,29 +1,29 @@
 // Grok Torty Town runtime: the town, players, townsfolk, the shuttle cart, ambient desert life, day -> sunset, collectibles,
 // the Sunstone mystery, the Slow-Mo Derby + Harvest Rush (3D mini-games), a hidden puzzle, co-op hooks.
 import * as THREE from 'three';
-import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=tt2';
-import { World } from './world.js?v=tt2';
-import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=tt2';
-import { UY } from './under.js?v=tt2';
-import { Player } from './player.js?v=tt2';
-import { FX } from './fx.js?v=tt2';
-import { makeRat, animRat, MB, toGroup } from './models.js?v=tt2';
-import { makePup, animPup, birdGeo } from './dogs.js?v=tt2';
-import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=tt2';
-import { P } from './geo.js?v=tt2';
-import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=tt2';
-import { updateFrustum, inView, LightPool } from './perf.js?v=tt2';
-import { sfx, playMusic } from './audio.js?v=tt2';
-import { S, persist } from './save.js?v=tt2';
-import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=tt2';
-import { readMove, edge, held, IN } from './input.js?v=tt2';
+import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=tt3';
+import { World } from './world.js?v=tt3';
+import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=tt3';
+import { UY } from './under.js?v=tt3';
+import { Player } from './player.js?v=tt3';
+import { FX } from './fx.js?v=tt3';
+import { makeRat, animRat, MB, toGroup } from './models.js?v=tt3';
+import { makePup, animPup, birdGeo } from './dogs.js?v=tt3';
+import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=tt3';
+import { P } from './geo.js?v=tt3';
+import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=tt3';
+import { updateFrustum, inView, LightPool } from './perf.js?v=tt3';
+import { sfx, playMusic } from './audio.js?v=tt3';
+import { S, persist } from './save.js?v=tt3';
+import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=tt3';
+import { readMove, edge, held, IN } from './input.js?v=tt3';
 const PI = Math.PI;
 const TOYS = [[60, 0, 76], [-70, 0, 61], [108, 0, -4]];
 const DAY = 420; // seconds per day -> sunset cycle
 export class Game {
   constructor(app, opts = {}) {
     this.app = app; this.scene = E.scene; this.net = app.net; this.hud = app.hud; this.T = 0; this.levelId = 'tortytown';
-    const w = this.world = new World(); w.game = this; buildTown(w); w.finalize(this.scene);
+    const w = this.world = new World(); w.game = this; { const R = E.renderer, rt = new THREE.WebGLRenderTarget(4, 4), sc = new THREE.Scene(); w.uploader = (m) => { const fc = m.frustumCulled; m.frustumCulled = false; const par = m.parent; sc.add(m); const prev = R.getRenderTarget(), sm = R.shadowMap.autoUpdate; R.shadowMap.autoUpdate = false; R.setRenderTarget(rt); R.render(sc, E.camera); R.setRenderTarget(prev); R.shadowMap.autoUpdate = sm; sc.remove(m); if (par) par.add(m); m.frustumCulled = fc; }; w._upRT = rt; } buildTown(w); w.finalize(this.scene); w.uploader = null; w._upRT.dispose();
     setEnvironment(w.env); this.fx = new FX(this.scene); this.extra = []; this.lightPool = new LightPool(this.scene, w.lights, 4);
     this.players = new Map();
     this.me = new Player({ rat: 'human', look: S.look, outfit: S.outfit, name: S.name || 'You', local: true, gadgets: new Set(), pid: opts.pid || 'me' });
@@ -266,6 +266,7 @@ export class Game {
     else if (o.kind === 'dial') { this.dialA[o.i] = (this.dialA[o.i] + 1) % 4; S.dials = this.dialA.slice(); persist(); sfx('door'); if (!S.flags.door && GLYPH.answer.every((a, i) => this.dialA[i] === a)) { S.flags.door = 1; persist(); this.cam.shake = 0.6; setTimeout(() => { sfx('win'); this.toastMsg('🪨 RUMBLE… the carved stone sinks into the sand!'); }, 400); } }
     else if (o.kind === 'descend') { sfx('door'); ui.fade(() => { this.me.place([154, UY + 0.1, 0], PI / 2); this.cam.yaw = PI / 2; this.cam.snap = true; }); if (!S.flags.under) { S.flags.under = 1; persist(); setTimeout(() => this.toastMsg('🕳️ Ancient tunnels… nobody has walked here in a very, very long time.'), 900); } }
     else if (o.kind === 'climb') { ui.fade(() => { const [dx, dz] = this.world.spots.sdoor; this.me.place([dx - 2.6, 0.1, dz], -PI / 2); this.cam.yaw = -PI / 2; this.cam.snap = true; }); }
+    else if (o.kind === 'relic') { if (S.badges.grotto) { this.toastMsg('🐚 The golden shell glows warmly. Slow and steady!'); return; } if (!S.secrets.includes('grotto')) S.secrets.push('grotto'); persist(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 60); this.badge('grotto'); this.toastMsg('🐚 The Golden Shell of the first Chief Tester! Badge: Grotto Explorer'); return; }
     else if (o.kind === 'moonstone') { if (S.flags.moon) { this.toastMsg('🌙 The Moonstone glows. Somewhere above, the Sunstone glows back.'); return; } S.flags.moon = 1; if (!S.secrets.includes('hall')) S.secrets.push('hall'); persist(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 100); sfx('win'); this.toastMsg('🌙 The Moonstone! The Hall of the Ancestors remembers you.'); this.giveHat('shellcrown'); this.badge('ancient'); if (S.secrets.length >= 5) { this.giveHat('wizard'); this.badge('secrets'); } }
     else if (o.kind === 'plant') { if (S.plants.includes(o.i)) return; S.plants.push(o.i); persist(); sfx('part'); this.fx.burst(o.x, 1, o.z - 1, 0xff9a1f, 14, 4); this.toastMsg(`🌼 Marigold planted! (${S.plants.length}/4)` + (S.plants.length >= 4 ? ' Tell Mama Rosa!' : '')); }
     else if (o.kind === 'plot') this.plotAct(o);

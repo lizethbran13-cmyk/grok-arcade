@@ -1,7 +1,7 @@
 // The hidden place beneath Torty Town: Ancient Tunnels -> Crystal Cavern -> Hall of the Ancestors. (Reached only by a secret.)
 import * as THREE from 'three';
-import * as K from './kit.js?v=tt2';
-import { tortStatue, shade, SUN } from './town.js?v=tt2';
+import * as K from './kit.js?v=tt3';
+import { tortStatue, shade, SUN } from './town.js?v=tt3';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; export const UY = -30;
 const ROCK = [0x8a6a52, 0x7a5c48, 0x9a785e, 0x6e523f];
@@ -28,7 +28,7 @@ export function underground(w) { const Y = UY;
   sign3d(w, 'SLOW AND STEADY FINDS THE WAY', 163, Y + 3.2, -5.6, 0, 0.18, 0xffd23f, 0x5b4334);
   w.gears.push([166, Y + 0.9, 3.5]);
   // ---------------- CRYSTAL CAVERN
-  room(w, 'u_crystal', 176, -16, 204, 16, -22.5, 0x7a6a8a, [['z', 176, -2, 2], ['z', 204, -2, 2]]); w.region = 'u_crystal';
+  room(w, 'u_crystal', 176, -16, 204, 16, -22.5, 0x7a6a8a, [['z', 176, -2, 2], ['z', 204, -2, 2], ['x', 16, 188, 192]]); w.region = 'u_crystal';
   const cc = [0x5eead4, 0xa78bfa, 0xf472b6, 0x60a5fa, 0xfde68a];
   [[180, -12, 1.6], [184, 12, 1.9], [190, -13, 2.2], [198, 12.5, 1.8], [201, -11, 1.5], [179, 7, 1.2], [194, 6, 1.0], [187, -6, 0.9], [200, 3, 1.1], [183, -2.5, 0.7]].forEach(([x, z, s], i) => { crystal(w, x, Y, z, s, cc[i % 5], 0, i); w.solid(x - 0.5 * s, Y, z - 0.5 * s, x + 0.5 * s, Y + 1.8 * s, z + 0.5 * s); w.lights.push({ x, y: Y + 1.6, z, c: cc[i % 5], i: 6, d: 9 }); });
   for (let i = 0; i < 26; i++) crystal(w, 177 + R() * 26, Y + 7.3, -15 + R() * 30, 0.35 + R() * 0.3, pick(cc), 0, R() * 6);
@@ -37,6 +37,25 @@ export function underground(w) { const Y = UY;
   for (let i = 0; i < 24; i++) { const x = 177.5 + R() * 25, z = (R() < 0.5 ? -1 : 1) * (8 + R() * 7); w.add('m', cyl(8), 0xfef3c7, x, Y, z, 0, 0, 0, 0.05, 0.3, 0.05); w.add('l', sph(10), pick([0x5eead4, 0xf472b6, 0xa78bfa]), x, Y + 0.35, z, 0, 0, 0, 0.18, 0.1, 0.18, 0.5); }
   w.secrets.push({ id: 'echo', x: 191, y: Y, z: -4.6, r: 1.6, msg: '💎 Secret: the singing crystal! Tap tap… it hums a slow little tune.' });
   w.gears.push([179, Y + 3.2, 7]); w.gears.push([201, Y + 1.2, 6]);
+  // ---------------- GLOWSHROOM GROTTO (through the crystal cavern): an underground stream, giant glowing mushrooms, the ancestors' shell library + the oldest durability test
+  room(w, 'u_grotto', 178, 16, 206, 42, -21.5, 0x5c6b4a, [['x', 16, 188, 192]]); w.region = 'u_grotto';
+  { // winding stream with a little arched stone bridge
+    for (let i = 0; i < 18; i++) { const x = 179 + i * 1.6, z = 29 + Math.sin(i * 0.55) * 3; w.add('l', rcyl(1.3, 0.05, 0.02, 20), 0x22d3ee, x, Y + 0.02, z, 0, 0, 0, 1, 1, 0.8, 0.12); w.add('e', rcyl(1.25, 0.08, 0.02, 20), 0x7dd3fc, x, Y + 0.06, z, 0, 0, 0, 1, 1, 0.8); }
+    w.add('m', torus(0.25, 24, PI), 0xc9a27a, 190.2, Y, 29 + Math.sin(7 * 0.55) * 3, 0, PI / 2, 0, 1.8, 1.1, 2.4); w.add('m', rbox(1.6, 0.2, 3.6, 0.08), 0xd9b88a, 190.2, Y + 1.05, 29 + Math.sin(7 * 0.55) * 3);
+    // giant glowing mushrooms + clusters of little ones
+    [[181, 20, 1.6, 0x60a5fa], [185, 38, 2.0, 0xa78bfa], [200, 21, 1.8, 0xf472b6], [203, 37, 1.5, 0x5eead4], [196, 39, 1.1, 0xfde68a], [180, 33, 1.2, 0xf472b6]].forEach(([x, z, sc, c]) => { w.add('m', rcyl(0.22 * sc, 2.2 * sc, 0.08, 16), 0xf5f0e6, x, Y, z); w.add('l', sph(24), c, x, Y + 2.2 * sc, z, 0, 0, 0, 1.1 * sc, 0.5 * sc, 1.1 * sc, 0.5); for (let k = 0; k < 6; k++) w.add('g', sph(8), 0xffffff, x + Math.cos(k) * 0.7 * sc, Y + 2.45 * sc, z + Math.sin(k) * 0.7 * sc, 0, 0, 0, 0.1 * sc); w.solid(x - 0.3 * sc, Y, z - 0.3 * sc, x + 0.3 * sc, Y + 2.4 * sc, z + 0.3 * sc); w.lights.push({ x, y: Y + 2 * sc, z, c, i: 5, d: 8 }); });
+    for (let i = 0; i < 40; i++) { const x = 179 + R() * 26, z = 17.5 + R() * 23.5; if (Math.abs(z - 29) < 4) continue; w.add('m', cyl(8), 0xfef3c7, x, Y, z, 0, 0, 0, 0.05, 0.25, 0.05); w.add('l', sph(10), pick([0x5eead4, 0xf472b6, 0xa78bfa, 0x60a5fa]), x, Y + 0.28, z, 0, 0, 0, 0.16, 0.08, 0.16, 0.5); }
+    for (let i = 0; i < 16; i++) w.add('g', blobGeo(i, 0.25, 1), 0x4d7c3a, 179 + R() * 26, Y + 0.1, 17 + R() * 24, 0, R() * 6, 0, 0.5 + R() * 0.4, 0.2, 0.5 + R() * 0.4);
+    // the ancestors' shell library: carved shelves of stone tablets and shell scrolls
+    for (let i = 0; i < 3; i++) { const x = 182 + i * 4.2, z = 41.4; w.add('m', rbox(3.4, 3.0, 0.7, 0.15), 0xb9956e, x, Y + 1.5, z); w.solid(x - 1.7, Y, z - 0.35, x + 1.7, Y + 3.0, z + 0.35); for (let r = 0; r < 3; r++) for (let k = 0; k < 6; k++) { const px = x - 1.35 + k * 0.54, py = Y + 0.5 + r * 0.9; if ((k + r) % 3) w.add('m', rbox(0.38, 0.6, 0.1, 0.04), pick([0xe8c9a0, 0xd9b88a, 0xc9a27a]), px, py, z - 0.36); else w.add('g', lathe([[0, 0], [0.18, 0], [0.16, 0.18], [0.08, 0.3], [0, 0.32]], 14, 'scroll'), pick([0xd1a05e, 0xb98545, 0x6e4524]), px, py - 0.25, z - 0.4); } }
+    w.I({ kind: 'fun', x: 186, y: Y, z: 39.6, r: 2.4, label: '📜 Read the shell tablets', msgs: ['📜 "Day 1: we put a shell under the waterfall. Day 4,000: still a shell." (The world\'s first durability test!)', '📜 A tablet signed with a tiny footprint: "Torty\'s great-great-great-great grandma, Chief Tester."', '📜 "Be slow. Be steady. Be TOUGH." Looks like Tortuga Tech runs in the family.'] });
+    // the oldest durability test: a stone shell under a little waterfall, still perfect
+    { const x = 202.5, z = 29; w.add('m', rbox(3.2, 4.2, 1.2, 0.3), 0x7a6a5a, x + 1.6, Y + 2.1, z); for (let k = 0; k < 6; k++) w.add('e', capsule(10), 0x7dd3fc, x + 0.6, Y + 2.0, z - 0.6 + k * 0.24, 0, 0, 0, 0.1, 3.8, 0.1); w.add('l', rcyl(1.0, 0.06, 0.02, 20), 0xbfeaff, x, Y + 0.05, z, 0, 0, 0, 1, 1, 1, 0.3); w.add('g', lathe([[0, 0], [0.8, 0], [0.75, 0.3], [0.5, 0.6], [0, 0.68]], 28, 'oshell'), 0x8a6a52, x - 0.2, Y + 0.1, z); w.solid(x - 1, Y, z - 1, x + 3.2, Y + 4.2, z + 1); }
+    { const x = 194.5, z = 18.6; w.add('m', rcyl(0.6, 0.8, 0.1, 20), 0xb9956e, x, Y, z); w.add('l', lathe([[0, 0], [0.3, 0], [0.34, 0.12], [0.22, 0.3], [0, 0.36]], 20, 'relicShell'), 0xffd23f, x, Y + 0.8, z, 0, 0, 0, 1, 1, 1, 0.6); w.solid(x - 0.6, Y, z - 0.6, x + 0.6, Y + 0.85, z + 0.6); w.lights.push({ x, y: Y + 1.5, z, c: 0xffd23f, i: 6, d: 6 }); }
+    w.secrets.push({ id: 'grotto', x: 0, y: -999, z: 0, r: -1, msg: '' }, { id: 'hall', x: 0, y: -999, z: 0, r: -1, msg: '' }); w.I({ kind: 'relic', x: 194.5, y: Y, z: 20.2, r: 2.0, label: '🐚 Look at the golden shell' });
+    sign3d(w, 'GLOWSHROOM GROTTO', 192, Y + 6.2, 16.4, PI, 0.28, 0x5eead4, 0x3f4a33);
+    w.gears.push([181, Y + 3.9, 20]); w.gears.push([203, Y + 4.6, 37]); w.gears.push([190.2, Y + 1.6, 29 + Math.sin(7 * 0.55) * 3]);
+    w.secrets.push({ id: 'stream', x: 184, y: Y, z: 28.6, r: 1.6, msg: '💧 Secret: the glowing stream! Little cave fish swim by… very, very slowly.' }); }
   // ---------------- HALL OF THE ANCESTORS
   room(w, 'u_hall', 204, -14, 232, 14, -23.0, 0xc9a27a, [['z', 204, -2, 2]]); w.region = 'u_hall';
   const disc = new THREE.CircleGeometry(6, 64).rotateX(-PI / 2); w.addFn('g', disc, (c, x, y, z) => { const r = Math.hypot(x, z), a = Math.atan2(z, x); c.setHex(r < 1.6 ? 0xa78bfa : r < 4 ? ((Math.floor((a + PI) / (PI / 6)) % 2) ? 0x6366f1 : 0x312e81) : 0xd4a017); }, 222, Y + 0.02, 0);

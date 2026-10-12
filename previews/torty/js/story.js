@@ -1,5 +1,5 @@
 // Torty Town townsfolk, what they say, side tasks and the mystery "Who swiped the Sunstone?". Pure data + helpers.
-import { S, persist } from './save.js?v=tt2';
+import { S, persist } from './save.js?v=tt3';
 const PI = Math.PI;
 export const HATS = [
   { id: 'none', n: 'No Hat', how: 'Always yours' }, { id: 'pupears', n: 'Schnauzer Ears', how: "Find Candy's 3 squeaky cactus toys" }, { id: 'flower', n: 'Desert Marigold', how: "Plant Mama Rosa's 4 marigolds" },
@@ -8,7 +8,7 @@ export const HATS = [
   { id: 'detective', n: 'Detective Hat', how: 'Solve the Sunstone mystery' }, { id: 'wizard', n: 'Wizard Hat', how: 'Find 5 secrets' }, { id: 'shellcrown', n: 'Ancient Shell Crown', how: '???' }, { id: 'hardhat', n: 'Tortuga Tech Hard Hat', how: 'Become a Tortuga Tech intern' }, { id: 'crown', n: 'Gold Crown', how: 'Every Sun Shell + the mystery' },
 ];
 export const BADGES = { sun: '☀️ Sunstone Detective', toys: "🧸 Candy's Best Friend", garden: '🌼 Green Thumb', race: '🏁 Derby Champ', farm: '🥬 Lettuce Legend', polish: '✨ Shell Shiner', catch: '🍐 Pear Catcher', bubbles: '🫧 Bubble Popper',
-  express: '🐦 Express Rider', secrets: '🗝️ Secret Seeker', shells: '🐚 Sun Shell Collector', friends: '🐀 Visitor Welcome Crew', family: "🐢 Torty's Family Friend", ancient: '🌙 Keeper of the Moonstone', tough: '🛡️ Make-It-Tougher Pro', intern: '🏢 Tortuga Tech Intern' };
+  express: '🐦 Express Rider', secrets: '🗝️ Secret Seeker', shells: '🐚 Sun Shell Collector', friends: '🐀 Visitor Welcome Crew', family: "🐢 Torty's Family Friend", ancient: '🌙 Keeper of the Moonstone', tough: '🛡️ Make-It-Tougher Pro', grotto: '🍄 Grotto Explorer', intern: '🏢 Tortuga Tech Intern' };
 // look: { t: tortoise opts + s: scale } | { bird } | { liz } | { rat } | { dog }
 const N = (id, n, look, at, region, o = {}) => Object.assign({ id, n, look, at, region }, o);
 const ring = (cx, cz, r, n = 10, rz = r, a0 = 0) => Array.from({ length: n }, (_, i) => { const a = a0 + i / n * PI * 2; return [cx + Math.cos(a) * r, cz + Math.sin(a) * rz]; });
@@ -63,6 +63,21 @@ export const NPCS = [
   N('paige', 'Paige (Librarian)', { t: { shell: 'plum', glasses: 0xa66bff, neck: 'scarf', neckC: 0x3b82f6 }, s: 0.28 }, [-31.4, -53.4, -PI / 2], 'library'),
   N('reader', 'Rupert (reading)', { t: { shell: 'grey', glasses: true, hat: 'beret', hatC: 0x1e3a8a }, s: 0.28 }, [-42, -43.6, PI], 'library', { mode: 'work' }),
   N('clerk', 'Clerk Clementine', { t: { shell: 'sand', glasses: true, neck: 'bowtie', neckC: 0x0f766e }, s: 0.27 }, [5.6, -47, -0.6], 'hall'),
+  // ---- Old Adobe Quarter + Fiesta Plaza
+  N('baker', 'Baker Biscotti', { t: { shell: 'gold', hat: 'chef', neck: 'apron', neckC: 0xe2733f }, s: 0.3 }, [-109.5, -70.2, 0], 'bakery', { mode: 'work' }),
+  N('bakfan', 'Crumbs (eating a concha)', { t: { shell: 'rose', bow: 0xffd23f }, s: 0.27 }, [-106.8, -64.2, -PI / 2], 'bakery', { mode: 'chat' }),
+  N('drummer', 'Rhythm Ray (drummer)', { t: { shell: 'plum', glasses: 0x111827, hat: 'bandana', hatC: 0x7c3aed }, s: 0.3 }, [-84.4, -61.6, 0], 'music', { y: 0.72, mode: 'cheer' }),
+  N('singer', 'Melody (singer)', { t: { shell: 'sky', flower: 0xff5d8f, neck: 'scarf', neckC: 0xffd23f }, s: 0.28 }, [-81.6, -61.2, 0], 'music', { y: 0.72 }),
+  N('mfan', 'Concert Fan', { t: { shell: 'olive', hat: 'cap', hatC: 0xff5d8f }, s: 0.27 }, [-82.6, -67.4, PI], 'music', { mode: 'cheer' }),
+  N('toymaker', 'Grandma Shelly (toymaker)', { t: { shell: 'grey', glasses: 0xd4a017, neck: 'apron', neckC: 0x2563eb, flower: 0xffd23f }, s: 0.29 }, [-100, -104.2, PI], 'toys'),
+  N('toykid', 'Little Tumble', { t: { shell: 'moss', hat: 'cap', hatC: 0xef4444 }, s: 0.14 }, [-104.6, -109.4, 0.6], 'toys', { mode: 'cheer' }),
+  N('usher', 'Usher Reel', { t: { shell: 'coral', hat: 'cap', hatC: 0xb91c1c, neck: 'bowtie', neckC: 0xffd23f }, s: 0.29 }, [54.4, 46.6, PI], 'cinema'),
+  N('moviefan', 'Popcorn Pete (watching)', { t: { shell: 'olive', glasses: true }, s: 0.27 }, [53.6, 53.3, 0], 'cinema', { y: 0.44 }),
+  N('scoop', 'Scoop (ice cream)', { t: { shell: 'rose', hat: 'visor', hatC: 0x2dd4bf, neck: 'apron', neckC: 0xff5d8f }, s: 0.29 }, [73.5, 54.8, PI], 'icecream', { mode: 'work' }),
+  N('icekid', 'Sprinkles', { t: { shell: 'sky', bow: 0xff5d8f }, s: 0.15 }, [71.1, 48.4, 0], 'icecream'),
+  N('taco', 'Taco Tina (food truck)', { t: { shell: 'gold', hat: 'straw', bandC: 0xff5d8f, neck: 'apron', neckC: 0x2dd4bf }, s: 0.29 }, [51.4, 37.8, PI / 2], 'out'),
+  N('fiestafan', 'Lola (fiesta-goer)', { t: { shell: 'coral', flower: 0xffd23f }, s: 0.27 }, [70, 37.6, 0], 'out', { mode: 'chat' }),
+  N('quarterfan', 'Old Adobe Al', { t: { shell: 'grey', hat: 'straw', beard: true }, s: 0.28 }, [-88.6, -82, -PI / 2], 'out'),
   // ---- Tortuga Tech Inc. (Torty's company)
   N('shelly', 'Shelly (Tortuga Tech Reception)', { t: { shell: 'sky', glasses: 0x0f9d8a, neck: 'scarf', neckC: 0x0f9d8a, flower: 0xffd23f }, s: 0.28 }, [85.7, -46.2, -PI / 2], 'tortuga'),
   N('bolt', 'Engineer Bolt (Drop Tower)', { t: { shell: 'olive', hat: 'helmet', hatC: 0xfacc15, glasses: true, neck: 'bowtie', neckC: 0xef4444 }, s: 0.3 }, [62.6, -51.2, PI / 2], 'tortuga', { mode: 'work' }),
@@ -165,6 +180,20 @@ export function talk(id, G) { const n = (S.talks[id] = (S.talks[id] | 0) + 1); p
     case 'tester2': return { lines: L(cyc(['The Squish Test! The armored melon wins every time.', 'Squish, unsquish, write it down. Squish, unsquish…'])) };
     case 'ttfan1': case 'ttfan2': case 'ttfan3': return { lines: L(cyc(['GO SHELL GO! 🐢', 'I come every Saturday to watch the Big Drop!', 'That boulder is foam. I checked. Still exciting!'])) };
     case 'ttfan4': return { lines: L(cyc(['Best seats in town. The squish is SO satisfying.', 'Tortuga Tech tested my tail. It\'s fine. It was always fine.'])) };
+    case 'baker': return { lines: L(cyc(['Fresh cactus conchas! Slow-baked for six hours. Worth it.', 'Torty orders a dozen every visit. She says they\'re "drop-tested". They\'re just delicious.'])) };
+    case 'bakfan': return { lines: L(cyc(['Mmmf. Best concha in the desert. Mmmf.', 'The ovens keep the whole Quarter toasty at night.'])) };
+    case 'drummer': return { lines: L(cyc(['ONE… two… three… four. (We play at turtle tempo.)', 'Tonight: "Slow Rock Sunset". Bring a cushion!'])) };
+    case 'singer': return { lines: L(cyc(['♪ Shell-ebrate good times, come on! ♪', 'Torty used to sing here before she started Tortuga Tech. Very… durable vocals.'])) };
+    case 'mfan': return { lines: L(cyc(['ENCORE! Eventually!', 'Front row cushions are the comfiest.'])) };
+    case 'toymaker': return { lines: L(cyc(['Every toy here is hand-carved. And Tortuga-Tech-tested for toddler toughness!', 'Pebble saves his allowance for my wind-up racers.'])) };
+    case 'toykid': return { lines: L(cyc(['CHOO CHOO! The train goes round and round and round…', 'I want the rocking tortoise. It\'s SO fast. (It isn\'t.)'])) };
+    case 'usher': return { lines: L(cyc(['Now showing: "The Slowest Sunset". Runtime: 4 hours. Popcorn: free refills.', 'Please turn off your shells. I mean your phones.'])) };
+    case 'moviefan': return { lines: L(cyc(['Shh! The sun is about to set. Any minute now.', 'This is my 9th time seeing it. It gets me every time.'])) };
+    case 'scoop': return { lines: L(cyc(['Twelve flavours, all slow-churned. Prickly pear is the bestseller!', 'Try lettuce-lime. Trust me.'])) };
+    case 'icekid': return { lines: L(cyc(['Brain freeze! …Slowly.', 'I got THREE scoops. Mama said one. Shh.'])) };
+    case 'taco': return { lines: L(cyc(['Taco Tortuga! Lettuce tacos, cactus tacos, more lettuce tacos.', 'The truck was shell-tested at Tortuga Tech. It survived a stampede of hungry racers.'])) };
+    case 'fiestafan': return { lines: L(cyc(['Fiesta every night! Well, every slow night.', 'Catch a movie, grab an ice cream, then dance by the fountain.'])) };
+    case 'quarterfan': return { lines: L(cyc(['The Old Adobe Quarter is the oldest part of town. Even older than Gramps!', 'Bakery, music hall, toy shop… everything a slow afternoon needs.'])) };
     case 'intern': return { lines: L(cyc(['I\'m the junior intern! My job is testing if the sofas are comfy. They are.', 'When I grow up I want to be as tough as Torty.'])) };
     case 'fisher': return { lines: L(cyc(['Shhh. The fish in this pond are very relaxed. So am I.', 'Caught nothing in 40 years. Best hobby ever.'])) };
     case 'lemon': return { lines: L(cyc(['Cactus lemonade! Sweet, sour and only a LITTLE prickly.', 'Snowie bought three cups. And a bag of lemon drops. That rat loves lemon.'])) };

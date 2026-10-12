@@ -1,9 +1,9 @@
 // World: batched static geometry (chunked per material), colliders, zones and queries.
 import * as THREE from 'three';
-import { compact } from './compact.js?v=tt2';
+import { compact, spillCompact } from './compact.js?v=tt3';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { MATS } from './mats.js?v=tt2';
+import { MATS } from './mats.js?v=tt3';
 
 const CH = 22, CELL = 8;
 const _m = new THREE.Matrix4(), _m2 = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3(), _c = new THREE.Color(), _n = new THREE.Matrix3();
@@ -46,21 +46,26 @@ export class World {
   constructor(def) {
     this.def = def || {}; this.group = new THREE.Group(); this.chunks = new Map(); this.solids = []; this.dyn = []; this.zones = []; this.grid = new Map(); this.stamp = 0;
     this.ents = []; this.hooks = []; this.checkpoints = []; this.doors = []; this.plates = []; this.levers = []; this.movers = []; this.enemies = []; this.lights = []; this.anims = []; this.killY = -6; this.route = [];
-    this.tris = 0; this.drawCalls = 0; this.fades = []; this._fg = null; this.region = 'shell'; this.detail = false; this.regionMeshes = {}; this.detailMeshes = [];
+    this.tris = 0; this.drawCalls = 0; this.fades = []; this._fg = null; this._region = 'shell'; this.detail = false; this.regionMeshes = {}; this.detailMeshes = [];
     this.oy = 0; // vertical build offset: upper storeys reuse every floor-level prop helper unchanged
   }
+  // interiors are built in one go: when the builder leaves an interior region, its batches are final -> merge, upload, free right away
+  get region() { return this._region; }
+  set region(v) { const p = this._region; if (false) { for (const [k, ch] of this.chunks) if (ch.region === p && ch.fade < 0) { this._final(ch); this.chunks.delete(k); } } this._region = v; }
   // props built between fadeBegin/fadeEnd become their own small meshes that hide while they block the camera's view of your rat
   fadeBegin() { this._fg = { id: this.fades.length, box: new THREE.Box3(), meshes: [] }; this.fades.push(this._fg); }
   fadeEnd() { this._fg = null; }
   // ---- visuals ----
   _part(bucket, geom, color, m, em = 0) {
+    if (this._pendingFlush) { const c0 = this._pendingFlush; this._pendingFlush = null; this._flush(c0); }
     const g0 = prep(lodGeo(geom, m)); const g = g0.clone(); g.applyMatrix4(m); if (this.oy) g.translate(0, this.oy, 0);
     const n = g.attributes.position.count, a = new Float32Array(n * 3); _c.set(color); const k = em ? 1 + em : 1;
     for (let i = 0; i < n; i++) { a[i * 3] = _c.r * k; a[i * 3 + 1] = _c.g * k; a[i * 3 + 2] = _c.b * k; }
     g.setAttribute('color', new THREE.BufferAttribute(a, 3));
     const F = this._fg; if (F) { g.computeBoundingBox(); F.box.union(g.boundingBox); }
     const chs = this.detail ? 18 : (this.region === 'out' || this.region === 'shell') ? 36 : 400, cx = Math.floor(m.elements[12] / chs), cz = Math.floor(m.elements[14] / chs), key = F ? 'F' + F.id + ':' + bucket : this.region + (this.detail ? '~d' : '') + ':' + bucket + ':' + cx + ':' + cz;
-    let ch = this.chunks.get(key); if (!ch) { ch = { bucket, parts: [], fade: F ? F.id : -1, region: this.region, detail: this.detail }; this.chunks.set(key, ch); } ch.parts.push(g); return g;
+    let ch = this.chunks.get(key); if (!ch) { ch = { bucket, parts: [], verts: 0, fade: F ? F.id : -1, region: this.region, detail: this.detail }; this.chunks.set(key, ch); } ch.parts.push(g); ch.verts += n; this._pv = (this._pv || 0) + n;
+    if (!this._pendingFlush && this._pv > 600000) { let big = null; for (const c of this.chunks.values()) if (c !== ch && (!big || c.verts > big.verts)) big = c; if (big && big.verts > 8000) this._pendingFlush = big; } return g;
   }
   add(bucket, geom, color, x, y, z, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx, em = 0) { return this._part(bucket, geom, color, mtx(x, y, z, rx, ry, rz, sx, sy, sz), em); }
   // vertex colour by function (gradients, stripes) after placement
@@ -112,18 +117,22 @@ export class World {
     return best;
   }
   // ---- finalize: merge chunk parts into meshes ----
+  // memory-light build: under pressure a chunk's raw parts are merged into a compact CPU 'spill' (half the bytes); at the end each chunk becomes
+  // ONE mesh (no extra draw calls), goes to the GPU and its CPU copy is freed right away.
+  _flush(ch) { if (!ch.parts.length) return; const g = spillCompact(mergeGeometries(ch.parts, false), ch.bucket); ch.parts.forEach((p) => p.dispose()); ch.parts = []; this._pv -= ch.verts; ch.verts = 0; (ch.spills || (ch.spills = [])).push(g);
+    if (ch.spills.length > 1) { const m = mergeGeometries(ch.spills, false); ch.spills.forEach((q) => q.dispose()); m.userData.spill = true; ch.spills = [m]; } }
+  _final(ch) { let g; if (ch.parts.length) { const raw = mergeGeometries(ch.parts, false); ch.parts.forEach((p) => p.dispose()); ch.parts = []; this._pv -= ch.verts; ch.verts = 0; g = raw; if (ch.spills && ch.spills.length) { const sp = spillCompact(raw, ch.bucket); g = mergeGeometries([...ch.spills, sp], false); ch.spills.forEach((q) => q.dispose()); sp.dispose(); } } else if (ch.spills && ch.spills.length) g = ch.spills[0]; else return; ch.spills = null;
+    g.computeBoundingSphere(); g.computeBoundingBox(); compact(g, ch.bucket, !!this.uploader);
+    const mesh = new THREE.Mesh(g, MATS[ch.bucket] || MATS.m); mesh.matrixAutoUpdate = false;
+    mesh.castShadow = ch.bucket !== 'e' && ch.bucket !== 'l' && ch.bucket !== 'w'; mesh.receiveShadow = ch.bucket !== 'l';
+    if (ch.bucket === 'e') mesh.renderOrder = 2; if (ch.fade >= 0) this.fades[ch.fade].meshes.push(mesh);
+    mesh.userData.region = ch.region; (this.regionMeshes[ch.region] || (this.regionMeshes[ch.region] = [])).push(mesh); if (ch.detail) { mesh.userData.detail = true; this.detailMeshes.push(mesh); }
+    this.group.add(mesh); this._tris = (this._tris || 0) + g.index.count / 3; this.drawCalls++;
+    if (this.uploader) this.uploader(mesh); }
   finalize(scene) {
-    let tris = 0;
-    for (const [k, ch] of this.chunks) {
-      if (!ch.parts.length) continue; const g = mergeGeometries(ch.parts, false); ch.parts.forEach((p) => p.dispose()); ch.parts = null;
-      g.computeBoundingSphere(); g.computeBoundingBox(); compact(g, ch.bucket, true);
-      const mesh = new THREE.Mesh(g, MATS[ch.bucket] || MATS.m); mesh.matrixAutoUpdate = false;
-      mesh.castShadow = ch.bucket !== 'e' && ch.bucket !== 'l' && ch.bucket !== 'w'; mesh.receiveShadow = ch.bucket !== 'l';
-      if (ch.bucket === 'e') mesh.renderOrder = 2; if (ch.fade >= 0) this.fades[ch.fade].meshes.push(mesh);
-      mesh.userData.region = ch.region; (this.regionMeshes[ch.region] || (this.regionMeshes[ch.region] = [])).push(mesh); if (ch.detail) { mesh.userData.detail = true; this.detailMeshes.push(mesh); }
-      this.group.add(mesh); tris += g.index ? g.index.count / 3 : g.attributes.position.count / 3; this.drawCalls++;
-    }
-    this.chunks.clear(); this.tris = tris; scene.add(this.group); return this;
+    if (this._pendingFlush) { this._flush(this._pendingFlush); this._pendingFlush = null; }
+    for (const [, ch] of this.chunks) this._final(ch);
+    this.chunks.clear(); this.tris = this._tris || 0; scene.add(this.group); for (const g of prepCache.values()) g.dispose(); prepCache.clear(); for (const g of lodCache.values()) if (g) g.dispose(); lodCache.clear(); return this;
   }
   dispose(scene) { scene.remove(this.group); this.group.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); }
 }
