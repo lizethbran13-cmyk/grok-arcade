@@ -1923,6 +1923,71 @@ GA.HALL_DATA = {
 "noOld": "Grok Eatsville Tycoon just opened for business. Its Time Jumper beta is in the Save Vault. Please wash your hands."
 
 },
+"northpole": {
+"repo": "grok-north-pole",
+"history": [
+{
+"date": "Oct 12",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A snowy cartoon 3D Christmas village in the Turbo look: visit Santa at Town Hall, ride the North Pole Express, explore Santa's Toy Workshop, the Santa Update Newsroom, North Pole Flight Command and the Post Office, then walk down Operations Row (the giant Wrapping Department plus 20 departments, each with its own activity). 80 named elves from santaupdate.com work in their real departments, the List Department checks Wish Lists twice, and visitors Torty, Candy, Luna, Pi-rat and Snowie are in town. Co-op for 3."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/northpole/1.webp",
+"cap": "Operations Row from above: the giant Wrapping Department (with its roof bow) and the North Pole departments",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/northpole/2.webp",
+"cap": "The Santa Update Newsroom: Elf Crash Murphy, Eye-in-the-Sky Reporter, says hi",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/northpole/3.webp",
+"cap": "North Pole Flight Command: Elf Roger Star, Director",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/northpole/4.webp",
+"cap": "Inside the Wrapping Department: conveyor belts full of presents",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/northpole/5.webp",
+"cap": "Elf Harriet Bow, Head Elf of the Wrapping Department",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/northpole/6.webp",
+"cap": "The List Department, where every Wish List is checked twice",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/northpole/7.webp",
+"cap": "The Wrapping Department on Operations Row, bow and all",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/northpole/8.webp",
+"cap": "Santa Claus welcomes you at Town Hall",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/northpole/cover.webp",
+"quip": "An elf from the Wrapping Department visited the exhibit and tied a bow on every picture frame. We have asked her to stop. She has not stopped.",
+"noOld": "Grok North Pole Village just opened. Its Time Jumper beta is in the Save Vault (Final Beta). Please don't shake the snow globes."
+},
 "torty": {
 "repo": "grok-torty-town",
 "history": [

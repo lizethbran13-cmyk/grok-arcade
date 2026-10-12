@@ -77,6 +77,9 @@
     torty: function (g) { var o = new T.Group(); o.position.y = 0.3; g.add(o); var sn = add(g, sp(0.07, 20), ph('#ffd23f', 110, '#a35f00'), 0, 0.3, 0); for (var i = 0; i < 8; i++) { var a = i / 8 * Math.PI * 2, c = add(g, new T.ConeGeometry(0.02, 0.06, 8), ph('#ffb020', 90, '#5a3a00'), Math.cos(a) * 0.1, 0.3 + Math.sin(a) * 0.1, 0); c.rotation.z = a - Math.PI / 2; } void sn;
       add(o, sp(0.04, 10), ph('#4ade80', 40), 0.22, 0.02, 0); add(o, cy(0.05, 0.05, 0.02, 6), ph('#0f9d8a', 80), -0.11, 0.03, 0.19).rotation.x = Math.PI / 2; add(o, sp(0.035, 10), ph('#a16207', 40), -0.11, 0.03, -0.19);
       add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
+    northpole: function (g) { var o = new T.Group(); o.position.y = 0.3; g.add(o); var sm = ph('#fde047', 110, '#a35f00'); for (var i = 0; i < 5; i++) { var a = i / 5 * Math.PI * 2, c = add(g, new T.ConeGeometry(0.03, 0.09, 8), sm, Math.sin(a) * 0.045, 0.3 + Math.cos(a) * 0.045, 0); c.rotation.z = -a; } add(g, sp(0.04, 14), sm, 0, 0.3, 0);
+      add(o, new T.BoxGeometry(0.07, 0.07, 0.07), ph('#dc2626', 60), 0.22, 0.02, 0); add(o, cy(0.012, 0.012, 0.12, 8), ph('#f8fafc', 50), -0.11, 0.03, 0.19); add(o, sp(0.035, 10), ph('#16a34a', 50), -0.11, 0.03, -0.19);
+      add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
     puptown: function (g) { var k = new T.Group(); k.position.y = 0.26; g.add(k); var gm = ph('#ffcf3a', 110, '#6a4a00'); add(k, cy(0.025, 0.025, 0.3, 14), gm, 0, 0, 0).rotation.z = Math.PI / 2;
       [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(function (q) { add(k, sp(0.04, 14), gm, q[0] * 0.15, q[1] * 0.03, 0); });
       var o = new T.Group(); o.position.y = 0.3; g.add(o); add(o, cy(0.05, 0.05, 0.02, 14), ph('#d4a373', 40), 0.22, 0.02, 0).rotation.x = Math.PI / 2; add(o, sp(0.035, 10), ph('#ff8fc8', 60), -0.11, 0.03, 0.19); add(o, sp(0.035, 10), ph('#8a9099', 50), -0.11, 0.03, -0.19);

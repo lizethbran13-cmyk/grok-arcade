@@ -869,6 +869,22 @@
         g.fillStyle = '#ffb020'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK TORTY TOWN', w / 2, 24);
         break;
       }
+      case 'northpole': {
+        // Grok North Pole Village: night sky with northern lights, falling snow, Santa's red workshop with a glowing North Star, the giant Wrapping Department bow, and Santa's sleigh gliding past the moon
+        var gnp = g.createLinearGradient(0, 0, 0, h); gnp.addColorStop(0, '#0b1d4a'); gnp.addColorStop(0.55, '#2c4f9e'); gnp.addColorStop(0.56, '#eaf4ff'); gnp.addColorStop(1, '#cfe3f7'); g.fillStyle = gnp; g.fillRect(0, 0, w, h);
+        for (i = 0; i < 3; i++) { g.strokeStyle = ['rgba(74,222,128,.45)', 'rgba(45,212,191,.35)', 'rgba(167,139,250,.3)'][i]; g.lineWidth = 7; g.beginPath(); for (var ax = 0; ax <= w; ax += 8) { var ay = h * (0.14 + i * 0.05) + Math.sin(ax * 0.03 + t * 0.8 + i) * 8; if (ax) g.lineTo(ax, ay); else g.moveTo(ax, ay); } g.stroke(); }
+        g.fillStyle = '#fef9c3'; g.beginPath(); g.arc(w * 0.8, h * 0.18, w * 0.06, 0, 7); g.fill();
+        var slx = (t * 30) % (w + 120) - 60; g.fillStyle = '#b91c1c'; g.fillRect(slx, h * 0.27, 22, 8); g.fillStyle = '#92400e'; g.fillRect(slx + 28, h * 0.265, 14, 6); g.fillRect(slx + 46, h * 0.265, 14, 6);
+        g.fillStyle = '#b91c1c'; g.fillRect(w * 0.28, h * 0.36, w * 0.44, h * 0.2); g.fillStyle = '#f8fafc'; g.beginPath(); g.moveTo(w * 0.24, h * 0.37); g.lineTo(w * 0.5, h * 0.27); g.lineTo(w * 0.76, h * 0.37); g.closePath(); g.fill();
+        g.fillStyle = '#fde68a'; g.fillRect(w * 0.33, h * 0.41, w * 0.08, h * 0.06); g.fillRect(w * 0.59, h * 0.41, w * 0.08, h * 0.06); g.fillStyle = '#14532d'; g.fillRect(w * 0.46, h * 0.44, w * 0.08, h * 0.12);
+        var sr = w * (0.035 + Math.sin(t * 2) * 0.006); g.fillStyle = '#fde047'; g.beginPath(); for (i = 0; i < 10; i++) { var sa = -Math.PI / 2 + i * Math.PI / 5, rr2 = i % 2 ? sr * 0.45 : sr; g[i ? 'lineTo' : 'moveTo'](w * 0.5 + Math.cos(sa) * rr2, h * 0.24 + Math.sin(sa) * rr2); } g.closePath(); g.fill();
+        g.fillStyle = '#dc2626'; g.fillRect(w * 0.06, h * 0.6, w * 0.24, h * 0.14); g.fillStyle = '#facc15'; g.fillRect(w * 0.165, h * 0.6, w * 0.03, h * 0.14); g.beginPath(); g.ellipse(w * 0.15, h * 0.59, 9, 5, -0.4, 0, 7); g.ellipse(w * 0.21, h * 0.59, 9, 5, 0.4, 0, 7); g.fill();
+        [0.8, 0.92].forEach(function (px, k) { g.fillStyle = '#166534'; g.beginPath(); g.moveTo(w * px, h * (0.5 + k * 0.04)); g.lineTo(w * px - 16, h * 0.74); g.lineTo(w * px + 16, h * 0.74); g.closePath(); g.fill(); });
+        var ex = w * 0.62 + Math.sin(t * 1.3) * w * 0.05; g.fillStyle = '#16a34a'; g.fillRect(ex - 5, h * 0.68, 10, 12); g.fillStyle = '#f1c27d'; g.beginPath(); g.arc(ex, h * 0.66, 5, 0, 7); g.fill(); g.fillStyle = '#16a34a'; g.beginPath(); g.moveTo(ex - 5, h * 0.65); g.lineTo(ex + 5, h * 0.65); g.lineTo(ex + 7, h * 0.6); g.closePath(); g.fill();
+        g.fillStyle = '#fff'; for (i = 0; i < 26; i++) { var fx = (i * 37.3 + Math.sin(t + i) * 6) % w, fy = (i * 23.7 + t * 22) % h; g.fillRect(fx, fy, 2, 2); }
+        g.fillStyle = '#dc2626'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(12); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK NORTH POLE VILLAGE', w / 2, 23);
+        break;
+      }
       case 'puptown': {
         // Grok Pup Town: town hall with a clock tower, the fountain, bunting, Candy trotting past and the Dog-Bus rolling by
         var gpt = g.createLinearGradient(0, 0, 0, h); gpt.addColorStop(0, '#7dc8ff'); gpt.addColorStop(0.55, '#ffe0f0'); gpt.addColorStop(0.56, '#f6d9c4'); gpt.addColorStop(1, '#f3c7a8'); g.fillStyle = gpt; g.fillRect(0, 0, w, h);
@@ -1047,6 +1063,16 @@
           if (gl) { g.strokeStyle = 'rgba(255,215,80,' + (0.5 + Math.sin(t * 10) * 0.4) + ')'; g.lineWidth = 2; g.beginPath(); g.ellipse(pxf, pyf, 22, 10, 0, 0, 7); g.stroke(); }
           g.strokeStyle = 'rgba(220,220,220,0.4)'; g.beginPath(); var st4 = (t * 30 + i * 9) % 20; g.moveTo(pxf - 4, pyf - 10 - st4); g.quadraticCurveTo(pxf + 4, pyf - 18 - st4, pxf - 2, pyf - 26 - st4); g.stroke(); }
         g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#ffb020'; g.fillText('PATTY PANIC', w / 2, 22);
+        break;
+      }
+      case 'chimneydrop': {
+        var gcd = g.createLinearGradient(0, 0, 0, h); gcd.addColorStop(0, '#0b1d4a'); gcd.addColorStop(1, '#3b5bab'); g.fillStyle = gcd; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#fff'; for (i = 0; i < 18; i++) g.fillRect((i * 41.7) % w, (i * 17.3) % (h * 0.5), 2, 2);
+        var hx = -((t * 40) % 120); for (i = 0; i < 4; i++) { var bx6 = hx + i * 120, bh6 = 50 + (i % 2) * 20; g.fillStyle = ['#b45309', '#9f1239', '#1d4ed8', '#166534'][i]; g.fillRect(bx6, h - 26 - bh6, 70, bh6); g.fillStyle = '#f8fafc'; g.fillRect(bx6 - 3, h - 30 - bh6, 76, 6); g.fillStyle = i === 2 ? '#facc15' : '#7f1d1d'; g.fillRect(bx6 + 44, h - 48 - bh6, 16, 18); }
+        g.fillStyle = '#f8fafc'; g.fillRect(0, h - 26, w, 26);
+        var sx6 = w * 0.5 + Math.sin(t * 1.2) * w * 0.3; g.fillStyle = '#b91c1c'; g.fillRect(sx6 - 16, 40, 30, 10); g.fillStyle = '#92400e'; g.fillRect(sx6 + 20, 38, 14, 7);
+        var fp6 = (t * 0.8) % 1; g.fillStyle = '#22c55e'; g.fillRect(sx6 - 6, 52 + fp6 * (h - 130), 12, 12); g.fillStyle = '#fde047'; g.fillRect(sx6 - 1, 52 + fp6 * (h - 130), 2, 12);
+        g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#fef2f2'; g.fillText('CHIMNEY DROP', w / 2, 22);
         break;
       }
       case 'shelldrop': {

@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-12",
+  "updated": "2026-10-12T14:00:00-07:00",
   "items": [
     {
       "game": "pumpkinhollow",
@@ -13,12 +13,11 @@
     },
     {
       "game": "northpole",
-      "name": "Grok North Pole Village",
-      "what": "A brand new Christmas hub: an explorable North Pole! Visit Santa, his elves and reindeer, Santa's Toy Workshop, North Pole Flight Command and the Post Office, play mini-games, solve Who silenced the Sleigh Bells? and find the secret ice caves. Torty, Candy, Luna, Pi-rat and Snowie visit. Co-op for 3.",
-      "stage": "building",
-      "when": "In the lab now",
-      "gname": "New hub",
-      "key": "northpole"
+      "name": "Grok North Pole Village (live)",
+      "what": "Grok North Pole Village: a snowy Christmas village with Santa, the North Pole Express, Operations Row (the Wrapping Department + 20 departments with activities), 80 real elves from santaupdate.com at their jobs and Wish Lists checked twice. Co-op for 3. Play it in Hubs & Worlds!",
+      "stage": "shipped",
+      "when": "Oct 12",
+      "shippedAt": "2026-10-12T21:00:00Z"
     },
     {
       "game": "torty",
@@ -215,15 +214,6 @@
       "playable": true,
       "built": "2026-10-12",
       "notes": "Update! iPhone memory fix: about half the GPU memory of Torty Town, same look."
-    },
-    {
-      "id": "northpole",
-      "game": "northpole",
-      "name": "Grok North Pole Village",
-      "url": "previews/northpole/",
-      "playable": true,
-      "built": "2026-10-12",
-      "notes": "Update! Meet 80 real elves from santaupdate.com in their own departments (Elf Crash Murphy in the newsroom, Elf Roger Star at Flight Command, Elf Harriet Bow in Wrapping and more). The List Department now checks Wish Lists. Plus the iPhone memory fix and Operations Row."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
@@ -293,6 +283,17 @@
       "built": "2026-10-12",
       "archived": "2026-10-12",
       "notes": "WIP build: oasis square, Market Street, the Burrows, Hot Spring Hill, Slow-Mo Derby, lettuce farm, dunes, Tortuga Tech Inc. campus, NEW Old Adobe Quarter (bakery, music hall, toy shop) and Fiesta Plaza (cinema, ice cream, taco truck). Lighter on memory: loads with about half the peak memory, flat while exploring.",
+      "playable": true
+    },
+    {
+      "id": "northpole",
+      "game": "northpole",
+      "name": "Grok North Pole Village",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/northpole-beta/",
+      "built": "2026-10-12",
+      "archived": "2026-10-12",
+      "notes": "The last Time Jumper build of Grok North Pole Village before release.",
       "playable": true
     }
   ],
