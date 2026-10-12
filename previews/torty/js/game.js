@@ -1,22 +1,22 @@
 // Grok Torty Town runtime: the town, players, townsfolk, the shuttle cart, ambient desert life, day -> sunset, collectibles,
 // the Sunstone mystery, the Slow-Mo Derby + Harvest Rush (3D mini-games), a hidden puzzle, co-op hooks.
 import * as THREE from 'three';
-import { E, setEnvironment, followShadow, skyUniforms } from './engine.js';
-import { World } from './world.js';
-import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js';
-import { UY } from './under.js';
-import { Player } from './player.js';
-import { FX } from './fx.js';
-import { makeRat, animRat, MB, toGroup } from './models.js';
-import { makePup, animPup, birdGeo } from './dogs.js';
-import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js';
-import { P } from './geo.js';
-import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js';
-import { updateFrustum, inView, LightPool } from './perf.js';
-import { sfx, playMusic } from './audio.js';
-import { S, persist } from './save.js';
-import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js';
-import { readMove, edge, held, IN } from './input.js';
+import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=tt1';
+import { World } from './world.js?v=tt1';
+import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=tt1';
+import { UY } from './under.js?v=tt1';
+import { Player } from './player.js?v=tt1';
+import { FX } from './fx.js?v=tt1';
+import { makeRat, animRat, MB, toGroup } from './models.js?v=tt1';
+import { makePup, animPup, birdGeo } from './dogs.js?v=tt1';
+import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=tt1';
+import { P } from './geo.js?v=tt1';
+import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=tt1';
+import { updateFrustum, inView, LightPool } from './perf.js?v=tt1';
+import { sfx, playMusic } from './audio.js?v=tt1';
+import { S, persist } from './save.js?v=tt1';
+import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=tt1';
+import { readMove, edge, held, IN } from './input.js?v=tt1';
 const PI = Math.PI;
 const TOYS = [[60, 0, 76], [-70, 0, 61], [108, 0, -4]];
 const DAY = 420; // seconds per day -> sunset cycle
@@ -133,7 +133,7 @@ export class Game {
       if (t.press) this.tt.press = mk((b) => { b.x.add(P.rbox, 0xa855f7, 0, 0, 0, 0, 0, 0, 3.4, 0.5, 2.2); b.g.add(P.rbox, 0xfacc15, 0, -0.27, 0, 0, 0, 0, 3.2, 0.06, 2.0); });
       if (t.press) { this.tt.pressItem = mk((b) => armored(b, 0xff5d8f)); this.tt.pressItem.position.set(t.press[0], 0.62, t.press[2]); this.tt.pressItem.scale.setScalar(0.7); }
       if (t.yardDrop) this.tt.ydrop = mk((b) => { armored(b, 0xffb020); b.l.add(P.sphere, 0xffffff, 0, 1.2, 0, 0, 0, 0, 0.1); });
-      if (t.yardPress) this.tt.ypress = mk((b) => { b.x.add(P.rbox, 0x7c3aed, 0, 0, 0, 0, 0, 0, 2.6, 0.5, 1.8); b.x.add(P.cyl, 0xcbd5e1, 0, 1.2, 0, 0, 0, 0, 0.25, 2.4, 0.25); });
+      if (t.yardPress) this.tt.ypress = mk((b) => { b.g.add(rcyl(1.15, 0.45, 0.18, 32), 0x7c3aed, 0, -0.22, 0); b.g.add(rcyl(1.0, 0.08, 0.04, 32), 0xfacc15, 0, -0.3, 0); b.x.add(rcyl(0.22, 2.6, 0.06, 20), 0xe2e8f0, 0, 0.2, 0); b.x.add(rcyl(0.4, 0.3, 0.1, 20), 0x64748b, 0, 0.2, 0); });
       if (t.yardPress) { this.tt.ypItem = mk((b) => { b.g.add(P.sphere, 0x22c55e, 0, 0.5, 0, 0, 0, 0, 0.6, 0.5, 0.6); for (let k = 0; k < 6; k++) b.g.add(new THREE.CylinderGeometry(0.2, 0.18, 0.06, 6), 0xb98545, Math.cos(k) * 0.42, 0.75, Math.sin(k) * 0.42, Math.sin(k) * 0.6, 0, -Math.cos(k) * 0.6); }); this.tt.ypItem.position.set(t.yardPress[0], 0.4, t.yardPress[1]); }
       if (t.ramp) this.tt.boulder = mk((b) => { b.m.add(blobGeo(9, 0.15, 2), 0xb07a4a, 0, 0, 0, 0, 0, 0, 0.9); for (let k = 0; k < 5; k++) b.m.add(P.sphere, 0x8a5a32, Math.cos(k * 1.3) * 0.75, Math.sin(k * 2.1) * 0.5, Math.sin(k * 1.3) * 0.6, 0, 0, 0, 0.18, 0.12, 0.18); });
       this.tt.ph = 0; }
@@ -174,6 +174,7 @@ export class Game {
   dayK() { const o = (this.net.online && this.hostTod) || S.opts.tod || 'auto'; if ((S.q.sun | 0) >= 4 && o === 'auto') return 1; if (o === 'day') return 0; if (o === 'evening') return 1; const p = (this.T / DAY) % 1; return p < 0.5 ? 0 : p < 0.6 ? (p - 0.5) / 0.1 : p < 0.9 ? 1 : 1 - (p - 0.9) / 0.1; }
   light(dt) { const k0 = this.dayK(); this.ev = this.ev == null ? k0 : this.ev + (k0 - this.ev) * Math.min(1, dt * 2); const ev = this.ev, inside = this.region !== 'out', under = this.under;
     const L = under ? [1.05, 0.22, 0.25, 1.0, 0.7] : inside ? [1.0, 0.62, 0.8, 1.25, 0.26] : [1.0 - ev * 0.06, 0.6 - ev * 0.14, 0.85 - ev * 0.28, 1.0 - ev * 0.14, 0.38 + ev * 0.16];
+    { const RX = inside && !under && REGIONS.find((q) => q.id === this.region), tm = (RX && RX.tone) || 1; if (tm !== 1) { L[0] *= tm; L[1] *= tm * 0.9; L[2] *= tm * 0.85; } }
     const k = Math.min(1, dt * 4), R = E.renderer; R.toneMappingExposure += (L[0] - R.toneMappingExposure) * k; E.hemi.intensity += (L[1] - E.hemi.intensity) * k; this.scene.environmentIntensity += (L[2] - this.scene.environmentIntensity) * k;
     if (E.bloom) { E.bloom.threshold += (L[3] - E.bloom.threshold) * k; E.bloom.strength += (L[4] - E.bloom.strength) * k; }
     const c = this._c || (this._c = { a: new THREE.Color(), b: new THREE.Color() }); E.sun.color.copy(c.a.set(0xfff0d0).lerp(c.b.set(0xff8a4a), ev)); E.sun.intensity = under ? 0.2 : 2.7 - ev * 0.95; E.hemi.color.copy(c.a.set(0xd8ecff).lerp(c.b.set(0xffb3a0), ev));
@@ -281,7 +282,7 @@ export class Game {
     if (IN.camDX || IN.camDY) { c.yaw -= IN.camDX * 0.0085 * sens * (S.opts.invertX ? -1 : 1); c.pitch = Math.max(-0.1, Math.min(1.15, c.pitch + IN.camDY * 0.005 * sens)); IN.camDX = IN.camDY = 0; }
     const manual = performance.now() - IN.lastCam < 1500;
     if (!manual && me.speed > 1) { let d = me.yaw - c.yaw; while (d > PI) d -= PI * 2; while (d < -PI) d += PI * 2; if (Math.abs(d) < 2.2) c.yaw += d * Math.min(1, dt * 0.9 * (me.speed / 7)); }
-    const indoor = this.region !== 'out'; const want = this.chat ? (this.chat.npc && (this.chat.npc.kind === 'tort' || this.chat.npc.kind === 'lizard') ? 4.6 : 5.6) : indoor ? (this.under ? 7.4 : 6.6) : 10.8; c.dist += (want - c.dist) * Math.min(1, dt * 2);
+    const indoor = this.region !== 'out'; const want = this.chat ? (this.chat.npc && (this.chat.npc.kind === 'tort' || this.chat.npc.kind === 'lizard') ? 4.6 : 5.6) + (this.chat.npc ? Math.max(0, Math.hypot(me.x - this.chat.npc.x, me.z - this.chat.npc.z) - 2.2) * 1.6 : 0) : indoor ? (this.under ? 7.4 : 6.6) : 10.8; c.dist += (want - c.dist) * Math.min(1, dt * 2);
     const cn = this.chat && this.chat.npc; let tx = me.x, tz = me.z, ty = me.y + me.hgt * 0.8;
     if (cn) { const a = Math.atan2(me.x - cn.x, me.z - cn.z); let dy = a + 1.15 + PI - c.yaw; while (dy > PI) dy -= PI * 2; while (dy < -PI) dy += PI * 2; c.yaw += dy * Math.min(1, dt * 3); c.pitch += (0.32 - c.pitch) * Math.min(1, dt * 3); tx = me.x * 0.45 + cn.x * 0.55; tz = me.z * 0.45 + cn.z * 0.55; ty = Math.max(ty - 0.35, cn.y + (cn.markY || 1.2) * 0.7); }
     const k6 = c.snap ? 1 : 1 - Math.exp(-dt * 6); c.tgt.set(c.tgt.x + (tx - c.tgt.x) * (cn || c.chatT > 0 ? k6 : 1), c.snap ? ty : c.tgt.y + (ty - c.tgt.y) * (1 - Math.exp(-dt * (me.onGround ? 6 : 3))), c.tgt.z + (tz - c.tgt.z) * (cn || c.chatT > 0 ? k6 : 1)); c.chatT = cn ? 0.8 : Math.max(0, (c.chatT || 0) - dt);

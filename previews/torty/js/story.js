@@ -1,5 +1,5 @@
 // Torty Town townsfolk, what they say, side tasks and the mystery "Who swiped the Sunstone?". Pure data + helpers.
-import { S, persist } from './save.js';
+import { S, persist } from './save.js?v=tt1';
 const PI = Math.PI;
 export const HATS = [
   { id: 'none', n: 'No Hat', how: 'Always yours' }, { id: 'pupears', n: 'Schnauzer Ears', how: "Find Candy's 3 squeaky cactus toys" }, { id: 'flower', n: 'Desert Marigold', how: "Plant Mama Rosa's 4 marigolds" },
@@ -64,15 +64,19 @@ export const NPCS = [
   N('reader', 'Rupert (reading)', { t: { shell: 'grey', glasses: true, hat: 'beret', hatC: 0x1e3a8a }, s: 0.28 }, [-42, -43.6, PI], 'library', { mode: 'work' }),
   N('clerk', 'Clerk Clementine', { t: { shell: 'sand', glasses: true, neck: 'bowtie', neckC: 0x0f766e }, s: 0.27 }, [5.6, -47, -0.6], 'hall'),
   // ---- Tortuga Tech Inc. (Torty's company)
-  N('shelly', 'Shelly (Tortuga Tech Reception)', { t: { shell: 'sky', glasses: 0x0f9d8a, neck: 'scarf', neckC: 0x0f9d8a, flower: 0xffd23f }, s: 0.28 }, [78.5, -45.9, 0], 'tortuga'),
+  N('shelly', 'Shelly (Tortuga Tech Reception)', { t: { shell: 'sky', glasses: 0x0f9d8a, neck: 'scarf', neckC: 0x0f9d8a, flower: 0xffd23f }, s: 0.28 }, [85.7, -46.2, -PI / 2], 'tortuga'),
   N('bolt', 'Engineer Bolt (Drop Tower)', { t: { shell: 'olive', hat: 'helmet', hatC: 0xfacc15, glasses: true, neck: 'bowtie', neckC: 0xef4444 }, s: 0.3 }, [62.6, -51.2, PI / 2], 'tortuga', { mode: 'work' }),
   N('blaze', 'Engineer Blaze (Heat + Sand)', { t: { shell: 'coral', hat: 'visor', hatC: 0xff8a3d, glasses: 0xff8a3d }, s: 0.29 }, [89.4, -47.2, -PI / 2], 'tortuga'),
   N('ironshell', 'Engineer Ironshell (Crush Press)', { t: { shell: 'grey', hat: 'helmet', hatC: 0x7c3aed, brow: 0xffffff }, s: 0.31 }, [69.4, -63.6, -PI / 2], 'tortuga', { mode: 'work' }),
   N('plato', 'Plato (Shell-Armor Smith)', { t: { shell: 'gold', hat: 'bandana', hatC: 0x0f9d8a, neck: 'apron', neckC: 0x0f9d8a, glasses: true }, s: 0.3 }, [76.8, -62.4, PI], 'tortuga', { mode: 'work' }),
   N('gauge', 'Gauge (Test Yard Boss)', { t: { shell: 'sand', hat: 'helmet', hatC: 0x0f9d8a, neck: 'medal', neckC: 0x0f9d8a }, s: 0.3 }, [112, -56, -PI / 2], 'out'),
-  N('intern', 'Nibbles (Junior Intern)', { t: { shell: 'moss', hat: 'helmet', hatC: 0xffd23f }, s: 0.15 }, [74.2, -48.6, PI / 2], 'tortuga'),
-  N('ttfan1', 'Test Fan', { t: { shell: 'rose', hat: 'cap', hatC: 0x0f9d8a }, s: 0.27 }, [114.5, -43.6, PI], 'out', { y: 0.72, mode: 'cheer' }),
-  N('ttfan2', 'Test Fan', { t: { shell: 'plum', bow: 0x5eead4 }, s: 0.26 }, [117.5, -42.7, PI], 'out', { y: 1.14, mode: 'cheer' }),
+  N('intern', 'Nibbles (Junior Intern)', { t: { shell: 'moss', hat: 'helmet', hatC: 0xffd23f }, s: 0.15 }, [75.8, -47.6, PI / 2], 'tortuga'),
+  N('ttfan1', 'Test Fan', { t: { shell: 'rose', hat: 'cap', hatC: 0x0f9d8a }, s: 0.27 }, [114.4, -41.2, PI], 'out', { y: 0.47, mode: 'cheer' }),
+  N('ttfan2', 'Test Fan', { t: { shell: 'plum', bow: 0x5eead4 }, s: 0.26 }, [117.6, -42.1, PI], 'out', { y: 0.89, mode: 'cheer' }),
+  N('ttfan3', 'Test Fan', { t: { shell: 'sky', hat: 'straw', bandC: 0xff5d8f }, s: 0.27 }, [113.2, -43.0, PI], 'out', { y: 1.31, mode: 'cheer' }),
+  N('ttfan4', 'Rocky the Lizard (test fan)', { liz: { col: 0x22c55e, spots: 0xffd23f }, s: 1.0 }, [116.6, -41.2, PI], 'out', { y: 0.47 }),
+  N('tester1', 'Engineer Dot (Big Drop)', { t: { shell: 'coral', hat: 'helmet', hatC: 0xef4444, glasses: true }, s: 0.29 }, [111.4, -61.2, -PI * 0.75], 'out', { mode: 'work' }),
+  N('tester2', 'Engineer Pip (Squish Test)', { t: { shell: 'plum', hat: 'helmet', hatC: 0x7c3aed, neck: 'bowtie', neckC: 0xffd23f }, s: 0.29 }, [110.9, -49.2, -PI * 0.7], 'out', { mode: 'work' }),
   // ---- the Burrows, school, farm, hill, racetrack, dunes
   N('shelby', 'Shelby (Turtle Artist)', { t: { shell: 'moss', flat: 0.62, hat: 'beret', hatC: 0x22c55e }, s: 0.27 }, [-86, -21.4, PI], 'shelby'),
   N('slate', 'Ms. Slate (Teacher)', { t: { shell: 'olive', glasses: true, flower: 0xffd23f }, s: 0.3 }, [-56.2, 23.6, PI], 'school'),
@@ -157,6 +161,10 @@ export function talk(id, G) { const n = (S.talks[id] = (S.talks[id] | 0) + 1); p
     case 'ironshell': return { lines: L(cyc(['The crush press goes squish. The shell-armored stuff does not.', 'That box over there survived 9,000 squishes. I\'m very proud of it.'])) };
     case 'plato': return { lines: L(cyc(['I bolt shell-armor plates onto gadgets. Hex plates: nature\'s best design!', 'Luna, Pi-rat and Snowie left their gadgets here. Play MAKE IT TOUGHER at the station and armor them up!'])) };
     case 'gauge': return { lines: L(cyc(['Welcome to the Toughness Test Yard! Big drop, roll test, outdoor press. All live!', 'The boulder is foam inside. Don\'t tell anyone. Safety first!'])) };
+    case 'tester1': return { lines: L(cyc(['Big Drop in 3… 2… 1… CLONK! Not a scratch. Next!', 'The foam pad is my favourite co-worker.'])) };
+    case 'tester2': return { lines: L(cyc(['The Squish Test! The armored melon wins every time.', 'Squish, unsquish, write it down. Squish, unsquish…'])) };
+    case 'ttfan1': case 'ttfan2': case 'ttfan3': return { lines: L(cyc(['GO SHELL GO! 🐢', 'I come every Saturday to watch the Big Drop!', 'That boulder is foam. I checked. Still exciting!'])) };
+    case 'ttfan4': return { lines: L(cyc(['Best seats in town. The squish is SO satisfying.', 'Tortuga Tech tested my tail. It\'s fine. It was always fine.'])) };
     case 'intern': return { lines: L(cyc(['I\'m the junior intern! My job is testing if the sofas are comfy. They are.', 'When I grow up I want to be as tough as Torty.'])) };
     case 'fisher': return { lines: L(cyc(['Shhh. The fish in this pond are very relaxed. So am I.', 'Caught nothing in 40 years. Best hobby ever.'])) };
     case 'lemon': return { lines: L(cyc(['Cactus lemonade! Sweet, sour and only a LITTLE prickly.', 'Snowie bought three cups. And a bag of lemon drops. That rat loves lemon.'])) };

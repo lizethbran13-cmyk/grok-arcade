@@ -1,11 +1,11 @@
 // Grok Torty Town: Martina "Torty"'s desert-oasis hometown. A palm-ringed Oasis Square, Market Street, the Burrows (homes),
 // Hot Spring Hill, the Slow-Mo Racetrack, the Lettuce Farm and the Dunes & Canyon edge. 18 enterable buildings, each its own
 // culled region; outdoors batch into big merged chunks, tiny decor goes into far-culled "detail" chunks. All real 3D geometry.
-import { tortuga } from './tortuga.js';
+import { tortuga } from './tortuga.js?v=tt1';
 import * as THREE from 'three';
-import * as K from './kit.js';
-import { interiors } from './interiors.js';
-import { underground } from './under.js';
+import * as K from './kit.js?v=tt1';
+import { interiors } from './interiors.js?v=tt1';
+import { underground } from './under.js?v=tt1';
 const { wall, D, G, floor, ceiling, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, star, heart, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; let I = null;
 export const FL = 0.02;
@@ -28,7 +28,7 @@ export const REGIONS = [
   { id: 'club', x0: -30, x1: -12, z0: 74, z1: 90, y0: -1, y1: 7, ceil: 5.0, name: "🏁 Racers' Clubhouse" },
   { id: 'barn', x0: -104, x1: -86, z0: 44, z1: 60, y0: -1, y1: 9, ceil: 6.6, name: '🥬 Lettuce Barn' },
   { id: 'green', x0: -80, x1: -66, z0: 70, z1: 82, y0: -1, y1: 8, ceil: 5.4, name: '🪴 Greenhouse' },
-  { id: 'tortuga', x0: 60, x1: 96, z0: -68, z1: -42, y0: -1, y1: 8, ceil: 6.4, name: '🐢 Tortuga Tech Inc.' },
+  { id: 'tortuga', x0: 60, x1: 96, z0: -68, z1: -42, y0: -1, y1: 8, ceil: 6.4, tone: 0.84, name: '🐢 Tortuga Tech Inc.' },
   // the hidden place (below the world, reached by a secret)
   { id: 'u_tunnel', x0: 150, x1: 176, z0: -6, z1: 6, y0: -34, y1: -24, ceil: -26.0, name: '🕳️ Ancient Tunnels', under: true },
   { id: 'u_crystal', x0: 176, x1: 204, z0: -16, z1: 16, y0: -34, y1: -20, ceil: -22.5, name: '💎 Crystal Cavern', under: true },
@@ -347,15 +347,15 @@ function dunes(w) { const S = w.spots;
     for (let i = 0; i < 4; i++) w.add('m', torus(0.06, 40, PI * 0.9), 0xe6b97a, x, h * (0.2 + i * 0.18), z, PI / 2, 0, 0.3 * i, rx * (0.96 - i * 0.18), rz * (0.96 - i * 0.18), 0.2); w.solid(x - rx * 0.7, 0, z - rz * 0.7, x + rx * 0.7, h * 0.8, z + rz * 0.7, { cam: false }); };
   secretDoor(w); dune(110, 50, 7, 5, 3.2); dune(94, 74, 9, 6, 4.2); dune(114, 82, 6, 8, 3.6); dune(92, 110, 8, 6, 3.8); dune(116, 118, 7, 5, 3.0); dune(76, 124, 6, 5, 2.6);
   // canyon wall (east) with the rock arch + rim mesas (north-east)
-  for (let i = 0; i < 18; i++) mesa(w, 128, -124 + i * 14.5, 8, 11 + (i % 3) * 3, 15, pick([0xd9824a, 0xc96f3a, 0xe08f55]));
+  for (let i = 0; i < 18; i++) if (Math.abs(-124 + i * 14.5 + 58) > 32) mesa(w, 128, -124 + i * 14.5, 8, 11 + (i % 3) * 3, 15, pick([0xd9824a, 0xc96f3a, 0xe08f55]));
   { const x = 108, z = 100; [-3.4, 3.4].forEach((o) => { w.add('m', blobGeo(7, 0.12, 2), 0xd9824a, x, 3, z + o, 0, 0, 0, 1.4, 3.2, 1.3); w.solid(x - 1.2, 0, z + o - 1.1, x + 1.2, 6, z + o + 1.1); }); w.add('m', torus(0.32, 32, PI), 0xd9824a, x, 5.2, z, 0, PI / 2, 0, 3.6, 2.2, 2.8);
     w.secrets.push({ id: 'arch', x, y: 0, z, r: 1.8, msg: '🌄 Secret: the Whispering Arch! Say "slow and steady" and it echoes back' }); }
   for (let i = 0; i < 7; i++) mesa(w, 66 + i * 10, -98 - (i % 2) * 8, 9, 6 + (i % 3) * 2.5, 7, pick([0xd9824a, 0xe08f55]));
   for (let i = 0; i < 16; i++) { const x = 64 + R() * 60, z = -86 - R() * 36; if (i % 3 === 0) saguaro(w, x, z, 1.2 + R() * 0.6); else if (i % 3 === 1) bigRock(w, x, z, 1 + R()); else prickly(w, x, z, 1.3); }
   for (let i = 0; i < 14; i++) { const x = 84 + R() * 36, z = 36 + R() * 90; if (Math.hypot(x - 108, z - 100) < 6) continue; if (i % 2) saguaro(w, x, z, 1.1 + R() * 0.7); else barrel(w, x, z, 1.1); }
   // sand-sled hill (a gentle ramp you can slide down)
-  { const x = 100, z = -50; w.solid(x - 3, 0, z - 10, x + 3, 3.0, z, { ramp: ['z', -1], cam: false }); w.slab('m', 0xf3cf94, x, 0, z - 13, 6, 3.0, 6, 0.3, {}); w.add('m', wedge3(6, 3, 10), 0xf3cf94, x, 0, z - 5); sign3d(w, 'SAND SLIDE', x, 3.9, z - 9.8, 0, 0.2, 0xffffff, 0xe2733f); }
-  [[110, 4.1, 50], [94, 5.0, 74], [108, 6.8, 100], [100, 4.2, -55], [116, 1.0, -100], [86, 1.0, -90], [120, 1.0, 66]].forEach((p) => sunShell(w, ...p));
+  { const x = 90, z = 124; w.solid(x - 3, 0, z - 10, x + 3, 3.0, z, { ramp: ['z', -1], cam: false }); w.slab('m', 0xf3cf94, x, 0, z - 13, 6, 3.0, 6, 0.3, {}); w.add('m', wedge3(6, 3, 10), 0xf3cf94, x, 0, z - 5); sign3d(w, 'SAND SLIDE', x, 3.9, z - 9.8, 0, 0.2, 0xffffff, 0xe2733f); }
+  [[110, 4.1, 50], [94, 5.0, 74], [108, 6.8, 100], [90, 4.2, 111], [116, 1.0, -100], [86, 1.0, -90], [120, 1.0, 66]].forEach((p) => sunShell(w, ...p));
 }
 function secretDoor(w) { const S = w.spots, x = 123.9, z = 86.5; S.sdoor = [x, z]; S.dials = [];
   // carved frame in the cliff face, hidden behind a ring of 'sleeping' boulders
@@ -364,7 +364,7 @@ function secretDoor(w) { const S = w.spots, x = 123.9, z = 86.5; S.sdoor = [x, z
   [[119.5, 82.5, 1.5], [118.6, 86.8, 1.7], [119.4, 91, 1.4], [121.6, 80.6, 1.0]].forEach(([bx, bz, bs]) => bigRock(w, bx, bz, bs, 0xc97a44));
   for (let i = 0; i < 3; i++) { const dz = z - 1.6 + i * 1.6, dx = 121.9; w.add('m', rbox(0.9, 0.7, 0.9, 0.1), 0xb86a3a, dx, 0.35, dz); w.solid(dx - 0.45, 0, dz - 0.45, dx + 0.45, 0.7, dz + 0.45, { cam: false }); S.dials.push([dx, 1.3, dz]); w.I({ kind: 'dial', i, x: dx - 1.1, y: 0, z: dz, r: 0.95, label: '🪨 Turn the stone dial' }); }
   w.solid(x - 0.3, 0, z - 2.2, x + 0.6, 4.6, z + 2.2, { wall: true }); }
-function wedge3(W, H, L) { const s = new THREE.Shape(); s.moveTo(-L / 2, 0); s.lineTo(L / 2, 0); s.lineTo(-L / 2, H); s.lineTo(-L / 2, 0); const g = new THREE.ExtrudeGeometry(s, { depth: W, bevelEnabled: false }); g.translate(0, 0, -W / 2); g.rotateY(-PI / 2); return g; }
+export function wedge3(W, H, L) { const s = new THREE.Shape(); s.moveTo(-L / 2, 0); s.lineTo(L / 2, 0); s.lineTo(-L / 2, H); s.lineTo(-L / 2, 0); const g = new THREE.ExtrudeGeometry(s, { depth: W, bevelEnabled: false }); g.translate(0, 0, -W / 2); g.rotateY(-PI / 2); return g; }
 // ------------------------------------------------------------------------------------------------ the valley rim (keeps everyone inside, looks like a canyon)
 function border(w) { for (let i = 0; i < 18; i++) { mesa(w, -126 + i * 14.6, 128, 15, 9 + (i % 4) * 2.5, 8, pick([0xd9824a, 0xc96f3a, 0xe08f55])); mesa(w, -128, -116 + i * 13.5, 8, 9 + (i % 3) * 3, 14, pick([0xd9824a, 0xc96f3a, 0xe08f55])); }
   w.solid(-134, 0, -134, 134, 30, -129, { wall: true }); w.solid(-134, 0, 129, 134, 30, 134, { wall: true }); w.solid(-134, 0, -134, -129, 30, 134, { wall: true }); w.solid(129, 0, -134, 134, 30, 134, { wall: true });

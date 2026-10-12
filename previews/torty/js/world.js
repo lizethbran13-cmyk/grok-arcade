@@ -1,8 +1,9 @@
 // World: batched static geometry (chunked per material), colliders, zones and queries.
 import * as THREE from 'three';
+import { compact } from './compact.js?v=tt1';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { MATS } from './mats.js';
+import { MATS } from './mats.js?v=tt1';
 
 const CH = 22, CELL = 8;
 const _m = new THREE.Matrix4(), _m2 = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3(), _c = new THREE.Color(), _n = new THREE.Matrix3();
@@ -16,10 +17,26 @@ function prep(geom) {
   if (!g.index) { const n = g.attributes.position.count; const a = new Uint32Array(n); for (let i = 0; i < n; i++) a[i] = i; g.setIndex(new THREE.BufferAttribute(a, 1)); }
   prepCache.set(geom, g); return g;
 }
+// size-aware tessellation at build time: a 3 cm bead doesn't need a 600-triangle sphere. Only ever lowers segments on SMALL parts (same look on screen).
+const lodCache = new Map();
+function lodGeo(geom, m) { const P0 = geom.parameters; if (!P0) return geom; const T = geom.type; if (!['SphereGeometry', 'CylinderGeometry', 'ConeGeometry', 'TorusGeometry', 'CapsuleGeometry', 'LatheGeometry'].includes(T)) return geom;
+  const e = m.elements, sc = Math.max(Math.hypot(e[0], e[1], e[2]), Math.hypot(e[4], e[5], e[6]), Math.hypot(e[8], e[9], e[10])); if (!geom.boundingSphere) geom.computeBoundingSphere(); const R = sc * geom.boundingSphere.radius;
+  const cap = R < 0.06 ? 8 : R < 0.15 ? 12 : R < 0.35 ? 16 : R < 0.7 ? 22 : 999; let key, mk;
+  if (T === 'SphereGeometry') { if (P0.widthSegments <= cap) return geom; const ws = cap, hs = Math.max(6, Math.round(P0.heightSegments * cap / P0.widthSegments)); mk = () => new THREE.SphereGeometry(P0.radius, ws, hs, P0.phiStart, P0.phiLength, P0.thetaStart, P0.thetaLength); }
+  else if (T === 'CylinderGeometry' || T === 'ConeGeometry') { if (P0.radialSegments <= cap) return geom; mk = () => { const g = T === 'ConeGeometry' ? new THREE.ConeGeometry(P0.radius, P0.height, cap, P0.heightSegments, P0.openEnded, P0.thetaStart, P0.thetaLength) : new THREE.CylinderGeometry(P0.radiusTop, P0.radiusBottom, P0.height, cap, P0.heightSegments, P0.openEnded, P0.thetaStart, P0.thetaLength); geom.boundingBox || geom.computeBoundingBox(); g.computeBoundingBox(); g.translate(0, geom.boundingBox.min.y - g.boundingBox.min.y, 0); return g; }; }
+  else if (T === 'TorusGeometry') { if (P0.tubularSegments <= cap) return geom; mk = () => new THREE.TorusGeometry(P0.radius, P0.tube, Math.min(P0.radialSegments, Math.max(6, cap / 2 | 0)), cap, P0.arc); }
+  else if (T === 'CapsuleGeometry') { const rs = P0.radialSegments; if (rs <= cap) return geom; mk = () => new THREE.CapsuleGeometry(P0.radius, P0.length ?? P0.height, Math.max(3, Math.min(P0.capSegments, cap / 3 | 0)), cap); }
+  else if (T === 'LatheGeometry') { if (P0.segments <= cap) return geom; mk = () => new THREE.LatheGeometry(P0.points, cap, P0.phiStart, P0.phiLength); }
+  key = geom.uuid + ':' + cap; let g = lodCache.get(key);
+  if (g === undefined) { g = mk(); geom.boundingBox || geom.computeBoundingBox(); g.computeBoundingBox(); const a = geom.boundingBox, b = g.boundingBox, tol = 0.08 * geom.boundingSphere.radius + 1e-4;
+    // any geometry that was rotated/translated after creation keeps its original mesh (we only swap pristine primitives)
+    if (Math.abs(a.min.x - b.min.x) > tol || Math.abs(a.max.x - b.max.x) > tol || Math.abs(a.min.y - b.min.y) > tol || Math.abs(a.max.y - b.max.y) > tol || Math.abs(a.min.z - b.min.z) > tol || Math.abs(a.max.z - b.max.z) > tol) { g.dispose(); g = null; }
+    lodCache.set(key, g); }
+  return g || geom; }
 const rbCache = new Map();
 export function clearWorldCaches() { for (const g of prepCache.values()) g.dispose(); prepCache.clear(); for (const g of rbCache.values()) g.dispose(); rbCache.clear(); }
 export function rbox(w, h, d, r, seg = 2) {
-  r = Math.min(r, w / 2 - 0.001, h / 2 - 0.001, d / 2 - 0.001); if (r < 0.005) r = 0.005;
+  r = Math.min(r, w / 2 - 0.001, h / 2 - 0.001, d / 2 - 0.001); if (r < 0.005) r = 0.005; if (seg > 1 && (r < 0.035 || Math.max(w, h, d) < 0.45)) seg = 1; // tiny bevels: one bevel step looks identical, ~2x fewer vertices
   const k = [w, h, d, r, seg].map((v) => +(+v).toFixed(3)).join(','); let g = rbCache.get(k);
   if (!g) { g = new RoundedBoxGeometry(w, h, d, seg, r); rbCache.set(k, g); } return g;
 }
@@ -37,7 +54,7 @@ export class World {
   fadeEnd() { this._fg = null; }
   // ---- visuals ----
   _part(bucket, geom, color, m, em = 0) {
-    const g0 = prep(geom); const g = g0.clone(); g.applyMatrix4(m); if (this.oy) g.translate(0, this.oy, 0);
+    const g0 = prep(lodGeo(geom, m)); const g = g0.clone(); g.applyMatrix4(m); if (this.oy) g.translate(0, this.oy, 0);
     const n = g.attributes.position.count, a = new Float32Array(n * 3); _c.set(color); const k = em ? 1 + em : 1;
     for (let i = 0; i < n; i++) { a[i * 3] = _c.r * k; a[i * 3 + 1] = _c.g * k; a[i * 3 + 2] = _c.b * k; }
     g.setAttribute('color', new THREE.BufferAttribute(a, 3));
@@ -99,7 +116,7 @@ export class World {
     let tris = 0;
     for (const [k, ch] of this.chunks) {
       if (!ch.parts.length) continue; const g = mergeGeometries(ch.parts, false); ch.parts.forEach((p) => p.dispose()); ch.parts = null;
-      g.computeBoundingSphere(); g.computeBoundingBox();
+      g.computeBoundingSphere(); g.computeBoundingBox(); compact(g, ch.bucket, true);
       const mesh = new THREE.Mesh(g, MATS[ch.bucket] || MATS.m); mesh.matrixAutoUpdate = false;
       mesh.castShadow = ch.bucket !== 'e' && ch.bucket !== 'l' && ch.bucket !== 'w'; mesh.receiveShadow = ch.bucket !== 'l';
       if (ch.bucket === 'e') mesh.renderOrder = 2; if (ch.fade >= 0) this.fades[ch.fade].meshes.push(mesh);

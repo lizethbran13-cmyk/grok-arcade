@@ -1,12 +1,13 @@
 // Characters & creatures: smooth high-poly cartoon models built from merged primitives, with animation rigs.
 import * as THREE from 'three';
-import { Builder, P } from './geo.js';
-import { MATS } from './mats.js';
-import { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, wedge, gear, heart, star, blobGeo } from './shapes.js';
+import { Builder, P } from './geo.js?v=tt1';
+import { MATS } from './mats.js?v=tt1';
+import { compact } from './compact.js?v=tt1';
+import { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, wedge, gear, heart, star, blobGeo } from './shapes.js?v=tt1';
 const PI = Math.PI;
 // multi-material builder -> group of meshes
 function MB() { return { f: new Builder(), g: new Builder(), m: new Builder(), x: new Builder(), l: new Builder(), e: new Builder() }; }
-function toGroup(b, shadow = true) { const g = new THREE.Group(); for (const k of Object.keys(b)) { if (!b[k].parts.length) continue; const m = new THREE.Mesh(b[k].build(), MATS[k]); m.castShadow = shadow && k !== 'l' && k !== 'e'; m.receiveShadow = k !== 'l'; g.add(m); } return g; }
+function toGroup(b, shadow = true) { const g = new THREE.Group(); for (const k of Object.keys(b)) { if (!b[k].parts.length) continue; const m = new THREE.Mesh(compact(b[k].build(), k), MATS[k]); m.castShadow = shadow && k !== 'l' && k !== 'e'; m.receiveShadow = k !== 'l'; g.add(m); } return g; }
 function eyes(b, y, z, sep, r, opt = {}) {
   [-1, 1].forEach((sd) => { const x = sd * sep;
     if (opt.closed === sd) { b.g.add(torus(0.28, 16, PI), 0x2a1d1d, x, y - r * 0.2, z + r * 0.45, 0, 0, 0, r * 0.75, r * 0.6, r * 0.6); return; }

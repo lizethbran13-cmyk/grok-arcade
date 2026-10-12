@@ -154,7 +154,7 @@ let win = 0, winN = 0;
 export function trackFps(dt, now) {
   if (!E.autoQ || E.quality !== 'high' || document.hidden || dt <= 0) return;
   win += dt; winN++; if (win < 4) return; const fps = winN / win; win = 0; winN = 0;
-  const maxPR = Math.min(window.devicePixelRatio || 1, 3); let pr = E.pixelRatio;
+  const maxPR = Math.min(window.devicePixelRatio || 1, 2); // 2x is retina-sharp on phones; 3x tripled every post-FX buffer (iOS memory kills) let pr = E.pixelRatio;
   if (fps >= 57 && pr < maxPR - 0.01) pr = Math.min(maxPR, pr + 0.25); else if (fps < 46 && pr > E.basePR + 0.01) pr = Math.max(E.basePR, pr - 0.25);
   if (pr !== E.pixelRatio) { E.pixelRatio = pr; E.renderer.setPixelRatio(pr); resize(); }
   E.lastFps = fps;

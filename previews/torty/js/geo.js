@@ -9,7 +9,7 @@ export class Builder {
   add(geom, color, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx, emissive = 0) {
     // size-aware tessellation: tiny parts (eyes, noses, toes, buttons) don't need 600-triangle spheres; same look, far fewer triangles
     { const m = Math.max(Math.abs(sx), Math.abs(sy), Math.abs(sz)); if (geom === P.sphere && m < 0.16) geom = m < 0.07 ? TESS.s : TESS.m; else if (geom === P.capsule && m < 0.2) geom = TESS.c; }
-    let g = geom.index ? geom.toNonIndexed() : geom.clone();
+    let g = geom.clone(); if (!g.index) { const n0 = g.attributes.position.count, ia = n0 < 65535 ? new Uint16Array(n0) : new Uint32Array(n0); for (let i = 0; i < n0; i++) ia[i] = i; g.setIndex(new THREE.BufferAttribute(ia, 1)); } else if (!(g.index.array instanceof Uint32Array)) g.setIndex(new THREE.BufferAttribute(new Uint32Array(g.index.array), 1)); // stays indexed: ~4x fewer vertices than toNonIndexed, same look
     if (!g.attributes.uv) g.setAttribute('uv', new THREE.Float32BufferAttribute(new Float32Array(g.attributes.position.count * 2), 2));
     if (!g.attributes.normal) g.computeVertexNormals();
     _e.set(rx, ry, rz); _q.setFromEuler(_e); _m.compose(_v.set(x, y, z), _q, _s.set(sx, sy, sz));

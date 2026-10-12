@@ -1,7 +1,7 @@
 // HUD: area name, Sun Shells, current objective, prompts, toasts, timers.
-import { $, esc } from './util.js';
-import { S } from './save.js';
-import { sunStep } from './story.js';
+import { $, esc } from './util.js?v=tt1';
+import { S } from './save.js?v=tt1';
+import { sunStep } from './story.js?v=tt1';
 export class HUD {
   constructor() { this.dirty = true; this.toasts = $('toast'); }
   region(n) { const e = $('hArea'); if (e && e.textContent !== n) { e.textContent = n; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } }
