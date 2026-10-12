@@ -280,6 +280,30 @@
   P.stats = function () { return JSON.parse(JSON.stringify(st)); };
   P.check = check;
 
+  /* One-time makeup gift: David bought the Silver Trophy (tr_silver, 300) by accident.
+     He keeps the trophy; we refund the tickets once per device on the LIVE arcade save only. */
+  function giftRefund300() {
+    try {
+      var path = (location.pathname || '').replace(/\\/g, '/');
+      // Never fire in preview/archive copies (they keep separate saves / aren't the live booth)
+      if (/\/(archive|previews)\//.test(path)) return;
+      if (GA.store.get('gift.refund300', 0)) return;
+      GA.store.set('gift.refund300', 1);
+      GA.addTickets(300);
+      if (GA.onTickets) GA.onTickets(GA.getTickets());
+      var tries = 0, iv = setInterval(function () {
+        var hud = document.getElementById('hud');
+        if (++tries > 240) { clearInterval(iv); return; }
+        if (hud && !hud.classList.contains('hidden')) {
+          clearInterval(iv);
+          setTimeout(function () {
+            if (GA.Fix && GA.Fix.toast) GA.Fix.toast('\uD83C\uDF9F\uFE0F Gus grumbled, but here\u2019s your 300-ticket refund for the Silver Trophy. You can keep the trophy. Don\u2019t tell anyone.', 5200);
+          }, 1400);
+        }
+      }, 500);
+    } catch (e) { /* ignore */ }
+  }
+
   function init() {
     var got = check(firstRun);
     if (firstRun) {
@@ -287,6 +311,7 @@
       // wait until the player is in the hub (not on the title screen) before announcing
       if (got.length) { var tries = 0, iv = setInterval(function () { var hud = document.getElementById('hud'); if (++tries > 240) clearInterval(iv); if (hud && !hud.classList.contains('hidden')) { clearInterval(iv); setTimeout(function () { if (GA.Fix && GA.Fix.toast) GA.Fix.toast('New: Achievements! You already unlocked ' + got.length + '. See them in the Achievement Gallery.', 4500); }, 1200); } }, 500); }
     }
+    giftRefund300();
     pump();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
