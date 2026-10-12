@@ -8,7 +8,7 @@ export const ROW = [
   ['stocking', '🧦 Kringle Stocking Shop', 'KRINGLE STOCKING SHOP', 'W', -118, -102, 0x16a34a, '🧦 Stitch names on stockings', ['stitch', 'Elf Hemsley (Stocking Stitcher)', ['Welcome to the Kringle Stocking Shop! Every stocking needs the right name stitched on top.', 'Read the order, then pick the stocking that matches. Easy as pie. Easier, actually.'], ['A stocking without a name is just a very lonely sock.', 'We use the softest yarn in the world. I\'ve checked. Many times.']]],
   ['emporium', '🌿 Kringle Mistletoe Emporium', 'KRINGLE MISTLETOE EMPORIUM', 'W', -98, -82, 0x15803d, '🌿 Tie mistletoe bundles', ['sprig', 'Elf Ivy Sprig (Emporium Owner)', ['Welcome to the Mistletoe Emporium! Fresh sprigs, ribbons and bundles for every doorway.', 'Customers are waiting. Make each bundle just the way they ask.'], ['Mistletoe goes over a doorway. Not in soup. I learned that the hard way.', 'The white berries are the best part. Look, don\'t eat!']]],
   ['bank', '🏦 Kringle Bank', 'KRINGLE BANK', 'W', -78, -62, 0xa16207, '🪙 Count the cookie coins', ['teller', 'Elf Penelope Pennyworth (Teller)', ['Good day, and welcome to Kringle Bank! We keep the village\'s cookie coins safe and sound.', 'I\'m short a helper at the counting window. Can you add up each deposit?'], ['The vault is guarded by a very serious snowman. He\'s never blinked.', 'Our savings plan: one cookie today, two cookies tomorrow. Wait, that\'s just snacking.']]],
-  ['wrap', '🎁 Wrapping Department', 'WRAPPING DEPARTMENT', 'W', -46, -8, 0xbe123c, '🎁 Wrap an elf\'s order', ['tibbs', 'Head Wrapper Elf Tibbs', ['Welcome to the Wrapping Department! Toys roll in on the belts straight from Santa\'s Workshop.', 'Every elf at the tables sends an order: the paper, the box and the bow. Match each order exactly!'], ['Rule of wrapping: tape is your friend. Too much tape is also your friend.', 'Watch the belts! A finished present rides out to the sleigh every few seconds.', 'Our fastest wrapper can do a bike in nine seconds. A BIKE.']]],
+  ['wrap', '🎁 Wrapping Department', 'WRAPPING DEPARTMENT', 'W', -46, -8, 0xbe123c, '🎁 Wrap an elf\'s order', ['tibbs', 'Elf Tibbs (Wrapping Shift Lead)', ['Welcome to the Wrapping Department! Toys roll in on the belts straight from Santa\'s Workshop.', 'Every elf at the tables sends an order: the paper, the box and the bow. Match each order exactly!'], ['Rule of wrapping: tape is your friend. Too much tape is also your friend.', 'Watch the belts! A finished present rides out to the sleigh every few seconds.', 'Our fastest wrapper can do a bike in nine seconds. A BIKE.']]],
   ['radio', '📻 Kringle Radio · North Pole Radio News', 'KRINGLE RADIO · NORTH POLE RADIO NEWS', 'W', -4, 12, 0x7c3aed, '🎙️ Run the morning show', ['dj', 'DJ Elf Jingle Jack', ['You\'re on the air! Well, almost. Welcome to Kringle Radio and North Pole Radio News.', 'Help me run the morning show: pick the right sound for each bulletin.'], ['Today\'s forecast: snow, with a chance of more snow.', 'Our most requested song? Anything with sleigh bells in it.']]],
   ['records', '🗄️ Hall of Records', 'NORTH POLE HALL OF RECORDS', 'W', 16, 32, 0x334155, '🗄️ File letters away', ['archie', 'Archivist Elf Ledger', ['Welcome to the Hall of Records. After Santa reads a letter, it is filed right here, in that person\'s very own drawer.', 'The drawers are sorted A to Z. Can you file today\'s letters?'], ['We have a drawer for every person in the world. Yes, even you.', 'Quiet please. The drawers are sleeping. Kidding! They\'re just very organised.']]],
   ['university', '🎓 Southern North Pole University', 'SOUTHERN NORTH POLE UNIVERSITY', 'W', 60, 76, 0x1e40af, '🎓 Take the pop quiz', ['dean', 'Dean Elf Quillsby', ['Welcome to Southern North Pole University, where elves study everything about the North Pole!', 'Today\'s lecture just ended. Ready for the pop quiz? It\'s a friendly one.'], ['Our motto: always be learning. And always bring a scarf.', 'Fun fact: from up here, every direction is south!']]],
@@ -19,7 +19,7 @@ export const ROW = [
   ['admin', '💻 Administrative Support (IT + Predictions)', 'ADMINISTRATIVE SUPPORT', 'W', 160, 176, 0x475569, '💻 Help the IT and Predictions desks', ['byte', 'Elf Byte (IT Desk)', ['Welcome to Administrative Support: the IT Department, the Predictions Department and the folks who keep the paperclips coming.', 'The help line is ringing! Pick the right fix for each call.'], ['Have you tried turning the snow globe off and on again?', 'The Predictions desk says: 97% chance Santa eats a cookie at every house.']]],
   ['snowplow', '🚜 Snow Removal Department', 'SNOW REMOVAL DEPARTMENT', 'E', -178, -162, 0xea580c, '🚜 Clear the runway', ['plow', 'Elf Drift (Snow Removal)', ['Snow Removal! We keep the runway clear so the sleigh can take off.', 'Snow is piling up fast. Tap the snow piles before they grow too big!'], ['It snowed 3 metres last night. I love my job.', 'Pro tip: shovel the snow, don\'t eat it. Okay, maybe one bite.']]],
   ['tracking', '📡 Tracking Department', 'TRACKING DEPARTMENT · REGIONAL TRACKING CENTER', 'E', -158, -142, 0x0284c7, '📡 Route tracker reports', ['radar', 'Elf Orbit (Tracking Desk)', ['Welcome to the Tracking Department and the Regional Tracking Center. Reports from tracker elves all over the world land here.', 'Help route each report to the right part of the world map. That\'s also where the Bedtime Advisory Desk reminds kids to get to sleep!'], ['Every report goes to Flight Command next. Fast, accurate, and with a cocoa break.', 'The Bedtime Advisory Desk says: Santa only comes when you\'re asleep. Zzz.']]],
-  ['listdept', '📜 List Department', 'LIST DEPARTMENT', 'E', -138, -122, 0x9f1239, '📜 Check the list twice', ['twice', 'Elf Checkwell (List Keeper)', ['The List Department! We keep the list, and yes, we check it twice.', 'Look at the two copies. Find the line that doesn\'t match!'], ['Being kind gets you on the list. Being kind to elves gets you a cookie, too.', 'The list is very, very, VERY long. We use a ladder.']]],
+  ['listdept', '📜 List Department', 'LIST DEPARTMENT', 'E', -138, -122, 0x9f1239, '📜 Check the Wish Lists twice', ['twice', 'Elf Checkwell (Wish List Keeper)', ['The List Department! Every Wish List that arrives at the North Pole comes through here, and yes, we check each one twice.', 'Look at the two copies of this Wish List. Find the line that doesn\'t match!'], ['Being kind gets you on the list. Being kind to elves gets you a cookie, too.', 'The list is very, very, VERY long. We use a ladder.']]],
   ['logistics', '📦 Operations & Logistics', 'OPERATIONS & LOGISTICS DEPARTMENT', 'E', -118, -102, 0x854d0e, '📦 Route the packages', ['dispatch', 'Elf Dispatch Dora (Logistics)', ['Operations and Logistics: if it moves at the North Pole, it goes through us.', 'Packages are stacking up. Send each one to the right place!'], ['Our motto: right toy, right sack, right chimney.', 'The underground train brings finished toys from the Workshop. Choo choo!']]],
   ['reindeerops', '🦌 Reindeer Operations', 'REINDEER OPERATIONS · ASSIGNMENT DESK', 'E', -98, -82, 0x6b21a8, '🦌 Plan the reindeer team', ['harness', 'Elf Harness Hal (Assignment Desk)', ['Reindeer Operations! I run the Reindeer Assignment Desk: who flies, who rests, who leads.', 'Help me place the team in the right spots on the harness board.'], ['A reindeer\'s favourite snack? Apples. Carrots are a close second.', 'The fastest flyer isn\'t always the leader. The leader is the one who never gets lost.']]],
   ['community', '🎉 Elf Community Department', 'ELF COMMUNITY DEPARTMENT', 'E', -78, -62, 0xdb2777, '🎉 Plan the village events', ['partyplan', 'Elf Confetta (Events)', ['Hiya! The Elf Community Department plans the parades, the contests and every party in the village.', 'The events board is a mess. Help me put each event in the right month!'], ['The Elf Parade has 300 floats. I\'ve ridden every one.', 'Next contest: best snow sculpture. My entry is a snow sculpture of a snow sculpture.']]],
@@ -63,7 +63,7 @@ export const ACTS = {
   admin: { t: '💻 THE HELP LINE', need: 4, rounds: [['"My snow globe screen is frozen!"', ['🔁 Turn it off and on', '🔨 Hit it', '🍯 Add honey'], 0], ['"The printer is out of paper."', ['📄 Add paper', '🧦 Add socks', '🎵 Sing to it'], 0], ['Predictions desk: dark clouds over the hill. Tomorrow will be…', ['🌨️ Snowy', '🏖️ Beach day', '🌋 Volcano'], 0], ['"I forgot my password!"', ['🔑 Reset it safely', '📢 Shout it out', '🗑️ Delete everything'], 0], ['Predictions desk: how many cookies will Santa eat?', ['🍪 LOTS', '0️⃣ None', '🥦 Broccoli'], 0]], pass: 'Every call fixed and every prediction made. Elf Byte gives you a high five (wirelessly).' },
   snowplow: { kind: 'grid', t: '🚜 CLEAR THE RUNWAY', need: 18, pass: 'The runway is clear! The sleigh can take off any time.' },
   tracking: { t: '📡 TRACKER REPORTS', need: 4, rounds: [['"Report from a tracker elf near the pyramids."', ['🌍 Africa', '🌏 Asia', '🌎 South America'], 0], ['"Report from a tracker elf near Mount Fuji."', ['🌏 Asia', '🌍 Europe', '🌎 North America'], 0], ['"Report from the Amazon rainforest."', ['🌎 South America', '🌏 Oceania', '🌍 Africa'], 0], ['"Report from beside the Eiffel Tower."', ['🌍 Europe', '🌏 Asia', '🌎 South America'], 0], ['"Report from the Great Barrier Reef."', ['🌏 Oceania', '🌍 Europe', '🌎 North America'], 0], ['Bedtime Advisory: a kid is still awake at midnight! Send…', ['😴 A gentle bedtime reminder', '📯 A trumpet', '🍬 More candy'], 0]], pass: 'Every report routed. Flight Command gets a perfect map tonight!' },
-  listdept: { t: '📜 CHECKING IT TWICE', need: 4, rounds: [['Copy 1: "Ava, Ben, Cara". Copy 2: "Ava, Ben, Kara". Which name is different?', ['Cara / Kara', 'Ava', 'Ben'], 0], ['Copy 1: "Leo, Mia, Omar". Copy 2: "Leo, Mya, Omar". Which name is different?', ['Mia / Mya', 'Leo', 'Omar'], 0], ['Copy 1: "Sam, Tia, Uma". Copy 2: "Sam, Tia, Uma". Different?', ['They match!', 'Sam', 'Uma'], 0], ['Copy 1: "Eli, Fay, Gus". Copy 2: "Eli, Fae, Gus". Which name is different?', ['Fay / Fae', 'Eli', 'Gus'], 0], ['Copy 1: "Ivy, Jon, Kai". Copy 2: "Ivy, John, Kai". Which name is different?', ['Jon / John', 'Ivy', 'Kai'], 0]], pass: 'Checked twice and perfectly matched. The list is ready for Santa!' },
+  listdept: { t: '📜 CHECKING WISH LISTS TWICE', need: 4, rounds: [['Copy 1: "Ava, Ben, Cara". Copy 2: "Ava, Ben, Kara". Which name is different?', ['Cara / Kara', 'Ava', 'Ben'], 0], ['Copy 1: "Leo, Mia, Omar". Copy 2: "Leo, Mya, Omar". Which name is different?', ['Mia / Mya', 'Leo', 'Omar'], 0], ['Copy 1: "Sam, Tia, Uma". Copy 2: "Sam, Tia, Uma". Different?', ['They match!', 'Sam', 'Uma'], 0], ['Copy 1: "Eli, Fay, Gus". Copy 2: "Eli, Fae, Gus". Which name is different?', ['Fay / Fae', 'Eli', 'Gus'], 0], ['Copy 1: "Ivy, Jon, Kai". Copy 2: "Ivy, John, Kai". Which name is different?', ['Jon / John', 'Ivy', 'Kai'], 0]], pass: 'Checked twice and perfectly matched. The list is ready for Santa!' },
   logistics: { t: '📦 PACKAGE ROUTING', need: 4, rounds: [['A box of finished toys, not wrapped yet.', ['🎁 Wrapping Department', '🛷 Sleigh', '🗄️ Records'], 0], ['A wrapped present with a name tag.', ['🛷 The sleigh sack', '🎁 Wrapping again', '🥛 Dairy'], 0], ['A crate of fresh carrots.', ['🦌 Reindeer Barn', '🏦 Bank', '📻 Radio'], 0], ['A sack of letters to Santa.', ['📮 Post Office', '🚜 Snow Removal', '🍭 Candy Co.'], 0], ['A spare sleigh runner.', ['🛷 Sleigh Hangar', '🧦 Stocking Shop', '🌿 Emporium'], 0], ['A giant tub of nutmeg.', ['🥛 North Pole Dairy', '🛡️ Security', '🎓 University'], 0]], pass: 'Every package is on its way. Dispatch Dora gives you the golden clipboard!' },
   reindeerops: { t: '🦌 THE HARNESS BOARD', need: 4, rounds: [['Who leads the team on a foggy night?', ['Rudolph 🔴', 'Blitzen', 'Cupid'], 0], ['Which reindeer pair goes right behind the leader?', ['Dasher & Dancer', 'Comet & Cupid', 'Donner & Blitzen'], 0], ['A reindeer has a sore hoof. What should she do?', ['Rest in the barn', 'Fly anyway', 'Run a race'], 0], ['What do reindeer love most from visitors?', ['🍎 Apples', '🧦 Socks', '📚 Books'], 0], ['How many reindeer pull Santa\'s sleigh with Rudolph?', ['Nine', 'Three', 'Twenty'], 0]], pass: 'The harness board is perfect. Hal says the team has never looked better!' },
   community: { t: '🎉 THE EVENTS BOARD', need: 4, rounds: [['The Elf Parade (on Thanksgiving Day)', ['November', 'March', 'July'], 0], ['The Halloween costume contest', ['October', 'December', 'May'], 0], ['The Reindeer Games', ['Autumn', 'Midsummer', 'Never'], 0], ['Show Your Tree contest', ['December', 'August', 'April'], 0], ['The big North Pole Christmas party', ['December', 'February', 'June'], 0]], pass: 'The events board is perfect! Confetta throws actual confetti.' },
@@ -73,3 +73,111 @@ export const PAPERS = [['Red stripes', 'repeating-linear-gradient(45deg,#dc2626 
 export const BOXES = [['Cube', 52, 52], ['Tall', 38, 66], ['Long', 72, 34]];
 export const BOWS = [['Red bow', '#ef4444'], ['Gold bow', '#facc15'], ['Silver bow', '#e2e8f0'], ['Purple bow', '#a855f7']];
 export const WRAPPERS = ['Rosie', 'Tom', 'Bea', 'Crinkle', 'Tibbs', 'Juniper', 'Pip', 'Mistle'];
+
+// Named elves from santaupdate.com (names + jobs exactly as the site lists them; every line of dialogue is original).
+// [name, job on the site, building id, what they say]
+export const SITE_ELVES = [
+  // North Pole News Department -> Santa Update Newsroom
+  ['Elf Ernest', 'Sr. Vice President, Public Relations & News', 'library', 'Every story that leaves the North Pole crosses my desk first. Friendly, true and full of cheer, that\'s our rule.'],
+  ['Elf Ed Zachary', 'Director, North Pole News', 'library', 'Deadline in ten minutes! Somebody find me a headline with the word "jingle" in it.'],
+  ['Elf Harold Star', 'Editor of the North Pole Herald Star', 'library', 'I\'ve edited North Pole news for longer than most icebergs have been around. Commas matter, young elf.'],
+  ['Elf Crash Murphy', 'Eye-in-the-Sky Reporter', 'library', 'I report from way up high. If it flies over the North Pole, I\'ve seen it first. Mostly snowflakes. Lots of snowflakes.'],
+  ['Elf Red Stocking', 'News Anchor', 'library', 'Good evening, North Pole! Oh, sorry. Habit. I say that to everyone.'],
+  ['Elf Quinn Dangerfield', 'Reporter', 'library', 'I chase the BIG stories. Yesterday: "Snowman Loses Carrot, Finds New Carrot." Gripping stuff.'],
+  ['Elf Frasier Fir', 'Reporter', 'library', 'My beat is the tree farm. Breaking news: the trees are still green. Every single day.'],
+  ['Elf Doug Fir', 'Reporter', 'library', 'I cover the reindeer for the newsroom. They give excellent interviews, if you speak snort.'],
+  ['Elf Guido Pastorelli', 'Reporter (How the North Pole Works)', 'library', 'I started out tracking Santa in Sector 3. Now I write about how everything up here works. Ask me anything!'],
+  ['Elf Angel Starr', 'Reporter', 'library', 'I\'m working on a story about the brightest star over the village. Spoiler: it\'s the one on top of the tree.'],
+  ['Elf Carol Frost', 'Reporter', 'library', 'Weather, carols and cocoa. Those are my three favourite things to write about.'],
+  ['Elf Ginger Fong', 'Reporter', 'library', 'Today I\'m reviewing every cookie in Mrs. Claus\'s Kitchen. For the news. Totally for the news.'],
+  ['Elf Ned Noel', 'Reporter', 'library', 'Got a tip for the newsroom? I\'m all ears. Pointy ears, but all ears.'],
+  ['Elf Cocoa', 'Reporter, Santa Tracker Advisor', 'library', 'I help families learn the best ways to follow Santa\'s flight. Warm cocoa recommended.'],
+  ['Elf Candy Cane', 'Reporter, Sector 1', 'library', 'I file reports from Sector 1. Sweet news only, it\'s in my name.'],
+  ['Elf Merry Ann Brite', 'Reporter, Sector 2', 'library', 'Sector 2 reporting in! Everybody there is getting ready for Christmas. Me too!'],
+  ['Elf Roz', 'Reporter, Sector 3', 'library', 'Short name, long stories. That\'s me, Sector 3\'s reporter.'],
+  ['Elf Yul C.', 'Reporter, Sector 4', 'library', 'Sector 4 has the jolliest kids in the world. Don\'t tell the other sectors I said that.'],
+  ['Elf Ashley Holiday', 'Reporter, Sector 5', 'library', 'Every day is a holiday when you report from Sector 5!'],
+  // North Pole Radio News -> Kringle Radio
+  ['Elf Frank Myrrh', 'Lead Anchor, North Pole Radio News', 'radio', 'This is North Pole Radio News. Today: snow, smiles and a reindeer who learned to moonwalk.'],
+  ['Elf Holly Berry', 'Lead Anchor, North Pole Radio News', 'radio', 'Frank and I share the anchor desk. He brings the facts, I bring the cookies.'],
+  // North Pole Flight Command
+  ['Elf Roger Star', 'Director, North Pole Flight Command', 'obs', 'Welcome to Flight Command, the biggest department at the North Pole. Every sleigh mile is planned right here.'],
+  ['Elf Buck Sanchez', 'Director, Flight Operations', 'obs', 'Runway clear, runners waxed, harness checked. That\'s a good morning in Flight Operations.'],
+  ['Elf Z', 'Associate Director of Santa Trackers', 'obs', 'I help coordinate the Santa trackers. Some of them are your age. Maybe one day you\'ll be one!'],
+  ['Elf Petey LaCroix', 'Professional Santa Tracker', 'obs', 'Tracking Santa is my full-time job. Best job in the world? Yes. Yes it is.'],
+  ['Elf Meg Nogg', 'Media Director', 'obs', 'When Flight Command has news, I make sure the whole world hears it.'],
+  ['Elf Al Pyne', 'News Anchor, North Pole Flight Command', 'obs', 'I read the flight news. "Visibility: excellent. Cookies: plentiful. Santa: on schedule."'],
+  ['Elf Seymour Snow', 'Lead Meteorologist', 'obs', 'My forecast says snow. My forecast always says snow. I\'m usually right.'],
+  ['Elf Buzz Flanders', 'Landing Zone Designer', 'obs', 'I plan where the sleigh can land. Rooftops, fields, the occasional very big snowdrift.'],
+  ['Elf Marley Merry', 'Countdown Coordinator', 'obs', 'Every countdown clock at the North Pole? I keep them ticking. Tick, tock, ho ho ho!'],
+  ['Elf Harvey Bullet', 'Senior Flight Analyst', 'obs', 'I study every flight path twice. Then a third time, just to be extra sure.'],
+  ['Elf Wilbur Boeing', 'Senior Flight Analyst', 'obs', 'Harvey checks the maps, I check the winds. Between us, nothing surprises the sleigh.'],
+  // Tracking Department (Flight Command runs it) -> Tracking Department building
+  ['Elf Victoria Wassail', 'Bedtime Advisory Desk', 'tracking', 'I run the Bedtime Advisory Desk. My advice is always the same: get cozy and go to sleep!'],
+  ['Elf Randi Hume', 'Elf Supervisor, Sector 1', 'tracking', 'Sector 1 trackers report to me. Every report gets read, every one.'],
+  ['Elf Clif Moyer', 'Elf Supervisor, Sector 2', 'tracking', 'Sector 2 is all green on my board. That means ready!'],
+  ['Elf Rolf Jannsen', 'Elf Supervisor, Sector 3', 'tracking', 'Sector 3 has trackers in so many towns, I need a very big map.'],
+  ['Elf Tubby Ryder', 'Elf Supervisor, Sector 4', 'tracking', 'Sector 4, steady as a sleigh on fresh snow.'],
+  ['Elf Pinky Yates', 'Elf Supervisor, Sector 5', 'tracking', 'Sector 5 trackers are the early birds. They\'re up before the sun!'],
+  // Snow Removal Department
+  ['Elf Nate Snowflake', 'Head Elf, Snow Removal Department', 'snowplow', 'Head of Snow Removal, and yes, my name is Snowflake. I\'ve heard all the jokes.'],
+  // Reindeer Operations
+  ['Elf Victor', 'Vice President, Reindeer Operations', 'reindeerops', 'Every reindeer up here is a volunteer. I make sure each one is happy, healthy and ready.'],
+  ['Elf Charlie Muscle', 'Reindeer Assignment Desk', 'reindeerops', 'Who flies where? That\'s my desk. Big decisions, tiny clipboard.'],
+  ['Elf Gerty Snorckleberry', 'Reindeer Registrar', 'reindeerops', 'Every reindeer who arrives gets signed in by me. Name, hoof size, favourite snack.'],
+  ['Big Sled Ted', 'Kringle Reindeer Center Head Elf', 'barn', 'I look after the Kringle Reindeer Center. Big name, big sled, bigger heart.'],
+  ['Elf Stinky Jinglebutt', 'Lead Reindeer Groomer', 'barn', 'I brush every reindeer till they shine. The name? Ask the reindeer, they gave it to me.'],
+  // North Pole Postal Department -> Post Office
+  ['Elf Hugo Slavia', 'North Pole Postmaster', 'post', 'Letters, emails, calls and texts to Santa: they all come through my Post Office.'],
+  ['Elf Jack Pringle', 'Special Projects Administrator', 'post', 'Special projects! Today\'s is a letter that came all the way here by paper airplane.'],
+  ['Elf Meggie Noel', 'Stocking Mail Manager', 'post', 'I handle the stocking mail. Tiny notes tucked in stockings are my favourite kind.'],
+  ['Elf Hector de la Fuego', 'Wishlist Coordinator', 'post', 'Wish lists get sorted by me before they go to Santa. Neat handwriting gets a gold star.'],
+  // Administrative Support
+  ['Elf Trixie', 'Chief of Staff to Mrs. Claus', 'admin', 'I used to be a reporter. Now I keep Mrs. Claus\'s day running on time. She\'s the best boss ever.'],
+  ['Elf Flip Beanz', 'Numerologist', 'admin', 'Numbers are my thing. Did you know Christmas is only a few sleeps away? I counted.'],
+  ['Elf Joel at the Pole', 'Manager of Santa\'s Calendar', 'admin', 'Santa\'s calendar is full! Parties, toy checks, cookie tastings. I keep it all organised.'],
+  ['Elf Winslow', 'North Pole Events Coordinator', 'admin', 'Events are my department. Parades, contests, parties, I plan them all.'],
+  ['Elf Moe', 'Community Manager', 'admin', 'I help everybody in the North Pole community feel welcome. Welcome, by the way!'],
+  ['Elf Max', 'Web Developer', 'admin', 'I build North Pole websites. Mostly I fix the snowflake animations.'],
+  ['Elf Angelina Seer', 'Head Elf, Predictions Department', 'admin', 'Predictions Department! I predict… you\'re going to have a very merry day.'],
+  ['Elf Cookie Sparkles', 'Head Elf, Department of Sugar Plums, Sprinkles and Frosting', 'admin', 'My department is sugar plums, sprinkles and frosting. Yes, it\'s as sweet as it sounds.'],
+  ['Elf Bertie Bott', 'Head Elf, IT Department', 'admin', 'Head of IT. If something beeps, blinks or freezes, I\'m the elf to call.'],
+  ['Elf Nick Winters', 'Chief Auditor, North Pole Accounting', 'admin', 'I count everything twice, like the list. Every bow and every button adds up.'],
+  ['Elf Joey Chestnuts', 'North Pole Club Member Support', 'admin', 'Need help? That\'s what I\'m here for. Ask away, friend.'],
+  // Department of Elf Resources
+  ['Elf Sandy Claus', 'Head Elf, Elf Resources', 'elfres', 'Elf Resources hires and organises every elf working on Operation Merry Christmas. That\'s a LOT of name tags.'],
+  ['Elf Ivy Holley', 'Recruiter', 'elfres', 'Thinking about becoming an elf? I\'d love to tell you all about it!'],
+  ['Elf Nico Figgypop', 'Visiting Elf Assignments', 'elfres', 'I match visiting elves with the families they\'ll help. It\'s like a puzzle, but cozier.'],
+  ['Elf Buddy McFudge', 'Director, Visiting Elves', 'elfres', 'Visiting elves travel all over the world. I make sure every one of them gets there safely.'],
+  ['Elf Rufus Hortwiggle', 'Senior Elf Investigator', 'elfres', 'Lost an elf? I investigate. Usually they\'re just behind the cookie jar.'],
+  ['Elf Rosalie Pickins', 'Elf Registrar', 'elfres', 'Every elf is registered with me. Name, hat size, favourite carol.'],
+  ['Elf Fluffy FuzzyFeet', 'Elf Code Enforcement', 'elfres', 'I keep an eye on the Elf Code. Mostly I remind elves to be kind. It works!'],
+  ['Elf Butch Winky', 'Elf Locator', 'elfres', 'I find elves. Big ones, small ones, ones hiding in snowdrifts.'],
+  // Operations & Logistics (Santa's Workshop, Wrapping, Sleigh Department are part of it)
+  ['Elf Wally', 'Vice President, Logistics & Distribution', 'logistics', 'Operations and Logistics is a thousand departments working as one. I keep them all pulling together.'],
+  ['Elf Gloria Twinkleheart', 'Commissioner of Traditions', 'logistics', 'I look after Christmas traditions, the old ones and the brand-new ones.'],
+  ['Elf Larry Lawrence', 'Director, Department of Redundancy Department', 'logistics', 'I run the Department of Redundancy Department. I run the Department of Redundancy Department.'],
+  ['Elf Bernard K. Kringle', 'Head Elf, Santa\'s Workshop', 'tortuga', 'Head of the Workshop. Safety first, goggles on, and no running near the toy saws!'],
+  ['Elf Grumbles Dash', 'Director of Toy Safety', 'tortuga', 'Every toy gets a safety check from me. Grumble, grumble… okay, that one passes!'],
+  ['Elf Quinton Q. Quigley', 'Director of Research and Development', 'tortuga', 'Research and Development! Today I\'m inventing a sock that never loses its partner.'],
+  ['Elf Harriet Bow', 'Head Elf, Wrapping Department', 'wrap', 'I run the Wrapping Department. Every present that leaves here looks as good as it feels to give.'],
+  ['Elf Charity Pickle', 'Head Elf, Sleigh Department', 'club', 'The Sleigh Department is mine. I know every bolt and bell on Santa\'s sleigh.'],
+  ['Elf Mitch', 'Sleigh Barn Reporter', 'club', 'I report from the sleigh hangar. Today\'s scoop: the runners got polished. Twice!'],
+  // Southern North Pole University
+  ['Elf Dr. Grant Smedley', 'Professor of Santa and North Pole History', 'university', 'History is my subject. The North Pole has stories older than the oldest snowflake.'],
+  ['Elf Dr. Lionel', 'North Pole School of Elf Health Science', 'university', 'Healthy elves are happy elves. Eat your veggies, get your sleep, wear your scarf.'],
+  ['Elf Slim Wonder', 'Office of Merriment Studies', 'university', 'I study merriment. My research says: laughing counts as exercise.'],
+  // North Pole State Department
+  ['Elf Rusty Belz', 'Vice President, North Pole State Department', 'statedept', 'The State Department keeps the North Pole friends with the whole world. Friendship is my job.'],
+];
+// building rectangles in the town's own (source) coordinates + door, for placing staff along the walls
+export const OLDR = { library: [-46, -58, -28, -42, -37, -42], post: [-46, 40, -30, 54, -38, 40], obs: [14, -114, 30, -98, 22, -98], club: [-30, 74, -12, 90, -12, 82], barn: [-104, 44, -86, 60, -86, 52], tortuga: [60, -68, 96, -42, 78, -42] };
+const _rect = (id) => { if (OLDR[id]) return OLDR[id]; const b = BUILD.find((q) => q.id === id); return [b.x0, b.z0, b.x1, b.z1, b.dx, b.dz]; };
+const _slug = (n) => 'su_' + n.toLowerCase().replace(/[^a-z]+/g, '');
+export const SITE_NPCS = []; { const by = {}; for (const e of SITE_ELVES) (by[e[2]] = by[e[2]] || []).push(e);
+  for (const id in by) { const [x0, z0, x1, z1, dx, dz] = _rect(id), m = 1.3, L = by[id]; const pts = []; const per = [[x0 + m, z0 + m, x1 - m, z0 + m], [x1 - m, z0 + m, x1 - m, z1 - m], [x1 - m, z1 - m, x0 + m, z1 - m], [x0 + m, z1 - m, x0 + m, z0 + m]];
+    for (const [ax, az, bx, bz] of per) { const len = Math.hypot(bx - ax, bz - az); for (let t = 0.8; t < len - 0.8; t += 1.5) { const px = ax + (bx - ax) * t / len, pz = az + (bz - az) * t / len; if (Math.hypot(px - dx, pz - dz) > 4.5) pts.push([px, pz]); } }
+    const cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, step = pts.length / L.length;
+    L.forEach((e, i) => { const p = pts[Math.floor(i * step + step / 2) % pts.length]; const yaw = Math.atan2(cx - p[0], cz - p[1]); SITE_NPCS.push({ id: _slug(e[0]), n: `${e[0]} (${e[1]})`, look: { t: { shell: 'olive' }, s: 0.3 }, at: [p[0], p[1], yaw], region: id, _site: e }); }); } }
+for (const d of SITE_NPCS) { const e = d._site; TALK[d.id] = { hi: [`Hi! I'm ${e[0]}, ${e[1]}.`, e[3]], more: [e[3], `Being ${e[1].replace(/^(Head Elf|Director|Vice President)/, 'the $1')} keeps me busy, but there's always time to say hello to a new elf!`, 'Keep up the good work around the village. Every elf helps Operation Merry Christmas!'] }; }
+NPCS.push(...SITE_NPCS);

@@ -208,15 +208,6 @@
   ],
   "previews": [
     {
-      "id": "northpole",
-      "game": "northpole",
-      "name": "Grok North Pole Village",
-      "url": "previews/northpole/",
-      "playable": true,
-      "built": "2026-10-12",
-      "notes": "Update! iPhone memory fix (about 30% less GPU memory than Torty Town) + new Operations Row: walk in the Wrapping Department (belts of presents, wrapping elves, wrap-the-order mini-game) and 20 more North Pole departments, each with something to do."
-    },
-    {
       "id": "pumpkinhollow",
       "game": "pumpkinhollow",
       "name": "Grok Pumpkin Hollow",
@@ -224,6 +215,15 @@
       "playable": true,
       "built": "2026-10-12",
       "notes": "Update! iPhone memory fix: about half the GPU memory of Torty Town, same look."
+    },
+    {
+      "id": "northpole",
+      "game": "northpole",
+      "name": "Grok North Pole Village",
+      "url": "previews/northpole/",
+      "playable": true,
+      "built": "2026-10-12",
+      "notes": "Update! Meet 80 real elves from santaupdate.com in their own departments (Elf Crash Murphy in the newsroom, Elf Roger Star at Flight Command, Elf Harriet Bow in Wrapping and more). The List Department now checks Wish Lists. Plus the iPhone memory fix and Operations Row."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

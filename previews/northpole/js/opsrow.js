@@ -1,10 +1,10 @@
 // Operations Row (North Pole only): a new street of walk-in departments on fresh land east of Mistletoe Street,
 // led by the Wrapping Department (belts of moving 3D presents, wrapping elves, the wrapping mini-game).
 import * as THREE from 'three';
-import { S, persist } from './save.js?v=np8';
-import { sfx } from './audio.js?v=np8';
-import { panel } from './ui.js?v=np8';
-import * as D from './opsdata.js?v=np8';
+import { S, persist } from './save.js?v=np9';
+import { sfx } from './audio.js?v=np9';
+import { panel } from './ui.js?v=np9';
+import * as D from './opsdata.js?v=np9';
 const PI = Math.PI;
 const $a = (c, s) => [...c.querySelectorAll(s)], $q = (c, s) => c.querySelector(s);
 const sh = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -128,7 +128,7 @@ function wrapGame(G, done) { const ORD = 6; let i = 0, ok = 0, t = 80, over = fa
       const s = $q(c, '#send'); if (s) s.onclick = () => { if (pick.includes(-1)) return; const good = pick.every((v, k) => v === o[k]); if (good) { ok++; sfx('check'); G.toastMsg(`🎁 Elf ${who[i % who.length]}: perfect!`); } else { sfx('bump'); G.toastMsg(`🎁 Elf ${who[i % who.length]}: that's not quite my order…`); } i++; pick = [-1, -1, -1]; if (i >= ORD) end(); else draw(); }; }, 'mgP'); };
   const tick = setInterval(() => { const e = document.getElementById('tt'); if (!e) { over = true; clearInterval(tick); return; } t -= 0.25; e.textContent = Math.max(0, t | 0); if (t <= 0) end(); }, 250);
   function end() { if (over) return; over = true; clearInterval(tick); const good = ok >= 5; S.best.wrap = Math.max(S.best.wrap | 0, ok); persist(); if (good) win(G, 'wrap', 'wrap');
-    result(good ? '🎁 ALL WRAPPED!' : '🎁 TIME!', `${ok}/${ORD} orders wrapped exactly right`, good ? 'Head Wrapper Tibbs ties a golden bow on your hat. You\'re a real Wrapping Department elf!' : 'Match the paper, the box AND the bow. Get 5 right to pass!', done); }
+    result(good ? '🎁 ALL WRAPPED!' : '🎁 TIME!', `${ok}/${ORD} orders wrapped exactly right`, good ? 'Elf Harriet Bow, Head Elf of the Wrapping Department, ties a golden bow on your hat. You\'re a real Wrapping Department elf!' : 'Match the paper, the box AND the bow. Get 5 right to pass!', done); }
   draw(); }
 export function act(id, G, done) { if (!id.startsWith('ops_')) return false; id = id.slice(4); if (id === 'wrap') { wrapGame(G, done); return true; } const A = D.ACTS[id]; if (!A) return false;
   const k = A.kind; if (k === 'seq') seq(id, A, G, done); else if (k === 'stripe') stripe(id, A, G, done); else if (k === 'grid') grid(id, A, G, done); else if (k === 'sum') sum(id, A, G, done); else quiz(id, A, G, done); return true; }

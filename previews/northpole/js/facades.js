@@ -1,5 +1,5 @@
 // Holiday building shapes: every house gets a new themed silhouette (roof, towers, trim) on top of its walk-in interior.
-import * as K from './kit.js?v=np8';
+import * as K from './kit.js?v=np9';
 const H = false, PI = Math.PI;
 const { rbox, rcyl, cyl, cone, sph, torus } = K;
 const GINGER = ['bakery', 'sweets', 'icecream', 'shellshop', 'pottery', 'cafe', 'cinema', 'music', 'toys'];

@@ -1,7 +1,7 @@
 // HUD: area name, Snowflakes, current objective, prompts, toasts, timers.
-import { $, esc } from './util.js?v=np8';
-import { S } from './save.js?v=np8';
-import { sunStep } from './story.js?v=np8';
+import { $, esc } from './util.js?v=np9';
+import { S } from './save.js?v=np9';
+import { sunStep } from './story.js?v=np9';
 export class HUD {
   constructor() { this.dirty = true; this.toasts = $('toast'); }
   region(n) { const e = $('hArea'); if (e && e.textContent !== n) { e.textContent = n; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } }
