@@ -6,7 +6,7 @@ export const KEY_TRACK = 'grokDLC.northpole.merry_tracking_expansion';
 export const KEY_EVENTS = 'grokDLC.northpole.merry_events_expansion';
 const QS = (() => { try { return new URLSearchParams(location.search); } catch (e) { return new URLSearchParams(''); } })();
 export function owned(k) { try { if (QS.get('locked') === '1') return false;
-    const pp = location.pathname; if (/\/previews\/np-merry-tracking/.test(pp)) return k === KEY_TRACK; if (/\/previews\/np-merry-events/.test(pp)) return k === KEY_EVENTS; if (/\/previews\//.test(pp)) return true; // Time Jumper test builds: that DLC is unlocked for testing
+    const pp = location.pathname; if (/\/(previews|archive)\/np-merry-tracking/.test(pp)) return k === KEY_TRACK; if (/\/(previews|archive)\/np-merry-events/.test(pp)) return k === KEY_EVENTS; if (/\/previews\//.test(pp)) return true; // Time Jumper test builds: that DLC is unlocked for testing
     if (localStorage.getItem(k)) return true; const l = JSON.parse(localStorage.getItem('grokDLC.owned') || '[]'); return Array.isArray(l) && l.indexOf(k) >= 0; } catch (e) { return false; } }
 export const OWN_T = owned(KEY_TRACK), OWN_E = owned(KEY_EVENTS);
 // ------------------------------------------------------------------ the real date in America/Los_Angeles (debug: ?npdate=YYYY-MM-DD)

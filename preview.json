@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-12T16:30:00-07:00",
+  "updated": "2026-10-12",
   "items": [
     {
       "game": "pumpkinhollow",
@@ -204,28 +204,7 @@
       "when": "Oct 10"
     }
   ],
-  "previews": [
-    {
-      "id": "np-merry-tracking",
-      "game": "northpole",
-      "issue": 43,
-      "name": "Merry Tracking Expansion",
-      "url": "previews/np-merry-tracking/",
-      "playable": true,
-      "built": "2026-10-12",
-      "notes": "North Pole Sleigh Port + all 5 walk-in Regional Tracking Centers (preparing until Dec 24; add ?npdate=2026-12-24 to see them fully online)"
-    },
-    {
-      "id": "np-merry-events",
-      "game": "northpole",
-      "issue": 44,
-      "name": "Merry Events Expansion",
-      "url": "previews/np-merry-events/",
-      "playable": true,
-      "built": "2026-10-12",
-      "notes": "North Pole Event Center on the real calendar. Test dates: ?npdate=2026-10-14 (Reindeer Games live), 2026-10-31 (Halloween Party), 2026-11-26 (Elf Parade), 2026-12-25 (Christmas Day Party)"
-    }
-  ],
+  "previews": [],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
@@ -315,6 +294,30 @@
       "built": "2026-10-12",
       "archived": "2026-10-12",
       "notes": "The last Time Jumper build of Grok North Pole Village before release.",
+      "playable": true
+    },
+    {
+      "id": "np-merry-tracking",
+      "game": "northpole",
+      "issue": 43,
+      "name": "Merry Tracking Expansion",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/np-merry-tracking-beta/",
+      "built": "2026-10-12",
+      "archived": "2026-10-12",
+      "notes": "North Pole Sleigh Port + all 5 walk-in Regional Tracking Centers (preparing until Dec 24; add ?npdate=2026-12-24 to see them fully online)",
+      "playable": true
+    },
+    {
+      "id": "np-merry-events",
+      "game": "northpole",
+      "issue": 44,
+      "name": "Merry Events Expansion",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/np-merry-events-beta/",
+      "built": "2026-10-12",
+      "archived": "2026-10-12",
+      "notes": "North Pole Event Center on the real calendar. Test dates: ?npdate=2026-10-14 (Reindeer Games live), 2026-10-31 (Halloween Party), 2026-11-26 (Elf Parade), 2026-12-25 (Christmas Day Party)",
       "playable": true
     }
   ],
