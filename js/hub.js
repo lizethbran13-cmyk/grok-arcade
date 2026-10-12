@@ -856,6 +856,19 @@
         g.fillStyle = '#ff4fa0'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK RATITA RESCUE', w / 2, 24);
         break;
       }
+      case 'torty': {
+        // Grok Torty Town: desert oasis with palms around a pond, an adobe dome, the Tortuga Tech shell logo, the sun sinking slowly and a tortoise strolling past (very slowly)
+        var gtt = g.createLinearGradient(0, 0, 0, h); gtt.addColorStop(0, '#7dc8ff'); gtt.addColorStop(0.5, '#ffd9a8'); gtt.addColorStop(0.51, '#f2cf98'); gtt.addColorStop(1, '#e8b984'); g.fillStyle = gtt; g.fillRect(0, 0, w, h);
+        var sy = h * 0.2 + (Math.sin(t * 0.2) * 0.5 + 0.5) * h * 0.18; g.fillStyle = '#ffd23f'; g.beginPath(); g.arc(w * 0.78, sy, w * 0.09, 0, 7); g.fill();
+        g.fillStyle = '#e08f55'; g.fillRect(w * 0.04, h * 0.36, w * 0.18, h * 0.14); g.fillStyle = '#c96f3a'; g.fillRect(w * 0.04, h * 0.4, w * 0.18, h * 0.02);
+        g.fillStyle = '#f6c38b'; g.fillRect(w * 0.3, h * 0.34, w * 0.38, h * 0.17); g.fillStyle = '#2dd4bf'; g.beginPath(); g.arc(w * 0.49, h * 0.34, w * 0.11, Math.PI, 0); g.fill(); g.fillStyle = '#7c2d12'; g.fillRect(w * 0.45, h * 0.43, w * 0.08, h * 0.08);
+        g.fillStyle = '#0f9d8a'; g.beginPath(); for (i = 0; i < 6; i++) { var aa = i / 6 * 6.283 + 0.52; g[i ? 'lineTo' : 'moveTo'](w * 0.49 + Math.cos(aa) * w * 0.045, h * 0.39 + Math.sin(aa) * w * 0.045); } g.closePath(); g.fill();
+        g.fillStyle = '#60c5ff'; g.beginPath(); g.ellipse(w * 0.5, h * 0.66, w * 0.3, h * 0.055, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(255,255,255,.5)'; g.fillRect(w * 0.38, h * 0.655, w * 0.1, 2);
+        [0.16, 0.84].forEach(function (px) { g.strokeStyle = '#8a5a32'; g.lineWidth = 5; g.beginPath(); g.moveTo(w * px, h * 0.68); g.quadraticCurveTo(w * (px + 0.03), h * 0.6, w * px, h * 0.5); g.stroke(); g.fillStyle = '#2f9e44'; for (var k = 0; k < 5; k++) { g.save(); g.translate(w * px, h * 0.5); g.rotate(-1.4 + k * 0.7 + Math.sin(t * 1.2) * 0.05); g.beginPath(); g.ellipse(18, 0, 20, 5, 0, 0, 7); g.fill(); g.restore(); } });
+        var tx = (t * 9) % (w + 60) - 30, ty = h * 0.82; g.fillStyle = '#a3a37a'; g.beginPath(); g.ellipse(tx + 20, ty + 2, 7, 5, 0, 0, 7); g.fill(); g.fillStyle = '#a16207'; g.beginPath(); g.ellipse(tx, ty, 18, 11, 0, Math.PI, 0); g.fill(); g.fillStyle = '#ca8a04'; g.beginPath(); g.arc(tx - 6, ty - 5, 3.5, 0, 7); g.arc(tx + 5, ty - 6, 3.5, 0, 7); g.fill(); g.fillStyle = '#111'; g.beginPath(); g.arc(tx + 23, ty, 1.5, 0, 7); g.fill(); g.fillStyle = '#ff5d8f'; g.beginPath(); g.arc(tx + 19, ty - 5, 2.5, 0, 7); g.fill();
+        g.fillStyle = '#ffb020'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK TORTY TOWN', w / 2, 24);
+        break;
+      }
       case 'puptown': {
         // Grok Pup Town: town hall with a clock tower, the fountain, bunting, Candy trotting past and the Dog-Bus rolling by
         var gpt = g.createLinearGradient(0, 0, 0, h); gpt.addColorStop(0, '#7dc8ff'); gpt.addColorStop(0.55, '#ffe0f0'); gpt.addColorStop(0.56, '#f6d9c4'); gpt.addColorStop(1, '#f3c7a8'); g.fillStyle = gpt; g.fillRect(0, 0, w, h);

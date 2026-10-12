@@ -1923,6 +1923,77 @@ GA.HALL_DATA = {
 "noOld": "Grok Eatsville Tycoon just opened for business. Its Time Jumper beta is in the Save Vault. Please wash your hands."
 
 },
+"torty": {
+"repo": "grok-torty-town",
+"history": [
+{
+"date": "Oct 11",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A sunny cartoon 3D desert oasis in the Turbo look (soft shadows, glow, real 3D props): Torty's hometown, where everything moves at turtle pace! Explore Oasis Square, Market Street, the Burrows, Hot Spring Hill, the Old Adobe Quarter, Fiesta Plaza, the Slow-Mo Derby, the lettuce farm and Tortuga Tech Inc., Torty's own durability-testing company. 25+ walk-in buildings, 90+ townsfolk, visitors Candy, Luna, Pi-rat and Snowie, the mystery of the swiped Sunstone, 6 mini-games, badges and secrets. Day-to-sunset light. Co-op for 3 online. It spent its beta in Lili's Time Jumper first."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/torty/1.webp",
+"cap": "Oasis Square: the palm-ringed pond, picnics and the townsfolk",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/torty/2.webp",
+"cap": "Torty's family burrow (Papa, Mama and Gramps, knee-high as desert tortoises should be!)",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/torty/3.webp",
+"cap": "Torty's CEO office at Tortuga Tech Inc.",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/torty/4.webp",
+"cap": "The Tortuga Tech lobby with its shell logo",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/torty/5.webp",
+"cap": "The Tortuga Tech Test Yard: drop tower and live toughness tests",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/torty/6.webp",
+"cap": "The Old Adobe Quarter: fountain plaza, bakery and music hall",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/torty/7.webp",
+"cap": "The Slowmotion Picture House, now showing a VERY slow sunset",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/torty/8.webp",
+"cap": "Make It Tougher: shell-testing Ratita Industries gadgets",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/torty/9.webp",
+"cap": "Fiesta Plaza: the taco truck, picnic umbrellas and string lights",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/torty/cover.webp",
+"quip": "A tortoise came in to see the exhibit at 9 a.m. She reached the front desk at closing time, said it was the best visit of her life, and booked again for tomorrow.",
+"noOld": "Grok Torty Town is still in Lili's Time Jumper. No old versions yet. Please don't rush the tortoises."
+},
 "puptown": {
 "repo": "grok-pup-town",
 "history": [

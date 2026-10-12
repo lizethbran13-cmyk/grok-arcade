@@ -1094,7 +1094,7 @@
     { id: 'race', name: 'RACING', icon: '\uD83C\uDFC1', col: '#f97316', ids: ['grid', 'surfers', 'rides', 'kart'], wall: 'N', from: 91.2, slots: 5 },
     { id: 'sport', name: 'SPORTS', icon: '\uD83C\uDFC6', col: '#38bdf8', ids: ['fc', 'pickle', 'sports'], wall: 'E', from: -10.4, slots: 6 },
     { id: 'more', name: 'MORE GAMES', icon: '\u2728', col: '#e879f9', ids: [], wall: 'E', from: 0.6, slots: 3 },
-    { id: 'hubs', name: 'HUBS & WORLDS', icon: '\uD83C\uDFE2', col: '#ff8a3d', ids: ['ratitahq', 'puptown'], wall: 'E', from: 6.3, slots: 3 },
+    { id: 'hubs', name: 'HUBS & WORLDS', icon: '\uD83C\uDFE2', col: '#ff8a3d', ids: ['ratitahq', 'puptown', 'torty'], wall: 'E', from: 6.3, slots: 3 },
     { id: 'life', name: 'LIFE SIMS', icon: '\uD83C\uDFE1', col: '#facc15', ids: ['pets', 'life', 'disaster', 'eatsville'], wall: 'S', from: 75.0, slots: 6 },
     { id: 'party', name: 'PARTY', icon: '\uD83C\uDF89', col: '#ff4fd8', ids: ['party', 'brawl', 'ratita'], wall: 'S', from: 87.2, slots: 6 }];
   var GSTEP = 1.75;
@@ -1225,7 +1225,7 @@
     function bench(x, z, ry) { var b = prop('gal', 'gallery bench ' + x + ',' + z, x, z, ry); add(b, bx(2.0, 0.12, 0.6), ph('#ff4fd8', 40), 0, 0.48, 0); add(b, bx(2.0, 0.5, 0.1), ph('#ff4fd8', 40), 0, 0.8, -0.27); [-0.85, 0.85].forEach(function (q) { add(b, bx(0.1, 0.44, 0.5), chrome(), q, 0.22, 0); }); reg(b, 'prop'); solidOf(b, 0.02); }
     bench(80, -5.0, 0); bench(92, -5.0, 0); bench(80, 3.2, Math.PI); bench(92, 3.2, Math.PI);
     function plant(x, z) { var p = prop('gal', 'gallery plant ' + x + ',' + z, x, z, 0); add(p, cy(0.28, 0.22, 0.55, 16), ph('#f5f0e6', 40), 0, 0.27, 0); for (var k = 0; k < 7; k++) { var l = add(p, sp(0.22, 10), lm(k % 2 ? '#22c55e' : '#16a34a'), Math.sin(k * 0.9) * 0.18, 0.7 + (k % 3) * 0.16, Math.cos(k * 0.9) * 0.18); l.scale.set(1, 1.4, 1); } reg(p, 'prop'); solidOf(p, 0.02); }
-    plant(71.0, -12.9); plant(71.0, 10.9); plant(100.9, 10.9);
+    plant(71.0, -12.9); plant(71.0, 10.9); plant(98.2, 10.9);
     ANIM.gal.push(function (t, dt) {
       holo.rotation.y = t * 0.8; ico.rotation.x = t * 0.5; holo.position.y = 2.25 + Math.sin(t * 1.6) * 0.08;
       if (gj.root) { gj.bub.tick(dt); var p2 = A.pose(), ang = Math.atan2(p2.x - (dx - 0.85), p2.z - dz) - Math.PI / 2; gj.head.rotation.y += (Math.max(-0.7, Math.min(0.7, -ang + Math.PI / 2 - Math.PI / 2)) - gj.head.rotation.y) * Math.min(1, dt * 3);
