@@ -1,16 +1,16 @@
 // Grok Pumpkin Hollow: Martina "Torty"'s desert-oasis hometown. A palm-ringed Pumpkin Square, Spooky Street, the Burrows (homes),
 // Haunted Hill, the Broomstick Racetrack, the Pumpkin Patch and the Bat Cliffs edge. 18 enterable buildings, each its own
 // culled region; outdoors batch into big merged chunks, tiny decor goes into far-culled "detail" chunks. All real 3D geometry.
-import { tortuga } from './tortuga.js?v=ph6';
-import { districts } from './districts.js?v=ph6';
+import { tortuga } from './tortuga.js?v=ph7';
+import { districts } from './districts.js?v=ph7';
 import * as THREE from 'three';
-import * as LY from './layout.js?v=ph6';
-import * as FA from './facades.js?v=ph6';
-import * as TH from './theme.js?v=ph6';
-import * as HOL from './holiday.js?v=ph6';
-import * as K from './kit.js?v=ph6';
-import { interiors } from './interiors.js?v=ph6';
-import { underground } from './under.js?v=ph6';
+import * as LY from './layout.js?v=ph7';
+import * as FA from './facades.js?v=ph7';
+import * as TH from './theme.js?v=ph7';
+import * as HOL from './holiday.js?v=ph7';
+import * as K from './kit.js?v=ph7';
+import { interiors } from './interiors.js?v=ph7';
+import { underground } from './under.js?v=ph7';
 const { wall, D, G, floor, ceiling, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, star, heart, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; let I = null;
 export const FL = 0.02;
@@ -124,7 +124,7 @@ export function building(w, B) { B = FA.restyle(B); const { x0, z0, x1, z1 } = B
     const holes = []; if (door) holes.push(D(door[0], door[1], B.door.h || 3.4));
     const wins = (B.noWin || '').includes(sd) || glass ? [] : winSlots(a, b, door, B.winW || 1.8, B.winStep || 4); wins.forEach(([p, q]) => holes.push(G(p, q, winTop, winBot)));
     const ext = ax === 'x' ? [a - 0.25, b + 0.25] : [a, b];
-    w.region = 'shell'; wall(w, ax, at, ext[0], ext[1], eh, glass ? 0xcfefff : B.ext, holes, { frame: B.frame || 0xffffff, trim: B.trim || 0xfff1d6, base: B.base || shade(B.ext, 0.78), bucket: glass ? 'e' : 'w', noBase: glass });
+    w.region = 'shell'; w._noTH = B._kind === 'ginger'; wall(w, ax, at, ext[0], ext[1], eh, glass ? 0xcfefff : B.ext, holes, { frame: B.frame || 0xffffff, trim: B.trim || 0xfff1d6, base: B.base || shade(B.ext, 0.78), bucket: glass ? 'e' : 'w', noBase: glass }); w._noTH = false;
     if (glass) { for (let p = a; p <= b + 0.01; p += 2) { if (door && p > door[0] - 0.2 && p < door[1] + 0.2) continue; const x = ax === 'x' ? p : at, z = ax === 'x' ? at : p; w.add('g', rbox(0.16, eh, 0.16, 0.05), 0xffffff, x, eh / 2, z); } [0.9, eh - 0.1].forEach((y) => { if (ax === 'x') w.add('g', rbox(b - a, 0.12, 0.16, 0.04), 0xffffff, (a + b) / 2, y, at); else w.add('g', rbox(0.16, 0.12, b - a, 0.04), 0xffffff, at, y, (a + b) / 2); }); }
     else { w.region = reg; const li = holes.map((h) => [h[0], h[1], h[2], h[3], h[4], 'noframe']); wall(w, ax, at - out * 0.31, a + 0.25, b - 0.25, ceil, B.int, li, { th: 0.12, noTrim: true, base: B.intBase || 0xffffff }); }
     // painted tile band + turquoise shutters + clay pots under windows (outside), curtains inside
@@ -151,7 +151,7 @@ export function building(w, B) { B = FA.restyle(B); const { x0, z0, x1, z1 } = B
     w.detail = true; for (let i = 0; i < 26; i++) { const a = R() * PI * 2, rr = 0.2 + R() * 0.25, h = eh - 0.5 + (B.moundH || 3.2) * Math.sqrt(1 - rr * rr * 2.2) * 0.98; if (!(h > eh)) continue; w.add('g', sph(8), pick([0xff5d8f, 0xffd23f, 0xffffff, 0xa66bff]), cx + Math.cos(a) * rr * W, h + 0.05, cz + Math.sin(a) * rr * Dd, 0, 0, 0, 0.14); } w.detail = false;
     if (B.chimney) { const [chx, chz] = B.chimney; w.add('m', rcyl(0.55, 2.6, 0.12, 20), 0xc2563c, chx, eh, chz); w.add('m', rcyl(0.7, 0.25, 0.08, 20), 0x9a3f2a, chx, eh + 2.55, chz); } }
   else if (st === 'gable' || st === 'glass') { const alongX = W >= Dd; const L = (alongX ? W : Dd) + 0.5, Wr = (alongX ? Dd : W) + 0.5, H = B.roofH || Wr * 0.4, ry = alongX ? PI / 2 : 0;
-    w.add(glass ? 'e' : 'm', prism(Wr, H, L), glass ? 0xcfefff : B.ext, cx, eh, cz, 0, ry, 0); const a = Math.atan2(H, Wr / 2), sl = Math.hypot(Wr / 2, H) + 0.6;
+    w._noTH = B._kind === 'ginger'; w.add(glass ? 'e' : 'm', prism(Wr, H, L), glass ? 0xcfefff : B.ext, cx, eh, cz, 0, ry, 0); w._noTH = false; const a = Math.atan2(H, Wr / 2), sl = Math.hypot(Wr / 2, H) + 0.6;
     if (!glass) [-1, 1].forEach((s) => { const T = w.tf(cx, eh, cz, ry); T.add('g', rbox(sl, 0.26, L + 1.0, 0.1), B.roofCol || 0xb4533a, s * (Wr / 4 + 0.1), H / 2 + 0.12, 0, 0, 0, -s * a); for (let i = 1; i < 5; i++) { const f = i / 5; T.add('g', rbox(0.4, 0.08, L + 1.02, 0.03), shade(B.roofCol || 0xb4533a, i % 2 ? 0.86 : 1.1), s * (Wr / 2 + 0.3) * (1 - f) + s * 0.06, H * f + 0.12, 0, 0, 0, -s * a); } });
     else { const T = w.tf(cx, eh, cz, ry); for (let p = -L / 2; p <= L / 2 + 0.01; p += 2) [-1, 1].forEach((s) => T.add('g', rbox(sl - 0.5, 0.1, 0.12, 0.03), 0xffffff, s * Wr / 4, H / 2, p, 0, 0, -s * a)); T.add('g', cyl(10), 0xffffff, 0, H, 0, PI / 2, 0, 0, 0.1, L, 0.1); }
     w.solid(x0 - 0.3, eh, z0 - 0.3, x1 + 0.3, eh + H * 0.5, z1 + 0.3, { cam: true, roof: true }); }
@@ -170,7 +170,7 @@ export function buildTown(w) {
   K.propSeed(1947); w.inter = []; w.gears = []; w.secrets = []; w.spots = {}; w.dyn = w.dyn || []; w.plots = []; w.toys = []; w.glyphs = [];
   w.env = Object.assign({}, TH.ENV);
   I = (o) => { w.inter.push(o); return o; }; w.I = I;
-  w.region = 'shell'; ground(w); w.region = 'out'; square(w); market(w); burrows(w); hill(w); track(w); farm(w); dunes(w); LY.newLand(w, K, TH, floor, mesa);
+  w.region = 'shell'; ground(w); w.region = 'out'; square(w); market(w); burrows(w); hill(w); track(w); farm(w); dunes(w); LY.newLand(w, K, TH, floor, mesa); LY.streets(w, floor);
   shells(w); interiors(w); tortuga(w); districts(w); underground(w); w.region = 'out'; expressStops(w); TH.dress(w, K); TH.dressInside(w, K, REGIONS); HOL.buildStations(w, K); w.region = 'shell';
   w.start = [0, 0.2, 21]; w.startYaw = PI; w.camDist = 9.5; LY.relayout(w, { REGIONS, AREAS, DOORS, STOPS, TRACK }); { const rg_ = w.region; w.region = 'out'; LY.doorPaths(w, floor, REGIONS, DOORS); w.region = rg_; }
   return w; }

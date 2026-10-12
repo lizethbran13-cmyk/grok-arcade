@@ -1,9 +1,9 @@
 // Grok Pumpkin Hollow critters: desert tortoises & turtles (Torty's family + townsfolk), roadrunners and lizards.
 // Smooth merged primitives (lathes, spheres, capsules, tori), rigged for simple animation. No textures, no billboards.
 import * as THREE from 'three';
-import { P } from './geo.js?v=ph6';
-import { lathe, torus, cone, cyl, rcyl, heart, star } from './shapes.js?v=ph6';
-import { MB, toGroup } from './models.js?v=ph6';
+import { P } from './geo.js?v=ph7';
+import { lathe, torus, cone, cyl, rcyl, heart, star } from './shapes.js?v=ph7';
+import { MB, toGroup } from './models.js?v=ph7';
 const PI = Math.PI;
 function eyes(b, y, z, sep, r, o = {}) { [-1, 1].forEach((sd) => { const x = sd * sep;
   if (o.sleepy) { b.g.add(torus(0.28, 16, PI), 0x2a1d1d, x, y - r * 0.1, z + r * 0.45, 0, 0, PI, r * 0.75, r * 0.5, r * 0.6); return; }

@@ -1,6 +1,6 @@
 // North Pole Village townsfolk, what they say, side tasks and the mystery "Who silenced the Sleigh Bells?". Pure data + helpers.
-import { S, persist } from './save.js?v=np6';
-import * as TS from './story_theme.js?v=np6';
+import { S, persist } from './save.js?v=np7';
+import * as TS from './story_theme.js?v=np7';
 const PI = Math.PI;
 export const HATS = [
   { id: 'none', n: 'No Hat', how: 'Always yours' }, { id: 'pupears', n: 'Schnauzer Ears', how: "Find Candy's 3 squeaky candy-cane toys" }, { id: 'flower', n: 'Snowy Winter Rose', how: "Plant Mama Rosa's 4 winter roses" },

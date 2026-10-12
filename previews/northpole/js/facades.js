@@ -1,5 +1,5 @@
 // Holiday building shapes: every house gets a new themed silhouette (roof, towers, trim) on top of its walk-in interior.
-import * as K from './kit.js?v=np6';
+import * as K from './kit.js?v=np7';
 const H = false, PI = Math.PI;
 const { rbox, rcyl, cyl, cone, sph, torus } = K;
 const GINGER = ['bakery', 'sweets', 'icecream', 'shellshop', 'pottery', 'cafe', 'cinema', 'music', 'toys'];
@@ -20,6 +20,8 @@ export function restyle(B) { const id = B.id, h = hsh(id);
   }
   return B; }
 export function facade(w, B) { const k = B._kind; if (!k) return; const keep = w.region; w.region = 'shell';
+  let dp = null; if (B.door) { const d = B.door, m = (d.a + d.b) / 2; dp = d.side === 's' ? [m, B.z1] : d.side === 'n' ? [m, B.z0] : d.side === 'e' ? [B.x1, m] : [B.x0, m]; }
+  const so = w.solid; w.solid = function (x0, y0, z0, x1, y1, z1, o) { if (dp) { const dx = Math.max(x0 - dp[0], 0, dp[0] - x1), dz = Math.max(z0 - dp[1], 0, dp[1] - z1); if (Math.hypot(dx, dz) < 3.2) return null; } return so.call(w, x0, y0, z0, x1, y1, z1, o); };
   const { x0, z0, x1, z1 } = B, cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, W = x1 - x0, D = z1 - z0, eh = B.wallH || B.ceil + 0.4, rH = B.roofH || 0, h = hsh(B.id);
   const corners = [[x0, z0], [x1, z0], [x0, z1], [x1, z1]];
   const doorSide = B.door && B.door.side; const front = (x, z) => doorSide === 's' ? z > cz : doorSide === 'n' ? z < cz : doorSide === 'e' ? x > cx : x < cx;
@@ -66,5 +68,5 @@ export function facade(w, B) { const k = B._kind; if (!k) return; const keep = w
     w.add('x', cyl(8), 0x94a3b8, cx, eh + 1 + Math.min(W, D) * 0.22, cz, 0, 0, 0, 0.08, 4, 0.08); w.add('l', sph(10), 0xfef08a, cx, eh + 5.2 + Math.min(W, D) * 0.22, cz, 0, 0, 0, 0.3, 0.3, 0.3, 1.6);
     corners.filter(([x, z]) => front(x, z)).forEach(([x, z]) => { w.add('x', cyl(16), 0x475569, x, 0, z, 0, 0, 0, 0.9, 1.2, 0.9); for (let j = 0; j < 7; j++) w.add('x', torus(0.12, 24), 0xb45309, x, 1.6 + j * 0.55, z, PI / 2, 0, 0, 0.75 - j * 0.06, 0.75 - j * 0.06, 1); w.add('x', cyl(10), 0x94a3b8, x, 1.2, z, 0, 0, 0, 0.25, 4.2, 0.25); w.add('l', sph(16), 0xa5f3fc, x, 5.9, z, 0, 0, 0, 0.75, 0.75, 0.75, 1.5); w.solid(x - 1, 0, z - 1, x + 1, 6.5, z + 1); });
     corners.filter(([x, z]) => !front(x, z)).forEach(([x, z], i) => { w.add('m', cyl(20), 0x334155, x, 0, z, 0, 0, 0, 1.6, 3.2, 1.6); w.add('l', rcyl(1.4, 0.1, 0.03, 20), 0x84cc16, x, 3.1, z, 0, 0, 0, 1, 1, 1, 0.9); for (let j = 0; j < 3; j++) w.add('l', sph(8), 0xbef264, x + (j - 1) * 0.5, 3.3 + j * 0.3, z, 0, 0, 0, 0.2, 0.2, 0.2, 1.2); w.add('x', cyl(10), 0x64748b, x, 3.2, z, 0, 0, i ? 0.9 : -0.9, 0.2, 5, 0.2); w.solid(x - 1.6, 0, z - 1.6, x + 1.6, 3.2, z + 1.6); }); }
-  w.region = keep; }
+  w.solid = so; w.region = keep; }
 function shadeK(c) { const r = ((c >> 16) & 255) * 0.8, g = ((c >> 8) & 255) * 0.8, b = (c & 255) * 0.8; return (r << 16) | (g << 8) | b; }

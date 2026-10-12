@@ -204,7 +204,7 @@
       "url": "previews/pumpkinhollow/",
       "playable": true,
       "built": "2026-10-12",
-      "notes": "Update! New building shapes: crooked haunted houses with leaning turrets and boarded windows, a spooky manor with needle-spire towers, and a mad-science lab with a glowing dome, tesla coils and bubbling vats. Paved paths lead from every door to the new roads. Crystal Ball Polish and Candy Apple Catch. Diary pages, bat caves, Ghost Catch, the cauldron and the secret caves are all still here. Still being built."
+      "notes": "Update! Every district has a brand-new street with its buildings on fresh lots: crooked haunted houses, the spooky manor, the mad-science lab and the abandoned village all line new lanes. Diary pages, bat caves, Ghost Catch, the cauldron, the mini-games and the secret caves are all still here. Torty, Candy, Luna, Pi-rat and Snowie visit. Still being built."
     },
     {
       "id": "northpole",
@@ -213,7 +213,7 @@
       "url": "previews/northpole/",
       "playable": true,
       "built": "2026-10-12",
-      "notes": "Update! New building shapes: an ice-palace Flight Command with spires, a toy-workshop complex with striped towers, a giant clock, gears and toy soldiers, gingerbread houses with icing and gumdrops, and elf cottages with smoking chimneys and twinkle lights. Paved paths lead from every door to the new roads. Present Catch and Ornament Polish. All elf activities and the sleigh launch are still here. Still being built."
+      "notes": "Update! Every district has a brand-new street with its buildings on fresh lots: the ice-palace Flight Command, the toy-workshop complex, brown gingerbread houses and elf cottages all line new lanes. Letters, the Elf Oath + Code, reindeer, Silent Sleigh Bells, Santa Update news and the sleigh launch are all still here. Still being built."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

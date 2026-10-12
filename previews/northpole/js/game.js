@@ -1,28 +1,28 @@
 // Grok North Pole Village runtime: the town, players, townsfolk, the shuttle cart, ambient desert life, day -> sunset, collectibles,
 // the Sleigh Bells mystery, the Reindeer Derby + Cookie Rush (3D mini-games), a hidden puzzle, co-op hooks.
 import * as THREE from 'three';
-import { RP, setP, relayNPC } from './layout.js?v=np6';
-import { makeFolk, animFolk } from './folk.js?v=np6';
-import { holAct } from './holiday.js?v=np6';
-import { GLYPH_TXT } from './story_theme.js?v=np6';
-import { LIGHT as THL, TH as THM } from './theme.js?v=np6';
-import { panel } from './ui.js?v=np6';
-import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=np6';
-import { World } from './world.js?v=np6';
-import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=np6';
-import { UY } from './under.js?v=np6';
-import { Player } from './player.js?v=np6';
-import { FX } from './fx.js?v=np6';
-import { makeRat, animRat, MB, toGroup } from './models.js?v=np6';
-import { makePup, animPup, birdGeo } from './dogs.js?v=np6';
-import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=np6';
-import { P } from './geo.js?v=np6';
-import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=np6';
-import { updateFrustum, inView, LightPool } from './perf.js?v=np6';
-import { sfx, playMusic } from './audio.js?v=np6';
-import { S, persist } from './save.js?v=np6';
-import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=np6';
-import { readMove, edge, held, IN } from './input.js?v=np6';
+import { RP, setP, relayNPC, freeSpot } from './layout.js?v=np7';
+import { makeFolk, animFolk } from './folk.js?v=np7';
+import { holAct } from './holiday.js?v=np7';
+import { GLYPH_TXT } from './story_theme.js?v=np7';
+import { LIGHT as THL, TH as THM } from './theme.js?v=np7';
+import { panel } from './ui.js?v=np7';
+import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=np7';
+import { World } from './world.js?v=np7';
+import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=np7';
+import { UY } from './under.js?v=np7';
+import { Player } from './player.js?v=np7';
+import { FX } from './fx.js?v=np7';
+import { makeRat, animRat, MB, toGroup } from './models.js?v=np7';
+import { makePup, animPup, birdGeo } from './dogs.js?v=np7';
+import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=np7';
+import { P } from './geo.js?v=np7';
+import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=np7';
+import { updateFrustum, inView, LightPool } from './perf.js?v=np7';
+import { sfx, playMusic } from './audio.js?v=np7';
+import { S, persist } from './save.js?v=np7';
+import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=np7';
+import { readMove, edge, held, IN } from './input.js?v=np7';
 const PI = Math.PI;
 const TOYS = [[60, 0, 76], [-70, 0, 61], [108, 0, -4]].map((p) => RP(...p));
 const DAY = 420; // seconds per day -> sunset cycle
@@ -55,7 +55,7 @@ export class Game {
       else if (L.liz) { rig = makeLizard(L.liz); rig.root.scale.setScalar(L.s || 1); kind = 'lizard'; markY = 0.5 * (L.s || 1); }
       else { rig = makeTortoise(L.t); rig.root.scale.setScalar(L.s || 0.28); kind = 'tort'; markY = 2.7 * (L.s || 0.28); }
       const RG = REGIONS.find((q) => q.id === d.region); const g = w.ground(d.at[0], d.at[1], RG ? RG.ceil - 0.4 : 20, 0.1).y; const y = d.y != null ? d.y + (d.region !== 'out' ? 0.12 : 0) : (g > -50 ? g : 0);
-      const n = { d, id: d.id, rig, kind, x: d.at[0], y, z: d.at[1], yaw: d.at[2] || 0, x0: d.at[0], z0: d.at[1], y0: y, yaw0: d.at[2] || 0, region: d.region, wp: 0, markY };
+      if (!d.cart) { const f_ = freeSpot(w, d.at[0], d.at[1], y); d.at[0] = f_[0]; d.at[1] = f_[1]; } const n = { d, id: d.id, rig, kind, x: d.at[0], y, z: d.at[1], yaw: d.at[2] || 0, x0: d.at[0], z0: d.at[1], y0: y, yaw0: d.at[2] || 0, region: d.region, wp: 0, markY };
       rig.root.position.set(n.x, n.y, n.z); rig.root.rotation.y = n.yaw; this.add(rig.root);
       if (d.cart) { n.cart = this.add(this.makeCart()); }
       const mk = new THREE.Mesh(new THREE.ConeGeometry(0.14, 0.38, 16).rotateX(PI), new THREE.MeshStandardMaterial({ color: 0xffd23f, emissive: 0xffb000, emissiveIntensity: 0.8 }));
@@ -326,7 +326,7 @@ export class Game {
     if (c.snap) { c.pos.copy(w3); c.snap = false; } else { const kx = 1 - Math.exp(-dt * 14), ky = 1 - Math.exp(-dt * 8); c.pos.x += (w3.x - c.pos.x) * kx; c.pos.z += (w3.z - c.pos.z) * kx; c.pos.y += (w3.y - c.pos.y) * ky; }
     if (R0 && c.tgt.x > R0.x0 + 0.3 && c.tgt.x < R0.x1 - 0.3 && c.tgt.z > R0.z0 + 0.3 && c.tgt.z < R0.z1 - 0.3) { const m = 0.3; c.pos.x = Math.max(R0.x0 + m, Math.min(R0.x1 - m, c.pos.x)); c.pos.z = Math.max(R0.z0 + m, Math.min(R0.z1 - m, c.pos.z)); c.pos.y = Math.min(R0.ceil - 0.2, c.pos.y); } // indoors the lens never leaves the room, even mid-glide
         cam.position.copy(c.pos); if (c.shake > 0) { c.shake -= dt; cam.position.x += (Math.random() - 0.5) * c.shake; cam.position.y += (Math.random() - 0.5) * c.shake; }
-    cam.lookAt(c.tgt.x - Math.cos(c.yaw) * (c.sh || 0) * 0.25, c.tgt.y + (RR ? 0.35 : 0.2), c.tgt.z + Math.sin(c.yaw) * (c.sh || 0) * 0.25); const fov = E.baseFov + (R0 && !this.chat ? (E.baseFov > 65 ? 10 : 8) : 0); /* small rooms: a slightly wider lens instead of a cramped close-up */ if (Math.abs(cam.fov - fov) > 0.1) { cam.fov += (fov - cam.fov) * Math.min(1, dt * 3); cam.updateProjectionMatrix(); } }
+    cam.lookAt(c.tgt.x - Math.cos(c.yaw) * (c.sh || 0) * 0.25, c.tgt.y + (RR ? 0.35 : 0.2), c.tgt.z + Math.sin(c.yaw) * (c.sh || 0) * 0.25); if (this._camOv) { cam.position.set(...this._camOv[0]); cam.lookAt(...this._camOv[1]); } const fov = E.baseFov + (R0 && !this.chat ? (E.baseFov > 65 ? 10 : 8) : 0); /* small rooms: a slightly wider lens instead of a cramped close-up */ if (Math.abs(cam.fov - fov) > 0.1) { cam.fov += (fov - cam.fov) * Math.min(1, dt * 3); cam.updateProjectionMatrix(); } }
   // ------------------------------------------------ co-op
   addRemote(pid, info, slot) { if (this.players.has(pid)) return this.players.get(pid); const p = new Player({ rat: 'human', look: info.look, outfit: info.outfit, name: info.name, pid, slot }); p.addTo(this.scene); p.place(this.world.start); this.players.set(pid, p); this.hud.dirty = true; return p; }
   removeRemote(pid) { const p = this.players.get(pid); if (!p || p.local) return; p.removeFrom(this.scene); this.players.delete(pid); this.hud.dirty = true; }

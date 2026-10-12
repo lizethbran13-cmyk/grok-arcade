@@ -1,5 +1,5 @@
 // Input: floating thumb-stick (left), action buttons (right), drag-anywhere-else to look around. Keyboard + mouse too.
-import { $ } from './util.js?v=np6';
+import { $ } from './util.js?v=np7';
 export const IN = { mx: 0, my: 0, jump: false, keys: {}, edges: {}, camDX: 0, camDY: 0, lastCam: 0, stick: { id: null, x0: 0, y0: 0, x: 0, y: 0 }, held: {} };
 const press = (k) => { IN.edges[k] = true; IN.held[k] = true; };
 const release = (k) => { IN.held[k] = false; };

@@ -1,11 +1,11 @@
 // World: batched static geometry (chunked per material), colliders, zones and queries.
 import * as THREE from 'three';
-import { SB, DB } from './layout.js?v=ph6';
-import { compact, spillCompact } from './compact.js?v=ph6';
+import { SB, DB, DROP } from './layout.js?v=ph7';
+import { compact, spillCompact } from './compact.js?v=ph7';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { MATS } from './mats.js?v=ph6';
-import { remap as THR } from './theme.js?v=ph6';
+import { MATS } from './mats.js?v=ph7';
+import { remap as THR } from './theme.js?v=ph7';
 
 const CH = 22, CELL = 8;
 const _m = new THREE.Matrix4(), _m2 = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3(), _c = new THREE.Color(), _n = new THREE.Matrix3();
@@ -59,28 +59,28 @@ export class World {
   fadeEnd() { this._fg = null; }
   // ---- visuals ----
   _part(bucket, geom, color, m, em = 0) {
-    { const b_ = this._forceB !== undefined ? this._forceB : (geom.parameters && geom.parameters.width > 300 ? null : SB(m.elements[12], m.elements[14])); if (b_) m.premultiply(b_.M); }
+    const b_ = this._forceB !== undefined ? this._forceB : (geom.parameters && geom.parameters.width > 300 ? null : SB(m.elements[12], m.elements[14])); const skip_ = this._forceDrop !== undefined ? this._forceDrop : DROP(b_, m.elements[12], m.elements[14]); if (b_) m.premultiply(b_.M);
     if (this._pendingFlush) { const c0 = this._pendingFlush; this._pendingFlush = null; this._flush(c0); }
     const g0 = prep(lodGeo(geom, m)); const g = g0.clone(); g.applyMatrix4(m); if (this.oy) g.translate(0, this.oy, 0);
-    const n = g.attributes.position.count, a = new Float32Array(n * 3); _c.set(THR(color, this.region)); const k = em ? 1 + em : 1;
+    const n = g.attributes.position.count, a = new Float32Array(n * 3); _c.set(this._noTH ? color : THR(color, this.region)); const k = em ? 1 + em : 1;
     for (let i = 0; i < n; i++) { a[i * 3] = _c.r * k; a[i * 3 + 1] = _c.g * k; a[i * 3 + 2] = _c.b * k; }
     g.setAttribute('color', new THREE.BufferAttribute(a, 3));
     const F = this._fg; if (F) { g.computeBoundingBox(); F.box.union(g.boundingBox); }
     const chs = this.detail ? 18 : (this.region === 'out' || this.region === 'shell') ? 36 : 400, cx = Math.floor(m.elements[12] / chs), cz = Math.floor(m.elements[14] / chs), key = F ? 'F' + F.id + ':' + bucket : this.region + (this.detail ? '~d' : '') + ':' + bucket + ':' + cx + ':' + cz;
-    let ch = this.chunks.get(key); if (!ch) { ch = { bucket, parts: [], verts: 0, fade: F ? F.id : -1, region: this.region, detail: this.detail }; this.chunks.set(key, ch); } ch.parts.push(g); ch.verts += n; this._pv = (this._pv || 0) + n;
+    if (skip_) return g; let ch = this.chunks.get(key); if (!ch) { ch = { bucket, parts: [], verts: 0, fade: F ? F.id : -1, region: this.region, detail: this.detail }; this.chunks.set(key, ch); } ch.parts.push(g); ch.verts += n; this._pv = (this._pv || 0) + n;
     if (!this._pendingFlush && this._pv > 600000) { let big = null; for (const c of this.chunks.values()) if (c !== ch && (!big || c.verts > big.verts)) big = c; if (big && big.verts > 8000) this._pendingFlush = big; } return g;
   }
   add(bucket, geom, color, x, y, z, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx, em = 0) { return this._part(bucket, geom, color, mtx(x, y, z, rx, ry, rz, sx, sy, sz), em); }
   // vertex colour by function (gradients, stripes) after placement
   addFn(bucket, geom, fn, x, y, z, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx) { const g = this.add(bucket, geom, 0xffffff, x, y, z, rx, ry, rz, sx, sy, sz); const p = g.attributes.position, c = g.attributes.color; for (let i = 0; i < p.count; i++) { { const px_ = p.getX(i), py_ = p.getY(i), pz_ = p.getZ(i), q_ = py_ > -10 ? DB(px_, pz_) : null; if (q_) fn(_c, q_[0], py_, q_[1]); else if (this._gnd) fn(_c, 300 + Math.abs(px_), py_, pz_ % 30); else fn(_c, px_, py_, pz_); } _c.setHex(THR(_c.getHex(), this.region)); c.setXYZ(i, _c.r, _c.g, _c.b); } return g; }
   // local frame for a prop: position + yaw + uniform scale
-  tf(x, y, z, ry = 0, s = 1) { const w = this, _fb = w._forceB !== undefined ? w._forceB : SB(x, z), base = mtx(x, y, z, 0, ry, 0, s, s, s), c = Math.cos(ry), sn = Math.sin(ry);
+  tf(x, y, z, ry = 0, s = 1) { const w = this, _fb = w._forceB !== undefined ? w._forceB : SB(x, z), _fd = w._forceDrop !== undefined ? w._forceDrop : DROP(_fb, x, z), base = mtx(x, y, z, 0, ry, 0, s, s, s), c = Math.cos(ry), sn = Math.sin(ry);
     const P = (lx, ly, lz) => [x + (lx * c + lz * sn) * s, y + ly * s, z + (-lx * sn + lz * c) * s];
     return { s, ry, P,
-      add(bucket, geom, col, lx = 0, ly = 0, lz = 0, rx = 0, rry = 0, rz = 0, sx = 1, sy = sx, sz = sx, em = 0) { _m2.multiplyMatrices(base, mtx(lx, ly, lz, rx, rry, rz, sx, sy, sz)); const k_ = w._forceB; w._forceB = _fb; const r_ = w._part(bucket, geom, col, _m2.clone(), em); w._forceB = k_; return r_; },
+      add(bucket, geom, col, lx = 0, ly = 0, lz = 0, rx = 0, rry = 0, rz = 0, sx = 1, sy = sx, sz = sx, em = 0) { _m2.multiplyMatrices(base, mtx(lx, ly, lz, rx, rry, rz, sx, sy, sz)); const k_ = w._forceB, d_ = w._forceDrop; w._forceB = _fb; w._forceDrop = _fd; const r_ = w._part(bucket, geom, col, _m2.clone(), em); w._forceB = k_; w._forceDrop = d_; return r_; },
       box(bucket, col, lx, ly, lz, bw, bh, bd, r = 0.08, em = 0, seg = 2) { if (r * s < 0.03) seg = 1; return this.add(bucket, rbox(bw, bh, bd, r, seg), col, lx, ly + bh / 2, lz, 0, 0, 0, 1, 1, 1, em); },
       solid(lx0, ly0, lz0, lx1, ly1, lz1, o) { const a = P(lx0, ly0, lz0), b = P(lx1, ly1, lz1), d = P(lx0, ly0, lz1), e = P(lx1, ly0, lz0);
-        const k_ = w._forceB; w._forceB = _fb; const r_ = w.solid(Math.min(a[0], b[0], d[0], e[0]), Math.min(a[1], b[1]), Math.min(a[2], b[2], d[2], e[2]), Math.max(a[0], b[0], d[0], e[0]), Math.max(a[1], b[1]), Math.max(a[2], b[2], d[2], e[2]), o); w._forceB = k_; return r_; },
+        const k_ = w._forceB, d_ = w._forceDrop; w._forceB = _fb; w._forceDrop = _fd; const r_ = w.solid(Math.min(a[0], b[0], d[0], e[0]), Math.min(a[1], b[1]), Math.min(a[2], b[2], d[2], e[2]), Math.max(a[0], b[0], d[0], e[0]), Math.max(a[1], b[1]), Math.max(a[2], b[2], d[2], e[2]), o); w._forceB = k_; w._forceDrop = d_; return r_; },
       // solid box + matching rounded visual (local, bottom-centred)
       slab(bucket, col, lx, ly, lz, bw, bh, bd, r = 0.08, o, em) { this.box(bucket, col, lx, ly, lz, bw, bh, bd, r, em); return this.solid(lx - bw / 2, ly, lz - bd / 2, lx + bw / 2, ly + bh, lz + bd / 2, o); },
     };
@@ -88,7 +88,7 @@ export class World {
   // world-space rounded slab with collider; x,z centre, y bottom
   slab(bucket, col, x, y, z, w, h, d, r = 0.1, o, em = 0, seg = 2) { if (r < 0.03) seg = 1; this.add(bucket, rbox(w, h, d, r, seg), col, x, y + h / 2, z, 0, 0, 0, 1, 1, 1, em); return o === false ? null : this.solid(x - w / 2, y, z - d / 2, x + w / 2, y + h, z + d / 2, o); }
   // ---- colliders ----
-  solid(x0, y0, z0, x1, y1, z1, o) { if (this.oy) { y0 += this.oy; y1 += this.oy; } { const b_ = this._forceB !== undefined ? this._forceB : (x1 - x0 > 300 ? null : SB((x0 + x1) / 2, (z0 + z1) / 2)); if (b_) { const dx0 = x0 - b_.scx, dz0 = z0 - b_.scz, dx1 = x1 - b_.scx, dz1 = z1 - b_.scz; const ax = b_.cx + dx0 * b_.c + dz0 * b_.sn, az = b_.cz - dx0 * b_.sn + dz0 * b_.c, bx = b_.cx + dx1 * b_.c + dz1 * b_.sn, bz = b_.cz - dx1 * b_.sn + dz1 * b_.c; x0 = Math.min(ax, bx); x1 = Math.max(ax, bx); z0 = Math.min(az, bz); z1 = Math.max(az, bz); } }
+  solid(x0, y0, z0, x1, y1, z1, o) { if (this.oy) { y0 += this.oy; y1 += this.oy; } { const b_ = this._forceB !== undefined ? this._forceB : (x1 - x0 > 300 ? null : SB((x0 + x1) / 2, (z0 + z1) / 2)); if ((this._forceDrop !== undefined ? this._forceDrop : DROP(b_, (x0 + x1) / 2, (z0 + z1) / 2)) && !(o && o.floor)) return Object.assign({ min: [x0, y0, z0], max: [x1, y1, z1] }, o || {}); if (b_) { const dx0 = x0 - b_.scx, dz0 = z0 - b_.scz, dx1 = x1 - b_.scx, dz1 = z1 - b_.scz; const ax = b_.cx + dx0 * b_.c + dz0 * b_.sn, az = b_.cz - dx0 * b_.sn + dz0 * b_.c, bx = b_.cx + dx1 * b_.c + dz1 * b_.sn, bz = b_.cz - dx1 * b_.sn + dz1 * b_.c; x0 = Math.min(ax, bx); x1 = Math.max(ax, bx); z0 = Math.min(az, bz); z1 = Math.max(az, bz); } }
     const s = Object.assign({ min: [x0, y0, z0], max: [x1, y1, z1] }, o || {});
     if (s.dyn) { s.dx = s.dy = s.dz = 0; this.dyn.push(s); } else { this.solids.push(s); this.index(s); }
     return s;
