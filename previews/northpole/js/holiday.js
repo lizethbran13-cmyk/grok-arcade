@@ -1,8 +1,9 @@
 // Holiday activities: 3D stations placed in the town + tap-based overlay mini-games (DOM buttons, no stretched images).
-import { S, persist } from './save.js?v=np7';
-import { sfx } from './audio.js?v=np7';
-import { panel } from './ui.js?v=np7';
-import { TH } from './theme.js?v=np7';
+import { S, persist } from './save.js?v=np8';
+import { sfx } from './audio.js?v=np8';
+import { panel } from './ui.js?v=np8';
+import { TH } from './theme.js?v=np8';
+import * as OPS from './opsrow.js?v=np8';
 const $q = (c, s) => c.querySelector(s), $a = (c, s) => [...c.querySelectorAll(s)];
 const sh = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const BTN = 'style="font:bold 17px system-ui;padding:12px 10px;margin:5px;border-radius:14px;border:0;min-width:96px;background:#fff3;color:#fff"';
@@ -72,7 +73,7 @@ function ghostcatch(ui, G, done) { let score = 0, t = 25, over = false, cur = -1
 function cauldron(ui, G, done) { const ING = ['🐸', '🍄', '🦇', '🕷️', '🌙', '🍬']; const seq = []; for (let i = 0; i < 6; i++) seq.push((Math.random() * 6) | 0); let i = 0, show = true;
   const draw = (lit) => panel(`<h2>🧪 THE BUBBLING CAULDRON</h2><p class="sub">${show ? 'Remember the recipe…' : `Add the ingredients in order (${i}/6)`}</p><div>${ING.map((b, k) => `<button data-k="${k}" style="font-size:34px;padding:12px;margin:5px;border-radius:16px;border:0;min-width:74px;background:${lit === k ? '#7cff6b' : '#fff3'}">${b}</button>`).join('')}</div>`, (c) => { if (show) return; $a(c, 'button').forEach((b) => b.onclick = () => { if (+b.dataset.k === seq[i]) { i++; sfx('pop'); if (i === 6) { win(G, 'cauldron', 'cauldron'); result(ui, '🧪 PERFECT POTION!', 'The cauldron glows bright green', 'Mira says it\'s her best potion in 100 years. It tastes like marshmallow!', done); } else draw(); } else { sfx('bump'); result(ui, '🧪 FIZZLE!', 'Wrong ingredient', 'The potion puffs purple smoke. Try again!', done); } }); }, 'mgP');
   let k = 0; const play = () => { if (k >= seq.length * 2) { show = false; draw(); return; } draw(k % 2 ? -1 : seq[k >> 1]); if (!(k % 2)) sfx('click'); k++; setTimeout(play, k % 2 ? 600 : 200); }; play(); }
-export function holAct(id, G) { const ui = G.app.ui; ui.open(); const done = () => { ui.done(); G.hud.dirty = true; };
+export function holAct(id, G) { const ui = G.app.ui; ui.open(); const done = () => { ui.done(); G.hud.dirty = true; }; if (OPS.act(id, G, done)) return;
   if (id === 'letters') return letters(ui, G, done); if (id === 'oath') return oath(ui, G, done); if (id === 'countdown') return countdown(ui, G, done); if (id === 'reindeer' || id === 'paddock') return reindeer(ui, G, done); if (id === 'bells') return bells(ui, G, done);
   if (id === 'news') { const n = (S.talks._news = ((S.talks._news | 0) + 1)) - 1; persist(); return result(ui, '📰 SANTA UPDATE', NEWS[n % NEWS.length], 'Fresh North Pole news, written by elves, all year long.', done); }
   if (id.startsWith('page')) return page(ui, G, +id.slice(4), done); if (id.startsWith('pup')) return pup(ui, G, +id.slice(3), done); if (id === 'batmama') return batmama(ui, G, done); if (id === 'ghostcatch') return ghostcatch(ui, G, done); if (id === 'cauldron') return cauldron(ui, G, done); done(); }

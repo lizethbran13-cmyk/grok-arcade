@@ -1,28 +1,28 @@
 // Grok Pumpkin Hollow runtime: the town, players, townsfolk, the shuttle cart, ambient desert life, day -> sunset, collectibles,
 // the Moon Lantern mystery, the Broomstick Derby + Pumpkin Rush (3D mini-games), a hidden puzzle, co-op hooks.
 import * as THREE from 'three';
-import { RP, setP, relayNPC, freeSpot } from './layout.js?v=ph7';
-import { makeFolk, animFolk } from './folk.js?v=ph7';
-import { holAct } from './holiday.js?v=ph7';
-import { GLYPH_TXT } from './story_theme.js?v=ph7';
-import { LIGHT as THL, TH as THM } from './theme.js?v=ph7';
-import { panel } from './ui.js?v=ph7';
-import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=ph7';
-import { World } from './world.js?v=ph7';
-import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=ph7';
-import { UY } from './under.js?v=ph7';
-import { Player } from './player.js?v=ph7';
-import { FX } from './fx.js?v=ph7';
-import { makeRat, animRat, MB, toGroup } from './models.js?v=ph7';
-import { makePup, animPup, birdGeo } from './dogs.js?v=ph7';
-import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=ph7';
-import { P } from './geo.js?v=ph7';
-import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=ph7';
-import { updateFrustum, inView, LightPool } from './perf.js?v=ph7';
-import { sfx, playMusic } from './audio.js?v=ph7';
-import { S, persist } from './save.js?v=ph7';
-import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=ph7';
-import { readMove, edge, held, IN } from './input.js?v=ph7';
+import { RP, setP, relayNPC, freeSpot } from './layout.js?v=ph8';
+import { makeFolk, animFolk } from './folk.js?v=ph8';
+import { holAct } from './holiday.js?v=ph8';
+import { GLYPH_TXT } from './story_theme.js?v=ph8';
+import { LIGHT as THL, TH as THM } from './theme.js?v=ph8';
+import { panel } from './ui.js?v=ph8';
+import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=ph8';
+import { World } from './world.js?v=ph8';
+import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=ph8';
+import { UY } from './under.js?v=ph8';
+import { Player } from './player.js?v=ph8';
+import { FX } from './fx.js?v=ph8';
+import { makeRat, animRat, MB, toGroup } from './models.js?v=ph8';
+import { makePup, animPup, birdGeo } from './dogs.js?v=ph8';
+import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=ph8';
+import { P } from './geo.js?v=ph8';
+import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=ph8';
+import { updateFrustum, inView, LightPool } from './perf.js?v=ph8';
+import { sfx, playMusic } from './audio.js?v=ph8';
+import { S, persist } from './save.js?v=ph8';
+import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=ph8';
+import { readMove, edge, held, IN } from './input.js?v=ph8';
 const PI = Math.PI;
 const TOYS = [[60, 0, 76], [-70, 0, 61], [108, 0, -4]].map((p) => RP(...p));
 const DAY = 420; // seconds per day -> sunset cycle
@@ -162,7 +162,7 @@ export class Game {
     const key = [...v].sort().join(','); if (key === this._vk && r === this.region) return; this._vk = key; this.region = r; this.vis = v; this.under = r.startsWith('u_');
     for (const k in this.world.regionMeshes) { const on = v.has(k); for (const m of this.world.regionMeshes[k]) m.visible = on; } this._lod = 0; }
   farCull(dt) { this._lod -= dt; if (this._lod > 0) return; this._lod = 0.4; const c = E.camera.position, D2 = 95 * 95;
-    for (const m of this.world.detailMeshes) { const reg = m.userData.region; if (!this.vis.has(reg)) { m.visible = false; continue; } const bs = m.geometry.boundingSphere; m.visible = !bs || (bs.center.x - c.x) ** 2 + (bs.center.z - c.z) ** 2 < D2 + bs.radius * bs.radius * 4; }
+    for (const m of this.world.detailMeshes) { const reg = m.userData.region; if (!this.vis.has(reg)) { m.visible = false; continue; } const bs = m.userData.ws || m.geometry.boundingSphere; m.visible = !bs || (bs.center.x - c.x) ** 2 + (bs.center.z - c.z) ** 2 < D2 + bs.radius * bs.radius * 4; }
     if (this.field) this.field.visible = !this.under && Math.hypot(c.x + 100, c.z - 94) < 85; }
   areaLabel() { const r = REGIONS.find((q) => q.id === this.region); return r ? r.name : areaName(this.me.x, this.me.z); }
   // ------------------------------------------------ frame

@@ -1,11 +1,11 @@
 // Menus & panels: title, pause, journal, dialog, clue cards, finale, town map, Style Station, mini-game launcher.
-import { $, esc } from './util.js?v=np7';
-import { S, persist, resetSave } from './save.js?v=np7';
-import { sfx, setSound } from './audio.js?v=np7';
-import { HATS, BADGES, SUN_CLUES, SUSPECTS, clueText, sunStep, sideTasks, hint } from './story.js?v=np7';
-import { REGIONS, DOORS, AREAS, STOPS, TRACK } from './town.js?v=np7';
-import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=np7';
-import * as MG from './minigames.js?v=np7';
+import { $, esc } from './util.js?v=np8';
+import { S, persist, resetSave } from './save.js?v=np8';
+import { sfx, setSound } from './audio.js?v=np8';
+import { HATS, BADGES, SUN_CLUES, SUSPECTS, clueText, sunStep, sideTasks, hint } from './story.js?v=np8';
+import { REGIONS, DOORS, AREAS, STOPS, TRACK } from './town.js?v=np8';
+import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=np8';
+import * as MG from './minigames.js?v=np8';
 const hex = (c) => '#' + c.toString(16).padStart(6, '0');
 export function panel(html, mount, cls = '') { const ui = $('ui'); { const t = $('toast'); if (t && !ui.classList.contains('open')) { t.innerHTML = ''; t.classList.add('low'); } } /* menus open with a clean screen (no reward pills over their header) */ ui.innerHTML = `<div class="panel ${cls}">${html}</div>`; ui.classList.add('open'); if (mount) mount(ui.firstChild); return ui.firstChild; }
 export function closePanel() { const ui = $('ui'); ui.innerHTML = ''; ui.classList.remove('open'); const t = $('toast'); if (t && !t.children.length) t.classList.remove('low'); }
@@ -68,8 +68,8 @@ export class UI {
       x.strokeStyle = '#c2a27a'; x.lineWidth = 6; x.beginPath(); x.arc(X(0), Z(0), X(34.9) - X(0), 0, 7); x.stroke(); x.fillStyle = '#7dd3fc'; x.beginPath(); x.ellipse(X(0), Z(0), X(10) - X(0), Z(7.5) - Z(0), 0, 0, 7); x.fill();
       x.strokeStyle = '#d9543d'; x.lineWidth = 5; x.beginPath(); x.ellipse(X(TRACK.cx), Z(TRACK.cz), X(TRACK.rx) - X(0), Z(TRACK.rz) - Z(0), 0, 0, 7); x.stroke();
       for (const r of REGIONS) { if (r.id.startsWith('u_')) continue; x.fillStyle = '#fff7ed'; x.strokeStyle = '#ff6b35'; x.lineWidth = 2; x.fillRect(X(r.x0), Z(r.z0), X(r.x1) - X(r.x0), Z(r.z1) - Z(r.z0)); x.strokeRect(X(r.x0), Z(r.z0), X(r.x1) - X(r.x0), Z(r.z1) - Z(r.z0));
-        x.fillStyle = '#1f2937'; x.font = '13px system-ui'; x.textAlign = 'center'; x.fillText(r.name.split(' ')[0], (X(r.x0) + X(r.x1)) / 2, (Z(r.z0) + Z(r.z1)) / 2 + 5); }
-      x.font = 'bold 11px system-ui'; x.fillStyle = '#7c2d12'; AREAS.forEach((a) => { if (!a.blk) return; const tx_n = a.name; a = Object.assign({}, a.m, { name: tx_n }); const tx = a.name.replace(/^\S+\s/, '').toUpperCase(), mw = X(a.x1) - X(a.x0) - 6; let fs = 11; x.font = `bold ${fs}px system-ui`; while (fs > 7 && x.measureText(tx).width > mw) { fs -= 0.5; x.font = `bold ${fs}px system-ui`; } x.fillText(tx, (X(a.x0) + X(a.x1)) / 2, Z(a.z0) + 12); });
+        x.fillStyle = '#1f2937'; x.font = '13px system-ui'; x.textAlign = 'center'; if (r.tag) { x.save(); x.translate((X(r.x0) + X(r.x1)) / 2 + 3, (Z(r.z0) + Z(r.z1)) / 2); x.rotate(-Math.PI / 2); x.font = 'bold 8px system-ui'; x.fillStyle = '#9f1239'; x.fillText(r.tag, 0, 0); x.restore(); } else x.fillText(r.name.split(' ')[0], (X(r.x0) + X(r.x1)) / 2, (Z(r.z0) + Z(r.z1)) / 2 + 5); }
+      x.font = 'bold 11px system-ui'; x.fillStyle = '#7c2d12'; AREAS.forEach((a) => { if (!a.blk) return; if (a.vert) { x.save(); x.translate(X(164) + 4, Z(112)); x.rotate(-Math.PI / 2); x.font = 'bold 10px system-ui'; x.fillText(a.name.replace(/^\S+\s/, '').toUpperCase(), 0, 0); x.restore(); return; } const tx_n = a.name; a = Object.assign({}, a.m, { name: tx_n }); const tx = a.name.replace(/^\S+\s/, '').toUpperCase(), mw = X(a.x1) - X(a.x0) - 6; let fs = 11; x.font = `bold ${fs}px system-ui`; while (fs > 7 && x.measureText(tx).width > mw) { fs -= 0.5; x.font = `bold ${fs}px system-ui`; } x.fillText(tx, (X(a.x0) + X(a.x1)) / 2, Z(a.z0) + 12); });
       x.font = '14px system-ui'; STOPS.forEach((s2) => x.fillText('🛷', X(s2[0]), Z(s2[1]) + 5));
       const me = g.me; if (!g.under) { x.fillStyle = '#ff4fa0'; x.strokeStyle = '#fff'; x.lineWidth = 3; x.beginPath(); x.arc(X(me.x), Z(me.z), 7, 0, 7); x.fill(); x.stroke(); }
       on(c, '#mBack', () => { if (back) back(); else this.done(); }); }); }

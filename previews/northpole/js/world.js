@@ -1,11 +1,11 @@
 // World: batched static geometry (chunked per material), colliders, zones and queries.
 import * as THREE from 'three';
-import { SB, DB, DROP } from './layout.js?v=np7';
-import { compact, spillCompact } from './compact.js?v=np7';
+import { SB, DB, DROP } from './layout.js?v=np8';
+import { compact, spillCompact } from './compact.js?v=np8';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { MATS } from './mats.js?v=np7';
-import { remap as THR } from './theme.js?v=np7';
+import { MATS } from './mats.js?v=np8';
+import { remap as THR } from './theme.js?v=np8';
 
 const CH = 22, CELL = 8;
 const _m = new THREE.Matrix4(), _m2 = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3(), _c = new THREE.Color(), _n = new THREE.Matrix3();
@@ -38,7 +38,7 @@ function lodGeo(geom, m) { const P0 = geom.parameters; if (!P0) return geom; con
 const rbCache = new Map();
 export function clearWorldCaches() { for (const g of prepCache.values()) g.dispose(); prepCache.clear(); for (const g of rbCache.values()) g.dispose(); rbCache.clear(); }
 export function rbox(w, h, d, r, seg = 2) {
-  r = Math.min(r, w / 2 - 0.001, h / 2 - 0.001, d / 2 - 0.001); if (r < 0.005) r = 0.005; if (seg > 1 && (r < 0.035 || Math.max(w, h, d) < 0.45)) seg = 1; // tiny bevels: one bevel step looks identical, ~2x fewer vertices
+  r = Math.min(r, w / 2 - 0.001, h / 2 - 0.001, d / 2 - 0.001); if (r < 0.005) r = 0.005; if (seg > 1 && (r < 0.12 || Math.max(w, h, d) < 0.45)) seg = 1; /* holiday iOS diet: small bevels use one smooth step */ // tiny bevels: one bevel step looks identical, ~2x fewer vertices
   const k = [w, h, d, r, seg].map((v) => +(+v).toFixed(3)).join(','); let g = rbCache.get(k);
   if (!g) { g = new RoundedBoxGeometry(w, h, d, seg, r); rbCache.set(k, g); } return g;
 }
@@ -126,7 +126,7 @@ export class World {
     if (ch.spills.length > 1) { const m = mergeGeometries(ch.spills, false); ch.spills.forEach((q) => q.dispose()); m.userData.spill = true; ch.spills = [m]; } }
   _final(ch) { let g; if (ch.parts.length) { const raw = mergeGeometries(ch.parts, false); ch.parts.forEach((p) => p.dispose()); ch.parts = []; this._pv -= ch.verts; ch.verts = 0; g = raw; if (ch.spills && ch.spills.length) { const sp = spillCompact(raw, ch.bucket); g = mergeGeometries([...ch.spills, sp], false); ch.spills.forEach((q) => q.dispose()); sp.dispose(); } } else if (ch.spills && ch.spills.length) g = ch.spills[0]; else return; ch.spills = null;
     g.computeBoundingSphere(); g.computeBoundingBox(); compact(g, ch.bucket, !!this.uploader);
-    const mesh = new THREE.Mesh(g, MATS[ch.bucket] || MATS.m); mesh.matrixAutoUpdate = false;
+    const mesh = new THREE.Mesh(g, MATS[ch.bucket] || MATS.m); if (g.userData.q) { const q = g.userData.q; mesh.position.set(q[0], q[1], q[2]); mesh.scale.setScalar(q[3]); mesh.updateMatrix(); g.computeBoundingSphere(); g.computeBoundingBox(); mesh.userData.ws = g.boundingSphere.clone().applyMatrix4(mesh.matrix); } mesh.matrixAutoUpdate = false;
     mesh.castShadow = ch.bucket !== 'e' && ch.bucket !== 'l' && ch.bucket !== 'w'; mesh.receiveShadow = ch.bucket !== 'l';
     if (ch.bucket === 'e') mesh.renderOrder = 2; if (ch.fade >= 0) this.fades[ch.fade].meshes.push(mesh);
     mesh.userData.region = ch.region; (this.regionMeshes[ch.region] || (this.regionMeshes[ch.region] = [])).push(mesh); if (ch.detail) { mesh.userData.detail = true; this.detailMeshes.push(mesh); }

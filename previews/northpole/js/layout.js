@@ -1,6 +1,7 @@
 // Holiday map: the town is rebuilt as a new map of district "islands" (moved + turned) joined by new roads through open land.
 import * as THREE from 'three';
 export const MAPR = 190;
+export const EXTRA = []; // extra hand-made districts (no scattered trees inside)
 const SRC = { NW: [-132, -132, -47, -36], NC: [-47, -132, 47, -36], NE: [47, -132, 132, -36], W: [-132, -36, -47, 36], P: [-47, -36, 47, 36], E: [47, -36, 132, 36], SW: [-132, 36, -47, 132], SCE: [-47, 36, 132, 132] };
 const mk = (s, cx, cz, th, extra) => { const scx = (s[0] + s[2]) / 2, scz = (s[1] + s[3]) / 2, c = Math.round(Math.cos(th)), sn = Math.round(Math.sin(th));
   let hw = (s[2] - s[0]) / 2, hd = (s[3] - s[1]) / 2; if (sn !== 0) [hw, hd] = [hd, hw];
@@ -51,7 +52,7 @@ export function newLand(w, K, TH, floor, mesa) { const keep = w._forceB; w._forc
   for (const row of zs) { row.sort((a, b) => a.cx - b.cx); for (let i = 0; i < row.length - 1; i++) { const xA = row[i].d[2], xB = row[i + 1].d[0], xc = (xA + xB) / 2; const z0 = Math.min(row[i].d[1], row[i + 1].d[1]) - 8, z1 = Math.max(row[i].d[3], row[i + 1].d[3]) + 8; roads.push([xc - 3, z0, xc + 3, z1]); } }
   for (const r of roads) floor(w, r[0], r[1], r[2], r[3], 'tile', 0.0, 0xe8cfa6, 0xd9b98a, 1.4);
   const onRoad = (x, z, m) => roads.some((r) => x > r[0] - m && x < r[2] + m && z > r[1] - m && z < r[3] + m);
-  let n = 0; for (let x = -MAPR + 12; x <= MAPR - 12; x += 11) for (let z = -MAPR + 12; z <= MAPR - 12; z += 11) { const jx = x + Math.sin(x * 12.9 + z * 7.1) * 3.5, jz = z + Math.cos(x * 3.7 - z * 9.3) * 3.5; if (inBlock(jx, jz, 3) || onRoad(jx, jz, 3.5) || ((x * 31 + z * 17) & 3) === 0) continue; TH.tree(w, K, jx, jz, 0.8 + ((x * 7 + z * 3) & 3) * 0.12); n++; }
+  let n = 0; for (let x = -MAPR + 12; x <= MAPR - 12; x += 11) for (let z = -MAPR + 12; z <= MAPR - 12; z += 11) { const jx = x + Math.sin(x * 12.9 + z * 7.1) * 3.5, jz = z + Math.cos(x * 3.7 - z * 9.3) * 3.5; if (inBlock(jx, jz, 3) || EXTRA.some((r) => jx > r[0] && jx < r[2] && jz > r[1] && jz < r[3]) || onRoad(jx, jz, 3.5) || ((x * 31 + z * 17) & 3) === 0) continue; TH.tree(w, K, jx, jz, 0.8 + ((x * 7 + z * 3) & 3) * 0.12); n++; }
   for (let i = 0; i < 26; i++) { const t = -MAPR + 8 + i * 14.6; mesa(w, t, MAPR - 4, 15, 9 + (i % 4) * 2.5, 8); mesa(w, t, -MAPR + 4, 15, 8 + (i % 3) * 3, 8); mesa(w, MAPR - 4, t, 8, 9 + (i % 3) * 3, 14); mesa(w, -MAPR + 4, t, 8, 8 + (i % 4) * 2.5, 14); }
   const R = MAPR + 4; w.solid(-R, 0, -R, R, 30, -MAPR + 1); w.solid(-R, 0, MAPR - 1, R, 30, R); w.solid(-R, 0, -R, -MAPR + 1, 30, R); w.solid(MAPR - 1, 0, -R, R, 30, R);
   w._forceB = keep; return n; }

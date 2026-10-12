@@ -1,35 +1,36 @@
 // Grok North Pole Village runtime: the town, players, townsfolk, the shuttle cart, ambient desert life, day -> sunset, collectibles,
 // the Sleigh Bells mystery, the Reindeer Derby + Cookie Rush (3D mini-games), a hidden puzzle, co-op hooks.
 import * as THREE from 'three';
-import { RP, setP, relayNPC, freeSpot } from './layout.js?v=np7';
-import { makeFolk, animFolk } from './folk.js?v=np7';
-import { holAct } from './holiday.js?v=np7';
-import { GLYPH_TXT } from './story_theme.js?v=np7';
-import { LIGHT as THL, TH as THM } from './theme.js?v=np7';
-import { panel } from './ui.js?v=np7';
-import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=np7';
-import { World } from './world.js?v=np7';
-import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=np7';
-import { UY } from './under.js?v=np7';
-import { Player } from './player.js?v=np7';
-import { FX } from './fx.js?v=np7';
-import { makeRat, animRat, MB, toGroup } from './models.js?v=np7';
-import { makePup, animPup, birdGeo } from './dogs.js?v=np7';
-import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=np7';
-import { P } from './geo.js?v=np7';
-import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=np7';
-import { updateFrustum, inView, LightPool } from './perf.js?v=np7';
-import { sfx, playMusic } from './audio.js?v=np7';
-import { S, persist } from './save.js?v=np7';
-import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=np7';
-import { readMove, edge, held, IN } from './input.js?v=np7';
+import { RP, setP, relayNPC, freeSpot } from './layout.js?v=np8';
+import { makeFolk, animFolk } from './folk.js?v=np8';
+import { holAct } from './holiday.js?v=np8';
+import { tick as opsTick } from './opsrow.js?v=np8';
+import { GLYPH_TXT } from './story_theme.js?v=np8';
+import { LIGHT as THL, TH as THM } from './theme.js?v=np8';
+import { panel } from './ui.js?v=np8';
+import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=np8';
+import { World } from './world.js?v=np8';
+import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=np8';
+import { UY } from './under.js?v=np8';
+import { Player } from './player.js?v=np8';
+import { FX } from './fx.js?v=np8';
+import { makeRat, animRat, MB, toGroup } from './models.js?v=np8';
+import { makePup, animPup, birdGeo } from './dogs.js?v=np8';
+import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=np8';
+import { P } from './geo.js?v=np8';
+import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=np8';
+import { updateFrustum, inView, LightPool } from './perf.js?v=np8';
+import { sfx, playMusic } from './audio.js?v=np8';
+import { S, persist } from './save.js?v=np8';
+import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=np8';
+import { readMove, edge, held, IN } from './input.js?v=np8';
 const PI = Math.PI;
 const TOYS = [[60, 0, 76], [-70, 0, 61], [108, 0, -4]].map((p) => RP(...p));
 const DAY = 420; // seconds per day -> sunset cycle
 export class Game {
   constructor(app, opts = {}) {
     this.app = app; this.scene = E.scene; this.net = app.net; this.hud = app.hud; this.T = 0; this.levelId = 'tortytown';
-    const w = this.world = new World(); w.game = this; { const R = E.renderer, rt = new THREE.WebGLRenderTarget(4, 4), sc = new THREE.Scene(); w.uploader = (m) => { const fc = m.frustumCulled; m.frustumCulled = false; const par = m.parent; sc.add(m); const prev = R.getRenderTarget(), sm = R.shadowMap.autoUpdate; R.shadowMap.autoUpdate = false; R.setRenderTarget(rt); R.render(sc, E.camera); R.setRenderTarget(prev); R.shadowMap.autoUpdate = sm; sc.remove(m); if (par) par.add(m); m.frustumCulled = fc; }; w._upRT = rt; } buildTown(w); w.finalize(this.scene); w.uploader = null; w._upRT.dispose();
+    const w = this.world = new World(); w.game = this; w._tick = (dt, G) => opsTick(w, dt, G); { const R = E.renderer, rt = new THREE.WebGLRenderTarget(4, 4), sc = new THREE.Scene(); w.uploader = (m) => { const fc = m.frustumCulled; m.frustumCulled = false; const par = m.parent; sc.add(m); const prev = R.getRenderTarget(), sm = R.shadowMap.autoUpdate; R.shadowMap.autoUpdate = false; R.setRenderTarget(rt); R.render(sc, E.camera); R.setRenderTarget(prev); R.shadowMap.autoUpdate = sm; sc.remove(m); if (par) par.add(m); m.frustumCulled = fc; }; w._upRT = rt; } buildTown(w); w.finalize(this.scene); w.uploader = null; w._upRT.dispose();
     setEnvironment(w.env); this.fx = new FX(this.scene); { const N = 900, pa = new Float32Array(N * 3); for (let i = 0; i < N * 3; i++) pa[i] = (Math.random() - 0.5) * 60; const gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.BufferAttribute(pa, 3)); this.wx = new THREE.Points(gg, new THREE.PointsMaterial({ color: THM.snow ? 0xffffff : 0xffa94d, size: THM.snow ? 0.16 : 0.07, transparent: true, opacity: THM.snow ? 0.9 : 0.7, depthWrite: false })); this.wx.frustumCulled = false; this.scene.add(this.wx); } this.extra = []; this.lightPool = new LightPool(this.scene, w.lights, 4);
     this.players = new Map();
     this.me = new Player({ rat: 'human', look: S.look, outfit: S.outfit, name: S.name || 'You', local: true, gadgets: new Set(), pid: opts.pid || 'me' });
@@ -162,11 +163,11 @@ export class Game {
     const key = [...v].sort().join(','); if (key === this._vk && r === this.region) return; this._vk = key; this.region = r; this.vis = v; this.under = r.startsWith('u_');
     for (const k in this.world.regionMeshes) { const on = v.has(k); for (const m of this.world.regionMeshes[k]) m.visible = on; } this._lod = 0; }
   farCull(dt) { this._lod -= dt; if (this._lod > 0) return; this._lod = 0.4; const c = E.camera.position, D2 = 95 * 95;
-    for (const m of this.world.detailMeshes) { const reg = m.userData.region; if (!this.vis.has(reg)) { m.visible = false; continue; } const bs = m.geometry.boundingSphere; m.visible = !bs || (bs.center.x - c.x) ** 2 + (bs.center.z - c.z) ** 2 < D2 + bs.radius * bs.radius * 4; }
+    for (const m of this.world.detailMeshes) { const reg = m.userData.region; if (!this.vis.has(reg)) { m.visible = false; continue; } const bs = m.userData.ws || m.geometry.boundingSphere; m.visible = !bs || (bs.center.x - c.x) ** 2 + (bs.center.z - c.z) ** 2 < D2 + bs.radius * bs.radius * 4; }
     if (this.field) this.field.visible = !this.under && Math.hypot(c.x + 100, c.z - 94) < 85; }
   areaLabel() { const r = REGIONS.find((q) => q.id === this.region); return r ? r.name : areaName(this.me.x, this.me.z); }
   // ------------------------------------------------ frame
-  update(dt) { this.T += dt; const w = this.world, me = this.me; if (this._fly) { const t = this._flyT += dt, f = this._fly; f.position.set(22 - t * 2.5, 0.6 + Math.max(0, t - 1) ** 1.6 * 2.2, -80 - t * 9); f.rotation.x = -Math.min(0.5, t * 0.12); if (Math.random() < dt * 30) this.fx.sparkle(f.position.x, f.position.y, f.position.z + 1.5, 0xffd23f); if (t > 16) { this.scene.remove(f); this._fly = null; } } if (this.wx) { const p = this.wx.geometry.attributes.position, a = p.array, sp = THM.snow ? 1.6 : 0.25; for (let i = 0; i < a.length; i += 3) { a[i + 1] -= sp * dt * (0.7 + (i % 7) * 0.08); a[i] += Math.sin(this.T + i) * dt * 0.3; if (a[i + 1] < -6) a[i + 1] += 30; } p.needsUpdate = true; this.wx.position.set(me.x, me.y + 8, me.z); this.wx.visible = this.region === 'out' && !this.under; }
+  update(dt) { this.T += dt; const w = this.world, me = this.me; if (w._tick) w._tick(dt, this); if (this._fly) { const t = this._flyT += dt, f = this._fly; f.position.set(22 - t * 2.5, 0.6 + Math.max(0, t - 1) ** 1.6 * 2.2, -80 - t * 9); f.rotation.x = -Math.min(0.5, t * 0.12); if (Math.random() < dt * 30) this.fx.sparkle(f.position.x, f.position.y, f.position.z + 1.5, 0xffd23f); if (t > 16) { this.scene.remove(f); this._fly = null; } } if (this.wx) { const p = this.wx.geometry.attributes.position, a = p.array, sp = THM.snow ? 1.6 : 0.25; for (let i = 0; i < a.length; i += 3) { a[i + 1] -= sp * dt * (0.7 + (i % 7) * 0.08); a[i] += Math.sin(this.T + i) * dt * 0.3; if (a[i + 1] < -6) a[i + 1] += 30; } p.needsUpdate = true; this.wx.position.set(me.x, me.y + 8, me.z); this.wx.visible = this.region === 'out' && !this.under; }
     const mv = this.app.paused || this.chat ? { x: 0, y: 0 } : readMove();
     const free = !this.app.paused && !this.chat && !this.app.busy;
     const inp = free ? { mx: mv.x, my: mv.y, jumpP: edge('jump'), jumpH: held('jump'), spinP: edge('spin'), blastP: edge('blast'), hookP: false, actP: edge('act') } : { mx: 0, my: 0 };

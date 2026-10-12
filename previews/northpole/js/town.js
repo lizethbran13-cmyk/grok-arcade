@@ -1,16 +1,18 @@
 // Grok North Pole Village: Martina "Torty"'s desert-oasis hometown. A palm-ringed Candy Cane Square, Mistletoe Street, the Burrows (homes),
 // The North Pole, the Reindeer Racetrack, the Christmas Tree Farm and the Snowdrift Hills edge. 18 enterable buildings, each its own
 // culled region; outdoors batch into big merged chunks, tiny decor goes into far-culled "detail" chunks. All real 3D geometry.
-import { tortuga } from './tortuga.js?v=np7';
-import { districts } from './districts.js?v=np7';
+import { tortuga } from './tortuga.js?v=np8';
+import { districts } from './districts.js?v=np8';
 import * as THREE from 'three';
-import * as LY from './layout.js?v=np7';
-import * as FA from './facades.js?v=np7';
-import * as TH from './theme.js?v=np7';
-import * as HOL from './holiday.js?v=np7';
-import * as K from './kit.js?v=np7';
-import { interiors } from './interiors.js?v=np7';
-import { underground } from './under.js?v=np7';
+import * as LY from './layout.js?v=np8';
+import * as OPS from './opsrow.js?v=np8';
+import * as OD from './opsdata.js?v=np8';
+import * as FA from './facades.js?v=np8';
+import * as TH from './theme.js?v=np8';
+import * as HOL from './holiday.js?v=np8';
+import * as K from './kit.js?v=np8';
+import { interiors } from './interiors.js?v=np8';
+import { underground } from './under.js?v=np8';
 const { wall, D, G, floor, ceiling, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, star, heart, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; let I = null;
 export const FL = 0.02;
@@ -53,12 +55,14 @@ export const AREAS = [
   { x0: -36, x1: 80, z0: 62, z1: 130, name: '🏁 Reindeer Racetrack' }, { x0: -132, x1: -40, z0: 34, z1: 132, name: '🍪 Christmas Tree Farm' },
   { x0: 80, x1: 132, z0: 32, z1: 132, name: '🏔️ Snowdrift Hills' }, { x0: 56, x1: 132, z0: -80, z1: -32, name: '🎄 Workshop Yard' }, { x0: 60, x1: 132, z0: -132, z1: -32, name: '🏔️ Glacier Rim' },
 ];
+REGIONS.splice(REGIONS.findIndex((r) => r.under), 0, ...OD.REG); AREAS.unshift({ x0: 144, x1: 184, z0: -184, z1: 184, name: '🏢 Operations Row', blk: 1, vert: 1, m: { x0: 145, z0: -180, x1: 182, z1: 178 } }); LY.EXTRA.push([143, -184, 186, 184]);
 export function regionAt(x, y, z) { for (const r of REGIONS) if (x >= r.x0 && x <= r.x1 && z >= r.z0 && z <= r.z1 && y >= r.y0 && y <= r.y1) return r.id; return 'out'; }
 export function areaName(x, z) { for (const a of AREAS) if (x >= a.x0 && x <= a.x1 && z >= a.z0 && z <= a.z1) return a.name; return '🎄 North Pole Village'; }
 export const DOORS = { bakery: [-108, -74], music: [-82, -74], toys: [-106, -102], cinema: [57, 44], icecream: [73.5, 44], tortuga: [78, -42], hall: [0, -42], library: [-37, -42], cafe: [37, -42], post: [-38, 40], inn: [37, 40], market: [62, -10], shellshop: [87, -10], pottery: [106, -10], sweets: [57, 10], fossil: [82, 10],
   burrow: [-59, -10], shelby: [-86, -10], school: [-60, 10], spa: [-23, -94], obs: [22, -98], club: [-12, 82], barn: [-86, 52], green: [-73, 70] };
+Object.assign(DOORS, OD.DOORS);
 // North Pole Express stops (fast travel) [x, z, yaw, name]
-export const STOPS = [[6, 30, PI, '🎄 Candy Cane Square'], [114, 8, -PI / 2, '🛍️ Mistletoe Street'], [-112, 8, PI / 2, '🏡 Gingerbread Lane'], [6, -84, PI, '♨️ The North Pole'], [6, 66, 0, '🏁 Racetrack'], [-78, 38, PI / 2, '🍪 Christmas Tree Farm'], [100, 62, -PI / 2, '🏔️ Snowdrift Hills'], [84, -36, PI, '🎄 Santa’s Workshop'], [-94, -72, PI, '🏺 Elf Quarter'], [68, 30.5, PI, '🎉 Carol Plaza']];
+export const STOPS = [[6, 30, PI, '🎄 Candy Cane Square'], [114, 8, -PI / 2, '🛍️ Mistletoe Street'], [-112, 8, PI / 2, '🏡 Gingerbread Lane'], [6, -84, PI, '♨️ The North Pole'], [6, 66, 0, '🏁 Racetrack'], [-78, 38, PI / 2, '🍪 Christmas Tree Farm'], [100, 62, -PI / 2, '🏔️ Snowdrift Hills'], [84, -36, PI, '🎄 Santa’s Workshop'], [-94, -72, PI, '🏺 Elf Quarter'], [68, 30.5, PI, '🎉 Carol Plaza']]; STOPS.push([164, -14, Math.PI, '🎁 Operations Row · Wrapping Dept']);
 // ------------------------------------------------------------------------------------------------ shared helpers
 export const shade = (c, k) => { const C = new THREE.Color(c); C.multiplyScalar(k); return C.getHex(); };
 const prismCache = new Map();
@@ -171,7 +175,7 @@ export function buildTown(w) {
   w.env = Object.assign({}, TH.ENV);
   I = (o) => { w.inter.push(o); return o; }; w.I = I;
   w.region = 'shell'; ground(w); w.region = 'out'; square(w); market(w); burrows(w); hill(w); track(w); farm(w); dunes(w); LY.newLand(w, K, TH, floor, mesa); LY.streets(w, floor);
-  shells(w); interiors(w); tortuga(w); districts(w); underground(w); w.region = 'out'; expressStops(w); TH.dress(w, K); TH.dressInside(w, K, REGIONS); HOL.buildStations(w, K); w.region = 'shell';
+  shells(w); interiors(w); tortuga(w); districts(w); underground(w); w.region = 'out'; expressStops(w); TH.dress(w, K); TH.dressInside(w, K, REGIONS); HOL.buildStations(w, K); OPS.build(w, K, TH, building, floor); w.region = 'shell';
   w.start = [0, 0.2, 21]; w.startYaw = PI; w.camDist = 9.5; LY.relayout(w, { REGIONS, AREAS, DOORS, STOPS, TRACK }); { const rg_ = w.region; w.region = 'out'; LY.doorPaths(w, floor, REGIONS, DOORS); w.region = rg_; }
   return w; }
 export function tcrate(w, x, y, z, s = 1, col = 0xd8a15a, top = 'lettuce') { const T = w.tf(x, y, z, R() * 0.3, s); T.slab('m', col, 0, 0, 0, 1, 0.8, 1, 0.06); [-1, 1].forEach((sd) => { T.box('m', shade(col, 0.8), 0, 0.05, sd * 0.505, 0.9, 0.12, 0.03, 0.02); T.box('m', shade(col, 0.8), 0, 0.62, sd * 0.505, 0.9, 0.12, 0.03, 0.02); T.box('m', shade(col, 0.8), sd * 0.505, 0.05, 0, 0.03, 0.12, 0.9, 0.02); T.box('m', shade(col, 0.8), sd * 0.505, 0.62, 0, 0.03, 0.12, 0.9, 0.02); });
