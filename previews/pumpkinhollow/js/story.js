@@ -1,15 +1,15 @@
 // Pumpkin Hollow townsfolk, what they say, side tasks and the mystery "Who swiped the Moon Lantern?". Pure data + helpers.
-import { S, persist } from './save.js?v=ph3';
-import * as TS from './story_theme.js?v=ph3';
+import { S, persist } from './save.js?v=ph4';
+import * as TS from './story_theme.js?v=ph4';
 const PI = Math.PI;
 export const HATS = [
   { id: 'none', n: 'No Hat', how: 'Always yours' }, { id: 'pupears', n: 'Schnauzer Ears', how: "Find Candy's 3 squeaky pumpkin toys" }, { id: 'flower', n: 'Spooky Moonflower', how: "Plant Mama Rosa's 4 moonflowers" },
   { id: 'racer', n: 'Turbo Lantern Helmet', how: 'Win the Broomstick Derby' }, { id: 'chef', n: 'Pumpkin Chef Hat', how: 'Harvest 8 pumpkins in Pumpkin Rush' }, { id: 'propeller', n: "Snowie's Propeller Cap", how: 'Polish a lantern for Snowie (70%+)' },
   { id: 'goggles', n: "Luna's Moon Goggles", how: 'Help Luna at the Observatory' }, { id: 'sunhat', n: 'Big Moon Hat', how: 'Catch 20+ in Prickly Pear Catch' }, { id: 'party', n: 'Monster Mash Hat', how: 'Find 20 Candy Corns' },
-  { id: 'detective', n: 'Detective Hat', how: 'Solve the Moon Lantern mystery' }, { id: 'wizard', n: 'Wizard Hat', how: 'Find 5 secrets' }, { id: 'shellcrown', n: 'Ancient Lantern Crown', how: '???' }, { id: 'hardhat', n: 'Tortuga Tech Hard Hat', how: 'Become a Tortuga Tech intern' }, { id: 'crown', n: 'Gold Crown', how: 'Every Candy Corn + the mystery' },
+  { id: 'detective', n: 'Detective Hat', how: 'Solve the Moon Lantern mystery' }, { id: 'wizard', n: 'Wizard Hat', how: 'Find 5 secrets' }, { id: 'shellcrown', n: 'Ancient Lantern Crown', how: '???' }, { id: 'hardhat', n: 'Mad Science Lab Hard Hat', how: 'Become a Mad Science Lab intern' }, { id: 'crown', n: 'Gold Crown', how: 'Every Candy Corn + the mystery' },
 ];
 export const BADGES = { sun: '☀️ Moon Lantern Detective', toys: "🧸 Candy's Best Friend", garden: '🌼 Green Thumb', race: '🏁 Derby Champ', farm: '🎃 Pumpkin Legend', polish: '✨ Lantern Shiner', catch: '🍐 Pear Catcher', bubbles: '🫧 Bubble Popper',
-  express: '🐦 Express Rider', secrets: '🗝️ Secret Seeker', shells: '🐚 Candy Corn Collector', friends: '🐀 Visitor Welcome Crew', family: "🐢 Torty's Family Friend", ancient: '🌙 Keeper of the Star Lantern', tough: '🛡️ Make-It-Tougher Pro', grotto: '🍄 Grotto Explorer', intern: '🏢 Tortuga Tech Intern' };
+  express: '🐦 Express Rider', secrets: '🗝️ Secret Seeker', shells: '🏮 Candy Corn Collector', friends: '🐀 Visitor Welcome Crew', family: "🎃 Torty's Family Friend", ancient: '🌙 Keeper of the Star Lantern', tough: '🛡️ Make-It-Tougher Pro', grotto: '🍄 Grotto Explorer', intern: '🏢 Mad Science Lab Intern' };
 // look: { t: tortoise opts + s: scale } | { bird } | { liz } | { rat } | { dog }
 const N = (id, n, look, at, region, o = {}) => Object.assign({ id, n, look, at, region }, o);
 const ring = (cx, cz, r, n = 10, rz = r, a0 = 0) => Array.from({ length: n }, (_, i) => { const a = a0 + i / n * PI * 2; return [cx + Math.cos(a) * r, cz + Math.sin(a) * rz]; });
@@ -79,8 +79,8 @@ export const NPCS = [
   N('taco', 'Toffee Tina (food truck)', { t: { shell: 'gold', hat: 'straw', bandC: 0xff5d8f, neck: 'apron', neckC: 0x2dd4bf }, s: 0.29 }, [51.4, 37.8, PI / 2], 'out'),
   N('fiestafan', 'Lola (monster mash-goer)', { t: { shell: 'coral', flower: 0xffd23f }, s: 0.27 }, [70, 37.6, 0], 'out', { mode: 'chat' }),
   N('quarterfan', 'Old Abandoned Al', { t: { shell: 'grey', hat: 'straw', beard: true }, s: 0.28 }, [-88.6, -82, -PI / 2], 'out'),
-  // ---- Tortuga Tech Spooky Lab (Torty's company)
-  N('shelly', 'Shadow (Tortuga Tech Reception)', { t: { shell: 'sky', glasses: 0x0f9d8a, neck: 'scarf', neckC: 0x0f9d8a, flower: 0xffd23f }, s: 0.28 }, [85.7, -46.2, -PI / 2], 'tortuga'),
+  // ---- Mad Science Lab (Torty's company)
+  N('shelly', 'Shadow (Mad Science Lab Reception)', { t: { shell: 'sky', glasses: 0x0f9d8a, neck: 'scarf', neckC: 0x0f9d8a, flower: 0xffd23f }, s: 0.28 }, [85.7, -46.2, -PI / 2], 'tortuga'),
   N('bolt', 'Engineer Bolt (Drop Tower)', { t: { shell: 'olive', hat: 'helmet', hatC: 0xfacc15, glasses: true, neck: 'bowtie', neckC: 0xef4444 }, s: 0.3 }, [62.6, -51.2, PI / 2], 'tortuga', { mode: 'work' }),
   N('blaze', 'Engineer Blaze (Heat + Fog)', { t: { shell: 'coral', hat: 'visor', hatC: 0xff8a3d, glasses: 0xff8a3d }, s: 0.29 }, [89.4, -47.2, -PI / 2], 'tortuga'),
   N('ironshell', 'Engineer Ironshell (Crush Press)', { t: { shell: 'grey', hat: 'helmet', hatC: 0x7c3aed, brow: 0xffffff }, s: 0.31 }, [69.4, -63.6, -PI / 2], 'tortuga', { mode: 'work' }),
@@ -107,7 +107,7 @@ export const NPCS = [
   N('soaker', 'Grandpa Gil (soaking)', { t: { shell: 'grey', brow: 0xffffff, sleepy: true }, s: 0.29 }, [-23.6, -104.2, 0.3], 'spa', { mode: 'soak', y: 0.5 }),
   N('ollie', 'Ollie Sr. (soaking)', { t: { shell: 'olive', hat: 'bandana', hatC: 0xffffff }, s: 0.28 }, [5, -108.4, -0.4], 'out', { mode: 'soak', y: 1.6 }),
   N('zoom', 'Zoom (Derby Champion)', { t: { shell: 'coral', hat: 'helmet', hatC: 0xef4444, neck: 'medal', neckC: 0x2563eb }, s: 0.29 }, [-20, 85.8, PI / 2], 'club'),
-  N('coach', 'Coach Tortuga', { t: { shell: 'olive', hat: 'visor', hatC: 0xe2733f, neck: 'bell', neckC: 0xe2733f }, s: 0.31 }, [-17, 79.6, -PI / 2], 'club'),
+  N('coach', 'Coach Cobble', { t: { shell: 'olive', hat: 'visor', hatC: 0xe2733f, neck: 'bell', neckC: 0xe2733f }, s: 0.31 }, [-17, 79.6, -PI / 2], 'club'),
   N('fan1', 'Derby Fan', { t: { shell: 'gold', hat: 'cap', hatC: 0xef4444 }, s: 0.27 }, [32, 70.6, 0], 'out', { y: 0.84, mode: 'cheer' }),
   N('fan2', 'Derby Fan', { t: { shell: 'sky', bow: 0xffd23f }, s: 0.26 }, [40, 69.3, 0], 'out', { y: 1.26, mode: 'cheer' }),
   N('dusty', 'Dusty the Explorer', { liz: { col: 0xd97706, spots: 0x7c2d12, hat: 'cowboy' }, s: 1.0 }, [100, 96, PI / 2], 'out'),
@@ -117,7 +117,7 @@ for (const h of HATS) if (TS.HATS[h.id]) { h.n = TS.HATS[h.id][0]; h.how = TS.HA
 Object.assign(BADGES, TS.BADGES);
 export const SUN_CLUES = ['pedestal', 'sniff', 'card', 'order', 'chart'];
 export const SUSPECTS = TS.SUSPECTS;
-export const GLYPH = { syms: ['🎃', '🦇', '👻', '🐢'], answer: [3, 0, 1] };
+export const GLYPH = { syms: ['🎃', '🦇', '👻', '🎃'], answer: [3, 0, 1] };
 export function clueText(id) { return TS.CLUES[id] || ''; }
 export function sunStep() { const q = S.q.sun | 0; if (q === 1) { const n = SUN_CLUES.filter((c) => S.clues[c]).length; return `${TS.STEP[1]} ${n}/5`; } return TS.STEP[Math.min(4, q)]; }
 export function hint() { const miss = SUN_CLUES.filter((c) => !S.clues[c]); return miss.length ? TS.HINT[miss[0]] : TS.HINT.up; }
@@ -136,16 +136,16 @@ export function talk(id, G) { const n = (S.talks[id] = (S.talks[id] | 0) + 1); p
       if (q >= 4) return { lines: L(cyc(['Best festival ever. And the moonrise has never been so golden!', 'Wisp is our new Junior Moon Lantern Keeper. With a tiny badge!', 'You\'re welcome back in Pumpkin Hollow any time. Spookily.'])) };
       return { lines: L(cyc(['Any clues yet? Check the journal in the pause menu.', 'Tiny footprints… who in town is that tiny?', 'Talk to everyone! Tortoises love to chat. It takes a while.'])) }; }
     case 'torty': fam('torty');
-      if (n === 1) return { lines: L('YOU CAME! Welcome to my hometown! Everybody here calls me Torty.', 'And this is MY company: TORTUGA TECH SPOOKY LAB! We test things and make them tougher. We know durability. We have lanterns! 🐚', 'Drop tower, crush press, heat and fog-blast chamber, iron plates workshop, and the Test Yard out back. Luna, Pi-rat and Snowie even brought their gadgets to get lantern-tested!', 'My family lives in the Burrows: Mama, Papa and Grandpa Boo. My little brother Wisp is… hmm, where IS Wisp?') };
-      if (S.flags.tough && !S.badges.intern) return { lines: L('You lantern-tested ALL THREE Ratita gadgets? Plato told me. That\'s Tortuga-level work!', 'Here: your official Tortuga Tech hard hat. Welcome to the team, intern!'), fx: () => { G.giveHat('hardhat'); G.badge('intern'); } };
+      if (n === 1) return { lines: L('YOU CAME! Welcome to my hometown! Everybody here calls me Torty.', 'And this is MY company: THE MAD SCIENCE LAB! We test things and make them tougher. We know durability. We have lanterns! 🏮', 'Drop tower, crush press, heat and fog-blast chamber, iron plates workshop, and the Test Yard out back. Luna, Pi-rat and Snowie even brought their gadgets to get lantern-tested!', 'My family lives in the Burrows: Mama, Papa and Grandpa Boo. My little brother Wisp is… hmm, where IS Wisp?') };
+      if (S.flags.tough && !S.badges.intern) return { lines: L('You lantern-tested ALL THREE Ratita gadgets? Plato told me. That\'s master-level work!', 'Here: your official Mad Science Lab hard hat. Welcome to the team, intern!'), fx: () => { G.giveHat('hardhat'); G.badge('intern'); } };
       if (q === 1) return { lines: L(cyc(['Our lab built the Moon Lantern\'s case. Drop-proof, crush-proof, heat-proof. Nobody could BREAK it…', '…but it has a tiny latch. Only a few of us know the trick. I showed it to Wisp once. Hmm!'])) };
       if (q >= 4) return { lines: L(cyc(['Wisp borrowed the Moon Lantern to warm Grandpa Boo\' bath. That\'s SO him.', 'Next product: a Wisp-proof latch. Kidding! Mostly.', 'Thanks for helping my town. You\'re officially an honorary ghost!'])) };
-      return { lines: L(cyc(['Try MAKE IT TOUGHER in the Iron-Plate Workshop! Bolt iron plates onto the weak spots before the test.', 'Grandpa Boo tells the best old legends. Ask him (if he\'s awake).', 'I learned to race on that track out south. I lost every race. Spookily. Happily.', 'Ghost Train stops are all over town, there\'s one right outside Tortuga Tech.'])) };
+      return { lines: L(cyc(['Try MAKE IT TOUGHER in the Iron-Plate Workshop! Bolt iron plates onto the weak spots before the test.', 'Grandpa Boo tells the best old legends. Ask him (if he\'s awake).', 'I learned to race on that track out south. I lost every race. Spookily. Happily.', 'Ghost Train stops are all over town, there\'s one right outside Mad Science Lab.'])) };
     case 'mama': fam('mama');
       if (!S.flags.garden && S.plants.length >= 4) return { lines: L('My moonflowers! All four! Oh, they look like little suns.', 'Here, a moonflower for your hair. Every visitor should wear one.'), fx: () => { S.flags.garden = 1; persist(); G.giveHat('flower'); G.badge('garden'); } };
       if (!S.flags.garden) return { lines: L('Hello dear! Any friend of Torty\'s is family. Want some pumpkin? Of course you do.', 'Could you help me? There are 4 flower beds by our front wall. Plant a spooky moonflower in each one!') };
-      return { lines: L(cyc(['Torty was SO small when she hatched. Now look at her: the CEO of her OWN company, Tortuga Tech!', 'Dinner is pumpkin. Lunch was pumpkin. Tomorrow? Surprise pumpkin.'])) };
-    case 'papa': fam('papa'); return { lines: L(cyc(['Welcome! I\'m Papa Basil. I grow the crunchiest pumpkin on the street.', 'Have you tried the Broomstick Derby? I came in last in 1987. Proudest day of my life.', q === 1 ? 'The Moon Lantern? Wisp was asking about warm rocks yesterday… hmm.' : 'My daughter runs Tortuga Tech! They tested my pumpkin basket. It\'s now drop-proof.'])) };
+      return { lines: L(cyc(['Torty was SO small when she hatched. Now look at her: the CEO of her OWN company, Mad Science Lab!', 'Dinner is pumpkin. Lunch was pumpkin. Tomorrow? Surprise pumpkin.'])) };
+    case 'papa': fam('papa'); return { lines: L(cyc(['Welcome! I\'m Papa Basil. I grow the crunchiest pumpkin on the street.', 'Have you tried the Broomstick Derby? I came in last in 1987. Proudest day of my life.', q === 1 ? 'The Moon Lantern? Wisp was asking about warm rocks yesterday… hmm.' : 'My daughter runs Mad Science Lab! They tested my pumpkin basket. It\'s now drop-proof.'])) };
     case 'gramps': fam('gramps'); if (!S.flags.legend) S.flags.legend = 1, persist();
       return { lines: L(cyc([['Grandpa Boo Thaddeus', 'Zzz… eh? Oh, a visitor! Pull up a cushion.'], ['Grandpa Boo Thaddeus', 'My old lantern gets chilly at night. Nothing a warm spring can\'t fix.'], ['Grandpa Boo Thaddeus', 'Want a legend? Long ago our ancestors carved a door in the eastern cliffs, behind the sleeping boulders.']]), ['Grandpa Boo Thaddeus', 'Three stone dials guard it. My grandpa said the middle one shows the PUMPKIN.'], ['Grandpa Boo Thaddeus', 'The other two? Look for old writing. Libraries… stars… spooky and steady.']) };
     case 'pebble':
@@ -158,14 +158,14 @@ export function talk(id, G) { const n = (S.talks[id] = (S.talks[id] | 0) + 1); p
       return { lines: L(['Candy', cyc(['The ghosts here are so nice. They pet me for a LONG time.', 'Pup Town is way faster. But Pumpkin Hollow has pumpkin. Pumpkin is ok I guess.'])]) }; }
     case 'luna': { friend('luna');
       if (q >= 1 && !S.flags.luna && S.clues.chart) return { lines: L(['Luna', 'You read the telescope log! See? A golden glow, up the hill, at 6:12 am. Moving at… 0.3 kilometers per hour.'], ['Luna', 'Snowie? No, she was with me all morning eating lemon drops. Those are what\'s golden and glowy.'], ['Luna', 'Take my moon goggles. Never look at the moon without them!']), fx: () => { S.flags.luna = 1; persist(); confirm('snowie'); G.giveHat('goggles'); } };
-      return { lines: L(['Luna', cyc(['Torty invited us for the festival! I\'m helping calibrate the Moon Observatory.', 'I brought my Star Goggles to Tortuga Tech for a drop test. Torty\'s company is VERY impressive.', 'Check the telescope log. It records everything that glows in this valley.', 'Ratita Industries Pumpkin Hollow branch? We\'d have to move… spookily.'])]) }; }
+      return { lines: L(['Luna', cyc(['Torty invited us for the festival! I\'m helping calibrate the Moon Observatory.', 'I brought my Star Goggles to Mad Science Lab for a drop test. Torty\'s company is VERY impressive.', 'Check the telescope log. It records everything that glows in this valley.', 'Ratita Industries Pumpkin Hollow branch? We\'d have to move… spookily.'])]) }; }
     case 'pirat': { friend('pirat');
       if (!S.flags.race) return { lines: L(['Pi-rat', 'Ahoy! I built the racers a TURBO LANTERN. Top speed: still very spooky. But faster!'], ['Pi-rat', 'Race Speedy #3 in the Broomstick Derby! Tap CHEER right when the ring flashes green and Speedy speeds up.']), fx: () => G.offerRace() };
-      return { lines: L(['Pi-rat', cyc(['Race again? Speedy loves the crowd!', 'Next upgrade: a pumpkin-powered engine.', 'My Turbo Wheel is at Tortuga Tech getting iron plates. Torty says it\'ll survive anything!'])]), fx: () => G.offerRace() }; }
+      return { lines: L(['Pi-rat', cyc(['Race again? Speedy loves the crowd!', 'Next upgrade: a pumpkin-powered engine.', 'My Turbo Wheel is at Mad Science Lab getting iron plates. Torty says it\'ll survive anything!'])]), fx: () => G.offerRace() }; }
     case 'snowie': { friend('snowie'); const s0 = S.sus.snowie | 0;
       if (q >= 1 && s0 === 0) return suspect('snowie', [['Snowie', 'Me? Golden and glowy? Oh! These are LEMON DROPS from Trick-or-Treat Sweets! Want one?'], ['Snowie', 'Ask Mrs. Taffy, she sold me a whole bag this morning.']]);
       if (!S.flags.snowie) return { lines: L(['Snowie', 'Hiii! I want to give Torty a sparkly polished lantern cozy as a present. Can you polish one at the Lantern Shop? Make it SHINY (70% or more)!']) };
-      return { lines: L(['Snowie', cyc(['Torty LOVED the lantern. She\'s wearing it on her lantern. Lantern-ception!', 'The market has a pumpkin that looks just like Pi-rat.', 'My Party Popper is at Tortuga Tech for the heat test. I hope it pops!'])]) }; }
+      return { lines: L(['Snowie', cyc(['Torty LOVED the lantern. She\'s wearing it on her lantern. Lantern-ception!', 'The market has a pumpkin that looks just like Pi-rat.', 'My Party Popper is at Mad Science Lab for the heat test. I hope it pops!'])]) }; }
     case 'rocky': { const s0 = S.sus.rocky | 0; if (q >= 1 && s0 === 0) return suspect('rocky', [['Rocky', 'Whoooo! Steal the Moon Lantern? I was delivering 400 letters at dawn! Ask Postmaster Penny!']]);
       return { lines: L(['Rocky', cyc(['Whoooo! Mail\'s here! (I\'m only stopping for a second.)', 'Fastest critter in Pumpkin Hollow! Not hard, honestly.'])]) }; }
     case 'glimmer': { const s0 = S.sus.glimmer | 0; if (q >= 1 && s0 === 0) return suspect('glimmer', [['Glimmer', 'I DO love shiny things… but I\'ve been here polishing lanterns since sunrise! Ask Coral!']]);
@@ -173,28 +173,28 @@ export function talk(id, G) { const n = (S.talks[id] = (S.talks[id] | 0) + 1); p
     case 'penny': return confirm('rocky') ? { lines: L('Rocky? He was here at dawn sorting mail with me, then zoomed off on his route. Couldn\'t have done it!'), fx: () => G.toastMsg('✅ Rocky\'s alibi checks out!') } : { lines: L(cyc(['Welcome to the Ghost Runner Post Office. Mail arrives fast, by ghost standards.', 'Rocky delivers. We sort. Spookily.'])) };
     case 'coral': return confirm('glimmer') ? { lines: L('Glimmer? Polishing lanterns with me since sunrise. My best helper!'), fx: () => G.toastMsg('✅ Glimmer\'s alibi checks out!') } : { lines: L(cyc(['Welcome to the Lantern Shop! Polishes, cozies, stickers. Try the polishing station!', 'A shiny lantern is a happy lantern.'])) };
     case 'taffy': return confirm('snowie') ? { lines: L('The little white rat? She bought a whole bag of lemon drops this morning. Golden, glowy and sour!'), fx: () => G.toastMsg('✅ Snowie\'s alibi checks out!') } : { lines: L(cyc(['Candy apple lollipops! Pumpkin candy! Lemon drops!', 'Everything here is handmade. It took years.'])) };
-    case 'shelly': return { lines: L(cyc(['Welcome to Tortuga Tech Spooky Lab! "We make it tougher." Torty\'s office is in the back, past the Iron-Plate Workshop.', 'Please sign in. Spookily. Thank you.', 'Fun fact: the lobby lantern logo survived 400 drop tests. It\'s just showing off now.'])) };
-    case 'bolt': return { lines: L(cyc(['Drop tower! We drop things from up high, then check for dents. Usually: no dents. 🐢', 'Rule #1 of drop testing: never stand under the drop. Rule #2: snacks.'])) };
+    case 'shelly': return { lines: L(cyc(['Welcome to Mad Science Lab! "We make it tougher." Torty\'s office is in the back, past the Iron-Plate Workshop.', 'Please sign in. Spookily. Thank you.', 'Fun fact: the lobby lantern logo survived 400 drop tests. It\'s just showing off now.'])) };
+    case 'bolt': return { lines: L(cyc(['Drop tower! We drop things from up high, then check for dents. Usually: no dents. 🎃', 'Rule #1 of drop testing: never stand under the drop. Rule #2: snacks.'])) };
     case 'blaze': return { lines: L(cyc(['Heat chamber and fog-blaster! Spooky moon, spooky wind, spooky-tough.', 'The marshmallow control sample failed. Again. Delicious though.'])) };
     case 'ironshell': return { lines: L(cyc(['The crush press goes squish. The iron-plated stuff does not.', 'That box over there survived 9,000 squishes. I\'m very proud of it.'])) };
     case 'plato': return { lines: L(cyc(['I bolt iron plates plates onto gadgets. Hex plates: nature\'s best design!', 'Luna, Pi-rat and Snowie left their gadgets here. Play MAKE IT TOUGHER at the station and armor them up!'])) };
     case 'gauge': return { lines: L(cyc(['Welcome to the Toughness Test Yard! Big drop, roll test, outdoor press. All live!', 'The boulder is foam inside. Don\'t tell anyone. Safety first!'])) };
     case 'tester1': return { lines: L(cyc(['Big Drop in 3… 2… 1… CLONK! Not a scratch. Next!', 'The foam pad is my favourite co-worker.'])) };
     case 'tester2': return { lines: L(cyc(['The Squish Test! The armored melon wins every time.', 'Squish, unsquish, write it down. Squish, unsquish…'])) };
-    case 'ttfan1': case 'ttfan2': case 'ttfan3': return { lines: L(cyc(['GO LANTERN GO! 🐢', 'I come every Saturday to watch the Big Drop!', 'That boulder is foam. I checked. Still exciting!'])) };
-    case 'ttfan4': return { lines: L(cyc(['Best seats in town. The squish is SO satisfying.', 'Tortuga Tech tested my tail. It\'s fine. It was always fine.'])) };
+    case 'ttfan1': case 'ttfan2': case 'ttfan3': return { lines: L(cyc(['GO LANTERN GO! 🎃', 'I come every Saturday to watch the Big Drop!', 'That boulder is foam. I checked. Still exciting!'])) };
+    case 'ttfan4': return { lines: L(cyc(['Best seats in town. The squish is SO satisfying.', 'Mad Science Lab tested my tail. It\'s fine. It was always fine.'])) };
     case 'baker': return { lines: L(cyc(['Fresh pumpkin bat cookies! Spooky-baked for six hours. Worth it.', 'Torty orders a dozen every visit. She says they\'re "drop-tested". They\'re just delicious.'])) };
     case 'bakfan': return { lines: L(cyc(['Mmmf. Best bat cookie in the spooky. Mmmf.', 'The ovens keep the whole Quarter toasty at night.'])) };
     case 'drummer': return { lines: L(cyc(['ONE… two… three… four. (We play at ghost tempo.)', 'Tonight: "Spooky Rock Moonrise". Bring a cushion!'])) };
-    case 'singer': return { lines: L(cyc(['♪ Lantern-ebrate good times, come on! ♪', 'Torty used to sing here before she started Tortuga Tech. Very… durable vocals.'])) };
+    case 'singer': return { lines: L(cyc(['♪ Lantern-ebrate good times, come on! ♪', 'Torty used to sing here before she started Mad Science Lab. Very… durable vocals.'])) };
     case 'mfan': return { lines: L(cyc(['ENCORE! Eventually!', 'Front row cushions are the comfiest.'])) };
-    case 'toymaker': return { lines: L(cyc(['Every toy here is hand-carved. And Tortuga-Tech-tested for toddler toughness!', 'Wisp saves his allowance for my wind-up racers.'])) };
+    case 'toymaker': return { lines: L(cyc(['Every toy here is hand-carved. And lab-tested for toddler toughness!', 'Wisp saves his allowance for my wind-up racers.'])) };
     case 'toykid': return { lines: L(cyc(['CHOO CHOO! The train goes round and round and round…', 'I want the rocking ghost. It\'s SO fast. (It isn\'t.)'])) };
     case 'usher': return { lines: L(cyc(['Now showing: "The Slowest Moonrise". Runtime: 4 hours. Popcorn: free refills.', 'Please turn off your lanterns. I mean your phones.'])) };
     case 'moviefan': return { lines: L(cyc(['Shh! The moon is about to set. Any minute now.', 'This is my 9th time seeing it. It gets me every time.'])) };
     case 'scoop': return { lines: L(cyc(['Twelve flavours, all spooky-churned. Candy apple is the bestseller!', 'Try pumpkin-lime. Trust me.'])) };
     case 'icekid': return { lines: L(cyc(['Brain freeze! …Spookily.', 'I got THREE scoops. Mama said one. Shh.'])) };
-    case 'taco': return { lines: L(cyc(['Toffee Tortuga! Pumpkin tacos, pumpkin tacos, more pumpkin tacos.', 'The truck was lantern-tested at Tortuga Tech. It survived a stampede of hungry racers.'])) };
+    case 'taco': return { lines: L(cyc(['Toffee Tavern! Pumpkin tacos, pumpkin tacos, more pumpkin tacos.', 'The truck was lantern-tested at Mad Science Lab. It survived a stampede of hungry racers.'])) };
     case 'fiestafan': return { lines: L(cyc(['Monster Mash every night! Well, every spooky night.', 'Catch a movie, grab an ice cream, then dance by the fountain.'])) };
     case 'quarterfan': return { lines: L(cyc(['The Abandoned Village is the oldest part of town. Even older than Grandpa Boo!', 'Bakery, music hall, toy shop… everything a spooky afternoon needs.'])) };
     case 'intern': return { lines: L(cyc(['I\'m the junior intern! My job is testing if the sofas are comfy. They are.', 'When I grow up I want to be as tough as Torty.'])) };
@@ -209,6 +209,6 @@ export function talk(id, G) { const n = (S.talks[id] = (S.talks[id] | 0) + 1); p
     case 'paige': return { lines: L(cyc(['Shhh… welcome to the library. Whisper spookily.', 'The ancient book by the window is older than Grandpa Boo. Much older.', q === 1 ? 'Someone checked out a book this morning. Check the card catalog!' : 'Every book here is overdue. Nobody minds.'])) };
     case 'leafy': return { lines: L(cyc(['Welcome to the Cauldron Café! Today\'s special: pumpkin.', q === 1 ? 'Funny thing, a tiny picnic order came in at dawn. The slip\'s on the counter.' : 'Our dessert menu? Pumpkin, but colder.'])) };
     case 'drdune': return { lines: L(cyc(['Welcome to the museum! That fossil is Grand-Grand-Grandma Archie. She was a sea ghost, 5 meters long!', 'Some say our ancestors left tunnels under this valley. Nobody has ever found them.'])) };
-    default: { const d = NPCS.find((x) => x.id === id); const gen = ['Hello there! Lovely day for a spooky stroll.', 'Have you seen the Midnight Festival decorations? Took us 3 weeks!', 'Pumpkin? Pumpkin.', 'Welcome to Pumpkin Hollow! Take your time. We do.', 'The witch’s cauldron spas on the hill are SO relaxing.', 'Did you hear? The Moon Lantern is missing!', 'Ride the Ghost Train if you\'re in a hurry. We never are.', 'Tortuga Tech tested my reading glasses. Unbreakable! Now I just need to stop losing them.', 'Did you see the Big Drop at the Tortuga Tech yard? CLONK!'];
+    default: { const d = NPCS.find((x) => x.id === id); const gen = ['Hello there! Lovely day for a spooky stroll.', 'Have you seen the Midnight Festival decorations? Took us 3 weeks!', 'Pumpkin? Pumpkin.', 'Welcome to Pumpkin Hollow! Take your time. We do.', 'The witch’s cauldron spas on the hill are SO relaxing.', 'Did you hear? The Moon Lantern is missing!', 'Ride the Ghost Train if you\'re in a hurry. We never are.', 'Mad Science Lab tested my reading glasses. Unbreakable! Now I just need to stop losing them.', 'Did you see the Big Drop at the Mad Science Lab yard? CLONK!'];
       return { lines: L(gen[(id.length * 3 + n) % gen.length]) }; }
   } }

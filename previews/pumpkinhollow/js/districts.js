@@ -1,8 +1,8 @@
 // Two new districts: the ABANDONED VILLAGE (north-west) and MONSTER MASH PLAZA (between Spooky Street and the racetrack).
 // 5 more walk-in buildings, all prop-dense, real 3D geometry (Turbo look, no flat textures).
 import * as THREE from 'three';
-import * as K from './kit.js?v=ph3';
-import { building, claypot, tcrate, palm, lanternString, flagString, tortStatue, prickly, barrel, agave, sunShell, SUN, shade } from './town.js?v=ph3';
+import * as K from './kit.js?v=ph4';
+import { building, claypot, tcrate, palm, lanternString, flagString, tortStatue, prickly, barrel, agave, sunShell, SUN, shade } from './town.js?v=ph4';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI, FL = 0.12;
 const art = (w, axis, at, c, y, W, H, side, k) => K.PR.frame(K.scaled(w, 0, FL, 0, 0.25), axis, (at + side * 0.25) / 0.25, c / 0.25, y / 0.25, W / 0.25, H / 0.25, side, k);
@@ -67,7 +67,7 @@ function fiesta(w) { w.region = 'out'; K.floor(w, 48, 32, 80, 43.5, 'tile', 0.0,
     flagString(w, [[48.5, 3.6, 33], [56, 3.0, 38], [64, 3.6, 33], [72, 3.0, 38], [79.5, 3.6, 33]]); lanternString(w, [[48.5, 3.4, 42.8], [64, 2.8, 40], [79.5, 3.4, 42.8]]);
     // food truck (rounded van body, awning, menu, wheels), picnic tables, umbrellas, a piñata on a pole
     { const T = w.tf(53.6, 0, 37.8, PI / 2); T.add('g', rbox(4.2, 2.2, 2.0, 0.4), 0x2dd4bf, 0, 1.35, 0); T.add('g', rbox(1.4, 1.6, 1.9, 0.35), 0x14b8a6, 2.6, 1.05, 0); T.add('e', rbox(0.06, 0.6, 1.5, 0.02), 0xd8f3ff, 3.28, 1.45, 0); [-1.3, 1.3, 2.6].forEach((x) => [-1, 1].forEach((s) => T.add('m', rcyl(0.38, 0.25, 0.08, 20), 0x111827, x, 0.38, s * 1.0, PI / 2, 0, 0))); T.add('f', rbox(3.0, 0.08, 0.9, 0.03), 0xff5d8f, 0, 2.3, -1.4, 0.3, 0, 0); T.add('m', rbox(2.6, 0.08, 0.5, 0.02), 0xfef3c7, 0, 1.1, -1.25); T.solid(-2.2, 0, -1.1, 3.3, 2.5, 1.1); }
-    sign3d(w, 'TOFFEE TORTUGA', 52.55, 2.95, 37.8, -PI / 2, 0.16, 0xffffff, 0xff5d8f);
+    sign3d(w, 'TOFFEE TAVERN', 52.55, 2.95, 37.8, -PI / 2, 0.16, 0xffffff, 0xff5d8f);
     [[70, 35.5], [75.5, 35.5], [70, 40.5], [75.5, 40.5]].forEach(([x, z], i) => { w.add('m', rbox(1.8, 0.08, 0.9, 0.03), 0xc58b52, x, 0.72, z); [-1, 1].forEach((s) => w.add('m', rbox(1.8, 0.06, 0.3, 0.02), 0xb07a3c, x, 0.42, z + s * 0.75)); w.add('x', cyl(8), 0xffffff, x, 0, z, 0, 0, 0, 0.04, 2.6, 0.04); w.add('f', lathe([[1.4, 0], [1.35, 0.02], [0.7, 0.3], [0, 0.45]], 24, 'umb3'), [0xff5d8f, 0xffd23f, 0x2dd4bf, 0xa66bff][i], x, 2.4, z); w.solid(x - 0.9, 0, z - 0.45, x + 0.9, 0.76, z + 0.45); });
     { w.add('x', cyl(8), 0x7c4a1e, 58, 0, 41.5, 0, 0, 0, 0.06, 3.4, 0.06); const T = w.tf(58, 2.6, 41.5, 0.3); T.add('f', sph(12), 0xff5d8f, 0, 0, 0, 0, 0, 0, 0.35, 0.3, 0.45); for (let k = 0; k < 6; k++) T.add('f', rbox(0.05, 0.3, 0.06, 0.01), SUN[k], -0.25 + k * 0.1, -0.35, 0.1, 0, 0, 0); T.add('f', sph(10), 0xffd23f, 0, 0.18, 0.4, 0, 0, 0, 0.14); }
     sign3d(w, 'MONSTER MASH PLAZA', 64, 3.2, 32.4, 0, 0.3, 0xffffff, 0xff5d8f); for (let i = 0; i < 6; i++) claypot(w, 49 + i * 6, 43.2, 0.8, pick([0xff8a3d, 0x2dd4bf, 0xff5d8f]), pick(['flower', 'cactus'])); }

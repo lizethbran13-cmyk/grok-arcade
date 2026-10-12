@@ -1,16 +1,16 @@
 // Grok North Pole Village - boot, app state, main loop.
 import * as THREE from 'three';
-import { E, initEngine, render, trackFps } from './engine.js?v=np3';
-import { initMats } from './mats.js?v=np3';
-import { initInput, clearEdges, edge, IN } from './input.js?v=np3';
-import { initAudio, setSound, sfx } from './audio.js?v=np3';
-import { S, persist } from './save.js?v=np3';
-import { HUD } from './hud.js?v=np3';
-import { UI, closePanel } from './ui.js?v=np3';
-import { Net } from './net.js?v=np3';
-import { Game } from './game.js?v=np3';
-import { $ } from './util.js?v=np3';
-import { loadFont } from './text3d.js?v=np3';
+import { E, initEngine, render, trackFps } from './engine.js?v=np4';
+import { initMats } from './mats.js?v=np4';
+import { initInput, clearEdges, edge, IN } from './input.js?v=np4';
+import { initAudio, setSound, sfx } from './audio.js?v=np4';
+import { S, persist } from './save.js?v=np4';
+import { HUD } from './hud.js?v=np4';
+import { UI, closePanel } from './ui.js?v=np4';
+import { Net } from './net.js?v=np4';
+import { Game } from './game.js?v=np4';
+import { $ } from './util.js?v=np4';
+import { loadFont } from './text3d.js?v=np4';
 const app = window.__pt = window.__hq = { state: 'boot', paused: true, game: null, ready: false, busy: false, simSpeed: 1 };
 function setLoad(p, t) { const b = $('loadBar'); if (b) b.style.width = p + '%'; if (t) $('loadTxt').textContent = t; }
 async function boot() {
@@ -59,4 +59,4 @@ setInterval(() => { const b = document.getElementById('ratitaWip'); const h = b 
 app.S = S; app.E = E; app.IN = IN;
 boot().catch((e) => { console.error(e); $('loadTxt').textContent = 'Oops: ' + e.message; });
 // WebGL context loss (iOS can drop the GPU context under memory pressure): save, show a friendly card, reload cleanly instead of a blank/looping tab
-{ const cv = E.renderer && E.renderer.domElement; if (cv) { cv.addEventListener('webglcontextlost', (e) => { e.preventDefault(); try { persist(); } catch (_) {} if (document.getElementById('ctxLost')) return; const d = document.createElement('div'); d.id = 'ctxLost'; d.setAttribute('style', 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(20,10,0,.75);color:#fff;font:bold 18px system-ui;text-align:center;padding:24px'); d.innerHTML = '🐢 North Pole Village is napping like a sleepy elf.<br>Your progress is saved.<br><br><button style="font:bold 18px system-ui;padding:12px 22px;border-radius:14px;border:0;background:#ffb020">Wake it up</button>'; d.querySelector('button').onclick = () => location.reload(); document.body.appendChild(d); }, false); cv.addEventListener('webglcontextrestored', () => location.reload(), false); } }
+{ const cv = E.renderer && E.renderer.domElement; if (cv) { cv.addEventListener('webglcontextlost', (e) => { e.preventDefault(); try { persist(); } catch (_) {} if (document.getElementById('ctxLost')) return; const d = document.createElement('div'); d.id = 'ctxLost'; d.setAttribute('style', 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(20,10,0,.75);color:#fff;font:bold 18px system-ui;text-align:center;padding:24px'); d.innerHTML = '🎄 North Pole Village is napping like a sleepy elf.<br>Your progress is saved.<br><br><button style="font:bold 18px system-ui;padding:12px 22px;border-radius:14px;border:0;background:#ffb020">Wake it up</button>'; d.querySelector('button').onclick = () => location.reload(); document.body.appendChild(d); }, false); cv.addEventListener('webglcontextrestored', () => location.reload(), false); } }

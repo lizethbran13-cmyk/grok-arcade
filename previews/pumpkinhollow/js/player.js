@@ -1,10 +1,10 @@
 // Rat player: tight platformer physics vs box colliders + Ratita Industries gadgets.
 import * as THREE from 'three';
-import { topOf } from './world.js?v=ph3';
-import { makeRat, animRat, setOutfit } from './models.js?v=ph3';
-import { makeHuman, animHuman } from './humans.js?v=ph3';
-import { sfx } from './audio.js?v=ph3';
-import { up } from './save.js?v=ph3';
+import { topOf } from './world.js?v=ph4';
+import { makeRat, animRat, setOutfit } from './models.js?v=ph4';
+import { makeHuman, animHuman } from './humans.js?v=ph4';
+import { sfx } from './audio.js?v=ph4';
+import { up } from './save.js?v=ph4';
 const R = 0.34, HGT = 0.72, STEP = 0.45;
 const G_UP = 26, G_DN = 34, JUMP = 10.2, JUMP2 = 9.0, JET = 8.4, MAXF = 26;
 const tmp = [];
@@ -69,7 +69,7 @@ export class Player {
     this.collide(dt, game);
     if (this.onGround) { this.air = 0; this.jumps = 0; this.spinHang = false; this.coyote = 0.1; this.bounced = false; } else this.air += dt;
     // kill plane
-    if (this.y < (this.x > 140 ? -45 : w.killY)) this.fall(game, 'fell');
+    if (this.y < (this.x > 140 ? -45 : w.killY)) this.fall(game, "fell"); /* the secret caves (x>140) sit at y≈-30, below the town kill plane */
     for (const q of zs) if (q.type === 'water' && this.y < q.max[1] - 0.2) { this.fall(game, 'splash'); break; }
     this.speed = Math.hypot(this.vx, this.vz);
     this.anim(dt);

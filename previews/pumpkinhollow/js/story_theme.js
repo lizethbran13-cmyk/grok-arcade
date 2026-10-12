@@ -25,7 +25,7 @@ export function talk(id, n, q, G, h) { const { L, cyc, suspect, confirm, friend,
       if (q >= 4) return { lines: L(cyc(['Best Midnight Festival in 300 years. And I\'d know.', 'Wisp is our Junior Lantern Keeper now. She glows with pride.', 'Have you explored the Abandoned Village? Old Mortimer knows its story.'])) };
       return { lines: L(cyc(['Any clues yet? Check your journal in the pause menu.', 'A trail of glowing ghost-dust… which ghost is that small?', 'Talk to everyone! Ghosts love company. It\'s lonely being see-through.'])) }; }
     case 'torty': fam('torty');
-      if (n === 1) return { lines: L('YOU CAME! Everybody calls me Torty. My company opened a Spook-Proof Lab here!', 'We make Halloween stuff tougher: lanterns that don\'t crack, capes that don\'t rip, pumpkins that survive the drop. We have shells! 🐚', 'Try MAKE IT TOUGHER at the bench. Luna, Pi-rat and Snowie brought gadgets!') };
+      if (n === 1) return { lines: L('YOU CAME! Everybody calls me Torty. My company opened a Spook-Proof Lab here!', 'We make Halloween stuff tougher: lanterns that don\'t crack, capes that don\'t rip, pumpkins that survive the drop. We have shells! 🏮', 'Try MAKE IT TOUGHER at the bench. Luna, Pi-rat and Snowie brought gadgets!') };
       if (F.tough && !S.badges.intern) return { lines: L('You toughened ALL THREE gadgets? Spook-proof work!', 'Here: your official hard hat!'), fx: () => { G.giveHat('hardhat'); G.badge('intern'); } };
       return { lines: L(cyc(['The ghosts here are SO nice. A bit chilly when they hug you.', 'We dropped a jack-o\'-lantern from the tower 50 times. Still grinning!', 'Have you been to the Bat Caves? Shhh, the bats are sleeping.'])) };
     case 'mama': fam('mama');

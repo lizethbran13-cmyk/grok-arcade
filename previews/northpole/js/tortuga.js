@@ -1,13 +1,13 @@
-// SANTA’S TOY WORKSHOP (BY TORTUGA TECH): Torty's own company. "We test it. We make it tougher. (We know durability: we have ornaments.)"
+// SANTA’S TOY WORKSHOP: Torty's own company. "We test it. We make it tougher. (We know durability: we have ornaments.)"
 // A big walk-in HQ (lobby with the shell logo, CEO office, drop tower lab, crush press lab, heat + sand-blast chamber, shell-armor workshop)
 // plus an outdoor Toughness Test Yard with live, cartoony tests and a Ratita Industries gadget corner. Real 3D geometry only.
 import * as THREE from 'three';
-import * as K from './kit.js?v=np3';
-import { building, tortStatue, claypot, tcrate, shade, SUN, sunShell, palm, flagString, wedge3 } from './town.js?v=np3';
+import * as K from './kit.js?v=np4';
+import { building, tortStatue, claypot, tcrate, shade, SUN, sunShell, palm, flagString, wedge3 } from './town.js?v=np4';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI, FL = 0.12, TEAL = 0x0f9d8a, SHELLC = [0x6e4524, 0xb98545, 0xd1a05e], HZ = 0xfacc15;
 const art = (w, axis, at, c, y, W, H, side, k) => K.PR.frame(K.scaled(w, 0, FL, 0, 0.25), axis, (at + side * 0.25) / 0.25, c / 0.25, y / 0.25, W / 0.25, H / 0.25, side, k);
-// the Tortuga Tech logo: a domed shell with hex scutes and a little bolt (3D, any size)
+// the Santa’s Workshop logo: a domed shell with hex scutes and a little bolt (3D, any size)
 export function logo(w, x, y, z, s = 1, ry = 0, flat = false) { const T = w.tf(x, y, z, ry, s);
   T.add('g', lathe([[0, 0], [1.0, 0], [0.96, 0.28], [0.75, 0.6], [0.4, 0.8], [0, 0.86]], 40, 'ttDome'), SHELLC[0], 0, 0, 0, flat ? PI / 2 : 0, 0, 0, 1, 1, flat ? 0.5 : 1);
   const sc = (px, py, r, c) => flat ? T.add('g', new THREE.CylinderGeometry(r, r, 0.12, 6), c, px, py, 0.42, PI / 2, 0, 0) : T.add('g', new THREE.CylinderGeometry(r, r * 0.9, 0.12, 6), c, px, 0.62 + py, 0, 0, 0, 0);
@@ -25,7 +25,7 @@ const gadget = (w, kind, x, y, z, s = 1, ry = 0) => { const T = w.tf(x, y, z, ry
   return T; };
 export function tortuga(w) { const I = w.I, S = w.spots; S.tt = {};
   const x0 = 60, x1 = 96, z0 = -68, z1 = -42, H = 6.4;
-  building(w, { id: 'tortuga', x0, z0, x1, z1, ceil: H, ext: 0xf3d9b0, int: 0xf6dcb8, band: TEAL, floor: ['tile', 0xe9b98a, 0xd9895a, 1.6], door: { side: 's', a: 76, b: 80, h: 4.4 }, winTop: 4.8, winBot: 1.3, curtain: TEAL, li: 34, lightCol: 0xf2fbff, style: 'flat', noPots: true, sign: ['SANTA’S TOY WORKSHOP (BY TORTUGA TECH)', 0.5, 0xffffff, TEAL] });
+  building(w, { id: 'tortuga', x0, z0, x1, z1, ceil: H, ext: 0xf3d9b0, int: 0xf6dcb8, band: TEAL, floor: ['tile', 0xe9b98a, 0xd9895a, 1.6], door: { side: 's', a: 76, b: 80, h: 4.4 }, winTop: 4.8, winBot: 1.3, curtain: TEAL, li: 34, lightCol: 0xf2fbff, style: 'flat', noPots: true, sign: ['SANTA’S TOY WORKSHOP', 0.5, 0xffffff, TEAL] });
   w.region = 'shell'; logo(w, 70.5, 6.0, z1 + 0.35, 1.6, 0, true); logo(w, 85.5, 6.0, z1 + 0.35, 1.6, 0, true); // big shell logos on the facade
   for (let i = 0; i < 5; i++) w.add('g', new THREE.CylinderGeometry(0.9, 0.9, 0.12, 6), [SHELLC[1], TEAL, SHELLC[2], 0xffb020, SHELLC[1]][i], x0 + 4 + i * 7, H + 0.55, z1 - 2, 0, 0, 0); // roof solar "scutes"
   w.region = 'tortuga'; const wc = 0xf6dcb8, opt = { th: 0.2, frame: TEAL };
@@ -42,7 +42,7 @@ export function tortuga(w) { const I = w.I, S = w.spots; S.tt = {};
     [[70.12, PI / 2], [86.88, -PI / 2]].forEach(([x, ry]) => { w.add('m', rbox(0.06, 1.1, 13.6, 0.02), 0xd9895a, x, FL + 0.55, -49); w.add('g', rbox(0.08, 0.12, 13.6, 0.03), TEAL, x, FL + 1.16, -49); });
     // giant 3D shell logo on a plinth (centre); title + motto stacked high on the back wall, workshop sign over its door (no overlaps)
     w.add('m', rcyl(2.0, 0.5, 0.15, 40), 0xe9b77f, cx, FL, -50.5); w.add('x', torus(0.03, 48), TEAL, cx, FL + 0.5, -50.5, PI / 2, 0, 0, 2.0, 2.0, 2); logo(w, cx, FL + 0.5, -50.5, 1.6, 0.3); w.solid(cx - 2, 0, -52.5, cx + 2, 1.9, -48.5);
-    w.add('m', rbox(9.4, 1.7, 0.1, 0.06), 0x0f766e, cx, 5.25, -55.86); sign3d(w, 'SANTA’S TOY WORKSHOP (BY TORTUGA TECH)', cx, 5.55, -55.78, 0, 0.34, 0xffffff, 0x0f766e); sign3d(w, 'WE MAKE IT TOUGHER', cx, 4.82, -55.78, 0, 0.17, 0x7c2d12, 0xffd9a8);
+    w.add('m', rbox(9.4, 1.7, 0.1, 0.06), 0x0f766e, cx, 5.25, -55.86); sign3d(w, 'SANTA’S TOY WORKSHOP', cx, 5.55, -55.78, 0, 0.34, 0xffffff, 0x0f766e); sign3d(w, 'WE MAKE IT TOUGHER', cx, 4.82, -55.78, 0, 0.17, 0x7c2d12, 0xffd9a8);
     // reception desk on the east side, facing the entry (curved, low for a tortoise receptionist)
     const T = w.tf(84.6, FL, -46.2, -PI / 2); for (let i = 0; i < 7; i++) { const a = -0.7 + i * 0.233; T.add('g', rbox(0.62, 0.75, 0.25, 0.06), i % 2 ? TEAL : 0x14b8a6, Math.sin(a) * 2.0, 0, Math.cos(a) * -0.9 + 0.9, 0, a, 0); } T.add('m', rbox(3.6, 0.08, 0.7, 0.03), 0xc58b52, 0, 0.8, 0.0); T.solid(-1.9, 0, -0.5, 1.9, 0.85, 0.6);
     K.monitor(w, null, 84.6, FL + 0.84, -47.2, -PI / 2 + 0.3); w.add('x', lathe([[0, 0], [0.12, 0], [0.1, 0.06], [0.02, 0.12], [0, 0.13]], 16, 'bell'), 0xffd23f, 84.4, FL + 0.84, -45.4); claypot(w, 84.5, -44.8, 0.35, TEAL, 'cactus', FL + 0.84);
@@ -65,7 +65,7 @@ export function tortuga(w) { const I = w.I, S = w.spots; S.tt = {};
     panel(w, 61.4, -44.2, PI * 0.75); K.monitor(w, null, 61.6, FL + 1.1, -44.6, 0.8, 0x4ade80); gauge(w, 60.25, 2.6, -47, PI / 2, 0x22c55e); gauge(w, 60.25, 2.6, -48.2, PI / 2, 0xef4444);
     K.shelf(w, 60.6, -53.5, PI / 2, 3.0, 2.4); for (let k = 0; k < 6; k++) tcrate(w, 60.8, FL + 0.1 + Math.floor(k / 3) * 1.1, -54.6 + (k % 3) * 1.0, 0.45, pick([0xd8a15a, 0xc58b52]), 'none');
     [[68.6, -54.6, 0xef4444], [67.6, -55, 0x3b82f6], [68.8, -43.4, 0xffd23f]].forEach(([x, z, c]) => K.PR.ball(K.scaled(w, x, FL, z, 0.12), 0, 2.2, 0, 2.2, c, 0xffffff));
-    K.cone3(w, 62.4, -51.8); K.cone3(w, 67.6, -51.9); I({ kind: 'fun', x: cx, y: 0, z: cz + 2.6, r: 2.2, label: '⬇️ Watch the drop test', sfx: 'splat', msgs: ['⬇️ CLONK! The armored ornament box: not a scratch. ✅', '⬇️ BOING! The rubber cookie bounced 3 times. ✅', '⬇️ THUNK! A pillow fell. Engineers clap politely.', '⬇️ Drop #4,082: still tough. 🐢'] }); sunShell(w, 69.2, FL + 2.4, -55.2); }
+    K.cone3(w, 62.4, -51.8); K.cone3(w, 67.6, -51.9); I({ kind: 'fun', x: cx, y: 0, z: cz + 2.6, r: 2.2, label: '⬇️ Watch the drop test', sfx: 'splat', msgs: ['⬇️ CLONK! The armored ornament box: not a scratch. ✅', '⬇️ BOING! The rubber cookie bounced 3 times. ✅', '⬇️ THUNK! A pillow fell. Engineers clap politely.', '⬇️ Drop #4,082: still tough. 🎄'] }); sunShell(w, 69.2, FL + 2.4, -55.2); }
   // ================= HEAT + SAND-BLAST CHAMBER (87..96, -56..-42)
   { const cx = 92.2, cz = -50; S.tt.blast = [cx, FL + 1.6, cz];
     // glass chamber with glowing heater coils, a sand-blast nozzle, a test shell on a turntable

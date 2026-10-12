@@ -1,14 +1,15 @@
 // Grok North Pole Village: Martina "Torty"'s desert-oasis hometown. A palm-ringed Candy Cane Square, Mistletoe Street, the Burrows (homes),
 // The North Pole, the Reindeer Racetrack, the Christmas Tree Farm and the Snowdrift Hills edge. 18 enterable buildings, each its own
 // culled region; outdoors batch into big merged chunks, tiny decor goes into far-culled "detail" chunks. All real 3D geometry.
-import { tortuga } from './tortuga.js?v=np3';
-import { districts } from './districts.js?v=np3';
+import { tortuga } from './tortuga.js?v=np4';
+import { districts } from './districts.js?v=np4';
 import * as THREE from 'three';
-import * as TH from './theme.js?v=np3';
-import * as HOL from './holiday.js?v=np3';
-import * as K from './kit.js?v=np3';
-import { interiors } from './interiors.js?v=np3';
-import { underground } from './under.js?v=np3';
+import * as LY from './layout.js?v=np4';
+import * as TH from './theme.js?v=np4';
+import * as HOL from './holiday.js?v=np4';
+import * as K from './kit.js?v=np4';
+import { interiors } from './interiors.js?v=np4';
+import { underground } from './under.js?v=np4';
 const { wall, D, G, floor, ceiling, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, star, heart, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; let I = null;
 export const FL = 0.02;
@@ -19,15 +20,15 @@ export const REGIONS = [
   { id: 'post', x0: -46, x1: -30, z0: 40, z1: 54, y0: -1, y1: 7, ceil: 5.0, name: '📮 North Pole Post Office' },
   { id: 'inn', x0: 28, x1: 46, z0: 40, z1: 56, y0: -1, y1: 7, ceil: 5.0, name: '🛏️ Cozy Mitten Inn' },
   { id: 'market', x0: 50, x1: 74, z0: -28, z1: -10, y0: -1, y1: 8, ceil: 6.2, name: '🎁 Christmas Market' },
-  { id: 'shellshop', x0: 80, x1: 94, z0: -24, z1: -10, y0: -1, y1: 7, ceil: 5.0, name: '🐚 The Ornament Shop' },
+  { id: 'shellshop', x0: 80, x1: 94, z0: -24, z1: -10, y0: -1, y1: 7, ceil: 5.0, name: '🔔 The Ornament Shop' },
   { id: 'pottery', x0: 100, x1: 112, z0: -22, z1: -10, y0: -1, y1: 7, ceil: 4.8, name: '🏺 Clay & Ornament Pottery' },
   { id: 'sweets', x0: 50, x1: 64, z0: 10, z1: 24, y0: -1, y1: 7, ceil: 4.8, name: '🍬 Candy Cane Sweets' },
   { id: 'fossil', x0: 72, x1: 92, z0: 10, z1: 28, y0: -1, y1: 8, ceil: 6.4, name: '🦴 Museum of Christmas Past' },
-  { id: 'burrow', x0: -70, x1: -48, z0: -30, z1: -10, y0: -1, y1: 7, ceil: 4.8, name: "🏡 Torty's Family Cottage" },
+  { id: 'burrow', x0: -70, x1: -48, z0: -30, z1: -10, y0: -1, y1: 7, ceil: 4.8, name: "🏡 Snowflake Cottage" },
   { id: 'shelby', x0: -94, x1: -78, z0: -26, z1: -10, y0: -1, y1: 7, ceil: 4.6, name: "🏠 Shelby's Cottage" },
   { id: 'school', x0: -70, x1: -50, z0: 10, z1: 26, y0: -1, y1: 7, ceil: 4.8, name: '🏫 Elf Academy (Oath + Code)' },
   { id: 'spa', x0: -36, x1: -10, z0: -114, z1: -94, y0: -1, y1: 8, ceil: 5.6, name: '♨️ Cocoa Hot Spring' },
-  { id: 'obs', x0: 14, x1: 30, z0: -114, z1: -98, y0: -1, y1: 10, ceil: 7.2, name: '🔭 North Pole Flight Command HQ' },
+  { id: 'obs', x0: 14, x1: 30, z0: -114, z1: -98, y0: -1, y1: 10, ceil: 7.2, name: '📡 North Pole Flight Command HQ' },
   { id: 'club', x0: -30, x1: -12, z0: 74, z1: 90, y0: -1, y1: 7, ceil: 5.0, name: "🏁 Sleigh Hangar · Silent Sleigh Bells Lab" },
   { id: 'barn', x0: -104, x1: -86, z0: 44, z1: 60, y0: -1, y1: 9, ceil: 6.6, name: '🍪 Reindeer Stables' },
   { id: 'green', x0: -80, x1: -66, z0: 70, z1: 82, y0: -1, y1: 8, ceil: 5.4, name: '🪴 Greenhouse' },
@@ -36,12 +37,12 @@ export const REGIONS = [
   { id: 'toys', x0: -114, x1: -98, z0: -116, z1: -102, y0: -1, y1: 7, ceil: 4.8, name: "🧸 Holly's Toy Cottage" },
   { id: 'cinema', x0: 48, x1: 66, z0: 44, z1: 60, y0: -1, y1: 8, ceil: 5.6, name: '🎬 Snow Globe Picture House' },
   { id: 'icecream', x0: 68, x1: 79, z0: 44, z1: 56, y0: -1, y1: 7, ceil: 4.6, name: '🍦 Candy-Cane Cream' },
-  { id: 'tortuga', x0: 60, x1: 96, z0: -68, z1: -42, y0: -1, y1: 8, ceil: 6.4, tone: 0.84, name: '🐢 Santa’s Toy Workshop (by Tortuga Tech)' },
+  { id: 'tortuga', x0: 60, x1: 96, z0: -68, z1: -42, y0: -1, y1: 8, ceil: 6.4, tone: 0.84, name: '🎄 Santa’s Toy Workshop' },
   // the hidden place (below the world, reached by a secret)
   { id: 'u_tunnel', x0: 150, x1: 176, z0: -6, z1: 6, y0: -34, y1: -24, ceil: -26.0, name: '🕳️ Ice Tunnels', under: true },
   { id: 'u_crystal', x0: 176, x1: 204, z0: -16, z1: 16, y0: -34, y1: -20, ceil: -22.5, name: '💎 Ice Crystal Cavern', under: true },
   { id: 'u_grotto', x0: 178, x1: 206, z0: 16, z1: 42, y0: -34, y1: -20, ceil: -21.5, name: '🍄 Northern Lights Grotto', under: true },
-  { id: 'u_hall', x0: 204, x1: 232, z0: -14, z1: 14, y0: -34, y1: -20, ceil: -23.0, name: '🐢 Hall of the First Elves', under: true },
+  { id: 'u_hall', x0: 204, x1: 232, z0: -14, z1: 14, y0: -34, y1: -20, ceil: -23.0, name: '🎄 Hall of the First Elves', under: true },
 ];
 export const NEAR = { u_tunnel: ['u_crystal'], u_crystal: ['u_tunnel', 'u_hall', 'u_grotto'], u_hall: ['u_crystal'], u_grotto: ['u_crystal'] };
 export const AREAS = [
@@ -49,14 +50,14 @@ export const AREAS = [
   { x0: -34, x1: 34, z0: -38, z1: 36, name: '🎄 Candy Cane Square' }, { x0: 30, x1: 120, z0: -32, z1: 32, name: '🛍️ Mistletoe Street' },
   { x0: -122, x1: -30, z0: -36, z1: 32, name: '🏡 Gingerbread Lane' }, { x0: -60, x1: 60, z0: -132, z1: -66, name: '♨️ The North Pole' },
   { x0: -36, x1: 80, z0: 62, z1: 130, name: '🏁 Reindeer Racetrack' }, { x0: -132, x1: -40, z0: 34, z1: 132, name: '🍪 Christmas Tree Farm' },
-  { x0: 80, x1: 132, z0: 32, z1: 132, name: '🏔️ Snowdrift Hills' }, { x0: 56, x1: 132, z0: -80, z1: -32, name: '🐢 Tortuga Tech Campus' }, { x0: 60, x1: 132, z0: -132, z1: -32, name: '🏔️ Glacier Rim' },
+  { x0: 80, x1: 132, z0: 32, z1: 132, name: '🏔️ Snowdrift Hills' }, { x0: 56, x1: 132, z0: -80, z1: -32, name: '🎄 Workshop Yard' }, { x0: 60, x1: 132, z0: -132, z1: -32, name: '🏔️ Glacier Rim' },
 ];
 export function regionAt(x, y, z) { for (const r of REGIONS) if (x >= r.x0 && x <= r.x1 && z >= r.z0 && z <= r.z1 && y >= r.y0 && y <= r.y1) return r.id; return 'out'; }
-export function areaName(x, z) { for (const a of AREAS) if (x >= a.x0 && x <= a.x1 && z >= a.z0 && z <= a.z1) return a.name; return '🐢 North Pole Village'; }
+export function areaName(x, z) { for (const a of AREAS) if (x >= a.x0 && x <= a.x1 && z >= a.z0 && z <= a.z1) return a.name; return '🎄 North Pole Village'; }
 export const DOORS = { bakery: [-108, -74], music: [-82, -74], toys: [-106, -102], cinema: [57, 44], icecream: [73.5, 44], tortuga: [78, -42], hall: [0, -42], library: [-37, -42], cafe: [37, -42], post: [-38, 40], inn: [37, 40], market: [62, -10], shellshop: [87, -10], pottery: [106, -10], sweets: [57, 10], fossil: [82, 10],
   burrow: [-59, -10], shelby: [-86, -10], school: [-60, 10], spa: [-23, -94], obs: [22, -98], club: [-12, 82], barn: [-86, 52], green: [-73, 70] };
 // North Pole Express stops (fast travel) [x, z, yaw, name]
-export const STOPS = [[6, 30, PI, '🎄 Candy Cane Square'], [114, 8, -PI / 2, '🛍️ Mistletoe Street'], [-112, 8, PI / 2, '🏡 Gingerbread Lane'], [6, -84, PI, '♨️ The North Pole'], [6, 66, 0, '🏁 Racetrack'], [-78, 38, PI / 2, '🍪 Christmas Tree Farm'], [100, 62, -PI / 2, '🏔️ Snowdrift Hills'], [84, -36, PI, '🐢 Tortuga Tech'], [-94, -72, PI, '🏺 Elf Quarter'], [68, 30.5, PI, '🎉 Carol Plaza']];
+export const STOPS = [[6, 30, PI, '🎄 Candy Cane Square'], [114, 8, -PI / 2, '🛍️ Mistletoe Street'], [-112, 8, PI / 2, '🏡 Gingerbread Lane'], [6, -84, PI, '♨️ The North Pole'], [6, 66, 0, '🏁 Racetrack'], [-78, 38, PI / 2, '🍪 Christmas Tree Farm'], [100, 62, -PI / 2, '🏔️ Snowdrift Hills'], [84, -36, PI, '🎄 Santa’s Workshop'], [-94, -72, PI, '🏺 Elf Quarter'], [68, 30.5, PI, '🎉 Carol Plaza']];
 // ------------------------------------------------------------------------------------------------ shared helpers
 export const shade = (c, k) => { const C = new THREE.Color(c); C.multiplyScalar(k); return C.getHex(); };
 const prismCache = new Map();
@@ -74,9 +75,9 @@ export function palm(w, x, z, s = 1, lean = 0, ry = R() * 6.28) { if (w.region =
   w.solid(x - 0.4 * s, 0, z - 0.4 * s, x + 0.4 * s, H * 0.8, z + 0.4 * s, { cam: false }); }
 export function barrel(w, x, z, s = 1, y = 0) { if (w.region === 'out') return TH.snowman(w, K, x, y, z, s * 0.8, R() * 6); return TH.present(w, K, x, y, z, s, pick([0xef4444, 0x22c55e, 0x3b82f6])); w.add('g', sph(18), 0x3aa655, x, y + 0.45 * s, z, 0, 0, 0, 0.55 * s, 0.55 * s, 0.55 * s); for (let i = 0; i < 10; i++) { const a = i / 10 * PI * 2; w.add('g', capsule(8), 0x2f8f47, x + Math.cos(a) * 0.5 * s, y + 0.45 * s, z + Math.sin(a) * 0.5 * s, 0, -a, 0, 0.12 * s, 0.5 * s, 0.12 * s); }
   for (let k = 0; k < 5; k++) { const a = k / 5 * PI * 2; w.add('g', sph(8), pick([0xff5d8f, 0xffd23f, 0xff8a3d]), x + Math.cos(a) * 0.12 * s, y + 1.0 * s, z + Math.sin(a) * 0.12 * s, 0, 0, 0, 0.1 * s, 0.06 * s, 0.1 * s); } w.solid(x - 0.5 * s, y, z - 0.5 * s, x + 0.5 * s, y + 0.9 * s, z + 0.5 * s, { cam: false }); }
-export function prickly(w, x, z, s = 1, y = 0) { const pad = (px, py, pz, rx, rz, sc) => { w.add('g', sph(14), 0x4caf50, px, py, pz, rx, R() * 3, rz, 0.42 * sc, 0.55 * sc, 0.12 * sc); if (R() < 0.6) w.add('g', sph(8), pick([0xff5d8f, 0xe11d48, 0xffd23f]), px, py + 0.55 * sc, pz, 0, 0, 0, 0.1 * sc, 0.13 * sc, 0.1 * sc); };
+export function prickly(w, x, z, s = 1, y = 0) { if (w.region === 'out') return TH.present(w, K, x, y, z, s * 0.8, pick([0xef4444, 0x22c55e, 0x3b82f6])); const pad = (px, py, pz, rx, rz, sc) => { w.add('g', sph(14), 0x4caf50, px, py, pz, rx, R() * 3, rz, 0.42 * sc, 0.55 * sc, 0.12 * sc); if (R() < 0.6) w.add('g', sph(8), pick([0xff5d8f, 0xe11d48, 0xffd23f]), px, py + 0.55 * sc, pz, 0, 0, 0, 0.1 * sc, 0.13 * sc, 0.1 * sc); };
   pad(x, y + 0.55 * s, z, 0, 0, s); pad(x + 0.35 * s, y + 1.2 * s, z, 0, -0.5, s * 0.8); pad(x - 0.35 * s, y + 1.15 * s, z + 0.1, 0, 0.5, s * 0.8); pad(x, y + 1.7 * s, z - 0.1, 0.2, 0.1, s * 0.65); w.solid(x - 0.5 * s, y, z - 0.3 * s, x + 0.5 * s, y + 1.6 * s, z + 0.3 * s, { cam: false }); }
-export function agave(w, x, z, s = 1, y = 0, col = 0x6fae8f) { for (let i = 0; i < 14; i++) { const a = i / 14 * PI * 2 + (i % 2) * 0.2, up = i % 2 ? 0.9 : 0.55; w.add('g', cone(8), i % 3 ? col : shade(col, 0.85), x + Math.cos(a) * 0.2 * s, y + 0.1, z + Math.sin(a) * 0.2 * s, 0, -a, -up - PI / 2 + PI, 0.12 * s, 1.0 * s, 0.05 * s); } }
+export function agave(w, x, z, s = 1, y = 0, col = 0x6fae8f) { if (w.region === 'out' && y < 0.3) return TH.tree(w, K, x, z, s * 0.35); for (let i = 0; i < 14; i++) { const a = i / 14 * PI * 2 + (i % 2) * 0.2, up = i % 2 ? 0.9 : 0.55; w.add('g', cone(8), i % 3 ? col : shade(col, 0.85), x + Math.cos(a) * 0.2 * s, y + 0.1, z + Math.sin(a) * 0.2 * s, 0, -a, -up - PI / 2 + PI, 0.12 * s, 1.0 * s, 0.05 * s); } }
 export function saguaro(w, x, z, s = 1) { return TH.tree(w, K, x, z, s * 0.9); K.cactus(w, x, z, s); }
 export function claypot(w, x, z, s = 1, col = 0xc8693c, plant = 'none', y = 0) { w.add('g', lathe([[0, 0], [0.28, 0], [0.42, 0.25], [0.4, 0.55], [0.3, 0.72], [0.34, 0.8], [0.3, 0.82], [0, 0.6]], 24, 'clayPot'), col, x, y, z, 0, 0, 0, s, s, s);
   w.add('g', rcyl(0.415, 0.05, 0.02, 24), shade(col, 0.7), x, y + 0.36 * s, z, 0, 0, 0, s, 1, s); w.add('g', rcyl(0.412, 0.04, 0.02, 24), 0xfff1d6, x, y + 0.48 * s, z, 0, 0, 0, s, 1, s);
@@ -84,7 +85,7 @@ export function claypot(w, x, z, s = 1, col = 0xc8693c, plant = 'none', y = 0) {
   else if (plant === 'flower') for (let k = 0; k < 7; k++) { const a = k * 0.9; w.add('g', sph(8), pick([0xff5d8f, 0xffd23f, 0xff8a3d, 0xa66bff, 0xffffff]), x + Math.cos(a) * 0.18 * s, y + (0.95 + (k % 3) * 0.08) * s, z + Math.sin(a) * 0.18 * s, 0, 0, 0, 0.12 * s); w.add('g', sph(8), 0x3fae5a, x + Math.cos(a + 0.4) * 0.22 * s, y + 0.85 * s, z + Math.sin(a + 0.4) * 0.22 * s, 0, 0, 0, 0.14 * s, 0.08 * s, 0.14 * s); }
   else if (plant === 'agave') agave(w, x, z, 0.5 * s, y + 0.7 * s); else if (plant === 'lettuce') lettuce(w, x, y + 0.75 * s, z, 0.7 * s);
   w.solid(x - 0.38 * s, y, z - 0.38 * s, x + 0.38 * s, y + 0.8 * s, z + 0.38 * s, { cam: false }); }
-export function lettuce(w, x, y, z, s = 1) { for (let i = 0; i < 9; i++) { const a = i * 2.4, r = i < 3 ? 0.05 : 0.18; w.add('g', sph(10), i < 3 ? 0xb5e86a : i % 2 ? 0x4cbb3c : 0x6fd04f, x + Math.cos(a) * r * s, y + (0.22 - (i < 3 ? 0 : 0.06)) * s, z + Math.sin(a) * r * s, Math.cos(a) * 0.5, 0, Math.sin(a) * 0.5, 0.26 * s, 0.2 * s, 0.26 * s); } }
+export function lettuce(w, x, y, z, s = 1) { if (w.region === 'out' && y < 0.5) return TH.tree(w, K, x, z, s * 0.3); w.add('g', sph(12), 0xc68642, x, y + 0.05 * s, z, 0, 0, 0, 0.24 * s, 0.06 * s, 0.24 * s); for (let i = 0; i < 5; i++) w.add('g', sph(6), 0x3b2410, x + Math.cos(i * 1.3) * 0.12 * s, y + 0.1 * s, z + Math.sin(i * 1.3) * 0.12 * s, 0, 0, 0, 0.03 * s); return; for (let i = 0; i < 9; i++) { const a = i * 2.4, r = i < 3 ? 0.05 : 0.18; w.add('g', sph(10), i < 3 ? 0xb5e86a : i % 2 ? 0x4cbb3c : 0x6fd04f, x + Math.cos(a) * r * s, y + (0.22 - (i < 3 ? 0 : 0.06)) * s, z + Math.sin(a) * r * s, Math.cos(a) * 0.5, 0, Math.sin(a) * 0.5, 0.26 * s, 0.2 * s, 0.26 * s); } }
 export function bigRock(w, x, z, s = 1, col = 0xd08a52, y = 0, ry = R() * 6) { w.add('m', blobGeo(((x * 7 + z * 13) | 0) & 63, 0.22, 3), col, x, y + s * 0.55, z, 0, ry, 0, s * 1.2, s, s * 1.0); w.add('m', blobGeo(((x * 3 + z * 5) | 0) & 63, 0.2, 2), shade(col, 1.08), x + s * 0.3, y + s * 1.25, z - s * 0.2, 0, ry, 0, s * 0.8, s * 0.55, s * 0.7);
   w.solid(x - s * 1.0, y, z - s * 0.85, x + s * 1.0, y + s * 1.4, z + s * 0.85); }
 export function mesa(w, x, z, W, H, Dp, col = 0xd9824a) { // layered sandstone butte/cliff with striped strata
@@ -102,7 +103,7 @@ export function stall(w, x, z, ry, c1, c2, goods = 'fruit') { const T = w.tf(x, 
     else if (goods === 'lettuce') lettuce(w, p[0], p[1], p[2], 0.8); else if (goods === 'flowers') { w.add('g', cyl(10), 0x9a6a3e, p[0], p[1], p[2], 0, 0, 0, 0.13, 0.22, 0.13); for (let k = 0; k < 5; k++) w.add('g', sph(8), pick([0xff5d8f, 0xffd23f, 0xa66bff, 0xffffff, 0xff8a3d]), p[0] + Math.cos(k * 1.3) * 0.1, p[1] + 0.35 + (k % 2) * 0.08, p[2] + Math.sin(k * 1.3) * 0.1, 0, 0, 0, 0.09); }
     else if (goods === 'pots') w.add('g', lathe([[0, 0], [0.12, 0], [0.18, 0.12], [0.12, 0.3], [0.14, 0.34], [0, 0.3]], 16, 'potMini'), pick([0xc8693c, 0x2dd4bf, 0xffd23f, 0x3b82f6, 0xff5d8f]), p[0], p[1], p[2]);
     else if (goods === 'shells') { w.add('g', sph(10), pick([0xffd6e8, 0xfef3c7, 0xbfe9ff, 0xffe4b5, 0xe9d5ff]), p[0], p[1] + 0.06, p[2], 0, R() * 3, 0, 0.18, 0.08, 0.14); w.add('g', torus(0.3, 12, PI), 0xffffff, p[0], p[1] + 0.08, p[2], PI / 2, 0, R() * 3, 0.12, 0.12, 0.05); } } }
-export function tortStatue(w, x, z, ry, s = 1, col = 0xffc83d) { const T = w.tf(x, 0, z, ry, s); T.slab('m', 0xe8c9a0, 0, 0, 0, 2.6, 1.2, 2.6, 0.1); T.box('m', 0xd9b88a, 0, 1.2, 0, 2.9, 0.2, 2.9, 0.06);
+export function tortStatue(w, x, z, ry, s = 1, col = 0xffc83d) { { const T = w.tf(x, 0, z, ry, s); T.slab('m', 0xe2e8f0, 0, 0, 0, 2.6, 1.2, 2.6, 0.1); TH.snowman(w, K, x, 1.2 * s, z, 1.6 * s, ry); return; } const T = w.tf(x, 0, z, ry, s); T.slab('m', 0xe8c9a0, 0, 0, 0, 2.6, 1.2, 2.6, 0.1); T.box('m', 0xd9b88a, 0, 1.2, 0, 2.9, 0.2, 2.9, 0.06);
   const A = 1.1, prof = []; for (let k = 0; k <= 12; k++) { const th = PI / 2 - k / 12 * PI / 2; prof.push([Math.max(0.0001, A * Math.sin(th)), 0.85 * Math.cos(th)]); } prof[prof.length - 1][0] = 0;
   T.add('x', lathe(prof, 36, 'statueShell'), col, 0, 1.6, 0, 0, 0, 0, 1, 1, 1.15); T.add('x', rcyl(1.15, 0.2, 0.08, 36), shade(col, 0.85), 0, 1.45, 0, 0, 0, 0, 1, 1, 1.15);
   for (let i = 0; i < 6; i++) { const a = i / 6 * PI * 2; T.add('x', sph(10), shade(col, 1.1), Math.cos(a) * 0.62, 2.12, Math.sin(a) * 0.72, 0, 0, 0, 0.32, 0.08, 0.34); }
@@ -170,7 +171,7 @@ export function buildTown(w) {
   I = (o) => { w.inter.push(o); return o; }; w.I = I;
   w.region = 'shell'; ground(w); w.region = 'out'; square(w); market(w); burrows(w); hill(w); track(w); farm(w); dunes(w); border(w);
   shells(w); interiors(w); tortuga(w); districts(w); underground(w); w.region = 'out'; expressStops(w); TH.dress(w, K); TH.dressInside(w, K, REGIONS); HOL.buildStations(w, K); w.region = 'shell';
-  w.start = [0, 0.2, 21]; w.startYaw = PI; w.camDist = 9.5;
+  w.start = [0, 0.2, 21]; w.startYaw = PI; w.camDist = 9.5; LY.relayout(w, { REGIONS, AREAS, DOORS, STOPS, TRACK });
   return w; }
 export function tcrate(w, x, y, z, s = 1, col = 0xd8a15a, top = 'lettuce') { const T = w.tf(x, y, z, R() * 0.3, s); T.slab('m', col, 0, 0, 0, 1, 0.8, 1, 0.06); [-1, 1].forEach((sd) => { T.box('m', shade(col, 0.8), 0, 0.05, sd * 0.505, 0.9, 0.12, 0.03, 0.02); T.box('m', shade(col, 0.8), 0, 0.62, sd * 0.505, 0.9, 0.12, 0.03, 0.02); T.box('m', shade(col, 0.8), sd * 0.505, 0.05, 0, 0.03, 0.12, 0.9, 0.02); T.box('m', shade(col, 0.8), sd * 0.505, 0.62, 0, 0.03, 0.12, 0.9, 0.02); });
   if (top === 'lettuce') { for (let k = 0; k < 4; k++) { const p = T.P((k % 2 - 0.5) * 0.45, 0.8, ((k >> 1) - 0.5) * 0.45); lettuce(w, p[0], p[1] - 0.1, p[2], 0.75 * s); } } else if (top === 'fruit') for (let k = 0; k < 6; k++) { const p = T.P((k % 3 - 1) * 0.3, 0.88, ((k / 3 | 0) - 0.5) * 0.36); w.add('g', sph(10), pick([0xff5d8f, 0xe11d48, 0xffd23f, 0xff8a3d]), p[0], p[1], p[2], 0, 0, 0, 0.16 * s); } return y + 0.8 * s; }
@@ -358,7 +359,7 @@ function dunes(w) { const S = w.spots;
     for (let i = 0; i < 4; i++) w.add('m', torus(0.06, 40, PI * 0.9), 0xe6b97a, x, h * (0.2 + i * 0.18), z, PI / 2, 0, 0.3 * i, rx * (0.96 - i * 0.18), rz * (0.96 - i * 0.18), 0.2); w.solid(x - rx * 0.7, 0, z - rz * 0.7, x + rx * 0.7, h * 0.8, z + rz * 0.7, { cam: false }); };
   secretDoor(w); dune(110, 50, 7, 5, 3.2); dune(94, 74, 9, 6, 4.2); dune(114, 82, 6, 8, 3.6); dune(92, 110, 8, 6, 3.8); dune(116, 118, 7, 5, 3.0); dune(76, 124, 6, 5, 2.6);
   // canyon wall (east) with the rock arch + rim mesas (north-east)
-  for (let i = 0; i < 18; i++) { const z = -124 + i * 14.5; if (z > -20) mesa(w, 128, z, 8, 11 + (i % 3) * 3, 15, pick([0xd9824a, 0xc96f3a, 0xe08f55])); else w.add('m', sph(24), pick([0xe8c48c, 0xdfb57c, 0xeccd98]), 131, -2, z, 0, 0, 0, 9, 9 + (i % 3) * 2.5, 9.5); } // calm rolling dunes behind Tortuga Tech instead of stacked cliffs
+  for (let i = 0; i < 18; i++) { const z = -124 + i * 14.5; if (z > -20) mesa(w, 128, z, 8, 11 + (i % 3) * 3, 15, pick([0xd9824a, 0xc96f3a, 0xe08f55])); else w.add('m', sph(24), pick([0xe8c48c, 0xdfb57c, 0xeccd98]), 131, -2, z, 0, 0, 0, 9, 9 + (i % 3) * 2.5, 9.5); } // calm rolling dunes behind Santa’s Workshop instead of stacked cliffs
   { const x = 108, z = 100; [-3.4, 3.4].forEach((o) => { w.add('m', blobGeo(7, 0.12, 2), 0xd9824a, x, 3, z + o, 0, 0, 0, 1.4, 3.2, 1.3); w.solid(x - 1.2, 0, z + o - 1.1, x + 1.2, 6, z + o + 1.1); }); w.add('m', torus(0.32, 32, PI), 0xd9824a, x, 5.2, z, 0, PI / 2, 0, 3.6, 2.2, 2.8);
     w.secrets.push({ id: 'arch', x, y: 0, z, r: 1.8, msg: '🌄 Secret: the Whispering Arch! Say "cozy and steady" and it echoes back' }); }
   for (let i = 0; i < 9; i++) w.add('m', sph(24), pick([0xe8c48c, 0xdfb57c, 0xeccd98]), 64 + i * 8, -1.4, -100 - (i % 2) * 6, 0, 0, 0, 6.5, 3.6 + (i % 3) * 1.1, 5.5); // soft dunes (calm backdrop behind the Test Yard)
@@ -373,7 +374,7 @@ function secretDoor(w) { const S = w.spots, x = 123.9, z = 86.5; S.sdoor = [x, z
   w.add('m', rbox(0.6, 4.6, 4.4, 0.2), 0xb86a3a, x + 0.2, 2.3, z); w.add('m', torus(0.3, 28, PI), 0xc97a44, x - 0.1, 3.4, z, 0, PI / 2, 0, 1.7, 1.3, 1.0);
   for (let i = 0; i < 6; i++) { const a = i / 6 * PI * 2; w.add('m', sph(10), 0xd9925a, x - 0.12, 4.3 + Math.sin(a) * 0.35, z + Math.cos(a) * 0.4, 0, 0, 0, 0.05, 0.18, 0.2); } w.add('m', sph(12), 0xd9925a, x - 0.12, 4.3, z, 0, 0, 0, 0.06, 0.3, 0.34);
   [[120.6, 81.0, 1.4], [117.4, 79.6, 1.6], [120.4, 92.2, 1.4], [117.2, 93.6, 1.2]].forEach(([bx, bz, bs]) => bigRock(w, bx, bz, bs, 0xc97a44));
-  for (let i = 0; i < 3; i++) { const dz = z - 1.6 + i * 1.6, dx = 121.9; w.add('m', rbox(0.9, 0.7, 0.9, 0.1), 0xb86a3a, dx, 0.35, dz); w.solid(dx - 0.45, 0, dz - 0.45, dx + 0.45, 0.7, dz + 0.45, { cam: false }); S.dials.push([dx, 1.3, dz]); sign3d(w, String(i + 1), dx - 0.2, 2.35, dz, -PI / 2, 0.42, 0xffffff, 0x7c2d12); w.I({ kind: 'dial', i, x: dx - 1.1, y: 0, z: dz, r: 0.95, label: '🪨 Turn the stone dial' }); }
+  for (let i = 0; i < 3; i++) { const dz = z - 2.6 + i * 2.6, dx = 119.4; /* spaced out with walk-through gaps, so the opened doorway is never walled off */ w.add('m', rbox(0.9, 0.7, 0.9, 0.1), 0xb86a3a, dx, 0.35, dz); w.solid(dx - 0.45, 0, dz - 0.45, dx + 0.45, 0.7, dz + 0.45, { cam: false }); S.dials.push([dx, 1.3, dz]); sign3d(w, String(i + 1), dx - 0.2, 2.35, dz, -PI / 2, 0.42, 0xffffff, 0x7c2d12); w.I({ kind: 'dial', i, x: dx - 1.1, y: 0, z: dz, r: 0.95, label: '🪨 Turn the stone dial' }); }
   w.solid(x - 0.3, 0, z - 2.2, x + 0.6, 4.6, z + 2.2, { wall: true }); w.solid(x - 0.3, 0, z - 9, x + 8, 9, z - 2.2, { wall: true, cam: false }); w.solid(x - 0.3, 0, z + 2.2, x + 8, 9, z + 9, { wall: true, cam: false }); w.solid(x + 0.6, 0, z - 2.2, x + 8, 9, z + 2.2, { wall: true, cam: false }); w.solid(x - 8, -3, z - 9, x + 8, 0, z + 9, { floor: true }); }
 export function wedge3(W, H, L) { const s = new THREE.Shape(); s.moveTo(-L / 2, 0); s.lineTo(L / 2, 0); s.lineTo(-L / 2, H); s.lineTo(-L / 2, 0); const g = new THREE.ExtrudeGeometry(s, { depth: W, bevelEnabled: false }); g.translate(0, 0, -W / 2); g.rotateY(-PI / 2); return g; }
 // ------------------------------------------------------------------------------------------------ the valley rim (keeps everyone inside, looks like a canyon)

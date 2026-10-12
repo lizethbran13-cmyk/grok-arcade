@@ -26,7 +26,7 @@ export function talk(id, n, q, G, h) { const { L, cyc, suspect, confirm, friend,
       if (F.launch) return { lines: L(cyc(['What a flight! Every chimney visited, every cookie tasted.', 'Tinsel is my new Junior Bell Keeper. She takes it VERY seriously.', 'You\'re a true North Pole elf now. Come back any time!'])) };
       return { lines: L(cyc(['Any clues yet? Your journal is in the pause menu.', 'Tiny boot prints… which elf is THAT tiny?', 'Talk to everyone! Elves love to chat almost as much as they love to wrap.'])) }; }
     case 'torty': fam('torty');
-      if (n === 1) return { lines: L('YOU MADE IT! Everybody calls me Torty. Santa hired MY company to test the toys this year!', 'We drop them, squish them and freeze them, so nothing breaks on Christmas morning. We know tough. We have shells! 🐚', 'Try MAKE IT TOUGHER at the bench. Luna, Pi-rat and Snowie brought gadgets too!') };
+      if (n === 1) return { lines: L('YOU MADE IT! Everybody calls me Torty. Santa hired MY company to test the toys this year!', 'We drop them, squish them and freeze them, so nothing breaks on Christmas morning. We know tough. We have shells! 🔔', 'Try MAKE IT TOUGHER at the bench. Luna, Pi-rat and Snowie brought gadgets too!') };
       if (F.tough && !S.badges.intern) return { lines: L('You toughened ALL THREE gadgets? That\'s real toy-tester work!', 'Here: your Toy Tester hard hat!'), fx: () => { G.giveHat('hardhat'); G.badge('intern'); } };
       return { lines: L(cyc(['The elves let me ride in the toy sleigh test rig. Very slowly. Very happily.', 'A good toy should survive a snowball fight. We check!', 'Have you fed the reindeer? Blitzen likes carrots. Everyone likes carrots.'])) };
     case 'mama': fam('mama');

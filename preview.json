@@ -204,7 +204,7 @@
       "url": "previews/pumpkinhollow/",
       "playable": true,
       "built": "2026-10-12",
-      "notes": "Update! Friendly ghosts and pumpkinheads with all-new names and lines, the Who swiped the Moon Lantern? mystery, 6 lost diary pages to find in the Abandoned Village, a bat-cave adventure (rescue 5 bat pups for Mama Bat), Ghost Catch and the Bubbling Cauldron potion game, spooky decorated interiors. Torty, Candy, Luna, Pi-rat and Snowie visit. Still being built."
+      "notes": "Update! A brand-new town layout: the market, houses, lab and pumpkin patch have all moved around Pumpkin Square. Pumpkins instead of leftover desert plants, a crystal-ball polish game, a Candy Catch with bats, the 6 lost diary pages in the Abandoned Village, the bat-cave adventure, Ghost Catch and the Bubbling Cauldron. Torty, Candy, Luna, Pi-rat and Snowie visit. Still being built."
     },
     {
       "id": "northpole",
@@ -213,7 +213,7 @@
       "url": "previews/northpole/",
       "playable": true,
       "built": "2026-10-12",
-      "notes": "Update! Lots of elves with all-new names and lines, Santa, 9 reindeer. Take the Elf Oath + Code at the Elf Academy, sort letters at the Post Office, run the launch countdown at Flight Command, feed the reindeer, test the Silent Sleigh Bells, read Santa Update elf news, solve Who silenced the Sleigh Bells? and launch Santa's sleigh! Secret ice caves. Torty, Candy, Luna, Pi-rat and Snowie visit. Still being built."
+      "notes": "Update! A brand-new village layout: Town Hall, Flight Command and the racetrack have swapped sides and the Elf Quarter moved. Flight Command is now a real radar room with consoles and a launch countdown board. Christmas trees replace the old farm plants, a bauble polish game and a Present Catch. Sort letters, take the Elf Oath + Code, feed the reindeer, test the Silent Sleigh Bells and launch Santa's sleigh. Still being built."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

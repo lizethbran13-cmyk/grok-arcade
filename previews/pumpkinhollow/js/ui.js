@@ -1,11 +1,11 @@
 // Menus & panels: title, pause, journal, dialog, clue cards, finale, town map, Style Station, mini-game launcher.
-import { $, esc } from './util.js?v=ph3';
-import { S, persist, resetSave } from './save.js?v=ph3';
-import { sfx, setSound } from './audio.js?v=ph3';
-import { HATS, BADGES, SUN_CLUES, SUSPECTS, clueText, sunStep, sideTasks, hint } from './story.js?v=ph3';
-import { REGIONS, DOORS, AREAS, STOPS, TRACK } from './town.js?v=ph3';
-import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=ph3';
-import * as MG from './minigames.js?v=ph3';
+import { $, esc } from './util.js?v=ph4';
+import { S, persist, resetSave } from './save.js?v=ph4';
+import { sfx, setSound } from './audio.js?v=ph4';
+import { HATS, BADGES, SUN_CLUES, SUSPECTS, clueText, sunStep, sideTasks, hint } from './story.js?v=ph4';
+import { REGIONS, DOORS, AREAS, STOPS, TRACK } from './town.js?v=ph4';
+import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=ph4';
+import * as MG from './minigames.js?v=ph4';
 const hex = (c) => '#' + c.toString(16).padStart(6, '0');
 export function panel(html, mount, cls = '') { const ui = $('ui'); { const t = $('toast'); if (t && !ui.classList.contains('open')) { t.innerHTML = ''; t.classList.add('low'); } } /* menus open with a clean screen (no reward pills over their header) */ ui.innerHTML = `<div class="panel ${cls}">${html}</div>`; ui.classList.add('open'); if (mount) mount(ui.firstChild); return ui.firstChild; }
 export function closePanel() { const ui = $('ui'); ui.innerHTML = ''; ui.classList.remove('open'); const t = $('toast'); if (t && !t.children.length) t.classList.remove('low'); }
@@ -29,7 +29,7 @@ export class UI {
       c.querySelector('#cName').onchange = (e) => { S.name = String(e.target.value).slice(0, 12); persist(); };
       on(c, '#cOk', () => { S.name = String(c.querySelector('#cName').value || '').slice(0, 12); S.made = true; persist(); app.game.refreshMe(); app.preview = false; app.net.online && app.net.sendLook(); done(); }); }, 'custP'); }
   how(done) { panel(`<h2>❓ HOW TO PLAY</h2><div class="how"><p>🕹️ <b>Move</b> with the left side of the screen. <b>Swipe</b> the right side to look around.</p><p>⬆️ <b>JUMP</b> (tap twice to double jump, hold to glide)</p>
-      <p>💬 When a button pops up, tap it to <b>talk, inspect or play</b>.</p><p>☀️ Solve <b>Who swiped the Moon Lantern?</b>, find 🐚 Candy Corns, 🗝️ secrets and play mini-games all over town.</p><p>🐦 Tired legs? Hop on the <b>Ghost Train</b> at any blue stop sign!</p>
+      <p>💬 When a button pops up, tap it to <b>talk, inspect or play</b>.</p><p>☀️ Solve <b>Who swiped the Moon Lantern?</b>, find 🏮 Candy Corns, 🗝️ secrets and play mini-games all over town.</p><p>🐦 Tired legs? Hop on the <b>Ghost Train</b> at any blue stop sign!</p>
       <p>⌨️ Keyboard: WASD/arrows, Space jump, E use, Esc pause.</p></div><button class="go" id="hOk">LET'S GO!</button>`, (c) => on(c, '#hOk', () => { S.seenHow = true; persist(); closePanel(); done && done(); })); }
   pause() { const app = this.app; const online = app.net.online;
     panel(`<h2>⏸️ PAUSED</h2><div class="menu"><button class="go" id="pRes">▶ RESUME</button><button class="mbtn2" id="pJour">📒 JOURNAL</button><button class="mbtn2" id="pMap">🗺️ MAP</button>
@@ -50,7 +50,7 @@ export class UI {
       <h3>${st} WHO SWIPED THE MOON LANTERN?</h3><p class="sub">${esc(sunStep())}</p>${q === 1 ? `<p class="sub">💡 ${esc(hint())}</p>` : ''}<ul class="clues">${cl}</ul>
       <h3>🕵️ SUSPECTS</h3><ul class="clues">${sus}</ul>
       <h3>⭐ SIDE TASKS</h3><ul class="clues">${sideTasks().map(([d, t]) => `<li class="${d ? '' : 'dim'}">${d ? '✅' : '⬜'} ${esc(t)}</li>`).join('')}</ul>
-      <h3>🐚 CANDY CORNS ${g.biscGot.size}/${g.world.gears.length} · 🗝️ SECRETS ${S.secrets.length}/${g.world.secrets.length}</h3>
+      <h3>🏮 CANDY CORNS ${g.biscGot.size}/${g.world.gears.length} · 🗝️ SECRETS ${S.secrets.length}/${g.world.secrets.length}</h3>
       <h3>🏅 BADGES</h3><div class="badges">${Object.entries(BADGES).filter(([k]) => !k.startsWith('row_')).map(([k, n]) => `<span class="${S.badges[k] ? 'on' : ''}">${S.badges[k] ? esc(n) : '🔒 ???'}</span>`).join('')}</div></div>`, (c) => on(c, '#jBack', () => back ? back() : this.app.resume())); }
   dialog(name, lines, done) { this.open(); let i = 0; const ui = $('dlg'); const show = () => { const [sp, tx] = lines[i]; ui.innerHTML = `<b>${esc(sp || name)}</b><p>${esc(tx)}</p><small>${i < lines.length - 1 ? 'TAP ▶' : 'TAP ✖'}</small>`; ui.classList.add('on'); };
     const next = (e) => { e && e.preventDefault(); sfx('click'); i++; if (i >= lines.length) { ui.classList.remove('on'); ui.onclick = null; this.app.busy = false; window.removeEventListener('keydown', key); setTimeout(done, 30); } else show(); };

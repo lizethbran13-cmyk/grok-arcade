@@ -1,7 +1,7 @@
 // "Smart" rendering helpers: frustum tests for skipping offscreen animation, deep disposal, light pool.
 // Nothing here lowers visual quality; it only skips work you can't see and frees memory you no longer use.
 import * as THREE from 'three';
-import { MATS } from './mats.js?v=ph3';
+import { MATS } from './mats.js?v=ph4';
 const fr = new THREE.Frustum(), pm = new THREE.Matrix4(), sp = new THREE.Sphere();
 export function updateFrustum(cam) { cam.updateMatrixWorld(); pm.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse); fr.setFromProjectionMatrix(pm); }
 export function inView(x, y, z, r = 2) { sp.center.set(x, y, z); sp.radius = r; return fr.intersectsSphere(sp); }

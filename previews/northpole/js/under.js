@@ -1,7 +1,7 @@
 // The hidden place beneath North Pole Village: Ice Tunnels -> Ice Crystal Cavern -> Hall of the First Elves. (Reached only by a secret.)
 import * as THREE from 'three';
-import * as K from './kit.js?v=np3';
-import { tortStatue, shade, SUN } from './town.js?v=np3';
+import * as K from './kit.js?v=np4';
+import { tortStatue, shade, SUN } from './town.js?v=np4';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; export const UY = -30;
 const ROCK = [0x8a6a52, 0x7a5c48, 0x9a785e, 0x6e523f];
@@ -48,11 +48,11 @@ export function underground(w) { const Y = UY;
     for (let i = 0; i < 16; i++) w.add('g', blobGeo(i, 0.25, 1), 0x4d7c3a, 179 + R() * 26, Y + 0.1, 17 + R() * 24, 0, R() * 6, 0, 0.5 + R() * 0.4, 0.2, 0.5 + R() * 0.4);
     // the ancestors' shell library: carved shelves of stone tablets and shell scrolls
     for (let i = 0; i < 3; i++) { const x = 182 + i * 4.2, z = 41.4; w.add('m', rbox(3.4, 3.0, 0.7, 0.15), 0xb9956e, x, Y + 1.5, z); w.solid(x - 1.7, Y, z - 0.35, x + 1.7, Y + 3.0, z + 0.35); for (let r = 0; r < 3; r++) for (let k = 0; k < 6; k++) { const px = x - 1.35 + k * 0.54, py = Y + 0.5 + r * 0.9; if ((k + r) % 3) w.add('m', rbox(0.38, 0.6, 0.1, 0.04), pick([0xe8c9a0, 0xd9b88a, 0xc9a27a]), px, py, z - 0.36); else w.add('g', lathe([[0, 0], [0.18, 0], [0.16, 0.18], [0.08, 0.3], [0, 0.32]], 14, 'scroll'), pick([0xd1a05e, 0xb98545, 0x6e4524]), px, py - 0.25, z - 0.4); } }
-    w.I({ kind: 'fun', x: 186, y: Y, z: 39.6, r: 2.4, label: '📜 Read the ornament tablets', msgs: ['📜 "Day 1: we put a ornament under the waterfall. Day 4,000: still a ornament." (The world\'s first durability test!)', '📜 A tablet signed with a tiny footprint: "Torty\'s great-great-great-great grandma, Chief Tester."', '📜 "Be cozy. Be steady. Be TOUGH." Looks like Tortuga Tech runs in the family.'] });
+    w.I({ kind: 'fun', x: 186, y: Y, z: 39.6, r: 2.4, label: '📜 Read the ornament tablets', msgs: ['📜 "Day 1: we put a ornament under the waterfall. Day 4,000: still a ornament." (The world\'s first durability test!)', '📜 A tablet signed with a tiny footprint: "Torty\'s great-great-great-great grandma, Chief Tester."', '📜 "Be cozy. Be steady. Be TOUGH." Looks like Santa’s Workshop runs in the family.'] });
     // the oldest durability test: a stone shell under a little waterfall, still perfect
     { const x = 202.5, z = 29; w.add('m', rbox(3.2, 4.2, 1.2, 0.3), 0x7a6a5a, x + 1.6, Y + 2.1, z); for (let k = 0; k < 6; k++) w.add('e', capsule(10), 0x7dd3fc, x + 0.6, Y + 2.0, z - 0.6 + k * 0.24, 0, 0, 0, 0.1, 3.8, 0.1); w.add('l', rcyl(1.0, 0.06, 0.02, 20), 0xbfeaff, x, Y + 0.05, z, 0, 0, 0, 1, 1, 1, 0.3); w.add('g', lathe([[0, 0], [0.8, 0], [0.75, 0.3], [0.5, 0.6], [0, 0.68]], 28, 'oshell'), 0x8a6a52, x - 0.2, Y + 0.1, z); w.solid(x - 1, Y, z - 1, x + 3.2, Y + 4.2, z + 1); }
     { const x = 194.5, z = 18.6; w.add('m', rcyl(0.6, 0.8, 0.1, 20), 0xb9956e, x, Y, z); w.add('l', lathe([[0, 0], [0.3, 0], [0.34, 0.12], [0.22, 0.3], [0, 0.36]], 20, 'relicShell'), 0xffd23f, x, Y + 0.8, z, 0, 0, 0, 1, 1, 1, 0.6); w.solid(x - 0.6, Y, z - 0.6, x + 0.6, Y + 0.85, z + 0.6); w.lights.push({ x, y: Y + 1.5, z, c: 0xffd23f, i: 6, d: 6 }); }
-    w.secrets.push({ id: 'grotto', x: 0, y: -999, z: 0, r: -1, msg: '' }, { id: 'hall', x: 0, y: -999, z: 0, r: -1, msg: '' }); w.I({ kind: 'relic', x: 194.5, y: Y, z: 20.2, r: 2.0, label: '🐚 Look at the golden ornament' });
+    w.secrets.push({ id: 'grotto', x: 0, y: -999, z: 0, r: -1, msg: '' }, { id: 'hall', x: 0, y: -999, z: 0, r: -1, msg: '' }); w.I({ kind: 'relic', x: 194.5, y: Y, z: 20.2, r: 2.0, label: '🔔 Look at the golden ornament' });
     sign3d(w, 'NORTHERN LIGHTS GROTTO', 192, Y + 6.2, 16.4, PI, 0.28, 0x5eead4, 0x3f4a33);
     w.gears.push([181, Y + 3.9, 20]); w.gears.push([203, Y + 4.6, 37]); w.gears.push([190.2, Y + 1.6, 29 + Math.sin(7 * 0.55) * 3]);
     w.secrets.push({ id: 'stream', x: 184, y: Y, z: 28.6, r: 1.6, msg: '💧 Secret: the glowing stream! Little cave fish swim by… very, very cozily.' }); }

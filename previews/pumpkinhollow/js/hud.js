@@ -1,7 +1,7 @@
 // HUD: area name, Candy Corns, current objective, prompts, toasts, timers.
-import { $, esc } from './util.js?v=ph3';
-import { S } from './save.js?v=ph3';
-import { sunStep } from './story.js?v=ph3';
+import { $, esc } from './util.js?v=ph4';
+import { S } from './save.js?v=ph4';
+import { sunStep } from './story.js?v=ph4';
 export class HUD {
   constructor() { this.dirty = true; this.toasts = $('toast'); }
   region(n) { const e = $('hArea'); if (e && e.textContent !== n) { e.textContent = n; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } }

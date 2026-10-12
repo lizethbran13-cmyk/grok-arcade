@@ -1,29 +1,30 @@
 // Grok North Pole Village runtime: the town, players, townsfolk, the shuttle cart, ambient desert life, day -> sunset, collectibles,
 // the Sleigh Bells mystery, the Reindeer Derby + Cookie Rush (3D mini-games), a hidden puzzle, co-op hooks.
 import * as THREE from 'three';
-import { makeFolk, animFolk } from './folk.js?v=np3';
-import { holAct } from './holiday.js?v=np3';
-import { GLYPH_TXT } from './story_theme.js?v=np3';
-import { LIGHT as THL, TH as THM } from './theme.js?v=np3';
-import { panel } from './ui.js?v=np3';
-import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=np3';
-import { World } from './world.js?v=np3';
-import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=np3';
-import { UY } from './under.js?v=np3';
-import { Player } from './player.js?v=np3';
-import { FX } from './fx.js?v=np3';
-import { makeRat, animRat, MB, toGroup } from './models.js?v=np3';
-import { makePup, animPup, birdGeo } from './dogs.js?v=np3';
-import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=np3';
-import { P } from './geo.js?v=np3';
-import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=np3';
-import { updateFrustum, inView, LightPool } from './perf.js?v=np3';
-import { sfx, playMusic } from './audio.js?v=np3';
-import { S, persist } from './save.js?v=np3';
-import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=np3';
-import { readMove, edge, held, IN } from './input.js?v=np3';
+import { RF, RP, relayNPC } from './layout.js?v=np4';
+import { makeFolk, animFolk } from './folk.js?v=np4';
+import { holAct } from './holiday.js?v=np4';
+import { GLYPH_TXT } from './story_theme.js?v=np4';
+import { LIGHT as THL, TH as THM } from './theme.js?v=np4';
+import { panel } from './ui.js?v=np4';
+import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=np4';
+import { World } from './world.js?v=np4';
+import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=np4';
+import { UY } from './under.js?v=np4';
+import { Player } from './player.js?v=np4';
+import { FX } from './fx.js?v=np4';
+import { makeRat, animRat, MB, toGroup } from './models.js?v=np4';
+import { makePup, animPup, birdGeo } from './dogs.js?v=np4';
+import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=np4';
+import { P } from './geo.js?v=np4';
+import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=np4';
+import { updateFrustum, inView, LightPool } from './perf.js?v=np4';
+import { sfx, playMusic } from './audio.js?v=np4';
+import { S, persist } from './save.js?v=np4';
+import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=np4';
+import { readMove, edge, held, IN } from './input.js?v=np4';
 const PI = Math.PI;
-const TOYS = [[60, 0, 76], [-70, 0, 61], [108, 0, -4]];
+const TOYS = [[60, 0, 76], [-70, 0, 61], [108, 0, -4]].map((p) => RP(...p));
 const DAY = 420; // seconds per day -> sunset cycle
 export class Game {
   constructor(app, opts = {}) {
@@ -46,7 +47,7 @@ export class Game {
   toastMsg(m) { this.hud.toast(m); }
   sfx(n) { sfx(n); }
   // ------------------------------------------------ townsfolk
-  buildNPCs() { const w = this.world; this.npcs = NPCS.map((d) => { const L = d.look; let rig, kind, markY;
+  buildNPCs() { const w = this.world; this.npcs = NPCS.map((d) => { relayNPC(d); const L = d.look; let rig, kind, markY;
       if (!['torty','candy','luna','pirat','snowie'].includes(d.id) && !L.rat && !L.dog) { const v = [...d.id].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 8; rig = makeFolk(THM.id, d.id === 'mayor' && THM.snow ? 99 : v); rig.root.scale.setScalar(d.id === 'pebble' || (L.s && L.s < 0.2) ? 0.62 : d.id === 'mayor' ? 1.2 : 1.0); kind = 'folk'; markY = 2.0; }
       else if (L.rat) { rig = makeRat(L.rat, L.hat || 'none', { pack: false, extras: L.extras || [], noBlaster: true }); rig.root.scale.setScalar(1.35); kind = 'rat'; markY = 1.6; }
       else if (L.dog) { rig = makePup(L.dog, { seed: 7 }); rig.root.scale.setScalar(L.s || 1); kind = 'dog'; markY = 1.2; }
@@ -65,7 +66,7 @@ export class Game {
     [-0.7, 0.7].forEach((x) => [-1.1, 1.1].forEach((z) => b.m.add(P.cyl, 0x7c4a1e, x, 1.6, z, 0, 0, 0, 0.04, 1.6, 0.04))); for (let i = 0; i < 6; i++) b.f.add(P.rbox, i % 2 ? 0xffffff : 0xffb020, -0.62 + i * 0.25, 2.42, 0, 0, 0, 0, 0.25, 0.08, 2.5);
     b.m.add(P.cyl, 0x7c4a1e, 0, 0.6, 1.6, PI / 2, 0, 0, 0.05, 1.0, 0.05); return toGroup(b); }
   // story-driven positions (Pebble on the hill, everyone at the festival)
-  placeStory() { const q = S.q.sun | 0, N = this.npc, set = (id, x, z, yaw, y, region) => { const n = N[id]; n.x = n.x0 = x; n.z = n.z0 = z; n.yaw = n.yaw0 = yaw; n.y = n.y0 = y; n.region = region; n.d.walk = null; n.d.mode = 'cheer'; };
+  placeStory() { const q = S.q.sun | 0, N = this.npc, set = (id, x, z, yaw, y, region) => { if (RF(x, z)) { x = -x; z = -z; yaw += PI; } const n = N[id]; n.x = n.x0 = x; n.z = n.z0 = z; n.yaw = n.yaw0 = yaw; n.y = n.y0 = y; n.region = region; n.d.walk = null; n.d.mode = 'cheer'; };
     N.pebble.hidden = !(q === 2 || q >= 4);
     if (q >= 4) { set('torty', 2.0, -12.6, 0.2, 0, 'out'); set('pebble', 0.6, -12.2, 0, 0, 'out'); set('mama', -1.2, -12.6, -0.3, 0, 'out'); set('papa', 3.4, -11.6, 0.5, 0, 'out'); set('gramps', -2.6, -11.4, -0.6, 0, 'out'); set('mayor', 0.6, -19.6, PI, 0, 'out'); N.gramps.d.mode = 'idle'; } }
   wants(n) { const id = n.id, q = S.q.sun | 0; if (n.hidden) return false;
@@ -107,13 +108,13 @@ export class Game {
     this.flowers = w.plants.map((p, i) => { const b = MB(); for (let k = 0; k < 3; k++) { const ox = (k - 1) * 0.6; b.g.add(P.cyl, 0x2e9e45, ox, 0.3, 0, 0, 0, 0, 0.03, 0.6, 0.03); for (let j = 0; j < 10; j++) { const a = j / 10 * PI * 2; b.g.add(P.sphere, 0xff9a1f, ox + Math.cos(a) * 0.12, 0.66 + Math.sin(a) * 0.12, 0, 0, 0, 0, 0.08, 0.08, 0.03); } b.g.add(P.sphere, 0xb45309, ox, 0.66, 0.02, 0, 0, 0, 0.07); }
       const g = toGroup(b); g.position.set(p[0], p[1], p[2]); g.scale.setScalar(S.plants.includes(i) ? 1 : 0.001); this.add(g); return g; });
     // lettuce field (one InstancedMesh: hundreds of heads, a single draw call, low-poly heads)
-    { const LO = new THREE.SphereGeometry(1, 10, 7); const b = MB(); for (let i = 0; i < 7; i++) { const a = i * 2.4, r = i < 2 ? 0.05 : 0.2; b.g.add(LO, i < 2 ? 0xb5e86a : i % 2 ? 0x4cbb3c : 0x6fd04f, Math.cos(a) * r, 0.2, Math.sin(a) * r, Math.cos(a) * 0.5, 0, Math.sin(a) * 0.5, 0.26, 0.2, 0.26); } const geo = toGroup(b).children[0].geometry; const F = s.field || [];
-      this.field = new THREE.InstancedMesh(geo, new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.4, clearcoat: 0.4 }), F.length); F.forEach((p, i) => { this._m.compose(this._p.set(p[0], p[1], p[2]), this._q.setFromEuler(this._e.set(0, i, 0)), this._s.setScalar(0.85 + p[3] * 0.12)); this.field.setMatrixAt(i, this._m); }); this.field.castShadow = true; this.field.userData.lod = [-100, 0.2, 95]; this.add(this.field); }
+    { const LO = new THREE.SphereGeometry(1, 10, 7); const b = MB(); for (let i = 0; i < 7; i++) { const a = i * 2.4, r = i < 2 ? 0.05 : 0.2; b.g.add(LO, i < 2 ? 0x2f7d32 : i % 2 ? 0x1f6b2a : 0x3c9a3f, Math.cos(a) * r, 0.2, Math.sin(a) * r, Math.cos(a) * 0.5, 0, Math.sin(a) * 0.5, 0.26, 0.2, 0.26); } const geo = toGroup(b).children[0].geometry; const F = s.field || [];
+      this.field = new THREE.InstancedMesh(geo, new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.4, clearcoat: 0.4 }), F.length); F.forEach((p, i) => { this._m.compose(this._p.set(p[0], p[1], p[2]), this._q.setFromEuler(this._e.set(0, i, 0)), this._s.setScalar(0.85 + p[3] * 0.12)); this.field.setMatrixAt(i, this._m); }); this.field.castShadow = true; this.field.userData.lod = RP(-100, 0.2, 95); this.add(this.field); }
     // windmill blades
-    if (s.mill) { const b = MB(); for (let i = 0; i < 6; i++) b.m.add(P.rbox, i % 2 ? 0xffffff : 0xef4444, Math.cos(i / 6 * PI * 2) * 1.5, Math.sin(i / 6 * PI * 2) * 1.5, 0, 0, 0, i / 6 * PI * 2, 2.6, 0.5, 0.05); b.x.add(P.sphere, 0xd4a017, 0, 0, 0.05, 0, 0, 0, 0.3); this.mill = this.add(toGroup(b)); this.mill.position.set(...s.mill); }
+    if (s.mill) { const b = MB(); for (let i = 0; i < 6; i++) b.m.add(P.rbox, i % 2 ? 0xffffff : 0xef4444, Math.cos(i / 6 * PI * 2) * 1.5, Math.sin(i / 6 * PI * 2) * 1.5, 0, 0, 0, i / 6 * PI * 2, 2.6, 0.5, 0.05); b.x.add(P.sphere, 0xd4a017, 0, 0, 0.05, 0, 0, 0, 0.3); this.mill = this.add(toGroup(b)); this.mill.position.set(...s.mill); if (s.millR) this.mill.rotation.y = PI; }
     // farm plots for Cookie Rush
     this.plots = w.plots.map((p, i) => { const g = new THREE.Group(); g.position.set(...p); const sb = MB(); sb.g.add(P.capsule, 0x86efac, 0, 0.12, 0, 0, 0, 0, 0.08, 0.15, 0.08); [-1, 1].forEach((k) => sb.g.add(P.sphere, 0x4ade80, k * 0.1, 0.22, 0, 0, 0, k * 0.6, 0.12, 0.05, 0.08)); const sprout = toGroup(sb);
-      const lb = MB(); for (let k = 0; k < 7; k++) { const a = k * 2.4, r = k < 2 ? 0.05 : 0.2; lb.g.add(P.sphere, k < 2 ? 0xb5e86a : k % 2 ? 0x4cbb3c : 0x6fd04f, Math.cos(a) * r, 0.2, Math.sin(a) * r, Math.cos(a) * 0.5, 0, Math.sin(a) * 0.5, 0.26, 0.2, 0.26); } const head = toGroup(lb); head.scale.setScalar(0.001);
+      const lb = MB(); for (let k = 0; k < 7; k++) { const a = k * 2.4, r = k < 2 ? 0.05 : 0.2; lb.g.add(P.sphere, k < 2 ? 0xd9a066 : k % 2 ? 0xc68642 : 0xb87333, Math.cos(a) * r, 0.2, Math.sin(a) * r, Math.cos(a) * 0.5, 0, Math.sin(a) * 0.5, 0.26, 0.2, 0.26); } const head = toGroup(lb); head.scale.setScalar(0.001);
       const db = MB(); for (let k = 0; k < 5; k++) db.m.add(P.sphere, 0x3b2410, Math.cos(k) * 0.25, 0.03, Math.sin(k * 1.3) * 0.25, 0, 0, 0, 0.06, 0.03, 0.06); const seeds = toGroup(db); seeds.visible = false; g.add(sprout, head, seeds); sprout.visible = false; this.add(g);
       const o = { kind: 'plot', i, x: p[0], y: 0, z: p[2], r: 1.5, label: '' }; w.inter.push(o); return { g, sprout, head, seeds, st: 0, t: 0 }; });
     // the hidden dials (rotating stone drums) + the carved door slab
@@ -136,7 +137,7 @@ export class Game {
       for (let i = 0; i <= 18; i++) { const a = i / 18 * PI; b.g.add(P.sphere, [0xff6b35, 0xffb020, 0xffd23f, 0xff5d8f][i % 4], -4.5 * Math.cos(a), Math.sin(a) * 4.5, -24.5, 0, 0, 0, 0.4, 0.46, 0.4); }
       [[-3, -22.4, 0xff5d8f], [3, -22.2, 0x2dd4bf], [2.4, -20.8, 0xffd23f], [-2.6, -20.6, 0xa66bff]].forEach(([px, pz, c]) => { b.g.add(P.rbox, c, px, 0.35, pz, 0, 0.5, 0, 0.7, 0.7, 0.7); b.g.add(P.rbox, 0xffffff, px, 0.35, pz, 0, 0.5, 0, 0.72, 0.72, 0.14); });
       g.add(toGroup(b)); this.party = this.add(g); this.party.visible = (S.q.sun | 0) >= 4; }
-    // Tortuga Tech live tests: drop carriages, crush press heads, a rolling foam boulder (cartoony + kid-friendly)
+    // Santa’s Workshop live tests: drop carriages, crush press heads, a rolling foam boulder (cartoony + kid-friendly)
     { const t = s.tt || {}; const mk = (f) => { const b = MB(); f(b); return this.add(toGroup(b)); }; const armored = (b, c) => { b.m.add(P.rbox, c, 0, 0.5, 0, 0, 0, 0, 1, 1, 1); for (let k = 0; k < 4; k++) b.g.add(new THREE.CylinderGeometry(0.22, 0.2, 0.06, 6), [0xb98545, 0x0f9d8a, 0xd1a05e, 0xffb020][k], -0.22 + (k % 2) * 0.44, 0.3 + Math.floor(k / 2) * 0.42, 0.52, PI / 2, 0, 0); };
       this.tt = { t };
       if (t.drop) this.tt.drop = mk((b) => { b.x.add(P.rbox, 0xfacc15, 0, 0.1, 0, 0, 0, 0, 2.7, 0.2, 2.7); b.x.add(P.cyl, 0x94a3b8, 0, 0.1, 0, 0, 0, 0, 0.04, 6, 0.04); armored(b, 0x60a5fa); });
@@ -151,7 +152,7 @@ export class Game {
     this.racers = [0, 1, 2, 3].map((i) => { const r = makeTortoise({ shell: ['coral', 'sky', 'gold', 'plum'][i], num: i + 1, numC: [0xef4444, 0x2563eb, 0x16a34a, 0xa855f7][i], hat: 'helmet', hatC: [0xef4444, 0x2563eb, 0x16a34a, 0xa855f7][i] }); r.root.scale.setScalar(0.24); this.add(r.root); return r; }); this.placeRacers(0);
     this.cheerRing = this.add(new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.07, 10, 32).rotateX(PI / 2), new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false }))); this.cheerRing.visible = false;
   }
-  laneP(i, a) { const { cx, cz, rx, rz } = TRACK, r = [16.3, 17.5, 18.7, 19.9][i]; return [cx + Math.cos(a) * r * rx / 18, cz + Math.sin(a) * r * rz / 18, Math.atan2(-Math.sin(a) * r * rx / 18, Math.cos(a) * r * rz / 18)]; }
+  laneP(i, a) { a += TRACK.flip || 0; const { cx, cz, rx, rz } = TRACK, r = [16.3, 17.5, 18.7, 19.9][i]; return [cx + Math.cos(a) * r * rx / 18, cz + Math.sin(a) * r * rz / 18, Math.atan2(-Math.sin(a) * r * rx / 18, Math.cos(a) * r * rz / 18)]; }
   placeRacers(dt, A) { this.racers.forEach((r, i) => { const a = A ? A[i] : PI / 2 - 0.02; const [x, z, yaw] = this.laneP(i, a); r.root.position.set(x, 0.02, z); r.root.rotation.y = yaw; animTortoise(r, dt, A ? 1.2 : 0, A ? 'idle' : 'idle'); }); }
   sunPos() { const q = S.q.sun | 0, s = this.sun, sp = this.world.spots; s.userData.carry = q === 3; if (q >= 4) { s.visible = true; s.position.set(...sp.pedestal); s.position.y += 0.35; } else if (q === 2) { s.visible = true; s.position.set(sp.pebbleSpot[0] + 0.8, sp.pebbleSpot[1] + 0.5, sp.pebbleSpot[2] - 0.6); } else s.visible = q === 3; this.sunLight.intensity = s.visible ? 3 : 0; s.scale.setScalar(q === 3 ? 0.7 : 1); }
   // ------------------------------------------------ region culling: interiors only draw when you're inside or near their door; far tiny decor is culled (only far away)
@@ -178,7 +179,7 @@ export class Game {
     this.net.tick && this.net.tick(dt, this);
     this.updateCam(dt); this.render(dt); this.hud.update(dt, this); this.lightPool.update(dt, me.x, me.y + 2, me.z); }
   render(dt) { this.fx.update(dt); followShadow(this.me.x, this.me.y, this.me.z); this.light(dt); }
-  pond(me) { const [cx, cz, rx, rz] = this.world.spots.pond; const dx = (me.x - cx) / (rx - 0.6), dz = (me.z - cz) / (rz - 0.6); if (dx * dx + dz * dz < 1 && me.y < 0.05 && me.onGround) { if (!this._wet) { this._wet = true; sfx('splat'); this.fx.burst(me.x, 0.1, me.z, 0x7dd3fc, 18, 5); this.toastMsg('🐢 Splash! The pond elves politely nudge you back to shore.'); const a = Math.atan2(dz, dx); me.place([cx + Math.cos(a) * (rx + 1.4), 0.1, cz + Math.sin(a) * (rz + 1.4)], me.yaw); } } else this._wet = false;
+  pond(me) { const [cx, cz, rx, rz] = this.world.spots.pond; const dx = (me.x - cx) / (rx - 0.6), dz = (me.z - cz) / (rz - 0.6); if (dx * dx + dz * dz < 1 && me.y < 0.05 && me.onGround) { if (!this._wet) { this._wet = true; sfx('splat'); this.fx.burst(me.x, 0.1, me.z, 0x7dd3fc, 18, 5); this.toastMsg('🎄 Splash! The pond elves politely nudge you back to shore.'); const a = Math.atan2(dz, dx); me.place([cx + Math.cos(a) * (rx + 1.4), 0.1, cz + Math.sin(a) * (rz + 1.4)], me.yaw); } } else this._wet = false;
     for (const p of this.world.spots.pools || []) { const ex = (me.x - p[0]) / p[3], ez = (me.z - p[2]) / p[4]; if (ex * ex + ez * ez < 1 && Math.abs(me.y - p[1]) < 0.4) { if (!this._warm) { this._warm = true; this.toastMsg('♨️ Ahhh… warm and fizzy!'); sfx('splat'); } return; } } this._warm = false; }
   // day -> golden desert sunset cycle (host time, so co-op players share the sky). Pure tone, never a quality change.
   dayK() { const o = (this.net.online && this.hostTod) || S.opts.tod || 'auto'; if ((S.q.sun | 0) >= 4 && o === 'auto') return 1; if (o === 'day') return 0; if (o === 'evening') return 1; const p = (this.T / DAY) % 1; return p < 0.5 ? 0 : p < 0.6 ? (p - 0.5) / 0.1 : p < 0.9 ? 1 : 1 - (p - 0.9) / 0.1; }
@@ -201,8 +202,8 @@ export class Game {
     const out = !this.under && this.region === 'out';
     if (out) { this.birds.visible = true; for (let i = 0; i < this.birdD.length; i++) { const b = this.birdD[i], a = T * b.sp + b.ph; this._p.set(b.cx + Math.cos(a) * b.r, b.y + Math.sin(T * 0.7 + i) * 0.6, b.cz + Math.sin(a) * b.r); this._q.setFromEuler(this._e.set(0, -a, Math.sin(a) * 0.15));
         const f = 0.55 + Math.abs(Math.sin(T * 12 + i)) * 0.7; this._s.set(f * 1.4, 1.4, 1.4); this._m.compose(this._p, this._q, this._s); this.birds.setMatrixAt(i, this._m); } this.birds.instanceMatrix.needsUpdate = true; } else this.birds.visible = false;
-    const nearSq = Math.hypot(me.x, me.z) < 60; this.swim.forEach((r, i) => { const a = T * 0.15 + i * 1.6, rr = 3 + (i % 2) * 2.2; r.root.visible = out && nearSq; if (!r.root.visible) return; r.root.position.set(Math.cos(a) * rr * 1.25, -0.3, Math.sin(a) * rr * 0.85); r.root.rotation.y = -a; animTortoise(r, dt, 0.6, 'idle'); });
-    this.weeds.forEach((q) => { const x = 80 + ((T * 2.2 + q.o * 5) % 50); q.g.visible = !this.under; q.g.position.set(x, 0.55 + Math.abs(Math.sin(T * 3 + q.o)) * 0.4, q.z + Math.sin(T * 0.5 + q.o) * 3); q.g.rotation.z = -T * 3; });
+    const nearSq = Math.hypot(me.x, me.z) < 60; this.swim.forEach((r, i) => { const a = T * 0.15 + i * 1.6, rr = 3 + (i % 2) * 2.2; r.root.visible = false; if (!r.root.visible) return; r.root.position.set(Math.cos(a) * rr * 1.25, -0.3, Math.sin(a) * rr * 0.85); r.root.rotation.y = -a; animTortoise(r, dt, 0.6, 'idle'); });
+    this.weeds.forEach((q) => { const x = 80 + ((T * 2.2 + q.o * 5) % 50); q.g.visible = false; q.g.position.set(x, 0.55 + Math.abs(Math.sin(T * 3 + q.o)) * 0.4, q.z + Math.sin(T * 0.5 + q.o) * 3); q.g.rotation.z = -T * 3; });
     if (out && Math.random() < dt * 6) { const p = (s.pools || [])[(Math.random() * 4) | 0]; if (p) this.fx.emit(p[0] + (Math.random() - 0.5) * p[3], p[1] + 0.3, p[2] + (Math.random() - 0.5) * p[4], 0, 0.8, 0, 0.18, 0xffffff, 1.6, -0.4, 0.6); }
     if (this.region === 'spa' && Math.random() < dt * 8) { const p = s.spaPool; this.fx.emit(p[0] + (Math.random() - 0.5) * 6, p[1], p[2] + (Math.random() - 0.5) * 4, 0, 0.7, 0, 0.2, 0xffffff, 1.6, -0.4, 0.6); }
     if (out && s.fall && Math.random() < dt * 6) this.fx.emit(s.fall[0], s.fall[1], s.fall[2], (Math.random() - 0.5) * 0.4, -0.5, 0.8, 0.09, 0xbfe9ff, 0.8, 9, 0.5);
@@ -210,7 +211,7 @@ export class Game {
     if (this.under && Math.random() < dt * 5) this.fx.emit(me.x + (Math.random() - 0.5) * 14, UY + 0.3 + Math.random() * 4, me.z + (Math.random() - 0.5) * 14, 0, 0.3, 0, 0.06, [0x5eead4, 0xa78bfa, 0xf472b6][(Math.random() * 3) | 0], 2.0, -0.1, 0.2);
     if (this.party.visible && out && Math.random() < dt * 3) this.fx.confetti((Math.random() - 0.5) * 10, 5, -20 + (Math.random() - 0.5) * 6, 6);
     if (this.moon) { this.moon.rotation.y = T * 0.6; this.moon.position.y = s.moonstone[1] + Math.sin(T * 1.5) * 0.08; this.moon.visible = this.under; }
-    if (this.tt) { const t = this.tt.t, nearTT = !this.under && Math.hypot(me.x - 95, me.z + 56) < 80, inTT = !!this.vis && this.vis.has('tortuga'); const cyc = (per, off = 0) => ((T + off) % per) / per;
+    if (this.tt) { const t = this.tt.t, nearTT = !this.under && Math.hypot(me.x - RP(95, 0, -56)[0], me.z - RP(95, 0, -56)[2]) < 80, inTT = !!this.vis && this.vis.has('tortuga'); const cyc = (per, off = 0) => ((T + off) % per) / per;
       const dropY = (k, top, bot) => k < 0.7 ? bot + (top - bot) * (k / 0.7) : k < 0.76 ? top - (top - bot) * ((k - 0.7) / 0.06) ** 2 : bot + Math.abs(Math.sin((k - 0.76) * 26)) * 0.5 * (1 - (k - 0.76) / 0.24);
       const impact = (k, kp, x, y, z) => { if (kp < 0.76 && k >= 0.76) { this.fx.puff(x, y, z, 10, 0xf5f0e6); if (Math.hypot(me.x - x, me.z - z) < 14) sfx('splat'); } };
       if (this.tt.drop) { this.tt.drop.visible = inTT; if (inTT) { const k = cyc(7), [x, y, z] = t.drop; this.tt.drop.position.set(x, y + dropY(k, 4.6, 0.45), z); impact(k, this._kd || 0, x, y + 0.5, z); this._kd = k; } }
@@ -247,7 +248,7 @@ export class Game {
   // ------------------------------------------------ collecting
   collect() { const me = this.me, G = this.world.gears;
     for (let i = 0; i < G.length; i++) { if (this.biscGot.has(i)) continue; const p = G[i]; if (Math.abs(me.x - p[0]) < 0.8 && Math.abs(me.z - p[2]) < 0.8 && me.y + me.hgt + 0.25 > p[1] && me.y < p[1] + 0.6) { this.biscGot.add(i); S.gears = [...this.biscGot]; persist(); sfx('part'); this.fx.sparkle(p[0], p[1], p[2], 0xffd23f); this.fx.burst(p[0], p[1], p[2], 0xffd23f, 10, 4);
-        const n = this.biscGot.size; this.toastMsg(`🐚 Snowflake ${n}/${G.length}`); if (n >= 20) this.giveHat('party'); if (n >= G.length) { this.badge('shells'); this.checkCrown(); } this.hud.dirty = true; } }
+        const n = this.biscGot.size; this.toastMsg(`🔔 Snowflake ${n}/${G.length}`); if (n >= 20) this.giveHat('party'); if (n >= G.length) { this.badge('shells'); this.checkCrown(); } this.hud.dirty = true; } }
     this.toys.forEach((t) => { if (!t.m.visible) return; if (Math.hypot(me.x - t.p[0], me.z - t.p[2]) < 0.9 && Math.abs(me.y - t.p[1]) < 1.6) { t.m.visible = false; S.toys.push(t.i); persist(); sfx('squeak'); this.fx.burst(t.p[0], t.p[1] + 0.4, t.p[2], 0x4ade80, 12); this.toastMsg(`🎁 *SQUEAK!* Candy's toy ${S.toys.length}/3`); this.hud.dirty = true; } }); }
   secretsCheck() { const me = this.me; for (const s of this.world.secrets) { if (S.secrets.includes(s.id)) continue; if (Math.hypot(me.x - s.x, me.z - s.z) < s.r && Math.abs(me.y - s.y) < 2.5) { S.secrets.push(s.id); persist(); sfx('win'); this.fx.confetti(me.x, me.y + 1.5, me.z, 40); this.toastMsg(s.msg + ` (${S.secrets.length}/${this.world.secrets.length})`); if (S.secrets.length >= 5) { this.giveHat('wizard'); this.badge('secrets'); } } } }
   // ------------------------------------------------ rewards + story
@@ -270,17 +271,17 @@ export class Game {
     if (this.race && this.race.t >= 0) best = { kind: 'cheer', label: '📣 CHEER!' };
     this.act = best; this.hud.setAct(this.chat ? null : best); }
   holOffer(id) { setTimeout(() => holAct(id, this), 50); }
-  holLaunch() { S.flags.launch = 1; persist(); this.badge('launch'); const s = this._fly = new THREE.Group(); const red = new THREE.MeshStandardMaterial({ color: 0xc81e1e }), gold = new THREE.MeshStandardMaterial({ color: 0xffd23f, emissive: 0x806000 }), brown = new THREE.MeshStandardMaterial({ color: 0x8a5a32 }); const body = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.9, 3), red); s.add(body); const run = new THREE.Mesh(new THREE.BoxGeometry(2, 0.1, 3.4), gold); run.position.y = -0.55; s.add(run); for (let i = 0; i < 9; i++) { const d = new THREE.Mesh(new THREE.CapsuleGeometry(0.3, 0.8, 4, 10), brown); d.rotation.x = Math.PI / 2; d.position.set(i === 8 ? 0 : (i % 2 ? 0.6 : -0.6), 0.2, 3 + (i >> 1) * 1.6 + (i === 8 ? 1.6 : 0)); s.add(d); if (i === 8) { const n = new THREE.Mesh(new THREE.SphereGeometry(0.15, 10, 8), new THREE.MeshStandardMaterial({ color: 0xff2020, emissive: 0xff2020, emissiveIntensity: 2 })); n.position.set(0, 0.3, d.position.z + 0.7); s.add(n); } } s.position.set(22, 0.6, -80); this.scene.add(s); this._flyT = 0; this.cam.shake = 0.5; sfx('win'); this.toastMsg('🛷 3… 2… 1… LIFT-OFF! Santa\'s sleigh is flying!'); setTimeout(() => { this.app.ui.open(); panel(`<div class="fin"><h2>🛷 LAUNCH NIGHT!</h2><h3>Santa\'s sleigh is in the sky</h3><p>The letters are sorted, the reindeer are fed, the Sleigh Bells are back and Flight Command is tracking every chimney. You did it, elf!</p><button class="go" id="fx">MERRY CHRISTMAS!</button></div>`, (c) => { c.querySelector('#fx').onclick = () => { this.app.ui.done(); }; }); }, 7000); }
+  holLaunch() { S.flags.launch = 1; persist(); this.badge('launch'); const s = this._fly = new THREE.Group(); const red = new THREE.MeshStandardMaterial({ color: 0xc81e1e }), gold = new THREE.MeshStandardMaterial({ color: 0xffd23f, emissive: 0x806000 }), brown = new THREE.MeshStandardMaterial({ color: 0x8a5a32 }); const body = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.9, 3), red); s.add(body); const run = new THREE.Mesh(new THREE.BoxGeometry(2, 0.1, 3.4), gold); run.position.y = -0.55; s.add(run); for (let i = 0; i < 9; i++) { const d = new THREE.Mesh(new THREE.CapsuleGeometry(0.3, 0.8, 4, 10), brown); d.rotation.x = Math.PI / 2; d.position.set(i === 8 ? 0 : (i % 2 ? 0.6 : -0.6), 0.2, 3 + (i >> 1) * 1.6 + (i === 8 ? 1.6 : 0)); s.add(d); if (i === 8) { const n = new THREE.Mesh(new THREE.SphereGeometry(0.15, 10, 8), new THREE.MeshStandardMaterial({ color: 0xff2020, emissive: 0xff2020, emissiveIntensity: 2 })); n.position.set(0, 0.3, d.position.z + 0.7); s.add(n); } } s.position.set(...RP(22, 0.6, -80)); this.scene.add(s); this._flyT = 0; this.cam.shake = 0.5; sfx('win'); this.toastMsg('🛷 3… 2… 1… LIFT-OFF! Santa\'s sleigh is flying!'); setTimeout(() => { this.app.ui.open(); panel(`<div class="fin"><h2>🛷 LAUNCH NIGHT!</h2><h3>Santa\'s sleigh is in the sky</h3><p>The letters are sorted, the reindeer are fed, the Sleigh Bells are back and Flight Command is tracking every chimney. You did it, elf!</p><button class="go" id="fx">MERRY CHRISTMAS!</button></div>`, (c) => { c.querySelector('#fx').onclick = () => { this.app.ui.done(); }; }); }, 7000); }
   doAct(o) { const ui = this.app.ui; if (o.kind !== 'cheer') sfx('click'); if (o.kind === 'hol') { holAct(o.id, this); return; }
     if (o.kind === 'cheer') this.cheer();
     else if (o.kind === 'npc') { const r = talk(o.npc.id, this); this.chat = { npc: o.npc }; ui.dialog(o.npc.d.n, r.lines, () => { this.chat = null; if (r.fx) r.fx(); this.recheck(); }); }
     else if (o.kind === 'clue') { if (o.id === 'lemon') { const t = talk('taffy', this); this.toastMsg(t.lines[0][1]); if (t.fx) t.fx(); return; } if ((S.q.sun | 0) === 0) { this.toastMsg('🤔 Something\'s odd here. Maybe talk to Santa Claus first.'); } this.addClue(o.id); }
     else if (o.kind === 'glyph') { const t = { g1: GLYPH_TXT.g1, g2: '', g3: GLYPH_TXT.g3 }[o.id]; if (o.id === 'g2') { const n = this.npc.gramps; const r = talk('gramps', this); this.chat = { npc: n }; ui.dialog(n.d.n, r.lines, () => { this.chat = null; }); } else this.toastMsg(t); S.flags[o.id] = 1; persist(); }
     else if (o.kind === 'dial') { this.dialA[o.i] = (this.dialA[o.i] + 1) % 4; S.dials = this.dialA.slice(); persist(); sfx('door'); if (!S.flags.door && GLYPH.answer.every((a, i) => this.dialA[i] === a)) { S.flags.door = 1; persist(); this.cam.shake = 0.6; setTimeout(() => { sfx('win'); this.toastMsg('🪨 RUMBLE… the carved stone sinks into the snow!'); }, 400); } }
-    else if (o.kind === 'descend') { sfx('door'); ui.fade(() => { this.me.place([154, UY + 0.1, 0], PI / 2); this.cam.yaw = PI / 2; this.cam.snap = true; }); if (!S.flags.under) { S.flags.under = 1; persist(); setTimeout(() => this.toastMsg('🕳️ Ancient tunnels… nobody has walked here in a very, very long time.'), 900); } }
+    else if (o.kind === 'descend') { sfx('door'); ui.fade(() => { this.me.place([154, UY + 0.1, 0], PI / 2); this.cam.yaw = PI / 2; this.cam.snap = true; }); if (!S.flags.under) { S.flags.under = 1; persist(); setTimeout(() => this.toastMsg('🕳️ The old ice tunnels… no elf has walked here in a very, very long time.'), 900); } }
     else if (o.kind === 'climb') { ui.fade(() => { const [dx, dz] = this.world.spots.sdoor; this.me.place([dx - 2.6, 0.1, dz], -PI / 2); this.cam.yaw = -PI / 2; this.cam.snap = true; }); }
-    else if (o.kind === 'relic') { if (S.badges.grotto) { this.toastMsg('🐚 The golden ornament glows warmly. Cozy and steady!'); return; } if (!S.secrets.includes('grotto')) S.secrets.push('grotto'); persist(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 60); this.badge('grotto'); this.toastMsg('🐚 The Golden Ornament of the first Chief Tester! Badge: Grotto Explorer'); return; }
-    else if (o.kind === 'moonstone') { if (S.flags.moon) { this.toastMsg('🌙 The Ice Star glows. Somewhere above, the Sleigh Bells glows back.'); return; } S.flags.moon = 1; if (!S.secrets.includes('hall')) S.secrets.push('hall'); persist(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 100); sfx('win'); this.toastMsg('🌙 The Ice Star! The Hall of the First Elves remembers you.'); this.giveHat('shellcrown'); this.badge('ancient'); if (S.secrets.length >= 5) { this.giveHat('wizard'); this.badge('secrets'); } }
+    else if (o.kind === 'relic') { if (S.badges.grotto) { this.toastMsg('🔔 The golden ornament glows warmly. Cozy and steady!'); return; } if (!S.secrets.includes('grotto')) S.secrets.push('grotto'); persist(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 60); this.badge('grotto'); this.toastMsg('🔔 The Golden Ornament of the first Chief Tester! Badge: Grotto Explorer'); return; }
+    else if (o.kind === 'moonstone') { if (S.flags.moon) { this.toastMsg('🌙 The Ice Star glows. Somewhere above, the Sleigh Bells jingle back.'); return; } S.flags.moon = 1; if (!S.secrets.includes('hall')) S.secrets.push('hall'); persist(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 100); sfx('win'); this.toastMsg('🌙 The Ice Star! The Hall of the First Elves remembers you.'); this.giveHat('shellcrown'); this.badge('ancient'); if (S.secrets.length >= 5) { this.giveHat('wizard'); this.badge('secrets'); } }
     else if (o.kind === 'plant') { if (S.plants.includes(o.i)) return; S.plants.push(o.i); persist(); sfx('part'); this.fx.burst(o.x, 1, o.z - 1, 0xff9a1f, 14, 4); this.toastMsg(`🌼 Winter Rose planted! (${S.plants.length}/4)` + (S.plants.length >= 4 ? ' Tell Mama Rosa!' : '')); }
     else if (o.kind === 'plot') this.plotAct(o);
     else if (o.kind === 'express') ui.express(this, o.i);
