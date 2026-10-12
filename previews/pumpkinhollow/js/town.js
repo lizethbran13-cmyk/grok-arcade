@@ -1,15 +1,16 @@
 // Grok Pumpkin Hollow: Martina "Torty"'s desert-oasis hometown. A palm-ringed Pumpkin Square, Spooky Street, the Burrows (homes),
 // Haunted Hill, the Broomstick Racetrack, the Pumpkin Patch and the Bat Cliffs edge. 18 enterable buildings, each its own
 // culled region; outdoors batch into big merged chunks, tiny decor goes into far-culled "detail" chunks. All real 3D geometry.
-import { tortuga } from './tortuga.js?v=ph5';
-import { districts } from './districts.js?v=ph5';
+import { tortuga } from './tortuga.js?v=ph6';
+import { districts } from './districts.js?v=ph6';
 import * as THREE from 'three';
-import * as LY from './layout.js?v=ph5';
-import * as TH from './theme.js?v=ph5';
-import * as HOL from './holiday.js?v=ph5';
-import * as K from './kit.js?v=ph5';
-import { interiors } from './interiors.js?v=ph5';
-import { underground } from './under.js?v=ph5';
+import * as LY from './layout.js?v=ph6';
+import * as FA from './facades.js?v=ph6';
+import * as TH from './theme.js?v=ph6';
+import * as HOL from './holiday.js?v=ph6';
+import * as K from './kit.js?v=ph6';
+import { interiors } from './interiors.js?v=ph6';
+import { underground } from './under.js?v=ph6';
 const { wall, D, G, floor, ceiling, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, star, heart, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; let I = null;
 export const FL = 0.02;
@@ -111,7 +112,7 @@ export function tortStatue(w, x, z, ry, s = 1, col = 0xffc83d) { { const T = w.t
   T.add('l', sph(10), 0xfff1a8, 0, 2.6, 0, 0, 0, 0, 0.12, 0.12, 0.12, 0.5); }
 // ------------------------------------------------------------------------------------------------ an enterable building
 // style: flat (adobe, parapet + vigas), dome, mound (burrow), gable (barn), glass (greenhouse)
-export function building(w, B) { const { x0, z0, x1, z1 } = B, ceil = B.ceil, eh = (B.wallH || ceil + 0.4), reg = B.id; const winTop = B.winTop || 3.2, winBot = B.winBot || 1.1; const st = B.style || 'flat'; const glass = st === 'glass';
+export function building(w, B) { B = FA.restyle(B); const { x0, z0, x1, z1 } = B, ceil = B.ceil, eh = (B.wallH || ceil + 0.4), reg = B.id; const winTop = B.winTop || 3.2, winBot = B.winBot || 1.1; const st = B.style || 'flat'; const glass = st === 'glass';
   w.region = 'shell';
   floor(w, x0 + 0.2, z0 + 0.2, x1 - 0.2, z1 - 0.2, B.floor[0], FL, B.floor[1], B.floor[2], B.floor[3]);
   if (!glass) { ceiling(w, x0, z0, x1, z1, ceil, B.ceilCol || 0xfff8ec, { lamps: false }); w.lights.push({ x: (x0 + x1) / 2, y: ceil - 1, z: (z0 + z1) / 2, c: B.lightCol || 0xfff1dc, i: B.li || 24, d: Math.max(x1 - x0, z1 - z0) * 1.1 });
@@ -163,7 +164,7 @@ export function building(w, B) { const { x0, z0, x1, z1 } = B, ceil = B.ceil, eh
     [-1, 1].forEach((s2) => { T.add('x', rcyl(0.1, 0.06, 0.02, 12), 0x334155, s2 * (Wd / 2 + 0.6), 2.5, 0.32, PI / 2, 0, 0); T.add('m', lathe([[0, 0], [0.16, 0.02], [0.2, 0.25], [0.12, 0.4], [0, 0.42]], 16, 'lantern'), 0x334155, s2 * (Wd / 2 + 0.6), 2.3, 0.5); T.add('l', sph(10), 0xffd28a, s2 * (Wd / 2 + 0.6), 2.45, 0.5, 0, 0, 0, 0.13, 0.15, 0.13, 0.7); });
     if (B.sign) { const S = B.sign, p = T.P(0, 0, 0.32); sign3d(w, S[0], p[0], dh + (B.awning ? 1.6 : 1.2), p[2], T.ry, S[1] || 0.42, S[2] || 0xffffff, S[3] === undefined ? 0xe2733f : S[3]); }
     w.lights.push({ x: T.P(0, 0, 2)[0], y: 3, z: T.P(0, 0, 2)[2], c: 0xffc98a, i: 10, d: 10, out: true }); }
-  w.region = reg; return B; }
+  FA.facade(w, B); w.region = reg; return B; }
 // ------------------------------------------------------------------------------------------------ build
 export function buildTown(w) {
   K.propSeed(1947); w.inter = []; w.gears = []; w.secrets = []; w.spots = {}; w.dyn = w.dyn || []; w.plots = []; w.toys = []; w.glyphs = [];
@@ -171,7 +172,7 @@ export function buildTown(w) {
   I = (o) => { w.inter.push(o); return o; }; w.I = I;
   w.region = 'shell'; ground(w); w.region = 'out'; square(w); market(w); burrows(w); hill(w); track(w); farm(w); dunes(w); LY.newLand(w, K, TH, floor, mesa);
   shells(w); interiors(w); tortuga(w); districts(w); underground(w); w.region = 'out'; expressStops(w); TH.dress(w, K); TH.dressInside(w, K, REGIONS); HOL.buildStations(w, K); w.region = 'shell';
-  w.start = [0, 0.2, 21]; w.startYaw = PI; w.camDist = 9.5; LY.relayout(w, { REGIONS, AREAS, DOORS, STOPS, TRACK });
+  w.start = [0, 0.2, 21]; w.startYaw = PI; w.camDist = 9.5; LY.relayout(w, { REGIONS, AREAS, DOORS, STOPS, TRACK }); { const rg_ = w.region; w.region = 'out'; LY.doorPaths(w, floor, REGIONS, DOORS); w.region = rg_; }
   return w; }
 export function tcrate(w, x, y, z, s = 1, col = 0xd8a15a, top = 'lettuce') { const T = w.tf(x, y, z, R() * 0.3, s); T.slab('m', col, 0, 0, 0, 1, 0.8, 1, 0.06); [-1, 1].forEach((sd) => { T.box('m', shade(col, 0.8), 0, 0.05, sd * 0.505, 0.9, 0.12, 0.03, 0.02); T.box('m', shade(col, 0.8), 0, 0.62, sd * 0.505, 0.9, 0.12, 0.03, 0.02); T.box('m', shade(col, 0.8), sd * 0.505, 0.05, 0, 0.03, 0.12, 0.9, 0.02); T.box('m', shade(col, 0.8), sd * 0.505, 0.62, 0, 0.03, 0.12, 0.9, 0.02); });
   if (top === 'lettuce') { for (let k = 0; k < 4; k++) { const p = T.P((k % 2 - 0.5) * 0.45, 0.8, ((k >> 1) - 0.5) * 0.45); lettuce(w, p[0], p[1] - 0.1, p[2], 0.75 * s); } } else if (top === 'fruit') for (let k = 0; k < 6; k++) { const p = T.P((k % 3 - 1) * 0.3, 0.88, ((k / 3 | 0) - 0.5) * 0.36); w.add('g', sph(10), pick([0xff5d8f, 0xe11d48, 0xffd23f, 0xff8a3d]), p[0], p[1], p[2], 0, 0, 0, 0.16 * s); } return y + 0.8 * s; }

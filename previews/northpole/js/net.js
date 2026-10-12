@@ -1,10 +1,10 @@
 // Co-op for up to 3 via GrokNet (PeerJS, 5-letter codes). Host-authoritative test schedule; each rat moves itself.
 // Mysteries, gears and hats are saved per player (everyone gets to solve them on their own device).
-import { S, persist } from './save.js?v=np5';
-import { esc, $ } from './util.js?v=np5';
-import { sfx } from './audio.js?v=np5';
-import { panel, closePanel } from './ui.js?v=np5';
-import { SHIRTS, cleanLook } from './humans.js?v=np5';
+import { S, persist } from './save.js?v=np6';
+import { esc, $ } from './util.js?v=np6';
+import { sfx } from './audio.js?v=np6';
+import { panel, closePanel } from './ui.js?v=np6';
+import { SHIRTS, cleanLook } from './humans.js?v=np6';
 const col = (L) => '#' + SHIRTS[cleanLook(L && L.look).shirt].toString(16).padStart(6, '0');
 const GN = window.GrokNet;
 export class Net {

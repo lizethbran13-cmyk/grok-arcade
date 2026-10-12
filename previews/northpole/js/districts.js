@@ -1,8 +1,8 @@
 // Two new districts: the ELF QUARTER (north-west) and CAROL PLAZA (between Mistletoe Street and the racetrack).
 // 5 more walk-in buildings, all prop-dense, real 3D geometry (Turbo look, no flat textures).
 import * as THREE from 'three';
-import * as K from './kit.js?v=np5';
-import { building, claypot, tcrate, palm, lanternString, flagString, tortStatue, prickly, barrel, agave, sunShell, SUN, shade } from './town.js?v=np5';
+import * as K from './kit.js?v=np6';
+import { building, claypot, tcrate, palm, lanternString, flagString, tortStatue, prickly, barrel, agave, sunShell, SUN, shade } from './town.js?v=np6';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI, FL = 0.12;
 const art = (w, axis, at, c, y, W, H, side, k) => K.PR.frame(K.scaled(w, 0, FL, 0, 0.25), axis, (at + side * 0.25) / 0.25, c / 0.25, y / 0.25, W / 0.25, H / 0.25, side, k);

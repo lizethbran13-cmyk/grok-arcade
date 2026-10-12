@@ -24,14 +24,15 @@ export function relayout(w, T) {
     if (k === 'pond' || k === 'sdoor') P2(v); else if (k === 'mill') { const t = P3(v); if (t) S.millR = t; } else if (typeof v[0] === 'number') { v.length === 2 ? P2(v) : P3(v); } else v.forEach((e) => Array.isArray(e) ? (e.length === 2 ? P2(e) : P3(e)) : PO(e)); }
   if (w.start) { const t = P3(w.start); if (t) w.startYaw = (w.startYaw || 0) + t; }
   T.REGIONS.forEach((r) => { if (!r.under) RB(r); }); for (const k in T.DOORS) P2(T.DOORS[k]);
-  T.AREAS.forEach(RB); T.AREAS.push(...BLOCKS.map((b) => ({ x0: b.d[0], z0: b.d[1], x1: b.d[2], z1: b.d[3], name: b.name, blk: 1 })));
+  T.AREAS.forEach(RB); T.AREAS.push(...BLOCKS.map((b) => ({ x0: b.d[0] - 8, z0: b.d[1] - 8, x1: b.d[2] + 8, z1: b.d[3] + 8, name: b.name, blk: 1, m: { x0: b.d[0], z0: b.d[1], x1: b.d[2], z1: b.d[3] } })));
   T.STOPS.forEach((s) => { const t = P2(s); if (t) s[2] += t; });
   { const b = SB(T.TRACK.cx, T.TRACK.cz); if (b) { const p = FW(b, T.TRACK.cx, T.TRACK.cz); T.TRACK.cx = p[0]; T.TRACK.cz = p[1]; if (b.k === 2) T.TRACK.flip = Math.PI; } }
 }
-export function relayNPC(d) { if (d._rl) return; d._rl = 1; if (d.at) { const t = P2(d.at); if (t) d.at[2] = (d.at[2] || 0) + t; } if (d.walk) d.walk.forEach(P2); if (d.run) P2(d.run); }
+export function relayNPC(d) { if (d._rl) return; d._rl = 1; const b0 = d.at && SB(d.at[0], d.at[1]); if (d.walk) { d.walk = d.walk.filter((p) => SB(p[0], p[1]) === b0); if (d.walk.length < 2) d.walk = null; } if (d.run && SB(d.run[0], d.run[1]) !== b0) d.run = null; if (d.at) { const t = P2(d.at); if (t) d.at[2] = (d.at[2] || 0) + t; } if (d.walk) d.walk.forEach(P2); if (d.run) P2(d.run); }
 export function setP(x, z, yaw) { const b = SB(x, z); if (!b) return [x, z, yaw]; const p = FW(b, x, z); return [p[0], p[1], yaw + b.th]; }
 // new roads in the open land between districts + scenery + the outer edge
-export function newLand(w, K, TH, floor, mesa) { const keep = w._forceB; w._forceB = null; const roads = [];
+let ROADS = [];
+export function newLand(w, K, TH, floor, mesa) { const keep = w._forceB; w._forceB = null; const roads = ROADS = [];
   const rows = {}; for (const b of BLOCKS) { const key = Math.round(b.cz / 50); (rows[key] = rows[key] || []).push(b); }
   const zs = Object.keys(rows).map(Number).sort((a, b) => a - b).map((k) => rows[k]);
   for (let i = 0; i < zs.length - 1; i++) { const zA = Math.max(...zs[i].map((b) => b.d[3])), zB = Math.min(...zs[i + 1].map((b) => b.d[1])), zc = (zA + zB) / 2; roads.push([-MAPR + 14, zc - 3, MAPR - 14, zc + 3]); }
@@ -41,4 +42,14 @@ export function newLand(w, K, TH, floor, mesa) { const keep = w._forceB; w._forc
   let n = 0; for (let x = -MAPR + 12; x <= MAPR - 12; x += 11) for (let z = -MAPR + 12; z <= MAPR - 12; z += 11) { const jx = x + Math.sin(x * 12.9 + z * 7.1) * 3.5, jz = z + Math.cos(x * 3.7 - z * 9.3) * 3.5; if (inBlock(jx, jz, 3) || onRoad(jx, jz, 3.5) || ((x * 31 + z * 17) & 3) === 0) continue; TH.tree(w, K, jx, jz, 0.8 + ((x * 7 + z * 3) & 3) * 0.12); n++; }
   for (let i = 0; i < 26; i++) { const t = -MAPR + 8 + i * 14.6; mesa(w, t, MAPR - 4, 15, 9 + (i % 4) * 2.5, 8); mesa(w, t, -MAPR + 4, 15, 8 + (i % 3) * 3, 8); mesa(w, MAPR - 4, t, 8, 9 + (i % 3) * 3, 14); mesa(w, -MAPR + 4, t, 8, 8 + (i % 4) * 2.5, 14); }
   const R = MAPR + 4; w.solid(-R, 0, -R, R, 30, -MAPR + 1); w.solid(-R, 0, MAPR - 1, R, 30, R); w.solid(-R, 0, -R, -MAPR + 1, 30, R); w.solid(MAPR - 1, 0, -R, R, 30, R);
+  w._forceB = keep; return n; }
+
+// paved paths: from every building door straight out to the nearest new road (stops before other buildings)
+export function doorPaths(w, floor, REGIONS, DOORS) { const keep = w._forceB; w._forceB = null; let n = 0;
+  const regs = REGIONS.filter((r) => !r.under);
+  for (const id in DOORS) { const r = regs.find((q) => q.id === id); if (!r) continue; const [x, z] = DOORS[id]; const b = inBlock(x, z, 2); if (!b) continue;
+    let nx = x - (r.x0 + r.x1) / 2, nz = z - (r.z0 + r.z1) / 2; if (Math.abs(nx) / (r.x1 - r.x0) > Math.abs(nz) / (r.z1 - r.z0)) { nx = Math.sign(nx); nz = 0; } else { nz = Math.sign(nz); nx = 0; }
+    let L = 0; for (; L < 90; L += 1) { const px = x + nx * (L + 1), pz = z + nz * (L + 1); if (ROADS.some((q) => px > q[0] && px < q[2] && pz > q[1] && pz < q[3])) { L += 2; break; } if (regs.some((q) => q !== r && px > q.x0 - 1.5 && px < q.x1 + 1.5 && pz > q.z0 - 1.5 && pz < q.z1 + 1.5)) break; if (!inBlock(px, pz, 16)) break; }
+    if (L < 3) continue; const hw = 1.4, ax = x + nx * 0.3, az = z + nz * 0.3, bx = x + nx * L, bz = z + nz * L;
+    floor(w, Math.min(ax, bx) - (nz ? hw : 0), Math.min(az, bz) - (nx ? hw : 0), Math.max(ax, bx) + (nz ? hw : 0), Math.max(az, bz) + (nx ? hw : 0), 'tile', 0.006, 0xe8cfa6, 0xd9b98a, 1.0); n++; }
   w._forceB = keep; return n; }
