@@ -58,7 +58,9 @@ GA.MAIN_GAMES = [
   { id: 'eatsville', mp: true, name: 'Grok Eatsville Tycoon', desc: 'A cartoon 3D restaurant tycoon in the town of Eatsville! Start as a trainee at Mega Munch and work your way up, or open your own diner right away. Cook and serve, hire staff, design menus and decor, run deliveries in your car, build and decorate your house, and grow a food empire against Mega Munch and Pizza Palooza. Keep every branch spotless for grumpy Inspector Grumbleton, and fix the Ratita Industries kitchen gadgets when they go haywire. Explore mode, 10 hidden Golden Spatulas, and co-op for up to 3 friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-eatsville/', color: '#ff7a3d', color2: '#14b8a6' },
   { id: 'northpole', mp: true, name: 'Grok North Pole Village', desc: 'A snowy cartoon 3D Christmas village at the North Pole! Visit Santa at Town Hall, ride the North Pole Express, explore Santa\u2019s Toy Workshop, the Santa Update Newsroom, North Pole Flight Command and the Post Office, then walk down Operations Row: the giant Wrapping Department plus 20 departments, from Snow Removal to Reindeer Operations, each with its own activity. Meet 80 named elves from santaupdate.com at their real jobs, check Wish Lists twice, solve a holiday mystery and play with visitors Torty, Candy, Luna, Pi-rat and Snowie. Co-op for 3 online.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-north-pole/', color: '#ef4444', color2: '#22c55e' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-north-pole/', color: '#ef4444', color2: '#22c55e' },
+  { id: 'pumpkinhollow', mp: true, name: 'Grok Pumpkin Hollow', desc: 'A moonlit cartoon 3D Halloween town of friendly ghosts and pumpkinheads! Ride the Ghost Train, explore Pumpkin Square, Spooky Street, the Abandoned Village, Haunted Hill, the Pumpkin Patch and the Bat Caves, catch a scary movie at the Scream-o-Vision Picture House, then walk down Boo Row: the Haunted Costume Shop, Witch\u2019s Potion Shoppe, Ghost Post Office, Skeleton Dance Hall, Candy Corn Factory, Monster Bakery, Fortune Teller, Mummy Spa, Carving Studio and Haunted Hotel, each with its own activity. Solve Who swiped the Moon Lantern? with visitors Torty, Candy, Luna, Pi-rat and Snowie. Co-op for 3 online.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-pumpkin-hollow/', color: '#f97316', color2: '#7c3aed' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -109,6 +111,8 @@ GA.BONUS_GAMES = [
   { id: 'shelldrop', name: 'Shell Drop', desc: 'Tortuga Tech drop test! Gadgets tumble down Torty\u2019s drop tower: TAP the cracked ones to bolt on a shell plate before they land. Golden gadgets score big, but leave the Rubber Lettuce alone. A Grok Torty Town game.', color: '#ffb020', color2: '#0f9d8a' },
   /* #39: Chimney Drop (Grok North Pole Village), on the Bonus Zone wall */
   { id: 'chimneydrop', name: 'Chimney Drop', desc: 'Help Santa deliver! The sleigh glides across the night sky: TAP to drop presents into the chimneys rolling past below. Golden chimneys score big, but don\u2019t bonk the snowman. A Grok North Pole Village game.', color: '#ef4444', color2: '#22c55e' },
+  /* #40: Boo Drop (Grok Pumpkin Hollow), on the Bonus Zone wall */
+  { id: 'boodrop', name: 'Boo Drop', desc: 'Trick or treat on Boo Row! Wisp the little ghost floats over the rooftops: TAP to drop candy into the jack-o\u2019-lantern buckets rolling past below. Golden pumpkins score big, but don\u2019t wake the sleeping black cat. A Grok Pumpkin Hollow game.', color: '#f97316', color2: '#7c3aed' },
 ];
 /* bonus games that have a cabinet on the Bonus Zone wall (1983 retro games live in the old arcade instead) */
 GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era && !g.room; }); };

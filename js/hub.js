@@ -869,6 +869,31 @@
         g.fillStyle = '#ffb020'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK TORTY TOWN', w / 2, 24);
         break;
       }
+      case 'pumpkinhollow': {
+        // Grok Pumpkin Hollow: purple night sky, big moon with bats flapping past, Wisp the ghost bobbing, the BOO ROW arch with glowing jack-o'-lanterns, crooked houses and drifting fog
+        var gph = g.createLinearGradient(0, 0, 0, h); gph.addColorStop(0, '#120726'); gph.addColorStop(0.5, '#3b1d5c'); gph.addColorStop(0.62, '#c2410c'); gph.addColorStop(0.63, '#2a1f3d'); gph.addColorStop(1, '#1a1028'); g.fillStyle = gph; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#fff'; for (i = 0; i < 20; i++) { g.globalAlpha = 0.4 + Math.sin(t * 2 + i) * 0.3; g.fillRect((i * 47.3) % w, (i * 19.1) % (h * 0.45), 2, 2); } g.globalAlpha = 1;
+        g.fillStyle = '#fef3c7'; g.beginPath(); g.arc(w * 0.74, h * 0.2, w * 0.11, 0, 7); g.fill();
+        for (i = 0; i < 3; i++) { var bx7 = (t * (24 + i * 8) + i * 70) % (w + 40) - 20, by7 = h * (0.16 + i * 0.06) + Math.sin(t * 3 + i) * 5, fl7 = Math.abs(Math.sin(t * 10 + i)) * 6; g.fillStyle = '#120726'; g.beginPath(); g.moveTo(bx7, by7); g.lineTo(bx7 - 10, by7 - 3 - fl7); g.lineTo(bx7 - 4, by7 + 3); g.lineTo(bx7 + 4, by7 + 3); g.lineTo(bx7 + 10, by7 - 3 - fl7); g.closePath(); g.fill(); }
+        [[0.04, 0.2, 0.17, '#4c1d95'], [0.66, 0.3, 0.2, '#7c2d12'], [0.3, 0.12, 0.13, '#1e1b4b']].forEach(function (q) { var hx = w * q[0], hw = w * q[1], hh = h * q[2], hy = h * 0.63 - hh; g.fillStyle = q[3]; g.fillRect(hx, hy, hw, hh); g.fillStyle = '#1f1630'; g.beginPath(); g.moveTo(hx - 4, hy + 2); g.lineTo(hx + hw * 0.4, hy - hh * 0.45); g.lineTo(hx + hw + 4, hy + 2); g.closePath(); g.fill(); g.fillStyle = '#fb923c'; g.fillRect(hx + hw * 0.2, hy + hh * 0.3, hw * 0.2, hh * 0.25); g.fillRect(hx + hw * 0.6, hy + hh * 0.3, hw * 0.2, hh * 0.25); });
+        g.fillStyle = '#1f1630'; g.fillRect(w * 0.2, h * 0.42, 5, h * 0.3); g.fillRect(w * 0.8 - 5, h * 0.42, 5, h * 0.3); rrF(g, w * 0.17, h * 0.38, w * 0.66, h * 0.07, 4); g.font = font(13); g.textAlign = 'center'; g.fillStyle = '#fdba74'; g.fillText('BOO ROW', w / 2, h * 0.43);
+        [0.2, 0.8].forEach(function (px) { var fx7 = w * px + 2, fy7 = h * 0.36; g.fillStyle = '#f97316'; g.beginPath(); g.ellipse(fx7, fy7, 10, 8, 0, 0, 7); g.fill(); g.fillStyle = 'rgba(253,224,71,' + (0.7 + Math.sin(t * 6 + px * 9) * 0.3) + ')'; g.fillRect(fx7 - 5, fy7 - 3, 3, 3); g.fillRect(fx7 + 2, fy7 - 3, 3, 3); g.fillRect(fx7 - 4, fy7 + 2, 8, 2); });
+        var gx7 = w * 0.5 + Math.sin(t * 0.9) * w * 0.25, gy7 = h * 0.58 + Math.sin(t * 2.2) * 6; g.fillStyle = '#f5f3ff'; g.beginPath(); g.arc(gx7, gy7, 13, Math.PI, 0); g.lineTo(gx7 + 13, gy7 + 14); for (i = 0; i < 4; i++) g.lineTo(gx7 + 9 - i * 6, gy7 + (i % 2 ? 14 : 19)); g.lineTo(gx7 - 13, gy7 + 14); g.closePath(); g.fill(); g.fillStyle = '#1e1b4b'; g.fillRect(gx7 - 6, gy7 - 4, 3, 5); g.fillRect(gx7 + 3, gy7 - 4, 3, 5);
+        for (i = 0; i < 5; i++) { var px7 = w * (0.1 + i * 0.2), py7 = h * 0.8 + (i % 2) * 10; g.fillStyle = '#f97316'; g.beginPath(); g.ellipse(px7, py7, 12, 9, 0, 0, 7); g.fill(); g.fillStyle = '#15803d'; g.fillRect(px7 - 1, py7 - 12, 3, 4); g.fillStyle = 'rgba(253,224,71,' + (0.6 + Math.sin(t * 5 + i) * 0.4) + ')'; g.beginPath(); g.moveTo(px7 - 7, py7 - 1); g.lineTo(px7 - 4, py7 - 5); g.lineTo(px7 - 1, py7 - 1); g.moveTo(px7 + 1, py7 - 1); g.lineTo(px7 + 4, py7 - 5); g.lineTo(px7 + 7, py7 - 1); g.fill(); g.fillRect(px7 - 5, py7 + 3, 10, 2); }
+        g.fillStyle = 'rgba(196,181,253,.18)'; for (i = 0; i < 4; i++) { g.beginPath(); g.ellipse((i * 80 + t * 12) % (w + 100) - 50, h * 0.9, 70, 12, 0, 0, 7); g.fill(); }
+        g.fillStyle = '#f97316'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(13); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK PUMPKIN HOLLOW', w / 2, 23);
+        break;
+      }
+      case 'boodrop': {
+        var gbd = g.createLinearGradient(0, 0, 0, h); gbd.addColorStop(0, '#120726'); gbd.addColorStop(0.75, '#3b1d5c'); gbd.addColorStop(1, '#c2410c'); g.fillStyle = gbd; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#fef3c7'; g.beginPath(); g.arc(w * 0.8, 50, 18, 0, 7); g.fill();
+        var hx8 = -((t * 40) % 120); for (i = 0; i < 4; i++) { var bx8 = hx8 + i * 120, bh8 = 50 + (i % 2) * 20, tp8 = h - 26 - bh8; g.fillStyle = ['#4c1d95', '#7c2d12', '#1e1b4b', '#14532d'][i]; g.fillRect(bx8, tp8, 70, bh8); g.fillStyle = '#1f1630'; g.beginPath(); g.moveTo(bx8 - 5, tp8 + 2); g.lineTo(bx8 + 25, tp8 - 16); g.lineTo(bx8 + 75, tp8 + 2); g.closePath(); g.fill(); g.fillStyle = i === 2 ? '#facc15' : '#f97316'; g.beginPath(); g.ellipse(bx8 + 49, tp8 - 12, 11, 9, 0, 0, 7); g.fill(); g.fillStyle = '#fb923c'; g.fillRect(bx8 + 10, tp8 + 16, 12, 12); }
+        g.fillStyle = '#2a1f3d'; g.fillRect(0, h - 26, w, 26);
+        var sx8 = w * 0.5 + Math.sin(t * 1.2) * w * 0.3, sy8 = 46 + Math.sin(t * 3) * 3; g.fillStyle = '#f5f3ff'; g.beginPath(); g.arc(sx8, sy8, 12, Math.PI, 0); g.lineTo(sx8 + 12, sy8 + 13); g.lineTo(sx8, sy8 + 9); g.lineTo(sx8 - 12, sy8 + 13); g.closePath(); g.fill(); g.fillStyle = '#1e1b4b'; g.fillRect(sx8 - 5, sy8 - 4, 3, 4); g.fillRect(sx8 + 2, sy8 - 4, 3, 4);
+        var fp8 = (t * 0.8) % 1; g.fillStyle = ['#a855f7', '#22c55e', '#ec4899'][Math.floor(t * 0.8) % 3]; g.beginPath(); g.ellipse(sx8, 64 + fp8 * (h - 140), 6, 4.5, 0, 0, 7); g.fill();
+        g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#fed7aa'; g.fillText('BOO DROP', w / 2, 22);
+        break;
+      }
       case 'northpole': {
         // Grok North Pole Village: night sky with northern lights, falling snow, Santa's red workshop with a glowing North Star, the giant Wrapping Department bow, and Santa's sleigh gliding past the moon
         var gnp = g.createLinearGradient(0, 0, 0, h); gnp.addColorStop(0, '#0b1d4a'); gnp.addColorStop(0.55, '#2c4f9e'); gnp.addColorStop(0.56, '#eaf4ff'); gnp.addColorStop(1, '#cfe3f7'); g.fillStyle = gnp; g.fillRect(0, 0, w, h);

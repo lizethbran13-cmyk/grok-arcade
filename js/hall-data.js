@@ -1923,6 +1923,71 @@ GA.HALL_DATA = {
 "noOld": "Grok Eatsville Tycoon just opened for business. Its Time Jumper beta is in the Save Vault. Please wash your hands."
 
 },
+"pumpkinhollow": {
+"repo": "grok-pumpkin-hollow",
+"history": [
+{
+"date": "Oct 12",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A moonlit cartoon 3D Halloween town in the Turbo look: ride the Ghost Train, explore Pumpkin Square, Spooky Street, the Abandoned Village, Haunted Hill, the Pumpkin Patch and the Bat Caves, catch a movie at the Scream-o-Vision Picture House, and walk down Boo Row: ten walk-in shops from the Haunted Costume Shop to the Haunted Hotel, each with its own activity. Solve Who swiped the Moon Lantern? with visitors Torty, Candy, Luna, Pi-rat and Snowie. Co-op for 3."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/pumpkinhollow/1.webp",
+"cap": "The BOO ROW arch: ten spooky walk-in shops line the new street",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pumpkinhollow/2.webp",
+"cap": "Boo Row at night, with Casper Jr. the guide ghost floating along",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pumpkinhollow/3.webp",
+"cap": "Inside the Haunted Costume Shop: Madame Stitchwhisper's costume racks",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pumpkinhollow/4.webp",
+"cap": "The Skeleton Dance Hall: glowing dance floor and a pumpkin disco ball",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pumpkinhollow/5.webp",
+"cap": "The Candy Corn Factory line: yellow, orange and white",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pumpkinhollow/6.webp",
+"cap": "Madame Mystic's Fortune Parlor and her crystal ball",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pumpkinhollow/7.webp",
+"cap": "The lobby of the Haunted Hotel, where every room comes with a free ghost",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pumpkinhollow/8.webp",
+"cap": "Inside the Scream-o-Vision Picture House",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/pumpkinhollow/cover.webp",
+"quip": "A friendly ghost floated through the exhibit wall to see the pictures. Then floated back out. Then in again. She says the Mummy Spa picture is her favourite.",
+"noOld": "Grok Pumpkin Hollow just opened. Its Time Jumper beta is in the Save Vault (Final Beta). Please don't feed the bats."
+},
 "northpole": {
 "repo": "grok-north-pole",
 "history": [

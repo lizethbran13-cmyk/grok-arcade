@@ -1,15 +1,14 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-12T14:00:00-07:00",
+  "updated": "2026-10-12T14:50:00-07:00",
   "items": [
     {
       "game": "pumpkinhollow",
-      "name": "Grok Pumpkin Hollow",
-      "what": "A brand new Halloween hub: Pumpkin Hollow, a moonlit spooky town. Explore an abandoned village, a graveyard, haunted shops and bat caves, solve Who swiped the Moon Lantern?, and find the secret under the hills. Torty, Candy, Luna, Pi-rat and Snowie visit. Co-op for 3.",
-      "stage": "building",
-      "when": "In the lab now",
-      "gname": "New hub",
-      "key": "pumpkinhollow"
+      "name": "Grok Pumpkin Hollow (live)",
+      "what": "Grok Pumpkin Hollow: a moonlit Halloween town with the Ghost Train, the Scream-o-Vision Picture House, the Bat Caves and Boo Row (10 spooky walk-in shops, each with an activity). Solve Who swiped the Moon Lantern? Co-op for 3. Play it in Hubs & Worlds!",
+      "stage": "shipped",
+      "when": "Oct 12",
+      "shippedAt": "2026-10-12T21:50:00Z"
     },
     {
       "game": "northpole",
@@ -205,19 +204,20 @@
       "when": "Oct 10"
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "pumpkinhollow",
       "game": "pumpkinhollow",
       "name": "Grok Pumpkin Hollow",
-      "url": "previews/pumpkinhollow/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/pumpkinhollow-beta/",
       "built": "2026-10-12",
-      "notes": "Update! Boo Row: a new spooky street with 10 walk-in shops (Costume Shop, Potion Shoppe, Ghost Post Office, Skeleton Dance Hall, Candy Corn Factory, Monster Bakery, Fortune Teller, Mummy Spa, Carving Studio, Haunted Hotel). Floating stuff pinned down."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-12",
+      "notes": "The last Time Jumper build of Grok Pumpkin Hollow before release.",
+      "playable": true
+    },
     {
       "id": "relics",
       "game": "relics",
