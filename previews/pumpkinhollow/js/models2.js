@@ -1,8 +1,8 @@
 // Ratita Industries HQ: extra smooth 3D models (the bot cousins, Sweepy, Bitsy, test rigs). No flat cut-outs: screens are real screens.
 import * as THREE from 'three';
-import { P } from './geo.js?v=ph8';
-import { MB, toGroup } from './models.js?v=ph8';
-import { rcyl, lathe, torus, capsule, cone, cyl, tube, wedge, gear, star } from './shapes.js?v=ph8';
+import { P } from './geo.js?v=ph10';
+import { MB, toGroup } from './models.js?v=ph10';
+import { rcyl, lathe, torus, capsule, cone, cyl, tube, wedge, gear, star } from './shapes.js?v=ph10';
 const PI = Math.PI;
 // ---------------------------------------------------------------- screen faces (canvas sized to the exact plane aspect)
 function faceScreen(wpx, hpx, pw, ph) { const c = document.createElement('canvas'); c.width = wpx; c.height = hpx; const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;

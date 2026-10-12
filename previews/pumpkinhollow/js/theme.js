@@ -18,7 +18,7 @@ export function tree(w, K, x, z, s = 1) { const { cyl, sph, cone } = K, R = K.R;
   for (let i = 0; i < 8; i++) w.add('m', cyl(10), i % 2 ? 0x3b2a22 : 0x2f2019, x + Math.sin(i * 0.7) * 0.15 * s, i * H / 8 + 0.4, z, Math.sin(i) * 0.12, 0, Math.cos(i) * 0.12, 0.42 * s * (1 - i / 11), H / 8 + 0.1, 0.42 * s * (1 - i / 11));
   for (let b = 0; b < 6; b++) { const a = b * 1.1 + R(), y = H * (0.5 + b * 0.08), L = (1.8 + R()) * s; w.add('m', cyl(8), 0x2f2019, x + Math.cos(a) * L * 0.45, y + 0.4, z + Math.sin(a) * L * 0.45, Math.sin(a) * 1.0, 0, -Math.cos(a) * 1.0, 0.12 * s, L, 0.12 * s);
     for (let t = 0; t < 2; t++) w.add('m', cyl(6), 0x3b2a22, x + Math.cos(a) * L * 0.85, y + 0.9 + t * 0.3, z + Math.sin(a) * L * 0.85, Math.sin(a + t) * 0.6, 0, -Math.cos(a + t) * 0.6, 0.05 * s, L * 0.45, 0.05 * s);
-    if (b % 2 === 0) { const px = x + Math.cos(a) * L * 0.9, pz = z + Math.sin(a) * L * 0.9; w.add('m', cyl(6), 0x111111, px, y - 0.1, pz, 0, 0, 0, 0.01, 0.8, 0.01); pumpkin(w, K, px, y - 0.9, pz, 0.45 * s, true); } }
+    if (b % 2 === 0) { const px = x + Math.cos(a) * L * 0.9, pz = z + Math.sin(a) * L * 0.9; w.add('m', cyl(6), 0x78716c, px, y - 0.9, pz, 0, 0, 0, 0.028 * s + 0.01, 1.15 + 0.3 * L, 0.028 * s + 0.01); pumpkin(w, K, px, y - 0.9, pz, 0.45 * s, true); } }
   w.solid(x - 0.4 * s, 0, z - 0.4 * s, x + 0.4 * s, H * 0.8, z + 0.4 * s, { cam: false }); }
 export function pumpkin(w, K, x, y, z, s = 1, lit = true) { const { sph, cyl, cone } = K;
   for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; w.add('g', sph(14), i % 2 ? 0xff7a1a : 0xf06a10, x + Math.cos(a) * 0.22 * s, y + 0.38 * s, z + Math.sin(a) * 0.22 * s, 0, -a, 0, 0.3 * s, 0.38 * s, 0.22 * s); }
@@ -53,4 +53,4 @@ export function dress(w, K) { const R = K.R, P = Math.PI; w.region = 'out';
 // themed interiors: cobwebs in the corners, candle clusters, a pumpkin, bats hanging from the ceiling, in every walk-in building
 export function dressInside(w, K, REGIONS) { for (const r of REGIONS) { if (r.under) continue; w.region = r.id; const c = [[r.x0 + 0.9, r.z0 + 0.9, 0], [r.x1 - 0.9, r.z0 + 0.9, Math.PI / 2], [r.x1 - 0.9, r.z1 - 0.9, Math.PI], [r.x0 + 0.9, r.z1 - 0.9, -Math.PI / 2]];
   c.forEach(([x, z, a], i) => { web(w, K, x, r.ceil - 0.7, z, a + Math.PI / 4, 0.8); if (i % 2 === 0) { for (let k = 0; k < 3; k++) { const h = 0.25 + k * 0.12; w.add('g', K.cyl(10), 0xf3ead2, x + (k - 1) * 0.16, 0.02, z + (k % 2) * 0.12, 0, 0, 0, 0.05, h, 0.05); w.add('g', K.sph(8), 0xffb347, x + (k - 1) * 0.16, h + 0.07, z + (k % 2) * 0.12, 0, 0, 0, 0.035, 0.06, 0.035, 2.6); } } else pumpkin(w, K, x, 0, z, 0.55); });
-  for (let k = 0; k < 3; k++) bat(w, K, r.x0 + (r.x1 - r.x0) * (k + 1) / 4, r.ceil - 0.35, (r.z0 + r.z1) / 2 + (k - 1) * 1.5, 0.9, k); } w.region = 'out'; }
+  for (let k = 0; k < 3; k++) bat(w, K, r.x0 + (r.x1 - r.x0) * (k + 1) / 4, r.ceil - 0.27, (r.z0 + r.z1) / 2 + (k - 1) * 1.5, 0.9, k); } w.region = 'out'; }

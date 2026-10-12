@@ -1,11 +1,11 @@
 // World: batched static geometry (chunked per material), colliders, zones and queries.
 import * as THREE from 'three';
-import { SB, DB, DROP } from './layout.js?v=ph8';
-import { compact, spillCompact } from './compact.js?v=ph8';
+import { SB, DB, DROP } from './layout.js?v=ph10';
+import { compact, spillCompact } from './compact.js?v=ph10';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { MATS } from './mats.js?v=ph8';
-import { remap as THR } from './theme.js?v=ph8';
+import { MATS } from './mats.js?v=ph10';
+import { remap as THR } from './theme.js?v=ph10';
 
 const CH = 22, CELL = 8;
 const _m = new THREE.Matrix4(), _m2 = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3(), _c = new THREE.Color(), _n = new THREE.Matrix3();
@@ -37,6 +37,8 @@ function lodGeo(geom, m) { const P0 = geom.parameters; if (!P0) return geom; con
   return g || geom; }
 const rbCache = new Map();
 export function clearWorldCaches() { for (const g of prepCache.values()) g.dispose(); prepCache.clear(); for (const g of rbCache.values()) g.dispose(); rbCache.clear(); }
+export const FIX = {"P:g@-63.3,1.8,-7.0": 1.7, "P:f@-93.2,1.8,-30.0": 1.31, "P:f@-91.4,1.8,-30.0": 1.31, "P:f@-89.6,1.8,-30.0": 1.31, "P:f@-87.8,1.8,-30.0": 1.31, "P:m@-42.1,6.2,36.8": 6.17, "P:m@-40.1,6.3,36.3": 4.73, "P:m@-38.8,6.8,36.6": 6.73, "P:m@-54.8,6.4,-35.4": 6.26, "P:m@-67.4,7.4,36.1": 7.29, "P:m@-95.7,5.1,32.5": 4.39, "P:m@-39.7,1.2,35.8": 0.68, "P:m@-72.9,1.3,35.8": 0.71, "P:m@-89.5,1.3,35.8": 0.65, "P:m@-106.1,1.4,35.8": 0.75, "P:m@13.8,3.7,-116.9": 3.61, "P:m@-175.6,6.0,-25.7": 5.91, "P:m@-179.5,6.0,60.7": 0.83, "P:m@-179.4,5.4,137.0": 5.28, "P:m@-169.6,5.4,-130.9": 5.28, "P:m@-166.5,4.5,-87.9": 4.4, "P:m@-165.0,6.7,67.3": 6.55, "P:m@-168.9,3.2,116.5": 3.1, "P:m@-169.7,5.4,176.0": 5.28, "P:m@-152.8,3.6,-59.6": 3.51, "P:m@-138.4,5.6,-104.4": 5.44, "P:m@-98.5,5.6,176.9": 5.44, "P:m@-54.0,4.0,-170.4": 3.88, "P:m@-37.5,4.5,41.7": 4.4, "P:m@19.4,6.0,-178.0": 5.91, "P:m@23.5,3.6,160.3": 3.51, "P:m@52.7,5.4,-0.7": 5.28, "P:m@61.1,4.4,-163.6": 4.32, "P:m@94.3,4.7,-61.1": 4.64, "P:m@105.5,4.5,160.6": 4.39, "P:m@118.5,6.7,169.8": 6.55, "P:m@153.7,4.5,-13.3": 4.4, "P:m@153.6,4.5,27.7": 4.4, "P:m@164.4,3.6,156.3": 3.51, "P:m@177.5,4.0,106.3": 3.91, "P:x@66.0,4.4,-62.5": 3.78, "P:x@108.0,5.0,-47.0": 4.59, "P:g@-109.2,2.1,-93.9": 1.94, "P:m@-111.8,4.6,-78.4": 4.52, "P:g@-90.7,0.9,-77.0": 0.76, "P:m@70.0,0.4,41.3": 0.39, "P:m@-126.0,0.7,-40.0": 0.65, "P:m@-124.2,0.7,-40.0": 0.65, "P:m@-121.6,0.7,-40.0": 0.65, "P:m@-110.9,0.7,-40.0": 0.7, "P:m@-110.0,0.7,-40.0": 0.7, "P:m@-108.2,0.7,-40.0": 0.67, "P:m@-105.6,0.7,-40.0": 0.67, "P:m@-102.9,0.7,-40.0": 0.67, "P:m@-102.0,0.7,-40.0": 0.67, "P:m@-100.2,0.7,-40.0": 0.67, "P:m@-86.9,0.7,-40.0": 0.67, "P:m@-86.0,0.7,-40.0": 0.67, "P:m@-84.2,0.7,-40.0": 0.67, "P:m@-78.9,0.7,-40.0": 0.7, "P:m@-78.0,0.7,-40.0": 0.7, "P:m@-76.2,0.7,-40.0": 0.7, "P:m@-73.6,0.7,-40.0": 0.7, "P:m@-70.9,0.7,-40.0": 0.7, "P:m@-70.0,0.7,-40.0": 0.7, "P:m@-68.2,0.7,-40.0": 0.7, "P:m@-62.9,0.7,-40.0": 0.7, "P:m@-62.0,0.7,-40.0": 0.7, "P:m@-62.0,0.7,-40.9": 0.69, "P:m@-62.0,0.7,-41.8": 0.7, "P:m@-62.0,0.7,-42.7": 0.7, "P:m@-62.0,0.7,-43.6": 0.69, "P:m@-62.0,0.7,-44.5": 0.7, "P:m@-62.0,0.7,-45.4": 0.7, "P:m@-62.0,0.7,-46.3": 0.69, "P:m@-62.0,0.7,-47.2": 0.7, "P:m@-62.0,0.7,-48.1": 0.7, "P:m@-62.0,0.7,-49.0": 0.69, "P:m@-62.0,0.7,-49.9": 0.7, "P:m@-62.0,0.7,-50.8": 0.7, "P:m@-62.0,0.7,-51.7": 0.69, "P:m@-62.0,0.7,-52.6": 0.7, "P:m@-62.0,0.7,-53.5": 0.7, "P:m@-62.0,0.7,-54.4": 0.69, "P:m@-62.0,0.7,-55.3": 0.7, "P:m@-62.0,0.7,-56.2": 0.7, "P:m@-62.0,0.7,-57.1": 0.69, "P:m@-62.0,0.7,-58.0": 0.7, "P:m@-62.0,0.7,-58.9": 0.7, "P:m@-62.0,0.7,-80.4": 0.7, "P:m@-62.0,0.7,-81.3": 0.67, "P:m@-62.0,0.7,-82.2": 0.67, "P:m@-62.0,0.7,-83.1": 0.67, "P:m@-62.0,0.7,-84.0": 0.67, "P:m@-62.0,0.7,-84.9": 0.67, "P:m@-62.0,0.7,-85.8": 0.67, "P:m@-62.0,0.7,-86.7": 0.67, "P:m@-62.0,0.7,-87.6": 0.7, "P:m@-62.0,0.7,-88.5": 0.7, "P:m@-62.0,0.7,-89.4": 0.69, "P:m@-62.0,0.7,-90.3": 0.7, "P:m@-62.0,0.7,-91.2": 0.7, "P:m@-62.0,0.7,-92.1": 0.69, "P:m@-62.0,0.7,-93.0": 0.7, "P:m@-62.0,0.7,-93.9": 0.7, "P:m@-62.0,0.7,-94.8": 0.69, "P:m@-62.0,0.7,-95.7": 0.7, "P:m@-62.0,0.7,-96.6": 0.7, "P:m@-62.0,0.7,-97.5": 0.69, "P:m@-62.0,0.7,-98.4": 0.7, "P:m@-62.0,0.7,-99.3": 0.7, "P:m@-62.0,0.7,-100.2": 0.69, "P:m@-62.0,0.7,-101.1": 0.7, "P:m@-62.0,0.7,-102.0": 0.7, "P:m@-62.0,0.7,-102.9": 0.69, "P:m@-62.0,0.7,-103.8": 0.7, "P:m@-62.0,0.7,-104.7": 0.7, "P:m@-62.0,0.7,-105.6": 0.69, "P:m@-62.0,0.7,-106.4": 0.7, "P:m@-62.0,0.7,-107.3": 0.7, "P:m@-62.0,0.7,-108.2": 0.69, "P:m@-62.0,0.7,-109.1": 0.7, "P:m@-62.0,0.7,-110.0": 0.7, "P:m@-62.0,0.7,-110.9": 0.69, "P:m@-62.0,0.7,-111.8": 0.7, "P:m@-62.0,0.7,-112.7": 0.7, "P:m@-62.0,0.7,-113.6": 0.69, "P:m@-62.0,0.7,-114.5": 0.7, "P:m@-62.0,0.7,-115.4": 0.7, "P:m@-62.0,0.7,-116.3": 0.69, "P:m@-62.0,0.7,-117.2": 0.7, "P:m@-62.0,0.7,-118.1": 0.7, "P:m@-62.0,0.7,-119.0": 0.69, "P:m@-62.0,0.7,-119.9": 0.7, "P:m@-62.0,0.7,-120.8": 0.7, "P:m@-62.0,0.7,-121.7": 0.69, "P:m@-128.0,0.7,96.0": 0.7, "P:m@-126.2,0.7,96.0": 0.7, "P:m@-123.6,0.7,96.0": 0.7, "P:m@-121.0,0.7,96.0": 0.7, "P:m@-120.1,0.7,96.0": 0.7, "P:m@-118.3,0.7,96.0": 0.7, "P:m@-115.7,0.7,96.0": 0.7, "P:m@-113.0,0.7,96.0": 0.7, "P:m@-110.4,0.7,96.0": 0.7, "P:m@-107.8,0.7,96.0": 0.7, "T@42.0,11.3,-38.9": 7.93, "T@76.8,7.1,-35.5": 6.87, "T@103.0,8.2,23.2": 7.87, "T@112.1,7.8,0.8": 7.49};
+const _k1 = (v) => (Math.round(v * 10) / 10).toFixed(1);
 export function rbox(w, h, d, r, seg = 2) {
   r = Math.min(r, w / 2 - 0.001, h / 2 - 0.001, d / 2 - 0.001); if (r < 0.005) r = 0.005; if (seg > 1 && (r < 0.12 || Math.max(w, h, d) < 0.45)) seg = 1; /* holiday iOS diet: small bevels use one smooth step */ // tiny bevels: one bevel step looks identical, ~2x fewer vertices
   const k = [w, h, d, r, seg].map((v) => +(+v).toFixed(3)).join(','); let g = rbCache.get(k);
@@ -46,7 +48,7 @@ export function mtx(x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx
 
 export class World {
   constructor(def) {
-    this.def = def || {}; this.group = new THREE.Group(); this.chunks = new Map(); this.solids = []; this.dyn = []; this.zones = []; this.grid = new Map(); this.stamp = 0;
+    this.def = def || {}; if (globalThis.__FLOATSCAN) { this._scan = []; (globalThis.__FS = globalThis.__FS || []).push(this); } this.group = new THREE.Group(); this.chunks = new Map(); this.solids = []; this.dyn = []; this.zones = []; this.grid = new Map(); this.stamp = 0;
     this.ents = []; this.hooks = []; this.checkpoints = []; this.doors = []; this.plates = []; this.levers = []; this.movers = []; this.enemies = []; this.lights = []; this.anims = []; this.killY = -6; this.route = [];
     this.tris = 0; this.drawCalls = 0; this.fades = []; this._fg = null; this._region = 'shell'; this.detail = false; this.regionMeshes = {}; this.detailMeshes = [];
     this.oy = 0; // vertical build offset: upper storeys reuse every floor-level prop helper unchanged
@@ -59,6 +61,7 @@ export class World {
   fadeEnd() { this._fg = null; }
   // ---- visuals ----
   _part(bucket, geom, color, m, em = 0) {
+    let gk_, hd_ = 0; if (this._gk) { if (!this._gres) { this._gres = true; this._gkey = this._gk + '@' + _k1(m.elements[12]) + ',' + _k1(m.elements[13]) + ',' + _k1(m.elements[14]); this._gdy = FIX[this._gkey] || 0; } gk_ = this._gkey; if (this._gdy) m.elements[13] -= this._gdy; } else { gk_ = 'P:' + bucket + '@' + _k1(m.elements[12]) + ',' + _k1(m.elements[13]) + ',' + _k1(m.elements[14]); const d_ = FIX[gk_]; if (d_ === 'x') hd_ = 1; else if (d_) m.elements[13] -= d_; }
     const b_ = this._forceB !== undefined ? this._forceB : (geom.parameters && geom.parameters.width > 300 ? null : SB(m.elements[12], m.elements[14])); const skip_ = this._forceDrop !== undefined ? this._forceDrop : DROP(b_, m.elements[12], m.elements[14]); if (b_) m.premultiply(b_.M);
     if (this._pendingFlush) { const c0 = this._pendingFlush; this._pendingFlush = null; this._flush(c0); }
     const g0 = prep(lodGeo(geom, m)); const g = g0.clone(); g.applyMatrix4(m); if (this.oy) g.translate(0, this.oy, 0);
@@ -67,7 +70,7 @@ export class World {
     g.setAttribute('color', new THREE.BufferAttribute(a, 3));
     const F = this._fg; if (F) { g.computeBoundingBox(); F.box.union(g.boundingBox); }
     const chs = this.detail ? 18 : (this.region === 'out' || this.region === 'shell') ? 36 : 400, cx = Math.floor(m.elements[12] / chs), cz = Math.floor(m.elements[14] / chs), key = F ? 'F' + F.id + ':' + bucket : this.region + (this.detail ? '~d' : '') + ':' + bucket + ':' + cx + ':' + cz;
-    if (skip_) return g; let ch = this.chunks.get(key); if (!ch) { ch = { bucket, parts: [], verts: 0, fade: F ? F.id : -1, region: this.region, detail: this.detail }; this.chunks.set(key, ch); } ch.parts.push(g); ch.verts += n; this._pv = (this._pv || 0) + n;
+    if (this._scan) { g.computeBoundingBox(); const B = g.boundingBox; this._scan.push([gk_, B.min.x, B.min.y, B.min.z, B.max.x, B.max.y, B.max.z, bucket, this.region, (skip_ || hd_) ? 1 : 0]); } if (hd_) return g; if (skip_) return g; let ch = this.chunks.get(key); if (!ch) { ch = { bucket, parts: [], verts: 0, fade: F ? F.id : -1, region: this.region, detail: this.detail }; this.chunks.set(key, ch); } ch.parts.push(g); ch.verts += n; this._pv = (this._pv || 0) + n;
     if (!this._pendingFlush && this._pv > 600000) { let big = null; for (const c of this.chunks.values()) if (c !== ch && (!big || c.verts > big.verts)) big = c; if (big && big.verts > 8000) this._pendingFlush = big; } return g;
   }
   add(bucket, geom, color, x, y, z, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx, em = 0) { return this._part(bucket, geom, color, mtx(x, y, z, rx, ry, rz, sx, sy, sz), em); }
@@ -76,10 +79,11 @@ export class World {
   // local frame for a prop: position + yaw + uniform scale
   tf(x, y, z, ry = 0, s = 1) { const w = this, _fb = w._forceB !== undefined ? w._forceB : SB(x, z), _fd = w._forceDrop !== undefined ? w._forceDrop : DROP(_fb, x, z), base = mtx(x, y, z, 0, ry, 0, s, s, s), c = Math.cos(ry), sn = Math.sin(ry);
     const P = (lx, ly, lz) => [x + (lx * c + lz * sn) * s, y + ly * s, z + (-lx * sn + lz * c) * s];
-    return { s, ry, P,
-      add(bucket, geom, col, lx = 0, ly = 0, lz = 0, rx = 0, rry = 0, rz = 0, sx = 1, sy = sx, sz = sx, em = 0) { _m2.multiplyMatrices(base, mtx(lx, ly, lz, rx, rry, rz, sx, sy, sz)); const k_ = w._forceB, d_ = w._forceDrop; w._forceB = _fb; w._forceDrop = _fd; const r_ = w._part(bucket, geom, col, _m2.clone(), em); w._forceB = k_; w._forceDrop = d_; return r_; },
+    const tk_ = 'T@' + _k1(x) + ',' + _k1(y) + ',' + _k1(z), tg_ = (f) => { if (w._gk) return f(); w._gk = 'T'; w._gres = true; w._gkey = tk_; w._gdy = FIX[tk_] || 0; try { return f(); } finally { w._gk = null; w._gdy = 0; } };
+    return { s, ry, P, tg_,
+      add(bucket, geom, col, lx = 0, ly = 0, lz = 0, rx = 0, rry = 0, rz = 0, sx = 1, sy = sx, sz = sx, em = 0) { if (!w._gk) return tg_(() => this.add(bucket, geom, col, lx, ly, lz, rx, rry, rz, sx, sy, sz, em)); _m2.multiplyMatrices(base, mtx(lx, ly, lz, rx, rry, rz, sx, sy, sz)); const k_ = w._forceB, d_ = w._forceDrop; w._forceB = _fb; w._forceDrop = _fd; const r_ = w._part(bucket, geom, col, _m2.clone(), em); w._forceB = k_; w._forceDrop = d_; return r_; },
       box(bucket, col, lx, ly, lz, bw, bh, bd, r = 0.08, em = 0, seg = 2) { if (r * s < 0.03) seg = 1; return this.add(bucket, rbox(bw, bh, bd, r, seg), col, lx, ly + bh / 2, lz, 0, 0, 0, 1, 1, 1, em); },
-      solid(lx0, ly0, lz0, lx1, ly1, lz1, o) { const a = P(lx0, ly0, lz0), b = P(lx1, ly1, lz1), d = P(lx0, ly0, lz1), e = P(lx1, ly0, lz0);
+      solid(lx0, ly0, lz0, lx1, ly1, lz1, o) { if (!w._gk) return tg_(() => this.solid(lx0, ly0, lz0, lx1, ly1, lz1, o)); const a = P(lx0, ly0, lz0), b = P(lx1, ly1, lz1), d = P(lx0, ly0, lz1), e = P(lx1, ly0, lz0);
         const k_ = w._forceB, d_ = w._forceDrop; w._forceB = _fb; w._forceDrop = _fd; const r_ = w.solid(Math.min(a[0], b[0], d[0], e[0]), Math.min(a[1], b[1]), Math.min(a[2], b[2], d[2], e[2]), Math.max(a[0], b[0], d[0], e[0]), Math.max(a[1], b[1]), Math.max(a[2], b[2], d[2], e[2]), o); w._forceB = k_; w._forceDrop = d_; return r_; },
       // solid box + matching rounded visual (local, bottom-centred)
       slab(bucket, col, lx, ly, lz, bw, bh, bd, r = 0.08, o, em) { this.box(bucket, col, lx, ly, lz, bw, bh, bd, r, em); return this.solid(lx - bw / 2, ly, lz - bd / 2, lx + bw / 2, ly + bh, lz + bd / 2, o); },
@@ -88,7 +92,7 @@ export class World {
   // world-space rounded slab with collider; x,z centre, y bottom
   slab(bucket, col, x, y, z, w, h, d, r = 0.1, o, em = 0, seg = 2) { if (r < 0.03) seg = 1; this.add(bucket, rbox(w, h, d, r, seg), col, x, y + h / 2, z, 0, 0, 0, 1, 1, 1, em); return o === false ? null : this.solid(x - w / 2, y, z - d / 2, x + w / 2, y + h, z + d / 2, o); }
   // ---- colliders ----
-  solid(x0, y0, z0, x1, y1, z1, o) { if (this.oy) { y0 += this.oy; y1 += this.oy; } { const b_ = this._forceB !== undefined ? this._forceB : (x1 - x0 > 300 ? null : SB((x0 + x1) / 2, (z0 + z1) / 2)); if ((this._forceDrop !== undefined ? this._forceDrop : DROP(b_, (x0 + x1) / 2, (z0 + z1) / 2)) && !(o && o.floor)) return Object.assign({ min: [x0, y0, z0], max: [x1, y1, z1] }, o || {}); if (b_) { const dx0 = x0 - b_.scx, dz0 = z0 - b_.scz, dx1 = x1 - b_.scx, dz1 = z1 - b_.scz; const ax = b_.cx + dx0 * b_.c + dz0 * b_.sn, az = b_.cz - dx0 * b_.sn + dz0 * b_.c, bx = b_.cx + dx1 * b_.c + dz1 * b_.sn, bz = b_.cz - dx1 * b_.sn + dz1 * b_.c; x0 = Math.min(ax, bx); x1 = Math.max(ax, bx); z0 = Math.min(az, bz); z1 = Math.max(az, bz); } }
+  solid(x0, y0, z0, x1, y1, z1, o) { if (this._gk && this._gdy) { y0 -= this._gdy; y1 -= this._gdy; } if (this.oy) { y0 += this.oy; y1 += this.oy; } { const b_ = this._forceB !== undefined ? this._forceB : (x1 - x0 > 300 ? null : SB((x0 + x1) / 2, (z0 + z1) / 2)); if ((this._forceDrop !== undefined ? this._forceDrop : DROP(b_, (x0 + x1) / 2, (z0 + z1) / 2)) && !(o && o.floor)) return Object.assign({ min: [x0, y0, z0], max: [x1, y1, z1] }, o || {}); if (b_) { const dx0 = x0 - b_.scx, dz0 = z0 - b_.scz, dx1 = x1 - b_.scx, dz1 = z1 - b_.scz; const ax = b_.cx + dx0 * b_.c + dz0 * b_.sn, az = b_.cz - dx0 * b_.sn + dz0 * b_.c, bx = b_.cx + dx1 * b_.c + dz1 * b_.sn, bz = b_.cz - dx1 * b_.sn + dz1 * b_.c; x0 = Math.min(ax, bx); x1 = Math.max(ax, bx); z0 = Math.min(az, bz); z1 = Math.max(az, bz); } }
     const s = Object.assign({ min: [x0, y0, z0], max: [x1, y1, z1] }, o || {});
     if (s.dyn) { s.dx = s.dy = s.dz = 0; this.dyn.push(s); } else { this.solids.push(s); this.index(s); }
     return s;

@@ -1,16 +1,16 @@
 // Ratita Industries HQ prop kit: rat-scale offices, labs and yard gear. Real smooth geometry everywhere (rounded boxes,
 // lathes, tubes); every prop batches into its room's merged meshes and registers simple colliders.
 import * as THREE from 'three';
-import { rbox } from './world.js?v=ph8';
-import { PR, propSeed, rnd, pick } from './props.js?v=ph8';
-import { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, wedge, gear, star, heart, blobGeo } from './shapes.js?v=ph8';
-import { textGeo } from './text3d.js?v=ph8';
+import { rbox } from './world.js?v=ph10';
+import { PR, propSeed, rnd, pick } from './props.js?v=ph10';
+import { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, wedge, gear, star, heart, blobGeo } from './shapes.js?v=ph10';
+import { textGeo } from './text3d.js?v=ph10';
 const PI = Math.PI;
 export const R = rnd;
 // ---------- scaled proxy so the big household prop library can be reused at rat scale ----------
 export function scaled(w, X, Y, Z, s) {
   const Pm = (x, y, z) => [X + x * s, Y + y * s, Z + z * s];
-  return { s, add(b, g, c, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx, em = 0) { const p = Pm(x, y, z); return w.add(b, g, c, p[0], p[1], p[2], rx, ry, rz, sx * s, sy * s, sz * s, em); },
+  return { _W: w._part ? w : w._W, s, add(b, g, c, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx, em = 0) { const p = Pm(x, y, z); return w.add(b, g, c, p[0], p[1], p[2], rx, ry, rz, sx * s, sy * s, sz * s, em); },
     addFn(b, g, fn, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0, sx = 1, sy = sx, sz = sx) { const p = Pm(x, y, z); return w.addFn(b, g, fn, p[0], p[1], p[2], rx, ry, rz, sx * s, sy * s, sz * s); },
     tf(x, y, z, ry = 0, sc = 1) { const p = Pm(x, y, z); const T = w.tf(p[0], p[1], p[2], ry, sc * s); const P0 = T.P; T.P = (a, b, c) => { const q = P0(a, b, c); return [(q[0] - X) / s, (q[1] - Y) / s, (q[2] - Z) / s]; }; return T; },
     slab(b, c, x, y, z, ww, h, d, r = 0.1, o, em = 0, seg = 2) { if (r * s < 0.03) seg = 1; const p = Pm(x, y, z); w.add(b, rbox(ww * s, h * s, d * s, r * s, seg), c, p[0], p[1] + h * s / 2, p[2], 0, 0, 0, 1, 1, 1, em); return o === false ? null : w.solid(p[0] - ww * s / 2, p[1], p[2] - d * s / 2, p[0] + ww * s / 2, p[1] + h * s, p[2] + d * s / 2, o); },

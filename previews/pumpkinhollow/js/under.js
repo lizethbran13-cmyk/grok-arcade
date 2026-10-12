@@ -1,7 +1,7 @@
 // The hidden place beneath Pumpkin Hollow: Bat Tunnels -> Bat Cave -> Hall of the Lantern Keepers. (Reached only by a secret.)
 import * as THREE from 'three';
-import * as K from './kit.js?v=ph8';
-import { tortStatue, shade, SUN } from './town.js?v=ph8';
+import * as K from './kit.js?v=ph10';
+import { tortStatue, shade, SUN } from './town.js?v=ph10';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; export const UY = -30;
 const ROCK = [0x8a6a52, 0x7a5c48, 0x9a785e, 0x6e523f];
@@ -10,7 +10,7 @@ function rockWall(w, axis, at, from, to, y0, h, side) { for (let p = from; p < t
 function room(w, id, x0, z0, x1, z1, ceil, floorCol, open) { w.region = id; const Y = UY;
   w.add('m', rbox(x1 - x0, 0.4, z1 - z0, 0.05), floorCol, (x0 + x1) / 2, Y - 0.2, (z0 + z1) / 2); w.solid(x0, Y - 3, z0, x1, Y, z1, { floor: true });
   w.add('m', rbox(x1 - x0 + 1, 0.6, z1 - z0 + 1, 0.1), 0x5b4334, (x0 + x1) / 2, ceil + 0.3, (z0 + z1) / 2); w.solid(x0 - 0.5, ceil, z0 - 0.5, x1 + 0.5, ceil + 0.6, z1 + 0.5, { cam: true, nofloor: true });
-  for (let i = 0; i < Math.floor((x1 - x0) * (z1 - z0) / 18); i++) { const x = x0 + 1 + R() * (x1 - x0 - 2), z = z0 + 1 + R() * (z1 - z0 - 2); w.add('m', cone(8), pick(ROCK), x, ceil - 0.7, z, PI, 0, 0, 0.25 + R() * 0.25, 0.9 + R() * 1.2, 0.25 + R() * 0.25); }
+  for (let i = 0; i < Math.floor((x1 - x0) * (z1 - z0) / 18); i++) { const x = x0 + 1 + R() * (x1 - x0 - 2), z = z0 + 1 + R() * (z1 - z0 - 2); w.add('m', cone(8), pick(ROCK), x, ceil + 0.05, z, PI, 0, 0, 0.25 + R() * 0.25, 0.9 + R() * 1.2, 0.25 + R() * 0.25); }
   const sides = [['x', z0, x0, x1, -1], ['x', z1, x0, x1, 1], ['z', x0, z0, z1, -1], ['z', x1, z0, z1, 1]]; const H = ceil - Y;
   for (const [ax, at, a, b, sd] of sides) { const op = (open || []).filter((o) => o[0] === ax && Math.abs(o[1] - at) < 0.1); const holes = op.map((o) => D(o[2], o[3], 3.6));
     wall(w, ax, at + sd * 0.15, a, b, H, 0x6e523f, holes, { y: Y, th: 0.3, noTrim: true, noBase: true, frame: 0xc9a27a }); let cur = a; const segs = []; for (const o of op.sort((p, q) => p[2] - q[2])) { segs.push([cur, o[2] - 0.4]); cur = o[3] + 0.4; } segs.push([cur, b]); segs.forEach(([p, q]) => q > p && rockWall(w, ax, at, p, q, Y, H, sd)); } }
