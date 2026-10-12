@@ -1,7 +1,25 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-11T22:50:00-07:00",
+  "updated": "2026-10-11T23:25:00-07:00",
   "items": [
+    {
+      "game": "pumpkinhollow",
+      "name": "Grok Pumpkin Hollow",
+      "what": "A brand new Halloween hub: Pumpkin Hollow, a moonlit spooky town. Explore an abandoned village, a graveyard, haunted shops and bat caves, solve Who swiped the Moon Lantern?, and find the secret under the hills. Torty, Candy, Luna, Pi-rat and Snowie visit. Co-op for 3.",
+      "stage": "building",
+      "when": "In the lab now",
+      "gname": "New hub",
+      "key": "pumpkinhollow"
+    },
+    {
+      "game": "northpole",
+      "name": "Grok North Pole Village",
+      "what": "A brand new Christmas hub: an explorable North Pole! Visit Santa, his elves and reindeer, Santa's Toy Workshop, North Pole Flight Command and the Post Office, play mini-games, solve Who silenced the Sleigh Bells? and find the secret ice caves. Torty, Candy, Luna, Pi-rat and Snowie visit. Co-op for 3.",
+      "stage": "building",
+      "when": "In the lab now",
+      "gname": "New hub",
+      "key": "northpole"
+    },
     {
       "game": "torty",
       "name": "Grok Torty Town (live)",
