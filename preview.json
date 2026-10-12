@@ -1,7 +1,16 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-11T23:55:00Z",
+  "updated": "2026-10-12T03:50:00Z",
   "items": [
+    {
+      "game": "torty",
+      "name": "Grok Torty Town",
+      "what": "A brand new hub world: Torty's hometown! A sunny desert oasis village where everything moves at turtle pace: a palm-ringed Oasis Square, Market Street, the Burrows (meet Torty's family), Hot Spring Hill, a Slow-Mo Racetrack and a Lettuce Farm. 18 walk-in buildings, tortoise and roadrunner townsfolk, Candy, Luna, Pi-rat and Snowie visiting, the Who Swiped the Sunstone? mystery, turtle racing, lettuce farming and shell polishing mini-games, and co-op for 3.",
+      "stage": "building",
+      "when": "In the lab now",
+      "gname": "New hub",
+      "key": "torty"
+    },
     {
       "game": "rides",
       "name": "Grok Rides Remastered (live)",
