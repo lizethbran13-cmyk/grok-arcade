@@ -1,15 +1,14 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-11T22:55:00-07:00",
+  "updated": "2026-10-11T22:50:00-07:00",
   "items": [
     {
       "game": "torty",
-      "name": "Grok Torty Town",
-      "what": "A brand new hub world: Torty's hometown! A sunny desert oasis village where everything moves at turtle pace: a palm-ringed Oasis Square, Market Street, the Burrows (meet Torty's family), Hot Spring Hill, a Slow-Mo Racetrack and a Lettuce Farm. 18 walk-in buildings, tortoise and roadrunner townsfolk, Candy, Luna, Pi-rat and Snowie visiting, the Who Swiped the Sunstone? mystery, turtle racing, lettuce farming and shell polishing mini-games, and co-op for 3.",
-      "stage": "building",
-      "when": "In the lab now",
-      "gname": "New hub",
-      "key": "torty"
+      "name": "Grok Torty Town (live)",
+      "what": "Grok Torty Town: Torty's hometown, a sunny desert oasis where everything moves at turtle pace. 25+ walk-in buildings, Tortuga Tech Inc., the Sunstone mystery, 6 mini-games, co-op for 3. Play it in Hubs & Worlds!",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-12T05:50:00Z"
     },
     {
       "game": "rides",
@@ -179,17 +178,7 @@
       "when": "Oct 10"
     }
   ],
-  "previews": [
-    {
-      "id": "torty",
-      "game": "torty",
-      "name": "Grok Torty Town",
-      "url": "previews/torty/",
-      "playable": true,
-      "built": "2026-10-12",
-      "notes": "WIP build: oasis square, Market Street, the Burrows, Hot Spring Hill, Slow-Mo Derby, lettuce farm, dunes, Tortuga Tech Inc. campus, NEW Old Adobe Quarter (bakery, music hall, toy shop) and Fiesta Plaza (cinema, ice cream, taco truck). Lighter on memory: loads with about half the peak memory, flat while exploring."
-    }
-  ],
+  "previews": [],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
@@ -246,6 +235,17 @@
       "built": "2026-10-11",
       "archived": "2026-10-11",
       "notes": "Co-op for 3 is in! Plus delivery orders, house decorating (paint, floors, furniture), the food critic, 10 hidden Golden Spatulas, cozier diners and a smoother phone feel.",
+      "playable": true
+    },
+    {
+      "id": "torty",
+      "game": "torty",
+      "name": "Grok Torty Town",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/torty-beta/",
+      "built": "2026-10-12",
+      "archived": "2026-10-12",
+      "notes": "WIP build: oasis square, Market Street, the Burrows, Hot Spring Hill, Slow-Mo Derby, lettuce farm, dunes, Tortuga Tech Inc. campus, NEW Old Adobe Quarter (bakery, music hall, toy shop) and Fiesta Plaza (cinema, ice cream, taco truck). Lighter on memory: loads with about half the peak memory, flat while exploring.",
       "playable": true
     }
   ],

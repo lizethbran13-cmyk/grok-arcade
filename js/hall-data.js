@@ -1992,7 +1992,7 @@ GA.HALL_DATA = {
 ],
 "cover": "assets/hall/torty/cover.webp",
 "quip": "A tortoise came in to see the exhibit at 9 a.m. She reached the front desk at closing time, said it was the best visit of her life, and booked again for tomorrow.",
-"noOld": "Grok Torty Town is still in Lili's Time Jumper. No old versions yet. Please don't rush the tortoises."
+"noOld": "Grok Torty Town just opened its gates. Its Time Jumper beta is in the Save Vault (Final Beta). Please don't rush the tortoises."
 },
 "puptown": {
 "repo": "grok-pup-town",
