@@ -1,0 +1,51 @@
+// The hidden place beneath Torty Town: Ancient Tunnels -> Crystal Cavern -> Hall of the Ancestors. (Reached only by a secret.)
+import * as THREE from 'three';
+import * as K from './kit.js';
+import { tortStatue, shade, SUN } from './town.js';
+const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, blobGeo, pick } = K;
+const R = K.R, PI = Math.PI; export const UY = -30;
+const ROCK = [0x8a6a52, 0x7a5c48, 0x9a785e, 0x6e523f];
+function crystal(w, x, y, z, s = 1, col = 0x5eead4, tilt = 0, ry = 0) { const T = w.tf(x, y, z, ry); for (let i = 0; i < 5; i++) { const a = i / 5 * PI * 2, h = (1.2 + (i % 3) * 0.5) * s; T.add('l', new THREE.OctahedronGeometry(1, 0), shade(col, 0.9 + (i % 2) * 0.25), Math.cos(a) * 0.25 * s * (i ? 1 : 0), h * 0.5, Math.sin(a) * 0.25 * s * (i ? 1 : 0), Math.cos(a) * (0.3 + tilt), 0, Math.sin(a) * (0.3 + tilt), 0.22 * s, h * 0.6, 0.22 * s, 0.35); } T.add('e', sph(10), col, 0, 0.6 * s, 0, 0, 0, 0, 0.6 * s, 0.9 * s, 0.6 * s); }
+function rockWall(w, axis, at, from, to, y0, h, side) { for (let p = from; p < to; p += 1.6) { const x = axis === 'x' ? p : at, z = axis === 'x' ? at : p; w.add('m', blobGeo(((p * 7 + at * 3) | 0) & 63, 0.25, 2), pick(ROCK), x + (axis === 'z' ? -side * 0.3 : 0), y0 + h * 0.5, z + (axis === 'x' ? -side * 0.3 : 0), 0, R() * 6, 0, 1.2, h * 0.6, 1.2); } }
+function room(w, id, x0, z0, x1, z1, ceil, floorCol, open) { w.region = id; const Y = UY;
+  w.add('m', rbox(x1 - x0, 0.4, z1 - z0, 0.05), floorCol, (x0 + x1) / 2, Y - 0.2, (z0 + z1) / 2); w.solid(x0, Y - 3, z0, x1, Y, z1, { floor: true });
+  w.add('m', rbox(x1 - x0 + 1, 0.6, z1 - z0 + 1, 0.1), 0x5b4334, (x0 + x1) / 2, ceil + 0.3, (z0 + z1) / 2); w.solid(x0 - 0.5, ceil, z0 - 0.5, x1 + 0.5, ceil + 0.6, z1 + 0.5, { cam: true, nofloor: true });
+  for (let i = 0; i < Math.floor((x1 - x0) * (z1 - z0) / 18); i++) { const x = x0 + 1 + R() * (x1 - x0 - 2), z = z0 + 1 + R() * (z1 - z0 - 2); w.add('m', cone(8), pick(ROCK), x, ceil - 0.7, z, PI, 0, 0, 0.25 + R() * 0.25, 0.9 + R() * 1.2, 0.25 + R() * 0.25); }
+  const sides = [['x', z0, x0, x1, -1], ['x', z1, x0, x1, 1], ['z', x0, z0, z1, -1], ['z', x1, z0, z1, 1]]; const H = ceil - Y;
+  for (const [ax, at, a, b, sd] of sides) { const op = (open || []).filter((o) => o[0] === ax && Math.abs(o[1] - at) < 0.1); const holes = op.map((o) => D(o[2], o[3], 3.6));
+    wall(w, ax, at + sd * 0.15, a, b, H, 0x6e523f, holes, { y: Y, th: 0.3, noTrim: true, noBase: true, frame: 0xc9a27a }); let cur = a; const segs = []; for (const o of op.sort((p, q) => p[2] - q[2])) { segs.push([cur, o[2] - 0.4]); cur = o[3] + 0.4; } segs.push([cur, b]); segs.forEach(([p, q]) => q > p && rockWall(w, ax, at, p, q, Y, H, sd)); } }
+export function underground(w) { const Y = UY;
+  // ---------------- ANCIENT TUNNELS (arrival)
+  room(w, 'u_tunnel', 150, -6, 176, 6, -26.0, 0x9a785e, [['z', 176, -2, 2]]); w.region = 'u_tunnel';
+  for (let x = 152; x < 176; x += 1.2) for (let z = -5; z <= 5; z += 1.2) { const k = (Math.round(x / 1.2) + Math.round(z / 1.2)) % 3; w.add('m', sph(8), [0xb9956e, 0xa88560, 0xc9a77e][k], x, Y + 0.01, z, 0, 0, 0, 0.55, 0.04, 0.55); }
+  for (let x = 156; x < 176; x += 4.5) { w.add('m', torus(0.35, 28, PI), 0xb9956e, x, Y + 3.6, 0, 0, PI / 2, 0, 5.4, 0.6, 1.4); [-5.4, 5.4].forEach((z) => { w.add('m', rbox(0.9, 3.6, 0.9, 0.2), 0xb9956e, x, Y + 1.8, z); w.solid(x - 0.45, Y, z - 0.45, x + 0.45, Y + 3.6, z + 0.45); }); }
+  for (let x = 154; x < 176; x += 4.5) [-5.6, 5.6].forEach((z, i) => { w.add('l', sph(10), i ? 0x5eead4 : 0xa78bfa, x + 2.2, Y + 2.2, z, 0, 0, 0, 0.18, 0.18, 0.18, 0.7); w.add('m', rcyl(0.2, 0.1, 0.03, 12), 0x5b4334, x + 2.2, Y + 1.95, z); w.lights.push({ x: x + 2.2, y: Y + 2, z: z * 0.7, c: i ? 0x5eead4 : 0xa78bfa, i: 4, d: 6 }); });
+  // carvings of tortoises along the walls (relief)
+  for (let i = 0; i < 5; i++) { const x = 155 + i * 4.5; [-5.75, 5.75].forEach((z) => { const T = w.tf(x, Y + 1.4, z, z > 0 ? PI : 0); T.add('m', sph(12), 0xd9b88a, 0, 0, 0.05, 0, 0, 0, 0.7, 0.45, 0.12); T.add('m', sph(8), 0xd9b88a, 0.8, -0.05, 0.05, 0, 0, 0, 0.22, 0.18, 0.08); for (let k = 0; k < 4; k++) T.add('m', sph(6), 0xd9b88a, (k % 2 ? 0.45 : -0.45), (k > 1 ? -0.4 : -0.35), 0.05, 0, 0, 0, 0.12, 0.12, 0.06); T.add('l', sph(6), 0xffd23f, 0, 0.1, 0.14, 0, 0, 0, 0.08, 0.08, 0.03, 0.4); }); }
+  for (let i = 0; i < 10; i++) w.add('m', blobGeo(i, 0.3, 1), pick(ROCK), 152 + R() * 22, Y + 0.15, (R() < 0.5 ? -1 : 1) * (4.2 + R() * 0.8), 0, R() * 6, 0, 0.3 + R() * 0.3, 0.2, 0.3);
+  { const x = 151.2; for (let i = 0; i < 5; i++) w.add('m', rbox(1.2, 0.3, 3, 0.05), 0xb9956e, x - i * 0.0, Y + 0.3 + i * 0.3, 0, 0, 0, 0, 1, 1, 1); w.add('l', sph(10), 0xfff1c1, x - 0.3, Y + 2.8, 0, 0, 0, 0, 0.4, 0.15, 0.6, 0.5); }
+  w.I({ kind: 'climb', x: 152.5, y: Y, z: 0, r: 2.0, label: '🪜 Climb back up to the canyon' });
+  sign3d(w, 'SLOW AND STEADY FINDS THE WAY', 163, Y + 3.2, -5.6, 0, 0.18, 0xffd23f, 0x5b4334);
+  w.gears.push([166, Y + 0.9, 3.5]);
+  // ---------------- CRYSTAL CAVERN
+  room(w, 'u_crystal', 176, -16, 204, 16, -22.5, 0x7a6a8a, [['z', 176, -2, 2], ['z', 204, -2, 2]]); w.region = 'u_crystal';
+  const cc = [0x5eead4, 0xa78bfa, 0xf472b6, 0x60a5fa, 0xfde68a];
+  [[180, -12, 1.6], [184, 12, 1.9], [190, -13, 2.2], [198, 12.5, 1.8], [201, -11, 1.5], [179, 7, 1.2], [194, 6, 1.0], [187, -6, 0.9], [200, 3, 1.1], [183, -2.5, 0.7]].forEach(([x, z, s], i) => { crystal(w, x, Y, z, s, cc[i % 5], 0, i); w.solid(x - 0.5 * s, Y, z - 0.5 * s, x + 0.5 * s, Y + 1.8 * s, z + 0.5 * s); w.lights.push({ x, y: Y + 1.6, z, c: cc[i % 5], i: 6, d: 9 }); });
+  for (let i = 0; i < 26; i++) crystal(w, 177 + R() * 26, Y + 7.3, -15 + R() * 30, 0.35 + R() * 0.3, pick(cc), 0, R() * 6);
+  { const x = 191, z = 0; w.add('m', rcyl(4.2, 0.35, 0.12, 40), 0x5b4a6a, x, Y, z, 0, 0, 0, 1, 1, 0.6); w.add('l', new THREE.CircleGeometry(4.0, 40).rotateX(-PI / 2), 0x22d3ee, x, Y + 0.3, z, 0, 0, 0, 1, 1, 0.6, 0.05); for (let i = 0; i < 22; i++) { const a = i / 22 * PI * 2; w.add('m', blobGeo(i & 31, 0.2, 1), pick([0x6b5a7a, 0x7a6a8a]), x + Math.cos(a) * 4.2, Y + 0.3, z + Math.sin(a) * 2.5, 0, a, 0, 0.5, 0.3, 0.4); } w.solid(x - 4, Y, z - 2.4, x + 4, Y + 0.45, z + 2.4, { cam: false }); w.spots.uPool = [x, Y + 0.6, z]; }
+  for (let i = 0; i < 18; i++) { const x = 178 + R() * 24, z = -15 + R() * 30; if (Math.abs(z) < 3.4 && Math.abs(x - 191) < 5) continue; w.add('m', cone(8), pick(ROCK), x, Y, z, 0, 0, 0, 0.3 + R() * 0.3, 1 + R() * 1.4, 0.3 + R() * 0.3); }
+  for (let i = 0; i < 24; i++) { const x = 177.5 + R() * 25, z = (R() < 0.5 ? -1 : 1) * (8 + R() * 7); w.add('m', cyl(8), 0xfef3c7, x, Y, z, 0, 0, 0, 0.05, 0.3, 0.05); w.add('l', sph(10), pick([0x5eead4, 0xf472b6, 0xa78bfa]), x, Y + 0.35, z, 0, 0, 0, 0.18, 0.1, 0.18, 0.5); }
+  w.secrets.push({ id: 'echo', x: 191, y: Y, z: -4.6, r: 1.6, msg: '💎 Secret: the singing crystal! Tap tap… it hums a slow little tune.' });
+  w.gears.push([179, Y + 3.2, 7]); w.gears.push([201, Y + 1.2, 6]);
+  // ---------------- HALL OF THE ANCESTORS
+  room(w, 'u_hall', 204, -14, 232, 14, -23.0, 0xc9a27a, [['z', 204, -2, 2]]); w.region = 'u_hall';
+  const disc = new THREE.CircleGeometry(6, 64).rotateX(-PI / 2); w.addFn('g', disc, (c, x, y, z) => { const r = Math.hypot(x, z), a = Math.atan2(z, x); c.setHex(r < 1.6 ? 0xa78bfa : r < 4 ? ((Math.floor((a + PI) / (PI / 6)) % 2) ? 0x6366f1 : 0x312e81) : 0xd4a017); }, 222, Y + 0.02, 0);
+  for (let i = 0; i < 6; i++) [-9, 9].forEach((z) => { const x = 208 + i * 4.4; w.add('m', lathe([[0, 0], [0.8, 0], [0.8, 0.4], [0.6, 0.6], [0.55, 6.4], [0.8, 6.8], [0.9, 7.0], [0, 7.0]], 20, 'apillar'), 0xd9b88a, x, Y, z); w.solid(x - 0.6, Y, z - 0.6, x + 0.6, Y + 7, z + 0.6); w.add('l', sph(8), 0xfde68a, x, Y + 5.6, z * 0.92, 0, 0, 0, 0.2, 0.2, 0.2, 0.6); });
+  [[210, -12.4, 0], [216, -12.4, 0], [222, -12.4, 0], [210, 12.4, PI], [216, 12.4, PI], [222, 12.4, PI]].forEach(([x, z, ry], i) => { tortStatue(w, x, z, ry, 1.15, [0xd9b88a, 0xc9a27a, 0xe8c9a0][i % 3]); });
+  for (let i = 0; i < 4; i++) { const z = -10 + i * 6.6, T = w.tf(231.6, Y + 3.6, z, -PI / 2); T.add('m', rbox(5, 3.4, 0.2, 0.08), 0xe8c9a0, 0, 0, 0); for (let k = 0; k < 4; k++) { T.add('g', sph(12), SUN[(i + k) % 8], -1.6 + k * 1.1, -0.4 + (k % 2) * 0.5, 0.12, 0, 0, 0, 0.42, 0.3, 0.1); T.add('g', sph(8), SUN[(i + k + 3) % 8], -1.6 + k * 1.1 + 0.5, -0.45 + (k % 2) * 0.5, 0.14, 0, 0, 0, 0.16, 0.13, 0.06); } T.add('l', sph(10), i === 1 ? 0xffb020 : 0xa78bfa, 0, 1.15, 0.15, 0, 0, 0, 0.3, 0.3, 0.06, 0.5); }
+  { const x = 222, z = 0; w.slab('m', 0xd9b88a, x, Y, z, 3.2, 0.6, 3.2, 0.2); w.add('m', rcyl(0.8, 1.1, 0.1, 28), 0xc9a27a, x, Y + 0.6, z); w.add('x', rcyl(0.9, 0.14, 0.04, 28), 0xd4a017, x, Y + 1.7, z); w.solid(x - 0.9, Y, z - 0.9, x + 0.9, Y + 1.85, z + 0.9); w.spots.moonstone = [x, Y + 2.35, z]; w.lights.push({ x, y: Y + 3, z, c: 0xc4b5fd, i: 10, d: 12 }); }
+  w.I({ kind: 'moonstone', x: 222, y: Y, z: 2.4, r: 2.4, label: '🌙 Approach the glowing altar' });
+  w.I({ kind: 'fun', x: 229.5, y: Y, z: -3.4, r: 2.4, label: '🖼️ Read the ancient murals', msgs: ['🖼️ The murals show the first tortoises finding two stones: one warm like the sun, one cool like the moon.', '🖼️ "The Sunstone warms the town above. The Moonstone keeps watch below. Slow and steady, together."', '🖼️ The last panel shows a tiny tortoise looking up at the stars. It looks a lot like Torty.'] });
+  sign3d(w, 'HALL OF THE ANCESTORS', 218, Y + 6.0, -13.6, 0, 0.32, 0xfde68a, 0x5b4334);
+  w.gears.push([210, Y + 3.2, -12.4]); w.gears.push([230, Y + 0.8, 11]);
+}
