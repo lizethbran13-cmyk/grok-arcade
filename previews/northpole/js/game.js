@@ -1,28 +1,28 @@
 // Grok North Pole Village runtime: the town, players, townsfolk, the shuttle cart, ambient desert life, day -> sunset, collectibles,
 // the Sleigh Bells mystery, the Reindeer Derby + Cookie Rush (3D mini-games), a hidden puzzle, co-op hooks.
 import * as THREE from 'three';
-import { RF, RP, relayNPC } from './layout.js?v=np4';
-import { makeFolk, animFolk } from './folk.js?v=np4';
-import { holAct } from './holiday.js?v=np4';
-import { GLYPH_TXT } from './story_theme.js?v=np4';
-import { LIGHT as THL, TH as THM } from './theme.js?v=np4';
-import { panel } from './ui.js?v=np4';
-import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=np4';
-import { World } from './world.js?v=np4';
-import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=np4';
-import { UY } from './under.js?v=np4';
-import { Player } from './player.js?v=np4';
-import { FX } from './fx.js?v=np4';
-import { makeRat, animRat, MB, toGroup } from './models.js?v=np4';
-import { makePup, animPup, birdGeo } from './dogs.js?v=np4';
-import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=np4';
-import { P } from './geo.js?v=np4';
-import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=np4';
-import { updateFrustum, inView, LightPool } from './perf.js?v=np4';
-import { sfx, playMusic } from './audio.js?v=np4';
-import { S, persist } from './save.js?v=np4';
-import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=np4';
-import { readMove, edge, held, IN } from './input.js?v=np4';
+import { RP, setP, relayNPC } from './layout.js?v=np5';
+import { makeFolk, animFolk } from './folk.js?v=np5';
+import { holAct } from './holiday.js?v=np5';
+import { GLYPH_TXT } from './story_theme.js?v=np5';
+import { LIGHT as THL, TH as THM } from './theme.js?v=np5';
+import { panel } from './ui.js?v=np5';
+import { E, setEnvironment, followShadow, skyUniforms } from './engine.js?v=np5';
+import { World } from './world.js?v=np5';
+import { buildTown, regionAt, areaName, REGIONS, DOORS, NEAR, STOPS, TRACK } from './town.js?v=np5';
+import { UY } from './under.js?v=np5';
+import { Player } from './player.js?v=np5';
+import { FX } from './fx.js?v=np5';
+import { makeRat, animRat, MB, toGroup } from './models.js?v=np5';
+import { makePup, animPup, birdGeo } from './dogs.js?v=np5';
+import { makeTortoise, animTortoise, makeRoadrunner, animRoadrunner, makeLizard, animLizard, makeSunstone } from './critters.js?v=np5';
+import { P } from './geo.js?v=np5';
+import { rcyl, capsule, torus, sph, cone, heart, star, blobGeo } from './shapes.js?v=np5';
+import { updateFrustum, inView, LightPool } from './perf.js?v=np5';
+import { sfx, playMusic } from './audio.js?v=np5';
+import { S, persist } from './save.js?v=np5';
+import { NPCS, talk, clueText, SUN_CLUES, HATS, BADGES, GLYPH } from './story.js?v=np5';
+import { readMove, edge, held, IN } from './input.js?v=np5';
 const PI = Math.PI;
 const TOYS = [[60, 0, 76], [-70, 0, 61], [108, 0, -4]].map((p) => RP(...p));
 const DAY = 420; // seconds per day -> sunset cycle
@@ -66,7 +66,7 @@ export class Game {
     [-0.7, 0.7].forEach((x) => [-1.1, 1.1].forEach((z) => b.m.add(P.cyl, 0x7c4a1e, x, 1.6, z, 0, 0, 0, 0.04, 1.6, 0.04))); for (let i = 0; i < 6; i++) b.f.add(P.rbox, i % 2 ? 0xffffff : 0xffb020, -0.62 + i * 0.25, 2.42, 0, 0, 0, 0, 0.25, 0.08, 2.5);
     b.m.add(P.cyl, 0x7c4a1e, 0, 0.6, 1.6, PI / 2, 0, 0, 0.05, 1.0, 0.05); return toGroup(b); }
   // story-driven positions (Pebble on the hill, everyone at the festival)
-  placeStory() { const q = S.q.sun | 0, N = this.npc, set = (id, x, z, yaw, y, region) => { if (RF(x, z)) { x = -x; z = -z; yaw += PI; } const n = N[id]; n.x = n.x0 = x; n.z = n.z0 = z; n.yaw = n.yaw0 = yaw; n.y = n.y0 = y; n.region = region; n.d.walk = null; n.d.mode = 'cheer'; };
+  placeStory() { const q = S.q.sun | 0, N = this.npc, set = (id, x, z, yaw, y, region) => { [x, z, yaw] = setP(x, z, yaw); const n = N[id]; n.x = n.x0 = x; n.z = n.z0 = z; n.yaw = n.yaw0 = yaw; n.y = n.y0 = y; n.region = region; n.d.walk = null; n.d.mode = 'cheer'; };
     N.pebble.hidden = !(q === 2 || q >= 4);
     if (q >= 4) { set('torty', 2.0, -12.6, 0.2, 0, 'out'); set('pebble', 0.6, -12.2, 0, 0, 'out'); set('mama', -1.2, -12.6, -0.3, 0, 'out'); set('papa', 3.4, -11.6, 0.5, 0, 'out'); set('gramps', -2.6, -11.4, -0.6, 0, 'out'); set('mayor', 0.6, -19.6, PI, 0, 'out'); N.gramps.d.mode = 'idle'; } }
   wants(n) { const id = n.id, q = S.q.sun | 0; if (n.hidden) return false;
@@ -111,7 +111,7 @@ export class Game {
     { const LO = new THREE.SphereGeometry(1, 10, 7); const b = MB(); for (let i = 0; i < 7; i++) { const a = i * 2.4, r = i < 2 ? 0.05 : 0.2; b.g.add(LO, i < 2 ? 0x2f7d32 : i % 2 ? 0x1f6b2a : 0x3c9a3f, Math.cos(a) * r, 0.2, Math.sin(a) * r, Math.cos(a) * 0.5, 0, Math.sin(a) * 0.5, 0.26, 0.2, 0.26); } const geo = toGroup(b).children[0].geometry; const F = s.field || [];
       this.field = new THREE.InstancedMesh(geo, new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.4, clearcoat: 0.4 }), F.length); F.forEach((p, i) => { this._m.compose(this._p.set(p[0], p[1], p[2]), this._q.setFromEuler(this._e.set(0, i, 0)), this._s.setScalar(0.85 + p[3] * 0.12)); this.field.setMatrixAt(i, this._m); }); this.field.castShadow = true; this.field.userData.lod = RP(-100, 0.2, 95); this.add(this.field); }
     // windmill blades
-    if (s.mill) { const b = MB(); for (let i = 0; i < 6; i++) b.m.add(P.rbox, i % 2 ? 0xffffff : 0xef4444, Math.cos(i / 6 * PI * 2) * 1.5, Math.sin(i / 6 * PI * 2) * 1.5, 0, 0, 0, i / 6 * PI * 2, 2.6, 0.5, 0.05); b.x.add(P.sphere, 0xd4a017, 0, 0, 0.05, 0, 0, 0, 0.3); this.mill = this.add(toGroup(b)); this.mill.position.set(...s.mill); if (s.millR) this.mill.rotation.y = PI; }
+    if (s.mill) { const b = MB(); for (let i = 0; i < 6; i++) b.m.add(P.rbox, i % 2 ? 0xffffff : 0xef4444, Math.cos(i / 6 * PI * 2) * 1.5, Math.sin(i / 6 * PI * 2) * 1.5, 0, 0, 0, i / 6 * PI * 2, 2.6, 0.5, 0.05); b.x.add(P.sphere, 0xd4a017, 0, 0, 0.05, 0, 0, 0, 0.3); this.mill = this.add(toGroup(b)); this.mill.position.set(...s.mill); if (s.millR) this.mill.rotation.y = s.millR; }
     // farm plots for Cookie Rush
     this.plots = w.plots.map((p, i) => { const g = new THREE.Group(); g.position.set(...p); const sb = MB(); sb.g.add(P.capsule, 0x86efac, 0, 0.12, 0, 0, 0, 0, 0.08, 0.15, 0.08); [-1, 1].forEach((k) => sb.g.add(P.sphere, 0x4ade80, k * 0.1, 0.22, 0, 0, 0, k * 0.6, 0.12, 0.05, 0.08)); const sprout = toGroup(sb);
       const lb = MB(); for (let k = 0; k < 7; k++) { const a = k * 2.4, r = k < 2 ? 0.05 : 0.2; lb.g.add(P.sphere, k < 2 ? 0xd9a066 : k % 2 ? 0xc68642 : 0xb87333, Math.cos(a) * r, 0.2, Math.sin(a) * r, Math.cos(a) * 0.5, 0, Math.sin(a) * 0.5, 0.26, 0.2, 0.26); } const head = toGroup(lb); head.scale.setScalar(0.001);

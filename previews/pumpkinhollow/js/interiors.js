@@ -1,7 +1,7 @@
 // Grok Pumpkin Hollow interiors: 18 walk-in buildings, each packed with real 3D props (and something to do).
 import * as THREE from 'three';
-import * as K from './kit.js?v=ph4';
-import { claypot, lettuce, stall, tcrate, shade, SUN, prism, agave, barrel, prickly, tortStatue, lanternString } from './town.js?v=ph4';
+import * as K from './kit.js?v=ph5';
+import { claypot, lettuce, stall, tcrate, shade, SUN, prism, agave, barrel, prickly, tortStatue, lanternString } from './town.js?v=ph5';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, pick, PR } = K;
 const R = K.R, PI = Math.PI, FL = 0.12;
 const art = (w, axis, at, c, y, W, H, side, k) => PR.frame(K.scaled(w, 0, FL, 0, 0.25), axis, (at + side * 0.25) / 0.25, c / 0.25, y / 0.25, W / 0.25, H / 0.25, side, k);

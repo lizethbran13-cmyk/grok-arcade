@@ -1,11 +1,11 @@
 // Menus & panels: title, pause, journal, dialog, clue cards, finale, town map, Style Station, mini-game launcher.
-import { $, esc } from './util.js?v=np4';
-import { S, persist, resetSave } from './save.js?v=np4';
-import { sfx, setSound } from './audio.js?v=np4';
-import { HATS, BADGES, SUN_CLUES, SUSPECTS, clueText, sunStep, sideTasks, hint } from './story.js?v=np4';
-import { REGIONS, DOORS, AREAS, STOPS, TRACK } from './town.js?v=np4';
-import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=np4';
-import * as MG from './minigames.js?v=np4';
+import { $, esc } from './util.js?v=np5';
+import { S, persist, resetSave } from './save.js?v=np5';
+import { sfx, setSound } from './audio.js?v=np5';
+import { HATS, BADGES, SUN_CLUES, SUSPECTS, clueText, sunStep, sideTasks, hint } from './story.js?v=np5';
+import { REGIONS, DOORS, AREAS, STOPS, TRACK } from './town.js?v=np5';
+import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=np5';
+import * as MG from './minigames.js?v=np5';
 const hex = (c) => '#' + c.toString(16).padStart(6, '0');
 export function panel(html, mount, cls = '') { const ui = $('ui'); { const t = $('toast'); if (t && !ui.classList.contains('open')) { t.innerHTML = ''; t.classList.add('low'); } } /* menus open with a clean screen (no reward pills over their header) */ ui.innerHTML = `<div class="panel ${cls}">${html}</div>`; ui.classList.add('open'); if (mount) mount(ui.firstChild); return ui.firstChild; }
 export function closePanel() { const ui = $('ui'); ui.innerHTML = ''; ui.classList.remove('open'); const t = $('toast'); if (t && !t.children.length) t.classList.remove('low'); }
@@ -60,17 +60,17 @@ export class UI {
   fade(mid) { const f = $('fade'); f.classList.add('on'); this.app.busy = true; setTimeout(() => { mid(); setTimeout(() => { f.classList.remove('on'); this.app.busy = false; }, 250); }, 450); }
   // ---------------- video call
   // ---------------- town map (drawn at the real shape of the town)
-  map(g, back) { this.open(); const x0 = -132, x1 = 132, z0 = -132, z1 = 132, W = 440, H = 440;
-    panel(`<div class="topBar"><button class="back" id="mBack">◀</button><h2>🗺️ NORTH POLE</h2></div><div class="mapWrap"><canvas id="mapC" width="${W}" height="${H}"></canvas></div><p class="sub">You are the pink dot. 🐦 = North Pole Express stops.</p>`, (c) => {
+  map(g, back) { this.open(); const x0 = -190, x1 = 190, z0 = -190, z1 = 190, W = 440, H = 440;
+    panel(`<div class="topBar"><button class="back" id="mBack">◀</button><h2>🗺️ NORTH POLE</h2></div><div class="mapWrap"><canvas id="mapC" width="${W}" height="${H}"></canvas></div><p class="sub">You are the pink dot. 🛷 = North Pole Express stops.</p>`, (c) => {
       const cv = c.querySelector('#mapC'), x = cv.getContext('2d'); const X = (v) => (v - x0) / (x1 - x0) * W, Z = (v) => (v - z0) / (z1 - z0) * H;
       x.fillStyle = '#f1d3a1'; x.fillRect(0, 0, W, H); const AC = ['#fde7c8', '#fcd9b0', '#e9d8b4', '#f5c9a8', '#f3e1b9', '#cfe8a8', '#f0c890', '#e8b98a'];
-      AREAS.forEach((a, i) => { x.fillStyle = AC[i % AC.length]; x.fillRect(X(a.x0), Z(a.z0), X(a.x1) - X(a.x0), Z(a.z1) - Z(a.z0)); });
+      AREAS.forEach((a, i) => { if (!a.blk) return; x.fillStyle = AC[i % AC.length]; x.fillRect(X(a.x0), Z(a.z0), X(a.x1) - X(a.x0), Z(a.z1) - Z(a.z0)); });
       x.strokeStyle = '#c2a27a'; x.lineWidth = 6; x.beginPath(); x.arc(X(0), Z(0), X(34.9) - X(0), 0, 7); x.stroke(); x.fillStyle = '#7dd3fc'; x.beginPath(); x.ellipse(X(0), Z(0), X(10) - X(0), Z(7.5) - Z(0), 0, 0, 7); x.fill();
       x.strokeStyle = '#d9543d'; x.lineWidth = 5; x.beginPath(); x.ellipse(X(TRACK.cx), Z(TRACK.cz), X(TRACK.rx) - X(0), Z(TRACK.rz) - Z(0), 0, 0, 7); x.stroke();
       for (const r of REGIONS) { if (r.id.startsWith('u_')) continue; x.fillStyle = '#fff7ed'; x.strokeStyle = '#ff6b35'; x.lineWidth = 2; x.fillRect(X(r.x0), Z(r.z0), X(r.x1) - X(r.x0), Z(r.z1) - Z(r.z0)); x.strokeRect(X(r.x0), Z(r.z0), X(r.x1) - X(r.x0), Z(r.z1) - Z(r.z0));
         x.fillStyle = '#1f2937'; x.font = '13px system-ui'; x.textAlign = 'center'; x.fillText(r.name.split(' ')[0], (X(r.x0) + X(r.x1)) / 2, (Z(r.z0) + Z(r.z1)) / 2 + 5); }
-      x.font = 'bold 11px system-ui'; x.fillStyle = '#7c2d12'; AREAS.forEach((a) => { if (a.name.includes('Rim')) return; x.fillText(a.name.replace(/^\S+\s/, '').toUpperCase(), (X(a.x0) + X(a.x1)) / 2, Z(a.z0) + 14); });
-      x.font = '14px system-ui'; STOPS.forEach((s2) => x.fillText('🐦', X(s2[0]), Z(s2[1]) + 5));
+      x.font = 'bold 11px system-ui'; x.fillStyle = '#7c2d12'; AREAS.forEach((a) => { if (!a.blk) return; const tx = a.name.replace(/^\S+\s/, '').toUpperCase(), mw = X(a.x1) - X(a.x0) - 6; let fs = 11; x.font = `bold ${fs}px system-ui`; while (fs > 7 && x.measureText(tx).width > mw) { fs -= 0.5; x.font = `bold ${fs}px system-ui`; } x.fillText(tx, (X(a.x0) + X(a.x1)) / 2, Z(a.z0) + 12); });
+      x.font = '14px system-ui'; STOPS.forEach((s2) => x.fillText('🛷', X(s2[0]), Z(s2[1]) + 5));
       const me = g.me; if (!g.under) { x.fillStyle = '#ff4fa0'; x.strokeStyle = '#fff'; x.lineWidth = 3; x.beginPath(); x.arc(X(me.x), Z(me.z), 7, 0, 7); x.fill(); x.stroke(); }
       on(c, '#mBack', () => { if (back) back(); else this.done(); }); }); }
   express(g, from) { this.open(); panel(`<h2>🚂 NORTH POLE EXPRESS</h2><p class="sub">All aboard! Where to? (Free, fast and a little frosty.)</p><div class="tBtns">${STOPS.map((s2, i) => `<button class="mbtn2" data-i="${i}" ${i === from ? 'disabled' : ''}>${s2[3]}${i === from ? ' (you are here)' : ''}</button>`).join('')}<button class="mbtn2" id="eX">✖ STAY HERE</button></div>`, (c) => {

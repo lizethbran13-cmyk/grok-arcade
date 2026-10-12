@@ -1,15 +1,15 @@
 // Grok North Pole Village: Martina "Torty"'s desert-oasis hometown. A palm-ringed Candy Cane Square, Mistletoe Street, the Burrows (homes),
 // The North Pole, the Reindeer Racetrack, the Christmas Tree Farm and the Snowdrift Hills edge. 18 enterable buildings, each its own
 // culled region; outdoors batch into big merged chunks, tiny decor goes into far-culled "detail" chunks. All real 3D geometry.
-import { tortuga } from './tortuga.js?v=np4';
-import { districts } from './districts.js?v=np4';
+import { tortuga } from './tortuga.js?v=np5';
+import { districts } from './districts.js?v=np5';
 import * as THREE from 'three';
-import * as LY from './layout.js?v=np4';
-import * as TH from './theme.js?v=np4';
-import * as HOL from './holiday.js?v=np4';
-import * as K from './kit.js?v=np4';
-import { interiors } from './interiors.js?v=np4';
-import { underground } from './under.js?v=np4';
+import * as LY from './layout.js?v=np5';
+import * as TH from './theme.js?v=np5';
+import * as HOL from './holiday.js?v=np5';
+import * as K from './kit.js?v=np5';
+import { interiors } from './interiors.js?v=np5';
+import { underground } from './under.js?v=np5';
 const { wall, D, G, floor, ceiling, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, star, heart, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; let I = null;
 export const FL = 0.02;
@@ -169,7 +169,7 @@ export function buildTown(w) {
   K.propSeed(1947); w.inter = []; w.gears = []; w.secrets = []; w.spots = {}; w.dyn = w.dyn || []; w.plots = []; w.toys = []; w.glyphs = [];
   w.env = Object.assign({}, TH.ENV);
   I = (o) => { w.inter.push(o); return o; }; w.I = I;
-  w.region = 'shell'; ground(w); w.region = 'out'; square(w); market(w); burrows(w); hill(w); track(w); farm(w); dunes(w); border(w);
+  w.region = 'shell'; ground(w); w.region = 'out'; square(w); market(w); burrows(w); hill(w); track(w); farm(w); dunes(w); LY.newLand(w, K, TH, floor, mesa);
   shells(w); interiors(w); tortuga(w); districts(w); underground(w); w.region = 'out'; expressStops(w); TH.dress(w, K); TH.dressInside(w, K, REGIONS); HOL.buildStations(w, K); w.region = 'shell';
   w.start = [0, 0.2, 21]; w.startYaw = PI; w.camDist = 9.5; LY.relayout(w, { REGIONS, AREAS, DOORS, STOPS, TRACK });
   return w; }
@@ -178,12 +178,12 @@ export function tcrate(w, x, y, z, s = 1, col = 0xd8a15a, top = 'lettuce') { con
 export function sunShell(w, x, y, z) { w.gears.push([x, y, z]); }
 // ------------------------------------------------------------------------------------------------ ground: warm sand, oasis grass, farm soil, sandstone paths
 function ground(w) {
-  const gg = new THREE.PlaneGeometry(264, 264, 110, 110).rotateX(-PI / 2); { const P2 = gg.attributes.position; for (let i = 0; i < P2.count; i++) { const ex = P2.getX(i) / 11.2, ez = P2.getZ(i) / 8.4; if (ex * ex + ez * ez < 1) P2.setY(i, -0.8); } gg.computeVertexNormals(); } const cA = new THREE.Color(), cB = new THREE.Color();
-  w.addFn('m', gg, (c, x, y, z) => { const n = Math.sin(x * 0.19) * Math.cos(z * 0.15) + Math.sin(x * 0.06 + z * 0.09) * 0.8; c.setHex(0xf0cf98).lerp(cA.set(n > 0.4 ? 0xf6dcae : n < -0.6 ? 0xe2b57c : 0xecc48c), 0.7);
+  const gg = new THREE.PlaneGeometry(LY.MAPR * 2, LY.MAPR * 2, 150, 150).rotateX(-PI / 2); { const P2 = gg.attributes.position; for (let i = 0; i < P2.count; i++) { const q_ = LY.DB(P2.getX(i), P2.getZ(i)) || [999, 999]; const ex = q_[0] / 11.2, ez = q_[1] / 8.4; if (ex * ex + ez * ez < 1) P2.setY(i, -0.8); } gg.computeVertexNormals(); } const cA = new THREE.Color(), cB = new THREE.Color();
+  w._gnd = 1; w.addFn('m', gg, (c, x, y, z) => { const n = Math.sin(x * 0.19) * Math.cos(z * 0.15) + Math.sin(x * 0.06 + z * 0.09) * 0.8; c.setHex(0xf0cf98).lerp(cA.set(n > 0.4 ? 0xf6dcae : n < -0.6 ? 0xe2b57c : 0xecc48c), 0.7);
     const ro = Math.hypot(x, z); if (ro < 33.5) c.setHex(0x9a5a34); else if (ro < 42) c.lerp(cB.set(0x8fd27a), Math.max(0, Math.min(1, (42 - ro) / 6)) * 0.8);
-    if (x < -42 && z > 36) c.lerp(cB.set(0xa8784c), 0.55); if (z < -70) c.lerp(cB.set(0xe9a982), 0.4); if (x > 80 && z > 30) c.lerp(cB.set(0xf7d9a2), 0.5); }, 0, -0.02, 0);
-  w.solid(-132, -3, -132, 132, 0, 132, { floor: true });
-  const pave = (a, b, c, d) => floor(w, a, b, c, d, 'tile', 0.0, 0xe8cfa6, 0xd9b98a, 1.4);
+     if (z < -70) c.lerp(cB.set(0xe9a982), 0.4); if (x > 80 && z > 30) c.lerp(cB.set(0xf7d9a2), 0.5); }, 0, -0.02, 0); w._gnd = 0;
+  w.solid(-LY.MAPR, -3, -LY.MAPR, LY.MAPR, 0, LY.MAPR, { floor: true });
+  const pave = (a, b, c, d) => { if (Math.abs(a + c) < 1 && Math.abs(b + d) < 1) floor(w, a, b, c, d, 'tile', 0.0, 0xe8cfa6, 0xd9b98a, 1.4); };
   pave(30, -6, 122, 6); pave(-122, -6, -30, 6); pave(-4, -42, 4, -30); pave(12, -94, 18, -34); pave(-30, -94, 30, -88); pave(-4, 30, 4, 74); pave(-82, 6, -76, 40); pave(98, 6, 104, 62);
   pave(-40, -42, -34, -30); pave(34, -42, 40, -30); pave(-41, 30, -35, 40); pave(34, 30, 40, 40); pave(-12, 80, -4, 84);
   // plaza mosaic disc (radial sun tiles)

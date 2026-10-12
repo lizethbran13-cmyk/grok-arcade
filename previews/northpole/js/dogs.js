@@ -1,10 +1,10 @@
 // Grok Pup Town townsfolk: one parametric cartoon-dog builder covering 18 breeds (real smooth geometry: spheres, capsules,
 // cones, tori merged per material), plus accessories (hats, sashes, scarves, glasses), a kitten, birds and the Dog-Bus.
 import * as THREE from 'three';
-import { P } from './geo.js?v=np4';
-import { MB, toGroup } from './models.js?v=np4';
-import { makeDog } from './models2.js?v=np4';
-import { rcyl, sph, cyl, cone, torus, capsule, star } from './shapes.js?v=np4';
+import { P } from './geo.js?v=np5';
+import { MB, toGroup } from './models.js?v=np5';
+import { makeDog } from './models2.js?v=np5';
+import { rcyl, sph, cyl, cone, torus, capsule, star } from './shapes.js?v=np5';
 const PI = Math.PI;
 // breed table: fur/dark/light colours, leg height, body length, girth, head radius, snout, ears, tail, extras
 export const BREEDS = {

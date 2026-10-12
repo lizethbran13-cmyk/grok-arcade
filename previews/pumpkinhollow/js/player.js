@@ -1,10 +1,10 @@
 // Rat player: tight platformer physics vs box colliders + Ratita Industries gadgets.
 import * as THREE from 'three';
-import { topOf } from './world.js?v=ph4';
-import { makeRat, animRat, setOutfit } from './models.js?v=ph4';
-import { makeHuman, animHuman } from './humans.js?v=ph4';
-import { sfx } from './audio.js?v=ph4';
-import { up } from './save.js?v=ph4';
+import { topOf } from './world.js?v=ph5';
+import { makeRat, animRat, setOutfit } from './models.js?v=ph5';
+import { makeHuman, animHuman } from './humans.js?v=ph5';
+import { sfx } from './audio.js?v=ph5';
+import { up } from './save.js?v=ph5';
 const R = 0.34, HGT = 0.72, STEP = 0.45;
 const G_UP = 26, G_DN = 34, JUMP = 10.2, JUMP2 = 9.0, JET = 8.4, MAXF = 26;
 const tmp = [];

@@ -1,7 +1,7 @@
 // The hidden place beneath Pumpkin Hollow: Bat Tunnels -> Bat Cave -> Hall of the Lantern Keepers. (Reached only by a secret.)
 import * as THREE from 'three';
-import * as K from './kit.js?v=ph4';
-import { tortStatue, shade, SUN } from './town.js?v=ph4';
+import * as K from './kit.js?v=ph5';
+import { tortStatue, shade, SUN } from './town.js?v=ph5';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; export const UY = -30;
 const ROCK = [0x8a6a52, 0x7a5c48, 0x9a785e, 0x6e523f];

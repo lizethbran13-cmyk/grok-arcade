@@ -1,7 +1,7 @@
 // The hidden place beneath North Pole Village: Ice Tunnels -> Ice Crystal Cavern -> Hall of the First Elves. (Reached only by a secret.)
 import * as THREE from 'three';
-import * as K from './kit.js?v=np4';
-import { tortStatue, shade, SUN } from './town.js?v=np4';
+import * as K from './kit.js?v=np5';
+import { tortStatue, shade, SUN } from './town.js?v=np5';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI; export const UY = -30;
 const ROCK = [0x8a6a52, 0x7a5c48, 0x9a785e, 0x6e523f];

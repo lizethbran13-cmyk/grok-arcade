@@ -2,8 +2,8 @@
 // A big walk-in HQ (lobby with the shell logo, CEO office, drop tower lab, crush press lab, heat + sand-blast chamber, shell-armor workshop)
 // plus an outdoor Toughness Test Yard with live, cartoony tests and a Ratita Industries gadget corner. Real 3D geometry only.
 import * as THREE from 'three';
-import * as K from './kit.js?v=ph4';
-import { building, tortStatue, claypot, tcrate, shade, SUN, sunShell, palm, flagString, wedge3 } from './town.js?v=ph4';
+import * as K from './kit.js?v=ph5';
+import { building, tortStatue, claypot, tcrate, shade, SUN, sunShell, palm, flagString, wedge3 } from './town.js?v=ph5';
 const { wall, D, sign3d, rbox, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, pick } = K;
 const R = K.R, PI = Math.PI, FL = 0.12, TEAL = 0x0f9d8a, SHELLC = [0x6e4524, 0xb98545, 0xd1a05e], HZ = 0xfacc15;
 const art = (w, axis, at, c, y, W, H, side, k) => K.PR.frame(K.scaled(w, 0, FL, 0, 0.25), axis, (at + side * 0.25) / 0.25, c / 0.25, y / 0.25, W / 0.25, H / 0.25, side, k);

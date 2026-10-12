@@ -1,16 +1,16 @@
 // Grok Pumpkin Hollow - boot, app state, main loop.
 import * as THREE from 'three';
-import { E, initEngine, render, trackFps } from './engine.js?v=ph4';
-import { initMats } from './mats.js?v=ph4';
-import { initInput, clearEdges, edge, IN } from './input.js?v=ph4';
-import { initAudio, setSound, sfx } from './audio.js?v=ph4';
-import { S, persist } from './save.js?v=ph4';
-import { HUD } from './hud.js?v=ph4';
-import { UI, closePanel } from './ui.js?v=ph4';
-import { Net } from './net.js?v=ph4';
-import { Game } from './game.js?v=ph4';
-import { $ } from './util.js?v=ph4';
-import { loadFont } from './text3d.js?v=ph4';
+import { E, initEngine, render, trackFps } from './engine.js?v=ph5';
+import { initMats } from './mats.js?v=ph5';
+import { initInput, clearEdges, edge, IN } from './input.js?v=ph5';
+import { initAudio, setSound, sfx } from './audio.js?v=ph5';
+import { S, persist } from './save.js?v=ph5';
+import { HUD } from './hud.js?v=ph5';
+import { UI, closePanel } from './ui.js?v=ph5';
+import { Net } from './net.js?v=ph5';
+import { Game } from './game.js?v=ph5';
+import { $ } from './util.js?v=ph5';
+import { loadFont } from './text3d.js?v=ph5';
 const app = window.__pt = window.__hq = { state: 'boot', paused: true, game: null, ready: false, busy: false, simSpeed: 1 };
 function setLoad(p, t) { const b = $('loadBar'); if (b) b.style.width = p + '%'; if (t) $('loadTxt').textContent = t; }
 async function boot() {
