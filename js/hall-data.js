@@ -1923,6 +1923,136 @@ GA.HALL_DATA = {
 "noOld": "Grok Eatsville Tycoon just opened for business. Its Time Jumper beta is in the Save Vault. Please wash your hands."
 
 },
+"ruffsources": {
+"repo": "grok-ruffsources",
+"history": [
+{
+"date": "Oct 16",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A cartoon 3D walk-in HR office run by dogs, in the Turbo look: the lobby with Biscuit the corgi receptionist, the mail room, the break room, the filing archive, the interview room and Candy's office, plus the plaza, the dog park, the Ratita and Tortuga branch offices and the Bark & Brew café. Sort the mail, file paperwork, interview new hires, find 26 golden bones and solve the mystery of Candy's missing squeaky toy."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/ruffsources/1.webp",
+"cap": "Bone Fountain Plaza outside Ruffsources HQ",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ruffsources/2.webp",
+"cap": "The lobby: Biscuit's reception desk and the waiting chairs",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ruffsources/3.webp",
+"cap": "The mail room, where Pi-rat drops off the packages",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ruffsources/4.webp",
+"cap": "The break room couch (Candy's favourite nap spot)",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ruffsources/5.webp",
+"cap": "The interview room: HIRE or PASS?",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ruffsources/6.webp",
+"cap": "The Ratita Industries branch office",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ruffsources/7.webp",
+"cap": "Tortuga Tech's drop tower lab",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/ruffsources/8.webp",
+"cap": "The Bark & Brew café",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/ruffsources/cover.webp",
+"quip": "A corgi came by to inspect the exhibit. She stamped every picture APPROVED. Then she stamped me.",
+"noOld": "Grok Ruffsources HQ just opened. Its Time Jumper beta is in the Save Vault (Final Beta). Please wipe your paws."
+},
+"skytours": {
+"repo": "grok-sky-tours",
+"history": [
+{
+"date": "Oct 16",
+"ver": "1.0",
+"title": "First flight",
+"text": "Fly Snowie's tour copter over a big open cartoon 3D world in the Turbo look, inspired by Pup Town, Torty Town and North Pole Village: fly tour stops, rescue stranded pets, race three ring courses and collect passport stamps. Crashes are harmless: the tow-drone carries you home. Land on any pad and walk into 9 packed buildings and 14 cottages, each with its own mini-game or chore."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/skytours/1.webp",
+"cap": "Flying over Pup Town",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/skytours/2.webp",
+"cap": "North Pole Village from the air",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/skytours/3.webp",
+"cap": "Flying through a ring course",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/skytours/4.webp",
+"cap": "The friendly tow-drone carrying the copter home",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/skytours/5.webp",
+"cap": "The Pilot Lounge with the SKY ACE 2 cabinet",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/skytours/6.webp",
+"cap": "Inside the Toy Workshop: toy train and sleigh",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/skytours/7.webp",
+"cap": "The Cocoa Cabin and its marshmallow table",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/skytours/8.webp",
+"cap": "A cozy North Pole cottage",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/skytours/cover.webp",
+"quip": "Snowie flew past the Hall window three times to wave at her pictures. The third time she was upside down. On purpose, she says.",
+"noOld": "Grok Snowie Sky Tours just took off. Its Time Jumper beta is in the Save Vault (Final Beta). Please keep your paws inside the copter."
+},
 "pumpkinhollow": {
 "repo": "grok-pumpkin-hollow",
 "history": [
@@ -2289,5 +2419,6 @@ GA.ARCADE_HISTORY = [
   { date: 'Oct 11', ver: '5.4', title: 'Time Jumper Save Booth', text: 'Lili\u2019s Save Vault in the Preview Center: when a game ships, its last Time Jumper preview is archived as its Final Beta, playable forever with its own save. Betas also appear in each game\u2019s Old Versions here in the Hall.' },
   { date: 'Oct 11', ver: '5.5', title: 'Grok Pup Town', text: 'Candy\u2019s hometown opened: a cozy 3D dog town in HUBS & WORLDS, bonus #34 Bone Dig, the Golden Bone Keychain, Torty Plush and Golden Bone Cup, and a Hall exhibit. Its Time Jumper beta is the first game in Lili\u2019s Save Vault.' },
   { date: 'Oct 11', ver: '5.6', title: 'Grok Eatsville Tycoon', text: 'A restaurant tycoon opened in LIFE SIMS: cook, serve and build a food empire in Eatsville, with bonus #37 Patty Panic, the Golden Spatula Keychain, the Inspector Grumbleton Plush, the Golden Burger Cup and a Hall exhibit.' },
-  { date: 'Oct 11', ver: '5.7', title: 'Grok Lost Relics', text: 'The Grok Lost Relics cabinet joined the Game Gallery, with bonus game #36 Boulder Run, three new prizes (Jade Monkey Keychain, Professor Vintage Plush, Lost Relics Cup), the Boulder Dodger, Coin Sprinter and Relic Keeper achievements, and a new Hall of Game Records exhibit.' }
+  { date: 'Oct 11', ver: '5.7', title: 'Grok Lost Relics', text: 'The Grok Lost Relics cabinet joined the Game Gallery, with bonus game #36 Boulder Run, three new prizes (Jade Monkey Keychain, Professor Vintage Plush, Lost Relics Cup), the Boulder Dodger, Coin Sprinter and Relic Keeper achievements, and a new Hall of Game Records exhibit.' },
+  { date: 'Oct 16', ver: '5.8', title: 'Ruffsources HQ & Snowie Sky Tours', text: 'Two new cabinets in HUBS & WORLDS: Grok Ruffsources HQ and Grok Snowie Sky Tours, with bonus games #41 Paw Stamp Rush and #42 Ring Dash, six new prizes, four new achievements and two new Hall exhibits.' }
 ];

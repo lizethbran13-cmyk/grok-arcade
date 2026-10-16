@@ -869,6 +869,51 @@
         g.fillStyle = '#ffb020'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK TORTY TOWN', w / 2, 24);
         break;
       }
+      case 'ruffsources': {
+        // Grok Ruffsources HQ: sunny sky, the red-brick HQ with its RUFFSOURCES sign, the Bone Fountain splashing, Biscuit the corgi trotting past with a form, paper planes drifting
+        var grs = g.createLinearGradient(0, 0, 0, h); grs.addColorStop(0, '#7dd3fc'); grs.addColorStop(0.55, '#e0f2fe'); grs.addColorStop(0.56, '#86efac'); grs.addColorStop(1, '#4ade80'); g.fillStyle = grs; g.fillRect(0, 0, w, h);
+        g.fillStyle = 'rgba(255,255,255,.9)'; for (i = 0; i < 3; i++) { var cxr = ((t * (8 + i * 4) + i * 90) % (w + 80)) - 40; g.beginPath(); g.ellipse(cxr, h * (0.1 + i * 0.07), 26, 9, 0, 0, 7); g.fill(); }
+        g.fillStyle = '#b45a3c'; g.fillRect(w * 0.12, h * 0.22, w * 0.76, h * 0.34); g.fillStyle = '#7c3f2c'; g.fillRect(w * 0.1, h * 0.2, w * 0.8, h * 0.04);
+        g.fillStyle = '#14b8a6'; rrF(g, w * 0.22, h * 0.25, w * 0.56, h * 0.06, 4); g.fill(); g.font = font(11); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('RUFFSOURCES', w / 2, h * 0.295);
+        g.fillStyle = '#bae6fd'; for (i = 0; i < 4; i++) g.fillRect(w * (0.17 + i * 0.18), h * 0.36, w * 0.1, h * 0.07); g.fillStyle = '#4a2c1a'; g.fillRect(w * 0.45, h * 0.45, w * 0.1, h * 0.11);
+        g.fillStyle = '#e2e8f0'; g.beginPath(); g.ellipse(w / 2, h * 0.7, w * 0.22, h * 0.035, 0, 0, 7); g.fill(); g.fillStyle = '#cbd5e1'; g.fillRect(w / 2 - 4, h * 0.6, 8, h * 0.1);
+        for (i = 0; i < 6; i++) { var ar = i / 6 * 6.283 + t * 0.6, dr = ((t * 1.5 + i * 0.3) % 1); g.fillStyle = 'rgba(56,189,248,' + (1 - dr) + ')'; g.beginPath(); g.arc(w / 2 + Math.cos(ar) * dr * w * 0.18, h * 0.6 + dr * dr * h * 0.09 - Math.sin(dr * 3.1) * h * 0.06, 2.5, 0, 7); g.fill(); }
+        var bxr = ((t * 30) % (w + 60)) - 30, byr = h * 0.84 - Math.abs(Math.sin(t * 8)) * 3; g.fillStyle = '#f59e0b'; g.beginPath(); g.ellipse(bxr, byr, 14, 8, 0, 0, 7); g.fill(); g.beginPath(); g.arc(bxr + 13, byr - 6, 7, 0, 7); g.fill(); g.beginPath(); g.moveTo(bxr + 9, byr - 11); g.lineTo(bxr + 10, byr - 19); g.lineTo(bxr + 14, byr - 12); g.fill(); g.beginPath(); g.moveTo(bxr + 15, byr - 12); g.lineTo(bxr + 19, byr - 19); g.lineTo(bxr + 19, byr - 10); g.fill();
+        g.fillStyle = '#fff'; g.beginPath(); g.arc(bxr + 15, byr - 4, 3.5, 0, 7); g.fill(); g.fillRect(bxr + 18, byr - 6, 9, 11); g.fillStyle = '#94a3b8'; g.fillRect(bxr + 20, byr - 3, 5, 1); g.fillRect(bxr + 20, byr, 5, 1); g.fillStyle = '#7c2d12'; for (i = 0; i < 4; i++) g.fillRect(bxr - 10 + i * 6, byr + 5, 3, 5 + (Math.sin(t * 16 + i) > 0 ? 1 : 0));
+        for (i = 0; i < 2; i++) { var pxr = ((t * (36 + i * 10) + i * 120) % (w + 40)) - 20, pyr = h * (0.12 + i * 0.1) + Math.sin(t * 2 + i) * 6; g.fillStyle = '#fff'; g.beginPath(); g.moveTo(pxr + 10, pyr); g.lineTo(pxr - 8, pyr - 5); g.lineTo(pxr - 4, pyr); g.lineTo(pxr - 8, pyr + 4); g.closePath(); g.fill(); }
+        g.fillStyle = '#ff8a3d'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(13); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK RUFFSOURCES HQ', w / 2, 23);
+        break;
+      }
+      case 'pawstamp': {
+        var gps = g.createLinearGradient(0, 0, 0, h); gps.addColorStop(0, '#fff7ed'); gps.addColorStop(1, '#fdba74'); g.fillStyle = gps; g.fillRect(0, 0, w, h);
+        var bys = h * 0.66, ofs = (t * 50) % 60; g.fillStyle = '#334155'; g.fillRect(0, bys, w, 14); g.fillStyle = '#64748b'; for (i = -1; i < w / 30 + 1; i++) g.fillRect(i * 30 + (ofs % 30), bys + 4, 12, 3);
+        var slm = (t * 1.2) % 1 > 0.8; for (i = 0; i < 3; i++) { var fxs = ((t * 50 + i * 60) % (w + 40)) - 20; g.fillStyle = i === 1 ? '#fde047' : '#fff'; g.fillRect(fxs - 13, bys - 26, 26, 26); g.fillStyle = '#94a3b8'; g.fillRect(fxs - 9, bys - 20, 18, 2); g.fillRect(fxs - 9, bys - 15, 14, 2); if (fxs > w / 2) { g.fillStyle = '#ea580c'; g.beginPath(); g.arc(fxs, bys - 9, 4, 0, 7); g.fill(); } }
+        var sys = slm ? bys - 40 : bys - 72; g.fillStyle = '#7c3f2c'; g.fillRect(w / 2 - 3, 30, 6, sys - 40); g.fillStyle = '#c8634a'; rrF(g, w / 2 - 18, sys - 14, 36, 16, 4); g.fill(); g.fillStyle = '#ea580c'; g.fillRect(w / 2 - 15, sys + 2, 30, 5);
+        g.font = font(17); g.textAlign = 'center'; g.fillStyle = '#9a3412'; g.fillText('PAW STAMP RUSH', w / 2, 22);
+        break;
+      }
+      case 'skytours': {
+        // Grok Snowie Sky Tours: bright sky with drifting clouds, snowy peaks, Snowie's pink tour copter looping through a sky ring, the yellow tow-drone buzzing behind, a tiny village and the heliport pad below
+        var gst = g.createLinearGradient(0, 0, 0, h); gst.addColorStop(0, '#0ea5e9'); gst.addColorStop(0.6, '#bae6fd'); gst.addColorStop(1, '#f0f9ff'); g.fillStyle = gst; g.fillRect(0, 0, w, h);
+        g.fillStyle = 'rgba(255,255,255,.9)'; for (i = 0; i < 4; i++) { var cxs = ((t * (10 + i * 5) + i * 70) % (w + 80)) - 40; g.beginPath(); g.ellipse(cxs, h * (0.12 + i * 0.09), 24, 8, 0, 0, 7); g.ellipse(cxs + 12, h * (0.12 + i * 0.09) - 5, 14, 7, 0, 0, 7); g.fill(); }
+        [[0.0, 0.42, 0.34], [0.3, 0.36, 0.4], [0.62, 0.4, 0.38]].forEach(function (q) { g.fillStyle = '#94a3b8'; g.beginPath(); g.moveTo(w * q[0], h * 0.72); g.lineTo(w * (q[0] + q[2] / 2), h * q[1]); g.lineTo(w * (q[0] + q[2]), h * 0.72); g.closePath(); g.fill(); g.fillStyle = '#f8fafc'; g.beginPath(); g.moveTo(w * (q[0] + q[2] * 0.36), h * (q[1] + 0.08)); g.lineTo(w * (q[0] + q[2] / 2), h * q[1]); g.lineTo(w * (q[0] + q[2] * 0.64), h * (q[1] + 0.08)); g.closePath(); g.fill(); });
+        g.fillStyle = '#86efac'; g.fillRect(0, h * 0.72, w, h * 0.28); for (i = 0; i < 4; i++) { var hxs = w * (0.08 + i * 0.24); g.fillStyle = ['#fca5a5', '#fde68a', '#93c5fd', '#c4b5fd'][i]; g.fillRect(hxs, h * 0.8, 20, 14); g.fillStyle = '#ef4444'; g.beginPath(); g.moveTo(hxs - 3, h * 0.8); g.lineTo(hxs + 10, h * 0.8 - 9); g.lineTo(hxs + 23, h * 0.8); g.fill(); }
+        g.fillStyle = '#334155'; g.beginPath(); g.ellipse(w * 0.5, h * 0.93, 26, 6, 0, 0, 7); g.fill(); g.strokeStyle = '#ff4fa0'; g.lineWidth = 2; g.beginPath(); g.ellipse(w * 0.5, h * 0.93, 18, 4, 0, 0, 7); g.stroke();
+        var rgx = w * 0.6, rgy = h * 0.44; g.lineWidth = 5; g.strokeStyle = '#facc15'; g.beginPath(); g.ellipse(rgx, rgy, 9, 24, 0, Math.PI / 2, Math.PI * 1.5); g.stroke();
+        var cxk = ((t * 40) % (w + 80)) - 40, cyk = rgy + Math.sin(t * 2) * 10; g.fillStyle = '#334155'; g.fillRect(cxk - 26, cyk - 2, 16, 4); g.fillStyle = '#ff4fa0'; g.beginPath(); g.ellipse(cxk, cyk, 15, 10, 0, 0, 7); g.fill(); g.fillStyle = '#bae6fd'; g.beginPath(); g.ellipse(cxk + 6, cyk - 2, 7, 6, 0, 0, 7); g.fill();
+        g.fillStyle = '#334155'; g.fillRect(cxk - 9, cyk + 11, 18, 2); var bls = Math.abs(Math.sin(t * 30)) * 18 + 4; g.fillRect(cxk - bls, cyk - 15, bls * 2, 2); g.fillRect(cxk - 1, cyk - 14, 2, 4);
+        g.lineWidth = 5; g.strokeStyle = '#facc15'; g.beginPath(); g.ellipse(rgx, rgy, 9, 24, 0, -Math.PI / 2, Math.PI / 2); g.stroke();
+        var dxs = w * 0.2 + Math.sin(t * 0.7) * w * 0.12, dys = h * 0.26 + Math.sin(t * 3) * 4; g.fillStyle = '#facc15'; rrF(g, dxs - 10, dys - 5, 20, 10, 4); g.fill(); g.fillStyle = '#1f2937'; [[-12, -6], [12, -6]].forEach(function (q) { g.fillRect(dxs + q[0] - 6, dys + q[1], 12 * Math.abs(Math.sin(t * 25)), 2); }); g.fillStyle = '#22d3ee'; g.beginPath(); g.arc(dxs, dys, 2.5, 0, 7); g.fill();
+        g.fillStyle = '#38bdf8'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(12); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK SNOWIE SKY TOURS', w / 2, 23);
+        break;
+      }
+      case 'ringdash': {
+        var grd = g.createLinearGradient(0, 0, 0, h); grd.addColorStop(0, '#38bdf8'); grd.addColorStop(1, '#e0f2fe'); g.fillStyle = grd; g.fillRect(0, 0, w, h);
+        var rof = (t * 60) % 110; for (i = 0; i < 4; i++) { var rxd = i * 110 - rof + 40, ryd = h * 0.5 + Math.sin(i * 1.7) * h * 0.18; g.lineWidth = 5; g.strokeStyle = i === 2 ? '#facc15' : '#ff4fa0'; g.beginPath(); g.ellipse(rxd, ryd, 7, 20, 0, 0, 7); g.stroke(); }
+        var cyd = h * 0.5 + Math.sin(t * 1.6) * h * 0.18; g.fillStyle = '#334155'; g.fillRect(w * 0.18, cyd - 2, 14, 4); g.fillStyle = '#ff4fa0'; g.beginPath(); g.ellipse(w * 0.3, cyd, 13, 9, 0, 0, 7); g.fill(); g.fillStyle = '#bae6fd'; g.beginPath(); g.arc(w * 0.3 + 5, cyd - 2, 5, 0, 7); g.fill(); g.fillStyle = '#334155'; var bld = Math.abs(Math.sin(t * 30)) * 16 + 4; g.fillRect(w * 0.3 - bld, cyd - 13, bld * 2, 2);
+        g.fillStyle = '#f8fafc'; g.fillRect(0, h - 16, w, 16); g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('RING DASH', w / 2, 22);
+        break;
+      }
       case 'pumpkinhollow': {
         // Grok Pumpkin Hollow: purple night sky, big moon with bats flapping past, Wisp the ghost bobbing, the BOO ROW arch with glowing jack-o'-lanterns, crooked houses and drifting fog
         var gph = g.createLinearGradient(0, 0, 0, h); gph.addColorStop(0, '#120726'); gph.addColorStop(0.5, '#3b1d5c'); gph.addColorStop(0.62, '#c2410c'); gph.addColorStop(0.63, '#2a1f3d'); gph.addColorStop(1, '#1a1028'); g.fillStyle = gph; g.fillRect(0, 0, w, h);

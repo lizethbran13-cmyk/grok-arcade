@@ -77,6 +77,12 @@
     torty: function (g) { var o = new T.Group(); o.position.y = 0.3; g.add(o); var sn = add(g, sp(0.07, 20), ph('#ffd23f', 110, '#a35f00'), 0, 0.3, 0); for (var i = 0; i < 8; i++) { var a = i / 8 * Math.PI * 2, c = add(g, new T.ConeGeometry(0.02, 0.06, 8), ph('#ffb020', 90, '#5a3a00'), Math.cos(a) * 0.1, 0.3 + Math.sin(a) * 0.1, 0); c.rotation.z = a - Math.PI / 2; } void sn;
       add(o, sp(0.04, 10), ph('#4ade80', 40), 0.22, 0.02, 0); add(o, cy(0.05, 0.05, 0.02, 6), ph('#0f9d8a', 80), -0.11, 0.03, 0.19).rotation.x = Math.PI / 2; add(o, sp(0.035, 10), ph('#a16207', 40), -0.11, 0.03, -0.19);
       add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
+    ruffsources: function (g) { var o = new T.Group(); o.position.y = 0.3; g.add(o); var gp = ph('#fbbf24', 110, '#a35f00'); add(g, cy(0.05, 0.055, 0.02, 20), gp, 0, 0.27, 0).rotation.x = Math.PI / 2; [[-0.055, 0.04], [-0.02, 0.07], [0.02, 0.07], [0.055, 0.04]].forEach(function (q) { add(g, cy(0.018, 0.02, 0.02, 12), gp, q[0], 0.27 + q[1], 0).rotation.x = Math.PI / 2; });
+      add(o, bx(0.07, 0.09, 0.006), ph('#ffffff', 30), 0.22, 0.02, 0); add(o, sp(0.03, 10), ph('#f472b6', 50), -0.11, 0.03, 0.19); add(o, sp(0.035, 10), ph('#14b8a6', 50), -0.11, 0.03, -0.19);
+      add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
+    skytours: function (g) { var o = new T.Group(); o.position.y = 0.3; g.add(o); var pk = ph('#ff4fa0', 80); add(g, sp(0.07, 18), pk, 0, 0.3, 0).scale.set(1.3, 0.85, 0.9); add(g, sp(0.04, 14), ph('#bae6fd', 100), 0.05, 0.31, 0); add(g, cy(0.012, 0.008, 0.12, 8), pk, -0.12, 0.3, 0).rotation.z = Math.PI / 2;
+      var rt = add(g, bx(0.28, 0.005, 0.02), ph('#334155', 30), 0, 0.37, 0); add(o, new T.TorusGeometry(0.035, 0.008, 6, 16), ph('#facc15', 90), 0.22, 0.02, 0); add(o, sp(0.03, 10), ph('#38bdf8', 50), -0.11, 0.03, 0.19); add(o, sp(0.035, 10), ph('#facc15', 50), -0.11, 0.03, -0.19); void rt;
+      add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
     pumpkinhollow: function (g) { var o = new T.Group(); o.position.y = 0.3; g.add(o); var pm = ph('#fbbf24', 110, '#a35f00'); for (var i = 0; i < 6; i++) { var a = i / 6 * Math.PI * 2; add(g, sp(0.045, 14), pm, Math.cos(a) * 0.03, 0.3, Math.sin(a) * 0.03).scale.set(0.75, 1, 0.75); } add(g, cy(0.008, 0.01, 0.04, 6), ph('#15803d', 40), 0, 0.36, 0);
       add(o, new T.ConeGeometry(0.03, 0.08, 10), ph('#f8fafc', 40), 0.22, 0.02, 0).rotation.z = Math.PI; add(o, sp(0.03, 10), ph('#1f1630', 30), -0.11, 0.03, 0.19); add(o, sp(0.035, 10), ph('#f97316', 50), -0.11, 0.03, -0.19);
       add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
@@ -403,6 +409,8 @@
     // (booth #32) room to grow: 8 wall niches in the Records Annex (games #24-#31). Empty ones show a dust-sheeted "coming soon" pedestal.
     var FUT = []; [0, 1, 2, 3].forEach(function (i) { FUT.push([W.minX, W.minZ + 16.2 + i * 2.1, Math.PI / 2]); FUT.push([W.maxX, W.minZ + 16.2 + i * 2.1, -Math.PI / 2]); });
     FUT.forEach(function (f) { slots.push(f); });
+    // 32nd: free-standing just inside the entrance on the left, mirroring the 23rd (a touch deeper so it clears the DLC Machine)
+    if (games.length > 31) slots.push([W.doorX - 3.6, W.minZ + 2.4, Math.PI / 2]);
     var par = A.scene;
     games.forEach(function (gm, i) { var s = slots[i]; if (!s) return; exhibit(gm, GA.HALL_DATA[gm.id], s[0], s[1], s[2]); });
     H3.freeSlots = slots.slice(games.length).filter(function (s) { return FUT.indexOf(s) >= 0; });

@@ -1,24 +1,22 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-16",
+  "updated": "2026-10-16T14:30:00-07:00",
   "items": [
     {
       "game": "ruffsources",
-      "name": "Grok Ruffsources HQ",
-      "what": "A brand new game: Candy the miniature schnauzer runs Ruffsources (HR) for Ratita Industries and Tortuga Tech! Walk through the office: sort the mail room, tidy the break room, file paperwork, run interviews and solve the mystery of the missing squeaky toy. Watch out, Candy naps on the paperwork. Luna, Pi-rat, Snowie and Torty visit.",
-      "stage": "building",
-      "when": "In the lab now",
-      "gname": "New game",
-      "key": "ruffsources"
+      "name": "Grok Ruffsources HQ (live)",
+      "what": "Grok Ruffsources HQ: a walk-in HR office run by dogs. Sort the mail, file paperwork, interview new hires, find 26 golden bones and solve the mystery of Candy's missing squeaky toy. Play it in Hubs & Worlds!",
+      "stage": "shipped",
+      "when": "Oct 16",
+      "shippedAt": "2026-10-16T21:30:00Z"
     },
     {
       "game": "skytours",
-      "name": "Grok Snowie Sky Tours",
-      "what": "A brand new game: pilot Snowie's tour copter over a big open world inspired by Pup Town, Torty Town and North Pole Village. Fly tour stops, rescue stranded pets and race ring courses. Crashes are harmless: the tow-drone brings you home and you earn a survival badge. Land on pads to walk into 9 packed buildings and 14 cottages, each with its own mini-game or chore and lots of townsfolk to chat with. All 5 pets appear.",
-      "stage": "building",
-      "when": "In the lab now",
-      "gname": "New game",
-      "key": "skytours"
+      "name": "Grok Snowie Sky Tours (live)",
+      "what": "Grok Snowie Sky Tours: fly Snowie's tour copter over a big open world. Tour stops, pet rescues, ring courses, and 9 packed walk-in buildings plus 14 cottages full of mini-games and chores. Play it in Hubs & Worlds!",
+      "stage": "shipped",
+      "when": "Oct 16",
+      "shippedAt": "2026-10-16T21:30:00Z"
     },
     {
       "game": "pumpkinhollow",
@@ -222,28 +220,31 @@
       "when": "Oct 10"
     }
   ],
-  "previews": [
-    {
-      "id": "ruffsources",
-      "game": "ruffsources",
-      "name": "Grok Ruffsources HQ",
-      "url": "previews/ruffsources/",
-      "playable": true,
-      "built": "2026-10-16",
-      "notes": "Walk-in HR office: mail room, break room, filing, interviews and the squeaky toy mystery"
-    },
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "skytours",
       "game": "skytours",
       "name": "Grok Snowie Sky Tours",
-      "url": "previews/skytours/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/skytours-beta/",
       "built": "2026-10-16",
-      "notes": "Fly Snowie's tour copter: tours, rescues, ring courses, plus dense walk-in buildings with 9 building mini-games, neighbor chores and 35 townsfolk"
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-16",
+      "notes": "The last Time Jumper build of Grok Snowie Sky Tours before release.",
+      "playable": true
+    },
+    {
+      "id": "ruffsources",
+      "game": "ruffsources",
+      "name": "Grok Ruffsources HQ",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/ruffsources-beta/",
+      "built": "2026-10-16",
+      "archived": "2026-10-16",
+      "notes": "The last Time Jumper build of Grok Ruffsources HQ before release.",
+      "playable": true
+    },
     {
       "id": "pumpkinhollow",
       "game": "pumpkinhollow",
