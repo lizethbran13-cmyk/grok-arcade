@@ -1,16 +1,16 @@
 // Grok Snowie Sky Tours - boot, app state, main loop.
 import * as THREE from 'three';
-import { E, initEngine, render, trackFps } from './engine.js?v=st3';
-import { initMats } from './mats.js?v=st3';
-import { initInput, clearEdges, edge } from './input.js?v=st3';
-import { initAudio, setSound, sfx } from './audio.js?v=st3';
-import { S, persist } from './save.js?v=st3';
-import { HUD } from './hud.js?v=st3';
-import { UI } from './ui.js?v=st3';
-import { closePanel } from './uikit.js?v=st3';
-import { Game } from './game.js?v=st3';
-import { $ } from './util.js?v=st3';
-import { loadFont } from './text3d.js?v=st3';
+import { E, initEngine, render, trackFps } from './engine.js?v=st4';
+import { initMats } from './mats.js?v=st4';
+import { initInput, clearEdges, edge } from './input.js?v=st4';
+import { initAudio, setSound, sfx } from './audio.js?v=st4';
+import { S, persist } from './save.js?v=st4';
+import { HUD } from './hud.js?v=st4';
+import { UI } from './ui.js?v=st4';
+import { closePanel } from './uikit.js?v=st4';
+import { Game } from './game.js?v=st4';
+import { $ } from './util.js?v=st4';
+import { loadFont } from './text3d.js?v=st4';
 const app = window.__pt = { state: 'boot', paused: true, game: null, ready: false, busy: false };
 function setLoad(p, t) { const b = $('loadBar'); if (b) b.style.width = p + '%'; if (t) $('loadTxt').textContent = t; }
 async function boot() {

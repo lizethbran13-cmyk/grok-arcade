@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-15",
+  "updated": "2026-10-16",
   "items": [
     {
       "game": "ruffsources",
@@ -14,7 +14,7 @@
     {
       "game": "skytours",
       "name": "Grok Snowie Sky Tours",
-      "what": "A brand new game: pilot Snowie's tour copter over a big open world inspired by Pup Town, Torty Town and North Pole Village. Fly tour stops, rescue stranded pets and race ring courses. Crashes are harmless: the tow-drone brings you home and you earn a survival badge. Land on pads to walk into buildings. All 5 pets appear.",
+      "what": "A brand new game: pilot Snowie's tour copter over a big open world inspired by Pup Town, Torty Town and North Pole Village. Fly tour stops, rescue stranded pets and race ring courses. Crashes are harmless: the tow-drone brings you home and you earn a survival badge. Land on pads to walk into 9 packed buildings and 14 cottages, each with its own mini-game or chore and lots of townsfolk to chat with. All 5 pets appear.",
       "stage": "building",
       "when": "In the lab now",
       "gname": "New game",
@@ -238,8 +238,8 @@
       "name": "Grok Snowie Sky Tours",
       "url": "previews/skytours/",
       "playable": true,
-      "built": "2026-10-15",
-      "notes": "Fly Snowie's tour copter: tours, rescues, ring courses and walk-in landing pads"
+      "built": "2026-10-16",
+      "notes": "Fly Snowie's tour copter: tours, rescues, ring courses, plus dense walk-in buildings with 9 building mini-games, neighbor chores and 35 townsfolk"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

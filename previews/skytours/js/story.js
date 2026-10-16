@@ -1,6 +1,6 @@
 // Snowie's tour commentary, the cameo chats, rescue lines and ring courses.
-import { S } from './save.js?v=st3';
-import { TOURS, RESCUES, TOWNS } from './map.js?v=st3';
+import { S } from './save.js?v=st4';
+import { TOURS, RESCUES, TOWNS } from './map.js?v=st4';
 export const FACTS = {
   arch: ['Snowie', 'Welcome to Pup Town! That arch is a REAL bone... okay, it\'s concrete. But every dog in town has licked it at least once.'],
   hydrant: ['Snowie', 'The Giant Hydrant holds all of Pup Town\'s water. On hot days they turn on the side nozzles and the whole town has a splash party!'],
@@ -50,3 +50,12 @@ export function goal(g) {
   const left = COURSES.filter((c) => !S.rings[c.id]); if (left.length) return `Fly the ${left[0].name} ring course`;
   return 'Top pilot! Collect every passport stamp and gold medal';
 }
+// letters to Santa in the Toy Workshop mail sacks
+export const LETTERS = [
+  ['A letter to Santa', '"Dear Santa, I would like one (1) squeaky bone, and for the mail carrier to stop being so suspicious. Love, Rusty (Pup Town)."'],
+  ['A letter to Santa', '"Dear Santa, Please bring a faster shell. Not for me. For a friend. The friend is me. — Slowpoke."'],
+  ['A letter to Santa', '"Santa! A new eyepatch, the shiny kind. Also a parrot. Also a parrot-shaped eyepatch. Arr. — Pi-rat."'],
+  ['A letter to Santa', '"Dear Santa, I have been very good. I only napped on 400 forms this year. — Candy (dictated to Mayor Goldie)."'],
+  ['A letter to Santa', '"Dear Santa, could you please fly with Snowie one day? She says the copter has a reindeer mode. — Mittens."'],
+  ['A letter to Santa', '"To Santa: one (1) tow-drone of my own, so I can tow my brother home from the park. — Bean."'],
+];

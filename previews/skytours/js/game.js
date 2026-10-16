@@ -1,23 +1,25 @@
 // Grok Snowie Sky Tours - flying, landing, walking into buildings, tour stops, rescues, ring courses, crash + tow-drone.
 import * as THREE from 'three';
-import { E, setEnvironment, followShadow } from './engine.js?v=st3';
-import { World } from './world.js?v=st3';
-import { buildMap, SPOTS, ENV, Hf, TOWNS, PADS, TOURS, RESCUES, ZONES, STAMPS, WATER_Y, LAKE } from './map.js?v=st3';
-import { BUILDINGS, buildingAt } from './bld.js?v=st3';
-import { Walker } from './walker.js?v=st3';
-import { FollowCam } from './cam.js?v=st3';
-import { makePet, animPet } from './pets.js?v=st3';
-import { makeKitten } from './dogs.js?v=st3';
-import { makeHuman, animHuman } from './humans.js?v=st3';
-import { readMove, edge, held } from './input.js?v=st3';
-import { updateFrustum, inView, LightPool } from './perf.js?v=st3';
-import { FX } from './fx.js?v=st3';
-import { S, persist } from './save.js?v=st3';
-import { sfx } from './audio.js?v=st3';
-import { talk, talking, toast } from './uikit.js?v=st3';
-import { textGeo } from './text3d.js?v=st3';
-import { makeCopter, makeTowDrone, PAINTS } from './copter.js?v=st3';
-import { FACTS, LINES, RESCUE_LINES, PET_NAMES, COURSES, goal } from './story.js?v=st3';
+import { E, setEnvironment, followShadow } from './engine.js?v=st4';
+import { World } from './world.js?v=st4';
+import { buildMap, SPOTS, ENV, Hf, TOWNS, PADS, TOURS, RESCUES, ZONES, STAMPS, WATER_Y, LAKE } from './map.js?v=st4';
+import { BUILDINGS, buildingAt } from './bld.js?v=st4';
+import { Walker } from './walker.js?v=st4';
+import { FollowCam } from './cam.js?v=st4';
+import { makePet, animPet } from './pets.js?v=st4';
+import { makeKitten } from './dogs.js?v=st4';
+import { makeHuman, animHuman } from './humans.js?v=st4';
+import { readMove, edge, held } from './input.js?v=st4';
+import { updateFrustum, inView, LightPool } from './perf.js?v=st4';
+import { FX } from './fx.js?v=st4';
+import { S, persist } from './save.js?v=st4';
+import { sfx } from './audio.js?v=st4';
+import { talk, talking, toast } from './uikit.js?v=st4';
+import { textGeo } from './text3d.js?v=st4';
+import { makeCopter, makeTowDrone, PAINTS } from './copter.js?v=st4';
+import { FACTS, LINES, RESCUE_LINES, PET_NAMES, COURSES, goal, LETTERS } from './story.js?v=st4';
+import { ROOMS, COTTAGE_IDS } from './rooms.js?v=st4';
+import { MG_NAMES } from './mg.js?v=st4';
 const PI = Math.PI, wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 const _r = new THREE.Ray(), _v = new THREE.Vector3(), _b = new THREE.Box3(), _s = new THREE.Vector3();
 const near = [];
@@ -60,6 +62,9 @@ export class Game {
     this.npc('marsh', { at: SPOTS.marsh, y: 1.05, s: 1.2, yaw: -PI / 2, label: '💬 Talk to Marsh', talk: () => talk(LINES.marsh, null, [{ t: '☕ Hot cocoa please!', f: () => this.cocoa() }, { t: 'Just warming up', f: () => {} }]) });
     [['husky', [[np.x - 12, np.z + 6], [np.x + 12, np.z + 6], [np.x, np.z - 14]]], ['sheepdog', [[np.x + 12, np.z - 10], [np.x + 20, np.z - 20], [np.x + 6, np.z - 22]]]].forEach(([br, walk], i) => this.npc('ndog' + i, { breed: br, s: 0.8, at: walk[0], walk, label: '💬 Say hi', talk: () => talk([[['Blizzard', 'Mop'][i], ['Snow is just cold sand you can eat! Best village ever.', 'I can\'t see the copter through my fur but I can HEAR it. Whup whup whup!'][i]]]) }));
     this.piratN = this.npc('pirat', { at: [SPOTS.pirat[0], SPOTS.pirat[1]], y: SPOTS.pirat[2] + 0.02, yaw: PI, s: 1.3, label: '💬 Talk to Pi-rat', talk: () => talk(LINES.pirat) });
+    // building residents, staff and visitors (only drawn while you're in their building)
+    for (const o of ROOMS.npcs) { const ch = o.mg ? [{ t: `${MG_NAMES[o.mg][0]} Play ${MG_NAMES[o.mg][1]}`, f: () => this.mg(o.mg) }, { t: 'Later!', f: () => {} }] : null;
+      const p = this.npc(o.pet || o.id, Object.assign({}, o, { label: `💬 ${o.name}`, talk: () => talk(o.lines, null, ch || undefined) })); p.room = o.room; }
     // every NPC gets a cached home position for visibility checks
     for (const p of this.npcs) p.home = [p.x, p.z];
   }
@@ -104,7 +109,12 @@ export class Game {
     push(SPOTS.cocoa[0], SPOTS.cocoa[1], 2.4, '☕ Hot cocoa', () => this.cocoa());
     push(SPOTS.log[0], SPOTS.log[1], 2.6, '📒 Pilot\'s log', () => this.app.pause());
     push(SPOTS.dogpark[0], SPOTS.dogpark[1], 4, '🎾 Throw a ball', () => { sfx('bark'); toast('🎾 Fetch! Every dog in the park went zooming.'); this.fx.burst(this.me.x, this.me.y + 1, this.me.z, 0xfacc15, 8, 3); });
+    for (const a of ROOMS.acts) push(a.x, a.z, a.r, a.label, () => { if (a.mg) this.mg(a.mg); else if (a.chore) this.chore(a.chore); else if (a.talk) talk(a.talk); else if (a.letter) this.letter(); });
     this.acts.push({ board: true, r: 3.6, label: '🚁 Board the copter', f: () => this.board(), walk: true }); }
+  mg(id) { const app = this.app; app.paused = true; app.busy = true; app.ui.minigame(id, () => app.resume()); }
+  chore(c) { const first = c.helped && !S.helped.includes(c.id); if (first) { S.helped.push(c.id); persist(); } sfx(first ? 'win' : 'ding'); this.fx.burst(this.me.x, this.me.y + 1.4, this.me.z, c.fx || 0xffd23f, first ? 18 : 8, 2.5); if (c.zoom) this.me.zoom = c.zoom;
+    toast(c.msg + (first ? ` (Neighbors helped ${S.helped.length}/${COTTAGE_IDS.length})` : '')); if (first && S.helped.length >= COTTAGE_IDS.length && !S.badges.neighbor) { S.badges.neighbor = 1; persist(); setTimeout(() => toast('🏅 Badge: Good Neighbor (helped every home in the valley)'), 1200); } }
+  letter() { this.li = ((this.li == null ? Math.random() * LETTERS.length : this.li) + 1) | 0; talk([LETTERS[this.li % LETTERS.length]]); sfx('click'); }
   stamp(s) { if (!S.stamps.includes(s.id)) { S.stamps.push(s.id); persist(); sfx('check'); const sm = this.stampM[s.id]; if (sm) sm.children[1].material.color.set(0xffd23f); this.fx.burst(s.at[0], (s.at[2] || 0) + 1.3, s.at[1], 0xffd23f, 12, 3); toast(`🛂 Passport stamped: ${s.name} (${S.stamps.length}/${STAMPS.length})`); if (S.stamps.length >= STAMPS.length && !S.badges.globe) { S.badges.globe = 1; persist(); setTimeout(() => toast('🏅 Badge: Globetrotter'), 900); } } }
   board() { this.mode = 'fly'; this.me.setVisible(false); this.cam.snap = true; this.cam.yaw = this.cop.yaw + PI; this.cam.pitch = 0.3; sfx('door'); this.inB = null; this.setVis(true); }
   hopOut() { const c = this.cop, pad = c.onPad; this.mode = 'walk'; const sx = Math.cos(c.yaw), sz = -Math.sin(c.yaw); const off = pad && pad.small ? 2.2 : 3.6; this.me.place([c.x - sx * off, c.y + 0.1, c.z - sz * off], c.yaw); this.me.setVisible(true); this.zone = this.zoneFor(this.me.x, this.me.z); this.cam.snap = true; this.cam.yaw = c.yaw + PI; this.cam.pitch = 0.32; sfx('door');
@@ -196,7 +206,7 @@ export class Game {
       const cp = E.camera.position, gh = Math.max(Hf(cp.x, cp.z), WATER_Y) + 1.5; if (cp.y < gh) { cp.y = gh; E.camera.lookAt(c.x, c.y + 2.2, c.z); } if (this.cam.pitch > 0.9) this.cam.pitch -= dt * 0.5; }
     updateFrustum(E.camera); this.fx.update(dt);
     // NPCs: stroll + animate only when on screen and near
-    const cp = E.camera.position; for (const p of this.npcs) { const dd = Math.hypot(cp.x - p.x, cp.z - p.z); const vis = dd < 110; p.root.visible = vis; if (!vis) continue;
+    const cp = E.camera.position, inId = this.inB && this.inB.id; for (const p of this.npcs) { const dd = Math.hypot(cp.x - p.x, cp.z - p.z); const vis = p.room ? (inId === p.room || (this.mode === 'walk' && Math.hypot(me.x - p.x, me.z - p.z) < 9)) : dd < 110; p.root.visible = vis; if (!vis) continue;
       if (p.walk) { const t = p.walk[p.wi]; const dx = t[0] - p.x, dz = t[1] - p.z, d = Math.hypot(dx, dz); const nearMe = this.mode === 'walk' && Math.hypot(me.x - p.x, me.z - p.z) < 2.6;
         if (nearMe) p.speed = 0; else if (p.wait > 0) { p.wait -= dt; p.speed = 0; } else if (d < 0.3) { p.wi = (p.wi + 1) % p.walk.length; p.wait = 1.5 + Math.random() * 2; } else { const sp = p.kind === 'tort' ? 0.7 : 1.6; p.x += dx / d * sp * dt; p.z += dz / d * sp * dt; p.yaw = Math.atan2(dx, dz); p.speed = sp; } p.noTurn = !nearMe; }
       if (inView(p.x, p.y + 0.5, p.z, 1.5)) { if (p.kind === 'human') { p.root.position.set(p.x, p.y, p.z); p.root.rotation.y = p.yaw; animHuman(p.rig, dt, { speed: p.speed, ground: true }); } else animPet(p, dt, this.mode === 'walk' ? me : null); } }

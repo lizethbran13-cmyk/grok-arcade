@@ -1,8 +1,8 @@
 // The 5 Grok pets as real 3D cameo characters: Candy (miniature schnauzer), Torty (Martina the tortoise), Luna, Pi-rat (eyepatch) and Snowie (white fancy rat).
 // Every cameo turns to face you when you come close or talk.
 import * as THREE from 'three';
-import { makeRat, animRat, makeMartina, animMartina } from './models.js?v=st3';
-import { makePup, animPup } from './dogs.js?v=st3';
+import { makeRat, animRat, makeMartina, animMartina } from './models.js?v=st4';
+import { makePup, animPup } from './dogs.js?v=st4';
 export const PETS = {
   candy: { name: 'Candy', title: 'Head of Ruffsources', emoji: '🐶' },
   torty: { name: 'Torty', title: 'CEO, Tortuga Tech Inc.', emoji: '🐢' },

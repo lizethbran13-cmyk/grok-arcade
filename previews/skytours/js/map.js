@@ -1,10 +1,11 @@
 // Grok Snowie Sky Tours - the open world: rolling hills, a lake, snowy peaks and three towns (Pup Town, Torty Town,
 // North Pole Village) around Snowie's heliport. Every town building is walk-in. Brand-new map, built on the Turbo kit.
 import * as THREE from 'three';
-import * as K from './kit.js?v=st3';
-import { rbox } from './world.js?v=st3';
-import { shell, part, onSide } from './bld.js?v=st3';
-import { textGeo } from './text3d.js?v=st3';
+import * as K from './kit.js?v=st4';
+import { rbox } from './world.js?v=st4';
+import { shell, part, onSide } from './bld.js?v=st4';
+import { textGeo } from './text3d.js?v=st4';
+import { dressRooms, cottageRoom } from './rooms.js?v=st4';
 const { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, wedge, propSeed } = K;
 const PI = Math.PI, R = K.R, pick = K.pick;
 export const ENV = { sunDir: [0.5, 0.8, 0.3], sunColor: 0xfff1dc, sunI: 2.6, hemiSky: 0xd6ecff, hemiGround: 0x7a9a5a, hemiI: 0.65, skyTop: 0x2a78e4, skyMid: 0x9fd3ff, skyBot: 0xe8f6ff, fog: 0xcfe6ff, fogD: 0.0016, exposure: 1.0, envI: 0.85, bloomT: 1.05, bloomS: 0.35, sunDisc: 1, stars: 0 };
@@ -41,13 +42,13 @@ export const SPOTS = {}; export const PADS = []; export const TOURS = []; export
 // ---------- little art helpers ----------
 export function txt(w, s, x, y, z, ry, size, col, b = 'g', em = 0) { const g = textGeo(s, size, size * 0.25); if (!g) return; w.add(b, g, col, x, y, z, 0, ry, 0, 1, 1, 1, em); }
 export function bone(w, b, col, x, y, z, ry = 0, s = 1, rx = 0, em = 0) { const T = w.tf(x, y, z, ry, s); T.add(b, capsule(14), col, 0, 0, 0, rx, 0, PI / 2, 0.32, 1.1, 0.32, em); [-1, 1].forEach((a) => [-1, 1].forEach((c) => T.add(b, sph(14), col, a * 0.78, c * 0.2, 0, 0, 0, 0, 0.3, 0.3, 0.3, em))); }
-function frameArt(w, axis, at, c, y, W, H, col, side) { if (axis === 'x') { w.add('m', rbox(W + 0.14, H + 0.14, 0.06, 0.02), 0x7c4a1e, c, y, at + side * 0.03); w.add('m', rbox(W, H, 0.04, 0.01), col, c, y, at + side * 0.07); } else { w.add('m', rbox(0.06, H + 0.14, W + 0.14, 0.02), 0x7c4a1e, at + side * 0.03, y, c); w.add('m', rbox(0.04, H, W, 0.01), col, at + side * 0.07, y, c); } }
-function pendant(w, x, z, col, y = 3.1) { w.add('m', cyl(6), 0x334155, x, y, z, 0, 0, 0, 0.012, 1.2, 0.012); w.add('g', lathe([[0, 0], [0.3, 0], [0.22, 0.22], [0.04, 0.3], [0, 0.3]], 20, 'shade'), col, x, y - 0.3, z); w.add('l', sph(12), 0xfff3c4, x, y - 0.3, z, 0, 0, 0, 0.12, 0.12, 0.12, 0.6); }
-function bed(w, x, z, ry, col) { const T = w.tf(x, 0, z, ry); T.slab('m', 0x9a6a3e, 0, 0, 0, 1.6, 0.45, 2.2, 0.06); T.slab('f', 0xffffff, 0, 0.45, 0.1, 1.5, 0.18, 1.9, 0.08); T.slab('f', col, 0, 0.6, 0.35, 1.55, 0.08, 1.3, 0.04); T.slab('f', 0xfef3c7, 0, 0.62, -0.75, 1.0, 0.18, 0.4, 0.08); T.slab('m', 0x9a6a3e, 0, 0, -1.1, 1.7, 1.1, 0.1, 0.04); T.solid(-0.8, 0, -1.15, 0.8, 0.7, 1.1); }
-function table2(w, x, z, top = 0xfde68a, chair = 0xff8a3d) { K.tableR(w, x, z, 0.6, 0.78, top); K.stool(w, x - 0.95, z, chair); K.stool(w, x + 0.95, z, chair); w.add('g', lathe([[0, 0], [0.08, 0], [0.08, 0.16], [0, 0.16]], 14, 'cup'), pick([0xff4fa0, 0x60a5fa, 0xffd23f]), x + 0.2, 0.78, z); }
-function clockW(w, axis, at, c, y, side) { const ry = axis === 'x' ? (side > 0 ? 0 : PI) : (side > 0 ? PI / 2 : -PI / 2); const T = axis === 'x' ? w.tf(c, y, at, ry) : w.tf(at, y, c, ry); T.add('g', rcyl(0.36, 0.08, 0.03, 28), 0xef4444, 0, 0, 0.05, PI / 2, 0, 0); T.add('m', rcyl(0.3, 0.02, 0.01, 28), 0xffffff, 0, 0, 0.1, PI / 2, 0, 0); T.box('g', 0x111827, 0, 0.08, 0.12, 0.03, 0.2, 0.01, 0.005); T.box('g', 0x111827, 0.06, 0, 0.12, 0.14, 0.03, 0.01, 0.005); }
-function snowman(w, x, z, s = 1) { w.add('g', sph(18), 0xffffff, x, 0.7 * s, z, 0, 0, 0, 0.8 * s); w.add('g', sph(18), 0xffffff, x, 1.75 * s, z, 0, 0, 0, 0.55 * s); w.add('g', sph(16), 0xffffff, x, 2.55 * s, z, 0, 0, 0, 0.4 * s); w.add('g', cone(10), 0xff7a1a, x, 2.55 * s, z + 0.35 * s, PI / 2, 0, 0, 0.08 * s, 0.35 * s, 0.08 * s); [-1, 1].forEach((a) => w.add('g', sph(8), 0x111827, x + a * 0.14 * s, 2.68 * s, z + 0.34 * s, 0, 0, 0, 0.05 * s)); w.add('f', torus(0.3, 20), 0xef4444, x, 2.2 * s, z, PI / 2, 0, 0, 0.42 * s, 0.42 * s, 0.6 * s); w.add('g', cyl(16), 0x1f2937, x, 2.85 * s, z, 0, 0, 0, 0.28 * s, 0.4 * s, 0.28 * s); w.solid(x - 0.8 * s, 0, z - 0.8 * s, x + 0.8 * s, 3 * s, z + 0.8 * s); }
-function pine(w, x, z, s = 1, snow = false, y = 0) { const oy = w.oy; w.oy = y; w.add('m', cyl(8), 0x7c4a1e, x, 0, z, 0, 0, 0, 0.25 * s, 1.4 * s, 0.25 * s); for (let i = 0; i < 3; i++) { const r = (1.9 - i * 0.5) * s, hh = 1.9 * s, yy = (1.0 + i * 1.15) * s; w.add('m', cone(12), i % 2 ? 0x15803d : 0x166534, x, yy, z, 0, i, 0, r, hh, r); if (snow) w.add('m', cone(12), 0xffffff, x, yy + hh * 0.55, z, 0, i, 0, r * 0.5, hh * 0.45, r * 0.5); } w.solid(x - 0.4 * s, 0, z - 0.4 * s, x + 0.4 * s, 4.5 * s, z + 0.4 * s); w.oy = oy; }
+export function frameArt(w, axis, at, c, y, W, H, col, side) { if (axis === 'x') { w.add('m', rbox(W + 0.14, H + 0.14, 0.06, 0.02), 0x7c4a1e, c, y, at + side * 0.03); w.add('m', rbox(W, H, 0.04, 0.01), col, c, y, at + side * 0.07); } else { w.add('m', rbox(0.06, H + 0.14, W + 0.14, 0.02), 0x7c4a1e, at + side * 0.03, y, c); w.add('m', rbox(0.04, H, W, 0.01), col, at + side * 0.07, y, c); } }
+export function pendant(w, x, z, col, y = 3.1) { w.add('m', cyl(6), 0x334155, x, y, z, 0, 0, 0, 0.012, 1.2, 0.012); w.add('g', lathe([[0, 0], [0.3, 0], [0.22, 0.22], [0.04, 0.3], [0, 0.3]], 20, 'shade'), col, x, y - 0.3, z); w.add('l', sph(12), 0xfff3c4, x, y - 0.3, z, 0, 0, 0, 0.12, 0.12, 0.12, 0.6); }
+export function bed(w, x, z, ry, col) { const T = w.tf(x, 0, z, ry); T.slab('m', 0x9a6a3e, 0, 0, 0, 1.6, 0.45, 2.2, 0.06); T.slab('f', 0xffffff, 0, 0.45, 0.1, 1.5, 0.18, 1.9, 0.08); T.slab('f', col, 0, 0.6, 0.35, 1.55, 0.08, 1.3, 0.04); T.slab('f', 0xfef3c7, 0, 0.62, -0.75, 1.0, 0.18, 0.4, 0.08); T.slab('m', 0x9a6a3e, 0, 0, -1.1, 1.7, 1.1, 0.1, 0.04); T.solid(-0.8, 0, -1.15, 0.8, 0.7, 1.1); }
+export function table2(w, x, z, top = 0xfde68a, chair = 0xff8a3d) { K.tableR(w, x, z, 0.6, 0.78, top); K.stool(w, x - 0.95, z, chair); K.stool(w, x + 0.95, z, chair); w.add('g', lathe([[0, 0], [0.08, 0], [0.08, 0.16], [0, 0.16]], 14, 'cup'), pick([0xff4fa0, 0x60a5fa, 0xffd23f]), x + 0.2, 0.78, z); }
+export function clockW(w, axis, at, c, y, side) { const ry = axis === 'x' ? (side > 0 ? 0 : PI) : (side > 0 ? PI / 2 : -PI / 2); const T = axis === 'x' ? w.tf(c, y, at, ry) : w.tf(at, y, c, ry); T.add('g', rcyl(0.36, 0.08, 0.03, 28), 0xef4444, 0, 0, 0.05, PI / 2, 0, 0); T.add('m', rcyl(0.3, 0.02, 0.01, 28), 0xffffff, 0, 0, 0.1, PI / 2, 0, 0); T.box('g', 0x111827, 0, 0.08, 0.12, 0.03, 0.2, 0.01, 0.005); T.box('g', 0x111827, 0.06, 0, 0.12, 0.14, 0.03, 0.01, 0.005); }
+export function snowman(w, x, z, s = 1) { w.add('g', sph(18), 0xffffff, x, 0.7 * s, z, 0, 0, 0, 0.8 * s); w.add('g', sph(18), 0xffffff, x, 1.75 * s, z, 0, 0, 0, 0.55 * s); w.add('g', sph(16), 0xffffff, x, 2.55 * s, z, 0, 0, 0, 0.4 * s); w.add('g', cone(10), 0xff7a1a, x, 2.55 * s, z + 0.35 * s, PI / 2, 0, 0, 0.08 * s, 0.35 * s, 0.08 * s); [-1, 1].forEach((a) => w.add('g', sph(8), 0x111827, x + a * 0.14 * s, 2.68 * s, z + 0.34 * s, 0, 0, 0, 0.05 * s)); w.add('f', torus(0.3, 20), 0xef4444, x, 2.2 * s, z, PI / 2, 0, 0, 0.42 * s, 0.42 * s, 0.6 * s); w.add('g', cyl(16), 0x1f2937, x, 2.85 * s, z, 0, 0, 0, 0.28 * s, 0.4 * s, 0.28 * s); w.solid(x - 0.8 * s, 0, z - 0.8 * s, x + 0.8 * s, 3 * s, z + 0.8 * s); }
+export function pine(w, x, z, s = 1, snow = false, y = 0) { const oy = w.oy; w.oy = y; w.add('m', cyl(8), 0x7c4a1e, x, 0, z, 0, 0, 0, 0.25 * s, 1.4 * s, 0.25 * s); for (let i = 0; i < 3; i++) { const r = (1.9 - i * 0.5) * s, hh = 1.9 * s, yy = (1.0 + i * 1.15) * s; w.add('m', cone(12), i % 2 ? 0x15803d : 0x166534, x, yy, z, 0, i, 0, r, hh, r); if (snow) w.add('m', cone(12), 0xffffff, x, yy + hh * 0.55, z, 0, i, 0, r * 0.5, hh * 0.45, r * 0.5); } w.solid(x - 0.4 * s, 0, z - 0.4 * s, x + 0.4 * s, 4.5 * s, z + 0.4 * s); w.oy = oy; }
 function roundTree(w, x, z, s = 1, y = 0, col) { const oy = w.oy; w.oy = y; w.add('m', capsule(8), 0x8b5a2b, x, 1.2 * s, z, 0, 0, 0, 0.4 * s, 1.4 * s, 0.4 * s); const c = col || pick([0x4ade80, 0x22c55e, 0x16a34a, 0x65a30d]); w.add('m', blobGeo(((x * 3 + z * 7) | 0) & 63, 0.22, 2), c, x, 3.4 * s, z, 0, R() * 6, 0, 1.9 * s, 1.6 * s, 1.9 * s); w.add('m', blobGeo(((x * 5 + z * 3) | 0) & 63, 0.22, 2), c, x + 0.9 * s, 2.8 * s, z + 0.4 * s, 0, R() * 6, 0, 1.2 * s, 1.0 * s, 1.2 * s); w.solid(x - 0.45 * s, 0, z - 0.45 * s, x + 0.45 * s, 4.6 * s, z + 0.45 * s); w.oy = oy; }
 function cloud(w, x, y, z, s) { for (let i = 0; i < 5; i++) w.add('m', blobGeo((i * 11 + (x | 0)) & 63, 0.18, 2), 0xffffff, x + (i - 2) * 5 * s, y + Math.sin(i * 2.1) * 1.5 * s, z + Math.cos(i * 1.7) * 3 * s, 0, i, 0, (5 + (i % 3) * 1.6) * s, 3.2 * s, 4.5 * s, 0.25); }
 function balloon(w, x, y, z, a, b) { w.addFn('g', sph(24), (c, px, py, pz) => c.set(Math.sin(Math.atan2(pz - z, px - x) * 4) > 0 ? a : b), x, y, z, 0, 0, 0, 4.2, 5, 4.2); w.add('g', lathe([[0, 0], [1.4, 0], [1.5, 0.4], [0, 0.4]], 16, 'bask'), 0xc08552, x, y - 7.5, z); w.add('g', rcyl(1.5, 1.0, 0.1, 16), 0xa16207, x, y - 7.5, z); for (let i = 0; i < 4; i++) { const q = i / 4 * PI * 2 + 0.4; w.add('x', tube([[x + Math.cos(q) * 1.3, y - 6.5, z + Math.sin(q) * 1.3], [x + Math.cos(q) * 2.6, y - 3.4, z + Math.sin(q) * 2.6]], 0.03, 2, 4), 0x334155, 0, 0, 0); } }
@@ -78,7 +79,7 @@ function dress(w, b, theme, o = {}) { const { x0, z0, x1, z1 } = b, cx = (x0 + x
 function cottage(w, id, name, x, z, W, D, door, theme) { const b = shell(w, { id, name, x0: x - W / 2, z0: z - D / 2, x1: x + W / 2, z1: z + D / 2, h: 3.6, wall: theme.wall, trim: theme.trim, roof: theme.roof, floor: theme.floor || 'wood', fc1: theme.fc1, fc2: theme.fc2, doors: [{ side: door, at: door === 's' || door === 'n' ? x : z, w: 1.8, top: 2.6 }], win: { s: 1, n: 1, e: 1, w: 1 }, flat: true });
   if (theme.dome) shellDome(w, b, theme.roof, theme.roof2); else gable(w, b, theme.roof, W >= D ? 'x' : 'z', !!theme.snow);
   if (theme.chim) { w.region = 'roof_' + id; w.add('m', rbox(0.7, 1.6, 0.7, 0.06), 0xb45309, x + W / 4, 4.8, z); }
-  dress(w, b, theme); w.region = 'out'; return b; }
+  cottageRoom(w, b, theme, door); w.region = 'out'; return b; }
 // ================= the world =================
 export function buildMap(w) {
   propSeed(777); w.region = 'out'; const L = w.lights;
@@ -89,7 +90,7 @@ export function buildMap(w) {
       if (y < WATER_Y + 1.2) c.setHSL(0.11, 0.45, 0.68 + n * 0.04); else if (snow) c.setHSL(0.58, 0.32, 0.86 + n * 0.05); else if (y > 30) c.setHSL(0.08, 0.12, 0.5 + n * 0.06); else c.setHSL(0.27 + n * 0.03, 0.55, 0.42 + n * 0.05 + Math.min(0.06, y * 0.002)); }, 0, 0, 0); }
   // towns are flat at y=0: one walkable floor each
   for (const k in TOWNS) { const t = TOWNS[k]; w.solid(t.x - t.r - 20, -3, t.z - t.r - 20, t.x + t.r + 20, 0, t.z + t.r + 20, { floor: true }); ZONES.push({ x: t.x, z: t.z, r: t.r - 2, town: k }); }
-  buildHub(w); buildPup(w); buildTort(w); buildNP(w); buildCountry(w);
+  buildHub(w); buildPup(w); buildTort(w); buildNP(w); buildCountry(w); dressRooms(w); w.region = 'out';
 }
 // ---------------- Heliport hub ----------------
 function buildHub(w) { const T0 = TOWNS.hub; w.region = 'out';
@@ -111,7 +112,7 @@ function buildHub(w) { const T0 = TOWNS.hub; w.region = 'out';
     // 3D map table: a little model of the whole valley
     { const x = -13, z = -24; w.add('m', rbox(3.4, 0.9, 2.4, 0.08), 0x8b5a2b, x, 0.45, z); const N = 24; for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { const wx = (i / (N - 1) - 0.5) * 1000, wz = (j / (N - 1) - 0.5) * 1000, h = Hf(wx, wz); const col = h < WATER_Y ? 0x38bdf8 : h > 45 ? 0xffffff : h > 25 ? 0x9ca3af : 0x4ade80; w.add('m', rbox(0.13, 0.04 + Math.max(0, h) * 0.006, 0.09, 0.01), col, x - 1.55 + i * 0.135, 0.92, z - 1.05 + j * 0.09); }
       [['hub', 0xff4fa0], ['pup', 0xffd23f], ['tort', 0x14b8a6], ['np', 0xef4444]].forEach(([k, c]) => { const t = TOWNS[k]; w.add('l', sph(10), c, x + t.x / 1000 * 3.1, 1.1, z + t.z / 1000 * 2.1, 0, 0, 0, 0.07, 0.07, 0.07, 0.6); }); w.solid(x - 1.7, 0, z - 1.2, x + 1.7, 1.0, z + 1.2); SPOTS.maptable = [x - 2.2, z]; }
-    [-28.5, -26.8].forEach((x) => K.chair(w, x, -18.2, PI, 0xff4fa0)); [-11.5, -9.8].forEach((x) => K.chair(w, x, -18.2, PI, 0x3ff0ff)); K.potPlant(w, -29, 0, -24, 1.2, 0xff4fa0); K.potPlant(w, -9, 0, -31, 1.2, 0x3ff0ff);
+    [-28.5, -26.8].forEach((x) => K.chair(w, x, 0, -18.2, PI, 0xff4fa0)); [-11.5, -9.8].forEach((x) => K.chair(w, x, 0, -18.2, PI, 0x3ff0ff)); K.potPlant(w, -29, 0, -24, 1.2, 0xff4fa0); K.potPlant(w, -9, 0, -31, 1.2, 0x3ff0ff);
     { const T = w.tf(-23.5, 0, -18.8, 0); for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) T.box('m', pick([0xff4fa0, 0x3ff0ff, 0xffd23f, 0x4ade80]), -0.5 + j * 0.5, 0.5 + i * 0.5, 0, 0.4, 0.42, 0.04, 0.01); T.slab('m', 0xe5e7eb, 0, 0, -0.1, 1.6, 1.9, 0.2, 0.04); }
     clockW(w, 'z', -29.75, -20, 2.8, 1); pendant(w, -19, -24, 0xff4fa0, 4.1); pendant(w, -13, -24, 0xff4fa0, 4.1); pendant(w, -25, -24, 0xff4fa0, 4.1);
     SPOTS.snowie = [-19, -28.0]; SPOTS.stamp_hub = [-10.6, -29.6]; STAMPS.push({ id: 'hub', name: 'Heliport', at: SPOTS.stamp_hub }); w.lights.push({ x: -19, y: 3.6, z: -24, c: 0xfff1f8, i: 13, d: 16 }); }
@@ -157,7 +158,7 @@ function buildPup(w) { const t = TOWNS.pup, X = t.x, Z = t.z; w.region = 'out';
     w.region = 'out'; onSide(w, b, 's', () => { txt(w, 'TOWN HALL', X, 4.2, Z - 21.7, 0, 0.5, 0xffffff); w.add('g', rbox(1.2, 1.2, 0.2, 0.1), 0xfacc15, X, 3.6, Z - 21.65, 0, 0, PI / 4); });
     w.region = 'in_hall'; K.rug(w, X, Z - 30, 0, 8, 4, 0xdc2626, 0xfacc15);
     { const T = w.tf(X, 0, Z - 36.5, 0); T.slab('g', 0x7c3f2c, 0, 0, 0, 5, 1.0, 1.4, 0.1); T.box('g', 0xfacc15, 0, 0.5, 0.71, 4.8, 0.2, 0.04, 0.03); paperStackA(w, X - 1.5, 1.0, Z - 36.6); w.add('g', rbox(1.4, 0.3, 0.12, 0.04), 0xfacc15, X, 1.0, Z - 35.9); txt(w, 'MAYOR', X, 1.06, Z - 35.83, 0, 0.13, 0x7c3f2c); }
-    for (let r = 0; r < 2; r++) for (let i = 0; i < 4; i++) K.chair(w, X - 4.5 + i * 3, Z - 27 + r * 2, PI, 0xdc2626);
+    for (let r = 0; r < 2; r++) for (let i = 0; i < 4; i++) K.chair(w, X - 4.5 + i * 3, 0, Z - 27 + r * 2, PI, 0xdc2626);
     [-1, 1].forEach((s) => { K.potPlant(w, X + s * 11, 0, Z - 38.8, 1.3, 0xdc2626); w.add('m', cyl(10), 0xa16207, X + s * 9, 0, Z - 39, 0, 0, 0, 0.04, 3.2, 0.04); w.add('f', rbox(1.2, 0.8, 0.02, 0.01), s > 0 ? 0xdc2626 : 0xfacc15, X + s * 9 + 0.62, 2.7, Z - 39); });
     frameArt(w, 'x', Z - 39.75, X - 5, 2.8, 2.4, 1.6, 0xfde68a, 1); frameArt(w, 'x', Z - 39.75, X + 5, 2.8, 2.4, 1.6, 0xbae6fd, 1); txt(w, 'GOOD DOGS ONLY', X, 4.3, Z - 39.6, 0, 0.3, 0xfacc15); clockW(w, 'z', X - 11.75, Z - 30, 3, 1);
     pendant(w, X - 5, Z - 30, 0xfacc15, 4.5); pendant(w, X + 5, Z - 30, 0xfacc15, 4.5);
@@ -183,7 +184,7 @@ function buildPup(w) { const t = TOWNS.pup, X = t.x, Z = t.z; w.region = 'out';
   // plaza: bone fountain
   { const x = X, z = Z; w.add('g', rcyl(5, 0.7, 0.2, 40), 0xe7e5e4, x, 0, z); w.add('e', rcyl(4.5, 0.55, 0.1, 40), 0x67e8f9, x, 0.12, z); bone(w, 'g', 0xfde68a, x, 2.4, z, 0.6, 1.3); w.add('g', cyl(16), 0xd6d3d1, x, 0.6, z, 0, 0, 0, 0.3, 1.4, 0.3); w.solid(x - 4.4, 0, z - 4.4, x + 4.4, 0.7, z + 4.4); }
 }
-function paperStackA(w, x, y, z) { for (let i = 0; i < 6; i++) w.add('m', rbox(0.42, 0.03, 0.3, 0.008), i % 3 ? 0xffffff : 0xfef3c7, x, y + 0.015 + i * 0.032, z, 0, i * 0.15, 0); }
+export function paperStackA(w, x, y, z) { for (let i = 0; i < 6; i++) w.add('m', rbox(0.42, 0.03, 0.3, 0.008), i % 3 ? 0xffffff : 0xfef3c7, x, y + 0.015 + i * 0.032, z, 0, i * 0.15, 0); }
 // ---------------- Torty Town ----------------
 const TORT = { wall: 0xccfbf1, trim: 0xfef3c7, roof: 0x8b5e34, roof2: 0xd1a05e, ac: 0x14b8a6, ac2: 0xccfbf1, fc1: 0xb7773f, art: 0xa7f3d0, dome: true, extra: (w, b) => { const cx = (b.x0 + b.x1) / 2; for (let i = 0; i < 3; i++) w.add('m', sph(10), 0x4ade80, cx - 0.8 + i * 0.5, 0.15, b.z1 - 0.9, 0, 0, 0, 0.25, 0.15, 0.22); w.add('g', rcyl(0.5, 0.1, 0.03, 20), 0x14b8a6, cx - 0.3, 0, b.z1 - 0.9); } };
 function buildTort(w) { const t = TOWNS.tort, X = t.x, Z = t.z; w.region = 'out';

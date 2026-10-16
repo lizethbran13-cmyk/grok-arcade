@@ -1,12 +1,14 @@
 // Grok Snowie Sky Tours - menus: title, look editor, how to fly, journal (pause), map, paint shop, postcards.
-import { $, esc } from './util.js?v=st3';
-import { S, persist, resetSave } from './save.js?v=st3';
-import { sfx, setSound } from './audio.js?v=st3';
-import { panel, closePanel, on } from './uikit.js?v=st3';
-import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=st3';
-import { COURSES, goal, PET_NAMES } from './story.js?v=st3';
-import { TOURS, RESCUES, STAMPS, TOWNS, PADS, Hf, WATER_Y, LAKE } from './map.js?v=st3';
-import { PAINTS } from './copter.js?v=st3';
+import { GAMES, MG_NAMES } from './mg.js?v=st4';
+import { $, esc } from './util.js?v=st4';
+import { S, persist, resetSave } from './save.js?v=st4';
+import { sfx, setSound } from './audio.js?v=st4';
+import { panel, closePanel, on } from './uikit.js?v=st4';
+import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=st4';
+import { COURSES, goal, PET_NAMES } from './story.js?v=st4';
+import { TOURS, RESCUES, STAMPS, TOWNS, PADS, Hf, WATER_Y, LAKE } from './map.js?v=st4';
+import { PAINTS } from './copter.js?v=st4';
+import { COTTAGE_IDS } from './rooms.js?v=st4';
 const hex = (c) => '#' + c.toString(16).padStart(6, '0');
 let mapImg = null;
 export class UI {
@@ -36,7 +38,9 @@ export class UI {
       <div class="statGrid"><div><b>${S.tours.length}/${TOURS.length}</b><small>📸 Tour stops</small></div><div><b>${S.rescues.length}/${RESCUES.length}</b><small>🐾 Pets rescued</small></div><div><b>${S.stamps.length}/${STAMPS.length}</b><small>🛂 Passport</small></div><div><b>${S.crashes}</b><small>💥 Crashes (all harmless)</small></div></div>
       <h3>RING COURSES</h3>${COURSES.map((c) => `<div class="upRow"><span class="ic">🏁</span><div><b>${esc(c.name)}</b><br><small>${md(c)} · gold under ${c.par} s</small></div></div>`).join('')}
       <h3>RESCUES</h3><p class="sub">${RESCUES.map((r) => `<span class="badge ${S.rescues.includes(r.id) ? 'on' : ''}">${S.rescues.includes(r.id) ? '✅' : '❔'} ${esc(r.name)}</span>`).join(' ')}</p>
-      <h3>BADGES</h3><p class="sub">${[['survivor', '🛟 Survival Badge'], ['tourist', '📸 Tour Guide'], ['hero', '🐾 Rescue Hero'], ['ace', '🥇 Sky Ace'], ['globe', '🛂 Globetrotter']].map(([k, n]) => `<span class="badge ${S.badges[k] ? 'on' : ''}">${n}</span>`).join(' ')}</p>
+      <h3>BADGES</h3><p class="sub">${[['survivor', '🛟 Survival Badge'], ['tourist', '📸 Tour Guide'], ['hero', '🐾 Rescue Hero'], ['ace', '🥇 Sky Ace'], ['globe', '🛂 Globetrotter'], ['neighbor', '🏡 Good Neighbor'], ['arcade', '🎮 Town Helper']].map(([k, n]) => `<span class="badge ${S.badges[k] ? 'on' : ''}">${n}</span>`).join(' ')}</p>
+      <h3>IN TOWN</h3><div class="statGrid"><div><b>${S.helped.length}/${COTTAGE_IDS.length}</b><small>🏡 Neighbors helped</small></div><div><b>${Object.keys(S.played || {}).length}/${Object.keys(MG_NAMES).length}</b><small>🎮 Building games</small></div></div>
+      <p class="sub">${Object.entries(MG_NAMES).map(([k, [e, n]]) => `<span class="badge ${S.played && S.played[k] ? 'on' : ''}">${e} ${esc(n)}${S.best && S.best[k] ? ' · ' + S.best[k] : ''}</span>`).join(' ')}</p>
       <p class="sub">Flown ${S.stats.km.toFixed(1)} km · ${S.stats.landings} landings · ${S.stats.tows} tows</p>
       <div class="btnRow"><button class="go" id="pR">▶ RESUME</button></div><div class="btnRow"><button class="mbtn2 sm" id="pM">🗺️ Map</button><button class="mbtn2 sm" id="pL">👤 Look</button><button class="mbtn2 sm" id="pO">⚙️</button><button class="mbtn2 sm" id="pT">🏠</button></div>`, (c) => {
       on(c, '#pR', () => app.resume()); on(c, '#pM', () => this.map(() => this.pause())); on(c, '#pL', () => this.custom(() => this.pause())); on(c, '#pO', () => this.options(() => this.pause())); on(c, '#pT', () => app.toTitle()); }); }
@@ -55,5 +59,6 @@ export class UI {
       on(c, '#mB', () => back ? back() : app.resume()); }); }
   paint() { const app = this.app; app.busy = true; panel(`<h2>🎨 PAINT SHOP</h2><p class="sub">Give Snowie's copter a fresh coat. Free, forever!</p><div class="hats">${PAINTS.map((p, i) => `<button class="hat ${S.paint === i ? 'on' : ''}" data-p="${i}"><span class="sw2" style="background:linear-gradient(90deg,${hex(p.a)} 60%,${hex(p.b)} 60%)"></span>${esc(p.n)}</button>`).join('')}</div><button class="go" id="pB">DONE</button>`, (c) => {
       c.querySelectorAll('[data-p]').forEach((b) => b.onclick = () => { sfx('buy'); this.g.repaint(+b.dataset.p); this.paint(); }); on(c, '#pB', () => app.resume()); }); }
+  minigame(id, done) { this.app.busy = true; GAMES[id](done); }
   postcards() { const app = this.app; app.busy = true; panel(`<h2>📮 POSTCARDS</h2><p class="sub">${S.tours.length}/${TOURS.length} collected</p>${TOURS.map((t) => `<div class="upRow"><span class="ic">${S.tours.includes(t.id) ? '🖼️' : '❔'}</span><div><b>${S.tours.includes(t.id) ? esc(t.name) : '???'}</b><br><small>${esc(t.town === 'lake' ? 'Lake Shimmer' : (TOWNS[t.town] || { name: '' }).name)}</small></div></div>`).join('')}<button class="go" id="pB">CLOSE</button>`, (c) => on(c, '#pB', () => app.resume())); }
 }
