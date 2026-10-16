@@ -1,7 +1,25 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-12",
+  "updated": "2026-10-15",
   "items": [
+    {
+      "game": "ruffsources",
+      "name": "Grok Ruffsources HQ",
+      "what": "A brand new game: Candy the miniature schnauzer runs Ruffsources (HR) for Ratita Industries and Tortuga Tech! Walk through the office: sort the mail room, tidy the break room, file paperwork, run interviews and solve the mystery of the missing squeaky toy. Watch out, Candy naps on the paperwork. Luna, Pi-rat, Snowie and Torty visit.",
+      "stage": "building",
+      "when": "In the lab now",
+      "gname": "New game",
+      "key": "ruffsources"
+    },
+    {
+      "game": "skytours",
+      "name": "Grok Snowie Sky Tours",
+      "what": "A brand new game: pilot Snowie's tour copter over a big open world inspired by Pup Town, Torty Town and North Pole Village. Fly tour stops, rescue stranded pets and race ring courses. Crashes are harmless: the tow-drone brings you home and you earn a survival badge. Land on pads to walk into buildings. All 5 pets appear.",
+      "stage": "building",
+      "when": "In the lab now",
+      "gname": "New game",
+      "key": "skytours"
+    },
     {
       "game": "pumpkinhollow",
       "name": "Grok Pumpkin Hollow (live)",
@@ -204,7 +222,26 @@
       "when": "Oct 10"
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "ruffsources",
+      "game": "ruffsources",
+      "name": "Grok Ruffsources HQ",
+      "url": "previews/ruffsources/",
+      "playable": true,
+      "built": "2026-10-15",
+      "notes": "Walk-in HR office: mail room, break room, filing, interviews and the squeaky toy mystery"
+    },
+    {
+      "id": "skytours",
+      "game": "skytours",
+      "name": "Grok Snowie Sky Tours",
+      "url": "previews/skytours/",
+      "playable": true,
+      "built": "2026-10-15",
+      "notes": "Fly Snowie's tour copter: tours, rescues, ring courses and walk-in landing pads"
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
