@@ -1,7 +1,16 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-16T14:30:00-07:00",
+  "updated": "2026-10-16",
   "items": [
+    {
+      "game": "grocery",
+      "name": "Grok Grocery Tycoon",
+      "what": "A brand new game: run a store in Grokton! Start as a courtesy clerk (bag groceries, push carts, stock shelves, clean spills) and get promoted all the way to owner, or start as the boss and build an empire of 11 store types: supermarkets, supercenters, markets, shoe stores, toy stores, electronics, pharmacies, pet stores, clothing, home goods and convenience stores. Walk into every store, spy on rival shops, switch to first-person, and run deliveries from your own distribution center. Luna, Pi-rat, Snowie, Candy and Torty visit.",
+      "stage": "building",
+      "when": "In the lab now",
+      "gname": "New game",
+      "key": "grocery"
+    },
     {
       "game": "ruffsources",
       "name": "Grok Ruffsources HQ (live)",
@@ -120,7 +129,7 @@
       "game": "fc",
       "name": "Fiesta Kits (live)",
       "size": "Mini Pack",
-      "what": "Grok FC: 4 festive teams with real 3D sombreros, party hats and flower crowns, the rainbow Piñata Ball and 3D fireworks + confetti on fiesta goals.",
+      "what": "Grok FC: 4 festive teams with real 3D sombreros, party hats and flower crowns, the rainbow Pi\u00f1ata Ball and 3D fireworks + confetti on fiesta goals.",
       "stage": "shipped",
       "when": "Oct 12",
       "shippedAt": "2026-10-12T16:30:00Z"
@@ -220,7 +229,17 @@
       "when": "Oct 10"
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "grocery",
+      "game": "grocery",
+      "name": "Grok Grocery Tycoon",
+      "url": "previews/grocery/",
+      "playable": true,
+      "built": "2026-10-16",
+      "notes": "Career (clerk to owner) or Boss mode, 11 store types, enterable rival stores, Shopping Row and first-person mode"
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
