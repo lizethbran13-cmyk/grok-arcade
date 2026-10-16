@@ -1,11 +1,11 @@
 // Grok Snowie Sky Tours - the open world: rolling hills, a lake, snowy peaks and three towns (Pup Town, Torty Town,
 // North Pole Village) around Snowie's heliport. Every town building is walk-in. Brand-new map, built on the Turbo kit.
 import * as THREE from 'three';
-import * as K from './kit.js?v=st4';
-import { rbox } from './world.js?v=st4';
-import { shell, part, onSide } from './bld.js?v=st4';
-import { textGeo } from './text3d.js?v=st4';
-import { dressRooms, cottageRoom } from './rooms.js?v=st4';
+import * as K from './kit.js?v=st5';
+import { rbox } from './world.js?v=st5';
+import { shell, part, onSide } from './bld.js?v=st5';
+import { textGeo } from './text3d.js?v=st5';
+import { dressRooms, cottageRoom } from './rooms.js?v=st5';
 const { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, wedge, propSeed } = K;
 const PI = Math.PI, R = K.R, pick = K.pick;
 export const ENV = { sunDir: [0.5, 0.8, 0.3], sunColor: 0xfff1dc, sunI: 2.6, hemiSky: 0xd6ecff, hemiGround: 0x7a9a5a, hemiI: 0.65, skyTop: 0x2a78e4, skyMid: 0x9fd3ff, skyBot: 0xe8f6ff, fog: 0xcfe6ff, fogD: 0.0016, exposure: 1.0, envI: 0.85, bloomT: 1.05, bloomS: 0.35, sunDisc: 1, stars: 0 };

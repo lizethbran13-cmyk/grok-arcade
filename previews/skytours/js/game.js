@@ -1,25 +1,25 @@
 // Grok Snowie Sky Tours - flying, landing, walking into buildings, tour stops, rescues, ring courses, crash + tow-drone.
 import * as THREE from 'three';
-import { E, setEnvironment, followShadow } from './engine.js?v=st4';
-import { World } from './world.js?v=st4';
-import { buildMap, SPOTS, ENV, Hf, TOWNS, PADS, TOURS, RESCUES, ZONES, STAMPS, WATER_Y, LAKE } from './map.js?v=st4';
-import { BUILDINGS, buildingAt } from './bld.js?v=st4';
-import { Walker } from './walker.js?v=st4';
-import { FollowCam } from './cam.js?v=st4';
-import { makePet, animPet } from './pets.js?v=st4';
-import { makeKitten } from './dogs.js?v=st4';
-import { makeHuman, animHuman } from './humans.js?v=st4';
-import { readMove, edge, held } from './input.js?v=st4';
-import { updateFrustum, inView, LightPool } from './perf.js?v=st4';
-import { FX } from './fx.js?v=st4';
-import { S, persist } from './save.js?v=st4';
-import { sfx } from './audio.js?v=st4';
-import { talk, talking, toast } from './uikit.js?v=st4';
-import { textGeo } from './text3d.js?v=st4';
-import { makeCopter, makeTowDrone, PAINTS } from './copter.js?v=st4';
-import { FACTS, LINES, RESCUE_LINES, PET_NAMES, COURSES, goal, LETTERS } from './story.js?v=st4';
-import { ROOMS, COTTAGE_IDS } from './rooms.js?v=st4';
-import { MG_NAMES } from './mg.js?v=st4';
+import { E, setEnvironment, followShadow } from './engine.js?v=st5';
+import { World } from './world.js?v=st5';
+import { buildMap, SPOTS, ENV, Hf, TOWNS, PADS, TOURS, RESCUES, ZONES, STAMPS, WATER_Y, LAKE } from './map.js?v=st5';
+import { BUILDINGS, buildingAt } from './bld.js?v=st5';
+import { Walker } from './walker.js?v=st5';
+import { FollowCam } from './cam.js?v=st5';
+import { makePet, animPet } from './pets.js?v=st5';
+import { makeKitten } from './dogs.js?v=st5';
+import { makeHuman, animHuman } from './humans.js?v=st5';
+import { readMove, edge, held } from './input.js?v=st5';
+import { updateFrustum, inView, LightPool } from './perf.js?v=st5';
+import { FX } from './fx.js?v=st5';
+import { S, persist } from './save.js?v=st5';
+import { sfx } from './audio.js?v=st5';
+import { talk, talking, toast } from './uikit.js?v=st5';
+import { textGeo } from './text3d.js?v=st5';
+import { makeCopter, makeTowDrone, PAINTS } from './copter.js?v=st5';
+import { FACTS, LINES, RESCUE_LINES, PET_NAMES, COURSES, goal, LETTERS } from './story.js?v=st5';
+import { ROOMS, COTTAGE_IDS } from './rooms.js?v=st5';
+import { MG_NAMES } from './mg.js?v=st5';
 const PI = Math.PI, wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 const _r = new THREE.Ray(), _v = new THREE.Vector3(), _b = new THREE.Box3(), _s = new THREE.Vector3();
 const near = [];
@@ -57,7 +57,7 @@ export class Game {
     [[[tt.x - 10, tt.z + 10], [tt.x + 10, tt.z + 10], [tt.x + 10, tt.z - 10], [tt.x - 10, tt.z - 10]], [[tt.x + 18, tt.z + 30], [tt.x + 30, tt.z + 30]]].forEach((walk, i) => this.npc('tt' + i, { s: 0.6, at: walk[0], walk, label: '💬 Say hi', talk: () => talk([[['Shelly', 'Old Mossback'][i], ['Torty is my hero. Torty once fell off the museum roof and just kept walking.', 'Back in my day, copters were slower. Like me. Good times.'][i]]]) }));
     this.tts = this.npcs.slice(-2); this.tts.forEach((p) => { p.root.remove(p.rig.root); const r = makePet('torty', { s: 0.6 }); p.rig = r.rig; p.kind = 'tort'; p.root.add(r.rig.root); });
     this.npc('ginger', { at: [tt.x - 6, tt.z + 18], walk: [[tt.x - 6, tt.z + 18], [tt.x - 30, tt.z + 18]], s: 1.1, label: '💬 Say hi', talk: () => talk([['Cheddar', 'I\'m on lunch break from Luna\'s shop. Did you know the Torty statue has a hidden cheese inside? I made that up. But imagine.']]) });
-    this.npc('elf', { at: SPOTS.elf, s: 1.2, yaw: 0, label: '💬 Talk to Tinsel', talk: () => talk(LINES.elf, null, [{ t: '🎁 Wrap a toy', f: () => this.wrapToy() }, { t: 'Later!', f: () => {} }]) }); this.npcs[this.npcs.length - 1].root.remove(this.npcs[this.npcs.length - 1].rig.root);
+    this.npc('elf', { at: SPOTS.elf, s: 1.2, yaw: 0, label: '💬 Talk to Tinsel', talk: () => talk(LINES.elf, null, [{ t: '🎁 Play Gift Wrap Rush', f: () => this.mg('wrap') }, { t: '🎀 Wrap one toy', f: () => this.wrapToy() }, { t: 'Later!', f: () => {} }]) }); this.npcs[this.npcs.length - 1].root.remove(this.npcs[this.npcs.length - 1].rig.root);
     { const p = this.npcs[this.npcs.length - 1]; const r = makePet('ginger', { s: 1.2, extras: ['glasses', 'bow'] }); p.rig = r.rig; p.kind = 'rat'; p.root.add(r.rig.root); }
     this.npc('marsh', { at: SPOTS.marsh, y: 1.05, s: 1.2, yaw: -PI / 2, label: '💬 Talk to Marsh', talk: () => talk(LINES.marsh, null, [{ t: '☕ Hot cocoa please!', f: () => this.cocoa() }, { t: 'Just warming up', f: () => {} }]) });
     [['husky', [[np.x - 12, np.z + 6], [np.x + 12, np.z + 6], [np.x, np.z - 14]]], ['sheepdog', [[np.x + 12, np.z - 10], [np.x + 20, np.z - 20], [np.x + 6, np.z - 22]]]].forEach(([br, walk], i) => this.npc('ndog' + i, { breed: br, s: 0.8, at: walk[0], walk, label: '💬 Say hi', talk: () => talk([[['Blizzard', 'Mop'][i], ['Snow is just cold sand you can eat! Best village ever.', 'I can\'t see the copter through my fur but I can HEAR it. Whup whup whup!'][i]]]) }));
@@ -105,7 +105,7 @@ export class Game {
     push(SPOTS.maptable[0], SPOTS.maptable[1], 2.6, '🗺️ Map table', () => this.app.ui.map());
     push(SPOTS.postcards[0], SPOTS.postcards[1], 2.6, '📮 Postcard wall', () => this.app.ui.postcards());
     push(SPOTS.treat[0], SPOTS.treat[1], 2.4, '🦴 Grab a Pup-Tart', () => { sfx('crumb'); S.stats.treats = (S.stats.treats || 0) + 1; persist(); toast('🦴 Pup-Tart! Peanut-buttery. You feel zoomy.'); this.me.zoom = 8; });
-    push(SPOTS.wrap[0], SPOTS.wrap[1], 2.4, '🎁 Wrap a toy', () => this.wrapToy());
+    push(SPOTS.wrap[0], SPOTS.wrap[1], 2.4, '🎁 Gift Wrap Rush', () => this.mg('wrap'));
     push(SPOTS.cocoa[0], SPOTS.cocoa[1], 2.4, '☕ Hot cocoa', () => this.cocoa());
     push(SPOTS.log[0], SPOTS.log[1], 2.6, '📒 Pilot\'s log', () => this.app.pause());
     push(SPOTS.dogpark[0], SPOTS.dogpark[1], 4, '🎾 Throw a ball', () => { sfx('bark'); toast('🎾 Fetch! Every dog in the park went zooming.'); this.fx.burst(this.me.x, this.me.y + 1, this.me.z, 0xfacc15, 8, 3); });
@@ -195,6 +195,12 @@ export class Game {
     this.detT -= 1; if (this.detT <= 0 || force) { this.detT = 15; for (const m of this.world.detailMeshes) { const ws = m.userData.ws; if (!ws) continue; m.visible = cp.distanceTo(ws.center) - ws.radius < 230; } } }
   fades() { const b = this.inB, c = E.camera.position, me = this.me; _v.set(me.x, me.y + 1.2, me.z).sub(c); const L = _v.length(); _r.set(c, _v.normalize());
     for (const B of BUILDINGS) for (const f of B.fades) { let hide = false; if (B === b) { _b.copy(f.box).expandByScalar(0.05); const p = _r.intersectBox(_b, _s); hide = !!p && c.distanceTo(p) < L - 0.3; } if (f._h !== hide) { f._h = hide; f.meshes.forEach((m) => m.visible = !hide); } } }
+  walkGoal() { const b = this.inB, nH = COTTAGE_IDS.length;
+    if (!b) return S.talks.snowie ? `On foot: explore, then board the copter. Next: ${goal(this)}` : 'Walk to the copter and board it to take off';
+    const here = ROOMS.acts.filter((a) => a.room === b.id);
+    if (COTTAGE_IDS.includes(b.id)) { const c = here.find((a) => a.chore); if (c && !S.helped.includes(b.id)) return `Lend a paw: ${c.label.replace(/^\S+\s/, '')}`; return `Thanks for helping! Neighbors helped ${S.helped.length}/${nH}`; }
+    const gm = (here.find((a) => a.mg) || {}).mg || ({ workshop: 'wrap' })[b.id]; if (gm) { const [e, n] = MG_NAMES[gm]; if (!(S.played || {})[gm]) return `${e} Try ${n} here, and chat with the townsfolk 💬`; const bs = (S.best || {})[gm] || 0; return `${e} ${n} best: ${bs}. Beat it, or explore the room!`; }
+    const ch = here.find((a) => a.chore || a.letter || a.talk); return ch ? `Look around: ${ch.label.replace(/^\S+\s/, '')}` : `Explore ${b.name} and chat with the townsfolk 💬`; }
   areaName() { const c = this.mode === 'walk' ? this.me : this.cop; if (this.inB) return this.inB.name; let best = null, bd = 1e9; for (const k in TOWNS) { const t = TOWNS[k], d = Math.hypot(c.x - t.x, c.z - t.z) - t.r; if (d < bd) { bd = d; best = t; } } if (Math.hypot(c.x - LAKE.x, c.z - LAKE.z) < LAKE.r + 10) return '🌊 Lake Shimmer'; if (bd < 20) return best.name; return c.z > 200 ? '🏔️ Snowcap Mountains' : '🌄 Over the valley'; }
   update(dt) { this.T += dt; const app = this.app, me = this.me, c = this.cop; const busy = app.busy || talking();
     if (this.mode === 'walk') { const mv = busy ? { x: 0, y: 0 } : readMove(); const j = !busy && edge('jump'); if (me.zoom > 0) me.zoom -= dt;

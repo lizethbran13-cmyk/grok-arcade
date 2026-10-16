@@ -1,10 +1,10 @@
 // Grok Ruffsources HQ - the campus map. Brand-new layout: Ruffsources HQ (6 walk-in rooms), the Ratita Industries branch,
 // the Tortuga Tech Inc. test lab and the Bark & Brew cafe around Bone Fountain Plaza. Real smooth geometry everywhere.
 import * as THREE from 'three';
-import * as K from './kit.js?v=rs5';
-import { rbox } from './world.js?v=rs5';
-import { shell, part, onSide } from './bld.js?v=rs5';
-import { textGeo } from './text3d.js?v=rs5';
+import * as K from './kit.js?v=rs6';
+import { rbox } from './world.js?v=rs6';
+import { shell, part, onSide } from './bld.js?v=rs6';
+import { textGeo } from './text3d.js?v=rs6';
 const { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, wedge, propSeed } = K;
 const PI = Math.PI, R = K.R, pick = K.pick;
 export const SPOTS = {}; // named interaction / NPC spots filled while building
@@ -81,7 +81,7 @@ function buildHQ(w) {
   // LOBBY (x -6..6, z -18..-8): reception desk, Biscuit the corgi receptionist, waiting chairs, bone rug, Candy's lobby doormat
   { K.rug(w, 0, -12.5, 0, 6, 4, 0xff8a3d, 0xffd6a5); const T = w.tf(0, 0, -15.2, 0); T.slab('g', 0xffffff, 0, 0, 0, 4.6, 1.1, 1.0, 0.15); T.box('g', 0xc8634a, 0, 0, 0.52, 4.4, 0.9, 0.04, 0.03); T.box('g', 0xffd23f, 0, 1.1, 0, 4.8, 0.08, 1.2, 0.04); K.monitor(w, T, -1.2, 1.18, -0.2, 0, 0x60a5fa); bone(w, 'g', 0xffd23f, 0, 0.55, -15.2 + 0.56, 0, 0.35);
     paperStack(w, 1.3, 1.18, -15.2, 4); w.add('g', rcyl(0.12, 0.2, 0.02, 16), 0x60a5fa, 1.8, 1.18, -15.1); txt(w, 'RECEPTION', 0, 3.0, -17.7, 0, 0.32, 0xc8634a);
-    [-4.5, -3.5].forEach((x) => K.chair(w, x, -9.5, PI, 0xff8a3d)); [3.5, 4.5].forEach((x) => K.chair(w, x, -9.5, PI, 0x60a5fa)); K.plant(w, -5.3, -17.2, 1); K.plant(w, 5.3, -17.2, 1); K.cooler(w, 5.2, -11);
+    [-4.5, -3.5].forEach((x) => K.chair(w, x, 0, -9.5, PI, 0xff8a3d)); [3.5, 4.5].forEach((x) => K.chair(w, x, 0, -9.5, PI, 0x60a5fa)); K.plant(w, -5.3, -17.2, 1); K.plant(w, 5.3, -17.2, 1); K.cooler(w, 5.2, -11);
     frameArt(w, 'x', -17.85, -3.5, 2.2, 1.6, 1.1, 0xfbcfe8, 1); frameArt(w, 'x', -17.85, 3.5, 2.2, 1.6, 1.1, 0xbae6fd, 1);
     SPOTS.reception = [0, -14.2]; SPOTS.nap_lobby = [-3.4, -12.2, 0.4]; L.push({ x: 0, y: 3.2, z: -13, c: 0xfff1dc, i: 13, d: 14 }); }
   // MAIL ROOM (x -18..-6, z -18..-8): conveyor, 4 sorting bins, pigeonholes, parcel piles
@@ -104,14 +104,14 @@ function buildHQ(w) {
   // INTERVIEW ROOM (x -6..6, z -34..-18): table, interviewer + candidate chairs, whiteboard, "YOU'RE HIRED" banner, bell
   { K.floor(w, -5.85, -33.75, 5.85, -18.15, 'carpet', 0.08, 0x7c3aed, 0x8b5cf6, 1.5); K.rug(w, 0, -26, 0, 6, 4, 0xfef3c7, 0xfde68a);
     const T = w.tf(0, 0, -26, 0); T.slab('g', 0xfde68a, 0, 0.72, 0, 3.6, 0.1, 1.6, 0.05); [-1.5, 1.5].forEach((x) => [-0.6, 0.6].forEach((z) => T.add('x', cyl(10), 0x94a3b8, x, 0, z, 0, 0, 0, 0.05, 0.72, 0.05)));
-    K.chair(w, 0, -27.6, 0, 0xc8634a); K.chair(w, 0, -24.3, PI, 0x14b8a6); paperStack(w, -0.8, 0.82, -26.3, 3); w.add('x', lathe([[0, 0], [0.16, 0], [0.16, 0.03], [0.12, 0.08], [0.02, 0.18], [0, 0.2]], 20, 'bell'), 0xfbbf24, 0.9, 0.82, -26.4);
+    K.chair(w, 0, 0, -27.6, 0, 0xc8634a); K.chair(w, 0, 0, -24.3, PI, 0x14b8a6); paperStack(w, -0.8, 0.82, -26.3, 3); w.add('x', lathe([[0, 0], [0.16, 0], [0.16, 0.03], [0.12, 0.08], [0.02, 0.18], [0, 0.2]], 20, 'bell'), 0xfbbf24, 0.9, 0.82, -26.4);
     K.whiteboard(w, 'x', -33.75, 0, 1.2, 4, 1); w.add('l', rbox(5.6, 0.7, 0.08, 0.1), 0xffd23f, 0, 3.9, -33.6, 0, 0, 0, 1, 1, 1, 0.15); txt(w, "NOW HIRING!", 0, 3.7, -33.52, 0, 0.36, 0xc8634a);
     K.plant(w, -5.2, -33.0, 1); K.plant(w, 5.2, -33.0, 1); SPOTS.interview = [0, -23.8]; SPOTS.candidate = [0, -27.6]; SPOTS.nap_interview = [4.2, -20.4, -0.6]; L.push({ x: 0, y: 3.2, z: -26, c: 0xf5e1ff, i: 12, d: 16 }); }
   // CANDY'S OFFICE (x 6..18, z -34..-18): big desk buried in paperwork, nameplate, dog bed, toy shelf, clue board, the official doormat
   { K.floor(w, 6.15, -33.75, 17.75, -18.15, 'wood', 0.08, 0xb7773f); K.rug(w, 12, -26, 0, 7, 5, 0xfbcfe8, 0xf9a8d4);
     const T = w.tf(12, 0, -30.5, 0); T.slab('g', 0x7c3f2c, 0, 0.8, 0, 4.2, 0.12, 1.8, 0.06); T.box('m', 0x6b3420, -1.6, 0, 0, 0.8, 0.8, 1.6, 0.05); T.box('m', 0x6b3420, 1.6, 0, 0, 0.8, 0.8, 1.6, 0.05); T.solid(-2.1, 0, -0.9, 2.1, 0.92, 0.9);
     for (let i = 0; i < 6; i++) paperStack(w, 10.6 + i * 0.55, 0.92, -30.5 + (i % 2) * 0.3, 4 + (i * 3) % 7); K.monitor(w, T, 1.3, 0.92, -0.5, 0, 0xf472b6); w.add('g', rbox(1.4, 0.3, 0.12, 0.04), 0xfbbf24, 12, 0.92, -29.7); txt(w, 'CANDY', 12, 0.98, -29.63, 0, 0.13, 0x7c3f2c);
-    K.chair(w, 12, -31.9, 0, 0xff4fa0); dogBed(w, 16.3, -32.2, 0xff4fa0); K.shelf(w, 7.0, -26, PI / 2, 3.2, 2.2, 0.6, 0xa0703f);
+    K.chair(w, 12, 0, -31.9, 0, 0xff4fa0); dogBed(w, 16.3, -32.2, 0xff4fa0); K.shelf(w, 7.0, -26, PI / 2, 3.2, 2.2, 0.6, 0xa0703f);
     for (let i = 0; i < 5; i++) { const y = 0.75 + (i % 2) * 0.75; w.add('g', sph(12), pick([0xff4fa0, 0xffd23f, 0x60a5fa, 0x4ade80]), 7.1, y, -27.3 + i * 0.6, 0, 0, 0, 0.16); }
     { const C = w.tf(17.75, 1.2, -24, -PI / 2); C.box('m', 0xa16207, 0, 0, 0, 3.2, 2.0, 0.08, 0.03); C.box('f', 0xfde68a, 0, 0.08, 0.05, 3.0, 1.84, 0.04, 0.02); for (let i = 0; i < 5; i++) C.box('m', 0xffffff, -1.1 + i * 0.55, 0.9 + (i % 2) * 0.5, 0.09, 0.4, 0.45, 0.01, 0.01); C.add('l', tube([[-1.1, 1.3, 0.11], [0, 1.6, 0.11], [1.1, 1.1, 0.11]], 0.012, 16, 4), 0xef4444, 0, 0, 0); }
     txt(w, 'HEAD OF RUFFSOURCES', 12, 3.9, -33.6, 0, 0.26, 0xfff7ed); frameArt(w, 'x', -33.75, 9, 2.3, 1.4, 1.0, 0xfde68a, 1); frameArt(w, 'x', -33.75, 15, 2.3, 1.4, 1.0, 0xc7d2fe, 1);

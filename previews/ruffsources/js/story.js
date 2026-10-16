@@ -1,5 +1,5 @@
 // Grok Ruffsources HQ - story, dialogue, clues and new-hire candidates.
-import { S } from './save.js?v=rs5';
+import { S } from './save.js?v=rs6';
 export const CLUES = [
   { id: 'mail', room: 'Mail Room', at: [-14.4, -9.4], title: 'A smudged parcel slip', text: '"To: Tortuga Tech Inc. Contents: 1 squeaky toy (pink). Handle with paws." The sender\'s name is smudged... but it starts with a P.' },
   { id: 'break', room: 'Break Room', at: [16.4, -14.3], title: 'Cheese crumbs + a black string', text: 'A trail of cheese crumbs leads away from the fridge, and a little black eyepatch string is snagged on the handle.' },

@@ -1,6 +1,6 @@
 // Menu kit: panels, talk bubbles with choices, toasts and the canvas helpers the 2D mini-games use.
-import { $, esc } from './util.js?v=rs5';
-import { sfx } from './audio.js?v=rs5';
+import { $, esc } from './util.js?v=rs6';
+import { sfx } from './audio.js?v=rs6';
 export function panel(html, mount, cls = '') { const ui = $('ui'); ui.innerHTML = `<div class="panel ${cls}">${html}</div>`; ui.classList.add('open'); const c = ui.firstChild; if (mount) mount(c); return c; }
 export function closePanel() { const ui = $('ui'); ui.innerHTML = ''; ui.classList.remove('open'); }
 export const on = (c, sel, f) => { const e = c.querySelector(sel); if (e) e.onclick = (ev) => { ev.stopPropagation(); sfx('click'); f(ev); }; };

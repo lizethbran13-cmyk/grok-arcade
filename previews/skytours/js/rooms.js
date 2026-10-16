@@ -1,8 +1,8 @@
 // Grok Snowie Sky Tours - dense, walk-in interiors: extra props, residents, chores and mini-game stations for every building.
 // All geometry goes into the building's own 'in_<id>' region (culled / hidden with the interior).
-import * as K from './kit.js?v=st4';
-import { rbox } from './world.js?v=st4';
-import { txt, bone, pendant, frameArt, clockW, bed, paperStackA, pine } from './map.js?v=st4';
+import * as K from './kit.js?v=st5';
+import { rbox } from './world.js?v=st5';
+import { txt, bone, pendant, frameArt, clockW, bed, paperStackA, pine } from './map.js?v=st5';
 const { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, wedge } = K;
 const PI = Math.PI, pick = K.pick, BR = [0xef4444, 0x3b82f6, 0xfacc15, 0x22c55e, 0xa855f7, 0xf97316, 0xec4899, 0x14b8a6];
 export const ROOMS = { npcs: [], acts: [] };

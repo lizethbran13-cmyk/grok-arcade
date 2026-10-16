@@ -1,7 +1,7 @@
 // Third-person follow camera: drag to orbit, eases back behind you while you move, pulls in so walls never block the view.
 import * as THREE from 'three';
-import { IN } from './input.js?v=rs5';
-import { E } from './engine.js?v=rs5';
+import { IN } from './input.js?v=rs6';
+import { E } from './engine.js?v=rs6';
 const _d = new THREE.Vector3(), _o = new THREE.Vector3();
 export class FollowCam {
   constructor() { this.yaw = Math.PI; this.pitch = 0.32; this.dist = 6.5; this.want = 6.5; this.cur = 6.5; this.snap = true; this.tx = 0; this.ty = 0; this.tz = 0; this.hgt = 1.45; }

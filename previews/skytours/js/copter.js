@@ -2,12 +2,12 @@
 // any kid can fly with one thumb: stick = fly that way (camera-relative), UP/DOWN buttons = climb/descend, auto-hover.
 // Plus the tow-drone that rescues you after a (harmless!) crash landing.
 import * as THREE from 'three';
-import { Builder, P } from './geo.js?v=st4';
-import { compact } from './compact.js?v=st4';
-import { MATS } from './mats.js?v=st4';
-import { textGeo } from './text3d.js?v=st4';
-import { makePet } from './pets.js?v=st4';
-import { makeHuman } from './humans.js?v=st4';
+import { Builder, P } from './geo.js?v=st5';
+import { compact } from './compact.js?v=st5';
+import { MATS } from './mats.js?v=st5';
+import { textGeo } from './text3d.js?v=st5';
+import { makePet } from './pets.js?v=st5';
+import { makeHuman } from './humans.js?v=st5';
 const PI = Math.PI;
 export const PAINTS = [{ n: 'Snowie Classic', a: 0xffffff, b: 0xff4fa0 }, { n: 'Sky Cyan', a: 0x3ff0ff, b: 0xffffff }, { n: 'Sunny Bee', a: 0xffd23f, b: 0x111827 }, { n: 'Mint Chip', a: 0x86efac, b: 0x7c3f2c }, { n: 'Grape Soda', a: 0xa78bfa, b: 0xffd23f }, { n: 'Rescue Red', a: 0xef4444, b: 0xffffff }];
 const MB = () => ({ f: new Builder(), g: new Builder(), m: new Builder(), l: new Builder(), x: new Builder(), e: new Builder() });

@@ -1,16 +1,16 @@
 // Grok Ruffsources HQ - boot, app state, main loop.
 import * as THREE from 'three';
-import { E, initEngine, render, trackFps } from './engine.js?v=rs5';
-import { initMats } from './mats.js?v=rs5';
-import { initInput, clearEdges, edge } from './input.js?v=rs5';
-import { initAudio, setSound, sfx } from './audio.js?v=rs5';
-import { S, persist } from './save.js?v=rs5';
-import { HUD } from './hud.js?v=rs5';
-import { UI } from './ui.js?v=rs5';
-import { closePanel } from './uikit.js?v=rs5';
-import { Game, BONES } from './game.js?v=rs5';
-import { $ } from './util.js?v=rs5';
-import { loadFont } from './text3d.js?v=rs5';
+import { E, initEngine, render, trackFps } from './engine.js?v=rs6';
+import { initMats } from './mats.js?v=rs6';
+import { initInput, clearEdges, edge } from './input.js?v=rs6';
+import { initAudio, setSound, sfx } from './audio.js?v=rs6';
+import { S, persist } from './save.js?v=rs6';
+import { HUD } from './hud.js?v=rs6';
+import { UI } from './ui.js?v=rs6';
+import { closePanel } from './uikit.js?v=rs6';
+import { Game, BONES } from './game.js?v=rs6';
+import { $ } from './util.js?v=rs6';
+import { loadFont } from './text3d.js?v=rs6';
 const app = window.__pt = { state: 'boot', paused: true, game: null, ready: false, busy: false };
 Game.BN = BONES.length;
 function setLoad(p, t) { const b = $('loadBar'); if (b) b.style.width = p + '%'; if (t) $('loadTxt').textContent = t; }

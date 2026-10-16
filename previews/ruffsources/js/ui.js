@@ -1,12 +1,12 @@
 // Grok Ruffsources HQ - menus: title, look editor, how to play, journal (pause), clue cards, clue board, mini-game launcher.
-import { $, esc } from './util.js?v=rs5';
-import { S, persist, resetSave } from './save.js?v=rs5';
-import { sfx, setSound } from './audio.js?v=rs5';
-import { panel, closePanel, on } from './uikit.js?v=rs5';
-import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=rs5';
-import { CLUES, SUSPECTS, goal } from './story.js?v=rs5';
-import { GAMES } from './mg.js?v=rs5';
-import { BONES, NAPS } from './game.js?v=rs5';
+import { $, esc } from './util.js?v=rs6';
+import { S, persist, resetSave } from './save.js?v=rs6';
+import { sfx, setSound } from './audio.js?v=rs6';
+import { panel, closePanel, on } from './uikit.js?v=rs6';
+import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=rs6';
+import { CLUES, SUSPECTS, goal } from './story.js?v=rs6';
+import { GAMES } from './mg.js?v=rs6';
+import { BONES, NAPS } from './game.js?v=rs6';
 const hex = (c) => '#' + c.toString(16).padStart(6, '0');
 export class UI {
   constructor(app) { this.app = app; }

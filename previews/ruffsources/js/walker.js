@@ -1,9 +1,9 @@
 // On-foot controller for a human visitor: smooth walking/running, jumping, step-up and box-collider pushing.
 // Shared by Grok Ruffsources HQ and Grok Snowie Sky Tours. Real 3D rig (makeHuman), camera-relative stick control.
 import * as THREE from 'three';
-import { topOf } from './world.js?v=rs5';
-import { makeHuman, animHuman } from './humans.js?v=rs5';
-import { sfx } from './audio.js?v=rs5';
+import { topOf } from './world.js?v=rs6';
+import { makeHuman, animHuman } from './humans.js?v=rs6';
+import { sfx } from './audio.js?v=rs6';
 const R = 0.34, H = 1.75, STEP = 0.5, G = 30, JUMP = 9.2;
 const near = [];
 export class Walker {

@@ -1,8 +1,8 @@
 // Grok Ruffsources HQ - office mini-games (overlay canvases with a fixed aspect, never stretched).
 // Mail Sort, Snack Orders, File It!, Gadget Calibration (Ratita Industries), Drop Test (Tortuga Tech), Pupuccino Pour (Bark & Brew).
-import { S, persist } from './save.js?v=rs5';
-import { sfx } from './audio.js?v=rs5';
-import { panel, loop, rr, ptr } from './uikit.js?v=rs5';
+import { S, persist } from './save.js?v=rs6';
+import { sfx } from './audio.js?v=rs6';
+import { panel, loop, rr, ptr } from './uikit.js?v=rs6';
 const $q = (c, s) => c.querySelector(s);
 const W = 480, H = 400;
 function shell(title, sub, extra = '') { return `<h2>${title}</h2><p class="sub" id="mS">${sub}</p><canvas id="mC" width="${W}" height="${H}" style="touch-action:none"></canvas>${extra}<div class="btnRow"><button class="mbtn2" id="mX">QUIT</button></div>`; }
