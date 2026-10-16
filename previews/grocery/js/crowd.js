@@ -2,10 +2,10 @@
 // (torso, head, face, two hair styles, legs, arms, staff apron, shopping cart, carried case), so 60 smooth cartoon people
 // cost about a dozen draw calls. Shirt / skin / hair / pants colours come from per-instance tints.
 import * as THREE from 'three';
-import { Builder, P } from './geo.js?v=ggt12';
-import { lathe, torus, rcyl } from './shapes.js?v=ggt12';
-import { compact } from './compact.js?v=ggt12';
-import { MATS } from './mats.js?v=ggt12';
+import { Builder, P } from './geo.js?v=ggt13';
+import { lathe, torus, rcyl } from './shapes.js?v=ggt13';
+import { compact } from './compact.js?v=ggt13';
+import { MATS } from './mats.js?v=ggt13';
 const PI = Math.PI;
 const SK = [0xffe0c7, 0xf5c9a4, 0xe0a87c, 0xc68658, 0x9a6440, 0x6b4128], HC = [0x2b1d14, 0x6b4226, 0xc98b4b, 0xf2d27a, 0xe0603a, 0xd8d8e0, 0x1f1f2a],
   SH = [0xff5a5f, 0x3fa7ff, 0x4ade80, 0xffc93c, 0xa78bfa, 0xff8f3d, 0x22d3ee, 0xf472b6, 0x94a3b8, 0xffffff, 0x10b981, 0xfb7185], PA = [0x334155, 0x1e3a8a, 0x6b4f2a, 0x3f3f46, 0x7c2d12, 0x0f766e];

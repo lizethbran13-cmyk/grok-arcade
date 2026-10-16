@@ -1,13 +1,13 @@
-// Grok Grocery Tycoon - the town of Grokton: your supermarkets, Bargain Bonanza, the distribution center, the suppliers
+// Grok Grocery Tycoon - the town of Shopsville: your supermarkets, Bargain Bonanza, the distribution center, the suppliers
 // (Fernhill Farm Co-op, Ratita Industries, Tortuga Tech), Ruffsources Staffing, Town Hall + Health Dept, the Grok Goods Lab
-// and Grokton Park. Every building is walk-in.
+// and Shopsville Park. Every building is walk-in.
 import * as THREE from 'three';
-import * as K from './kit.js?v=ggt12';
-import { rbox } from './world.js?v=ggt12';
-import { shell, part, onSide } from './bld.js?v=ggt12';
-import { STORES } from './data.js?v=ggt12';
-import { storeBuilding } from './stores.js?v=ggt12';
-import { PI, R, pick, BRIGHT, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, wedge, txt, poster, wallWord, clockW, pendant, rack, pallet, cartStatic, planter, awning, trash, bags, produceCrate, grokLogo } from './art.js?v=ggt12';
+import * as K from './kit.js?v=ggt13';
+import { rbox } from './world.js?v=ggt13';
+import { shell, part, onSide } from './bld.js?v=ggt13';
+import { STORES } from './data.js?v=ggt13';
+import { storeBuilding } from './stores.js?v=ggt13';
+import { PI, R, pick, BRIGHT, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, wedge, txt, poster, wallWord, clockW, pendant, rack, pallet, cartStatic, planter, awning, trash, bags, produceCrate, grokLogo } from './art.js?v=ggt13';
 export const SPOTS = {}; export const GEOM = {};
 export const ENV = { sunDir: [0.5, 0.8, 0.32], sunColor: 0xfff3e0, sunI: 2.5, hemiSky: 0xdaf0ff, hemiGround: 0x7a9a5a, hemiI: 0.62, skyTop: 0x3b8beb, skyMid: 0xb3dcff, skyBot: 0xeef8ff, fog: 0xdcefff, fogD: 0.0036, exposure: 1.0, envI: 0.85, bloomT: 1.05, bloomS: 0.32, sunDisc: 1, stars: 0 };
 export const ROADS = { ew: [-56, 14, 50, 110], ns: [-30, 30], x0: -104, x1: 104, z0: -61, z1: 115 };
@@ -31,7 +31,7 @@ export function buildMap(w) {
     ns.forEach((x) => { w.add('m', rbox(RW, 0.065, z1 - z0, 0.02, 1), 0x3f4652, x, 0.032, (z0 + z1) / 2); for (let z = z0 + 2; z < z1; z += 5) if (!ew.some((e) => Math.abs(z - e) < 6)) w.add('l', rbox(0.16, 0.02, 2.4, 0.01, 1), 0xfacc15, x, 0.075, z, 0, 0, 0, 1, 1, 1, 0);
       ew.forEach((z) => { for (let i = 0; i < 6; i++) [-1, 1].forEach((s) => { w.add('l', rbox(0.6, 0.02, 2.2, 0.01, 1), 0xffffff, x - 3.6 + i * 1.45, 0.08, z + s * 6.4, 0, 0, 0, 1, 1, 1, 0); }); }); });
     for (let x = -96; x <= 96; x += 16) [14 - 7, 14 + 7, 50 - 7, 50 + 7].forEach((z, i) => { if (ns.some((n) => Math.abs(x - n) < 6)) return; K.lampPost(w, x, z); }); }
-  // town sign + Grokton Park (pond, fountain, playground, food truck)
+  // town sign + Shopsville Park (pond, fountain, playground, food truck)
   { const X = 14, Z = 80; w.add('e', rcyl(9, 0.3, 0.2, 40), 0x7dd3fc, X - 4, 0.02, Z + 6); w.add('g', torus(0.12, 40), 0xd6d3d1, X - 4, 0.15, Z + 6, PI / 2, 0, 0, 9.1, 9.1, 3); w.solid(X - 12.5, 0, Z - 1.5, X + 4.5, 0.5, Z + 13.5, { nofloor: true });
     for (let i = 0; i < 4; i++) w.add('g', sph(12), 0xffffff, X - 6 + i * 2, 0.3, Z + 4 + (i % 2) * 3, 0, i, 0, 0.3, 0.25, 0.4); w.add('g', rcyl(2.2, 0.7, 0.15, 32), 0xe7e5e4, X + 8, 0, Z - 8); w.solid(X + 6, 0, Z - 10, X + 10, 0.7, Z - 6); w.add('e', rcyl(1.9, 0.5, 0.1, 32), 0x67e8f9, X + 8, 0.25, Z - 8); w.add('g', cyl(14), 0xd6d3d1, X + 8, 0.6, Z - 8, 0, 0, 0, 0.25, 1.2, 0.25); w.add('g', sph(14), 0xef4444, X + 8, 2.0, Z - 8, 0, 0, 0, 0.5); w.add('g', capsule(8), 0x7c4a1e, X + 8, 2.55, Z - 8, 0, 0, 0.2, 0.06, 0.3, 0.06); SPOTS.fountain = [X + 8, Z - 5.4];
     // playground
@@ -41,7 +41,11 @@ export function buildMap(w) {
     { const T = w.tf(X + 12, 0, Z + 6, -PI / 2); T.box('g', 0xff4fa0, 0, 0.5, 0, 2.4, 2.6, 5, 0.3); T.box('g', 0xfef3c7, 1.21, 1.6, 0.3, 0.02, 1.0, 2.6, 0.02); T.box('g', 0xffffff, 1.5, 1.45, 0.3, 0.7, 0.06, 2.8, 0.02); [-1, 1].forEach((s) => [-1.6, 1.6].forEach((b) => T.add('m', torus(0.45, 16), 0x111827, s * 1.1, 0.45, b, 0, PI / 2, 0, 0.42, 0.42, 0.35))); T.add('l', star(), 0xfacc15, 1.25, 2.6, 0.3, 0, PI / 2, 0, 0.4, 0.4, 0.2, 0.3); T.solid(-1.25, 0, -2.5, 1.25, 3.2, 2.5); SPOTS.foodtruck = [X + 9.6, Z + 6.3]; txt(w, 'GROK TACOS', X + 10.7, 2.6, Z + 6.3, PI / 2, 0.22, 0xffffff); }
     [[X - 14, Z - 6], [X + 18, Z - 2], [X - 15, Z + 18], [X + 18, Z + 16], [X - 6, Z + 24], [X + 12, Z + 26]].forEach(([x, z], i) => K.tree(w, x, z, 1.1 + (i % 3) * 0.2, i % 3 === 0 ? 1 : 0));
     [[X - 2, Z - 6, 0], [X + 3, Z - 3, PI / 2], [X - 13, Z + 2, PI / 2]].forEach(([x, z, r]) => K.bench(w, x, z, r, 0x16a34a)); K.flowerBed(w, X - 18, Z - 12, X - 10, Z - 9);
-    { const sx = 0, sz = 22; w.add('g', rbox(8, 2.2, 0.4, 0.2), 0x16a34a, sx + 92, 1.6, sz - 30); txt(w, 'GROKTON', sx + 92, 1.6, sz - 29.7, 0, 0.6, 0xffffff); txt(w, 'POP. HUNGRY', sx + 92, 0.9, sz - 29.7, 0, 0.22, 0xfef3c7); [-3.6, 3.6].forEach((o) => w.add('x', cyl(10), 0x334155, sx + 92 + o, 0, sz - 30, 0, 0, 0, 0.08, 1.2, 0.08)); } }
+    { const AX = 99, z0 = 7.2, z1 = 20.8, H = 6.4; [z0, z1].forEach((z) => { w.slab('g', 0xfef3c7, AX, 0, z, 1.3, H, 1.3, 0.12); w.add('g', rbox(1.6, 0.4, 1.6, 0.1), 0x16a34a, AX, H + 0.2, z); w.add('g', sph(14), 0xfacc15, AX, H + 0.75, z, 0, 0, 0, 0.42); w.add('g', rbox(1.6, 0.5, 1.6, 0.1), 0x16a34a, AX, 0.25, z); });
+      w.add('g', rbox(1.0, 1.9, z1 - z0 + 1.2, 0.2), 0x16a34a, AX, H - 0.6, (z0 + z1) / 2); w.add('g', rbox(1.1, 0.18, z1 - z0 + 1.4, 0.06), 0xfacc15, AX, H + 0.38, (z0 + z1) / 2); w.add('g', rbox(1.1, 0.18, z1 - z0 + 1.4, 0.06), 0xfacc15, AX, H - 1.58, (z0 + z1) / 2);
+      for (const sd of [1, -1]) { const ry = sd > 0 ? PI / 2 : -PI / 2, xx = AX + sd * 0.52; txt(w, 'WELCOME TO', xx, H - 0.05, (z0 + z1) / 2, ry, 0.34, 0xfef3c7); txt(w, 'SHOPSVILLE', xx, H - 0.95, (z0 + z1) / 2, ry, 0.72, 0xffffff, 'l', 0.25); [-4.6, 4.6].forEach((o) => w.add('l', star(), 0xfacc15, xx, H - 0.6, (z0 + z1) / 2 + o, 0, ry, 0, 0.35, 0.35, 0.1, 0.4)); }
+      [z0 - 1.4, z1 + 1.4].forEach((z) => planter(w, AX, z, 2.2, PI / 2));
+      w.add('g', rbox(0.3, 1.5, 3.6, 0.1), 0x16a34a, AX - 4, 1.4, 22.6); txt(w, 'SHOPSVILLE', AX - 4.17, 1.65, 22.6, -PI / 2, 0.36, 0xffffff); txt(w, 'POP. HUNGRY', AX - 4.17, 1.05, 22.6, -PI / 2, 0.2, 0xfef3c7); w.add('x', cyl(10), 0x334155, AX - 4, 0, 22.6, 0, 0, 0, 0.07, 0.7, 0.07); } }
   // trees / bushes around the edges and between lots
   { const spots = [[-90, -40], [-88, -10], [-92, 20], [-90, 40], [-92, 70], [-88, 100], [90, -36], [92, -4], [94, 24], [-40, 28], [-28, 4], [28, 4], [-84, 30], [84, 34], [-78, 104], [-30, 125], [30, 125], [0, 124], [-60, 124], [60, 124], [-98, 50], [-12, 96], [-26, 100]];
     spots.forEach(([x, z], i) => K.tree(w, x, z, 1.1 + (i % 4) * 0.2, i % 6 === 0 ? 1 : 0)); for (let i = 0; i < 40; i++) { const a = i / 40 * PI * 2, x = Math.cos(a) * 125, z = 27 + Math.sin(a) * (Math.sin(a) < 0 ? 134 : 112); if (z < -56 && z > -100 && Math.abs(x) < 106) continue; K.tree(w, x, z, 1.4 + (i % 3) * 0.3, 0); }
@@ -49,7 +53,7 @@ export function buildMap(w) {
     for (let i = 0; i < 10; i++) { const a = i / 10 * PI * 2 + 0.3; w.add('m', blobGeo(i * 3, 0.15, 2), 0xffffff, Math.cos(a) * 220, 60 + (i % 3) * 12, 27 + Math.sin(a) * 220, 0, a, 0, 22, 6, 12); } }
   // ---------------- stores ----------------
   STORES.forEach((d) => { const r = storeBuilding(w, d, d.id === 's1'); GEOM[d.id] = r.G; });
-  // Grokton Shopping Row sidewalk lamps + a row sign
+  // Shopsville Shopping Row sidewalk lamps + a row sign
   w.region = 'out'; [-49, -24, 1, 26, 51, 76].forEach((x) => K.lampPost(w, x, -61.4)); { const X = 103.5, Z = -72; w.add('g', rbox(0.4, 2.4, 6, 0.15), 0x1d4ed8, X, 2.6, Z); txt(w, 'SHOPPING ROW', X - 0.22, 2.9, Z, -PI / 2, 0.4, 0xffffff); txt(w, 'SHOPS · SUPERCENTER', X - 0.22, 2.3, Z, -PI / 2, 0.22, 0xfde68a); w.add('x', cyl(10), 0x334155, X, 0, Z, 0, 0, 0, 0.1, 1.4, 0.1); w.solid(X - 0.3, 0, Z - 3, X + 0.3, 3.8, Z + 3); }
   buildDC(w); buildRatita(w); buildTortuga(w); buildRuff(w); buildHall(w); buildFarm(w); buildLab(w);
   w.region = 'out';
@@ -124,7 +128,7 @@ function buildHall(w) { const x0 = -56, z0 = 23, x1 = -36, z1 = 43, L = w.lights
   // health dept office
   { counter(w, -55, -48, 37.5, 0xffffff, 0x0f766e); txt(w, 'HEALTH DEPT', -51.5, 1.5, 37.06, PI, 0.2, 0x0f766e); for (let i = 0; i < 6; i++) { w.add('m', rbox(0.7, 0.9, 0.04, 0.02), 0xffffff, -55 + i * 1.2, 2.4, 42.7); txt(w, 'ABCABC'[i], -55 + i * 1.2, 2.25, 42.66, PI, 0.4, [0x16a34a, 0xf59e0b, 0xdc2626][i % 3]); } K.filing(w, -49, 42.3, PI, 0x94a3b8, 4); SPOTS.inspector = [-51.5, 39.5]; SPOTS.hallHealth = [-51.5, 36.2]; }
   // bank
-  { counter(w, -44, -37, 37.5, 0xfef3c7, 0x7c4a1e); for (let i = 0; i < 3; i++) w.add('e', rbox(1.6, 1.1, 0.04, 0.02), 0xcfefff, -43 + i * 2.2, 1.65, 37.5); txt(w, 'GROKTON BANK', -40.5, 2.6, 37.06, PI, 0.24, 0x7c4a1e); w.slab('x', 0x475569, -37.5, 0, 42, 1.4, 2.2, 1.2, 0.08); w.add('x', torus(0.2, 20), 0xfacc15, -37.5, 1.1, 41.38, 0, 0, 0, 0.35); SPOTS.banker = [-40.5, 39.5]; SPOTS.hallBank = [-40.5, 36.2]; }
+  { counter(w, -44, -37, 37.5, 0xfef3c7, 0x7c4a1e); for (let i = 0; i < 3; i++) w.add('e', rbox(1.6, 1.1, 0.04, 0.02), 0xcfefff, -43 + i * 2.2, 1.65, 37.5); txt(w, 'SHOPSVILLE BANK', -40.5, 2.6, 37.06, PI, 0.24, 0x7c4a1e); w.slab('x', 0x475569, -37.5, 0, 42, 1.4, 2.2, 1.2, 0.08); w.add('x', torus(0.2, 20), 0xfacc15, -37.5, 1.1, 41.38, 0, 0, 0, 0.35); SPOTS.banker = [-40.5, 39.5]; SPOTS.hallBank = [-40.5, 36.2]; }
   pendant(w, -46, 28, 0xfde68a, 4.8); L.push({ x: -46, y: 4, z: 30, c: 0xfff7e6, i: 14, d: 16 }); L.push({ x: -46, y: 3, z: 39, c: 0xfff7e6, i: 12, d: 14 }); }
 // ---------------- Fernhill Farm Co-op (produce, dairy, meat, bakery flour) ----------------
 function buildFarm(w) { const x0 = 38, z0 = 23, x1 = 64, z1 = 43, L = w.lights;

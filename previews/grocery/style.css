@@ -220,3 +220,5 @@ html,body{background:#0f3d24}
 #dlg{transform:translate(-50%,calc(100% + 80px));visibility:hidden;transition:transform .22s,visibility 0s .22s;background:linear-gradient(180deg,#fff,#ecfdf3);color:#14532d;border-color:#16a34a}
 #dlg.on{transform:translate(-50%,0);visibility:visible;transition:transform .22s}
 #dlg b{background:#16a34a}#dlg small{color:#16a34a}
+
+.tmName{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);font-size:13px;letter-spacing:3px;color:rgba(255,255,255,.75);font-weight:900;pointer-events:none}

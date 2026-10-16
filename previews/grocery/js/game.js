@@ -1,27 +1,27 @@
 // Grok Grocery Tycoon - world, characters, store simulation hookup, jobs, interactions, first-person mode and smart rendering.
 import * as THREE from 'three';
-import { E, setEnvironment, followShadow } from './engine.js?v=ggt12';
-import { World } from './world.js?v=ggt12';
-import { buildMap, SPOTS, GEOM, ENV } from './map.js?v=ggt12';
-import { BUILDINGS, buildingAt } from './bld.js?v=ggt12';
-import { Walker } from './walker.js?v=ggt12';
-import { FollowCam } from './cam.js?v=ggt12';
-import { makePet, animPet } from './pets.js?v=ggt12';
-import { readMove, edge, IN } from './input.js?v=ggt12';
-import { updateFrustum, inView, LightPool } from './perf.js?v=ggt12';
-import { S, persist, capOf, news, newStore, staffName } from './save.js?v=ggt12';
-import { sfx } from './audio.js?v=ggt12';
-import { talk, talking, toast } from './uikit.js?v=ggt12';
-import { MATS } from './mats.js?v=ggt12';
-import { Builder, P } from './geo.js?v=ggt12';
-import { compact } from './compact.js?v=ggt12';
-import { Fixtures, FIXSOLID } from './fixtures.js?v=ggt12';
-import { Crowd } from './crowd.js?v=ggt12';
-import { Sim, EV, mine, shelfFrac, storeIds, OPEN, CLOSE, fmtClock } from './sim.js?v=ggt12';
-import { STORE, STORES, FIX, DEPTS, DEPT_IDS, RANKS, ROLES, CAMEOS, GOALS, EMPIRE, TYPES, typeOf, DEPT_ITEMS, autoLayout } from './data.js?v=ggt12';
-import { Decor } from './decor.js?v=ggt12';
-import { MG_NAMES } from './mg.js?v=ggt12';
-import { LINES, QUIZ, TASKS, dailyFor } from './story.js?v=ggt12';
+import { E, setEnvironment, followShadow } from './engine.js?v=ggt13';
+import { World } from './world.js?v=ggt13';
+import { buildMap, SPOTS, GEOM, ENV } from './map.js?v=ggt13';
+import { BUILDINGS, buildingAt } from './bld.js?v=ggt13';
+import { Walker } from './walker.js?v=ggt13';
+import { FollowCam } from './cam.js?v=ggt13';
+import { makePet, animPet } from './pets.js?v=ggt13';
+import { readMove, edge, IN } from './input.js?v=ggt13';
+import { updateFrustum, inView, LightPool } from './perf.js?v=ggt13';
+import { S, persist, capOf, news, newStore, staffName } from './save.js?v=ggt13';
+import { sfx } from './audio.js?v=ggt13';
+import { talk, talking, toast } from './uikit.js?v=ggt13';
+import { MATS } from './mats.js?v=ggt13';
+import { Builder, P } from './geo.js?v=ggt13';
+import { compact } from './compact.js?v=ggt13';
+import { Fixtures, FIXSOLID } from './fixtures.js?v=ggt13';
+import { Crowd } from './crowd.js?v=ggt13';
+import { Sim, EV, mine, shelfFrac, storeIds, OPEN, CLOSE, fmtClock } from './sim.js?v=ggt13';
+import { STORE, STORES, FIX, DEPTS, DEPT_IDS, RANKS, ROLES, CAMEOS, GOALS, EMPIRE, TYPES, typeOf, DEPT_ITEMS, autoLayout } from './data.js?v=ggt13';
+import { Decor } from './decor.js?v=ggt13';
+import { MG_NAMES } from './mg.js?v=ggt13';
+import { LINES, QUIZ, TASKS, dailyFor } from './story.js?v=ggt13';
 const PI = Math.PI;
 const _r = new THREE.Ray(), _v = new THREE.Vector3(), _b = new THREE.Box3(), _s = new THREE.Vector3(), _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _c = new THREE.Color();
 function meshFrom(parts) { const g = new THREE.Group(); for (const k in parts) { const b = parts[k]; if (!b.parts.length) continue; const m = new THREE.Mesh(compact(b.build(), k), MATS[k]); m.castShadow = k !== 'l' && k !== 'e'; m.receiveShadow = true; g.add(m); } return g; }
@@ -64,7 +64,7 @@ export class Game {
     P0('Banker Bo', SPOTS.banker, PI, 'in_hall', () => talk(LINES.banker, null, [{ t: '🏦 Loans', f: () => this.app.ui.bank() }, { t: 'No thanks', f: () => {} }]), { shirt: 0x1e3a8a });
     P0('Max Markdown', [Gr.office[0] - 1.8, Gr.office[1] - 1.4], 0.3, 'in_rival', () => talk(LINES.max, null, [{ t: '📰 Compare prices', f: () => this.app.ui.spy('rival') }, { t: 'See ya!', f: () => {} }]), { shirt: 0xdc2626 });
     P0('Ms. Quinn', [Gq.office[0] - 1.8, Gq.office[1] - 1.4], 0.3, 'in_rival2', () => talk(LINES.quinn, null, [{ t: '📰 Compare prices', f: () => this.app.ui.spy('rival2') }, { t: 'Bye!', f: () => {} }]), { shirt: 0x4f46e5 });
-    for (const d of STORES) if (d.strip) { const Gx = GEOM[d.id]; P0(d.boss, [Gx.office[0] - 1.6, Gx.office[1] - 1.3], 0.3, 'in_' + d.id, () => talk([[d.boss, `Welcome to ${d.name}! ${({ supercenter: 'Groceries, TVs, socks, sofas... we sell EVERYTHING. Good luck competing.', toy: 'Every kid in Grokton wants our plushies. Try to keep up!', shoe: 'We measure every foot twice. Our prices? Step right up.', tech: 'Newest gadgets first. Big screens, bigger margins.', pet: 'Candy shops here, you know. Well... sometimes.', clothing: 'Fashion moves fast. Our racks move faster.', pharmacy: 'Healthy town, happy town. And our vitamins are on sale.' })[d.type]}`]], null, [{ t: '📰 Compare prices', f: () => this.app.ui.spy(d.id) }, ...(S.mode === 'boss' ? [{ t: `💰 Make an offer ($${d.price.toLocaleString('en-US')})`, f: () => this.buyout(d.id) }] : []), { t: 'Just browsing', f: () => {} }]), { shirt: d.trim, ok: () => !mine(d.id) }); }
+    for (const d of STORES) if (d.strip) { const Gx = GEOM[d.id]; P0(d.boss, [Gx.office[0] - 1.6, Gx.office[1] - 1.3], 0.3, 'in_' + d.id, () => talk([[d.boss, `Welcome to ${d.name}! ${({ supercenter: 'Groceries, TVs, socks, sofas... we sell EVERYTHING. Good luck competing.', toy: 'Every kid in Shopsville wants our plushies. Try to keep up!', shoe: 'We measure every foot twice. Our prices? Step right up.', tech: 'Newest gadgets first. Big screens, bigger margins.', pet: 'Candy shops here, you know. Well... sometimes.', clothing: 'Fashion moves fast. Our racks move faster.', pharmacy: 'Healthy town, happy town. And our vitamins are on sale.' })[d.type]}`]], null, [{ t: '📰 Compare prices', f: () => this.app.ui.spy(d.id) }, ...(S.mode === 'boss' ? [{ t: `💰 Make an offer ($${d.price.toLocaleString('en-US')})`, f: () => this.buyout(d.id) }] : []), { t: 'Just browsing', f: () => {} }]), { shirt: d.trim, ok: () => !mine(d.id) }); }
     P0('Ruffsources Clerk', [SPOTS.ruffDesk[0] + 0.6, SPOTS.ruffDesk[1] - 2.7], 0, 'in_ruff', () => this.app.ui.hire(), { shirt: 0xc8634a });
     P0('Grok Goods Chef', [SPOTS.labKitchen[0] - 2, SPOTS.labKitchen[1] + 5.5], PI, 'in_lab', () => this.app.ui.brand(), { shirt: 0xffffff, staff: true });
     P0('Dispatcher Dee', [SPOTS.dcBoard[0] + 1.6, SPOTS.dcBoard[1] - 1.5], PI, 'in_dc', () => S.dc ? this.app.ui.orders() : talk([['Dispatcher Dee', 'This warehouse is for sale! Buy it and I\'ll run your trucks: cheaper stock, faster deliveries to every store.']]), { shirt: 0xf97316, cap: true });
@@ -102,7 +102,7 @@ export class Game {
         if (s.cameo) { const p = makePet(s.cameo, { s: s.cameo === 'torty' ? 0.9 : 1.2 }); p.x = a.x; p.z = a.z; p.y = 0.06; this.add(p.root); (this.cameoPets[sid] || (this.cameoPets[sid] = [])).push(p); a.pet = p; } return a; }); } }
   // ---------------- per-frame helpers ----------------
   storeVisible(sid) { const RM = this.world.regionMeshes['in_' + sid]; return !!(RM && RM[0] && RM[0].visible); }
-  setVis(force) { const me = this.me; const b = buildingAt(me.x, me.z); if (b !== this.inB || force) { this.inB = b; this.app.hud.region(b ? (STORE[b.id] ? typeOf(S.stores[b.id]).e + ' ' + this.storeTitle(b.id) : b.name) : '🌳 Grokton'); }
+  setVis(force) { const me = this.me; const b = buildingAt(me.x, me.z); if (b !== this.inB || force) { this.inB = b; this.app.hud.region(b ? (STORE[b.id] ? typeOf(S.stores[b.id]).e + ' ' + this.storeTitle(b.id) : b.name) : '🌳 Shopsville'); }
     const RM = this.world.regionMeshes; for (const B of BUILDINGS) { const inIt = B === b; (RM['roof_' + B.id] || []).forEach((m) => m.visible = !inIt || this.fp);
       const d = Math.max(0, B.x0 - me.x, me.x - B.x1, B.z0 - me.z, me.z - B.z1); const show = inIt || (d < 26 && !this.fp) || (this.fp && d < 6); (RM['in_' + B.id] || []).forEach((m) => m.visible = show); if (STORE[B.id]) { this.fixtures.show(B.id, show); this.decor.vis(B.id, !(inIt && !this.fp), show); } if (B.id === 'dc') (RM.ownin_dc || []).forEach((m) => m.visible = show && S.dc); }
     for (const p of this.npcs) p.root.visible = !p.region || p.region === 'out' || (RM[p.region] && RM[p.region][0] ? RM[p.region][0].visible : true);
@@ -139,7 +139,7 @@ export class Game {
   buyDC() { if (S.dc || !this.bossOnly() || !this.spend(EMPIRE.dc)) return; S.dc = true; S.trucks = Math.max(S.trucks, 2); news('Grok Grocery opens a distribution center! Stock now ships cheaper and faster.'); persist(); this.refreshStores(); this.app.ui.banner('🏭 DISTRIBUTION CENTER OPEN', 'All stock now ships from your DC: 18% cheaper. Snowie can join as a speed stocker.'); }
   checkGoals() { if (S.mode !== 'boss') return; const M = storeIds().filter(mine); const depts = new Set(); M.forEach((k) => S.stores[k].layout.forEach((f) => f && FIX[f].dept && depts.add(FIX[f].dept))); const staff = M.reduce((a, k) => a + S.stores[k].staff.length, 0);
     const G = S.goals, before = Object.keys(G).length; if (depts.size >= 6) G.dept6 = 1; if (staff >= 4 + (S.mode === 'boss' ? 0 : 0)) G.staff4 = 1; if (M.length >= 2) G.store2 = 1; if (M.length >= 3) G.store3 = 1; if (S.dc) G.dc = 1; if (S.brand.on) G.brand = 1; if (S.trucks >= 3) G.fleet = 1; if (S.stores.rival && S.stores.rival.owned) G.buyout = 1; if (new Set(M.map((k) => S.stores[k].type || 'grocery')).size >= 3) G.mix3 = 1; if (M.length >= 5 && S.dc && S.brand.on) G.tycoon = 1;
-    if (Object.keys(G).length > before) { const g = GOALS.filter(([k]) => G[k]).pop(); sfx('win'); toast('🏆 Empire goal: ' + (g ? g[1] : '')); if (G.tycoon && !S.badges.tycoon) { S.badges.tycoon = 1; this.app.ui.banner('👑 RETAIL TYCOON!', 'Five stores, a DC and your own brand. Grokton bows to your carts.'); } persist(); } }
+    if (Object.keys(G).length > before) { const g = GOALS.filter(([k]) => G[k]).pop(); sfx('win'); toast('🏆 Empire goal: ' + (g ? g[1] : '')); if (G.tycoon && !S.badges.tycoon) { S.badges.tycoon = 1; this.app.ui.banner('👑 RETAIL TYCOON!', 'Five stores, a DC and your own brand. Shopsville bows to your carts.'); } persist(); } }
   // ---------------- interactions ----------------
   gather() { const me = this.me, out = [], sid = this.curStore(), st = sid && S.stores[sid], G = sid && GEOM[sid]; const push = (x, z, r, label, f) => { const d = Math.hypot(me.x - x, me.z - z); if (d < r) out.push({ d, label, f }); };
     for (const p of this.npcs) if (p.talk && p.root.visible) push(p.x, p.z, 2.3, p.label, p.talk);

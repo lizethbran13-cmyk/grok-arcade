@@ -2,10 +2,10 @@
 // the entry display and the facade sign. Built per store into its own meshes so a lot can be remodelled from a
 // supermarket into a shoe store (or bought from a rival and rebranded) without rebuilding the town.
 import * as THREE from 'three';
-import { World, rbox } from './world.js?v=ggt12';
-import { STORE, TYPES } from './data.js?v=ggt12';
-import { bevWall, wallShelf, BOT } from './stores.js?v=ggt12';
-import { PI, R, pick, BRIGHT, rcyl, lathe, sph, cyl, cone, torus, capsule, star, txt, wallWord, cartStatic, grokLogo, frameArt } from './art.js?v=ggt12';
+import { World, rbox } from './world.js?v=ggt13';
+import { STORE, TYPES } from './data.js?v=ggt13';
+import { bevWall, wallShelf, BOT } from './stores.js?v=ggt13';
+import { PI, R, pick, BRIGHT, rcyl, lathe, sph, cyl, cone, torus, capsule, star, txt, wallWord, cartStatic, grokLogo, frameArt } from './art.js?v=ggt13';
 const SHOE = [0xef4444, 0x111827, 0xffffff, 0x2563eb, 0x7c3aed, 0x92400e, 0xfacc15, 0x22c55e, 0xf97316];
 // one themed wall run, local x in [-L/2, L/2], wall at local z=0, facing +z
 function units(T, L, kind, ac) { const n = Math.max(1, Math.floor(L / 1.25)), uw = L / n;

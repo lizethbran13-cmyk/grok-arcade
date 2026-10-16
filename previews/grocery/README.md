@@ -1,6 +1,6 @@
 # Grok Grocery Tycoon (beta)
 
-Run a store in the town of Grokton. You can work your way up from bagging groceries, or start at the top and build a whole retail empire.
+Run a store in the town of Shopsville. You can work your way up from bagging groceries, or start at the top and build a whole retail empire.
 
 - **Two ways to play**
   - **Career:** start as a courtesy clerk. Bag groceries, push carts, stock shelves, clean spills and help shoppers. Promotions take you from Clerk to Cashier, Department Lead, Assistant Manager, Store Manager and finally **Owner**. You can clerk at any type of store.

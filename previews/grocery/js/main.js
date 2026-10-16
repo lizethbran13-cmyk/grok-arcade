@@ -1,17 +1,17 @@
 // Grok Grocery Tycoon - boot, app state, main loop.
 import * as THREE from 'three';
-import { E, initEngine, render, trackFps } from './engine.js?v=ggt12';
-import { initMats } from './mats.js?v=ggt12';
-import { initInput, clearEdges, edge, IN } from './input.js?v=ggt12';
-import { initAudio, setSound, sfx } from './audio.js?v=ggt12';
-import { S, persist, newGame } from './save.js?v=ggt12';
-import { HUD } from './hud.js?v=ggt12';
-import { UI } from './ui.js?v=ggt12';
-import { closePanel } from './uikit.js?v=ggt12';
-import { Game } from './game.js?v=ggt12';
-import { $ } from './util.js?v=ggt12';
-import { GEOM } from './map.js?v=ggt12';
-import { loadFont } from './text3d.js?v=ggt12';
+import { E, initEngine, render, trackFps } from './engine.js?v=ggt13';
+import { initMats } from './mats.js?v=ggt13';
+import { initInput, clearEdges, edge, IN } from './input.js?v=ggt13';
+import { initAudio, setSound, sfx } from './audio.js?v=ggt13';
+import { S, persist, newGame } from './save.js?v=ggt13';
+import { HUD } from './hud.js?v=ggt13';
+import { UI } from './ui.js?v=ggt13';
+import { closePanel } from './uikit.js?v=ggt13';
+import { Game } from './game.js?v=ggt13';
+import { $ } from './util.js?v=ggt13';
+import { GEOM } from './map.js?v=ggt13';
+import { loadFont } from './text3d.js?v=ggt13';
 const app = window.__pt = { state: 'boot', paused: true, game: null, ready: false, busy: false };
 function setLoad(p, t) { const b = $('loadBar'); if (b) b.style.width = p + '%'; if (t) $('loadTxt').textContent = t; }
 async function boot() {
@@ -22,7 +22,7 @@ async function boot() {
   app.hud = new HUD(); app.ui = new UI(app);
   const unlock = () => { initAudio(); }; window.addEventListener('touchstart', unlock, { passive: true }); window.addEventListener('mousedown', unlock); window.addEventListener('keydown', unlock);
   { const pb = $('hPause'); let tT = 0; const hit = (e) => { e.preventDefault(); e.stopPropagation(); if (performance.now() - tT < 350) return; tT = performance.now(); sfx('click'); if (app.paused && app.state === 'play') { if (!app.busy || $('ui').classList.contains('open')) app.resume(); } else app.pause(); }; pb.addEventListener('touchstart', hit, { passive: false }); pb.addEventListener('click', hit); }
-  await new Promise((r) => setTimeout(r, 30)); setLoad(40, 'Stocking every shelf in Grokton…'); await new Promise((r) => setTimeout(r, 30));
+  await new Promise((r) => setTimeout(r, 30)); setLoad(40, 'Stocking every shelf in Shopsville…'); await new Promise((r) => setTimeout(r, 30));
   app.game = new Game(app); setLoad(90, 'Opening the doors…');
   try { E.renderer.compile(E.scene, E.camera); } catch (e) {}
   setLoad(100, 'Ready!'); app.state = 'title'; app.paused = true; showTouch(false); app.ui.title(); setTimeout(() => $('loading').classList.add('gone'), 250);

@@ -1,5 +1,5 @@
 // localStorage save for Grok Grocery Tycoon (its own key; never touches other games or the arcade)
-import { STORES, LAYOUTS, storeGeom, FIX, DEPT_IDS, FIRST, LAST, TYPES, autoLayout } from './data.js?v=ggt12';
+import { STORES, LAYOUTS, storeGeom, FIX, DEPT_IDS, FIRST, LAST, TYPES, autoLayout } from './data.js?v=ggt13';
 const KEY = 'grokGroceryTycoon.v1';
 // layoutKey: a hand-made grocery layout (LAYOUTS) or a fill share for the type's auto layout
 export function newStore(id, layoutKey, type, nReg = 2) { const d = STORES.find((s) => s.id === id), G = storeGeom(d); type = type || d.type || 'grocery'; let layout;

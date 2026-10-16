@@ -1,15 +1,15 @@
 // Grok Grocery Tycoon - menus: title (Career / Boss + store type), look editor, how to play, journal, banners,
 // the Manager's Desk (floor planner, prices, orders, staff, empire map, news), hiring, bank, brand lab, rival spy, time clock, day summary.
-import { $, esc } from './util.js?v=ggt12';
-import { S, persist, resetSave, newGame, capOf, news, staffName } from './save.js?v=ggt12';
-import { sfx, setSound } from './audio.js?v=ggt12';
-import { panel, closePanel, on, toast } from './uikit.js?v=ggt12';
-import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=ggt12';
-import { goal, TASKS } from './story.js?v=ggt12';
-import { GAMES, MG_NAMES } from './mg.js?v=ggt12';
-import { STORE, STORES, FIX, DEPTS, DEPT_IDS, RANKS, ROLES, CAMEOS, EMPIRE, GOALS, BRAND_LINES, TYPES, TYPE_IDS, typeOf } from './data.js?v=ggt12';
-import { GEOM } from './map.js?v=ggt12';
-import { storeIds, mine, shelfFrac, wholesale, fmtClock } from './sim.js?v=ggt12';
+import { $, esc } from './util.js?v=ggt13';
+import { S, persist, resetSave, newGame, capOf, news, staffName } from './save.js?v=ggt13';
+import { sfx, setSound } from './audio.js?v=ggt13';
+import { panel, closePanel, on, toast } from './uikit.js?v=ggt13';
+import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=ggt13';
+import { goal, TASKS } from './story.js?v=ggt13';
+import { GAMES, MG_NAMES } from './mg.js?v=ggt13';
+import { STORE, STORES, FIX, DEPTS, DEPT_IDS, RANKS, ROLES, CAMEOS, EMPIRE, GOALS, BRAND_LINES, TYPES, TYPE_IDS, typeOf } from './data.js?v=ggt13';
+import { GEOM } from './map.js?v=ggt13';
+import { storeIds, mine, shelfFrac, wholesale, fmtClock } from './sim.js?v=ggt13';
 const hex = (c) => '#' + c.toString(16).padStart(6, '0');
 const $m = (n) => '$' + Math.round(n).toLocaleString('en-US');
 const pct = (p) => Math.round(p * 100) + '%';
@@ -21,7 +21,7 @@ export class UI {
   // ---------------- title ----------------
   title() { const app = this.app; const ui = $('ui'); ui.classList.add('open'); app.preview = false; const has = !!S.mode && S.stores.s1;
     ui.innerHTML = `<div class="title"><div class="logo"><span class="l0">GROK</span><span class="l1">GROCERY</span><span class="l2">TYCOON</span></div>
-      <p class="tag">Start as a courtesy clerk and work your way to owner, or start as the boss. Run supermarkets, supercenters, shoe shops, toy stores, pet shops and more on one town map.</p>
+      <p class="tag">Start as a courtesy clerk and work your way to owner, or start as the boss. Run supermarkets, supercenters, shoe shops, toy stores, pet shops and more across the town of Shopsville.</p>
       <div class="tBtns">${has ? `<button class="go" id="tCont">▶ CONTINUE · DAY ${S.day} · ${S.mode === 'career' ? esc(RANKS[S.rank].n) : 'BOSS'}</button>` : ''}
       <div class="btnRow"><button class="${has ? 'mbtn2' : 'go'}" id="tCar">🛒 CAREER<small>clerk to owner</small></button><button class="${has ? 'mbtn2' : 'go'}" id="tBoss">👑 BOSS<small>run it all</small></button></div>
       <div class="btnRow"><button class="mbtn2 sm" id="tLook">👤 YOUR LOOK</button><button class="mbtn2 sm" id="tOpts">⚙️ OPTIONS</button></div></div>
@@ -49,7 +49,7 @@ export class UI {
       <p>🏙️ Every building is walk-in: rival stores (spy on their prices!), the Shopping Row, the warehouse, Ratita Industries, Tortuga Tech, Ruffsources, Town Hall, Fernhill Farm and the Grok Goods Lab.</p><p>📒 The top-right button opens your journal.</p></div><button class="go" id="hOk">LET'S GO!</button>`, (c) => on(c, '#hOk', () => { S.seenHow = true; persist(); done(); })); }
   pause() { const app = this.app; app.busy = true; const M = storeIds().filter(mine); const career = S.mode === 'career', nx = RANKS[S.rank + 1];
     const t = (S.daily && S.daily.t) || {};
-    panel(`<h2>📒 JOURNAL · DAY ${S.day}</h2><p class="sub">⭐ ${esc(goal())}</p>
+    panel(`<h2>📒 JOURNAL · DAY ${S.day}</h2><p class="sub">📍 Shopsville</p><p class="sub">⭐ ${esc(goal())}</p>
       <div class="statGrid"><div><b>${$m(S.money)}</b><small>💵 money</small></div><div><b>${career ? esc(RANKS[S.rank].e + ' ' + RANKS[S.rank].n) : M.length}</b><small>${career ? (nx ? S.xp + '/' + nx.xp + ' XP' : 'top rank') : '🏪 stores'}</small></div><div><b>${S.stats.served}</b><small>🛒 shoppers served</small></div><div><b>${S.stats.aGrades}</b><small>📋 grade-A inspections</small></div></div>
       ${career ? `<h3>TODAY'S TASKS</h3>${Object.keys(t).map((k) => `<div class="upRow"><span class="ic">${TASKS[k][0]}</span><div><b>${TASKS[k][1]}</b><br><small>${t[k] < 0 ? '✅ done' : t[k] + '/' + TASKS[k][2]}</small></div></div>`).join('')}` : `<h3>YOUR STORES</h3>${M.map((k) => { const st = S.stores[k]; return `<div class="upRow"><span class="ic">${typeOf(st).e}</span><div><b>${esc(this.g.storeTitle(k))}</b><br><small>⭐ ${Math.round(st.rep)} rep · ${$m(st.rev)} today · ${st.cust} shoppers${st.grade ? ' · grade ' + st.grade : ''}</small></div></div>`; }).join('')}`}
       <h3>BEST SCORES</h3><p class="sub">${Object.keys(MG_NAMES).filter((k) => S.played[k]).map((k) => `<span class="badge on">${MG_NAMES[k][0]} ${S.best[k] || 0}</span>`).join(' ') || 'Play store jobs to set scores!'}</p>
@@ -97,7 +97,7 @@ export class UI {
   t_empire(B, sid) { const M = storeIds().filter(mine); const lots = STORES.map((d) => { const st = S.stores[d.id], own = mine(d.id), T = st ? typeOf(st) : null;
       const act = own ? '' : d.rival ? `<button class="ob" data-b="${d.id}">Buy out<small>${$m(d.price)}</small></button>` : `<button class="ob" data-l="${d.id}">Buy lot<small>${$m(d.price)}</small></button>`;
       return `<div class="row ${own ? 'own' : ''}"><span class="ic">${T ? T.e : '🏷️'}</span><div class="rn"><b>${esc(this.g.storeTitle(d.id))}</b><small>${own ? `⭐ ${Math.round(st.rep)} · ${$m(st.rev)} today` : d.rival ? `rival · ${T ? esc(T.n) : ''} · ⭐ ${st ? Math.round(st.rep) : '?'}${d.easy ? '' : ' · needs 2 stores + better rep'}` : 'empty lot: any store type'}</small></div>${act}</div>`; }).join('');
-    B.innerHTML = `<div class="townMap">${STORES.map((d) => `<i class="tm ${mine(d.id) ? 'own' : d.rival ? 'rv' : 'lot'}" style="left:${(d.x0 + 110) / 220 * 100}%;top:${(d.z0 + 100) / 215 * 100}%;width:${(d.x1 - d.x0) / 220 * 100}%;height:${(d.z1 - d.z0) / 215 * 100}%">${S.stores[d.id] ? typeOf(S.stores[d.id]).e : '🏷️'}</i>`).join('')}<i class="tm dc ${S.dc ? 'own' : 'lot'}" style="left:${146 / 220 * 100}%;top:${52 / 215 * 100}%;width:20%;height:17.7%">🏭</i></div>
+    B.innerHTML = `<h3>🗺️ SHOPSVILLE TOWN MAP</h3><div class="townMap"><b class="tmName">SHOPSVILLE</b>${STORES.map((d) => `<i class="tm ${mine(d.id) ? 'own' : d.rival ? 'rv' : 'lot'}" style="left:${(d.x0 + 110) / 220 * 100}%;top:${(d.z0 + 100) / 215 * 100}%;width:${(d.x1 - d.x0) / 220 * 100}%;height:${(d.z1 - d.z0) / 215 * 100}%">${S.stores[d.id] ? typeOf(S.stores[d.id]).e : '🏷️'}</i>`).join('')}<i class="tm dc ${S.dc ? 'own' : 'lot'}" style="left:${146 / 220 * 100}%;top:${52 / 215 * 100}%;width:20%;height:17.7%">🏭</i></div>
       <h3>STORES + LOTS (${M.length} yours)</h3>${lots}
       <h3>LOGISTICS</h3><div class="row"><span class="ic">🏭</span><div class="rn"><b>Distribution center</b><small>${S.dc ? 'open: stock ships 18% cheaper' : 'cheaper, faster stock for every store'}</small></div>${S.dc ? '' : `<button class="ob" id="dc">Buy<small>${$m(EMPIRE.dc)}</small></button>`}</div>
       <div class="row"><span class="ic">🚚</span><div class="rn"><b>Delivery trucks: ${S.trucks}</b><small>more trucks = no delivery delays</small></div><button class="ob" id="tr">+1<small>${$m(EMPIRE.truck)}</small></button></div>
@@ -120,13 +120,13 @@ export class UI {
       c.querySelectorAll('[data-h]').forEach((b) => b.onclick = () => { const h = S.hire.c[+b.dataset.h]; if (S.mode === 'boss') { if (S.money < 50) { sfx('deny'); toast('💸 Need $50'); return; } S.money -= 50; } h.taken = true; S.stores[sid].staff.push({ role: h.role, name: h.name, skill: h.skill }); sfx('win'); toast(`🤝 ${h.name} joins ${STORE[sid].short}!`); if (S.mode === 'career') this.g.reward('help', 1, ' · great hire'); persist(); this.g.refreshStores(); this.hire(sid); });
       c.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { closePanel(); this.done(); this.g.hireCameo(b.dataset.c); }); }, 'wideP'); }
   // ---------------- bank, records, brand ----------------
-  bank() { this.hold(); panel(`<h2>🏦 GROKTON BANK</h2><p class="sub">Loan: ${$m(S.loan)} · 5% interest each night</p><div class="btnRow"><button class="mbtn2" id="b2">Borrow $2,000</button><button class="mbtn2" id="b5">Borrow $5,000</button></div><div class="btnRow"><button class="mbtn2" id="r1" ${S.loan ? '' : 'disabled'}>Repay $1,000</button><button class="mbtn2" id="rA" ${S.loan ? '' : 'disabled'}>Repay all</button></div><button class="go" id="bX">DONE</button>`, (c) => {
+  bank() { this.hold(); panel(`<h2>🏦 SHOPSVILLE BANK</h2><p class="sub">Loan: ${$m(S.loan)} · 5% interest each night</p><div class="btnRow"><button class="mbtn2" id="b2">Borrow $2,000</button><button class="mbtn2" id="b5">Borrow $5,000</button></div><div class="btnRow"><button class="mbtn2" id="r1" ${S.loan ? '' : 'disabled'}>Repay $1,000</button><button class="mbtn2" id="rA" ${S.loan ? '' : 'disabled'}>Repay all</button></div><button class="go" id="bX">DONE</button>`, (c) => {
       const bor = (n) => { if (S.mode !== 'boss') { toast('🏦 Loans are for store owners'); return; } if (S.loan + n > 12000) { toast('🏦 Max loan is $12,000'); return; } S.loan += n; S.money += n; sfx('buy'); persist(); this.bank(); };
       const pay = (n) => { n = Math.min(n, S.loan); if (S.money < n) { sfx('deny'); toast('💸 Not enough money'); return; } S.money -= n; S.loan -= n; sfx('ding'); persist(); this.bank(); };
       on(c, '#b2', () => bor(2000)); on(c, '#b5', () => bor(5000)); on(c, '#r1', () => pay(1000)); on(c, '#rA', () => pay(S.loan)); on(c, '#bX', () => this.done()); }); }
   records() { this.hold(); const M = storeIds().filter(mine); panel(`<h2>📋 HEALTH DEPT</h2><p class="sub">Inspections: ${S.stats.inspections} · grade A: ${S.stats.aGrades} · next visit around day ${S.insp.next}</p>${M.map((k) => `<div class="row"><span class="ic">${typeOf(S.stores[k]).e}</span><div class="rn"><b>${esc(this.g.storeTitle(k))}</b><small>clean ${Math.round(S.stores[k].clean)}% · last grade ${S.stores[k].grade || '—'}</small></div></div>`).join('')}<p class="sub">Inspectors check spills, cleanliness and empty coolers. Janitors help a lot!</p><button class="go" id="rX">OK</button>`, (c) => on(c, '#rX', () => this.done())); }
   brand() { this.hold(); if (!S.brand.on) { panel(`<h2>⭐ GROK GOODS LAB</h2><p class="sub">Launch your own store brand: Grok Goods displays sell your products in every store, at better margins.</p><button class="go" id="bl">${S.mode === 'boss' ? 'LAUNCH GROK GOODS · ' + $m(EMPIRE.brand) : 'Owners only'}</button><button class="mbtn2" id="bX">LATER</button>`, (c) => {
-      on(c, '#bl', () => { if (S.mode !== 'boss') return; if (!this.g.spend(EMPIRE.brand)) return; S.brand.on = true; news('Grok Goods store brand launches across Grokton!'); persist(); this.g.checkGoals(); this.banner('⭐ GROK GOODS LAUNCHED', 'Build Grok Goods displays from the floor planner.'); this.brand(); }); on(c, '#bX', () => this.done()); }); return; }
+      on(c, '#bl', () => { if (S.mode !== 'boss') return; if (!this.g.spend(EMPIRE.brand)) return; S.brand.on = true; news('Grok Goods store brand launches across Shopsville!'); persist(); this.g.checkGoals(); this.banner('⭐ GROK GOODS LAUNCHED', 'Build Grok Goods displays from the floor planner.'); this.brand(); }); on(c, '#bX', () => this.done()); }); return; }
     panel(`<h2>⭐ GROK GOODS LAB</h2><p class="sub">Each product line makes Grok Goods worth more (+15% per line).</p>${BRAND_LINES.map((l) => `<div class="row"><span class="ic">${l.e}</span><div class="rn"><b>${esc(l.n)}</b><small>${l.who ? 'with ' + esc(l.who) : 'in-house recipe'}</small></div>${S.brand.lines.includes(l.id) ? '<b class="pv">✅</b>' : `<button class="ob" data-l="${l.id}">Make<small>${$m(l.cost)}</small></button>`}</div>`).join('')}<button class="go" id="bX">DONE</button>`, (c) => {
       c.querySelectorAll('[data-l]').forEach((b) => b.onclick = () => { const l = BRAND_LINES.find((x) => x.id === b.dataset.l); if (!this.g.spend(l.cost)) return; S.brand.lines.push(l.id); DEPTS.brand.val = 8 * (1 + S.brand.lines.length * 0.15); persist(); toast(`${l.e} ${l.n} is on the line!`); this.brand(); }); on(c, '#bX', () => this.done()); }); }
   // ---------------- rival spy ----------------
