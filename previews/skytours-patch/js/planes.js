@@ -87,10 +87,10 @@ const MODELS = {
       b.g.add(P.cyl, B, s * 3.5, 3.05, 1.25, 0, 0, 0, 0.5, 0.03, 0.5); b.g.add(P.cyl, 0xffffff, s * 3.5, 3.065, 1.25, 0, 0, 0, 0.3, 0.03, 0.3); b.g.add(P.rboxS, B, s * 4.25, 2.95, 1.25, 0, 0, 0, 0.55, 0.19, 1.62); b.g.add(P.rboxS, B, s * 4.1, 0.95, 1.0, 0, 0, 0, 0.55, 0.19, 1.57);
       rod(b.x, 0x475569, [s * 1.05, 0.38, 1.5], [s * 0.4, 1.2, 1.2], 0.06); rod(b.x, 0x475569, [s * 1.05, 0.38, 1.5], [s * 0.4, 1.1, 2.2], 0.06); wheel(b, s * 1.1, 0.4, 1.5, 0.4, 0.2); });
     wingC(b.g, A, 0, 1.75, -4.6, 3.2, 0.9, 0.1); b.g.add(P.rbox, B, 0, 2.4, -4.65, 0.3, 0, 0, 0.1, 1.2, 1.0); b.x.add(P.sphere, 0x1f2937, 0, 0.3, -4.5, 0, 0, 0, 0.12); rod(b.x, 0x475569, [0, 0.3, -4.5], [0, 1.3, -4.2], 0.04);
-    b.x.add(P.torus, 0x7c4a1e, 0, 2.18, -0.6, PI / 2, 0, 0, 0.55, 0.65, 0.5); b.x.add(P.torus, 0x7c4a1e, 0, 2.18, 1.0, PI / 2, 0, 0, 0.48, 0.55, 0.45); b.e.add(P.rbox, 0xbfe9ff, 0, 2.38, 0.15, -0.35, 0, 0, 0.7, 0.4, 0.05);
+    b.x.add(P.torus, 0x7c4a1e, 0, 2.12, -0.6, PI / 2, 0, 0, 0.55, 0.65, 0.22); b.x.add(P.torus, 0x7c4a1e, 0, 2.12, 1.0, PI / 2, 0, 0, 0.48, 0.55, 0.22); b.e.add(P.rbox, 0xbfe9ff, 0, 2.3, 0.2, -0.35, 0, 0, 0.6, 0.26, 0.05);
     lights(b, -4.5, 4.5, 3.0, 1.25, [0, 2.95, -5.1]); b.f.add(P.rbox, 0x7c3f2c, 0, 1.55, -0.6, 0, 0, 0, 0.9, 0.3, 0.9);
     const body = meshFrom(b), pr = propeller(2, 1.55, 0x7c4a1e, B === 0xffffff ? 0xff4fa0 : B); pr.position.set(0, 1.6, 3.75); b.x.parts.length; body.add(pr); const cone = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.6, 20).rotateX(PI / 2), MATS.g); body.add(cone); cone.position.set(0, 1.6, 3.95);
-    return { body, spin: [{ o: pr, ax: 'z', k: 45 }], discs: [], seat: { pilot: [0, 1.25, -0.65], snowie: [0, 1.5, 0.95], eye: [0, 3.15, -0.3] }, smoke: [0, 2.2, 2.6], dents: [[0.58, 1.6, 0.3, 0.26], [-0.58, 1.4, -1.0, 0.24], [2.6, 3.05, 1.2, 0.28], [-2.2, 1.05, 0.9, 0.26], [0.3, 2.0, -2.4, 0.2], [-3.6, 3.0, 1.5, 0.24]], bend: { at: [0, 2.4, -4.65], fin: [0.1, 1.2, 1.0, B] }, rad: 2.2, len: 9, span: 9 }; },
+    return { body, spin: [{ o: pr, ax: 'z', k: 45 }], discs: [], seat: { pilot: [0, 1.25, -0.65], snowie: [0, 1.5, 0.95], eye: [0, 3.35, 1.1], pitch: -0.04 }, smoke: [0, 2.2, 2.6], dents: [[0.58, 1.6, 0.3, 0.26], [-0.58, 1.4, -1.0, 0.24], [2.6, 3.05, 1.2, 0.28], [-2.2, 1.05, 0.9, 0.26], [0.3, 2.0, -2.4, 0.2], [-3.6, 3.0, 1.5, 0.24]], bend: { at: [0, 2.4, -4.65], fin: [0.1, 1.2, 1.0, B] }, rad: 2.2, len: 9, span: 9 }; },
   seaplane(A, B) { const b = MB();
     fuse(b.g, A, 0, 2.55, 0.3, 1.35, 5.6, 1.55); b.g.add(P.cone, A, 0, 2.75, -3.7, -PI / 2, 0, 0, 0.66, 3.2, 0.7); b.g.add(P.capsule, B, 0, 2.2, 0.3, PI / 2, 0, 0, 1.38, 2.0, 0.55);
     b.e.add(P.sphere, 0xbfe9ff, 0, 3.0, 1.75, -0.4, 0, 0, 0.62, 0.48, 0.8); [-1, 1].forEach((s) => [0.7, -0.4].forEach((z) => b.e.add(P.rbox, 0xbfe9ff, s * 0.66, 2.85, z, 0, 0, 0, 0.06, 0.48, 0.8)));
@@ -103,7 +103,7 @@ const MODELS = {
     const body = meshFrom(b), pr = propeller(3, 1.5, 0x1f2937, 0xffd23f); pr.position.set(0, 2.6, 3.45); body.add(pr); const cone = new THREE.Mesh(new THREE.ConeGeometry(0.26, 0.55, 20).rotateX(PI / 2), MATS.g); cone.position.set(0, 2.6, 3.65); body.add(cone);
     return { body, spin: [{ o: pr, ax: 'z', k: 45 }], discs: [], seat: { pilot: [-0.32, 1.95, 1.0], snowie: [0.32, 2.15, 1.05], eye: [-0.3, 3.45, 1.2] }, smoke: [0, 3.3, 2.4], dents: [[0.68, 2.6, 0.0, 0.26], [-0.66, 2.4, -1.2, 0.24], [3.3, 3.62, 0.6, 0.28], [-2.4, 3.62, 0.4, 0.26], [1.65, 0.75, 1.4, 0.24], [0.3, 3.2, -2.4, 0.22]], bend: { at: [0, 3.75, -5.1], fin: [0.12, 1.5, 1.2, B] }, rad: 2.4, len: 9.2, span: 10.6 }; },
   jet(A, B) { const b = MB(), acc = B;
-    fuse(b.g, A, 0, 1.55, -0.2, 1.25, 8.4, 1.25); b.g.add(P.cone, acc, 0, 1.55, 4.65, PI / 2, 0, 0, 0.6, 1.9, 0.6); b.g.add(P.capsule, acc, 0, 1.25, -0.2, PI / 2, 0, 0, 1.28, 3.6, 0.5);
+    fuse(b.g, A, 0, 1.55, -0.2, 1.25, 8.4, 1.25); b.g.add(P.cone, acc, 0, 1.42, 4.6, PI / 2 + 0.07, 0, 0, 0.58, 1.9, 0.46); b.g.add(P.capsule, acc, 0, 1.25, -0.2, PI / 2, 0, 0, 1.28, 3.6, 0.5);
     b.e.add(P.sphere, 0x9fd8ff, 0, 2.15, 1.6, 0, 0, 0, 0.55, 0.5, 1.55); b.x.add(P.torus, 0x475569, 0, 1.92, 1.6, PI / 2, 0, 0, 0.56, 1.5, 0.25);
     [-1, 1].forEach((s) => { const sw = 0.55, L = 3.9, cx = s * (0.5 + L / 2 * Math.cos(sw)), cz = -0.8 - L / 2 * Math.sin(sw); wingC(b.g, A, cx, 1.35, cz, L, 2.3, 0.14, s * sw, s * 0.05); b.g.add(P.rboxS, acc, s * (0.5 + L * 0.92 * Math.cos(sw)), 1.4, -0.8 - L * 0.92 * Math.sin(sw), 0, s * sw, 0, 0.5, 0.17, 1.0);
       const fx = s * 0.7; b.g.add(P.rbox, A, fx, 2.55, -3.6, -0.5, 0, s * -0.3, 0.12, 1.7, 1.3); wingC(b.g, A, s * 1.25, 1.55, -3.9, 1.9, 1.0, 0.1, s * 0.5, 0);
@@ -111,7 +111,7 @@ const MODELS = {
       rod(b.x, 0x64748b, [s * 1.3, 0.35, -0.9], [s * 1.0, 1.2, -0.7], 0.06); wheel(b, s * 1.35, 0.32, -0.9, 0.32, 0.22); });
     rod(b.x, 0x64748b, [0, 0.3, 3.0], [0, 1.2, 2.8], 0.06); wheel(b, 0, 0.27, 3.0, 0.27, 0.18); label(b.g, 'COMET', 0.26, acc === 0xffffff ? 0xff4fa0 : 0xffffff, 0.64, 1.3, -1.8, PI / 2); label(b.g, 'COMET', 0.26, acc === 0xffffff ? 0xff4fa0 : 0xffffff, -0.64, 1.3, -1.8, -PI / 2);
     lights(b, -3.6, 3.6, 1.4, -2.9, [0, 3.3, -4.2]); b.f.add(P.rbox, 0x334155, 0, 1.6, 1.1, 0, 0, 0, 0.7, 0.3, 2.2);
-    const body = meshFrom(b); return { body, spin: [], discs: [], jet: [[-0.36, 1.45, -4.9], [0.36, 1.45, -4.9]], seat: { pilot: [0, 1.25, 2.0], snowie: [0, 1.45, 0.9], eye: [0, 3.05, 2.35] }, smoke: [0, 1.9, -4.0], dents: [[0.62, 1.6, 0.4, 0.26], [-0.62, 1.4, -1.4, 0.24], [2.2, 1.48, -1.9, 0.28], [-1.8, 1.48, -1.6, 0.26], [0.2, 2.1, -2.6, 0.2], [0.6, 2.6, -3.6, 0.2]], bend: { at: [0.7, 2.55, -3.6], fin: [0.12, 1.7, 1.3, A], rz: -0.3 }, rad: 2.3, len: 11, span: 8.8 }; },
+    const body = meshFrom(b); return { body, spin: [], discs: [], jet: [[-0.36, 1.45, -4.9], [0.36, 1.45, -4.9]], seat: { pilot: [0, 1.25, 2.0], snowie: [0, 1.45, 0.9], eye: [0, 2.85, 2.55], pitch: 0.0 }, smoke: [0, 1.9, -4.0], dents: [[0.62, 1.6, 0.4, 0.26], [-0.62, 1.4, -1.4, 0.24], [2.2, 1.48, -1.9, 0.28], [-1.8, 1.48, -1.6, 0.26], [0.2, 2.1, -2.6, 0.2], [0.6, 2.6, -3.6, 0.2]], bend: { at: [0.7, 2.55, -3.6], fin: [0.12, 1.7, 1.3, A], rz: -0.3 }, rad: 2.3, len: 11, span: 8.8 }; },
   cargo(A, B) { const b = MB(), body2 = A === 0xffffff ? 0xfde68a : A;
     fuse(b.g, body2, 0, 2.3, 0.4, 2.5, 10.4, 2.5); b.g.add(P.cone, body2, 0, 2.85, -6.4, -PI / 2 + 0.1, 0, 0, 1.25, 4.4, 1.2); b.g.add(P.capsule, B, 0, 1.6, 0.4, PI / 2, 0, 0, 2.53, 4.4, 0.9);
     b.e.add(P.capsule, 0x9fd8ff, 0, 3.0, 4.35, PI / 2 - 0.5, 0, 0, 1.7, 0.5, 0.9); for (let i = 0; i < 5; i++) [-1, 1].forEach((s) => b.e.add(P.sphere, 0xbfe9ff, s * 1.22, 2.7, 2.4 - i * 1.4, 0, 0, 0, 0.06, 0.32, 0.32));
@@ -141,4 +141,18 @@ export function buildPlane(id, paintI = 0, o = {}) { FREE_CPU = !!o.display; try
 function buildPlane0(id, paintI, o) { const pt = PAINTS[paintI % PAINTS.length], M = MODELS[PLANE(id).id](pt.a, pt.b); const g = new THREE.Group(); g.add(M.body);
   const D = damageLayers(M, pt.a); D.tiers.forEach((t) => M.body.add(t)); M.body.add(D.bk); M.root = g;
   M.setDamage = (hp) => { const t = hp < 30 ? 2 : hp < 55 ? 1 : hp < 82 ? 0 : -1; D.tiers.forEach((m, i) => m.visible = i === t); D.bk.visible = hp < 55; const f = M.bend; if (D.bk.visible) { if (f.fin) D.bk.rotation.set(0.25, 0, (f.rz || 0) + (hp < 30 ? 0.9 : 0.45)); else if (f.ramp) D.bk.rotation.set(hp < 30 ? 1.1 : 0.55, 0, 0); else D.bk.rotation.set(0, 0, hp < 30 ? 0.5 : 0.25); } M.hp = hp; };
+  if (PLANE(id).kind === 'heli') M.body.add(copterDash(M.seat.eye));
   M.setDamage(o.hp == null ? 100 : o.hp); return M; }
+// simple 3D first-person instrument panel for copters (only shown in cockpit view; game.js toggles userData.ckOnly)
+function copterDash([ex, ey, ez]) { const grp = new THREE.Group(); grp.userData.ckOnly = true; grp.visible = false;
+  const pn = new THREE.Group(); pn.position.set(ex, ey - 0.6, ez + 0.88); pn.rotation.x = 0.5; pn.scale.setScalar(0.85); grp.add(pn); const b = MB(), D = 0x1e293b;
+  b.m.add(P.rbox, D, 0, 0, 0, 0, 0, 0, 0.98, 0.32, 0.08); b.m.add(P.rbox, 0x0f172a, 0, 0.17, 0.03, 0, 0, 0, 1.04, 0.05, 0.2);
+  [[-0.21, 0.05, 0.6], [0.21, 0.05, 1.2], [-0.36, 0.0, -0.4], [0.36, 0.0, -1.0], [-0.21, -0.08, 0.2], [0.21, -0.08, 2.2]].forEach(([x, y, a], i) => { const r = i > 3 ? 0.035 : 0.045;
+    b.g.add(P.cyl, 0xf8fafc, x, y, -0.045, PI / 2, 0, 0, r, 0.02, r); b.x.add(P.torus, 0x94a3b8, x, y, -0.05, 0, 0, 0, r, r, 0.08);
+    b.l.add(P.rbox, i % 2 ? 0xff4fa0 : 0xef4444, x + Math.sin(a) * r * 0.4, y + Math.cos(a) * r * 0.4, -0.058, 0, 0, -a, 0.008, r * 0.85, 0.006); b.x.add(P.sphere, 0x111827, x, y, -0.058, 0, 0, 0, 0.008); });
+  b.m.add(P.rbox, 0x0b1220, 0, -0.02, -0.044, 0, 0, 0, 0.26, 0.19, 0.012); b.l.add(P.rbox, 0x0f766e, 0, -0.02, -0.052, 0, 0, 0, 0.23, 0.16, 0.006); b.l.add(P.rbox, 0x5eead4, 0, -0.02, -0.056, 0, 0, 0, 0.2, 0.006, 0.004); b.l.add(P.rbox, 0x5eead4, 0, -0.02, -0.056, 0, 0, 0, 0.006, 0.14, 0.004); b.l.add(P.rbox, 0xfde68a, 0.03, 0.0, -0.058, 0, 0, 0.6, 0.012, 0.012, 0.004);
+  [-0.06, 0, 0.06].forEach((x, i) => b.l.add(P.sphere, [0x22c55e, 0xfacc15, 0xef4444][i], x, -0.125, -0.045, 0, 0, 0, 0.012));
+  for (let i = 0; i < 5; i++) b.x.add(P.rbox, 0xcbd5e1, -0.44 + i * 0.03 + (i > 1 ? 0.0 : 0), -0.13, -0.05, -0.4, 0, 0, 0.012, 0.035, 0.012);
+  pn.add(meshFrom(b, false));
+  const s = MB(); s.x.add(P.cyl, 0x334155, ex, ey - 0.95, ez + 0.32, 0.25, 0, 0, 0.022, 0.62, 0.022); s.g.add(P.capsule, 0x111827, ex, ey - 0.62, ez + 0.4, 0.25, 0, 0, 0.07, 0.1, 0.07); s.g.add(P.sphere, 0xef4444, ex + 0.02, ey - 0.54, ez + 0.42, 0, 0, 0, 0.022);
+  grp.add(meshFrom(s, false)); return grp; }

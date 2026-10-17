@@ -142,7 +142,7 @@ export class Game {
     c.root.position.set(c.x, c.y + (c.mode === 'fly' && !wing ? Math.sin(c.t * 2.2) * 0.06 : 0), c.z); c.root.rotation.y = c.yaw; c.tilt.rotation.set(c.pitchV, 0, c.rollV);
     if (M) { for (const sp of M.spin) sp.o.rotation[sp.ax] += dt * (4 + c.spin * Math.abs(sp.k)) * Math.sign(sp.k); for (const d of M.discs) { d.material.opacity = c.spin * 0.16; d.visible = c.spin > 0.05; } }
     const inCk = S.view === 'cockpit' && this.mode === 'fly' && c.mode !== 'tow' && c.mode !== 'crash'; if (c.pilot) c.pilot.root.visible = !inCk;
-    if (c.M && c.M._ck !== inCk) { c.M._ck = inCk; c.M.root.traverse((o) => { if (o.userData.glass) o.visible = !inCk; }); } // glass canopies vanish from inside: a clear first-person view
+    if (c.M && c.M._ck !== inCk) { c.M._ck = inCk; c.M.root.traverse((o) => { if (o.userData.glass) o.visible = !inCk; if (o.userData.ckOnly) o.visible = inCk; }); } // glass canopies vanish from inside: a clear first-person view
     if (c.snowie && inView(c.x, c.y + 1, c.z, 4)) animPet(c.snowie, dt, null); }
   dropOff(r) { const p = this.rpets[r.id]; S.rescues.push(r.id); S.carry = null; persist(); this.rate(0.2); setTimeout(() => this.earn(60, 'rescue reward'), 200); this.cop.tilt.remove(p.root); p.seated = false; this.homePet(p); this.fx.confetti(this.cop.x, this.cop.y + 3, this.cop.z, 60); sfx('win');
     setTimeout(() => talk([[r.name, `Home! Thank you, pilot! Thank you, Snowie!`], ['Snowie', `Pet rescued: ${S.rescues.length}/${RESCUES.length}!`]], () => { if (S.rescues.length >= RESCUES.length && !S.badges.hero) { S.badges.hero = 1; persist(); toast('🏅 Badge: Pet Rescue Hero'); } }), 400); }

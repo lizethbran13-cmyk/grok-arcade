@@ -136,7 +136,10 @@ const CARE = {
       L.push(['Snowie', oos ? `Uh-oh, the ${PL.name} is out of service until it's fixed. We're parked right outside the 🔧 Repair Hangar. Brie and the Tortuga Tech crew can patch it up!` : c.hp < 60 ? `The ${PL.name} is at ${c.hp}% and a bit smoky. We can still fly, but a visit to the 🔧 Repair Hangar at the Heliport would be smart.` : `Only a few scuffs: ${c.hp}%. Onward!`]); }
     talk(L, () => { if (first) toast('🏅 Badge: Survival Badge (Bounce-Back Pilot)'); }); },
   // ---------------- per-frame extras: smoke, sparks, wobble, cockpit camera ----------------
-  careFx(dt) { const c = this.cop, M = c.M; if (!M) return; this._smT = (this._smT || 0) - dt;
+  careFx(dt) { const c = this.cop, M = c.M;
+    // welding sparks in the Repair Hangar's welding bay (only while you're inside)
+    if (this.mode === 'walk' && this.inB && this.inB.id === 'repair' && SPOTS.weld) { this._wdT = (this._wdT || 0) - dt; if (this._wdT <= 0) { this._wdT = 0.06 + Math.random() * 0.18; const [x, y, z] = SPOTS.weld; for (let i = 0; i < 7; i++) { const a = Math.random() * 6.28, v = 1.2 + Math.random() * 2.4; this.fx.emit(x, y + 0.05, z, Math.cos(a) * v, 0.6 + Math.random() * 2.2, Math.sin(a) * v, 0.022 + Math.random() * 0.022, Math.random() < 0.5 ? 0xffd23f : 0xfff3c4, 0.25 + Math.random() * 0.3, 9, 0.6); } } }
+    if (!M) return; this._smT = (this._smT || 0) - dt;
     if (c.hp < 60 && this._smT <= 0 && c.root.visible) { this._smT = c.hp < 30 ? 0.07 : 0.14; _v.set(...M.smoke); c.tilt.localToWorld(_v); this.fx.emit(_v.x, _v.y, _v.z, (Math.random() - 0.5) * 0.8, 1.6 + Math.random(), (Math.random() - 0.5) * 0.8, 0.22 + Math.random() * 0.2, c.hp < 30 ? 0x52525b : 0xa1a1aa, 1.3, -0.6, 1.2);
       if (c.hp < 25 && Math.random() < 0.25) this.fx.emit(_v.x, _v.y, _v.z, (Math.random() - 0.5) * 4, 3, (Math.random() - 0.5) * 4, 0.06, 0xffd23f, 0.4, 9, 1); }
     if (M.jet && c.mode === 'fly' && c.root.visible) { this._jT = (this._jT || 0) - dt; if (this._jT <= 0) { this._jT = 0.05; for (const j of M.jet) { _v.set(...j); c.tilt.localToWorld(_v); this.fx.emit(_v.x, _v.y, _v.z, -c.vx * 0.2, 0, -c.vz * 0.2, 0.12, 0xffa53d, 0.18, 0, 4); } } }
@@ -144,7 +147,7 @@ const CARE = {
   toggleView() { if (this.mode !== 'fly') return; S.view = S.view === 'cockpit' ? 'chase' : 'cockpit'; persist(); sfx('click'); toast(S.view === 'cockpit' ? '👁️ Cockpit view! Snowie waves hi.' : '🎥 Chase camera'); this.cam.snap = true; this.ck = { yaw: 0, pitch: 0 }; },
   cockpitCam(dt, IN) { const c = this.cop, M = c.M, cam = E.camera; const ck = this.ck || (this.ck = { yaw: 0, pitch: 0 }); if (IN.camDX || IN.camDY) { ck.yaw -= IN.camDX * 0.006; ck.pitch = clamp(ck.pitch - IN.camDY * 0.004, -0.9, 0.7); IN.camDX = IN.camDY = 0; }
     if (performance.now() - IN.lastCam > 1200) { ck.yaw *= Math.exp(-2 * dt); ck.pitch *= Math.exp(-2 * dt); } ck.yaw = clamp(ck.yaw, -2.2, 2.2);
-    c.root.updateMatrixWorld(true); _v.set(...M.seat.eye); c.tilt.localToWorld(_v); cam.position.copy(_v); c.tilt.getWorldQuaternion(_q); _e.set(ck.pitch - 0.08, PI + ck.yaw, 0, 'YXZ'); cam.quaternion.copy(_q).multiply(new THREE.Quaternion().setFromEuler(_e));
+    c.root.updateMatrixWorld(true); _v.set(...M.seat.eye); c.tilt.localToWorld(_v); cam.position.copy(_v); c.tilt.getWorldQuaternion(_q); _e.set(ck.pitch + (M.seat.pitch ?? -0.08), PI + ck.yaw, 0, 'YXZ'); cam.quaternion.copy(_q).multiply(new THREE.Quaternion().setFromEuler(_e));
     if (cam.near !== 0.08) { cam.near = 0.08; cam.updateProjectionMatrix(); } this.cam.yaw = c.yaw + PI; },
   chaseNear() { const cam = E.camera; if (cam.near !== 0.3) { cam.near = 0.3; cam.updateProjectionMatrix(); } },
 };
