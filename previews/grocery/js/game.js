@@ -1,27 +1,27 @@
 // Grok Grocery Tycoon - world, characters, store simulation hookup, jobs, interactions, first-person mode and smart rendering.
 import * as THREE from 'three';
-import { E, setEnvironment, followShadow } from './engine.js?v=ggt13';
-import { World } from './world.js?v=ggt13';
-import { buildMap, SPOTS, GEOM, ENV } from './map.js?v=ggt13';
-import { BUILDINGS, buildingAt } from './bld.js?v=ggt13';
-import { Walker } from './walker.js?v=ggt13';
-import { FollowCam } from './cam.js?v=ggt13';
-import { makePet, animPet } from './pets.js?v=ggt13';
-import { readMove, edge, IN } from './input.js?v=ggt13';
-import { updateFrustum, inView, LightPool } from './perf.js?v=ggt13';
-import { S, persist, capOf, news, newStore, staffName } from './save.js?v=ggt13';
-import { sfx } from './audio.js?v=ggt13';
-import { talk, talking, toast } from './uikit.js?v=ggt13';
-import { MATS } from './mats.js?v=ggt13';
-import { Builder, P } from './geo.js?v=ggt13';
-import { compact } from './compact.js?v=ggt13';
-import { Fixtures, FIXSOLID } from './fixtures.js?v=ggt13';
-import { Crowd } from './crowd.js?v=ggt13';
-import { Sim, EV, mine, shelfFrac, storeIds, OPEN, CLOSE, fmtClock } from './sim.js?v=ggt13';
-import { STORE, STORES, FIX, DEPTS, DEPT_IDS, RANKS, ROLES, CAMEOS, GOALS, EMPIRE, TYPES, typeOf, DEPT_ITEMS, autoLayout } from './data.js?v=ggt13';
-import { Decor } from './decor.js?v=ggt13';
-import { MG_NAMES } from './mg.js?v=ggt13';
-import { LINES, QUIZ, TASKS, dailyFor } from './story.js?v=ggt13';
+import { E, setEnvironment, followShadow } from './engine.js?v=ggt17';
+import { World } from './world.js?v=ggt17';
+import { buildMap, SPOTS, GEOM, ENV } from './map.js?v=ggt17';
+import { BUILDINGS, buildingAt } from './bld.js?v=ggt17';
+import { Walker } from './walker.js?v=ggt17';
+import { FollowCam } from './cam.js?v=ggt17';
+import { makePet, animPet } from './pets.js?v=ggt17';
+import { readMove, edge, IN } from './input.js?v=ggt17';
+import { updateFrustum, inView, LightPool } from './perf.js?v=ggt17';
+import { S, persist, capOf, news, newStore, staffName } from './save.js?v=ggt17';
+import { sfx } from './audio.js?v=ggt17';
+import { talk, talking, toast } from './uikit.js?v=ggt17';
+import { MATS } from './mats.js?v=ggt17';
+import { Builder, P } from './geo.js?v=ggt17';
+import { compact } from './compact.js?v=ggt17';
+import { Fixtures, FIXSOLID } from './fixtures.js?v=ggt17';
+import { Crowd } from './crowd.js?v=ggt17';
+import { Sim, EV, mine, shelfFrac, storeIds, OPEN, CLOSE, fmtClock } from './sim.js?v=ggt17';
+import { STORE, STORES, FIX, DEPTS, DEPT_IDS, RANKS, ROLES, CAMEOS, GOALS, EMPIRE, TYPES, typeOf, DEPT_ITEMS, autoLayout } from './data.js?v=ggt17';
+import { Decor } from './decor.js?v=ggt17';
+import { MG_NAMES } from './mg.js?v=ggt17';
+import { LINES, QUIZ, TASKS, dailyFor } from './story.js?v=ggt17';
 const PI = Math.PI;
 const _r = new THREE.Ray(), _v = new THREE.Vector3(), _b = new THREE.Box3(), _s = new THREE.Vector3(), _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _c = new THREE.Color();
 function meshFrom(parts) { const g = new THREE.Group(); for (const k in parts) { const b = parts[k]; if (!b.parts.length) continue; const m = new THREE.Mesh(compact(b.build(), k), MATS[k]); m.castShadow = k !== 'l' && k !== 'e'; m.receiveShadow = true; g.add(m); } return g; }
@@ -34,9 +34,9 @@ export class Game {
     buildMap(w); w.finalize(this.scene); this.upload = w.uploader; w.uploader = null;
     setEnvironment(ENV); this.lightPool = new LightPool(this.scene, w.lights, 4);
     // store fixtures + their colliders
-    this.fixtures = new Fixtures(); this.slotSol = {}; this.fxSig = {};
+    this.fixtures = new Fixtures(); this.fixtures.upload = this.upload; this.slotSol = {}; this.fxSig = {};
     for (const d of STORES) { const G = GEOM[d.id]; this.fixtures.attach(this.scene, d.id, G.slots); this.slotSol[d.id] = G.slots.map((sl) => { const o = {}; const mk = (k) => FIXSOLID[k].map(([a, b, c, e, h]) => w.solid(sl.x + a, 0, sl.z + b, sl.x + c, h, sl.z + e, { dyn: true, off: true }));
-      if (sl.kind === 'floor') o.floor = mk('floor'); else { o.register = mk('register'); o.selfck = mk('selfck'); } return o; }); }
+      if (sl.kind === 'floor') { o.floor = mk('floor'); o.promo = mk('promo'); } else { o.register = mk('register'); o.selfck = mk('selfck'); } return o; }); }
     this.dcSol = w.dyn.filter((s) => s.tag === 'dc'); this.decor = new Decor(this.scene, w, GEOM); this.decor.upload = this.upload;
     this.crowd = new Crowd(this.scene, 72); this.sim = new Sim();
     this.me = new Walker(S.look); this.me.addTo(this.scene); this.me.place([0, 0.1, 2], PI);
@@ -85,10 +85,17 @@ export class Game {
   buildCarry() { const b = MB(); b.m.add(P.rboxS, 0xc9a06a, 0, 0, 0, 0, 0, 0, 0.55, 0.4, 0.42); b.g.add(P.rboxS, 0x16a34a, 0, 0, 0.215, 0, 0, 0, 0.22, 0.15, 0.01); this.caseProto = meshFrom(b); this.caseM = this.caseProto.clone(); this.attachCarry(); }
   attachCarry() { this.me.rig.body.add(this.caseM); this.caseM.position.set(0, 1.05, 0.42); this.caseM.visible = !!this.carry; }
   // ---------------- store state -> visuals ----------------
-  variantOf(st) { return (f) => { const d = FIX[f].dept; const fr = shelfFrac(st, d); return fr > 0.55 ? 0 : fr > 0.12 ? 1 : 2; }; }
+  // per-shelf stock: st.ss[i] = items on the fixture in slot i. Department totals (st.shelf) stay the truth for the sim; this keeps a
+  // sticky per-fixture split so the shelf you stocked stays full until shoppers actually take items from it.
+  slotStock(st) { const L = st.layout; if (!st.ss || st.ss.length !== L.length) { const o = st.ss || []; st.ss = L.map((f, i) => o[i] || 0); }
+    for (let i = 0; i < L.length; i++) { const f = L[i]; if (!f || !FIX[f].dept) st.ss[i] = 0; else st.ss[i] = Math.max(0, Math.min(FIX[f].cap, st.ss[i] | 0)); }
+    for (const d of DEPT_IDS) { const idx = []; let sum = 0; L.forEach((f, i) => { if (f && FIX[f].dept === d) { idx.push(i); sum += st.ss[i]; } }); if (!idx.length) continue; let diff = Math.round(st.shelf[d] || 0) - sum, g = 0;
+      while (diff !== 0 && g++ < 4000) { let b = -1, bf = diff > 0 ? 9 : -1; for (const i of idx) { const c = FIX[L[i]].cap, fr = st.ss[i] / c; if (diff > 0 ? st.ss[i] < c && fr < bf : st.ss[i] > 0 && fr > bf) { bf = fr; b = i; } } if (b < 0) break; st.ss[b] += diff > 0 ? 1 : -1; diff += diff > 0 ? -1 : 1; } }
+    return st.ss; }
+  variantOf(st) { const ss = this.slotStock(st); return (f, i) => { if (i === undefined) { const fr = shelfFrac(st, FIX[f].dept); return fr >= 0.5 ? 0 : fr > 0 ? 1 : 2; } const n = ss[i] || 0, fr = n / FIX[f].cap; return fr >= 0.5 ? 0 : n > 0 ? 1 : 2; }; }
   refreshStores(force) { for (const d of STORES) { const st = S.stores[d.id]; const show = st && (st.owned || d.id === 's1' || d.rival); const layout = show ? st.layout : [];
-      const sig = layout.map((f) => f ? f + (FIX[f].dept ? this.variantOf(st)(f) : '') : '').join(','); if (force || sig !== this.fxSig[d.id]) { this.fxSig[d.id] = sig; this.fixtures.sync(d.id, layout, show ? this.variantOf(st) : () => 0);
-        this.slotSol[d.id].forEach((o, i) => { const f = layout[i] || ''; for (const k in o) o[k].forEach((s) => { s.off = !(k === 'floor' ? f && FIX[f].kind === 'floor' : f === k); }); }); } }
+      const stype = (st && st.type) || d.type || 'grocery', vo = show ? this.variantOf(st) : null, sig = stype + '|' + layout.map((f, i) => f ? f + (FIX[f].dept && vo ? vo(f, i) : '') : '').join(','); if (force || sig !== this.fxSig[d.id]) { this.fxSig[d.id] = sig; this.fixtures.sync(d.id, layout, vo || (() => 0), stype);
+        this.slotSol[d.id].forEach((o, i) => { const f = layout[i] || ''; for (const k in o) o[k].forEach((s) => { s.off = !(k === 'floor' ? f && FIX[f].kind === 'floor' : k === 'promo' ? !!show && !f : f === k); }); }); } }
     this.refreshDecor(); for (const s of this.dcSol) s.off = !S.dc; const RM = this.world.regionMeshes; const set = (k, v) => (RM[k] || []).forEach((m) => m.visible = v);
     for (const id of ['s2', 's3']) { const own = S.stores[id] && S.stores[id].owned; set('own_' + id, own); set('sale_' + id, !own); } set('own_dc', S.dc); set('sale_dc', !S.dc);
     this.snowie.x = S.dc ? SPOTS.dcBoard[0] + 3 : SPOTS.farmStand[0] + 3; this.snowie.z = S.dc ? SPOTS.dcBoard[1] - 3 : SPOTS.farmStand[1] + 1; this.snowie.region = S.dc ? 'in_dc' : 'in_farm';
@@ -96,16 +103,21 @@ export class Game {
   refreshDecor() { for (const d of STORES) { const st = S.stores[d.id]; if (d.rival && !(st && st.owned)) this.decor.set(d.id, d.type, d.brandName, true);
       else if (d.id === 's1' || (st && st.owned)) { const t = (st && st.type) || 'grocery'; this.decor.set(d.id, t, TYPES[t].brand, false); } else this.decor.drop(d.id); } this._decorVis = null; }
   storeTitle(sid) { const d = STORE[sid], st = S.stores[sid]; if (!d) return ''; if (d.rival && !(st && st.owned)) return d.name; if (sid === 's1' || (st && st.owned)) return 'Grok ' + typeOf(st).n + ' · ' + d.short; return d.short + ' (lot for sale)'; }
-  rebuildStaff() { for (const sid in this.cameoPets) for (const p of this.cameoPets[sid]) this.scene.remove(p.root); this.cameoPets = {};
+  // each pet exists exactly once: hired cameo pets are reused (never rebuilt on refresh), duplicates in old saves are dropped,
+  // and the pet's home NPC steps away while it works a store or visits as the VIP shopper
+  rebuildStaff() { const pool = {}; for (const sid in this.cameoPets) for (const p of this.cameoPets[sid]) pool[p.id] = p; this.cameoPets = {}; const seen = {};
+    for (const sid of storeIds()) { const st = S.stores[sid]; if (!st || !st.staff) continue; st.staff = st.staff.filter((s) => { if (!s.cameo) return true; if (seen[s.cameo] || (S.cameos[s.cameo] && S.cameos[s.cameo] !== sid)) return false; seen[s.cameo] = sid; return true; }); }
+    for (const id in S.cameos) if (S.cameos[id] && !seen[id]) delete S.cameos[id];
     for (const sid of storeIds()) { const st = S.stores[sid]; const old = this.staffAg[sid] || []; this.staffAg[sid] = st.staff.map((s, i) => { const prev = old[i]; const G = GEOM[sid]; const a = prev && prev.role === s.role && prev.name === s.name ? prev : { role: s.role, name: s.name, x: G.stock[0], z: G.back + 1.3, ry: 0, look: this.crowd.look(i * 131 + sid.length * 17 + s.name.length * 7, true), vis: true, path: [], wait: Math.random() * 3, sp: 0 }; a.cameo = s.cameo;
         if (sid === 'rival') a.look.shirt = 0xfde047; else if (sid === 'rival2') a.look.shirt = 0xc7d2fe; else if (STORE[sid].boss || STORE[sid].strip) a.look.shirt = STORE[sid].trim;
-        if (s.cameo) { const p = makePet(s.cameo, { s: s.cameo === 'torty' ? 0.9 : 1.2 }); p.x = a.x; p.z = a.z; p.y = 0.06; this.add(p.root); (this.cameoPets[sid] || (this.cameoPets[sid] = [])).push(p); a.pet = p; } return a; }); } }
+        if (s.cameo) { let p = pool[s.cameo]; if (p) delete pool[s.cameo]; else { p = makePet(s.cameo, { s: s.cameo === 'torty' ? 0.9 : 1.2 }); p.x = a.x; p.z = a.z; p.y = 0.06; p.root.position.set(a.x, 0.06, a.z); this.add(p.root); } (this.cameoPets[sid] || (this.cameoPets[sid] = [])).push(p); a.pet = p; } return a; }); } for (const id in pool) this.scene.remove(pool[id].root); }
+  petAway(id) { return !!S.cameos[id] || !!(this.vipPet && this.vipPet.id === id); }
   // ---------------- per-frame helpers ----------------
   storeVisible(sid) { const RM = this.world.regionMeshes['in_' + sid]; return !!(RM && RM[0] && RM[0].visible); }
   setVis(force) { const me = this.me; const b = buildingAt(me.x, me.z); if (b !== this.inB || force) { this.inB = b; this.app.hud.region(b ? (STORE[b.id] ? typeOf(S.stores[b.id]).e + ' ' + this.storeTitle(b.id) : b.name) : '🌳 Shopsville'); }
     const RM = this.world.regionMeshes; for (const B of BUILDINGS) { const inIt = B === b; (RM['roof_' + B.id] || []).forEach((m) => m.visible = !inIt || this.fp);
       const d = Math.max(0, B.x0 - me.x, me.x - B.x1, B.z0 - me.z, me.z - B.z1); const show = inIt || (d < 26 && !this.fp) || (this.fp && d < 6); (RM['in_' + B.id] || []).forEach((m) => m.visible = show); if (STORE[B.id]) { this.fixtures.show(B.id, show); this.decor.vis(B.id, !(inIt && !this.fp), show); } if (B.id === 'dc') (RM.ownin_dc || []).forEach((m) => m.visible = show && S.dc); }
-    for (const p of this.npcs) p.root.visible = !p.region || p.region === 'out' || (RM[p.region] && RM[p.region][0] ? RM[p.region][0].visible : true);
+    for (const p of this.npcs) { p._rv = !p.region || p.region === 'out' || (RM[p.region] && RM[p.region][0] ? RM[p.region][0].visible : true); p.root.visible = p._rv && !this.petAway(p.id); }
     for (const sid in this.cameoPets) for (const p of this.cameoPets[sid]) p.root.visible = this.storeVisible(sid); }
   fades() { const b = this.inB, c = E.camera.position, me = this.me; _v.set(me.x, me.y + 1.2, me.z).sub(c); const L = _v.length(); _r.set(c, _v.normalize());
     for (const B of BUILDINGS) for (const f of B.fades) { let hide = false; if (B === b && !this.fp) { _b.copy(f.box).expandByScalar(0.05); const p = _r.intersectBox(_b, _s); hide = !!p && c.distanceTo(p) < L - 0.3; } if (f._h !== hide) { f._h = hide; f.meshes.forEach((m) => m.visible = !hide); } } }
@@ -119,7 +131,7 @@ export class Game {
   checkPromo() { const nx = RANKS[S.rank + 1]; if (S.mode !== 'career' || !nx || S.rank >= 4 && true && S.rank + 1 === 5) return; if (S.xp >= nx.xp) { S.rank++; persist(); sfx('win'); this.app.ui.banner(`${nx.e} PROMOTED: ${nx.n.toUpperCase()}!`, nx.can); news(`${S.name || 'Our clerk'} promoted to ${nx.n}!`); } }
   mg(id, opt, done) { this.app.paused = true; this.app.busy = true; this.app.ui.minigame(id, (sc) => { this.app.resume(); done && done(sc); }, opt); }
   grabCase(sid) { const st = S.stores[sid]; let best = null, bf = 9; for (const k of DEPT_IDS) { const c = capOf(st, k); if (!c || st.back[k] <= 0) continue; const f = st.shelf[k] / c; if (f < bf) { bf = f; best = k; } } if (!best) { toast('📭 No backstock! ' + (S.mode === 'boss' || S.rank >= 2 ? 'Order more at the Manager\'s Desk.' : 'Penny has ordered more.')); return; } if (bf > 0.95) { toast('👍 Every shelf is already full!'); return; } this.carry = { sid, dept: best }; this.caseM.visible = true; sfx('pop'); toast(`📦 Got a case of ${DEPTS[best].n}. Find a ${DEPTS[best].n} shelf!`); }
-  stockShelf(sid, dept) { const st = S.stores[sid]; this.mg('stock', { dept }, (sc) => { const n = Math.min(st.back[dept], capOf(st, dept) - st.shelf[dept], Math.round(6 + sc * 18)); st.back[dept] -= n; st.shelf[dept] += n; this.carry = null; this.caseM.visible = false; this.reward('stock', sc, ` · +${n} on the shelf`); this.refreshStores(); }); }
+  stockShelf(sid, dept, slot) { const st = S.stores[sid]; this.mg('stock', { dept }, (sc) => { const ss = this.slotStock(st); const f = st.layout[slot]; const room = f && FIX[f].dept === dept ? FIX[f].cap - ss[slot] : 0; const n = Math.max(0, Math.min(st.back[dept], capOf(st, dept) - st.shelf[dept], Math.max(Math.round(6 + sc * 18), room))); st.back[dept] -= n; st.shelf[dept] += n; if (room > 0) ss[slot] += Math.min(n, room); this.carry = null; this.caseM.visible = false; this.reward('stock', sc, ` · +${n} on the shelf`); this.refreshStores(); }); }
   help(a) { const st = S.stores[a.sid] || S.stores.s1; const have = [...new Set(st.layout.filter((f) => f && FIX[f].dept).map((f) => FIX[f].dept))]; const pool = have.length >= 2 ? have : DEPT_IDS; const ans = pool[(a.seed >> 3) % pool.length], items = DEPT_ITEMS[ans], item = items[(a.seed >> 5) % items.length];
     const opts = [ans]; let g = 0; while (opts.length < 3 && g++ < 50) { const src = have.length >= 3 ? have : DEPT_IDS; const d = src[(Math.random() * src.length) | 0]; if (!opts.includes(d)) opts.push(d); } opts.sort(() => Math.random() - 0.5); const q = [`Excuse me! Where would I find ${item}?`, ans];
     talk([['Shopper', q[0]]], null, opts.map((d) => ({ t: DEPTS[d].e + ' ' + DEPTS[d].n, f: () => { a.help = false; a.wait = 0; if (d === q[1]) { sfx('ding'); talk([['Shopper', 'Oh, perfect! Thank you so much!']]); this.reward('help', 1); a.mood = 1.2; } else { sfx('squeak'); talk([['Shopper', 'Hmm, I don\'t think it\'s there... I\'ll keep looking.']]); this.reward('help', 0.2); } } }))); }
@@ -129,7 +141,7 @@ export class Game {
   buySelfck() { if (S.unlock.selfck) return; if (!this.bossOnly() || !this.spend(EMPIRE.selfck)) return; S.unlock.selfck = true; persist(); this.app.ui.banner('🤖 ROBO-CHECKOUT UNLOCKED', 'Build Ratita self-checkouts in any checkout slot from the Manager\'s Desk.'); }
   buyCold() { if (S.unlock.cold) return; if (!this.bossOnly() || !this.spend(EMPIRE.cold)) return; S.unlock.cold = true; for (const sid of storeIds()) if (mine(sid)) S.stores[sid].rep += 2; persist(); this.app.ui.banner('❄️ COLD CHAIN INSTALLED', 'Freezers survive power blips. Torty can now join your team.'); }
   hireCameo(id) { if (!this.bossOnly()) return; const c = CAMEOS[id]; const sid = this.curStore() && mine(this.curStore()) ? this.curStore() : 's1'; S.cameos[id] = sid; S.stores[sid].staff.push({ role: c.role, name: c.n, skill: 5, cameo: id }); persist(); sfx('win'); this.app.ui.banner(`${c.e} ${c.n.toUpperCase()} JOINS THE TEAM!`, c.perk); this.refreshStores(); }
-  buyStore(id, type) { if (!this.bossOnly()) return; const d = STORE[id]; if (S.stores[id] && S.stores[id].owned) return; if (!type) { this.app.ui.pickType((t) => this.buyStore(id, t), { big: GEOM[id].W >= 44, title: `🏷️ ${d.short}: what kind of store?`, price: d.price }); return; } if (!this.spend(d.price)) return; { const st = S.stores[id] = newStore(id, type === 'grocery' ? 'starter' : 0.6, type); st.owned = true; st.staff = [{ role: 'cashier', name: staffName(2), skill: 2 }, { role: 'stocker', name: staffName(3), skill: 2 }]; news(`Grok opens a new ${TYPES[type].n.toLowerCase()} on ${d.short}!`); persist(); this.sim.seedCarts(); this.refreshStores(); this.app.ui.banner(`${TYPES[type].e} NEW ${TYPES[type].n.toUpperCase()}: ${d.short.toUpperCase()}`, 'Walk in to see it. Customize it from any Manager\'s Desk.'); } }
+  buyStore(id, type) { if (!this.bossOnly()) return; const d = STORE[id]; if (S.stores[id] && S.stores[id].owned) return; if (!type) { this.app.ui.pickType((t) => this.buyStore(id, t), { big: GEOM[id].W >= 44, title: `🏷️ ${d.short}: what kind of store?`, price: d.price }); return; } if (!this.spend(d.price)) return; { const st = S.stores[id] = newStore(id, type === 'grocery' ? 'starter' : 0.8, type, 3); st.owned = true; st.staff = [{ role: 'cashier', name: staffName(2), skill: 2 }, { role: 'stocker', name: staffName(3), skill: 2 }]; news(`Grok opens a new ${TYPES[type].n.toLowerCase()} on ${d.short}!`); persist(); this.sim.seedCarts(); this.refreshStores(); this.app.ui.banner(`${TYPES[type].e} NEW ${TYPES[type].n.toUpperCase()}: ${d.short.toUpperCase()}`, 'Walk in to see it. Customize it from any Manager\'s Desk.'); } }
   // remodel one of your stores into another type (new floor plan, new decor, new staff tasks)
   remodel(sid, type) { const st = S.stores[sid], G = GEOM[sid]; if (!st || st.type === type) return; if (TYPES[type].big && G.W < 44) { toast('🏬 A supercenter needs a big lot (Main St or MegaMart)'); return; } const cost = S.mode === 'boss' ? 1500 : 0; if (cost && !this.spend(cost)) return;
     const nReg = st.layout.filter((f) => f === 'register').length || 2; st.type = type; st.layout = autoLayout(type, G, 0.75, nReg);
@@ -142,13 +154,13 @@ export class Game {
     if (Object.keys(G).length > before) { const g = GOALS.filter(([k]) => G[k]).pop(); sfx('win'); toast('🏆 Empire goal: ' + (g ? g[1] : '')); if (G.tycoon && !S.badges.tycoon) { S.badges.tycoon = 1; this.app.ui.banner('👑 RETAIL TYCOON!', 'Five stores, a DC and your own brand. Shopsville bows to your carts.'); } persist(); } }
   // ---------------- interactions ----------------
   gather() { const me = this.me, out = [], sid = this.curStore(), st = sid && S.stores[sid], G = sid && GEOM[sid]; const push = (x, z, r, label, f) => { const d = Math.hypot(me.x - x, me.z - z); if (d < r) out.push({ d, label, f }); };
-    for (const p of this.npcs) if (p.talk && p.root.visible) push(p.x, p.z, 2.3, p.label, p.talk);
+    for (const p of this.npcs) if (p.talk && p.root.visible) push(p.x, p.z, 2.3, p.label, p.talk); else if (p.talk && p._rv && p.id !== 'pirat' && this.petAway(p.id)) push(p.x, p.z, 2.3, p.label.replace('Talk to', 'Leave a note for').replace('Pet ', 'Leave a note for ') + ' (away)', p.talk);
     for (const a of this.people) { if (a.opt.ok && !a.opt.ok()) continue; if (a.region !== 'out' && !(this.world.regionMeshes[a.region] || [{ visible: true }])[0].visible) continue; push(a.x, a.z, 2.2, a.label, a.talk); }
     if (sid && STORE[sid].rival && !mine(sid)) { st.layout.forEach((f, i) => { if (!f || !FIX[f].dept) return; const sl = G.slots[i]; push(sl.x + (me.x > sl.x ? 1.6 : -1.6), me.z > sl.z - 2.5 && me.z < sl.z + 2.5 ? me.z : sl.z, 1.4, `🏷️ Check ${DEPTS[FIX[f].dept].n} prices`, () => this.spyDept(sid, FIX[f].dept)); }); push(G.doorX + 4.5, G.front - 1.5, 2.2, '📰 Read their deals flyer', () => this.app.ui.spy(sid)); }
     if (sid && this.canWork(sid)) {
       if (!this.carry) push(G.stock[0], G.stock[1] + 0.8, 2.2, '📦 Grab a case', () => this.grabCase(sid));
       st.layout.forEach((f, i) => { if (!f) return; const sl = G.slots[i], fx = FIX[f];
-        if (fx.dept) { const dz = Math.max(0, Math.abs(me.z - sl.z) - 2.6), dx = Math.max(0, Math.abs(me.x - sl.x) - 1.0), d = Math.hypot(dx, dz); if (d < 1.2) { if (this.carry && this.carry.dept === fx.dept && this.carry.sid === sid) out.push({ d, label: `📦 Stock ${DEPTS[fx.dept].n}`, f: () => this.stockShelf(sid, fx.dept) });
+        if (fx.dept) { const dz = Math.max(0, Math.abs(me.z - sl.z) - 2.6), dx = Math.max(0, Math.abs(me.x - sl.x) - 1.0), d = Math.hypot(dx, dz); if (d < 1.2) { if (this.carry && this.carry.dept === fx.dept && this.carry.sid === sid) out.push({ d, label: `📦 Stock ${DEPTS[fx.dept].n}`, f: () => this.stockShelf(sid, fx.dept, i) });
           else if (!this.carry) { const mgk = typeOf(st).sp[f]; const sp = mgk && [mgk, MG_NAMES[mgk][0] + ' ' + MG_NAMES[mgk][1]]; if (sp && (S.mode === 'boss' || S.rank >= 2) && !(this.cool[sid + i] > this.T)) out.push({ d: d + 0.3, label: sp[1], f: () => this.mg(sp[0], {}, (sc) => { this.cool[sid + i] = this.T + 90; st.rep = Math.min(100, st.rep + sc * 2); this.reward('special', sc, ` · ${DEPTS[fx.dept].n} looks amazing`); }) }); } } }
         else if (f === 'register') { const staffed = this.sim.staffed(sid)[i]; const x = sl.x - 1.3, z = sl.z; const mineLane = this.sim.playerReg && this.sim.playerReg.sid === sid && this.sim.playerReg.i === i;
           if (mineLane) { const head = this.sim.ag[sid].find((a) => a.lane === i && a.atYou); if (head) push(x, z, 2.4, '🧾 Scan their order', () => this.mg('scan', { items: head.items }, (sc) => { this.sim.pay(sid, st, G, head, Math.round(sc * 4)); this.reward('scan', sc); })); else push(x, z, 2.4, '🚪 Close my lane', () => { this.sim.playerReg = null; toast('Lane closed. Back to the floor!'); }); }
@@ -207,7 +219,7 @@ export class Game {
     this.actT = (this.actT || 0) - dt; if (this.actT <= 0) { this.actT = 0.15; this.act = busy ? null : this.gather(); app.hud.setAct(this.act); }
     if (this.act && !busy && edge('act')) { sfx('click'); const a = this.act; this.act = null; app.hud.setAct(null); a.f(); }
     this.lightPool.update(dt, me.x, me.y, me.z); followShadow(me.x, me.y, me.z); app.hud.update(this); }
-  toggleFP() { this.fp = !this.fp; this.me.setVisible(!this.fp); if (!this.fp) { this.cam.snap = true; E.camera.fov = E.baseFov; E.camera.updateProjectionMatrix(); } else this.fpPitch = -0.08; toast(this.fp ? '👁️ First-person view: drag to look, stick to walk' : '🎥 Third-person view'); this.setVis(true); }
+  toggleFP() { this.fp = !this.fp; this.fixtures.setFP(this.fp); this.me.setVisible(!this.fp); if (!this.fp) { this.cam.snap = true; E.camera.fov = E.baseFov; E.camera.updateProjectionMatrix(); } else this.fpPitch = -0.08; toast(this.fp ? '👁️ First-person view: drag to look, stick to walk' : '🎥 Third-person view'); this.setVis(true); }
   events() { while (EV.length) { const e = EV.shift(); if (e.t === 'toast') { if (!e.quiet || (e.sid && this.curStore() === e.sid)) toast(e.m); } else if (e.t === 'banner') this.app.ui.banner(e.m, e.s || ''); else if (e.t === 'cash') { if (this.storeVisible(e.sid)) this.cashFx.push({ x: e.x, z: e.z, t: 1.2 }); } } }
   stepStaff(dt) { for (const sid in this.staffAg) { if (!this.storeVisible(sid)) continue; const G = GEOM[sid], st = S.stores[sid], staffed = this.sim.staffed(sid); const regs = Object.keys(staffed).filter((i) => staffed[i] === 'staff').map(Number); let ri = 0;
       const lanesB = this.sim.lanes(sid).filter((l) => l.f === 'register');
@@ -233,7 +245,7 @@ export class Game {
     for (const a of list) if (a.vis && !inView(a.x, 1, a.z, 1.4)) a.vis = false;
     this.crowd.draw(list, loose, this.T);
     // VIP pet shoppers
-    for (const sid of storeIds()) for (const a of this.sim.ag[sid]) if (a.pet) { if (!this.vipPet || this.vipPet.id !== a.pet) { if (this.vipPet) this.scene.remove(this.vipPet.root); this.vipPet = makePet(a.pet, { s: a.pet === 'torty' ? 0.8 : 1.15 }); this.add(this.vipPet.root); } const p = this.vipPet; p.x = a.x; p.z = a.z; p.y = 0.06; p.yaw = a.ry; p.speed = a.sp; p.noTurn = true; p.root.visible = this.storeVisible(sid); if (p.root.visible) animPet(p, dt, null); p._a = a; }
+    let vipA = null; for (const sid of storeIds()) for (const a of this.sim.ag[sid]) if (a.pet) { if (vipA || (S.cameos[a.pet])) { a.pet = null; continue; } vipA = a; if (!this.vipPet || this.vipPet.id !== a.pet) { if (this.vipPet) this.scene.remove(this.vipPet.root); this.vipPet = makePet(a.pet, { s: a.pet === 'torty' ? 0.8 : 1.15 }); this.add(this.vipPet.root); } const p = this.vipPet; p.x = a.x; p.z = a.z; p.y = 0.06; p.yaw = a.ry; p.speed = a.sp; p.noTurn = true; p.root.visible = this.storeVisible(sid); if (p.root.visible) animPet(p, dt, null); p._a = a; }
     if (this.vipPet && this.vipPet._a && this.vipPet._a.gone) { this.scene.remove(this.vipPet.root); this.vipPet = null; S.vip = null; }
     // trucks
     const T = this.sim.trucks; while (this.truckM.length < Math.min(T.length, 10)) { const m = this.truckProto.clone(); this.add(m); this.truckM.push(m); }
@@ -256,7 +268,7 @@ export class Game {
     else if (S.day >= 3 && r < 0.22) { S.war = { day: S.day }; S.event = { k: 'war' }; this.app.ui.banner('🏷️ PRICE WAR!', 'Bargain Bonanza slashed prices today. Match them (90% or less) or run an ad!'); }
     else if (r < 0.36) { S.event = { k: 'freeze' }; } else if (r < 0.48) { S.event = { k: 'jam' }; }
     else if (r < 0.62) { const k = DEPT_IDS[(Math.random() * 7) | 0]; const st = S.stores.s1; st.back[k] += 18; this.app.ui.banner('🐁 SNOWIE AIR-DROP!', `Snowie Sky Express dropped 18 free cases of ${DEPTS[k].n} at Main St.`); }
-    else if (r < 0.8) { const id = ['luna', 'torty', 'pirat', 'snowie', 'candy'][(Math.random() * 5) | 0]; S.vip = { sid: 's1', id }; toast(`⭐ VIP shopper today: ${({ luna: 'Luna', torty: 'Torty', pirat: 'Pi-rat', snowie: 'Snowie', candy: 'Candy' })[id]} is coming to Main St!`); }
+    else if (r < 0.8) { const free = ['luna', 'torty', 'pirat', 'snowie', 'candy'].filter((k) => !S.cameos[k]), id = free[(Math.random() * free.length) | 0]; if (id) S.vip = { sid: 's1', id }; if (id) toast(`⭐ VIP shopper today: ${({ luna: 'Luna', torty: 'Torty', pirat: 'Pi-rat', snowie: 'Snowie', candy: 'Candy' })[id]} is coming to Main St!`); }
     if (S.day >= S.insp.next) { const M = storeIds().filter(mine); S.insp = { next: S.day + 3 + ((Math.random() * 2) | 0), day: S.day, sid: M[(Math.random() * M.length) | 0] || 's1', done: 0 }; toast('📋 Rumor: a health inspector visits ' + STORE[S.insp.sid].short + ' this morning!'); }
     if (S.mode === 'career') S.daily = { day: S.day, t: dailyFor(S.rank, S.day, !typeOf(S.stores.s1).carts) };
     this.sim.seedCarts(); persist(); this.refreshStores(true); }

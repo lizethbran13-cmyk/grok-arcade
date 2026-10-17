@@ -110,8 +110,8 @@ export function storeGeom(d) {
 }
 export const LAYOUTS = {
   career: { floor: ['produce', 'produce', 'bakery', 'deli', 'meat', 'dairy', 'dairy', 'frozen', 'frozen', 'aisle', 'aisle', 'aisle', 'aisle', 'aisle', 'aisle', 'aisle', 'aisle', 'aisle'], check: ['register', 'register', 'register', 'register', 'selfck', 'selfck'] },
-  boss: { floor: ['produce', 'bakery', '', 'dairy', 'frozen', 'aisle', 'aisle', 'aisle', '', '', 'aisle', '', 'aisle', '', '', '', '', ''], check: ['register', 'register'] },
-  starter: { floor: ['produce', 'dairy', 'frozen', 'aisle', '', 'aisle', 'aisle', '', '', '', '', '', '', ''], check: ['register', 'register'] },
+  boss: { floor: ['produce', 'bakery', 'deli', 'dairy', 'frozen', 'aisle', 'aisle', 'aisle', '', 'produce', 'aisle', 'aisle', 'aisle', '', 'dairy', 'aisle', '', 'aisle'], check: ['register', 'register', 'register', 'register'] },
+  starter: { floor: ['produce', 'dairy', 'frozen', 'aisle', 'bakery', 'aisle', 'aisle', '', 'aisle', 'produce', '', 'aisle', 'aisle', ''], check: ['register', 'register', 'register'] },
   rival2: { floor: ['produce', 'aisle', 'deli', 'aisle', 'frozen', 'dairy', 'aisle', 'bakery', 'aisle', 'aisle'], check: ['selfck', 'register', 'selfck', 'register'] },
   rival: { floor: ['aisle', 'aisle', 'produce', 'frozen', 'aisle', 'dairy', 'aisle', 'aisle', 'aisle', 'meat', 'aisle', 'aisle', 'frozen', 'aisle', 'aisle', 'bakery'], check: ['register', 'register', 'register', 'selfck', 'register', 'register'] },
 };

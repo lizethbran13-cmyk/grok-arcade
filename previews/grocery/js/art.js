@@ -1,7 +1,7 @@
 // Grok Grocery Tycoon - small art helpers shared by the store, town and supplier builders.
-import * as K from './kit.js?v=ggt13';
-import { rbox } from './world.js?v=ggt13';
-import { textGeo } from './text3d.js?v=ggt13';
+import * as K from './kit.js?v=ggt17';
+import { rbox } from './world.js?v=ggt17';
+import { textGeo } from './text3d.js?v=ggt17';
 export const { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, wedge } = K;
 export const PI = Math.PI, R = K.R, pick = K.pick;
 export const BRIGHT = [0xef4444, 0xf97316, 0xfacc15, 0x22c55e, 0x3b82f6, 0xa855f7, 0xec4899, 0x14b8a6];

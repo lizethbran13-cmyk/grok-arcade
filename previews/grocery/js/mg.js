@@ -1,8 +1,8 @@
 // Grok Grocery Tycoon - store job mini-games (overlay canvases with a fixed 480x400 aspect, never stretched).
 // Bag It Right, Beep! Scanner, Stock Sprint, Mop Mania, Produce Pyramid, Deli Slicer, Cupcake Frosting, Truck Tetris.
-import { S, persist } from './save.js?v=ggt13';
-import { sfx } from './audio.js?v=ggt13';
-import { panel, loop, rr, ptr } from './uikit.js?v=ggt13';
+import { S, persist } from './save.js?v=ggt17';
+import { sfx } from './audio.js?v=ggt17';
+import { panel, loop, rr, ptr } from './uikit.js?v=ggt17';
 const $q = (c, s) => c.querySelector(s);
 const W = 480, H = 400;
 export const MG_NAMES = { bag: ['🛍️', 'Bag It Right', 12], scan: ['🧾', 'Beep! Scanner', 10], stock: ['📦', 'Stock Sprint', 20], mop: ['🧽', 'Mop Mania', 10], pyramid: ['🍎', 'Produce Pyramid', 8], slice: ['🔪', 'Deli Slicer', 6], frost: ['🧁', 'Cupcake Frosting', 10], load: ['🚚', 'Truck Tetris', 24], fit: ['👟', 'Perfect Fit', 10], wrap: ['🎁', 'Gift Wrap Rush', 10], tech: ['🔌', 'Plug It In', 10], rx: ['💊', 'Pill Sorter', 10], feed: ['🐠', 'Feeding Time', 10], fold: ['👕', 'Fold + Size', 10], stage: ['🛋️', 'Room Stager', 10], coffee: ['☕', 'Hot or Cold?', 10] };

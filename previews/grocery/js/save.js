@@ -1,5 +1,5 @@
 // localStorage save for Grok Grocery Tycoon (its own key; never touches other games or the arcade)
-import { STORES, LAYOUTS, storeGeom, FIX, DEPT_IDS, FIRST, LAST, TYPES, autoLayout } from './data.js?v=ggt13';
+import { STORES, LAYOUTS, storeGeom, FIX, DEPT_IDS, FIRST, LAST, TYPES, autoLayout } from './data.js?v=ggt17';
 const KEY = 'grokGroceryTycoon.v1';
 // layoutKey: a hand-made grocery layout (LAYOUTS) or a fill share for the type's auto layout
 export function newStore(id, layoutKey, type, nReg = 2) { const d = STORES.find((s) => s.id === id), G = storeGeom(d); type = type || d.type || 'grocery'; let layout;
@@ -20,7 +20,7 @@ export function persist() { try { localStorage.setItem(KEY, JSON.stringify(S)); 
 export function resetSave() { const d = DEF(); for (const k in S) delete S[k]; Object.assign(S, d); persist(); return S; }
 // start a new game in career (A) or boss (B) mode, keeping your name + look
 export function newGame(mode, type = 'grocery') { const keep = { name: S.name, look: S.look, made: S.made, opts: S.opts, seenHow: S.seenHow }; resetSave(); Object.assign(S, keep); S.mode = mode;
-  S.stores.s1 = type === 'grocery' ? newStore('s1', mode === 'career' ? 'career' : 'boss') : newStore('s1', mode === 'career' ? 1 : 0.5, type, mode === 'career' ? 6 : 2); S.stores.s1.type = type;
+  S.stores.s1 = type === 'grocery' ? newStore('s1', mode === 'career' ? 'career' : 'boss') : newStore('s1', mode === 'career' ? 1 : 0.8, type, mode === 'career' ? 6 : 4); S.stores.s1.type = type;
   if (mode === 'career' && type !== 'grocery') { const L = S.stores.s1.layout, G = storeGeom(STORES[0]); let n = 0; G.slots.forEach((sl, i) => { if (sl.kind === 'check' && L[i] === 'register' && ++n > 4) L[i] = 'selfck'; }); fillStock(S.stores.s1, 0.85, 0.6); }
   S.stores.rival = newStore('rival', 'rival'); S.stores.rival.rep = 60; S.stores.rival2 = newStore('rival2', 'rival2'); S.stores.rival2.rep = 52; for (const k in S.stores.rival2.price) S.stores.rival2.price[k] = 1.2; for (const k in S.stores.rival.price) S.stores.rival.price[k] = 0.9;
   for (const d of STORES) if (d.strip) { const st = S.stores[d.id] = newStore(d.id, 1, d.type, d.id === 'mega' ? 6 : 2); st.rep = 45 + ((d.x0 * 7) & 15); const pr = d.id === 'mega' ? 0.92 : 1.05 + ((d.x0 & 3) * 0.05); for (const k in st.price) st.price[k] = pr;

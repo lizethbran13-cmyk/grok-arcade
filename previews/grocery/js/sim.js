@@ -1,8 +1,8 @@
 // Grok Grocery Tycoon - the live store simulation: shoppers walk the real aisles, buy from real shelves, queue at real
 // checkout lanes; staff stock, scan and mop; trucks deliver; the clock runs the day. Pure data: game.js draws it.
-import { S, persist, capOf, news } from './save.js?v=ggt13';
-import { FIX, DEPTS, DEPT_IDS, STORE, ROLES, CAMEOS, typeOf } from './data.js?v=ggt13';
-import { GEOM, ROADS } from './map.js?v=ggt13';
+import { S, persist, capOf, news } from './save.js?v=ggt17';
+import { FIX, DEPTS, DEPT_IDS, STORE, ROLES, CAMEOS, typeOf } from './data.js?v=ggt17';
+import { GEOM, ROADS } from './map.js?v=ggt17';
 export const OPEN = 7 * 60, CLOSE = 22 * 60, MPS = 2; // game minutes per real second
 export const EV = []; // UI events: {t:'toast'|'banner', m}
 let NID = 1;
@@ -49,13 +49,13 @@ export class Sim {
     if (rival) { for (const k of DEPT_IDS) { const c = capOf(st, k); if (st.shelf[k] < c * 0.5) st.shelf[k] += 1; } }
     else if (mine(sid) && this.has(sid, 'greeter')) st.rep = Math.min(100, st.rep + dt * 0.002);
     st.clean = Math.max(0, st.clean - dt * 0.02 * (1 + this.spills[sid].length * 0.5)); }
-  interval(sid, st, shops) { const depts = new Set(shops.map((i) => FIX[st.layout[i]].dept)).size; let k = (0.45 + st.rep / 90) * (0.55 + Math.min(depts, 7) * 0.11) * this.rushK() * typeOf(st).traffic;
+  interval(sid, st, shops) { const depts = new Set(shops.map((i) => FIX[st.layout[i]].dept)).size; let k = (0.45 + st.rep / 90) * (0.55 + Math.min(depts, 7) * 0.11) * this.rushK() * Math.max(0.6, typeOf(st).traffic);
     const avgP = DEPT_IDS.reduce((a, d) => a + st.price[d], 0) / DEPT_IDS.length; k *= clamp(1.5 - avgP * 0.5, 0.6, 1.15);
     if (!STORE[sid].rival && S.war && S.war.day === S.day && avgP > 0.92 && !(st.ad > 0)) k *= 0.65; if (st.ad > 0) k *= 1.25; if (st.clean < 50) k *= 0.85;
     return clamp(7.5 / k, 1.6, 14) * (0.7 + Math.random() * 0.6); }
   spawn(sid, st, G, shops) { const n = 2 + ((Math.random() * 3) | 0), want = []; for (let i = 0; i < n; i++) want.push(shops[(Math.random() * shops.length) | 0]);
     const a = { id: NID++, sid, seed: (Math.random() * 1e6) | 0, x: G.doorX + (Math.random() - 0.5) * 2, z: G.front + 1.5, ry: Math.PI, sp: 0, st: 'walk', path: [[G.doorX + (Math.random() - 0.5) * 2.4, G.front - 2.5], [G.doorX + (Math.random() - 0.5) * 3, G.cross[G.cross.length - 1]]], want, basket: 0, items: 0, mood: 1, pat: 0, wait: 0, cart: !!typeOf(st).carts && Math.random() < 0.7, vis: true, help: mine(sid) && Math.random() < 0.18 };
-    if (S.vip && S.vip.sid === sid && !S.vip.spawned && Math.random() < 0.5) { a.pet = S.vip.id; S.vip.spawned = true; a.cart = false; }
+    if (S.vip && S.vip.sid === sid && !S.vip.spawned && !S.cameos[S.vip.id] && Math.random() < 0.5) { a.pet = S.vip.id; S.vip.spawned = true; a.cart = false; }
     this.ag[sid].push(a); return a; }
   route(G, a, tx, tz) { const lanes = G.lanes, cr = G.cross; const nearest = (arr, v) => arr.reduce((b, x) => Math.abs(x - v) < Math.abs(b - v) ? x : b, arr[0]);
     const zc = nearest(cr, a.z), lx = nearest(lanes, tx); return [[a.x, zc], [lx, zc], [lx, tz], [tx, tz]]; }
@@ -74,11 +74,11 @@ export class Sim {
   leave(sid, st, G, a, why) { a.st = 'out'; a.lane = null; const sg = a.x < G.doorX ? -1 : 1, lc = G.cross[G.cross.length - 1];
     if (a.z < G.zCheck - 0.6) a.path = [[a.x, lc], [G.doorX + sg * 1.5, lc], [G.doorX + sg * 1.2, G.front - 2.2], [G.doorX + sg * 0.8, G.front + 2.5]];
     else a.path = [[a.x, G.front - 3.2], [G.doorX + sg * 1.0, G.front - 2.2], [G.doorX + sg * 0.8, G.front + 2.5]];
-    if (why && mine(sid)) { st.rep = Math.max(0, st.rep - (why === 'angry' ? 1.0 : 0.5)); st.angry++; if (why === 'angry') EV.push({ t: 'toast', m: '😤 A shopper gave up waiting at ' + (STORE[sid].short), sid }); else if (why === 'oos') EV.push({ t: 'toast', m: '📭 A shopper left: shelves empty at ' + STORE[sid].short, sid }); } }
+    if (why && mine(sid)) { st.rep = Math.max(0, st.rep - (why === 'angry' ? 1.0 : 0.5)); st.angry++; if (why === 'angry') EV.push({ t: 'toast', m: '😤 A shopper gave up waiting at ' + (STORE[sid].short), sid }); else if (why === 'oos') EV.push({ t: 'toast', m: '📭 A shopper left: ' + (typeof a.oos === 'string' && DEPTS[a.oos] ? DEPTS[a.oos].n + ' shelves' : 'shelves') + ' empty at ' + STORE[sid].short + ' · grab a case from the back!', sid }); } }
   move(a, dt, sp) { const p = a.path[0]; if (!p) return true; const dx = p[0] - a.x, dz = p[1] - a.z, d = Math.hypot(dx, dz); if (d < 0.1) { a.path.shift(); return !a.path.length; } const s = Math.min(d, sp * dt); a.x += dx / d * s; a.z += dz / d * s; let dy = Math.atan2(dx, dz) - a.ry; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); a.ry += dy * Math.min(1, dt * 10); a.sp = sp; a.wt = (a.wt || 0) + dt * sp * 4.2; return false; }
-  stepAgent(sid, st, G, a, dt) { a.sp = 0;
+  stepAgent(sid, st, G, a, dt) { a.sp = 0; if (a.pick > 0) a.pick -= dt;
     if (a.st === 'walk') { if (this.move(a, dt, a.pet ? 1.3 : 1.5)) { if (a.after === 'browse') { a.st = 'browse'; a.wait = 1.6 + Math.random() * 1.4; a.ry = a.face; } else this.next(sid, st, G, a); } }
-    else if (a.st === 'browse') { a.wait -= dt; if (a.wait <= 0) { const f = st.layout[a.target], dept = f && FIX[f].dept; if (dept) { if (st.shelf[dept] > 0) { if (Math.random() < buyChance(st.price[dept])) { st.shelf[dept]--; const v = DEPTS[dept].val * st.price[dept] * (dept === 'brand' ? 1.15 : 1); a.basket += v; a.items++; } else a.mood -= 0.15; } else { a.mood -= 0.3; a.oos = true; } } if (!a.help) this.next(sid, st, G, a); else { a.wait = 0.5; } } }
+    else if (a.st === 'browse') { a.wait -= dt; if (a.wait <= 0) { const f = st.layout[a.target], dept = f && FIX[f].dept; if (dept && st.ss && !(st.ss[a.target] > 0) && st.shelf[dept] > 0 && (a.redir || 0) < 2) { const j = st.layout.findIndex((g, k) => g && FIX[g].dept === dept && st.ss[k] > 0); if (j >= 0) { a.redir = (a.redir || 0) + 1; a.want.unshift(j); this.next(sid, st, G, a); return; } } if (dept) { if (st.shelf[dept] > 0) { if (Math.random() < buyChance(st.price[dept])) { st.shelf[dept]--; if (st.ss && st.ss[a.target] > 0) st.ss[a.target]--; a.pick = 0.8; const v = DEPTS[dept].val * st.price[dept] * (dept === 'brand' ? 1.15 : 1); a.basket += v; a.items++; } else a.mood -= 0.15; } else { a.mood -= 0.3; a.oos = dept; } } if (!a.help) this.next(sid, st, G, a); else { a.wait = 0.5; } } }
     else if (a.st === 'wait') { a.wait -= dt; a.pat += dt; if (a.pat > 40) this.leave(sid, st, G, a, 'angry'); else if (a.wait <= 0) this.toQueue(sid, st, G, a); }
     else if (a.st === 'toq') { if (this.move(a, dt, 1.5)) { a.st = 'q'; } }
     else if (a.st === 'q') { const sl = G.slots[a.lane]; if (!sl || !st.layout[a.lane]) { this.toQueue(sid, st, G, a); return; } const Q = this.ag[sid].filter((o) => o.lane === a.lane && o.st === 'q').sort((p, q) => p.qid - q.qid); if (!a.qid) a.qid = NID++;

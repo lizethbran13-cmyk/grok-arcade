@@ -1,17 +1,18 @@
 // Grok Grocery Tycoon - boot, app state, main loop.
 import * as THREE from 'three';
-import { E, initEngine, render, trackFps } from './engine.js?v=ggt13';
-import { initMats } from './mats.js?v=ggt13';
-import { initInput, clearEdges, edge, IN } from './input.js?v=ggt13';
-import { initAudio, setSound, sfx } from './audio.js?v=ggt13';
-import { S, persist, newGame } from './save.js?v=ggt13';
-import { HUD } from './hud.js?v=ggt13';
-import { UI } from './ui.js?v=ggt13';
-import { closePanel } from './uikit.js?v=ggt13';
-import { Game } from './game.js?v=ggt13';
-import { $ } from './util.js?v=ggt13';
-import { GEOM } from './map.js?v=ggt13';
-import { loadFont } from './text3d.js?v=ggt13';
+import { E, initEngine, render, trackFps } from './engine.js?v=ggt17';
+import { initMats } from './mats.js?v=ggt17';
+import { initInput, clearEdges, edge, IN } from './input.js?v=ggt17';
+import { initAudio, setSound, sfx } from './audio.js?v=ggt17';
+import { S, persist, newGame } from './save.js?v=ggt17';
+import { HUD } from './hud.js?v=ggt17';
+import { UI } from './ui.js?v=ggt17';
+import { closePanel } from './uikit.js?v=ggt17';
+import { Game } from './game.js?v=ggt17';
+import { $ } from './util.js?v=ggt17';
+import { GEOM } from './map.js?v=ggt17';
+import { BUILDINGS } from './bld.js?v=ggt17';
+import { loadFont } from './text3d.js?v=ggt17';
 const app = window.__pt = { state: 'boot', paused: true, game: null, ready: false, busy: false };
 function setLoad(p, t) { const b = $('loadBar'); if (b) b.style.width = p + '%'; if (t) $('loadTxt').textContent = t; }
 async function boot() {
@@ -51,7 +52,7 @@ function frame(now) {
 }
 app.sim = (sec) => { const g = app.game; const n = Math.round(sec * 60); for (let i = 0; i < n; i++) g.update(1 / 60); };
 app.tp = (sid, dz = 5, dx = 0) => { const G = GEOM[sid], g = app.game; g.me.place([G.doorX + dx, 0.1, G.front - dz], Math.PI); g.cam.yaw = 0; g.cam.snap = true; g.setVis(true); app.sim(0.3); return [sid, G.doorX, G.front]; };
-app.geom = GEOM;
+app.geom = GEOM; app.B = BUILDINGS;
 app.start = (mode, type) => { newGame(mode, type || 'grocery'); app.play(false); };
 window.__E = E; app.S = S; app.E = E;
 boot().catch((e) => { console.error(e); $('loadTxt').textContent = 'Oops: ' + e.message; });

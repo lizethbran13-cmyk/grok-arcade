@@ -2,10 +2,10 @@
 // (torso, head, face, two hair styles, legs, arms, staff apron, shopping cart, carried case), so 60 smooth cartoon people
 // cost about a dozen draw calls. Shirt / skin / hair / pants colours come from per-instance tints.
 import * as THREE from 'three';
-import { Builder, P } from './geo.js?v=ggt13';
-import { lathe, torus, rcyl } from './shapes.js?v=ggt13';
-import { compact } from './compact.js?v=ggt13';
-import { MATS } from './mats.js?v=ggt13';
+import { Builder, P } from './geo.js?v=ggt17';
+import { lathe, torus, rcyl } from './shapes.js?v=ggt17';
+import { compact } from './compact.js?v=ggt17';
+import { MATS } from './mats.js?v=ggt17';
 const PI = Math.PI;
 const SK = [0xffe0c7, 0xf5c9a4, 0xe0a87c, 0xc68658, 0x9a6440, 0x6b4128], HC = [0x2b1d14, 0x6b4226, 0xc98b4b, 0xf2d27a, 0xe0603a, 0xd8d8e0, 0x1f1f2a],
   SH = [0xff5a5f, 0x3fa7ff, 0x4ade80, 0xffc93c, 0xa78bfa, 0xff8f3d, 0x22d3ee, 0xf472b6, 0x94a3b8, 0xffffff, 0x10b981, 0xfb7185], PA = [0x334155, 0x1e3a8a, 0x6b4f2a, 0x3f3f46, 0x7c2d12, 0x0f766e];
@@ -42,7 +42,7 @@ export class Crowd {
       put(M.torso, n, P0, L.shirt); put(M.head, n, P0, L.skin); put(M.face, n, P0); m.copy(P0); if (L.staff || a.cap) { put(M.cap, n, P0); m.makeScale(0, 0, 0); put(M.hairA, n, m, L.hair); put(M.hairB, n, m, L.hair); } else { m.makeScale(0, 0, 0); put(M.cap, n, m); put(L.hs ? M.hairA : M.hairB, n, m, L.hair); put(L.hs ? M.hairB : M.hairA, n, P0, L.hair); }
       if (L.staff) put(M.apron, n, P0); else { m.makeScale(0, 0, 0); put(M.apron, n, m); }
       for (let k = 0; k < 2; k++) { const sd = k ? 1 : -1; e.set(sd * sw, 0, 0); q.setFromEuler(e); m.compose(v.set(sd * 0.12, 0.84, 0), q, s.set(1, 1, 1)); m.premultiply(P0); put(M.legL, n * 2 + k, m, L.pants);
-        const ar = a.cart ? -1.1 : a.carry ? -1.3 : -sd * sw * 0.8; e.set(ar, 0, sd * 0.12); q.setFromEuler(e); m.compose(v.set(sd * 0.27, 1.32, 0), q, s.set(1, 1, 1)); m.premultiply(P0); put(M.arm, n * 2 + k, m, L.skin); }
+        const ar = a.pick > 0 && sd > 0 ? -2.5 + Math.abs(a.pick - 0.4) * 2 : a.cart ? -1.1 : a.carry ? -1.3 : -sd * sw * 0.8; e.set(ar, 0, sd * 0.12); q.setFromEuler(e); m.compose(v.set(sd * 0.27, 1.32, 0), q, s.set(1, 1, 1)); m.premultiply(P0); put(M.arm, n * 2 + k, m, L.skin); }
       if (a.carry) { m.compose(v.set(0, 1.0, 0.42), this._q.identity(), s.set(1, 1, 1)); m.premultiply(P0); put(M.case, n, m); } else { m.makeScale(0, 0, 0); put(M.case, n, m); }
       if (a.cart && nc < M.cart.instanceMatrix.count) { e.set(0, a.ry, 0); q.setFromEuler(e); m.compose(v.set(a.x + Math.sin(a.ry) * 0.95 * sc, 0, a.z + Math.cos(a.ry) * 0.95 * sc), q, s.set(sc, sc, sc)); put(M.cart, nc++, m); }
       n++; }

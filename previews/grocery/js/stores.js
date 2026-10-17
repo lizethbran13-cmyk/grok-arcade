@@ -1,10 +1,10 @@
 // Grok Grocery Tycoon - the walk-in supermarket buildings (your stores + Bargain Bonanza). The sales floor fixtures are
 // instanced separately (fixtures.js); this builds the shell, back rooms, checkout front, walls, facade, parking and truck dock.
-import * as K from './kit.js?v=ggt13';
-import { rbox } from './world.js?v=ggt13';
-import { shell, part, onSide } from './bld.js?v=ggt13';
-import { storeGeom } from './data.js?v=ggt13';
-import { PI, R, pick, BRIGHT, rcyl, lathe, sph, cyl, cone, torus, capsule, star, blobGeo, txt, poster, wallWord, clockW, pendant, rack, pallet, cartStatic, planter, awning, trash, bags, produceCrate, grokLogo } from './art.js?v=ggt13';
+import * as K from './kit.js?v=ggt17';
+import { rbox } from './world.js?v=ggt17';
+import { shell, part, onSide } from './bld.js?v=ggt17';
+import { storeGeom } from './data.js?v=ggt17';
+import { PI, R, pick, BRIGHT, rcyl, lathe, sph, cyl, cone, torus, capsule, star, blobGeo, txt, poster, wallWord, clockW, pendant, rack, pallet, cartStatic, planter, awning, trash, bags, produceCrate, grokLogo } from './art.js?v=ggt17';
 export const BOT = lathe([[0, 0], [0.5, 0], [0.5, 0.55], [0.2, 0.75], [0.18, 1], [0, 1]], 9, 'sbot');
 export function wallShelf(w, axis, at, from, to, side, cols) { const L = to - from, c = (from + to) / 2; // shelving run against a wall (x-axis = along x at z=at)
   const T = axis === 'x' ? w.tf(c, 0, at, side > 0 ? 0 : PI) : w.tf(at, 0, c, side > 0 ? PI / 2 : -PI / 2);
@@ -58,7 +58,7 @@ export function storeBuilding(w, d, own) {
   const B = G.back, mz = (z0 + B) / 2;
   // stockroom: racks, pallets, case cart, baler, pallet jack
   { rack(w, x0 + 4.5, z0 + 1.3, 0, 5); if (big) rack(w, sx1 - 5, z0 + 1.3, 0, 5); rack(w, x0 + 1.3, mz + (big ? 1.2 : 1.4), PI / 2, big ? 4 : 3);
-    if (big) { pallet(w, x0 + 10, mz + 1.5, 0.1, 6); pallet(w, x0 + 12.4, mz + 2.2, -0.2, 4); } if (W > 40) pallet(w, sx1 - 4, mz + 2, 0.3, 5);
+    if (big) { pallet(w, x0 + 10, mz + 1.5, 0.1, 6); pallet(w, x0 + 12.4, mz + 2.2, -0.2, 4); } if (W > 40) pallet(w, sx1 - 4, mz + 2, 0.3, 5); pallet(w, sx1 - 1.4, z0 + 3.4, 0, 6); for (let i = 0; i < 3; i++) K.parcel(w, x0 + 1.1, i * 0.5, B - 1.0, 0.8); txt(w, 'RECEIVING', x0 + W * 0.18, 3.2, z0 + 0.32, 0, 0.26, 0x111827);
     { const X = G.stock[0], Z = G.stock[1]; const T = w.tf(X, 0, Z, 0); T.box('x', 0x94a3b8, 0, 0, 0, 1.6, 0.12, 1.0, 0.02); [-0.75, 0.75].forEach((a) => T.box('x', 0x94a3b8, a, 0, 0, 0.05, 1.6, 0.95, 0.01)); for (let i = 0; i < 6; i++) T.box('m', pick([0xc9a06a, 0xd8b98b]), -0.4 + (i % 2) * 0.8, 0.14 + Math.floor(i / 2) * 0.45, 0, 0.7, 0.42, 0.8, 0.03); T.solid(-0.8, 0, -0.5, 0.8, 1.6, 0.5, { cam: false });
       txt(w, 'GRAB A CASE', X, 1.95, Z + 0.4, 0, 0.16, 0x16a34a); }
     { const X = sx1 - 2.2, Z = B - 2; w.slab('x', 0x64748b, X, 0, Z, 1.4, 2.2, 1.2, 0.08); w.add('g', rbox(1.2, 0.5, 0.05, 0.03), 0xfacc15, X, 1.6, Z + 0.62); txt(w, 'BALER', X, 1.55, Z + 0.66, 0, 0.14, 0x111827); }
