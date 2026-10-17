@@ -48,7 +48,7 @@
     (iss || []).forEach(function (it) {
       if (it.pull_request) return; var stg = PV.stageOf(it), j = byIssue[it.number], tg = gameFromTitle(it.title);
       if (!stg) { if (j) j._hide = true; return; }
-      var o = j || { issue: it.number, game: tg.gid, name: tg.name, auto: true }; o.stage = j && j.stage === 'shipped' ? 'shipped' : stg; o.live = true; o.url = it.html_url; o.upd = Date.parse(it.updated_at) || 0; o.closed = Date.parse(it.closed_at) || (j && Date.parse(j.shippedAt)) || 0; o.title = it.title; // preview.json 'shipped' wins: an issue left open after release must not bounce back to BUILDING NOW
+      var o = j || { issue: it.number, game: tg.gid, name: tg.name, auto: true }; o.stage = j && j.stage === 'shipped' ? 'shipped' : stg; o.live = true; o.url = it.html_url; o.upd = Date.parse(it.updated_at) || 0; o.closed = (j && Date.parse(j.shippedAt)) || Date.parse(it.closed_at) || 0; o.title = it.title; // preview.json wins: an issue left open after release must not bounce back to BUILDING NOW, and one closed late must not jump to the top of JUST SHIPPED (shippedAt is the real release time)
       o.kind = labs(it).indexOf('dlc') >= 0 ? 'dlc' : 'build';
       if (!j) { o.gname = tg.gname; items.push(o); }
     });
