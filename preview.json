@@ -1,7 +1,16 @@
 {
-  "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-17",
+  "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
+  "updated": "2026-10-16",
   "items": [
+    {
+      "game": "skytours",
+      "name": "Crash & Repair Patch",
+      "size": "Patch",
+      "what": "Grok Snowie Sky Tours patch: crashes now have real consequences, you repair your aircraft, new plane styles to choose from, and a tidier world.",
+      "stage": "building",
+      "when": "Started Oct 16",
+      "key": "skytours_patch"
+    },
     {
       "game": "grocery",
       "name": "Grok Grocery Tycoon (live)",
@@ -39,6 +48,26 @@
       "shippedAt": "2026-10-16T21:30:00Z"
     },
     {
+      "issue": 44,
+      "game": "northpole",
+      "name": "Merry Events Expansion (live)",
+      "size": "Expansion",
+      "what": "Grok North Pole Village: the North Pole Event Center with live events on the real santaupdate.com calendar: the Annual Reindeer Games, the Halloween Party, the Thanksgiving Day Elf Parade and the Christmas Day Party. 75 tickets in the DLC Machine.",
+      "stage": "shipped",
+      "when": "Oct 12",
+      "shippedAt": "2026-10-12T23:16:13Z"
+    },
+    {
+      "issue": 43,
+      "game": "northpole",
+      "name": "Merry Tracking Expansion (live)",
+      "size": "Expansion",
+      "what": "Grok North Pole Village: the Sleigh Port opens next to Flight Command HQ. Fly to all 5 walk-in Regional Tracking Centers, meet the Elf Supervisors and help set up. Fully online on Dec 24-25 with live Santa tracking. 75 tickets in the DLC Machine.",
+      "stage": "shipped",
+      "when": "Oct 12",
+      "shippedAt": "2026-10-12T23:16:10Z"
+    },
+    {
       "game": "pumpkinhollow",
       "name": "Grok Pumpkin Hollow (live)",
       "what": "Grok Pumpkin Hollow: a moonlit Halloween town with the Ghost Train, the Scream-o-Vision Picture House, the Bat Caves and Boo Row (10 spooky walk-in shops, each with an activity). Solve Who swiped the Moon Lantern? Co-op for 3. Play it in Hubs & Worlds!",
@@ -55,6 +84,26 @@
       "shippedAt": "2026-10-12T21:00:00Z"
     },
     {
+      "issue": 41,
+      "game": "fc",
+      "name": "Fiesta Kits (live)",
+      "size": "Mini Pack",
+      "what": "Grok FC: 4 festive teams with real 3D sombreros, party hats and flower crowns, the rainbow Piñata Ball and 3D fireworks + confetti on fiesta goals.",
+      "stage": "shipped",
+      "when": "Oct 12",
+      "shippedAt": "2026-10-12T16:30:00Z"
+    },
+    {
+      "issue": 42,
+      "game": "arcade",
+      "name": "Cabinet animation fix (live)",
+      "size": "Fix",
+      "what": "Grok Arcade: the 6 Bonus Zone cabinets with blank screens (Ghost Lantern '83, Crumb Patrol, Bone Dig, Sparkle Car Wash, Patty Panic, Shell Drop) now have their own animated attract screens.",
+      "stage": "shipped",
+      "when": "Oct 12",
+      "shippedAt": "2026-10-12T16:13:25Z"
+    },
+    {
       "game": "torty",
       "name": "Grok Torty Town (live)",
       "what": "Grok Torty Town: Torty's hometown, a sunny desert oasis where everything moves at turtle pace. 25+ walk-in buildings, Tortuga Tech Inc., the Sunstone mystery, 6 mini-games, co-op for 3. Play it in Hubs & Worlds!",
@@ -63,22 +112,14 @@
       "shippedAt": "2026-10-12T05:50:00Z"
     },
     {
-      "game": "rides",
-      "name": "Grok Rides Remastered (live)",
-      "size": "Remake",
-      "what": "Grok Rides rebuilt on the Tempest engine: a bigger map with a beach town and mountain road, lived-in walk-in interiors, smarter traffic, rain and puddles, 31 rides incl. helicopter, seaplane, hovercraft, ice cream truck, fire truck, tow truck, hot air balloon and the Ratita hover-car, plus bonus #35 Sparkle Car Wash and 3 prizes. Its Time Jumper beta lives on in the Save Vault.",
+      "issue": 39,
+      "game": "sports",
+      "name": "Ratita Stadium Night (live)",
+      "size": "Expansion",
+      "what": "Grok Sports Command: the night-lights Ratita Stadium with Ice Hockey, Glow Mini-Golf, Cheese Curling, the Ratita Mascot Race and the Ratita Cup tournament (4 cheese cups to win).",
       "stage": "shipped",
       "when": "Oct 11",
-      "shippedAt": "2026-10-11T20:55:00Z"
-    },
-    {
-      "game": "eatsville",
-      "name": "Grok Eatsville Tycoon (live)",
-      "size": "New Game",
-      "what": "A cartoon 3D restaurant tycoon in Eatsville: work up from Mega Munch trainee or open your own diner, cook and serve, run deliveries, decorate your house, beat Mega Munch and Pizza Palooza, keep it spotless for Inspector Grumbleton and fix the Ratita gadgets. Explore mode, Golden Spatulas, co-op for 3.",
-      "stage": "shipped",
-      "when": "Oct 11",
-      "shippedAt": "2026-10-11T22:05:00Z"
+      "shippedAt": "2026-10-12T00:10:00Z"
     },
     {
       "game": "relics",
@@ -88,22 +129,6 @@
       "stage": "shipped",
       "when": "Oct 11",
       "shippedAt": "2026-10-11T23:55:00Z"
-    },
-    {
-      "game": "puptown",
-      "name": "Grok Pup Town (live)",
-      "what": "Grok Pup Town: Candy's hometown, a cozy 3D dog town hub in HUBS & WORLDS, with bonus #34 Bone Dig and 3 Pup Town prizes. Its Time Jumper beta lives on in the Save Vault.",
-      "stage": "shipped",
-      "when": "Oct 11",
-      "shippedAt": "2026-10-11T09:10:00Z"
-    },
-    {
-      "game": "arcade",
-      "name": "Ratita Preview Center (live)",
-      "what": "Lili's Preview Center behind the Food Court: posters, this board, the Time Jumper and bonus game #32 Chrono Courier.",
-      "stage": "shipped",
-      "when": "Oct 11",
-      "shippedAt": "2026-10-11T06:20:00Z"
     },
     {
       "issue": 38,
@@ -126,34 +151,22 @@
       "shippedAt": "2026-10-11T22:45:00Z"
     },
     {
-      "issue": 39,
-      "game": "sports",
-      "name": "Ratita Stadium Night (live)",
-      "size": "Expansion",
-      "what": "Grok Sports Command: the night-lights Ratita Stadium with Ice Hockey, Glow Mini-Golf, Cheese Curling, the Ratita Mascot Race and the Ratita Cup tournament (4 cheese cups to win).",
+      "game": "eatsville",
+      "name": "Grok Eatsville Tycoon (live)",
+      "size": "New Game",
+      "what": "A cartoon 3D restaurant tycoon in Eatsville: work up from Mega Munch trainee or open your own diner, cook and serve, run deliveries, decorate your house, beat Mega Munch and Pizza Palooza, keep it spotless for Inspector Grumbleton and fix the Ratita gadgets. Explore mode, Golden Spatulas, co-op for 3.",
       "stage": "shipped",
       "when": "Oct 11",
-      "shippedAt": "2026-10-12T00:10:00Z"
+      "shippedAt": "2026-10-11T22:05:00Z"
     },
     {
-      "issue": 41,
-      "game": "fc",
-      "name": "Fiesta Kits (live)",
-      "size": "Mini Pack",
-      "what": "Grok FC: 4 festive teams with real 3D sombreros, party hats and flower crowns, the rainbow Pi\u00f1ata Ball and 3D fireworks + confetti on fiesta goals.",
-      "stage": "shipped",
-      "when": "Oct 12",
-      "shippedAt": "2026-10-12T16:30:00Z"
-    },
-    {
-      "issue": 27,
-      "game": "life",
-      "name": "Good Life Pack (live)",
-      "size": "Mini Pack",
-      "what": "Grok Life Mini Pack: the Ratita Industries Gadget Shop with 8 working gadgets (Fix-It Hammer, RatPhone 5 drone delivery, Tablet remote work, Hover-Board, Bubble Shield and more) plus 5 Ratita outfits.",
+      "game": "rides",
+      "name": "Grok Rides Remastered (live)",
+      "size": "Remake",
+      "what": "Grok Rides rebuilt on the Tempest engine: a bigger map with a beach town and mountain road, lived-in walk-in interiors, smarter traffic, rain and puddles, 31 rides incl. helicopter, seaplane, hovercraft, ice cream truck, fire truck, tow truck, hot air balloon and the Ratita hover-car, plus bonus #35 Sparkle Car Wash and 3 prizes. Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Oct 11",
-      "shippedAt": "2026-10-11T16:40:00Z"
+      "shippedAt": "2026-10-11T20:55:00Z"
     },
     {
       "issue": 28,
@@ -166,14 +179,34 @@
       "shippedAt": "2026-10-11T17:55:00Z"
     },
     {
+      "issue": 31,
+      "game": "party",
+      "name": "Fiesta Fits (live)",
+      "size": "Mini Pack",
+      "what": "Grok Land Party Mini Pack: 6 new skins (Ratita Mascot, Party-Hat Gus, Disco Astronaut and more), 6 hats, 6 trails, 4 dance emotes, a confetti cannon and a bouncy party horn.",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T17:45:00Z"
+    },
+    {
       "issue": 29,
       "game": "ratita",
       "name": "Pi-rat the Pirate Pack (live)",
       "size": "MEGA",
-      "what": "Grok Ratita Rescue MEGA: sail the Salty Cheddar with Captain Eye Patch and Grumbles to 5 islands (puzzles, hazards, 5 bosses, treasure) plus the Dresser Shop. 175 tickets in the DLC Shop. Its Time Jumper beta lives on in the Save Vault.",
+      "what": "Grok Ratita Rescue MEGA: sail the Salty Cheddar with Captain Eye Patch and Grumbles to 5 islands (puzzles, hazards, 5 bosses, treasure) plus the Dresser Shop. 175 tickets in the DLC Machine. Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Oct 11",
       "shippedAt": "2026-10-11T17:20:00Z"
+    },
+    {
+      "issue": 27,
+      "game": "life",
+      "name": "Good Life Pack (live)",
+      "size": "Mini Pack",
+      "what": "Grok Life Mini Pack: the Ratita Industries Gadget Shop with 8 working gadgets (Fix-It Hammer, RatPhone 5 drone delivery, Tablet remote work, Hover-Board, Bubble Shield and more) plus 5 Ratita outfits.",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T16:40:00Z"
     },
     {
       "issue": 30,
@@ -186,14 +219,20 @@
       "shippedAt": "2026-10-11T16:30:00Z"
     },
     {
-      "issue": 31,
-      "game": "party",
-      "name": "Fiesta Fits (live)",
-      "size": "Mini Pack",
-      "what": "Grok Land Party Mini Pack: 6 new skins (Ratita Mascot, Party-Hat Gus, Disco Astronaut and more), 6 hats, 6 trails, 4 dance emotes, a confetti cannon and a bouncy party horn.",
+      "game": "puptown",
+      "name": "Grok Pup Town (live)",
+      "what": "Grok Pup Town: Candy's hometown, a cozy 3D dog town hub in HUBS & WORLDS, with bonus #34 Bone Dig and 3 Pup Town prizes. Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Oct 11",
-      "shippedAt": "2026-10-11T17:45:00Z"
+      "shippedAt": "2026-10-11T09:10:00Z"
+    },
+    {
+      "game": "arcade",
+      "name": "Ratita Preview Center (live)",
+      "what": "Lili's Preview Center behind the Food Court: posters, this board, the Time Jumper and bonus game #32 Chrono Courier.",
+      "stage": "shipped",
+      "when": "Oct 11",
+      "shippedAt": "2026-10-11T06:20:00Z"
     },
     {
       "game": "ratitahq",
@@ -206,43 +245,78 @@
     {
       "issue": 32,
       "game": "arcade",
-      "name": "Records Annex",
+      "name": "Records Annex (live)",
       "what": "The Hall of Game Records doubled: Uncle Barnaby, the Exhibit of the Week, a reading nook, a photo booth and seats.",
       "stage": "shipped",
-      "when": "Oct 10"
-    },
-    {
-      "issue": 26,
-      "game": "disaster",
-      "name": "Super Thunder Expansion",
-      "stage": "shipped",
-      "when": "Oct 10"
+      "when": "Oct 10",
+      "shippedAt": "2026-10-11T03:17:21Z"
     },
     {
       "issue": 24,
       "game": "pickle",
-      "name": "Pickle Smash Expansion",
+      "name": "Pickle Smash Expansion (live)",
       "stage": "shipped",
-      "when": "Oct 10"
+      "when": "Oct 10",
+      "shippedAt": "2026-10-11T02:43:40Z",
+      "what": "Grok Pickleball: Smash Mode with 6 Smasher supers, 3 new venues (Lava Island, Moon Base, Candy Stadium) and 3 new paddles.",
+      "size": "Expansion"
     },
     {
       "issue": 23,
       "game": "spooks",
-      "name": "Ratita Industries Super Pack",
+      "name": "Ratita Industries Super Pack (live)",
       "stage": "shipped",
-      "when": "Oct 10"
+      "when": "Oct 10",
+      "shippedAt": "2026-10-11T02:42:31Z",
+      "what": "Grok Spooks: Spook 'Em mode in Willowmere Mansion as Wisp the ghost, plus 2 new Ratita Industries lab floors with 2 new bosses.",
+      "size": "Mini Pack"
+    },
+    {
+      "issue": 26,
+      "game": "disaster",
+      "name": "Super Thunder Expansion (live)",
+      "stage": "shipped",
+      "when": "Oct 10",
+      "shippedAt": "2026-10-11T02:13:15Z",
+      "what": "Grok Disaster Zone MEGA: 3 new disasters (Acid Storm, Dragon Attack, Dino Destruction), 3 new maps and the new Weather Hunter mode.",
+      "size": "MEGA"
     },
     {
       "issue": 25,
       "game": "sports",
-      "name": "Stuck camera fix",
+      "name": "Stuck camera fix (live)",
       "stage": "shipped",
-      "when": "Oct 10"
+      "when": "Oct 10",
+      "shippedAt": "2026-10-11T01:27:01Z",
+      "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
   "previews": [],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "grocery",
+      "game": "grocery",
+      "name": "Grok Grocery Tycoon",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grocery-beta/",
+      "built": "2026-10-16",
+      "archived": "2026-10-16",
+      "notes": "The last Time Jumper build of Grok Grocery Tycoon before release: every store type with its own endcaps and feature displays, specialty corners and fuller supplier buildings.",
+      "playable": true
+    },
+    {
+      "id": "ph-spookster",
+      "game": "pumpkinhollow",
+      "issue": 45,
+      "name": "Spookster Mega Pack",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/ph-spookster-beta/",
+      "built": "2026-10-16",
+      "archived": "2026-10-16",
+      "notes": "The last Time Jumper build of the Spookster Mega Pack before release: the fenced Sludge Site + THE GLOOMWORKS underground facility (7 walk-in rooms, mad scientists, spooky tests, green sludge), the Who-built-it-and-why mystery, Gloopy, 8 Glow Vials, 6 new skins and Spooky Mode 2.0 (BOO / HAUNT / VANISH / FLICKER + Night Shift). Unlocked in the Time Jumper; add ?locked=1 to see the locked teaser",
+      "playable": true
+    },
     {
       "id": "skytours",
       "game": "skytours",
@@ -266,6 +340,30 @@
       "playable": true
     },
     {
+      "id": "np-merry-events",
+      "game": "northpole",
+      "issue": 44,
+      "name": "Merry Events Expansion",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/np-merry-events-beta/",
+      "built": "2026-10-12",
+      "archived": "2026-10-12",
+      "notes": "North Pole Event Center on the real calendar. Test dates: ?npdate=2026-10-14 (Reindeer Games live), 2026-10-31 (Halloween Party), 2026-11-26 (Elf Parade), 2026-12-25 (Christmas Day Party).",
+      "playable": true
+    },
+    {
+      "id": "np-merry-tracking",
+      "game": "northpole",
+      "issue": 43,
+      "name": "Merry Tracking Expansion",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/np-merry-tracking-beta/",
+      "built": "2026-10-12",
+      "archived": "2026-10-12",
+      "notes": "North Pole Sleigh Port + all 5 walk-in Regional Tracking Centers (preparing until Dec 24; add ?npdate=2026-12-24 to see them fully online).",
+      "playable": true
+    },
+    {
       "id": "pumpkinhollow",
       "game": "pumpkinhollow",
       "name": "Grok Pumpkin Hollow",
@@ -274,6 +372,28 @@
       "built": "2026-10-12",
       "archived": "2026-10-12",
       "notes": "The last Time Jumper build of Grok Pumpkin Hollow before release.",
+      "playable": true
+    },
+    {
+      "id": "northpole",
+      "game": "northpole",
+      "name": "Grok North Pole Village",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/northpole-beta/",
+      "built": "2026-10-12",
+      "archived": "2026-10-12",
+      "notes": "The last Time Jumper build of Grok North Pole Village before release.",
+      "playable": true
+    },
+    {
+      "id": "torty",
+      "game": "torty",
+      "name": "Grok Torty Town",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/torty-beta/",
+      "built": "2026-10-12",
+      "archived": "2026-10-12",
+      "notes": "WIP build: oasis square, Market Street, the Burrows, Hot Spring Hill, Slow-Mo Derby, lettuce farm, dunes, Tortuga Tech Inc. campus, NEW Old Adobe Quarter (bakery, music hall, toy shop) and Fiesta Plaza (cinema, ice cream, taco truck). Lighter on memory: loads with about half the peak memory, flat while exploring.",
       "playable": true
     },
     {
@@ -288,14 +408,25 @@
       "playable": true
     },
     {
-      "id": "puptown",
-      "game": "puptown",
-      "name": "Grok Pup Town",
+      "id": "eatsville",
+      "game": "eatsville",
+      "name": "Grok Eatsville Tycoon",
       "label": "Final Beta (Time Jumper)",
-      "url": "archive/puptown-beta/",
+      "url": "archive/eatsville-beta/",
       "built": "2026-10-11",
       "archived": "2026-10-11",
-      "notes": "Early look! The whole town is walkable: square + fountain, 8 buildings to explore, Paw Park, the Golden Bone mystery and mini-games. Still being polished.",
+      "notes": "Co-op for 3 is in! Plus delivery orders, house decorating (paint, floors, furniture), the food critic, 10 hidden Golden Spatulas, cozier diners and a smoother phone feel.",
+      "playable": true
+    },
+    {
+      "id": "rides-remastered",
+      "game": "rides",
+      "name": "Grok Rides Remastered",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/rides-remastered-beta/",
+      "built": "2026-10-11",
+      "archived": "2026-10-11",
+      "notes": "Early build on the Tempest engine: drive the whole map, 31 vehicles, traffic, jobs, races, homes. Still being polished.",
       "playable": true
     },
     {
@@ -311,94 +442,14 @@
       "playable": true
     },
     {
-      "id": "rides-remastered",
-      "game": "rides",
-      "name": "Grok Rides Remastered",
+      "id": "puptown",
+      "game": "puptown",
+      "name": "Grok Pup Town",
       "label": "Final Beta (Time Jumper)",
-      "url": "archive/rides-remastered-beta/",
+      "url": "archive/puptown-beta/",
       "built": "2026-10-11",
       "archived": "2026-10-11",
-      "notes": "Early build on the Tempest engine: drive the whole map, 31 vehicles, traffic, jobs, races, homes. Still being polished.",
-      "playable": true
-    },
-    {
-      "id": "eatsville",
-      "game": "eatsville",
-      "name": "Grok Eatsville Tycoon",
-      "label": "Final Beta (Time Jumper)",
-      "url": "archive/eatsville-beta/",
-      "built": "2026-10-11",
-      "archived": "2026-10-11",
-      "notes": "Co-op for 3 is in! Plus delivery orders, house decorating (paint, floors, furniture), the food critic, 10 hidden Golden Spatulas, cozier diners and a smoother phone feel.",
-      "playable": true
-    },
-    {
-      "id": "torty",
-      "game": "torty",
-      "name": "Grok Torty Town",
-      "label": "Final Beta (Time Jumper)",
-      "url": "archive/torty-beta/",
-      "built": "2026-10-12",
-      "archived": "2026-10-12",
-      "notes": "WIP build: oasis square, Market Street, the Burrows, Hot Spring Hill, Slow-Mo Derby, lettuce farm, dunes, Tortuga Tech Inc. campus, NEW Old Adobe Quarter (bakery, music hall, toy shop) and Fiesta Plaza (cinema, ice cream, taco truck). Lighter on memory: loads with about half the peak memory, flat while exploring.",
-      "playable": true
-    },
-    {
-      "id": "northpole",
-      "game": "northpole",
-      "name": "Grok North Pole Village",
-      "label": "Final Beta (Time Jumper)",
-      "url": "archive/northpole-beta/",
-      "built": "2026-10-12",
-      "archived": "2026-10-12",
-      "notes": "The last Time Jumper build of Grok North Pole Village before release.",
-      "playable": true
-    },
-    {
-      "id": "np-merry-tracking",
-      "game": "northpole",
-      "issue": 43,
-      "name": "Merry Tracking Expansion",
-      "label": "Final Beta (Time Jumper)",
-      "url": "archive/np-merry-tracking-beta/",
-      "built": "2026-10-12",
-      "archived": "2026-10-12",
-      "notes": "North Pole Sleigh Port + all 5 walk-in Regional Tracking Centers (preparing until Dec 24; add ?npdate=2026-12-24 to see them fully online)",
-      "playable": true
-    },
-    {
-      "id": "np-merry-events",
-      "game": "northpole",
-      "issue": 44,
-      "name": "Merry Events Expansion",
-      "label": "Final Beta (Time Jumper)",
-      "url": "archive/np-merry-events-beta/",
-      "built": "2026-10-12",
-      "archived": "2026-10-12",
-      "notes": "North Pole Event Center on the real calendar. Test dates: ?npdate=2026-10-14 (Reindeer Games live), 2026-10-31 (Halloween Party), 2026-11-26 (Elf Parade), 2026-12-25 (Christmas Day Party)",
-      "playable": true
-    },
-    {
-      "id": "ph-spookster",
-      "game": "pumpkinhollow",
-      "issue": 45,
-      "name": "Spookster Mega Pack",
-      "label": "Final Beta (Time Jumper)",
-      "url": "archive/ph-spookster-beta/",
-      "built": "2026-10-16",
-      "archived": "2026-10-17",
-      "notes": "MEGA DLC (not shipped): the fenced Sludge Site + THE GLOOMWORKS underground facility (7 walk-in rooms, mad scientists, spooky tests, green sludge), the Who-built-it-and-why mystery, Gloopy, 8 Glow Vials, 6 new skins and Spooky Mode 2.0 (BOO / HAUNT / VANISH / FLICKER + Night Shift). Unlocked in the Time Jumper; add ?locked=1 to see the locked teaser",
-      "playable": true
-    },
-    {
-      "id": "grocery",
-      "game": "grocery",
-      "name": "Grok Grocery Tycoon",
-      "label": "Final Beta (Time Jumper)",
-      "url": "archive/grocery-beta/",
-      "built": "2026-10-17",
-      "archived": "2026-10-17",
-      "notes": "Shopsville detail pass: every store type has its own endcaps + feature displays (train tables, try-on benches, fish tanks, laptop bars, vitamin towers, TV doorbusters), specialty corners (cafe, garden center, play tables, plush walls, aquariums, fitting rooms), fuller supplier buildings. Fixed: stocked shelves vanishing, duplicate Pi-rats.",
+      "notes": "Early look! The whole town is walkable: square + fountain, 8 buildings to explore, Paw Park, the Golden Bone mystery and mini-games. Still being polished.",
       "playable": true
     }
   ],

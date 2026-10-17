@@ -153,7 +153,7 @@
     var st = PR.STC[it.stage] || PR.STC.queued, url = GA.PVD.cover(it.game);
     var img = url ? '<div class="pvPosterImg"><img src="' + esc(url) + '" alt=""></div>' : '<div class="pvPosterImg arcade"><span>GROK</span><span>ARCADE</span></div>';
     show('pv_poster', it.name, it.gname + (it.size ? ' \u00b7 ' + it.size : '') + (it.issue ? ' \u00b7 #' + it.issue : ''),
-      img + '<div class="pvPill" style="background:' + st[1] + '">' + esc(st[0]) + (it.when ? ' \u00b7 ' + esc(it.when) : '') + '</div>' +
+      img + '<div class="pvPill" style="background:' + st[1] + '">' + esc(st[0]) + (it.when && it.when.toLowerCase() !== st[0].toLowerCase() ? ' \u00b7 ' + esc(it.when) : '') + '</div>' +
       (it.what ? '<p class="pvWhat">' + esc(it.what) + '</p>' : '<p class="pvWhat">' + esc(it.title || 'A new build for ' + it.gname + '.') + '</p>') +
       liliNote(it.stage === 'building' ? 'This one is in the lab right now. When it really works, a preview might show up in my Jumper. Might. I have standards.' : it.stage === 'queued' ? 'Queued. The builders get to it after the ones above it. No, you cannot bribe them. I tried. With cheese.' : 'Shipped! It is in the real game now. Go play it.'),
       (it.url ? '<a class="pill" href="' + esc(it.url) + '" target="_blank" rel="noopener">SEE IT ON GITHUB</a> ' : '') + '<button class="bigBtn" id="pvOk">COOL!</button>');
@@ -164,7 +164,7 @@
   /* ---------- board ---------- */
   function openBoard() {
     mark('board'); var m = M(), st = GA.PVD.state;
-    function col(title, color, L2) { return '<div class="pvCol"><h4 style="color:' + color + '">' + title + '</h4>' + (L2.length ? L2.map(function (it) { return '<div class="pvRow"><b>' + esc(it.name) + '</b><span>' + esc(it.gname || '') + (it.size ? ' \u00b7 ' + esc(it.size) : '') + (it.when ? ' \u00b7 ' + esc(it.when) : '') + '</span>' + (it.what ? '<i>' + esc(it.what) + '</i>' : '') + '</div>'; }).join('') : '<div class="pvRow dim">nothing here right now</div>') + '</div>'; }
+    function col(title, color, L2) { return '<div class="pvCol"><h4 style="color:' + color + '">' + title + '</h4>' + (L2.length ? L2.map(function (it) { return '<div class="pvRow"><b>' + esc(GA.PVD.boardName(it)) + '</b><span>' + esc(it.gname || '') + (it.size ? ' \u00b7 ' + esc(it.size) : '') + (it.when ? ' \u00b7 ' + esc(it.when) : '') + '</span>' + (it.what ? '<i>' + esc(it.what) + '</i>' : '') + '</div>'; }).join('') : '<div class="pvRow dim">nothing here right now</div>') + '</div>'; }
     var src = m.live ? (st.src === 'live' ? 'Live from GitHub just now' : 'Live data from earlier (saved)') : 'Saved schedule (could not reach GitHub' + (st.err === 'ratelimit' ? ': too many checks, try in a bit' : '') + ')';
     show('pv_board', 'SCHEDULED ADDITIONS', 'What\u2019s being built, what\u2019s next, what just shipped', '<div class="pvCols">' + col('\uD83D\uDD34 BUILDING NOW', '#fb7185', m.building) + col('\uD83D\uDFE2 UP NEXT', '#5eead4', m.queued) + col('\u2705 JUST SHIPPED', '#4ade80', m.shipped) + '</div><div class="pvSrc">' + esc(src) + (m.updated ? ' \u00b7 preview.json ' + esc(m.updated) : '') + '</div>',
       '<button class="pill" id="pvRef">\u21BB REFRESH</button> <button class="bigBtn" id="pvOk">DONE</button>');

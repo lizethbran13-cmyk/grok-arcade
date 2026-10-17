@@ -304,7 +304,7 @@
     BD.c.redraw(function (c, w, h) { c.fillStyle = '#060b18'; c.fillRect(0, 0, w, h); neon(c, 'SCHEDULED ADDITIONS', w / 2, 40, 44, '#fbbf24', w - 40);
       col.forEach(function (q, k) { var x = 14 + k * (w - 28) / 3, cw = (w - 28) / 3 - 10; c.fillStyle = 'rgba(255,255,255,.05)'; rr(c, x, 78, cw, h - 120, 14); c.fill(); fitTxt(c, q[0], x + cw / 2, 102, 28, q[1], cw - 20);
         var L = q[2] || []; if (!L.length) { txt(c, k === 0 ? 'nothing on the bench' : k === 1 ? 'the queue is empty' : 'nothing yet', x + cw / 2, 160, 20, 'rgba(226,232,240,.5)'); }
-        L.slice(0, 6).forEach(function (it, n) { var y = 140 + n * 50; c.fillStyle = 'rgba(0,0,0,.45)'; rr(c, x + 8, y, cw - 16, 44, 8); c.fill(); fitTxt(c, it.name, x + 16, y + 15, 21, '#ffffff', cw - 32, 'left'); fitTxt(c, (it.gname || '') + (it.when ? ' \u00b7 ' + it.when : ''), x + 16, y + 34, 15, '#94a3b8', cw - 32, 'left'); });
+        L.slice(0, 6).forEach(function (it, n) { var y = 140 + n * 50; c.fillStyle = 'rgba(0,0,0,.45)'; rr(c, x + 8, y, cw - 16, 44, 8); c.fill(); fitTxt(c, PV().boardName(it), x + 16, y + 15, 21, '#ffffff', cw - 32, 'left'); fitTxt(c, (it.gname || '') + (it.when ? ' \u00b7 ' + it.when : ''), x + 16, y + 34, 15, '#94a3b8', cw - 32, 'left'); });
         if (L.length > 6) txt(c, '+' + (L.length - 6) + ' more (walk up!)', x + cw / 2, h - 52, 18, q[1]); });
       var src = !model ? 'loading' : model.live ? 'LIVE from the Suggestion Booth + DLC Machine' : 'saved schedule (offline)'; txt(c, src + (model && model.updated ? ' \u00b7 preview.json ' + model.updated : ''), w / 2, h - 20, 17, 'rgba(226,232,240,.55)'); });
   }

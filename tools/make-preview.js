@@ -18,7 +18,8 @@ const BETA_LABEL = 'Final Beta (Time Jumper)';
 function die(m) { console.error('make-preview: ' + m); process.exit(1); }
 function args() { const a = process.argv.slice(2), o = { _: [] }; for (let i = 0; i < a.length; i++) { if (a[i].startsWith('--')) { const k = a[i].slice(2); if (k === 'remove' || k === 'list' || k === 'archive') o[k] = a[i + 1] && !a[i + 1].startsWith('--') ? a[++i] : true; else o[k] = a[++i]; } else o._.push(a[i]); } return o; }
 function readPJ() { try { return JSON.parse(fs.readFileSync(PJ, 'utf8')); } catch (e) { die('cannot read preview.json: ' + e.message); } }
-function writePJ(d) { d.updated = new Date().toISOString().slice(0, 10); fs.writeFileSync(PJ, JSON.stringify(d, null, 2) + '\n'); }
+function today() { const t = new Date(); return t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0'); } // the builders' local date (Pacific), not UTC
+function writePJ(d) { d.updated = today(); fs.writeFileSync(PJ, JSON.stringify(d, null, 2) + '\n'); }
 function copyDir(src, dst) { fs.mkdirSync(dst, { recursive: true }); for (const e of fs.readdirSync(src, { withFileTypes: true })) { if (SKIP.has(e.name)) continue; const s = path.join(src, e.name), d = path.join(dst, e.name); if (e.isDirectory()) copyDir(s, d); else if (e.isFile()) fs.copyFileSync(s, d); } }
 function htmlFiles(dir, out = []) { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, e.name); if (e.isDirectory()) htmlFiles(p, out); else if (/\.html?$/i.test(e.name)) out.push(p); } return out; }
 const MARK = '<!-- ratita-preview-shim -->';
@@ -65,7 +66,7 @@ if (o.remove || o.archive) { // a game shipped: NEVER delete its last preview. A
   if (!fs.existsSync(dst)) die('archive/' + id + '-beta/ is missing');
   const nm = (p && p.name) || id; let n = 0; for (const f of htmlFiles(dst)) { const depth = path.relative(dst, path.dirname(f)).split(path.sep).filter(Boolean).length; if (inject(f, id, nm, depth, true)) n++; }
   d.previews = (d.previews || []).filter(x => x.id !== id); d.archive = (d.archive || []).filter(x => x.id !== id);
-  d.archive.push({ id, game: (p && p.game) || 'arcade', issue: p && p.issue, name: nm, label: BETA_LABEL, url: 'archive/' + id + '-beta/', built: p && p.built, archived: new Date().toISOString().slice(0, 10), notes: p && p.notes, playable: true });
+  d.archive.unshift({ id, game: (p && p.game) || 'arcade', issue: p && p.issue, name: nm, label: BETA_LABEL, url: 'archive/' + id + '-beta/', built: p && p.built, archived: today(), notes: p && p.notes, playable: true });
   writePJ(d); console.log('archived ' + id + ' -> archive/' + id + '-beta/ (' + n + ' page(s) re-shimmed as the ' + BETA_LABEL + '). Commit + push: it shows in the Save Booth and the game\'s Hall Old Versions.'); process.exit(0); }
 const [src, id] = o._; if (!src || !id) die('usage: node tools/make-preview.js <build-folder> <id> --game <gameId> --issue <n> --name "<name>" [--notes "..."]');
 if (!/^[a-z0-9-]{2,40}$/.test(id)) die('id must be 2-40 chars of a-z, 0-9 and -');
@@ -75,6 +76,6 @@ const dst = path.join(PDIR, id); fs.rmSync(dst, { recursive: true, force: true }
 let n = 0; for (const f of htmlFiles(dst)) { const depth = path.relative(dst, path.dirname(f)).split(path.sep).filter(Boolean).length; if (inject(f, id, o.name || id, depth)) n++; }
 const d = readPJ(); d.previews = (d.previews || []).filter(p => p.id !== id);
 if ((d.archive || []).some(p => p.id === id)) console.warn('note: ' + id + ' already has an archived Final Beta; it stays in the Save Booth.');
-d.previews.push({ id, game: o.game || 'arcade', issue: o.issue ? +o.issue : undefined, name: o.name || id, url: 'previews/' + id + '/', playable: true, built: new Date().toISOString().slice(0, 10), notes: o.notes || undefined });
+d.previews.push({ id, game: o.game || 'arcade', issue: o.issue ? +o.issue : undefined, name: o.name || id, url: 'previews/' + id + '/', playable: true, built: today(), notes: o.notes || undefined });
 writePJ(d);
 console.log('preview ' + id + ' -> previews/' + id + '/ (' + n + ' page(s) shimmed) and added to preview.json. Commit + push, then it shows up in the Time Jumper.');

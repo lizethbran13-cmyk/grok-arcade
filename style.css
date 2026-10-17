@@ -787,5 +787,5 @@ body.touch .tmChip{top:calc(max(12px,env(safe-area-inset-top)) + 248px);bottom:a
 .pvPanel a.pill{display:inline-flex;align-items:center;text-decoration:none}
 /* Time Jumper Save Booth (Save Vault) */
 .pvVaultWip{background:rgba(20,184,166,.16);border-color:#2dd4bf;color:#ccfbf1}.pvVaultH{margin:12px 0 2px;color:#fbbf24;font-size:14px;letter-spacing:.5px}
-.pvBetaRow{border:1px solid rgba(74,222,128,.45)}.pvPendRow{border:1px dashed rgba(251,191,36,.6)}.pvPrev .pvTag,.pvTag{flex:none;color:#111827 !important;font:900 11px "Trebuchet MS",system-ui,sans-serif;color:#111827;background:#fbbf24;border-radius:8px;padding:4px 7px;letter-spacing:.4px}
+.pvBetaRow{border:1px solid rgba(74,222,128,.45)}.pvPrev>div{flex:1 1 auto;min-width:0}.pvPrev .bigBtn{flex:0 0 auto;white-space:nowrap;height:46px;min-height:46px;padding:0 14px;border-radius:23px;font-size:15px}.pvPendRow{border:1px dashed rgba(251,191,36,.6)}.pvPrev .pvTag,.pvTag{flex:none;color:#111827 !important;font:900 11px "Trebuchet MS",system-ui,sans-serif;color:#111827;background:#fbbf24;border-radius:8px;padding:4px 7px;letter-spacing:.4px}
 .hlBeta{outline:2px solid #2dd4bf;outline-offset:-2px}
