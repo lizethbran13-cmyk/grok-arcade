@@ -2053,6 +2053,71 @@ GA.HALL_DATA = {
 "quip": "Snowie flew past the Hall window three times to wave at her pictures. The third time she was upside down. On purpose, she says.",
 "noOld": "Grok Snowie Sky Tours just took off. Its Time Jumper beta is in the Save Vault (Final Beta). Please keep your paws inside the copter."
 },
+"grocery": {
+"repo": "grok-grocery-tycoon",
+"history": [
+{
+"date": "Oct 16",
+"ver": "1.0",
+"title": "Grand opening",
+"text": "A cartoon 3D store tycoon in Shopsville. Start in Career Mode as a courtesy clerk bagging groceries, pushing carts, stocking shelves and mopping spills, and work your way up to owner. Or start in Boss Mode and build an empire of 11 store types, from supermarkets and supercenters to toy, shoe, electronics, pet, clothing, home goods, pharmacy and convenience stores. You can walk into every store, including all 9 rival shops, switch to first-person, run deliveries from your own distribution center and hire Luna, Pi-rat, Snowie, Candy and Torty."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/grocery/1.webp",
+"cap": "The Shopsville supermarket from above: aisles, checkouts and shoppers",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/grocery/2.webp",
+"cap": "On the floor: stocked shelves, carts and the produce section",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/grocery/3.webp",
+"cap": "A Grok Supercenter with its garden center and big-box aisles",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/grocery/4.webp",
+"cap": "Inside the toy store: train table and plush walls",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/grocery/5.webp",
+"cap": "The pet store with fish tanks, cat trees and the grooming corner",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/grocery/6.webp",
+"cap": "Walking into Mega Mart, one of 9 rival shops",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/grocery/7.webp",
+"cap": "The Grok Distribution Center: trucks, racking and forklifts",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/grocery/8.webp",
+"cap": "The electronics store with TV walls and the phone bar",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/grocery/cover.webp",
+"quip": "Pi-rat insists the free cheese samples are for staff training. He has done a lot of training.",
+"noOld": "Grok Grocery Tycoon just opened in Shopsville. Its Time Jumper beta is in the Save Vault (Final Beta). Clean-up on aisle 3!"
+},
 "pumpkinhollow": {
 "repo": "grok-pumpkin-hollow",
 "history": [
@@ -2420,5 +2485,6 @@ GA.ARCADE_HISTORY = [
   { date: 'Oct 11', ver: '5.5', title: 'Grok Pup Town', text: 'Candy\u2019s hometown opened: a cozy 3D dog town in HUBS & WORLDS, bonus #34 Bone Dig, the Golden Bone Keychain, Torty Plush and Golden Bone Cup, and a Hall exhibit. Its Time Jumper beta is the first game in Lili\u2019s Save Vault.' },
   { date: 'Oct 11', ver: '5.6', title: 'Grok Eatsville Tycoon', text: 'A restaurant tycoon opened in LIFE SIMS: cook, serve and build a food empire in Eatsville, with bonus #37 Patty Panic, the Golden Spatula Keychain, the Inspector Grumbleton Plush, the Golden Burger Cup and a Hall exhibit.' },
   { date: 'Oct 11', ver: '5.7', title: 'Grok Lost Relics', text: 'The Grok Lost Relics cabinet joined the Game Gallery, with bonus game #36 Boulder Run, three new prizes (Jade Monkey Keychain, Professor Vintage Plush, Lost Relics Cup), the Boulder Dodger, Coin Sprinter and Relic Keeper achievements, and a new Hall of Game Records exhibit.' },
-  { date: 'Oct 16', ver: '5.8', title: 'Ruffsources HQ & Snowie Sky Tours', text: 'Two new cabinets in HUBS & WORLDS: Grok Ruffsources HQ and Grok Snowie Sky Tours, with bonus games #41 Paw Stamp Rush and #42 Ring Dash, six new prizes, four new achievements and two new Hall exhibits.' }
+  { date: 'Oct 16', ver: '5.8', title: 'Ruffsources HQ & Snowie Sky Tours', text: 'Two new cabinets in HUBS & WORLDS: Grok Ruffsources HQ and Grok Snowie Sky Tours, with bonus games #41 Paw Stamp Rush and #42 Ring Dash, six new prizes, four new achievements and two new Hall exhibits.' },
+  { date: 'Oct 16', ver: '5.9', title: 'Grok Grocery Tycoon', text: 'Shopsville opened in HUBS & WORLDS: the Grok Grocery Tycoon cabinet, bonus game #43 Cart Dash, three new prizes (Mini Grok Cart Keychain, Milky the Carton Plush, Golden Grocery Cup), two new achievements and a new Hall exhibit.' }
 ];

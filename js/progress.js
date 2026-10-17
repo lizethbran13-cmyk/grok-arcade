@@ -88,6 +88,7 @@
     boodrop: [30, 'Treat Champ', 'Score 30 in Boo Drop', '\uD83C\uDF83'],
     pawstamp: [30, 'Paperwork Champ', 'Score 30 in Paw Stamp Rush', '\uD83D\uDC3E'],
     ringdash: [30, 'Ring Champ', 'Score 30 in Ring Dash', '\uD83D\uDE81'],
+    cartdash: [30, 'Cart Champ', 'Score 30 in Cart Dash', '\uD83D\uDED2'],
     wash: [35, 'Shine Master', 'Score 35 in Sparkle Car Wash', '\uD83E\uDEE7'],
     flip: [35, 'Grill Master', 'Score 35 in Patty Panic', '\uD83C\uDF54'],
     boulder: [40, 'Boulder Dodger', 'Score 40 in Boulder Run', '\uD83E\uDEA8'],
@@ -180,6 +181,8 @@
   A.push({ id: 'ruff_pal', cat: 'Prizes', icon: '\uD83D\uDC15', name: 'Ruffsources Regular', desc: 'Own the Squeaky Toy Keychain, the Biscuit Corgi Plush and the Golden Paw Stamp Cup', p: function () { return [['kc_squeaky', 'pl_biscuit', 'tr_ruffsources'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'ring_pro', cat: 'High Scores', icon: '\uD83D\uDCAB', name: 'Sky Tour Ace', desc: 'Fly through 40 rings in one game of Ring Dash', p: function () { return [ev('ring40') ? 1 : 0, 1]; } });
   A.push({ id: 'sky_pal', cat: 'Prizes', icon: '\uD83D\uDE81', name: 'Sky Tours Crew', desc: 'Own the Mini Copter Keychain, the Tow-Drone Plush and the Golden Rotor Cup', p: function () { return [['kc_copter', 'pl_towdrone', 'tr_skytours'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
+  A.push({ id: 'cart_pro', cat: 'High Scores', icon: '\uD83E\uDDFA', name: 'Clean-Up Crew Captain', desc: 'Catch 40 groceries in one game of Cart Dash', p: function () { return [ev('cart40') ? 1 : 0, 1]; } });
+  A.push({ id: 'shop_pal', cat: 'Prizes', icon: '\uD83D\uDED2', name: 'Shopsville Regular', desc: 'Own the Mini Grok Cart Keychain, the Milky the Carton Plush and the Golden Grocery Cup', p: function () { return [['kc_grokcart', 'pl_milky', 'tr_grocery'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'boo_pro', cat: 'High Scores', icon: '\uD83C\uDF6C', name: 'Sweet Haul', desc: 'Drop 40 candies into buckets in one game of Boo Drop', p: function () { return [ev('boo40') ? 1 : 0, 1]; } });
   A.push({ id: 'ph_pal', cat: 'Prizes', icon: '\uD83C\uDF83', name: 'Pumpkin Hollow Pal', desc: 'Own the Moon Lantern Keychain, the Wisp Ghost Plush and the Golden Pumpkin Cup', p: function () { return [['kc_moonlantern', 'pl_wisp', 'tr_pumpkinhollow'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'chimney_pro', cat: 'High Scores', icon: '\uD83C\uDF81', name: 'Special Delivery', desc: 'Deliver 40 presents in one game of Chimney Drop', p: function () { return [ev('chim40') ? 1 : 0, 1]; } });

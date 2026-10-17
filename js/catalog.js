@@ -64,7 +64,9 @@ GA.MAIN_GAMES = [
   { id: 'ruffsources', name: 'Grok Ruffsources HQ', desc: 'A cartoon 3D walk-in HR office run by dogs! Explore Ruffsources HQ: the lobby with Biscuit the corgi receptionist, the mail room, the break room, the filing archive, the interview room and Candy\u2019s office. Sort the mail, file the paperwork, interview new hires (HIRE or PASS?) and solve the mystery of Candy\u2019s missing squeaky toy. Find all 26 golden bones, then head out to the plaza, the dog park and the Bark & Brew caf\u00e9. Save your progress and keep playing any time.',
     url: 'https://lizethbran13-cmyk.github.io/grok-ruffsources/', color: '#ff8a3d', color2: '#14b8a6' },
   { id: 'skytours', name: 'Grok Snowie Sky Tours', desc: 'Fly Snowie\u2019s tour copter over a big open cartoon 3D world inspired by Pup Town, Torty Town and North Pole Village! Fly tour stops, rescue stranded pets, race the ring courses and collect passport stamps. Crashes are harmless: the friendly tow-drone carries you home. Land on any pad and walk into 9 packed buildings and 14 cottages, each with its own mini-game or chore: Ticket Rush, Sky Ace, Gift Wrap Rush, Marshmallow Catch and more. Save your progress and keep flying any time.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-sky-tours/', color: '#38bdf8', color2: '#ff4fa0' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-sky-tours/', color: '#38bdf8', color2: '#ff4fa0' },
+  { id: 'grocery', name: 'Grok Grocery Tycoon', desc: 'Run a store in the cartoon 3D town of Shopsville! Start as a courtesy clerk (bag groceries, push carts, stock shelves, mop spills) and get promoted all the way to owner, or start as the boss and build an empire of 11 store types: supermarkets, supercenters, markets, toy, shoe, electronics, pet, clothing, home goods, pharmacies and convenience stores. Walk into every store and all 9 rival shops, switch to first-person, run deliveries from your own distribution center and hire Luna, Pi-rat, Snowie, Candy and Torty. Save your progress and keep playing any time.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-grocery-tycoon/', color: '#16a34a', color2: '#f97316' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -121,6 +123,8 @@ GA.BONUS_GAMES = [
   { id: 'pawstamp', name: 'Paw Stamp Rush', desc: 'Paperwork time at Ruffsources HQ! Forms ride the conveyor past Biscuit\u2019s desk: TAP to paw-stamp each one as it slides under the stamp. Golden hire forms score big, but don\u2019t stamp Candy\u2019s squeaky toy. A Grok Ruffsources HQ game.', color: '#ff8a3d', color2: '#14b8a6' },
   /* #42: Ring Dash (Grok Snowie Sky Tours), on the Bonus Zone wall */
   { id: 'ringdash', name: 'Ring Dash', desc: 'Fly with Snowie! HOLD to climb and let go to dip as the tour copter zooms through the sky rings. Golden rings score big, but watch out for the seagulls. A Grok Snowie Sky Tours game.', color: '#38bdf8', color2: '#ff4fa0' },
+  /* #43: Cart Dash (Grok Grocery Tycoon), on the Bonus Zone wall */
+  { id: 'cartdash', name: 'Cart Dash', desc: 'Shopping spree in Shopsville! Push your Grok cart up the aisle: TAP left or right to swerve between 3 lanes, catch groceries and golden Grok Goods, and dodge spills and runaway carts. A Grok Grocery Tycoon game.', color: '#16a34a', color2: '#f97316' },
 ];
 /* bonus games that have a cabinet on the Bonus Zone wall (1983 retro games live in the old arcade instead) */
 GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era && !g.room; }); };

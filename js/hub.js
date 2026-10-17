@@ -914,6 +914,33 @@
         g.fillStyle = '#f8fafc'; g.fillRect(0, h - 16, w, 16); g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('RING DASH', w / 2, 22);
         break;
       }
+      case 'grocery': {
+        // Grok Grocery Tycoon: sunny Shopsville street, the big green GROK GROCERY storefront with striped awning and glowing windows, carts rolling past, Pi-rat scurrying, produce crates out front
+        var ggr = g.createLinearGradient(0, 0, 0, h); ggr.addColorStop(0, '#38bdf8'); ggr.addColorStop(0.55, '#bae6fd'); ggr.addColorStop(0.56, '#94a3b8'); ggr.addColorStop(1, '#64748b'); g.fillStyle = ggr; g.fillRect(0, 0, w, h);
+        g.fillStyle = 'rgba(255,255,255,.9)'; for (i = 0; i < 3; i++) { var cgx = ((t * (9 + i * 4) + i * 90) % (w + 80)) - 40; g.beginPath(); g.ellipse(cgx, h * (0.13 + i * 0.07), 22, 7, 0, 0, 7); g.ellipse(cgx + 11, h * (0.13 + i * 0.07) - 5, 12, 6, 0, 0, 7); g.fill(); }
+        [[0.0, 0.2, 0.2, '#fca5a5'], [0.8, 0.2, 0.24, '#c4b5fd']].forEach(function (q) { g.fillStyle = q[3]; g.fillRect(w * q[0], h * (0.56 - q[2]), w * q[1], h * q[2]); g.fillStyle = 'rgba(255,255,255,.7)'; g.fillRect(w * q[0] + 6, h * (0.56 - q[2]) + 8, w * q[1] - 12, 8); });
+        var sx0 = w * 0.16, sw0 = w * 0.68, sy0 = h * 0.3, sh0 = h * 0.26; g.fillStyle = '#16a34a'; g.fillRect(sx0, sy0, sw0, sh0); g.fillStyle = '#166534'; g.fillRect(sx0 - 4, sy0 - 6, sw0 + 8, 8);
+        for (i = 0; i < 8; i++) { g.fillStyle = i % 2 ? '#fff' : '#f97316'; g.beginPath(); var ax = sx0 + i * sw0 / 8; g.moveTo(ax, sy0 + 2); g.lineTo(ax + sw0 / 8, sy0 + 2); g.lineTo(ax + sw0 / 8, sy0 + 14); g.arc(ax + sw0 / 16, sy0 + 14, sw0 / 16, 0, Math.PI); g.closePath(); g.fill(); }
+        var glw = 0.75 + Math.sin(t * 3) * 0.15; g.fillStyle = 'rgba(254,249,195,' + glw + ')'; g.fillRect(sx0 + 8, sy0 + 26, sw0 * 0.3, sh0 - 34); g.fillRect(sx0 + sw0 * 0.62, sy0 + 26, sw0 * 0.3, sh0 - 34);
+        ['#ef4444', '#facc15', '#22c55e', '#f97316', '#a855f7'].forEach(function (c, k) { g.fillStyle = c; g.fillRect(sx0 + 12 + k * 7, sy0 + 34 + (k % 2) * 8, 5, 5); g.fillRect(sx0 + sw0 * 0.66 + k * 7, sy0 + 38 - (k % 2) * 6, 5, 5); });
+        var dop = (Math.sin(t * 1.3) + 1) * 0.5 * 9; g.fillStyle = '#bae6fd'; g.fillRect(w / 2 - 14, sy0 + 26, 14 - dop, sh0 - 26); g.fillRect(w / 2 + dop, sy0 + 26, 14 - dop, sh0 - 26); g.strokeStyle = '#166534'; g.lineWidth = 2; g.strokeRect(w / 2 - 14, sy0 + 26, 28, sh0 - 26);
+        g.fillStyle = '#facc15'; rrF(g, w / 2 - 34, sy0 - 26, 68, 18, 5); g.font = font(10); g.textAlign = 'center'; g.fillStyle = '#14532d'; g.fillText('GROK GROCERY', w / 2, sy0 - 13);
+        g.fillStyle = '#e2e8f0'; g.fillRect(0, h * 0.56, w, 10); g.fillStyle = '#475569'; g.fillRect(0, h * 0.62, w, h * 0.38); g.fillStyle = '#fde047'; var lof = (t * 40) % 40; for (i = -1; i < w / 40 + 1; i++) g.fillRect(i * 40 - lof, h * 0.8, 20, 3);
+        [[0.08, '#ef4444'], [0.86, '#f97316']].forEach(function (q, k) { var crx = w * q[0]; g.fillStyle = '#92400e'; g.fillRect(crx - 11, h * 0.54, 22, 10); for (var m = 0; m < 3; m++) { g.fillStyle = k ? (m % 2 ? '#facc15' : '#f97316') : (m % 2 ? '#22c55e' : '#ef4444'); g.beginPath(); g.arc(crx - 7 + m * 7, h * 0.54, 4, 0, 7); g.fill(); } });
+        for (i = 0; i < 2; i++) { var cx2 = ((t * (34 + i * 14) + i * 150) % (w + 70)) - 35, cy2 = h * (0.72 + i * 0.13); g.strokeStyle = '#cbd5e1'; g.lineWidth = 2; g.strokeRect(cx2 - 13, cy2 - 12, 24, 13); g.beginPath(); g.moveTo(cx2 - 13, cy2 - 12); g.lineTo(cx2 - 19, cy2 - 18); g.stroke(); g.fillStyle = i ? '#f97316' : '#16a34a'; g.fillRect(cx2 - 11, cy2 - 18, 9, 7); g.fillStyle = '#facc15'; g.fillRect(cx2 - 1, cy2 - 16, 8, 5); g.fillStyle = '#1f2937'; g.beginPath(); g.arc(cx2 - 9, cy2 + 4, 3, 0, 7); g.arc(cx2 + 7, cy2 + 4, 3, 0, 7); g.fill(); }
+        var rx2 = w - ((t * 55) % (w + 40)) + 20, ry2 = h * 0.64 - Math.abs(Math.sin(t * 12)) * 2; g.fillStyle = '#9ca3af'; g.beginPath(); g.ellipse(rx2, ry2, 9, 5, 0, 0, 7); g.fill(); g.beginPath(); g.arc(rx2 - 8, ry2 - 2, 4.5, 0, 7); g.fill(); g.fillStyle = '#f9a8d4'; g.beginPath(); g.arc(rx2 - 7, ry2 - 7, 2.5, 0, 7); g.fill(); g.strokeStyle = '#f9a8d4'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(rx2 + 8, ry2); g.quadraticCurveTo(rx2 + 15, ry2 - 6, rx2 + 18, ry2 + 1); g.stroke(); g.fillStyle = '#111'; g.fillRect(rx2 - 12, ry2 - 4, 3, 2);
+        g.fillStyle = '#16a34a'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.font = font(12); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK GROCERY TYCOON', w / 2, 23);
+        break;
+      }
+      case 'cartdash': {
+        var gcd = g.createLinearGradient(0, 0, 0, h); gcd.addColorStop(0, '#dcfce7'); gcd.addColorStop(1, '#f1f5f9'); g.fillStyle = gcd; g.fillRect(0, 0, w, h);
+        var sof = (t * 70) % 40; for (i = -1; i < h / 40 + 1; i++) { var syc = i * 40 + sof; g.fillStyle = '#16a34a'; g.fillRect(0, syc, 22, 36); g.fillRect(w - 22, syc, 22, 36); g.fillStyle = ['#ef4444', '#facc15', '#f97316'][(i + 3) % 3]; g.fillRect(4, syc + 6, 14, 10); g.fillRect(w - 18, syc + 18, 14, 10); }
+        g.strokeStyle = 'rgba(100,116,139,.35)'; g.lineWidth = 2; g.setLineDash([10, 10]); g.lineDashOffset = -t * 70; [w * 0.4, w * 0.6].forEach(function (lx) { g.beginPath(); g.moveTo(lx, 0); g.lineTo(lx, h); g.stroke(); }); g.setLineDash([]);
+        for (i = 0; i < 3; i++) { var iy = ((t * 70 + i * 70) % (h + 30)) - 15, ix = w * (0.3 + ((i * 2) % 3) * 0.2); g.fillStyle = ['#ef4444', '#fde047', '#22c55e'][i]; g.beginPath(); g.arc(ix, iy, 8, 0, 7); g.fill(); }
+        var ccx = w * 0.5 + Math.sin(t * 1.7) * w * 0.2, ccy = h * 0.78; g.strokeStyle = '#64748b'; g.lineWidth = 3; g.strokeRect(ccx - 16, ccy - 14, 32, 18); g.fillStyle = '#16a34a'; g.fillRect(ccx - 13, ccy - 22, 12, 10); g.fillStyle = '#f97316'; g.fillRect(ccx + 1, ccy - 20, 11, 8); g.fillStyle = '#1f2937'; g.beginPath(); g.arc(ccx - 11, ccy + 8, 4, 0, 7); g.arc(ccx + 11, ccy + 8, 4, 0, 7); g.fill();
+        g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#14532d'; g.fillText('CART DASH', w / 2, 24);
+        break;
+      }
       case 'pumpkinhollow': {
         // Grok Pumpkin Hollow: purple night sky, big moon with bats flapping past, Wisp the ghost bobbing, the BOO ROW arch with glowing jack-o'-lanterns, crooked houses and drifting fog
         var gph = g.createLinearGradient(0, 0, 0, h); gph.addColorStop(0, '#120726'); gph.addColorStop(0.5, '#3b1d5c'); gph.addColorStop(0.62, '#c2410c'); gph.addColorStop(0.63, '#2a1f3d'); gph.addColorStop(1, '#1a1028'); g.fillStyle = gph; g.fillRect(0, 0, w, h);

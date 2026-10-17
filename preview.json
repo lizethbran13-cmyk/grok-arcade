@@ -1,15 +1,15 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-16",
+  "updated": "2026-10-17",
   "items": [
     {
       "game": "grocery",
-      "name": "Grok Grocery Tycoon",
-      "what": "A brand new game: run a store in the town of Shopsville! Start as a courtesy clerk (bag groceries, push carts, stock shelves, clean spills) and get promoted all the way to owner, or start as the boss and build an empire of 11 store types: supermarkets, supercenters, markets, shoe stores, toy stores, electronics, pharmacies, pet stores, clothing, home goods and convenience stores. Walk into every store, spy on rival shops, switch to first-person, and run deliveries from your own distribution center. Luna, Pi-rat, Snowie, Candy and Torty visit.",
-      "stage": "building",
-      "when": "In the lab now",
-      "gname": "New game",
-      "key": "grocery"
+      "name": "Grok Grocery Tycoon (live)",
+      "what": "Grok Grocery Tycoon: run a store in the cartoon 3D town of Shopsville! Climb from courtesy clerk to owner in Career Mode or build an empire of 11 store types as the boss, walk into every store and all 9 rival shops, and run deliveries from your own distribution center. Play it in Hubs & Worlds, plus bonus game #43 Cart Dash!",
+      "stage": "shipped",
+      "when": "Oct 16",
+      "key": "grocery",
+      "shippedAt": "2026-10-17T01:10:10Z"
     },
     {
       "issue": 45,
@@ -140,7 +140,7 @@
       "game": "fc",
       "name": "Fiesta Kits (live)",
       "size": "Mini Pack",
-      "what": "Grok FC: 4 festive teams with real 3D sombreros, party hats and flower crowns, the rainbow Piñata Ball and 3D fireworks + confetti on fiesta goals.",
+      "what": "Grok FC: 4 festive teams with real 3D sombreros, party hats and flower crowns, the rainbow Pi\u00f1ata Ball and 3D fireworks + confetti on fiesta goals.",
       "stage": "shipped",
       "when": "Oct 12",
       "shippedAt": "2026-10-12T16:30:00Z"
@@ -240,17 +240,7 @@
       "when": "Oct 10"
     }
   ],
-  "previews": [
-    {
-      "id": "grocery",
-      "game": "grocery",
-      "name": "Grok Grocery Tycoon",
-      "url": "previews/grocery/",
-      "playable": true,
-      "built": "2026-10-17",
-      "notes": "Shopsville detail pass: every store type has its own endcaps + feature displays (train tables, try-on benches, fish tanks, laptop bars, vitamin towers, TV doorbusters), specialty corners (cafe, garden center, play tables, plush walls, aquariums, fitting rooms), fuller supplier buildings. Fixed: stocked shelves vanishing, duplicate Pi-rats."
-    }
-  ],
+  "previews": [],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
@@ -398,6 +388,17 @@
       "built": "2026-10-16",
       "archived": "2026-10-17",
       "notes": "MEGA DLC (not shipped): the fenced Sludge Site + THE GLOOMWORKS underground facility (7 walk-in rooms, mad scientists, spooky tests, green sludge), the Who-built-it-and-why mystery, Gloopy, 8 Glow Vials, 6 new skins and Spooky Mode 2.0 (BOO / HAUNT / VANISH / FLICKER + Night Shift). Unlocked in the Time Jumper; add ?locked=1 to see the locked teaser",
+      "playable": true
+    },
+    {
+      "id": "grocery",
+      "game": "grocery",
+      "name": "Grok Grocery Tycoon",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grocery-beta/",
+      "built": "2026-10-17",
+      "archived": "2026-10-17",
+      "notes": "Shopsville detail pass: every store type has its own endcaps + feature displays (train tables, try-on benches, fish tanks, laptop bars, vitamin towers, TV doorbusters), specialty corners (cafe, garden center, play tables, plush walls, aquariums, fitting rooms), fuller supplier buildings. Fixed: stocked shelves vanishing, duplicate Pi-rats.",
       "playable": true
     }
   ],

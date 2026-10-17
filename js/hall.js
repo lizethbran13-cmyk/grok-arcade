@@ -80,6 +80,8 @@
     ruffsources: function (g) { var o = new T.Group(); o.position.y = 0.3; g.add(o); var gp = ph('#fbbf24', 110, '#a35f00'); add(g, cy(0.05, 0.055, 0.02, 20), gp, 0, 0.27, 0).rotation.x = Math.PI / 2; [[-0.055, 0.04], [-0.02, 0.07], [0.02, 0.07], [0.055, 0.04]].forEach(function (q) { add(g, cy(0.018, 0.02, 0.02, 12), gp, q[0], 0.27 + q[1], 0).rotation.x = Math.PI / 2; });
       add(o, bx(0.07, 0.09, 0.006), ph('#ffffff', 30), 0.22, 0.02, 0); add(o, sp(0.03, 10), ph('#f472b6', 50), -0.11, 0.03, 0.19); add(o, sp(0.035, 10), ph('#14b8a6', 50), -0.11, 0.03, -0.19);
       add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
+    grocery: function (g) { var gr = ph('#16a34a', 70), wr = ph('#cbd5e1', 90); add(g, bx(0.2, 0.1, 0.13), gr, 0, 0.3, 0); add(g, bx(0.012, 0.012, 0.15), wr, -0.13, 0.38, 0); [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(function (q) { add(g, sp(0.02, 10), ph('#1f2937', 30), q[0] * 0.07, 0.235, q[1] * 0.05); });
+      add(g, sp(0.03, 12), ph('#ef4444', 70), -0.04, 0.37, 0); add(g, bx(0.035, 0.06, 0.035), ph('#facc15', 50), 0.02, 0.38, 0.02); add(g, sp(0.026, 12), ph('#22c55e', 50), 0.07, 0.37, -0.02); },
     skytours: function (g) { var o = new T.Group(); o.position.y = 0.3; g.add(o); var pk = ph('#ff4fa0', 80); add(g, sp(0.07, 18), pk, 0, 0.3, 0).scale.set(1.3, 0.85, 0.9); add(g, sp(0.04, 14), ph('#bae6fd', 100), 0.05, 0.31, 0); add(g, cy(0.012, 0.008, 0.12, 8), pk, -0.12, 0.3, 0).rotation.z = Math.PI / 2;
       var rt = add(g, bx(0.28, 0.005, 0.02), ph('#334155', 30), 0, 0.37, 0); add(o, new T.TorusGeometry(0.035, 0.008, 6, 16), ph('#facc15', 90), 0.22, 0.02, 0); add(o, sp(0.03, 10), ph('#38bdf8', 50), -0.11, 0.03, 0.19); add(o, sp(0.035, 10), ph('#facc15', 50), -0.11, 0.03, -0.19); void rt;
       add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
@@ -411,6 +413,8 @@
     FUT.forEach(function (f) { slots.push(f); });
     // 32nd: free-standing just inside the entrance on the left, mirroring the 23rd (a touch deeper so it clears the DLC Machine)
     if (games.length > 31) slots.push([W.doorX - 3.6, W.minZ + 2.4, Math.PI / 2]);
+    // 33rd: free-standing in the middle of the Records Annex, facing Barnaby's lounge sofa
+    if (games.length > 32) slots.push([W.doorX, W.minZ + 23.4, 0]);
     var par = A.scene;
     games.forEach(function (gm, i) { var s = slots[i]; if (!s) return; exhibit(gm, GA.HALL_DATA[gm.id], s[0], s[1], s[2]); });
     H3.freeSlots = slots.slice(games.length).filter(function (s) { return FUT.indexOf(s) >= 0; });
