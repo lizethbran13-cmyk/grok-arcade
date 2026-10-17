@@ -57,7 +57,7 @@
       say(greet || line(HELLO)) +
       '<div class="acCard acAcct"><div class="acLbl">ACCOUNT ID</div><div class="acId">' + fmtId(a.id) + '</div>' +
       '<div class="acNameRow"><span id="acNm">' + esc(a.name) + '</span><button class="pill acSm" id="acRen">\u270F\uFE0F Rename</button></div>' +
-      '<div class="acStats"><span>\uD83C\uDF9F\uFE0F ' + sm.tickets.toLocaleString() + '</span><span>\uD83C\uDF81 ' + sm.prizes + ' prizes</span><span>\uD83C\uDFC5 ' + sm.badges + ' badges</span><span>\uD83E\uDDE9 ' + sm.dlc + ' DLC</span><span>\uD83C\uDFAE ' + sm.games.length + (sm.games.length === 1 ? ' game' : ' games') + '</span></div>' +
+      '<div class="acStats"><span>\uD83C\uDF9F\uFE0F ' + sm.tickets.toLocaleString() + '</span><span>\uD83C\uDF81 ' + sm.prizes + (sm.prizes === 1 ? ' prize' : ' prizes') + '</span><span>\uD83C\uDFC5 ' + sm.badges + ' badges</span><span>\uD83E\uDDE9 ' + sm.dlc + ' DLC</span><span>\uD83C\uDFAE ' + sm.games.length + (sm.games.length === 1 ? ' game' : ' games') + '</span></div>' +
       '<div class="acNote">This ID is your account\u2019s name tag for Live Sync later. On its own it can\u2019t move a save (no save server yet), so <b>Transfer Save</b> gives you a code that carries the whole save.</div></div>' +
       '<div class="acGrid"><button class="acBig" id="acOut"><b>\uD83D\uDCE4 TRANSFER SAVE</b><span>make a code / QR for your other device</span></button><button class="acBig" id="acIn"><b>\uD83D\uDCE5 LOAD SAVE</b><span>paste a code from another device</span></button>' +
       '<button class="acBig sm" id="acBak"' + (bak ? '' : ' disabled') + '><b>\u21A9\uFE0F RESTORE BACKUP</b><span>' + (bak ? 'from ' + when(bak.t) : 'no backup yet') + '</span></button><button class="acBig sm" id="acDev"><b>\uD83D\uDCF1 DEVICES ' + n + '/' + AC.MAX_DEVICES + '</b><span>linked by transfer</span></button></div>' +
@@ -71,7 +71,7 @@
   function refresh3d() { if (GA.Account3D && GA.Account3D.refresh) GA.Account3D.refresh(); }
   function back(id) { var b = $(id); if (b) b.onclick = function () { home(); }; }
   function statsHtml(sm) {
-    return '<div class="acStats"><span>\uD83C\uDF9F\uFE0F ' + sm.tickets.toLocaleString() + ' tickets</span><span>\uD83C\uDF81 ' + sm.prizes + ' prizes</span><span>\uD83C\uDFC5 ' + sm.badges + ' badges</span><span>\uD83E\uDDE9 ' + sm.dlc + ' DLC keys</span></div>' +
+    return '<div class="acStats"><span>\uD83C\uDF9F\uFE0F ' + sm.tickets.toLocaleString() + ' tickets</span><span>\uD83C\uDF81 ' + sm.prizes + (sm.prizes === 1 ? ' prize' : ' prizes') + '</span><span>\uD83C\uDFC5 ' + sm.badges + ' badges</span><span>\uD83E\uDDE9 ' + sm.dlc + (sm.dlc === 1 ? ' DLC key' : ' DLC keys') + '</span></div>' +
       '<div class="acGames">' + (sm.games.length ? sm.games.map(function (g) { return '<span>' + esc(g) + '</span>'; }).join('') : '<i>no game saves yet</i>') + '</div>';
   }
 
