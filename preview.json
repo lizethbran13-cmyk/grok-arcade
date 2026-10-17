@@ -16,12 +16,13 @@
     {
       "issue": 49,
       "game": "arcade",
-      "name": "Bob's Account Desk",
+      "name": "Bob's Account Desk (live)",
       "size": "Feature",
-      "what": "Grok Arcade: a walk-up account desk run by Bob, Lili's long, chatty, nice-but-pushy big brother (he WILL mention Premium Platinum Plus, which doesn't exist). Get a 6-digit account ID + name, TRANSFER SAVE moves your whole Grok save (Arcade tickets, prizes, badges, DLC and every Grok game) to another device with a code, QR, link or file, LOAD SAVE backs up first and RESTORE BACKUP undoes it. Live Sync (3 devices, friends) is coming later: it needs a save server. Beta in the Time Jumper!",
-      "stage": "building",
-      "when": "Started Oct 16 · beta in the Time Jumper",
-      "key": "bob_account_desk"
+      "what": "Grok Arcade: Bob's Account Desk is open by the GROK ARCADE wall! Bob, Lili's long, chatty, nice-but-pushy big brother, gives you a 6-digit account ID + name. TRANSFER SAVE moves your whole Grok save (Arcade tickets, prizes, badges, DLC and every Grok game) to another device with a code, QR, link or file; LOAD SAVE backs up first and RESTORE BACKUP undoes it. Live Sync (3 devices, friends) comes later: it needs a save server. (Premium Platinum Plus still doesn't exist.)",
+      "stage": "shipped",
+      "when": "Oct 16",
+      "key": "bob_account_desk",
+      "shippedAt": "2026-10-17T03:03:00Z"
     },
     {
       "game": "skytours",
@@ -315,16 +316,6 @@
   ],
   "previews": [
     {
-      "id": "bob-desk",
-      "game": "arcade",
-      "issue": 49,
-      "name": "Bob's Account Desk",
-      "url": "previews/bob-desk/",
-      "playable": true,
-      "built": "2026-10-16",
-      "notes": "Walk-up booth by the GROK ARCADE wall: Bob (Lili's pushy big brother) gives you a 6-digit account + name, TRANSFER SAVE packs the whole Grok save (Arcade + every game) into a code / QR / link / file, LOAD SAVE checks it, backs up and loads, RESTORE BACKUP undoes it. Live Sync: coming soon. Preview: exports read your real save (read only); loads stay in this preview's sandbox."
-    },
-    {
       "id": "pickleball",
       "game": "pickle",
       "issue": 48,
@@ -337,6 +328,18 @@
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "bob-desk",
+      "game": "arcade",
+      "issue": 49,
+      "name": "Bob's Account Desk",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/bob-desk-beta/",
+      "built": "2026-10-16",
+      "archived": "2026-10-16",
+      "notes": "Walk-up booth by the GROK ARCADE wall: Bob (Lili's pushy big brother) gives you a 6-digit account + name, TRANSFER SAVE packs the whole Grok save (Arcade + every game) into a code / QR / link / file, LOAD SAVE checks it, backs up and loads, RESTORE BACKUP undoes it. Live Sync: coming soon. Preview: exports read your real save (read only); loads stay in this preview's sandbox.",
+      "playable": true
+    },
     {
       "id": "skytours-patch",
       "game": "skytours",
