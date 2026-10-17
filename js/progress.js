@@ -300,6 +300,29 @@
 
   /* One-time makeup gift: David bought the Silver Trophy (tr_silver, 300) by accident.
      He keeps the trophy; we refund the tickets once per device on the LIVE arcade save only. */
+  /* One-time makeup gift #2 (Oct 16): David's pet rat Luna went shopping at the Prize Counter on his phone.
+     He keeps the prizes; we refund 1,000 tickets once per device (own key, separate from refund300), LIVE arcade save only. */
+  function giftRefundLuna(after) {
+    try {
+      var path = (location.pathname || '').replace(/\\/g, '/');
+      if (/\/(archive|previews)\//.test(path)) return;
+      if (GA.store.get('gift.lunaRefund1000', 0)) return;
+      GA.store.set('gift.lunaRefund1000', 1);
+      GA.addTickets(1000);
+      if (GA.onTickets) GA.onTickets(GA.getTickets());
+      var tries = 0, iv = setInterval(function () {
+        var hud = document.getElementById('hud');
+        if (++tries > 240) { clearInterval(iv); return; }
+        if (hud && !hud.classList.contains('hidden')) {
+          clearInterval(iv);
+          setTimeout(function () {
+            if (GA.Fix && GA.Fix.toast) GA.Fix.toast('\uD83D\uDC00 Luna went on a shopping spree! Gus grumbled, but here\u2019s a 1,000-ticket refund. Keep the prizes, and keep an eye on that rat.', 6500);
+          }, 1400 + (after ? 6000 : 0)); // wait for the Silver Trophy toast if it showed this visit
+        }
+      }, 500);
+    } catch (e) { /* ignore */ }
+  }
+
   function giftRefund300() {
     try {
       var path = (location.pathname || '').replace(/\\/g, '/');
@@ -329,7 +352,9 @@
       // wait until the player is in the hub (not on the title screen) before announcing
       if (got.length) { var tries = 0, iv = setInterval(function () { var hud = document.getElementById('hud'); if (++tries > 240) clearInterval(iv); if (hud && !hud.classList.contains('hidden')) { clearInterval(iv); setTimeout(function () { if (GA.Fix && GA.Fix.toast) GA.Fix.toast('New: Achievements! You already unlocked ' + got.length + '. See them in the Achievement Gallery.', 4500); }, 1200); } }, 500); }
     }
+    var had300 = !!GA.store.get('gift.refund300', 0);
     giftRefund300();
+    giftRefundLuna(!had300 && !!GA.store.get('gift.refund300', 0));
     pump();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
