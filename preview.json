@@ -5,13 +5,13 @@
     {
       "issue": 48,
       "game": "pickleballpark",
-      "gname": "Grok Pickleball Park",
-      "name": "Grok Pickleball Park",
+      "name": "Grok Pickleball Park (live)",
       "size": "New Game",
-      "what": "NEW GAME, Grok Pickleball Park: a giant walk-in sports park (way bigger than Pup Town). Real pickleball rules (diagonal underhand serve, two-bounce rule, the kitchen, side-out scoring to 11 win by 2), singles or doubles with an AI partner, easy swipe/tap shots: dink, drop, drive, lob, smash and MaxGrit spin. Stadium Court with Umpire Pi-rat, the Night Lights Court, a Quiet Court with Silent Serve foam balls, Torty's Pro Shop (paddles with power/control/spin, including the MaxGrit Signature), the Clubhouse with the Park Ladder and 4 tournaments, Snowie's Snack Shack and Luna's Training Center drills. Polish pass: densely stocked walk-in Pro Shop, Clubhouse, locker room, Snack Shack and Training Center full of displays, props and people. Beta in the Time Jumper!",
-      "stage": "building",
-      "when": "Started Oct 16 · polished beta in the Time Jumper",
-      "key": "pickleball_park"
+      "what": "Grok Pickleball Park is open! A giant cartoon 3D sports park built around real pickleball (two-bounce rule, the kitchen, side-out scoring): singles or doubles, easy swipe/tap shots, the 10-rung Park Ladder and 4 tournaments, the Stadium Court with Umpire Pi-rat, the Night Lights Court, Torty's Pro Shop, the Clubhouse, the Snack Shack and Luna's Training Center. Play it in SPORTS, plus bonus game #44 Target Drill!",
+      "stage": "shipped",
+      "when": "Oct 16",
+      "key": "pickleball_park",
+      "shippedAt": "2026-10-17T04:40:00Z"
     },
     {
       "issue": 49,
@@ -314,20 +314,21 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
-      "id": "pickleball",
+      "id": "pickleballpark",
       "game": "pickleballpark",
       "issue": 48,
       "name": "Grok Pickleball Park",
-      "url": "previews/pickleball/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/pickleballpark-beta/",
       "built": "2026-10-16",
-      "notes": "Polish pass: packed walk-in Pro Shop (racks, mannequins, bag wall, grip spinners, ball bins, try-on benches, Torty on the counter), fuller Clubhouse, locker room, Snack Shack and Training Center; no more ceiling lamps or walls in your face indoors; doubles camera fixed. Its own game in the Time Jumper (not Grok Pickleball)."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-16",
+      "notes": "Polish pass: packed walk-in Pro Shop (racks, mannequins, bag wall, grip spinners, ball bins, try-on benches, Torty on the counter), fuller Clubhouse, locker room, Snack Shack and Training Center; no more ceiling lamps or walls in your face indoors; doubles camera fixed. Its own game in the Time Jumper (not Grok Pickleball).",
+      "playable": true
+    },
     {
       "id": "bob-desk",
       "game": "arcade",

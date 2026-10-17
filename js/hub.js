@@ -914,6 +914,35 @@
         g.fillStyle = '#f8fafc'; g.fillRect(0, h - 16, w, 16); g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('RING DASH', w / 2, 22);
         break;
       }
+      case 'pickleballpark': {
+        // Grok Pickleball Park: sunny park sky, trees, the green PICKLEBALL PARK clubhouse sign, a blue court seen from behind the baseline with a net, two players dinking a neon ball back and forth
+        var gpp = g.createLinearGradient(0, 0, 0, h); gpp.addColorStop(0, '#38bdf8'); gpp.addColorStop(0.42, '#bae6fd'); gpp.addColorStop(0.43, '#4ade80'); gpp.addColorStop(1, '#22c55e'); g.fillStyle = gpp; g.fillRect(0, 0, w, h);
+        g.fillStyle = 'rgba(255,255,255,.9)'; for (i = 0; i < 2; i++) { var pcx = ((t * (8 + i * 5) + i * 120) % (w + 80)) - 40; g.beginPath(); g.ellipse(pcx, h * (0.16 + i * 0.07), 20, 6, 0, 0, 7); g.ellipse(pcx + 10, h * (0.16 + i * 0.07) - 4, 11, 5, 0, 0, 7); g.fill(); }
+        for (i = 0; i < 5; i++) { var ptx = w * (0.04 + i * 0.23); g.fillStyle = '#92400e'; g.fillRect(ptx - 2, h * 0.36, 4, h * 0.07); g.fillStyle = i % 2 ? '#15803d' : '#16a34a'; g.beginPath(); g.arc(ptx, h * 0.34, 11, 0, 7); g.arc(ptx - 7, h * 0.38, 8, 0, 7); g.arc(ptx + 7, h * 0.38, 8, 0, 7); g.fill(); }
+        var ctT = h * 0.47, ctB = h * 0.97; g.fillStyle = '#15803d'; g.beginPath(); g.moveTo(w * 0.22, ctT - 3); g.lineTo(w * 0.78, ctT - 3); g.lineTo(w * 1.02, ctB); g.lineTo(-w * 0.02, ctB); g.closePath(); g.fill();
+        g.fillStyle = '#2563eb'; g.beginPath(); g.moveTo(w * 0.26, ctT); g.lineTo(w * 0.74, ctT); g.lineTo(w * 0.94, ctB - 4); g.lineTo(w * 0.06, ctB - 4); g.closePath(); g.fill();
+        var ctN = ctT + (ctB - ctT) * 0.38, kw = (ctB - ctT) * 0.14; g.fillStyle = 'rgba(250,204,21,.25)'; g.fillRect(w * 0.18, ctN - kw * 0.6, w * 0.64, kw * 1.6);
+        g.strokeStyle = '#fff'; g.lineWidth = 2; g.beginPath(); g.moveTo(w * 0.26, ctT); g.lineTo(w * 0.74, ctT); g.lineTo(w * 0.94, ctB - 4); g.lineTo(w * 0.06, ctB - 4); g.closePath(); g.moveTo(w * 0.5, ctT); g.lineTo(w * 0.5, ctN - kw * 0.6); g.moveTo(w * 0.5, ctN + kw); g.lineTo(w * 0.5, ctB - 4); g.stroke();
+        g.fillStyle = '#334155'; g.fillRect(w * 0.15, ctN - 14, 3, 16); g.fillRect(w * 0.85 - 3, ctN - 14, 3, 16); g.fillStyle = 'rgba(15,23,42,.45)'; g.fillRect(w * 0.15, ctN - 12, w * 0.7, 12); g.fillStyle = '#f8fafc'; g.fillRect(w * 0.15, ctN - 13, w * 0.7, 2);
+        var ph0 = (t * 0.8) % 2, pu = ph0 < 1 ? ph0 : 2 - ph0, pfx = w * (0.4 + Math.sin(t * 0.5) * 0.08), pnx = w * (0.58 + Math.sin(t * 0.7) * 0.1);
+        [[pfx, ctB - 30, 1.15, '#16a34a', ph0 < 1 && pu < 0.12], [pnx, ctT + 16, 0.7, '#f97316', ph0 >= 1 && pu > 0.88]].forEach(function (q) { var s = q[2]; g.fillStyle = 'rgba(0,0,0,.2)'; g.beginPath(); g.ellipse(q[0], q[1] + 18 * s, 12 * s, 3.5 * s, 0, 0, 7); g.fill(); g.fillStyle = q[3]; rrF(g, q[0] - 8 * s, q[1] - 2 * s, 16 * s, 18 * s, 5 * s); g.fillStyle = '#fcd9b6'; g.beginPath(); g.arc(q[0], q[1] - 9 * s, 7 * s, 0, 7); g.fill(); g.fillStyle = '#e6ff3b'; g.fillRect(q[0] - 7 * s, q[1] - 13 * s, 14 * s, 3 * s); g.save(); g.translate(q[0] + 10 * s, q[1] + 2 * s); g.rotate(q[4] ? -0.9 : -0.2); g.fillStyle = '#111827'; rrF(g, -4 * s, -12 * s, 9 * s, 12 * s, 4 * s); g.fillRect(-1 * s, 0, 3 * s, 6 * s); g.restore(); });
+        var pbx = pfx + (pnx - pfx) * pu, pby = (ctB - 34) + ((ctT + 12) - (ctB - 34)) * pu - Math.sin(pu * Math.PI) * h * 0.12, pbr = 4.5 - pu * 1.8; g.fillStyle = 'rgba(0,0,0,.2)'; g.beginPath(); g.ellipse(pbx, (ctB - 20) + ((ctT + 30) - (ctB - 20)) * pu, pbr * 1.4, pbr * 0.5, 0, 0, 7); g.fill(); g.fillStyle = '#e6ff3b'; g.beginPath(); g.arc(pbx, pby, pbr, 0, 7); g.fill(); g.fillStyle = 'rgba(0,0,0,.3)'; g.fillRect(pbx - 1, pby - 1, 2, 2);
+        g.fillStyle = '#16a34a'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.strokeStyle = '#e6ff3b'; g.lineWidth = 2; g.strokeRect(w * 0.06 + 3, 9, w * 0.88 - 6, 20); g.font = font(11); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK PICKLEBALL PARK', w / 2, 23);
+        break;
+      }
+      case 'targetdrill': {
+        var gdr = g.createLinearGradient(0, 0, 0, h); gdr.addColorStop(0, '#4ade80'); gdr.addColorStop(1, '#16a34a'); g.fillStyle = gdr; g.fillRect(0, 0, w, h);
+        var dmx = w * 0.12, dnet = h * 0.42; g.fillStyle = '#2563eb'; g.fillRect(dmx, h * 0.14, w - 2 * dmx, h * 0.84); g.fillStyle = 'rgba(250,204,21,.25)'; g.fillRect(dmx, dnet - h * 0.11, w - 2 * dmx, h * 0.22);
+        g.strokeStyle = '#fff'; g.lineWidth = 2; g.strokeRect(dmx, h * 0.14, w - 2 * dmx, h * 0.84); g.fillStyle = '#f8fafc'; g.fillRect(dmx - 4, dnet - 2, w - 2 * dmx + 8, 4); g.fillStyle = 'rgba(15,23,42,.4)'; g.fillRect(dmx - 4, dnet + 2, w - 2 * dmx + 8, 6);
+        var tgx = w * (0.3 + 0.4 * (0.5 + 0.5 * Math.sin(Math.floor(t * 0.45) * 2.7))), tgy = h * 0.22; g.fillStyle = 'rgba(250,204,21,.3)'; g.beginPath(); g.ellipse(tgx, tgy, 16, 7, 0, 0, 7); g.fill(); g.strokeStyle = '#facc15'; g.lineWidth = 2; g.beginPath(); g.ellipse(tgx, tgy, 16, 7, 0, 0, 7); g.stroke();
+        g.fillStyle = '#334155'; rrF(g, w * 0.5 - 13, dnet - 30, 26, 16, 4); g.fillStyle = '#16a34a'; g.fillRect(w * 0.5 - 10, dnet - 27, 20, 6); g.fillStyle = '#e6ff3b'; g.beginPath(); g.arc(w * 0.5 - 5, dnet - 34, 4, 0, 7); g.arc(w * 0.5 + 4, dnet - 35, 4, 0, 7); g.fill();
+        var du = (t * 0.9) % 1, dtx = w * (0.3 + 0.4 * (0.5 + 0.5 * Math.sin(Math.floor(t * 0.9) * 2.1))), dpy = h * 0.84, dbx, dby;
+        if (du < 0.6) { var uu = du / 0.6; dbx = w * 0.5 + (dtx - w * 0.5) * uu; dby = dnet - 26 + (dpy - (dnet - 26)) * uu - Math.sin(uu * Math.PI) * 30; } else { var vv = (du - 0.6) / 0.4; dbx = dtx + (tgx - dtx) * vv; dby = dpy + (tgy - dpy) * vv - Math.sin(vv * Math.PI) * 40; }
+        g.strokeStyle = '#e6ff3b'; g.lineWidth = 2; g.beginPath(); g.ellipse(dtx, dpy, 12, 5, 0, 0, 7); g.stroke(); g.fillStyle = '#e6ff3b'; g.beginPath(); g.arc(dbx, dby, 5, 0, 7); g.fill();
+        var dpx = w * 0.5 + (dtx - (tgx - w * 0.5) * 0.25 - w * 0.5) * Math.min(1, du * 1.8); g.fillStyle = '#111827'; rrF(g, dpx - 22, dpy - 8, 44, 14, 7); g.fillStyle = '#e6ff3b'; rrF(g, dpx - 20, dpy - 6, 40, 10, 5);
+        g.font = font(17); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('TARGET DRILL', w / 2, 22);
+        break;
+      }
       case 'grocery': {
         // Grok Grocery Tycoon: sunny Shopsville street, the big green GROK GROCERY storefront with striped awning and glowing windows, carts rolling past, Pi-rat scurrying, produce crates out front
         var ggr = g.createLinearGradient(0, 0, 0, h); ggr.addColorStop(0, '#38bdf8'); ggr.addColorStop(0.55, '#bae6fd'); ggr.addColorStop(0.56, '#94a3b8'); ggr.addColorStop(1, '#64748b'); g.fillStyle = ggr; g.fillRect(0, 0, w, h);

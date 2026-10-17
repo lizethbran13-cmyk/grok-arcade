@@ -462,7 +462,7 @@
   var CLOCKS = [];
 
   /* ---------- 11. lost files (daily scavenger hunt, 6 of 13 spots) ---------- */
-  var SPOTS = [[8.0, 24.4], [16.6, 26.0], [4.0, 27.4], [15.0, 29.4], [5.4, 33.4], [10.0, 35.4], [12.2, 36.4], [3.6, 42.3], [7.0, 44.6], [12.6, 44.0], [17.0, 42.6], [15.0, 22.0], [11.9, 13.3]];
+  var SPOTS = [[8.0, 24.4], [16.6, 26.0], [4.0, 27.4], [15.0, 29.4], [5.4, 33.4], [7.3, 33.3], [12.7, 33.3], [3.6, 42.3], [7.0, 44.6], [12.6, 44.0], [17.0, 42.6], [15.0, 22.0], [11.9, 13.3]];
   H2.SPOTS = SPOTS;
   H2.huntPick = function () { var r = rng(hash('h2files:' + H2.dayKey())), ord = SPOTS.map(function (_, i) { return i; }); for (var i = ord.length - 1; i > 0; i--) { var j = Math.floor(r() * (i + 1)), t = ord[i]; ord[i] = ord[j]; ord[j] = t; } return ord.slice(0, 6); };
   function filesBuild() {

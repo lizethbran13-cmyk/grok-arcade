@@ -66,7 +66,9 @@ GA.MAIN_GAMES = [
   { id: 'skytours', name: 'Grok Snowie Sky Tours', desc: 'Fly Snowie\u2019s tour copter over a big open cartoon 3D world inspired by Pup Town, Torty Town and North Pole Village! Fly tour stops, rescue stranded pets, race the ring courses and collect passport stamps. Crashes are harmless: the friendly tow-drone carries you home. Land on any pad and walk into 9 packed buildings and 14 cottages, each with its own mini-game or chore: Ticket Rush, Sky Ace, Gift Wrap Rush, Marshmallow Catch and more. Save your progress and keep flying any time.',
     url: 'https://lizethbran13-cmyk.github.io/grok-sky-tours/', color: '#38bdf8', color2: '#ff4fa0' },
   { id: 'grocery', name: 'Grok Grocery Tycoon', desc: 'Run a store in the cartoon 3D town of Shopsville! Start as a courtesy clerk (bag groceries, push carts, stock shelves, mop spills) and get promoted all the way to owner, or start as the boss and build an empire of 11 store types: supermarkets, supercenters, markets, toy, shoe, electronics, pet, clothing, home goods, pharmacies and convenience stores. Walk into every store and all 9 rival shops, switch to first-person, run deliveries from your own distribution center and hire Luna, Pi-rat, Snowie, Candy and Torty. Save your progress and keep playing any time.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-grocery-tycoon/', color: '#16a34a', color2: '#f97316' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-grocery-tycoon/', color: '#16a34a', color2: '#f97316' },
+  { id: 'pickleballpark', name: 'Grok Pickleball Park', desc: 'A giant cartoon 3D sports park built around real pickleball! Serve, dink, drop, drive, lob and smash with easy touch controls (real kitchen and two-bounce rules), play singles or doubles with Coach Kai, Luna, Snowie or Rally Rita, climb the 10-rung Park Ladder to Pickle King and win 4 tournaments for coins. Play on the Stadium Court with Umpire Pi-rat, 8 open courts and the Night Lights Court, shop for MaxGrit paddles and Silent Serve balls in Torty\u2019s Pro Shop, and visit the Clubhouse, the Snack Shack and the Training Center. Save your progress and keep playing any time.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-pickleball-park/', color: '#16a34a', color2: '#e6ff3b' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -125,6 +127,8 @@ GA.BONUS_GAMES = [
   { id: 'ringdash', name: 'Ring Dash', desc: 'Fly with Snowie! HOLD to climb and let go to dip as the tour copter zooms through the sky rings. Golden rings score big, but watch out for the seagulls. A Grok Snowie Sky Tours game.', color: '#38bdf8', color2: '#ff4fa0' },
   /* #43: Cart Dash (Grok Grocery Tycoon), on the Bonus Zone wall */
   { id: 'cartdash', name: 'Cart Dash', desc: 'Shopping spree in Shopsville! Push your Grok cart up the aisle: TAP left or right to swerve between 3 lanes, catch groceries and golden Grok Goods, and dodge spills and runaway carts. A Grok Grocery Tycoon game.', color: '#16a34a', color2: '#f97316' },
+  /* #44: Target Drill (Grok Pickleball Park), on the Bonus Zone wall */
+  { id: 'targetdrill', name: 'Target Drill', desc: 'Coach Luna\u2019s ball machine drill at the Grok Pickleball Park Training Center! DRAG your MaxGrit paddle under each ball, and use the paddle edges to aim your returns into the gold target ring for big points. Let the OUT balls go, and watch out when a second machine joins in! A Grok Pickleball Park game.', color: '#16a34a', color2: '#e6ff3b' },
 ];
 /* bonus games that have a cabinet on the Bonus Zone wall (1983 retro games live in the old arcade instead) */
 GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era && !g.room; }); };

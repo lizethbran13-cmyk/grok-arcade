@@ -2053,6 +2053,71 @@ GA.HALL_DATA = {
 "quip": "Snowie flew past the Hall window three times to wave at her pictures. The third time she was upside down. On purpose, she says.",
 "noOld": "Grok Snowie Sky Tours just took off. Its Time Jumper beta is in the Save Vault (Final Beta). Please keep your paws inside the copter."
 },
+"pickleballpark": {
+"repo": "grok-pickleball-park",
+"history": [
+{
+"date": "Oct 16",
+"ver": "1.0",
+"title": "Opening day",
+"text": "A giant cartoon 3D sports park built around real pickleball: diagonal underhand serves, the two-bounce rule, the kitchen and side-out scoring to 11. Dink, drop, drive, lob and smash with easy touch controls, play singles or doubles with Coach Kai, Luna, Snowie or Rally Rita, climb the 10-rung Park Ladder to the Pickle King and win 4 tournaments for coins. Play on the Stadium Court with Umpire Pi-rat, 8 open courts, the Night Lights Court and the Quiet Practice Court, and walk into Torty’s Pro Shop (MaxGrit paddles, Silent Serve balls), the Clubhouse, the Dill-icious Snack Shack and the Training Center."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/pickleballpark/1.webp",
+"cap": "The whole park from above: the Stadium Court, 8 open courts, the Night Lights Court and the Pro Shop",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickleballpark/2.webp",
+"cap": "A Park Ladder match on an open court",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickleballpark/3.webp",
+"cap": "Under the lights on the Night Lights Court",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickleballpark/4.webp",
+"cap": "Inside Torty’s Pro Shop: paddle walls, ball bins and the MaxGrit display",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickleballpark/5.webp",
+"cap": "The Clubhouse lobby with the giant golden trophy and the Park Ladder board",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickleballpark/6.webp",
+"cap": "The Dill-icious Snack Shack, run by Snowie",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickleballpark/7.webp",
+"cap": "The Training Center, where Coach Luna runs the drills",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/pickleballpark/8.webp",
+"cap": "Tournament champion! Winning the Park Open",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/pickleballpark/cover.webp",
+"quip": "Pi-rat calls every ball out when he’s losing. He is also the umpire.",
+"noOld": "Grok Pickleball Park just opened its gates. Its Time Jumper beta is in the Save Vault (Final Beta). Let’s dink!"
+},
 "grocery": {
 "repo": "grok-grocery-tycoon",
 "history": [
@@ -2486,5 +2551,6 @@ GA.ARCADE_HISTORY = [
   { date: 'Oct 11', ver: '5.6', title: 'Grok Eatsville Tycoon', text: 'A restaurant tycoon opened in LIFE SIMS: cook, serve and build a food empire in Eatsville, with bonus #37 Patty Panic, the Golden Spatula Keychain, the Inspector Grumbleton Plush, the Golden Burger Cup and a Hall exhibit.' },
   { date: 'Oct 11', ver: '5.7', title: 'Grok Lost Relics', text: 'The Grok Lost Relics cabinet joined the Game Gallery, with bonus game #36 Boulder Run, three new prizes (Jade Monkey Keychain, Professor Vintage Plush, Lost Relics Cup), the Boulder Dodger, Coin Sprinter and Relic Keeper achievements, and a new Hall of Game Records exhibit.' },
   { date: 'Oct 16', ver: '5.8', title: 'Ruffsources HQ & Snowie Sky Tours', text: 'Two new cabinets in HUBS & WORLDS: Grok Ruffsources HQ and Grok Snowie Sky Tours, with bonus games #41 Paw Stamp Rush and #42 Ring Dash, six new prizes, four new achievements and two new Hall exhibits.' },
-  { date: 'Oct 16', ver: '5.9', title: 'Grok Grocery Tycoon', text: 'Shopsville opened in HUBS & WORLDS: the Grok Grocery Tycoon cabinet, bonus game #43 Cart Dash, three new prizes (Mini Grok Cart Keychain, Milky the Carton Plush, Golden Grocery Cup), two new achievements and a new Hall exhibit.' }
+  { date: 'Oct 16', ver: '5.9', title: 'Grok Grocery Tycoon', text: 'Shopsville opened in HUBS & WORLDS: the Grok Grocery Tycoon cabinet, bonus game #43 Cart Dash, three new prizes (Mini Grok Cart Keychain, Milky the Carton Plush, Golden Grocery Cup), two new achievements and a new Hall exhibit.' },
+{ date: 'Oct 16', ver: '6.0', title: 'Grok Pickleball Park', text: 'The park gates opened in SPORTS: the Grok Pickleball Park cabinet, bonus game #44 Target Drill, three new prizes (MaxGrit Paddle Keychain, Dinky the Pickleball Plush, Pickle King Cup), two new achievements and a new Hall exhibit in the Records Annex.' }
 ];
