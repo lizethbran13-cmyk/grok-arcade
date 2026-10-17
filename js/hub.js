@@ -404,7 +404,7 @@
     anims.push(function (t) { tor.rotation.y = t * 0.8; tor.rotation.x = Math.sin(t * 0.5) * 0.4; oct.rotation.y = -t * 1.2; oct.position.y = 3.4 + Math.sin(t * 1.5) * 0.12; star.rotation.y = t; star.rotation.x = t * 0.6; star.position.y = 3.6 + Math.sin(t * 2) * 0.15; });
 
     // wall posters
-    var p1 = sign('INSERT FUN', 2.4, 0.8, '#4ade80'); p1.position.set(ROOM.minX + 0.03, 1.85, 0); p1.rotation.y = Math.PI / 2; wallSign('INSERT FUN poster', p1);
+    var p1 = sign('INSERT FUN', 2.4, 0.8, '#4ade80'); p1.position.set(ROOM.minX + 0.03, 1.95, 4.0); p1.rotation.y = Math.PI / 2; wallSign('INSERT FUN poster', p1); // over the couch: Bob's Account Desk (#49) took its old spot
     var p2 = sign('HIGH SCORE\nLIZETH', 2.2, 1.0, '#fb923c'); p2.position.set(ROOM.minX + 0.03, 2.2, 8.6); p2.rotation.y = Math.PI / 2; wallSign('HIGH SCORE poster', p2);
     // the Official Arcade Rats sign + portrait (bonus zone, south wall; kept clear of the last bonus cabinet and the plant)
     var RX = 14.4;
@@ -1962,6 +1962,7 @@
     if (GA.Areas && GA.Areas.build) { try { GA.Areas.build(api()); } catch (e) { if (window.console) console.warn('Food Court / Rooftop / Basement failed to build', e); } }
     if (GA.Attic && GA.Attic.build) { try { GA.Attic.build(api()); } catch (e) { if (window.console) console.warn('Attic failed to build', e); } }
     if (GA.Preview && GA.Preview.build) { try { GA.Preview.build(api()); } catch (e) { if (window.console) console.warn('Ratita Preview Center failed to build', e); } }
+    if (GA.Account3D && GA.Account3D.build) { try { GA.Account3D.build(api()); } catch (e) { if (window.console) console.warn('Bob\u2019s Account Desk failed to build', e); } }
     buildGary(); buildPlayer(); setupInput();
     // restore position when coming back from a main game
     var saved = null; try { saved = JSON.parse(sessionStorage.getItem('grokArcade.pos') || 'null'); } catch (e) {}
