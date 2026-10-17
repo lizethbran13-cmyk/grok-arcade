@@ -1,7 +1,7 @@
 /* Grok Arcade - RATITA PREVIEW CENTER data (booth: Preview Center). See PREVIEW.md.
    preview.json (in this repo) lists upcoming builds/DLC ("items") and playable work-in-progress snapshots ("previews").
    It is merged with the LIVE GitHub issues on grok-arcade (labels dlc / suggestion), the same way the DLC Board reads them:
-     open + "in-progress" -> BUILDING NOW, open -> UP NEXT, closed + "shipped" -> JUST SHIPPED (closed as not planned/wontfix -> hidden).
+     open + "in-progress" (or preview.json says stage "building") -> BUILDING NOW, open -> UP NEXT, closed + "shipped" -> JUST SHIPPED (closed as not planned/wontfix -> hidden).
    New booth ideas show up on their own (no code change), and preview.json fills in nicer names/descriptions.
    Offline: the last good copy from localStorage, then the bundled fallback below. */
 (function () {
@@ -48,7 +48,7 @@
     (iss || []).forEach(function (it) {
       if (it.pull_request) return; var stg = PV.stageOf(it), j = byIssue[it.number], tg = gameFromTitle(it.title);
       if (!stg) { if (j) j._hide = true; return; }
-      var o = j || { issue: it.number, game: tg.gid, name: tg.name, auto: true }; o.stage = j && j.stage === 'shipped' ? 'shipped' : stg; o.live = true; o.url = it.html_url; o.upd = Date.parse(it.updated_at) || 0; o.closed = (j && Date.parse(j.shippedAt)) || Date.parse(it.closed_at) || 0; o.title = it.title; // preview.json wins: an issue left open after release must not bounce back to BUILDING NOW, and one closed late must not jump to the top of JUST SHIPPED (shippedAt is the real release time)
+      var o = j || { issue: it.number, game: tg.gid, name: tg.name, auto: true }; o.stage = j && j.stage === 'shipped' ? 'shipped' : j && j.stage === 'building' && stg === 'queued' ? 'building' : stg; o.live = true; o.url = it.html_url; o.upd = Date.parse(it.updated_at) || 0; o.closed = (j && Date.parse(j.shippedAt)) || Date.parse(it.closed_at) || 0; o.title = it.title; // preview.json wins: an issue left open after release must not bounce back to BUILDING NOW, and one closed late must not jump to the top of JUST SHIPPED (shippedAt is the real release time)
       o.kind = labs(it).indexOf('dlc') >= 0 ? 'dlc' : 'build';
       if (!j) { o.gname = tg.gname; items.push(o); }
     });
