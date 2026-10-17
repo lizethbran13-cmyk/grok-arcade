@@ -8,8 +8,8 @@
      JSON = { f:'GAS', v:1, acct:{id,name}, dev:{id,name}, t:<ms>, rev:<n>, keys:{ <localStorage key>: <string value>, ... } }
    - LOAD SAVE: checks the code, backs up the current save (grokArcade.account.backup), replaces the save, reloads. RESTORE BACKUP
      swaps the backup back in (and keeps the other one as the new backup, so it's always undoable).
-   LIVE SYNC LATER: GA.Account.sync is the plug. A save server only needs push(snapshot)/pull(accountId) of the SAME snapshot
-   object; account.sync.devices (max 3) and account.sync.friends are already part of the account record. */
+   LIVE SYNC: js/account-sync.js (GA.Sync) syncs the SAME key set through Firebase Firestore with the 6-digit ID, max 3 devices,
+   friend cards. Its own keys (grokArcade.sync*) are never put in a transfer code. */
 (function () {
   'use strict';
   var AC = GA.Account = {};
@@ -17,7 +17,7 @@
   AC.MAX_DEVICES = 3; AC.QR_MAX = 2300; // a phone camera can still read a QR this dense; bigger saves use copy / share / file / link
   AC.HOME = (function () { try { return location.origin + location.pathname; } catch (e) { return 'https://lizethbran13-cmyk.github.io/grok-arcade/'; } })(); // this page (the live arcade, or the Time Jumper preview while it's a beta)
   // never transferred: this device's own id + backups, multiplayer peer ids, data the arcade just re-downloads, dev/test switches
-  var SKIP = [K_BAK, K_DEV, K_LOG, K_REV, 'grokArcade.pvIssues', 'grokArcade.pvJson', 'grokArcade.devUrls', 'grokNet.pid', 'grokNet.peer', 'grokNet.turn'];
+  var SKIP = [K_BAK, K_DEV, K_LOG, K_REV, 'grokArcade.pvIssues', 'grokArcade.pvJson', 'grokArcade.devUrls', 'grokNet.pid', 'grokNet.peer', 'grokNet.turn', 'grokArcade.sync', 'grokArcade.sync.meta', 'grokArcade.sync.backup', 'grokArcade.syncReopen'];
   var SKIP_PFX = ['grokPreview.']; // Time Jumper sandboxes (work-in-progress builds, not real saves)
 
   /* ---------- storage: in a Time Jumper preview the page's localStorage is sandboxed (grokPreview.<id>.*). Exports read the REAL
@@ -144,11 +144,8 @@
   function log(what, s) { var L = getJ(K_LOG, []); L.unshift({ w: what, t: Date.now(), from: s && s.dev ? s.dev.name : '', acct: s && s.acct ? s.acct.id : '', rev: s && s.rev }); setJ(K_LOG, L.slice(0, 12)); }
   AC.log = function () { return getJ(K_LOG, []); };
 
-  /* ---------- LIVE SYNC (later): the plug for a save server. Not connected: GitHub Pages can't store saves. ---------- */
-  AC.sync = { available: false, server: null, reason: 'needs a save server',
-    push: function () { return Promise.reject(new Error('Live Sync needs a save server')); },
-    pull: function () { return Promise.reject(new Error('Live Sync needs a save server')); },
-    link: function () { return Promise.reject(new Error('Live Sync needs a save server')); } };
+  /* ---------- LIVE SYNC lives in js/account-sync.js (GA.Sync) ---------- */
+  AC.sync = { available: true, server: 'firebase', get engine() { return GA.Sync; } };
 
   /* ---------- a transfer LINK (#gas=...) opens Bob's Load Save screen ---------- */
   AC.pendingLink = null;

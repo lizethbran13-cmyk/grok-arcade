@@ -46,9 +46,9 @@
       c.restore();
       // right: live sync sign
       c.save(); c.translate(704, 230); c.fillStyle = '#0f172a'; rr(c, 0, 0, 280, 360, 18); c.fill(); c.strokeStyle = '#38bdf8'; c.lineWidth = 6; rr(c, 6, 6, 268, 348, 14); c.stroke();
-      neon(c, 'LIVE SYNC', 140, 54, 44, '#38bdf8', 250); txt(c, 'coming soon', 140, 98, 30, '#bae6fd', 250);
+      neon(c, 'LIVE SYNC', 140, 54, 44, '#38bdf8', 250); c.fillStyle = '#22c55e'; rr(c, 70, 76, 140, 42, 12); c.fill(); txt(c, 'NOW ON!', 140, 98, 30, '#fff', 130, '900');
       c.strokeStyle = '#38bdf8'; c.lineWidth = 5; c.beginPath(); c.arc(140, 168, 40, 0.4, Math.PI * 1.9); c.stroke(); c.beginPath(); c.moveTo(178, 140); c.lineTo(182, 170); c.lineTo(152, 160); c.stroke();
-      txt(c, 'needs a save server', 140, 236, 26, '#fbbf24', 250); txt(c, '3 devices \u00b7 friends', 140, 276, 26, '#e0f2fe', 250); txt(c, 'for now: TRANSFER CODE', 140, 318, 24, '#a7f3d0', 250);
+      txt(c, 'one 6-digit ID', 140, 236, 26, '#fbbf24', 250); txt(c, '3 devices \u00b7 friends', 140, 276, 26, '#e0f2fe', 250); txt(c, 'syncs by itself!', 140, 318, 24, '#a7f3d0', 250);
       c.restore();
       mouse(c, w / 2 - 70, 724, 30, '#9ca3af'); mouse(c, w / 2, 718, 34, '#d6a26b'); mouse(c, w / 2 + 70, 724, 30, '#ffffff');
     });
@@ -99,7 +99,7 @@
     B3.screen.redraw(function (c, w, h) {
       c.fillStyle = '#0b1020'; c.fillRect(0, 0, w, h); c.strokeStyle = AMB; c.lineWidth = 6; c.strokeRect(6, 6, w - 12, h - 12);
       txt(c, 'YOUR ACCOUNT', w / 2, 46, 34, '#fbbf24', w - 40, '900');
-      if (ac && ac.id) { neon(c, ac.id.slice(0, 3) + ' ' + ac.id.slice(3), w / 2, 140, 96, '#fde68a', w - 60); txt(c, ac.name, w / 2, 222, 40, '#fff', w - 60); txt(c, 'Live Sync: coming soon', w / 2, 278, 26, '#7dd3fc', w - 60); }
+      if (ac && ac.id) { neon(c, ac.id.slice(0, 3) + ' ' + ac.id.slice(3), w / 2, 140, 96, '#fde68a', w - 60); txt(c, ac.name, w / 2, 222, 40, '#fff', w - 60); var on = GA.Sync && GA.Sync.on(); txt(c, on ? 'Live Sync: ON \u2714' : 'Live Sync: ask Bob!', w / 2, 278, 26, on ? '#86efac' : '#7dd3fc', w - 60); }
       else { txt(c, 'not signed up yet', w / 2, 130, 40, '#fff', w - 60); txt(c, 'Talk to Bob! (It\u2019s free.', w / 2, 200, 30, '#fde68a', w - 60); txt(c, 'He WILL mention Premium.)', w / 2, 244, 30, '#fde68a', w - 60); }
     });
   }

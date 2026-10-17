@@ -12,6 +12,14 @@
   st.played = st.played || {}; st.launched = st.launched || {}; st.ev = st.ev || {};
   if (firstRun) st.earned = Math.max(st.earned, GA.getTickets()); // tickets earned before achievements existed still count
   function save() { GA.store.set('prog', S); }
+  // Live Sync (Bob's desk) brought a newer grokArcade.prog from another device: take it without restarting the arcade
+  P._reload = function () {
+    var n = GA.store.get('prog', null); if (!n || typeof n !== 'object') return false;
+    n.unlocked = n.unlocked || {}; n.owned = n.owned || {}; n.unseen = n.unseen || [];
+    var s2 = n.stats = n.stats || {}; s2.earned = s2.earned || 0; s2.spent = s2.spent || 0; s2.rounds = s2.rounds || 0; s2.bests = s2.bests || 0;
+    s2.played = s2.played || {}; s2.launched = s2.launched || {}; s2.ev = s2.ev || {};
+    S = n; st = s2; return true;
+  };
 
   /* ---------- tickets ---------- */
   var rawAdd = GA.addTickets;
