@@ -1,18 +1,18 @@
 // Grok Pickleball Park - a live 3D pickleball match (or drill) on any court in the park.
 // Real rules come from PB.Match (side-out scoring, two-bounce rule, kitchen, diagonal underhand serve). This file draws it and handles touch.
 import * as THREE from 'three';
-import { E, setEnvironment } from './engine.js?v=ppk1';
-import { makeHuman, animHuman } from './humans.js?v=ppk1';
-import { makePet, animPet } from './pets.js?v=ppk1';
-import { MB, toGroup } from './models.js?v=ppk1';
-import { P } from './geo.js?v=ppk1';
-import { S, persist } from './save.js?v=ppk1';
-import { PADDLES, BALLS, COURTS, DRILLS } from './data.js?v=ppk1';
-import { BUILDINGS } from './bld.js?v=ppk1';
-import { SPOTS, ENV, NIGHT } from './map.js?v=ppk1';
-import { sfx, playMusic } from './audio.js?v=ppk1';
-import { IN } from './input.js?v=ppk1';
-import { UMP } from './story.js?v=ppk1';
+import { E, setEnvironment } from './engine.js?v=ppk2';
+import { makeHuman, animHuman } from './humans.js?v=ppk2';
+import { makePet, animPet } from './pets.js?v=ppk2';
+import { MB, toGroup } from './models.js?v=ppk2';
+import { P } from './geo.js?v=ppk2';
+import { S, persist } from './save.js?v=ppk2';
+import { PADDLES, BALLS, COURTS, DRILLS } from './data.js?v=ppk2';
+import { BUILDINGS } from './bld.js?v=ppk2';
+import { SPOTS, ENV, NIGHT } from './map.js?v=ppk2';
+import { sfx, playMusic } from './audio.js?v=ppk2';
+import { IN } from './input.js?v=ppk2';
+import { UMP } from './story.js?v=ppk2';
 
 const PB = window.PB, D = PB.D, R = PB.Rules, PI = Math.PI;
 const Y0 = 0.08; // top of the court surface
@@ -209,7 +209,7 @@ export class MatchView {
     this.box.material.opacity = lerp(this.box.material.opacity, serving ? 0.2 + Math.sin(this.T * 5) * 0.06 : 0, 0.15); }
   camera(dt) { const c = E.camera, m = this.m, me = m.players[0], b = m.ball, C = this.C, k = this.snap ? 1 : Math.min(1, dt * 4.5); this.snap = false;
     if (this.fp) { this.camPos.set(C.x + me.x, Y0 + 1.6, C.z + me.z + 0.05); const bz = b.live ? Math.min(b.z, me.z - 1.5) : -D.HL; this.camLook.lerp(new THREE.Vector3(C.x + (b.live ? b.x : 0) * 0.85, Y0 + (b.live ? clamp(b.y, 0.3, 3) * 0.7 + 0.3 : 0.6), C.z + bz), this.snap ? 1 : Math.min(1, dt * 7)); c.position.copy(this.camPos); }
-    else { const port = c.aspect < 1, tx = C.x + me.x * (port ? 0.35 : 0.6), back = (port ? 8.6 : 5.8), zl = Math.min(Math.max(me.z, D.K) + back, this.C.kind === 'night' || this.C.kind === 'quiet' ? 10.6 : this.C.kind === 'indoor' ? 12.5 : 15), tz = C.z + zl, ty = Y0 + (port ? 6.4 : 4.3) + Math.max(0, Math.max(me.z, D.K) + back - zl) * 0.55; this.camPos.lerp(new THREE.Vector3(tx, ty, tz), k); c.position.copy(this.camPos); this.camLook.lerp(new THREE.Vector3(C.x + me.x * 0.25 + (b.live ? b.x * 0.15 : 0), Y0 + 0.2, C.z - (port ? 2.2 : 1.6) + me.z * 0.15 + Math.max(0, Math.max(me.z, D.K) + back - zl) * 0.45), k); }
+    else { const port = c.aspect < 1, pa_ = m.players[1] && m.players[1].team === 0 ? m.players[1] : null, mx = pa_ ? me.x * 0.55 + pa_.x * 0.45 : me.x, tx = C.x + mx * (port ? (pa_ ? 0.2 : 0.35) : 0.6), back = (port ? 8.6 : 5.8), pz = m.players[1] && m.players[1].team === 0 ? m.players[1].z + 1.2 : 0, zl = Math.min(Math.max(me.z, pz, D.K) + back, this.C.kind === 'night' || this.C.kind === 'quiet' ? 10.6 : this.C.kind === 'indoor' ? 12.5 : 15), tz = C.z + zl, ty = Y0 + (port ? 6.4 : 4.3) + Math.max(0, Math.max(me.z, D.K) + back - zl) * 0.55; this.camPos.lerp(new THREE.Vector3(tx, ty, tz), k); c.position.copy(this.camPos); this.camLook.lerp(new THREE.Vector3(C.x + me.x * 0.25 + (b.live ? b.x * 0.15 : 0), Y0 + 0.2, C.z - (port ? 2.2 : 1.6) + me.z * 0.15 + Math.max(0, Math.max(me.z, D.K) + back - zl) * 0.45), k); }
     c.lookAt(this.camLook); const fov = this.fp ? 74 : (c.aspect < 1 ? 62 : 54); if (Math.abs(c.fov - fov) > 0.1) { c.fov = fov; c.updateProjectionMatrix(); } }
   applyFP() { const f = this.figs[0]; if (f.rig) { f.rig.head.visible = !this.fp; } this.snap = true; }
   toggleFP() { this.fp = !this.fp; S.opts.fp = this.fp; persist(); this.applyFP(); this.hint(this.fp ? '\uD83D\uDC41\uFE0F First-person: you ARE the player' : '\uD83C\uDFA5 Third-person view'); }

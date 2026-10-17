@@ -1,10 +1,10 @@
 // Ratita Industries HQ prop kit: rat-scale offices, labs and yard gear. Real smooth geometry everywhere (rounded boxes,
 // lathes, tubes); every prop batches into its room's merged meshes and registers simple colliders.
 import * as THREE from 'three';
-import { rbox } from './world.js?v=ppk1';
-import { PR, propSeed, rnd, pick } from './props.js?v=ppk1';
-import { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, wedge, gear, star, heart, blobGeo } from './shapes.js?v=ppk1';
-import { textGeo } from './text3d.js?v=ppk1';
+import { rbox } from './world.js?v=ppk2';
+import { PR, propSeed, rnd, pick } from './props.js?v=ppk2';
+import { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, leaf, wedge, gear, star, heart, blobGeo } from './shapes.js?v=ppk2';
+import { textGeo } from './text3d.js?v=ppk2';
 const PI = Math.PI;
 export const R = rnd;
 // ---------- scaled proxy so the big household prop library can be reused at rat scale ----------
@@ -102,7 +102,9 @@ export function plant(w, x, z, s = 1, pot) { hh('bigPlant', w, x, z, 0.12 * s); 
 export function potPlant(w, x, y, z, s = 1, pot = 0xff8a3d) { w.add('g', lathe([[0, 0], [0.22, 0], [0.28, 0.36], [0.3, 0.4], [0, 0.4]], 24, 'pp'), pot, x, y, z, 0, 0, 0, s, s, s); w.add('m', cyl(16), 0x5b3a1e, x, y + 0.36 * s, z, 0, 0, 0, 0.27 * s, 0.03 * s, 0.27 * s);
   for (let i = 0; i < 7; i++) { const a = i / 7 * PI * 2 + R(); w.add('g', leaf(), pick([0x22c55e, 0x16a34a, 0x4ade80]), x + Math.cos(a) * 0.05 * s, y + 0.38 * s, z + Math.sin(a) * 0.05 * s, -0.5 - R() * 0.4, -a + PI / 2, 0, 0.35 * s, 0.6 * s, 0.35 * s); } w.solid(x - 0.25 * s, y, z - 0.25 * s, x + 0.25 * s, y + 0.5 * s, z + 0.25 * s, { cam: false }); }
 export function sofa(w, x, z, ry = 0, col = 0x8b5cf6, cush = 0xa78bfa, L = 22) { return hh('couch', w, x, z, 0.16, ry, L, col, cush); }
-export function rug(w, x, z, ry, L, Dp, a, b) { hh('rug', w, x, z, 0.25, ry, L / 0.25, Dp / 0.25, a, b); }
+export function rug(w, x, z, ry, L, Dp, a = 0xf59e0b, b = 0xfef3c7) { const T = w.tf(x, 0, z, ry), y = 0.1; // sits above every indoor floor (floor top ~0.09)
+  T.add('f', rbox(L, 0.03, Dp, 0.015, 1), a, 0, y + 0.015, 0); T.add('f', rbox(L - 0.4, 0.03, Dp - 0.4, 0.015, 1), b, 0, y + 0.025, 0); T.add('f', rbox(Math.max(0.3, L - 1.1), 0.03, Math.max(0.3, Dp - 1.1), 0.015, 1), a, 0, y + 0.035, 0);
+  const n = Math.max(3, Math.round(Dp / 0.25)); for (let i = 0; i < n; i++) [-1, 1].forEach((s) => T.add('f', rbox(0.14, 0.012, 0.035, 0.005, 1), b, s * (L / 2 + 0.06), y + 0.01, -Dp / 2 + 0.12 + i * (Dp - 0.24) / (n - 1))); }
 export function shelf(w, x, z, ry, W, H, Dp = 0.6, col = 0x9a6a3e) { return hh('bookshelf', w, x, z, 0.25, ry, W / 0.25, H / 0.25, Dp / 0.25, col); }
 export function lamp(w, x, z, shade = 0xffe4b5) { hh('lamp', w, x, z, 0.14, 0, 16, shade); }
 export function vending(w, x, z, ry = 0, col = 0xef4444) { const T = w.tf(x, 0, z, ry); T.slab('g', col, 0, 0, 0, 1.3, 2.3, 0.8, 0.1); T.box('e', 0xcfefff, -0.12, 0.6, 0.41, 0.85, 1.5, 0.04, 0.03); T.box('g', 0x1f2937, 0.45, 0.9, 0.41, 0.25, 0.9, 0.04, 0.03);

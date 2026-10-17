@@ -1,8 +1,8 @@
 // Grok Pickleball Park - court pieces: regulation courts (20 x 44 ft, 7 ft kitchen), sagging nets with tape + center strap,
 // chain-link fences with windscreens, stepped bleachers, light towers, umpire chairs, benches, ball hoppers. Real smooth geometry.
-import * as K from './kit.js?v=ppk1';
-import { rbox } from './world.js?v=ppk1';
-import { txt } from './art.js?v=ppk1';
+import * as K from './kit.js?v=ppk2';
+import { rbox } from './world.js?v=ppk2';
+import { txt } from './art.js?v=ppk2';
 const { rcyl, lathe, sph, cyl, cone, torus, capsule, tube } = K;
 const PI = Math.PI, R = K.R;
 export const CW = { HW: 3.048, HL: 6.705, K: 2.134, POST: 3.35, NS: 0.914, NM: 0.864 };

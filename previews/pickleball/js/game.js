@@ -1,25 +1,25 @@
 // Grok Pickleball Park - the walk-in park: world, people, the 5 pet cameos, ambient matches on the courts,
 // interactions, first-person mode and smart rendering. Live matches are run by MatchView (match3d.js).
 import * as THREE from 'three';
-import { E, setEnvironment, followShadow } from './engine.js?v=ppk1';
-import { World } from './world.js?v=ppk1';
-import { buildMap, SPOTS, ENV, SEATS, SITS, STANDS } from './map.js?v=ppk1';
-import { BUILDINGS, buildingAt } from './bld.js?v=ppk1';
-import { Walker } from './walker.js?v=ppk1';
-import { FollowCam } from './cam.js?v=ppk1';
-import { makePet, animPet } from './pets.js?v=ppk1';
-import { Crowd } from './crowd.js?v=ppk1';
-import { readMove, edge, IN } from './input.js?v=ppk1';
-import { updateFrustum, inView, LightPool } from './perf.js?v=ppk1';
-import { S, persist } from './save.js?v=ppk1';
-import { sfx, playMusic } from './audio.js?v=ppk1';
-import { talk, talking, toast } from './uikit.js?v=ppk1';
-import { MATS } from './mats.js?v=ppk1';
-import { Builder, P } from './geo.js?v=ppk1';
-import { compact } from './compact.js?v=ppk1';
-import { COURTS, PADDLES } from './data.js?v=ppk1';
-import { LINES, goal } from './story.js?v=ppk1';
-import { MatchView } from './match3d.js?v=ppk1';
+import { E, setEnvironment, followShadow } from './engine.js?v=ppk2';
+import { World } from './world.js?v=ppk2';
+import { buildMap, SPOTS, ENV, SEATS, SITS, STANDS } from './map.js?v=ppk2';
+import { BUILDINGS, buildingAt } from './bld.js?v=ppk2';
+import { Walker } from './walker.js?v=ppk2';
+import { FollowCam } from './cam.js?v=ppk2';
+import { makePet, animPet } from './pets.js?v=ppk2';
+import { Crowd } from './crowd.js?v=ppk2';
+import { readMove, edge, IN } from './input.js?v=ppk2';
+import { updateFrustum, inView, LightPool } from './perf.js?v=ppk2';
+import { S, persist } from './save.js?v=ppk2';
+import { sfx, playMusic } from './audio.js?v=ppk2';
+import { talk, talking, toast } from './uikit.js?v=ppk2';
+import { MATS } from './mats.js?v=ppk2';
+import { Builder, P } from './geo.js?v=ppk2';
+import { compact } from './compact.js?v=ppk2';
+import { COURTS, PADDLES } from './data.js?v=ppk2';
+import { LINES, goal } from './story.js?v=ppk2';
+import { MatchView } from './match3d.js?v=ppk2';
 const PI = Math.PI, PB = window.PB;
 const _r = new THREE.Ray(), _v = new THREE.Vector3(), _b = new THREE.Box3(), _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _s = new THREE.Vector3(), _e = new THREE.Euler();
 // shared instanced paddle + ball geometry for the ambient players
@@ -45,7 +45,7 @@ export class Game {
     SITS.forEach((q, i) => { this.people.push({ x: q.x, z: q.z, y: q.y - 0.79, ry: q.ry, sit: true, look: c.look(900 + i * 31, false), region: regionAt(q.x, q.z), name: q.name }); });
     STANDS.forEach((q, i) => { const a = { x: q.x, z: q.z, y: 0.06, ry: q.ry, look: c.look(1500 + i * 17, !!q.staff), region: regionAt(q.x, q.z), name: q.name || (q.staff ? 'Staff' : 'Visitor') }; if (q.staff) a.cap = true; this.people.push(a); k++; });
     // strollers on loops (paths + plaza)
-    const loops = [[[3, 104], [3, 80], [10, 62], [0, 46], [-10, 62], [3, 80]], [[-80, 19], [80, 19]], [[80, 19.6], [-80, 19.6]], [[0, 44], [0, 10]], [[-54, 14], [-54, -30], [-30, -30], [30, -30], [54, -30], [54, 14]],
+    const loops = [[[3, 104], [3, 80], [10, 62], [0, 46], [-10, 62], [3, 80]], [[-80, 19], [80, 19]], [[80, 19.6], [-80, 19.6]], [[0, 44], [0, 10]], [[-54, 19.4], [-89, 19.4], [-89, -30], [-30, -30], [30, -30], [89, -30], [89, 19.4], [54, 19.4]],
       [[-14, 55], [-14, 65], [14, 65], [14, 55]], [[-40, 120], [-12, 118], [-12, 108], [-40, 108]], [[2, 86], [14, 92], [2, 98]], [[-50, -30], [50, -30]], [[-12, 47], [12, 73]], [[12, 47], [-12, 73]], [[-3, 30], [-30, 19], [-3, 30], [30, 19]]];
     this.walkers = loops.map((pts, i) => ({ x: pts[0][0], z: pts[0][1], y: 0.04, ry: 0, look: c.look(4000 + i * 31, false), path: pts, wi: 1, region: 'out', sp: 0, wt: i }));
     loops.slice(0, 6).forEach((pts, i) => this.walkers.push({ x: pts[pts.length - 1][0], z: pts[pts.length - 1][1], y: 0.04, ry: 0, look: c.look(5000 + i * 37, false), path: pts.slice().reverse(), wi: 1, region: 'out', sp: 0, wt: i * 2 }));
@@ -67,9 +67,9 @@ export class Game {
       const b = m.ball; if (nb < 8 && (b.live || m.phase === 'serve' || m.phase === 'pre')) { _m.compose(_v.set(C.x + b.x, b.y, C.z + b.z), _q.identity(), _s.set(1, 1, 1)); this.ballMesh.setMatrixAt(nb++, _m); } }
     this.padMesh.count = np; this.padMesh.instanceMatrix.needsUpdate = true; this.ballMesh.count = nb; this.ballMesh.instanceMatrix.needsUpdate = true; }
   // ---------------- the 5 pets (exactly one of each in the world, ever) ----------------
-  npc(id, o) { const p = makePet(id, o); p.x = o.at[0]; p.z = o.at[1]; p.y = o.y || 0.07; p.yaw = o.yaw || 0; p.home = [p.x, p.z]; p.walk = o.walk || null; p.wi = 0; p.wait = 0; p.talk = o.talk; p.label = o.label; p.region = o.region; this.add(p.root); this.npcs.push(p); return p; }
+  npc(id, o) { const p = makePet(id, o); p.x = o.at[0]; p.z = o.at[1]; p.y = o.y || 0.07; p.yaw = o.yaw || 0; p.home = [p.x, p.z]; p.walk = o.walk || null; p.wi = 0; p.wait = 0; p.talk = o.talk; p.label = o.label; p.region = o.region; p.root.position.set(p.x, p.y, p.z); p.root.rotation.y = p.yaw; this.add(p.root); this.npcs.push(p); return p; }
   buildPets() { const SP = SPOTS;
-    this.torty = this.npc('torty', { at: SP.torty, y: 1.13, yaw: 0, s: 0.9, label: '🐢 Torty\'s shop', region: 'in_shop', talk: () => this.talkTorty() });
+    this.torty = this.npc('torty', { at: SP.torty, y: 1.13, yaw: 0, s: 1.15, label: '🐢 Torty\'s shop', region: 'in_shop', talk: () => this.talkTorty() });
     this.luna = this.npc('luna', { at: SP.luna, y: 1.13, yaw: 0, s: 1.25, label: '🐭 Coach Luna: drills', region: 'in_train', talk: () => this.talkLuna() });
     this.snowie = this.npc('snowie', { at: SP.snowie, y: 1.13, yaw: PI / 2, s: 1.25, label: '🐁 Snowie\'s snacks', region: 'in_snack', talk: () => this.talkSnowie() });
     this.pirat = this.npc('pirat', { at: [SP.ump[0], SP.ump[2]], y: SP.ump[1] + 0.06, yaw: PI / 2, s: 1.25, label: '🏴‍☠️ Umpire Pi-rat', region: 'out', talk: () => talk(LINES.pirat) });
@@ -133,16 +133,19 @@ export class Game {
     // pets: stroll routes, face you, only animated on screen
     for (const p of this.npcs) { if (p.busy) continue; if (p.walk) { const t = p.walk[p.wi]; const dx = t[0] - p.x, dz = t[1] - p.z, d = Math.hypot(dx, dz); const near = Math.hypot(me.x - p.x, me.z - p.z) < 2.6;
         if (near) p.speed = 0; else if (p.wait > 0) { p.wait -= dt; p.speed = 0; } else if (d < 0.3) { p.wi = (p.wi + 1) % p.walk.length; p.wait = 1.2 + Math.random() * 2; } else { const sp = p.kind === 'tort' ? 0.7 : 1.7; p.x += dx / d * sp * dt; p.z += dz / d * sp * dt; p.yaw = Math.atan2(dx, dz); p.speed = sp; } p.noTurn = !near; }
-      if (p.root.visible && inView(p.x, p.y + 0.5, p.z, 1.5)) animPet(p, dt, focus); }
+      if (p.root.visible && inView(p.x, p.y + 0.5, p.z, 1.5)) animPet(p, dt, focus); else { p.root.position.set(p.x, p.y, p.z); p.root.rotation.y = p.yaw; } }
     this.stepAmbient(dt); this.drawCrowd(dt);
     this.lightPool.update(dt, focus.x, focus.y || 0, focus.z); followShadow(focus.x, focus.y || 0, focus.z); this.app.hud.update(this); }
   drawCrowd(dt) { const me = this.mv ? this.mv.focus() : this.me, list = [], RM = this.world.regionMeshes; const cheer = this.mv ? this.mv.cheerT > 0 : false;
     for (const A of this.amb) for (const f of A.figs) list.push(f);
     for (const a of this.walkers) { const t = a.path[a.wi]; const dx = t[0] - a.x, dz = t[1] - a.z, d = Math.hypot(dx, dz); if (d < 0.3) a.wi = (a.wi + 1) % a.path.length; else { const sp = 1.3; a.x += dx / d * sp * dt; a.z += dz / d * sp * dt; a.ry = Math.atan2(dx, dz); a.sp = sp; a.wt = (a.wt || 0) + dt * sp * 4.2; } a.vis = (!this.inB || this.fp || !!this.mv) && Math.hypot(a.x - me.x, a.z - me.z) < 80; list.push(a); }
     for (const a of this.people) { a.vis = a.region === 'out' ? Math.hypot(a.x - me.x, a.z - me.z) < 85 : !!(RM[a.region] && RM[a.region][0] && RM[a.region][0].visible); if (a.fan) { const near = this.mv && Math.hypot(a.x - this.mv.C.x, a.z - this.mv.C.z) < 26; a.cheer = cheer && near ? 1 : 0; a.sit = !a.cheer; a.y = a.cheer ? a.base + 0.42 : a.base; } list.push(a); }
+    if (this.mv) { const C = this.mv.C; for (const a of this.walkers) if (a.vis && Math.abs(a.x - C.x) < 5.5 && Math.abs(a.z - C.z) < 9.5) a.vis = false; }
     for (const a of list) if (a.vis && !inView(a.x, 1, a.z, 1.4)) a.vis = false;
     { let n = 0; const f = this.mv ? this.mv.focus() : me; for (const a of list) if (a.vis) n++; if (n > 230) { const far = list.filter((a) => a.vis && !a.ambP).sort((a, b) => Math.hypot(b.x - f.x, b.z - f.z) - Math.hypot(a.x - f.x, a.z - f.z)); for (let i = 0; i < n - 230 && i < far.length; i++) far[i].vis = false; } }
     this.crowd.draw(list, [], this.T); }
+  // screenshot/debug helper: park the camera somewhere and redraw the crowd for that view
+  peek(px, py, pz, tx, ty, tz) { E.camera.position.set(px, py, pz); E.camera.lookAt(tx, ty, tz); updateFrustum(E.camera); this.drawCrowd(0); }
   render(dt) { followShadow(this.me.x, this.me.y, this.me.z); }
   refreshMe() { const p = [this.me.x, this.me.y, this.me.z], y = this.me.yaw; this.me.removeFrom(this.scene); this.me = new Walker(S.look); this.me.addTo(this.scene); this.me.place(p, y); this.me.setVisible(!this.fp && !this.mv); }
   tp(x, z, yaw = PI) { this.me.place([x, 0.1, z], yaw); this.cam.yaw = yaw + PI; this.cam.snap = true; this.setVis(true); }

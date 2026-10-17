@@ -1,12 +1,12 @@
 // Grok Pickleball Park - menus: title, look, how-to, journal, Pro Shop, ladder, tournaments, match setup, drills, snacks, results.
-import { $, esc } from './util.js?v=ppk1';
-import { S, persist, resetSave } from './save.js?v=ppk1';
-import { sfx, setSound } from './audio.js?v=ppk1';
-import { panel, closePanel, on, toast } from './uikit.js?v=ppk1';
-import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=ppk1';
-import { goal } from './story.js?v=ppk1';
-import { PADDLES, BALLS, HATS, SHOES, RANKS, rankOf, LADDER, NAMES, TOURNEYS, DRILLS, COURTS, PARTNERS } from './data.js?v=ppk1';
-import { SPOTS } from './map.js?v=ppk1';
+import { $, esc } from './util.js?v=ppk2';
+import { S, persist, resetSave } from './save.js?v=ppk2';
+import { sfx, setSound } from './audio.js?v=ppk2';
+import { panel, closePanel, on, toast } from './uikit.js?v=ppk2';
+import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=ppk2';
+import { goal } from './story.js?v=ppk2';
+import { PADDLES, BALLS, HATS, SHOES, RANKS, rankOf, LADDER, NAMES, TOURNEYS, DRILLS, COURTS, PARTNERS } from './data.js?v=ppk2';
+import { SPOTS } from './map.js?v=ppk2';
 const hex = (c) => '#' + c.toString(16).padStart(6, '0');
 const R = () => Math.random(), pick = (a) => a[(R() * a.length) | 0];
 const rndLook = () => ({ skin: (R() * 6) | 0, hair: (R() * 6) | 0, hairC: (R() * 6) | 0, shirt: (R() * 8) | 0, pants: (R() * 6) | 0 });

@@ -4,13 +4,13 @@
   "items": [
     {
       "issue": 48,
-      "game": "pickle",
+      "game": "pickleballpark",
       "gname": "Grok Pickleball Park",
       "name": "Grok Pickleball Park",
       "size": "New Game",
-      "what": "NEW GAME, Grok Pickleball Park: a giant walk-in sports park (way bigger than Pup Town). Real pickleball rules (diagonal underhand serve, two-bounce rule, the kitchen, side-out scoring to 11 win by 2), singles or doubles with an AI partner, easy swipe/tap shots: dink, drop, drive, lob, smash and MaxGrit spin. Stadium Court with Umpire Pi-rat, the Night Lights Court, a Quiet Court with Silent Serve foam balls, Torty's Pro Shop (paddles with power/control/spin, including the MaxGrit Signature), the Clubhouse with the Park Ladder and 4 tournaments, Snowie's Snack Shack and Luna's Training Center drills. Beta in the Time Jumper!",
+      "what": "NEW GAME, Grok Pickleball Park: a giant walk-in sports park (way bigger than Pup Town). Real pickleball rules (diagonal underhand serve, two-bounce rule, the kitchen, side-out scoring to 11 win by 2), singles or doubles with an AI partner, easy swipe/tap shots: dink, drop, drive, lob, smash and MaxGrit spin. Stadium Court with Umpire Pi-rat, the Night Lights Court, a Quiet Court with Silent Serve foam balls, Torty's Pro Shop (paddles with power/control/spin, including the MaxGrit Signature), the Clubhouse with the Park Ladder and 4 tournaments, Snowie's Snack Shack and Luna's Training Center drills. Polish pass: densely stocked walk-in Pro Shop, Clubhouse, locker room, Snack Shack and Training Center full of displays, props and people. Beta in the Time Jumper!",
       "stage": "building",
-      "when": "Started Oct 16 · beta in the Time Jumper",
+      "when": "Started Oct 16 · polished beta in the Time Jumper",
       "key": "pickleball_park"
     },
     {
@@ -317,13 +317,13 @@
   "previews": [
     {
       "id": "pickleball",
-      "game": "pickle",
+      "game": "pickleballpark",
       "issue": 48,
       "name": "Grok Pickleball Park",
       "url": "previews/pickleball/",
       "playable": true,
       "built": "2026-10-16",
-      "notes": "NEW GAME: a giant walk-in sports park. Real pickleball (diagonal underhand serve, two-bounce rule, kitchen, side-out scoring to 11 win by 2), singles or doubles with an AI partner (Kai, Luna, Snowie, Rita), swipe/tap shots (dink, drop, drive, lob, smash + MaxGrit spin). Stadium Court with Umpire Pi-rat, 8 open courts, Night Lights Court, Quiet Court (Silent Serve foam + Candy), Torty's Pro Shop, Clubhouse (Park Ladder + 4 tournaments), Snack Shack (Snowie), Training Center drills with Luna. First + third person."
+      "notes": "Polish pass: packed walk-in Pro Shop (racks, mannequins, bag wall, grip spinners, ball bins, try-on benches, Torty on the counter), fuller Clubhouse, locker room, Snack Shack and Training Center; no more ceiling lamps in your face indoors; doubles camera fixed. Its own game in the Time Jumper (not Grok Pickleball)."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
@@ -510,5 +510,11 @@
       "playable": true
     }
   ],
-  "archiveHelp": "Save Booth (Save Vault in the Preview Center): the LAST Time Jumper preview of every game that shipped, kept playable forever at archive/<id>-beta/ with its own grokBeta.<id>. save. Made with: node tools/make-preview.js --archive <id> (never delete previews). Each entry also shows in that game's Hall of Records Old Versions as 'Final Beta (Time Jumper)'."
+  "archiveHelp": "Save Booth (Save Vault in the Preview Center): the LAST Time Jumper preview of every game that shipped, kept playable forever at archive/<id>-beta/ with its own grokBeta.<id>. save. Made with: node tools/make-preview.js --archive <id> (never delete previews). Each entry also shows in that game's Hall of Records Old Versions as 'Final Beta (Time Jumper)'.",
+  "wip": {
+    "pickleballpark": {
+      "name": "Grok Pickleball Park",
+      "cover": "assets/wip/pickleballpark/cover.webp"
+    }
+  }
 }

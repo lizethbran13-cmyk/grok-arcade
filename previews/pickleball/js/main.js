@@ -1,16 +1,16 @@
 // Grok Pickleball Park - boot, app state, main loop.
 import * as THREE from 'three';
-import { E, initEngine, render, trackFps } from './engine.js?v=ppk1';
-import { initMats } from './mats.js?v=ppk1';
-import { initInput, clearEdges, edge } from './input.js?v=ppk1';
-import { initAudio, setSound, sfx } from './audio.js?v=ppk1';
-import { S, persist } from './save.js?v=ppk1';
-import { HUD } from './hud.js?v=ppk1';
-import { UI } from './ui.js?v=ppk1';
-import { closePanel } from './uikit.js?v=ppk1';
-import { Game } from './game.js?v=ppk1';
-import { $ } from './util.js?v=ppk1';
-import { loadFont } from './text3d.js?v=ppk1';
+import { E, initEngine, render, trackFps } from './engine.js?v=ppk2';
+import { initMats } from './mats.js?v=ppk2';
+import { initInput, clearEdges, edge } from './input.js?v=ppk2';
+import { initAudio, setSound, sfx } from './audio.js?v=ppk2';
+import { S, persist } from './save.js?v=ppk2';
+import { HUD } from './hud.js?v=ppk2';
+import { UI } from './ui.js?v=ppk2';
+import { closePanel } from './uikit.js?v=ppk2';
+import { Game } from './game.js?v=ppk2';
+import { $ } from './util.js?v=ppk2';
+import { loadFont } from './text3d.js?v=ppk2';
 const app = window.__pt = { state: 'boot', paused: true, game: null, ready: false, busy: false };
 function setLoad(p, t) { const b = $('loadBar'); if (b) b.style.width = p + '%'; if (t) $('loadTxt').textContent = t; }
 async function boot() {
@@ -51,4 +51,5 @@ boot().catch((e) => { console.error(e); $('loadTxt').textContent = 'Oops: ' + e.
 setInterval(() => { const b = document.getElementById('ratitaWip'); const h = b ? Math.ceil(b.getBoundingClientRect().bottom) + 2 : 0; const v = h ? h + 'px' : '0px'; if (document.documentElement.style.getPropertyValue('--wip') !== v) document.documentElement.style.setProperty('--wip', v); }, 500);
 // test / screenshot helpers
 app.tp = (x, z, yaw) => app.game.tp(x, z, yaw);
+app.peek = (...a) => { app.paused = true; app.game.peek(...a); };
 app.match = (cfg) => { app.ui.start(cfg); };

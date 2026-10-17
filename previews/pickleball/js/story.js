@@ -1,6 +1,6 @@
 // Grok Pickleball Park - what everyone says. Martina the tortoise runs the Pro Shop; friends call her "Torty".
-import { S } from './save.js?v=ppk1';
-import { LADDER, TOURNEYS, rankOf } from './data.js?v=ppk1';
+import { S } from './save.js?v=ppk2';
+import { LADDER, TOURNEYS, rankOf } from './data.js?v=ppk2';
 export const LINES = {
   pirat: [['\uD83C\uDFF4\u200D\u2620\uFE0F Umpire Pi-rat', 'Arr! Welcome to Stadium Court, matey. I call every line with me one good eye.'], ['\uD83C\uDFF4\u200D\u2620\uFE0F Umpire Pi-rat', 'Remember: serve underhand, diagonal. Let the serve bounce, and the return bounce. THEN ye may volley!'], ['\uD83C\uDFF4\u200D\u2620\uFE0F Umpire Pi-rat', 'And no volleyin\' in the kitchen! Torty fined me three cheese cubes for that once.']],
   torty0: [['\uD83D\uDC22 Martina (Torty)', 'Welcome to Torty\'s Pro Shop! I\'m Martina, CEO of Tortuga Tech. Everybody calls me Torty.'], ['\uD83D\uDC22 Torty', 'Every paddle has three numbers: POWER for drives, CONTROL for soft dinks and drops, and SPIN for slice and topspin.'], ['\uD83D\uDC22 Torty', 'See the MaxGrit Signature on the glowing stand? Gritty face, tons of spin. And the Silent Serve foam balls are perfect for the Quiet Court.']],

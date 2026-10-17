@@ -1,7 +1,7 @@
 // HUD: area chip, next goal, coins + rating, the context action button.
-import { $ } from './util.js?v=ppk1';
-import { S } from './save.js?v=ppk1';
-import { goal } from './story.js?v=ppk1';
+import { $ } from './util.js?v=ppk2';
+import { S } from './save.js?v=ppk2';
+import { goal } from './story.js?v=ppk2';
 export class HUD {
   region(n) { const e = $('hArea'); if (e && e.textContent !== n) { e.textContent = n; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } }
   setAct(a) { const b = $('tAct'); const k = a ? a.label : ''; if (k === this._ak) return; this._ak = k; if (a) { b.classList.remove('hidden'); b.textContent = a.label; } else b.classList.add('hidden'); }

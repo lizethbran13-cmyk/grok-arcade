@@ -1,7 +1,7 @@
 // Walk-in building shells: thick walls with door/window holes (each wall side is a camera-fade group so it hides while it
 // blocks your view inside), a floor, and a roof on its own region (hidden while you're inside, so the rooms read like a dollhouse).
-import * as K from './kit.js?v=ppk1';
-import { rbox } from './world.js?v=ppk1';
+import * as K from './kit.js?v=ppk2';
+import { rbox } from './world.js?v=ppk2';
 export const BUILDINGS = [];
 // b: { id, name, x0, z0, x1, z1, h, wall, trim, roof, floor:'wood'|'tile'|'carpet'|'marble', fc1, fc2, doors:[{side:'s'|'n'|'e'|'w', at, w}], win:{n,s,e,w}, flat }
 export function shell(w, b) {

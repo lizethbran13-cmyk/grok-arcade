@@ -1,11 +1,11 @@
 // World: batched static geometry (chunked per material), colliders, zones and queries.
 import * as THREE from 'three';
-import { SB, DB, DROP } from './layout.js?v=ppk1';
-import { compact, spillCompact } from './compact.js?v=ppk1';
+import { SB, DB, DROP } from './layout.js?v=ppk2';
+import { compact, spillCompact } from './compact.js?v=ppk2';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
-import { MATS } from './mats.js?v=ppk1';
-import { remap as THR } from './theme.js?v=ppk1';
+import { MATS } from './mats.js?v=ppk2';
+import { remap as THR } from './theme.js?v=ppk2';
 
 const CH = 22, CELL = 8;
 const _m = new THREE.Matrix4(), _m2 = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _v = new THREE.Vector3(), _s = new THREE.Vector3(), _c = new THREE.Color(), _n = new THREE.Matrix3();

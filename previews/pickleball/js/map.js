@@ -2,19 +2,19 @@
 // the Pro Shop, the Dill-icious Snack Shack, the Training Center (with an indoor court), Stadium Court with full bleachers,
 // 8 community courts, the Night Lights Court, the Quiet Practice Court, a playground, picnic lawn and Candy's Dog Run.
 import * as THREE from 'three';
-import * as K from './kit.js?v=ppk1';
-import { rbox } from './world.js?v=ppk1';
-import { shell, part, onSide } from './bld.js?v=ppk1';
-import { txt, poster, frameArt, wallWord, clockW, pendant, planter, awning, trash } from './art.js?v=ppk1';
-import { court, PAL, CW, fence, fencedBox, bleachers, lightTower, umpireChair, scoreFrame, paddleProp, hopper, ballBucket } from './court.js?v=ppk1';
-import { COURTS } from './data.js?v=ppk1';
+import * as K from './kit.js?v=ppk2';
+import { rbox } from './world.js?v=ppk2';
+import { shell, part, onSide } from './bld.js?v=ppk2';
+import { txt, poster, frameArt, wallWord, clockW, pendant, planter, awning, trash } from './art.js?v=ppk2';
+import { court, PAL, CW, fence, fencedBox, bleachers, lightTower, umpireChair, scoreFrame, paddleProp, hopper, ballBucket } from './court.js?v=ppk2';
+import { COURTS } from './data.js?v=ppk2';
 const { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, propSeed } = K;
 const PI = Math.PI, R = K.R, pick = K.pick;
 export const SPOTS = {}; export const SEATS = []; export const SITS = []; export const STANDS = [];
 export const ENV = { sunDir: [0.5, 0.78, 0.38], sunColor: 0xfff1dc, sunI: 2.5, hemiSky: 0xd6ecff, hemiGround: 0x7a9a5a, hemiI: 0.62, skyTop: 0x2f7fe0, skyMid: 0xa8d8ff, skyBot: 0xeaf6ff, fog: 0xd8ecff, fogD: 0.0032, exposure: 1.0, envI: 0.85, bloomT: 1.05, bloomS: 0.35, sunDisc: 1, stars: 0 };
 export const NIGHT = { sunDir: [-0.3, 0.7, -0.5], sunColor: 0x9db4ff, sunI: 0.55, hemiSky: 0x3a4a8a, hemiGround: 0x1a2030, hemiI: 0.45, skyTop: 0x050a24, skyMid: 0x1b2a5e, skyBot: 0x2a3570, fog: 0x141c3c, fogD: 0.006, exposure: 1.05, envI: 0.35, bloomT: 0.9, bloomS: 0.65, moon: 1, stars: 1, nebula: 0x30205a };
 // reserved rectangles (no trees / clutter): [x0,z0,x1,z1]
-const RES = [[-90, -14, 90, 26], [-20, -30, 20, 8], [-64, -64, -44, -36], [44, -64, 64, -36], [-56, 40, -14, 74], [14, 42, 48, 72], [-38, 76, -2, 98], [12, 74, 54, 114], [-6, 8, 6, 124], [-20, 42, 20, 78], [-74, 102, -8, 138], [-14, 112, 14, 126], [-16, -64, 16, -36]];
+const RES = [[-90, -14, 90, 26], [-94, -38, -84, 26], [84, -38, 94, 26], [-94, -34, 94, -26], [-20, -30, 20, 8], [-64, -64, -44, -36], [44, -64, 64, -36], [-56, 40, -14, 74], [14, 42, 48, 72], [-38, 76, -2, 98], [12, 74, 54, 114], [-6, 8, 6, 124], [-20, 42, 20, 78], [-74, 102, -8, 138], [-14, 112, 14, 126], [-16, -64, 16, -36]];
 const free = (x, z, m = 2) => !RES.some(([a, b, c, d]) => x > a - m && x < c + m && z > b - m && z < d + m);
 // ---------------- little helpers ----------------
 function pball(w, bucket, x, y, z, r, col = 0xe6ff3b, holes = 0x9fb81a) { w.add(bucket, sph(28), col, x, y, z, 0, 0, 0, r, r, r); const n = 12; for (let i = 0; i < n; i++) { const t = Math.acos(1 - 2 * (i + 0.5) / n), p = i * 2.399; const nx = Math.sin(t) * Math.cos(p), ny = Math.cos(t), nz = Math.sin(t) * Math.sin(p); w.add(bucket, sph(12), holes, x + nx * r * 0.97, y + ny * r * 0.97, z + nz * r * 0.97, 0, 0, 0, r * 0.13, r * 0.13, r * 0.13); } }
@@ -59,7 +59,7 @@ export function buildMap(w) {
   { const N = 120, Sz = 420; const g = new THREE.PlaneGeometry(Sz, Sz, N, N); g.rotateX(-PI / 2); const p = g.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), z = p.getZ(i) - 30, r = Math.max(Math.abs(x) * 0.95, Math.abs(z) * 0.9); const hill = r > 118 ? Math.pow((r - 118) / 70, 1.6) * 22 * (0.7 + 0.3 * Math.sin(x * 0.05) * Math.cos(z * 0.04)) : 0; p.setY(i, hill - 0.02); p.setZ(i, p.getZ(i) + 30); } g.computeVertexNormals();
     w.addFn('m', g, (c, x, y, z) => { const n = Math.sin(x * 0.19) * Math.cos(z * 0.15) * 0.5 + Math.sin(x * 0.04 + z * 0.06) * 0.5; c.setHSL(0.27 + n * 0.025, 0.52, 0.42 + n * 0.05 + Math.min(0.08, y * 0.004)); }, 0, 0, 0); w.solid(-210, -3, -180, 210, 0, 240, { floor: true }); }
   paths(w); plaza(w); entrance(w); stadium(w); complexes(w); nightCourt(w); quietCourt(w); northLawn(w);
-  clubhouse(w); proShop(w); snackBar(w); training(w); nature(w);
+  clubhouse(w); proShop(w); snackBar(w); training(w); shopFill(w); clubFill(w); snackFill(w); trainFill(w); nature(w);
   w.region = 'out';
 }
 function paths(w) { const T = (x0, z0, x1, z1, c1 = 0xe8dcc4, c2 = 0xdccfb4) => K.floor(w, x0, z0, x1, z1, 'tile', 0.02, c1, c2, 1.5);
@@ -67,8 +67,8 @@ function paths(w) { const T = (x0, z0, x1, z1, c1 = 0xe8dcc4, c2 = 0xdccfb4) => 
   T(-84, 16, 84, 22, 0xd9cfbd, 0xcdc2ad); // Court Row walk
   T(-56, 52, -16, 58); T(16, 54, 56, 60); // to clubhouse / pro shop doors
   T(-14, 84, -3.5, 90); T(3.5, 89, 16, 95); // snack shack + training center
-  T(-58, -36, -50, 16); T(50, -36, 58, 16); // to the north courts
-  T(-3, -36, 3, -28); T(-50, -32, 50, -28, 0xd9cfbd, 0xcdc2ad); // north walk behind the stadium
+  T(-92, -36, -86, 22); T(86, -36, 92, 22); // to the north courts (around the fenced court rows, not through them)
+  T(-3, -36, 3, -28); T(-92, -32, 92, -28, 0xd9cfbd, 0xcdc2ad); // north walk behind the stadium
   // edging stones along the promenade
   for (let z = 78; z < 118; z += 1.2) [-3.7, 3.7].forEach((x) => w.add('g', rbox(0.25, 0.12, 1.1, 0.04, 1), 0xbfb5a0, x, 0.06, z + 0.55));
 }
@@ -195,7 +195,7 @@ function clubhouse(w) { const b = shell(w, { id: 'club', name: '🏛️ The Club
     // trophy cases along the north wall
     for (let k = 0; k < 2; k++) { const x = -31 + k * 6, T2 = w.tf(x, 0, 44.6, 0); T2.slab('m', 0x7c4a1e, 0, 0, 0, 3.2, 0.9, 0.7, 0.04); T2.box('e', 0xcfefff, 0, 0.9, 0, 3.1, 1.6, 0.66, 0.02); T2.box('m', 0x7c4a1e, 0, 2.5, 0, 3.2, 0.1, 0.7, 0.02); for (let i = 0; i < 5; i++) trophy(w, x - 1.2 + i * 0.6, 0.92 + (i % 2) * 0.4, 44.6, 1 + (i === 2 ? 0.4 : 0), i === 2 ? 0xfcd34d : i % 2 ? 0xcbd5e1 : 0xd97706); T2.solid(-1.6, 0, -0.35, 1.6, 2.6, 0.35); }
     frameArt(w, 'x', 69.75, -30, 2.4, 2.2, 1.4, 0x60a5fa, -1); frameArt(w, 'x', 69.75, -22, 2.4, 2.2, 1.4, 0xfca5a5, -1); poster(w, 'x', 69.75, -26, 2.5, 1.6, 1.1, 0x16a34a, -1, 'MEMBERS ONLY*', 0xe6ff3b);
-    K.plant(w, -19.2, 45.5, 1.1); K.plant(w, -19.2, 68.5, 1.1); [-21, -20].forEach((x) => K.chair(w, x, 0, 66.5, PI, 0x16a34a)); K.cooler(w, -19.3, 52); clockW(w, 'x', 44.25, -27, 3.4, 1); pendant(w, -26, 54, 0xe6ff3b, 4.6); pendant(w, -26, 62, 0xe6ff3b, 4.6);
+    K.plant(w, -19.2, 45.5, 1.1); K.plant(w, -19.2, 68.5, 1.1); [-21, -20].forEach((x) => K.chair(w, x, 0, 66.5, PI, 0x16a34a)); K.cooler(w, -19.3, 52); clockW(w, 'x', 44.25, -27, 3.4, 1); pend(w, -26, 54, 0xe6ff3b, 4.6); pend(w, -26, 62, 0xe6ff3b, 4.6);
     person(-27, 62.5, 2.4, { name: 'Member' }); person(-29.5, 47, 0.3, { name: 'Member' }); L.push({ x: -26, y: 4, z: 57, c: 0xfff1dc, i: 14, d: 18 }); }
   // LOUNGE (x -52..-34, z 44..57): sofas around a fireplace, TV wall showing a match, bookshelves, game table, coffee bar
   { K.floor(w, -51.75, 44.25, -34.15, 56.85, 'carpet', 0.08, 0x2f6f4e, 0x357a56, 1.6); fireplace(w, -51.3, 50.5, PI / 2); tv(w, -43, 3.0, 44.4, 0, 3.2);
@@ -204,7 +204,7 @@ function clubhouse(w) { const b = shell(w, { id: 'club', name: '🏛️ The Club
     K.shelf(w, -36, 44.6, 0, 3.4, 2.6, 0.5, 0x7c4a1e); K.shelf(w, -39.8, 44.6, 0, 3.0, 2.6, 0.5, 0x7c4a1e);
     { const T = w.tf(-37, 0, 53.5, 0); T.slab('g', 0x14532d, 0, 0.72, 0, 1.8, 0.08, 1.0, 0.03); T.box('l', 0x2f9e57, 0, 0.8, 0, 1.6, 0.01, 0.8, 0.01, 0.1); [-0.7, 0.7].forEach((a) => [-0.4, 0.4].forEach((c) => T.add('x', cyl(8), 0x7c4a1e, a, 0, c, 0, 0, 0, 0.04, 0.72, 0.04))); T.box('m', 0xffffff, 0, 0.82, 0, 0.02, 0.06, 0.8, 0.005); T.solid(-0.9, 0, -0.5, 0.9, 0.85, 0.5); K.stool(w, -38.4, 53.5); K.stool(w, -35.6, 53.5, 0x60a5fa); seat(-35.6, 0.66, 53.5, -PI / 2); }
     { const T = w.tf(-48, 0, 55.9, PI); T.slab('g', 0x7c4a1e, 0, 0, 0, 3.4, 1.0, 0.7, 0.05); for (let i = 0; i < 4; i++) w.add('g', lathe([[0, 0], [0.08, 0], [0.09, 0.14], [0, 0.14]], 14, 'mug'), pick([0xffffff, 0x16a34a, 0xe6ff3b]), -49.2 + i * 0.6, 1.0, 55.9); txt(w, 'COFFEE & TEA', -48, 2.6, 56.62, PI, 0.22, 0x7c4a1e); }
-    poster(w, 'z', -51.75, 46.2, 2.5, 1.6, 1.1, 0x2563eb, 1, '1965: PICKLEBALL', 0xffffff); clockW(w, 'x', 44.25, -47, 3.6, 1); pendant(w, -44, 51, 0xfef3c7, 4.6); K.lamp(w, -50.5, 55.5);
+    poster(w, 'z', -51.75, 46.2, 2.5, 1.6, 1.1, 0x2563eb, 1, '1965: PICKLEBALL', 0xffffff); clockW(w, 'x', 44.25, -47, 3.6, 1); pend(w, -44, 51, 0xfef3c7, 4.6); K.lamp(w, -50.5, 55.5);
     L.push({ x: -43, y: 4, z: 50.5, c: 0xffe4c4, i: 13, d: 16 }); }
   // LOCKER ROOM (x -52..-34, z 57..70): rows of lockers, benches, shower stalls, towel cart, scale, mirrors
   { K.floor(w, -51.75, 57.15, -34.15, 69.75, 'tile', 0.08, 0xdbeafe, 0xbfdbfe, 1.0);
@@ -213,7 +213,7 @@ function clubhouse(w) { const b = shell(w, { id: 'club', name: '🏛️ The Club
     for (let i = 0; i < 3; i++) { const x = -37 + i * 0.0, z = 59 + i * 1.6; w.add('g', rbox(0.06, 2.2, 1.4, 0.02, 1), 0xe2e8f0, -36.2, 1.1, z); w.add('x', cyl(8), 0xcbd5e1, -34.6, 2.2, z + 0.7, 0, 0, PI / 2, 0.03, 0.4, 0.03); w.add('f', rbox(0.04, 1.8, 1.3, 0.02, 1), [0x60a5fa, 0xe6ff3b, 0xf472b6][i], -36.4, 1.2, z + 0.7); void x; }
     { const T = w.tf(-48.5, 0, 59, 0); T.box('x', 0xcbd5e1, 0, 0.1, 0, 1.0, 0.9, 0.6, 0.04); for (let i = 0; i < 6; i++) T.add('f', rbox(0.8, 0.12, 0.5, 0.05, 1), pick([0xffffff, 0x16a34a, 0xe6ff3b]), 0, 1.04 + i * 0.12, 0); T.solid(-0.5, 0, -0.3, 0.5, 1.8, 0.3); }
     w.add('e', rbox(2.4, 1.4, 0.04, 0.02), 0xdff6ff, -42, 2.0, 57.4); paddleV(w, -45.2, 1.0, 66.6, 0.2, 0xef4444); paddleV(w, -41.1, 0.6, 60.4, -0.4, 0x22c55e); ballBucket(w, -38.5, 0.08, 66.4);
-    txt(w, 'LOCKER ROOM', -43, 3.6, 57.35, PI, 0.28, 0x2563eb); pendant(w, -43, 61.5, 0xdbeafe, 4.6); pendant(w, -43, 67, 0xdbeafe, 4.6); person(-40.5, 65.2, 1.5, { name: 'Player' }); seat(-44.4, 0.5, 66.4, 0, { name: 'Player' });
+    txt(w, 'LOCKER ROOM', -43, 3.6, 57.35, PI, 0.28, 0x2563eb); pend(w, -43, 61.5, 0xdbeafe, 4.6); pend(w, -43, 67, 0xdbeafe, 4.6); person(-40.5, 65.2, 1.5, { name: 'Player' }); seat(-44.4, 0.5, 66.4, 0, { name: 'Player' });
     L.push({ x: -43, y: 4, z: 63.5, c: 0xe0f2ff, i: 12, d: 16 }); }
 }
 // ---------------- Torty's Pro Shop: paddle walls, the MaxGrit spotlight podium, ball shelves, shoe wall, apparel, demo cage, counter ----------------
@@ -232,7 +232,7 @@ function proShop(w) { const b = shell(w, { id: 'shop', name: '🏓 Torty\'s Pro 
   { const x = 28, z = 57; w.add('g', rcyl(1.1, 0.5, 0.08, 32), 0x111827, x, 0, z); w.add('g', rcyl(0.9, 0.12, 0.04, 32), 0xef4444, x, 0.5, z); w.add('e', rcyl(0.85, 1.4, 0.05, 32), 0xdff6ff, x, 0.62, z);
     paddleV(w, x - 0.25, 1.05, z, 0.3, 0x111827, 0xef4444, true, 2.0); paddleV(w, x + 0.3, 1.05, z + 0.1, -0.35, 0x111827, 0xef4444, true, 2.0); w.add('g', sph(14), 0xfde047, x, 0.72, z + 0.5, 0, 0, 0, 0.037 * 2); w.add('g', sph(14), 0xfde047, x + 0.12, 0.72, z + 0.48, 0, 0, 0, 0.037 * 2);
     w.add('l', torus(0.04, 40), 0xef4444, x, 0.63, z, PI / 2, 0, 0, 0.9, 0.9, 0.9, 0.6); txt(w, 'MAXGRIT', x, 2.4, z, -PI / 2, 0.3, 0xef4444, 'l', 0.5); txt(w, 'GRIT = SPIN', x, 2.05, z, -PI / 2, 0.16, 0x111827);
-    w.add('x', cone(16), 0x334155, x, 4.6, z, PI, 0, 0, 0.4, 0.5, 0.4); w.solid(x - 1.1, 0, z - 1.1, x + 1.1, 2.0, z + 1.1); SPOTS.maxgrit = [x - 1.9, z]; L.push({ x, y: 4, z, c: 0xfff1f1, i: 10, d: 8 }); }
+    { const r_ = w.region; w.region = 'roof_shop'; w.add('x', cone(16), 0x334155, x, 4.6, z, PI, 0, 0, 0.4, 0.5, 0.4); w.region = r_; } w.solid(x - 1.1, 0, z - 1.1, x + 1.1, 2.0, z + 1.1); SPOTS.maxgrit = [x - 1.9, z]; L.push({ x, y: 4, z, c: 0xfff1f1, i: 10, d: 8 }); }
   // display tables with paddles laid out + "try me" demo paddles
   [[23.5, 52], [23.5, 62], [33, 52], [33, 62]].forEach(([x, z], k) => { const T = w.tf(x, 0, z, 0); T.slab('m', 0xb7773f, 0, 0.0, 0, 2.6, 0.85, 1.2, 0.04); for (let i = 0; i < 4; i++) paddleProp(w, x - 0.9 + i * 0.6, 0.87, z - 0.1, 0.1 * (i - 1.5), 0, pcols[(i + k * 2) % pcols.length]); });
   // ball shelves + shoe wall + apparel racks (east half, before the stockroom partition)
@@ -241,13 +241,13 @@ function proShop(w) { const b = shell(w, { id: 'shop', name: '🏓 Torty\'s Pro 
   // hat stand + visors
   { const T = w.tf(37.6, 0, 66.2, 0); T.add('x', cyl(10), 0x94a3b8, 0, 0, 0, 0, 0, 0, 0.04, 1.8, 0.04); for (let i = 0; i < 5; i++) { const a = i / 5 * PI * 2; T.add('g', torus(0.25, 20, PI * 1.3), pick([0xffffff, 0x16a34a, 0xe6ff3b, 0x111827]), Math.cos(a) * 0.25, 1.2 + (i % 2) * 0.3, Math.sin(a) * 0.25, PI / 2, 0, a, 0.16, 0.16, 0.16); } T.solid(-0.3, 0, -0.3, 0.3, 1.8, 0.3); }
   // checkout counter (Torty runs the shop from here)
-  { const T = w.tf(24, 0, 48.8, 0); T.slab('g', 0x0f766e, 0, 0, 0, 4.2, 1.05, 1.0, 0.12); T.box('m', 0xfef3c7, 0, 1.05, 0, 4.4, 0.08, 1.15, 0.04); register(w, 25.2, 48.8, PI); for (let i = 0; i < 4; i++) ballBucket(w, 22.4 + i * 0.4, 1.13, 48.7, 0xe6ff3b, 3); txt(w, 'CHECKOUT', 24, 3.2, 46.45, 0, 0.3, 0x0f766e); SPOTS.counter = [24, 50.6]; SPOTS.torty = [24, 47.6]; }
+  { const T = w.tf(24, 0, 48.8, 0); T.slab('g', 0x0f766e, 0, 0, 0, 4.2, 1.05, 1.0, 0.12); T.box('m', 0xfef3c7, 0, 1.05, 0, 4.4, 0.08, 1.15, 0.04); register(w, 25.2, 48.8, PI); for (let i = 0; i < 2; i++) ballBucket(w, 22.3 + i * 0.4, 1.13, 48.6, 0xe6ff3b, 3); txt(w, 'CHECKOUT', 24, 3.2, 46.45, 0, 0.3, 0x0f766e); SPOTS.counter = [24, 50.6]; SPOTS.torty = [24, 48.75]; }
   // demo cage: net + target where you "test swing"
   { const x = 22, z = 65.2; w.add('e', rbox(3.2, 2.6, 0.03, 0.01, 1), 0x0b0f19, x, 1.3, z + 1.6); w.add('l', torus(0.05, 32), 0xe6ff3b, x, 1.5, z + 1.55, 0, 0, 0, 0.5, 0.5, 0.5, 0.5); txt(w, 'TEST SWING', x, 2.9, z + 1.55, PI, 0.2, 0x0f766e); w.add('f', rbox(3.2, 0.04, 2.4, 0.02, 1), 0x16a34a, x, 0.09, z + 0.2); SPOTS.demo = [x, z - 0.4]; }
   // stockroom behind the partition: boxes, ball crates, restringing... er, re-gripping bench
   for (let i = 0; i < 6; i++) K.parcel(w, 41 + (i % 2) * 0.9, (i / 2 | 0) * 0.55, 48 + (i % 3) * 0.3, 0.9); for (let i = 0; i < 4; i++) K.crate(w, 42.8, 0, 52 + i * 1.2, 0.9, 0xfde047); K.desk(w, 41.8, 60, PI / 2, { pc: false, chairCol: 0x0f766e }); txt(w, 'STOCKROOM', 41.8, 3.2, 46.45, 0, 0.22, 0x0f766e);
   for (let i = 0; i < 4; i++) paddleProp(w, 41.4 + i * 0.3, 0.87, 59.4 + i * 0.25, 0.4, 0, pcols[i]);
-  pendant(w, 24, 54, 0xffffff, 4.4); pendant(w, 24, 60, 0xffffff, 4.4); pendant(w, 33, 54, 0xffffff, 4.4); pendant(w, 33, 60, 0xffffff, 4.4); clockW(w, 'x', 67.75, 36, 3.4, -1);
+  pend(w, 24, 54, 0xffffff, 4.4); pend(w, 24, 60, 0xffffff, 4.4); pend(w, 33, 54, 0xffffff, 4.4); pend(w, 33, 60, 0xffffff, 4.4); clockW(w, 'x', 67.75, 36, 3.4, -1);
   person(23.8, 55.4, -1.2, { name: 'Shopper' }); person(31.4, 47.8, 0, { name: 'Shopper' }); person(34.4, 60.6, PI / 2, { name: 'Shopper' }); person(36.2, 48.6, 0.2, { name: 'Shopper' });
   L.push({ x: 26, y: 4, z: 57, c: 0xf0fdfa, i: 14, d: 18 }); L.push({ x: 41, y: 3, z: 57, c: 0xfff1dc, i: 8, d: 10 });
 }
@@ -272,7 +272,7 @@ function snackBar(w) { const b = shell(w, { id: 'snack', name: '🌭 Dill-icious
   [[-24, 89], [-20, 89], [-24, 92.4]].forEach(([x, z]) => { K.tableR(w, x, z, 0.75, 0.75, 0xfef3c7, 0x166534); K.stool(w, x - 1.0, z, 0x16a34a); K.stool(w, x + 1.0, z, 0xe6ff3b); w.add('g', lathe([[0, 0], [0.3, 0], [0.34, 0.06], [0, 0.06]], 20, 'plate'), 0xffffff, x, 0.76, z); w.add('g', capsule(10), 0xc2410c, x, 0.84, z, 0, 0, PI / 2, 0.05, 0.18, 0.05); });
   seat(-25, 0.66, 89, PI / 2); seat(-19, 0.66, 89, -PI / 2);
   poster(w, 'x', 80.25, -28, 2.2, 2.2, 1.3, 0x16a34a, 1, 'BIG DILL ENERGY', 0xe6ff3b); poster(w, 'x', 93.75, -20, 2.2, 2.0, 1.2, 0xff4fa0, -1, 'TRY THE PICKLE POP'); clockW(w, 'x', 80.25, -16, 3.2, 1);
-  pendant(w, -22, 85, 0x16a34a, 3.9); pendant(w, -22, 90.5, 0x16a34a, 3.9); trash(w, -15.4, 89.6, 0x16a34a);
+  pend(w, -22, 85, 0x16a34a, 3.9); pend(w, -22, 90.5, 0x16a34a, 3.9); trash(w, -15.4, 89.6, 0x16a34a);
   person(-29.2, 86.4, -PI / 2, { name: 'Hungry Player' }); person(-28.6, 88.6, -PI / 2 - 0.3, { name: 'Hungry Player' });
   SPOTS.snack = [-30.3, 87]; SPOTS.snowie = [-32.6, 87.8]; w.lights.push({ x: -24, y: 3.4, z: 87, c: 0xfff1c4, i: 13, d: 16 });
 }
@@ -293,12 +293,12 @@ function training(w) { const c = COURTS.train; const b = shell(w, { id: 'train',
   { K.floor(w, 16.25, 78.25, 27.05, 93.85, 'carpet', 0.08, 0x1e40af, 0x1d4ed8, 1.4); const T = w.tf(22, 0, 80.2, 0); T.slab('g', 0xffffff, 0, 0, 0, 4, 1.05, 0.9, 0.12); T.box('g', 0x1e3a8a, 0, 1.05, 0, 4.2, 0.08, 1.0, 0.03); K.monitor(w, T, -1, 1.13, -0.15, 0, 0xe6ff3b); txt(w, 'DRILL DESK', 22, 3.0, 78.4, 0, 0.32, 0x1e3a8a);
     K.whiteboard(w, 'z', 16.25, 87, 1.2, 4, 1); w.add('m', tube([[16.36, 1.9, 85.6], [16.36, 2.3, 86.6], [16.36, 1.8, 87.6], [16.36, 2.2, 88.4]], 0.015, 16, 4), 0xef4444, 0, 0, 0);
     for (let i = 0; i < 3; i++) { K.chair(w, 20 + i * 1.6, 0, 86, PI, 0x1e3a8a); seat(20 + i * 1.6, 0.48, 86.1, -PI / 2 + PI / 2 * 0 - PI / 2 * 0 + PI); } cones(w, 18, 91.5, 6, 1.4); ballBucket(w, 25.8, 0.08, 91.8); ballBucket(w, 26.2, 0.08, 91.2, 0xff8a1f);
-    poster(w, 'x', 78.25, 24.5, 2.2, 2.4, 1.3, 0xe6ff3b, 1, 'THIRD SHOT DROP!', 0x1e3a8a); clockW(w, 'z', 16.25, 82, 3, 1); pendant(w, 22, 86, 0x93c5fd, 3.4);
+    poster(w, 'x', 78.25, 24.5, 2.2, 2.4, 1.3, 0xe6ff3b, 1, 'THIRD SHOT DROP!', 0x1e3a8a); clockW(w, 'z', 16.25, 82, 3, 1); pend(w, 22, 86, 0x93c5fd, 3.4);
     SPOTS.drills = [22, 82.2]; SPOTS.luna = [23.6, 81.0]; w.lights.push({ x: 22, y: 3.2, z: 86, c: 0xe0f0ff, i: 12, d: 14 }); }
   // VIDEO ROOM + FITNESS CORNER (x 16..27, z 94..110)
   { K.floor(w, 16.25, 94.15, 27.05, 109.75, 'tile', 0.08, 0x334155, 0x3b4658, 1.6); tv(w, 21.5, 2.2, 109.6, PI, 3.6, 0x0f172a); for (let r = 0; r < 2; r++) for (let i = 0; i < 4; i++) { K.chair(w, 19.5 + i * 1.3, 0, 105 - r * 1.6, 0, 0x1e3a8a); } seat(20.8, 0.48, 104.9, 0, { name: 'Student' }); seat(22.1, 0.48, 103.3, 0, { name: 'Student' });
     gymMat(w, 18, 98, 0x1e3a8a); gymMat(w, 19.4, 98, 0xe6ff3b); dumbbellRack(w, 24.5, 95.2, 0); { const T = w.tf(25.5, 0, 99.4, 0); T.box('x', 0x111827, 0, 0, 0, 0.8, 0.3, 1.8, 0.05); T.box('f', 0x1e3a8a, 0, 0.3, 0, 0.7, 0.12, 1.7, 0.05); T.add('x', cyl(10), 0x94a3b8, 0, 0.8, -0.8, 0, 0, 0, 0.03, 0.9, 0.03); T.solid(-0.4, 0, -0.9, 0.4, 0.5, 0.9); }
-    for (let i = 0; i < 3; i++) w.add('g', sph(20), [0xef4444, 0x2563eb, 0x16a34a][i], 17 + i * 0.9, 0.35, 108.8, 0, 0, 0, 0.35); txt(w, 'VIDEO ROOM', 21.5, 3.2, 94.35, 0, 0.28, 0xe6ff3b); pendant(w, 21.5, 102, 0x334155, 3.4); person(18.6, 98, 0, { name: 'Player' });
+    for (let i = 0; i < 3; i++) w.add('g', sph(20), [0xef4444, 0x2563eb, 0x16a34a][i], 17 + i * 0.9, 0.35, 108.8, 0, 0, 0, 0.35); txt(w, 'VIDEO ROOM', 21.5, 3.2, 94.35, 0, 0.28, 0xe6ff3b); pend(w, 21.5, 102, 0x334155, 3.4); person(18.6, 98, 0, { name: 'Player' });
     w.lights.push({ x: 21.5, y: 3, z: 102, c: 0xdbeafe, i: 10, d: 14 }); }
   w.lights.push({ x: c.x, y: 6, z: c.z, c: 0xfff6e0, i: 20, d: 26 });
 }
@@ -309,4 +309,130 @@ function nature(w) { w.region = 'out';
   for (let i = 0; i < 60; i++) { const a = i / 60 * PI * 2, r = 120 + (i % 4) * 6; const x = Math.cos(a) * r, z = 30 + Math.sin(a) * r * 1.02; K.tree(w, x, z, 1.4 + (i % 3) * 0.3, i % 7 === 0 ? 1 : 0); }
   [[-20, 40, -17, 43], [17, 40, 20, 43], [-20, 77, -17, 80], [17, 77, 20, 80], [-40, 96, -36, 100], [-14, 100, -9, 104], [9, 100, 14, 104]].forEach(([a, b, c, d]) => K.flowerBed(w, a, b, c, d));
   for (let i = 0; i < 12; i++) { const a = i / 12 * PI * 2 + 0.3; w.add('m', blobGeo(i * 3, 0.15, 2), 0xffffff, Math.cos(a) * 240, 70 + (i % 3) * 14, 30 + Math.sin(a) * 240, 0, a, 0, 26, 7, 14); }
+}
+// ---------------- interior density pass (smooth merged props + people) ----------------
+// indoor ceiling lamps live in the roof region so they hide with the roof in third-person (no clipping in front of the camera)
+function pend(w, ...a) { const r = w.region; if (r.startsWith('in_')) w.region = 'roof_' + r.slice(3); pendant(w, ...a); w.region = r; }
+const TEES = [0x16a34a, 0xe6ff3b, 0x2563eb, 0xff4fa0, 0xffffff, 0x111827, 0xef4444, 0x2dd4bf, 0xf97316, 0xa855f7, 0xfcd34d];
+function mannequin(w, x, z, ry, shirt, shorts, hat) { const T = w.tf(x, 0, z, ry);
+  T.add('x', rcyl(0.28, 0.05, 0.02, 24), 0x334155, 0, 0, 0); T.add('x', cyl(8), 0x94a3b8, 0, 0.05, 0, 0, 0, 0, 0.025, 0.62, 0.025);
+  [-1, 1].forEach((s) => T.add('g', capsule(12), shorts, s * 0.085, 0.8, 0, 0, 0, s * 0.06, 0.15, 0.14, 0.15)); T.add('g', sph(16), shorts, 0, 1.0, 0, 0, 0, 0, 0.2, 0.15, 0.14);
+  T.add('g', capsule(16), shirt, 0, 1.36, 0, 0, 0, 0, 0.42, 0.27, 0.28); T.add('g', sph(16), shirt, 0, 1.6, 0, 0, 0, 0, 0.25, 0.08, 0.15);
+  [-1, 1].forEach((s) => { T.add('g', capsule(10), shirt, s * 0.27, 1.5, 0, 0, 0, s * 0.25, 0.11, 0.12, 0.11); T.add('g', capsule(10), 0xf1f5f9, s * 0.33, 1.27, 0.02, 0, 0, s * 0.12, 0.08, 0.17, 0.08); });
+  T.add('g', cyl(10), 0xf1f5f9, 0, 1.62, 0, 0, 0, 0, 0.05, 0.12, 0.05); T.add('g', sph(16), 0xf8fafc, 0, 1.86, 0, 0, 0, 0, 0.11, 0.13, 0.11);
+  if (hat) { T.add('g', sph(14), hat, 0, 1.93, 0, 0, 0, 0, 0.12, 0.08, 0.12); T.add('g', sph(12), hat, 0, 1.92, 0.11, 0, 0, 0, 0.09, 0.012, 0.09); }
+  T.add('g', rbox(0.18, 0.02, 0.06, 0.01, 1), 0xffffff, 0, 1.4, 0.15); T.solid(-0.3, 0, -0.3, 0.3, 2, 0.3); }
+function bagStand(w, x, z, ry) { const T = w.tf(x, 0, z, ry); T.slab('m', 0xe5e7eb, 0, 0, 0, 2.2, 0.4, 0.7, 0.05); T.box('x', 0x0f766e, 0, 0.4, -0.3, 2.2, 1.9, 0.06, 0.02);
+  [[0x111827, 0xef4444], [0x0f766e, 0xe6ff3b], [0xff4fa0, 0xffffff], [0x2563eb, 0xfcd34d]].forEach(([a, b], i) => { const bx = -0.78 + i * 0.52; T.add('g', rbox(0.38, 0.78, 0.2, 0.08, 2), a, bx, 0.8, 0.02); T.add('g', rbox(0.39, 0.06, 0.21, 0.02, 1), b, bx, 0.98, 0.02); T.add('g', rbox(0.03, 0.62, 0.02, 0.01, 1), b, bx + 0.1, 0.82, 0.13); T.add('x', torus(0.12, 16, PI), 0x111827, bx, 1.19, 0.02, 0, 0, 0, 0.11, 0.11, 0.11); });
+  [0xa855f7, 0xf97316, 0x16a34a].forEach((c, i) => { T.add('g', rbox(0.5, 0.36, 0.22, 0.1, 2), c, -0.6 + i * 0.6, 1.9, -0.18); T.add('x', torus(0.1, 14, PI), 0x334155, -0.6 + i * 0.6, 2.08, -0.18, 0, 0, 0, 0.12, 0.12, 0.12); });
+  txt(w, 'BAGS', ...T.P(0, 2.55, -0.25), ry, 0.22, 0xffffff); }
+function spinner(w, x, z, word = 'GRIPS') { const T = w.tf(x, 0, z, 0); T.add('x', rcyl(0.32, 0.06, 0.02, 24), 0x334155, 0, 0, 0); T.add('x', cyl(10), 0x94a3b8, 0, 0.06, 0, 0, 0, 0, 0.03, 1.9, 0.03);
+  for (let t = 0; t < 3; t++) { const y = 0.75 + t * 0.45; for (let i = 0; i < 6; i++) { const a = i / 6 * PI * 2 + t * 0.5; T.add('x', cyl(6), 0x94a3b8, 0, y, 0, 0, a, -PI / 2, 0.008, 0.34, 0.008); const px = Math.cos(a) * 0.3, pz = -Math.sin(a) * 0.3; T.add('g', rbox(0.13, 0.22, 0.025, 0.01, 1), TEES[(i * 3 + t * 5) % TEES.length], px, y - 0.13, pz, 0, a + PI / 2, 0); T.add('g', rbox(0.09, 0.1, 0.03, 0.01, 1), 0xffffff, px * 1.02, y - 0.17, pz * 1.02, 0, a + PI / 2, 0); } }
+  T.add('g', rcyl(0.3, 0.03, 0.01, 24), 0x0f766e, 0, 1.98, 0); T.box('g', 0x0f766e, 0, 2.0, 0, 0.62, 0.28, 0.03, 0.01); txt(w, word, ...T.P(0, 2.14, 0.02), 0, 0.12, 0xe6ff3b); txt(w, word, ...T.P(0, 2.14, -0.02), PI, 0.12, 0xe6ff3b); T.solid(-0.35, 0, -0.35, 0.35, 2.1, 0.35); }
+function ballBin(w, x, z, col = 0xe6ff3b, tag = '$3') { w.add('x', lathe([[0, 0], [0.36, 0], [0.42, 0.7], [0.44, 0.72], [0.4, 0.72], [0, 0.05]], 28, 'bin'), 0x0f766e, x, 0, z); w.add('x', torus(0.05, 28), 0xffffff, x, 0.71, z, PI / 2, 0, 0, 0.43, 0.43, 0.43);
+  [[0, 1], [0.13, 6], [0.25, 11], [0.35, 15]].forEach(([r, n], k) => { for (let i = 0; i < n; i++) { const a = i / n * PI * 2 + k; w.add('g', sph(10), col, x + Math.cos(a) * r, 0.74 + (3 - k) * 0.035, z + Math.sin(a) * r, 0, 0, 0, 0.045, 0.045, 0.045); } });
+  w.add('x', cyl(6), 0x94a3b8, x + 0.3, 0.7, z, 0, 0, 0, 0.01, 0.45, 0.01); w.add('g', rbox(0.24, 0.16, 0.02, 0.01, 1), 0xffffff, x + 0.3, 1.2, z); txt(w, tag, x + 0.3, 1.17, z + 0.015, 0, 0.09, 0xef4444); w.solid(x - 0.42, 0, z - 0.42, x + 0.42, 0.8, z + 0.42); }
+function foldTable(w, x, z, ry, n = 4) { const T = w.tf(x, 0, z, ry); T.slab('m', 0xb7773f, 0, 0, 0, 2.2, 0.85, 1.0, 0.04); T.box('m', 0x8b5a2b, 0, 0.1, 0, 1.9, 0.06, 0.8, 0.02);
+  for (let s = 0; s < n; s++) for (let k = 0; k < 2; k++) { const h = 3 + ((s + k) % 3); for (let i = 0; i < h; i++) T.add('f', rbox(0.38, 0.06, 0.3, 0.025, 1), TEES[(s * 2 + k * 5 + (i > h - 2 ? 1 : 0)) % TEES.length], -0.78 + s * 0.52, 0.89 + i * 0.065, -0.2 + k * 0.4, 0, (i % 2) * 0.05, 0); } }
+function hatShelf(w, x, z, ry, W = 2.4) { const T = w.tf(x, 0, z, ry); T.box('m', 0xf5f5f4, 0, 0, 0, W, 2.3, 0.12, 0.03); const n = Math.floor(W / 0.36);
+  for (let r = 0; r < 4; r++) { const y = 0.45 + r * 0.5; T.box('m', 0xb7773f, 0, y, 0.18, W, 0.04, 0.34, 0.01); for (let i = 0; i < n; i++) { const c = TEES[(i * 7 + r * 3) % TEES.length], hx = -W / 2 + 0.2 + i * (W - 0.4) / (n - 1); T.add('g', sph(14), c, hx, y + 0.04, 0.17, 0, 0, 0, 0.12, 0.085, 0.12); T.add('g', sph(12), r % 2 ? c : 0xffffff, hx, y + 0.05, 0.3, 0, 0, 0, 0.09, 0.012, 0.08); } }
+  T.solid(-W / 2, 0, 0, W / 2, 2.3, 0.4); }
+function ottoman(w, x, z, ry, L = 2.2, col = 0x0f766e) { const T = w.tf(x, 0, z, ry); T.slab('f', col, 0, 0.08, 0, L, 0.38, 0.55, 0.12); [-1, 1].forEach((a) => [-1, 1].forEach((b) => T.add('x', cyl(8), 0x94a3b8, a * (L / 2 - 0.12), 0, b * 0.2, 0, 0, 0, 0.03, 0.1, 0.03)));
+  T.add('g', rbox(0.36, 0.14, 0.22, 0.02, 1), 0xf97316, L / 2 - 0.35, 0.46, 0); T.add('g', rbox(0.37, 0.03, 0.23, 0.01, 1), 0xffffff, L / 2 - 0.35, 0.55, 0); }
+function shoePair(w, x, z, ry, col) { const T = w.tf(x, 0, z, ry); [-0.08, 0.08].forEach((s) => { T.add('g', sph(12), col, s, 0.05, 0, 0, 0, 0, 0.06, 0.05, 0.14); T.add('g', rbox(0.12, 0.03, 0.29, 0.01, 1), 0xffffff, s, 0.015, 0); }); }
+function roundRack(w, x, z, cols, shorts) { w.add('x', rcyl(0.3, 0.05, 0.02, 24), 0x334155, x, 0, z); w.add('x', cyl(8), 0x94a3b8, x, 0.05, z, 0, 0, 0, 0.03, 1.4, 0.03); w.add('x', torus(0.03, 36), 0x94a3b8, x, 1.45, z, PI / 2, 0, 0, 0.62, 0.62, 0.62);
+  const n = 14, H = shorts ? 0.42 : 0.62; for (let i = 0; i < n; i++) { const a = i / n * PI * 2, gx = x + Math.cos(a) * 0.62, gz = z - Math.sin(a) * 0.62; w.add('f', rbox(0.44, H, 0.05, 0.03, 1), cols[i % cols.length], gx, 1.42 - H / 2, gz, 0, a + PI / 2, 0); w.add('x', cyl(6), 0x94a3b8, gx, 1.42, gz, 0, 0, 0, 0.008, 0.06, 0.008); }
+  w.solid(x - 0.75, 0, z - 0.75, x + 0.75, 1.5, z + 0.75); }
+function bottle(w, x, y, z, col = 0x38bdf8) { w.add('g', rcyl(0.04, 0.2, 0.015, 12), col, x, y, z); w.add('g', rcyl(0.025, 0.04, 0.01, 10), 0xffffff, x, y + 0.2, z); }
+function cupSet(w, x, y, z, col) { w.add('g', lathe([[0, 0], [0.04, 0], [0.05, 0.14], [0, 0.14]], 14, 'cup'), col, x, y, z); w.add('x', cyl(6), 0xffffff, x + 0.01, y + 0.1, z, 0, 0, 0.15, 0.006, 0.12, 0.006); }
+function stanchions(w, axis, at, from, to, y0 = 0) { const n = Math.max(2, Math.round(Math.abs(to - from) / 1.1) + 1); for (let i = 0; i < n; i++) { const p = from + (to - from) * i / (n - 1), x = axis === 'x' ? p : at, z = axis === 'x' ? at : p; w.add('x', rcyl(0.16, 0.04, 0.01, 18), 0xcca43b, x, y0, z); w.add('x', cyl(10), 0xcca43b, x, y0, z, 0, 0, 0, 0.025, 0.95, 0.025); w.add('x', sph(10), 0xfcd34d, x, y0 + 0.97, z, 0, 0, 0, 0.045, 0.045, 0.045); }
+  const L = Math.abs(to - from), m = (from + to) / 2; for (let i = 0; i < 5; i++) { const t = (i + 0.5) / 5 - 0.5, sag = 0.12 * (1 - 4 * t * t); const p = m + t * L * 0.98; w.add('f', capsule(8), 0xb91c1c, axis === 'x' ? p : at, y0 + 0.85 - sag, axis === 'x' ? at : p, axis === 'x' ? 0 : PI / 2, 0, axis === 'x' ? PI / 2 : 0, 0.035, L / 10, 0.035); } }
+function towel(w, x, y, z, ry, col) { const T = w.tf(x, y, z, ry); T.add('f', rbox(0.5, 0.7, 0.04, 0.02, 1), col, 0, -0.35, 0); T.add('f', rbox(0.52, 0.06, 0.06, 0.02, 1), shadeC(col), 0, -0.6, 0); }
+function shadeC(c) { const o = new THREE.Color(c); o.multiplyScalar(0.8); return o.getHex(); }
+function gymBag(w, x, y, z, ry, col) { const T = w.tf(x, y, z, ry); T.add('g', capsule(14), col, 0, 0.16, 0, 0, 0, PI / 2, 0.32, 0.36, 0.3); T.add('x', torus(0.12, 14, PI), 0x111827, 0, 0.3, 0, 0, 0, 0, 0.13, 0.13, 0.13); }
+function fan(w, x, z, y) { const r = w.region; if (r.startsWith('in_')) w.region = 'roof_' + r.slice(3); w.add('x', cyl(6), 0x334155, x, y, z, 0, 0, 0, 0.02, 0.6, 0.02); w.add('x', rcyl(0.18, 0.14, 0.05, 18), 0xffffff, x, y - 0.12, z); for (let i = 0; i < 4; i++) { const a = i * PI / 2 + 0.3; w.add('m', rbox(0.9, 0.02, 0.2, 0.01, 1), 0xb7773f, x + Math.cos(a) * 0.55, y - 0.06, z - Math.sin(a) * 0.55, 0, a, 0); } w.region = r; }
+function ballsOn(w, x, z, n, r) { for (let i = 0; i < n; i++) { const a = R() * PI * 2, d = Math.sqrt(R()) * r; w.add('g', sph(10), 0xe6ff3b, x + Math.cos(a) * d, 0.045, z + Math.sin(a) * d, 0, 0, 0, 0.045, 0.045, 0.045); } }
+function paddleBoard(w, x, z, ry, n = 8) { const T = w.tf(x, 0, z, ry); T.box('m', 0xd6c3a5, 0, 0.8, 0, n * 0.42 + 0.3, 1.5, 0.06, 0.02); for (let i = 0; i < n; i++) { const P = T.P(-(n - 1) * 0.21 + i * 0.42, 1.2, 0.08); paddleV(w, P[0], P[1], P[2], ry, TEES[(i * 3) % TEES.length], 0x111827, false, 1.4); } }
+
+function shopFill(w) { w.region = 'in_shop';
+  // entrance rug + welcome mat, plants in the corners
+  K.rug(w, 21.2, 57, PI / 2, 3.0, 2.2, 0x0f766e, 0xe6ff3b); [[18.9, 66.9], [38.9, 47.7], [18.9, 51.4], [38.9, 67.0]].forEach(([x, z]) => K.plant(w, x, z, 0.9));
+  // ball bins in a row facing the door, grip/overgrip spinners by the podium
+  [[29.4, 0xe6ff3b, '$3'], [30.5, 0xff8a3d, '$3'], [31.6, 0xe6ff3b, 'FOAM'], [32.7, 0x38bdf8, '$4']].forEach(([x, c, t]) => ballBin(w, x, 49.9, c, t));
+  spinner(w, 26.6, 54.3, 'GRIPS'); spinner(w, 26.6, 59.7, 'GEAR'); spinner(w, 30.2, 54.5, 'WRISTBANDS'.slice(0, 5));
+  // mannequins on a little platform along the south aisle
+  { const T = w.tf(31.5, 0, 65.3, 0); T.slab('m', 0xffffff, 0, 0, 0, 4.4, 0.12, 1.3, 0.04); T.box('l', 0x2dd4bf, 0, 0.12, 0.66, 4.4, 0.02, 0.02, 0.01, 0.6); }
+  mannequin(w, 30.0, 65.3, PI, 0x16a34a, 0x111827, 0xffffff); mannequin(w, 31.5, 65.3, PI, 0xe6ff3b, 0x2563eb, 0); mannequin(w, 33.0, 65.3, PI, 0xff4fa0, 0xffffff, 0x0f766e);
+  // bag display wall + folded tees + hat shelf + try-on benches by the shoe wall
+  roundRack(w, 27.2, 63.4, [0x111827, 0x2563eb, 0xffffff, 0x16a34a], true); roundRack(w, 32.8, 54.7, TEES); roundRack(w, 20.6, 53.2, [0xff4fa0, 0xa855f7, 0xffffff, 0x2dd4bf]);
+  K.rug(w, 28, 57, 0, 5.2, 4.4, 0x111827, 0xef4444); K.rug(w, 36.7, 59.5, PI / 2, 3.4, 2.4, 0x0f766e, 0xf1f5f9);
+  person(27.2, 62.2, PI, { name: 'Shopper' }); person(20.2, 54.6, PI * 0.8, { name: 'Shopper' }); person(29.8, 58.5, -PI / 2, { name: 'Shopper' }); person(33.6, 55.8, PI * 0.9, { name: 'Shopper' });
+  bagStand(w, 38.5, 52.0, -PI / 2); foldTable(w, 31.5, 57.0, 0); hatShelf(w, 26.6, 67.3, PI, 2.6); hatShelf(w, 18.25 + 0.2, 62.5, PI / 2, 2.2);
+  ottoman(w, 37.3, 59.5, PI / 2, 2.6); ottoman(w, 35.6, 59.5, PI / 2, 1.4, 0xe6ff3b); shoePair(w, 36.6, 58.3, 0.4, 0xff4fa0); shoePair(w, 36.5, 60.9, -0.2, 0x2563eb); shoePair(w, 38.6, 61.7, PI / 2, 0xffffff);
+  // posters + sale banner
+  poster(w, 'z', 39.45, 49.6, 2.7, 1.3, 1.0, 0xef4444, -1, 'MAXGRIT', 0xffffff); poster(w, 'z', 39.45, 66.3, 2.7, 1.3, 1.0, 0x2563eb, -1, 'SILENT SERVE', 0xffffff); poster(w, 'z', 39.45, 54.6, 3.7, 1.6, 0.5, 0xe6ff3b, -1, 'SALE 20%', 0x0f766e);
+  { const r = w.region; w.region = 'roof_shop'; w.add('f', rbox(5, 0.7, 0.03, 0.02, 1), 0xef4444, 28.5, 4.35, 57); txt(w, 'GEAR UP · PLAY BETTER', 28.5, 4.3, 57.02, 0, 0.26, 0xffffff); txt(w, 'GEAR UP · PLAY BETTER', 28.5, 4.3, 56.98, PI, 0.26, 0xffffff); w.region = r; }
+  // people: staff + shoppers (counter queue, shoe try-on, bins, mannequins, bags)
+  person(26.3, 50.2, -2.4, { name: 'Shopper' }); person(21.4, 50.4, 2.5, { name: 'Shopper' }); person(31.0, 51.0, PI, { name: 'Shopper' }); person(33.2, 63.6, PI, { name: 'Shopper' });
+  person(37.8, 53.2, -PI / 2 + 0.3, { name: 'Shopper' }); person(26.4, 56.9, PI / 2, { name: 'Shopper' }); person(29.0, 60.2, 0.4, { name: 'Shopper' }); person(21.2, 58.6, PI / 2, { name: 'Shopper' });
+  person(34.4, 57.6, -PI / 2, { staff: true, name: 'Staff' }); person(29.6, 47.4, PI, { staff: true, name: 'Staff' }); seat(37.3, 0.46, 60.3, PI / 2, { name: 'Shopper' });
+}
+function clubFill(w) { w.region = 'in_club';
+  // lobby: sofa nook, Grok Cup trophy on a roped pedestal, frames, plants
+  K.sofa(w, -29.5, 68.9, PI, 0x166534, 0x22c55e); K.tableR(w, -29.5, 66.9, 0.5, 0.45, 0xb7773f); bottle(w, -29.3, 0.45, 66.8); cupSet(w, -29.7, 0.45, 67.0, 0xef4444);
+  { const x = -27.5, z = 57; w.add('m', rbox(0.9, 1.0, 0.9, 0.06, 2), 0x1f2937, x, 0.5, z); w.add('g', rbox(0.95, 0.06, 0.95, 0.03, 1), 0xcca43b, x, 1.03, z); trophy(w, x, 1.06, z, 4.2, 0xfcd34d); txt(w, 'GROK CUP', x, 0.55, z + 0.46, 0, 0.14, 0xfcd34d); w.solid(x - 0.5, 0, z - 0.5, x + 0.5, 2.2, z + 0.5); }
+  stanchions(w, 'x', 55.6, -29.0, -26.0); stanchions(w, 'x', 58.4, -29.0, -26.0);
+  [[-33.2, 46.0], [-33.2, 68.6], [-21.0, 68.9]].forEach(([x, z]) => K.plant(w, x, z, 0.9)); for (let i = 0; i < 3; i++) frameArt(w, 'x', 44.25, -31 + i * 3, 3.6, 0.9, 0.7, TEES[i * 3], 1);
+  pend(w, -29.5, 67.2, 0xfef3c7, 4.6);
+  K.sofa(w, -18.9, 64.0, -PI / 2, 0x7c4a1e, 0xb7773f); K.tableR(w, -20.7, 64.0, 0.45, 0.45, 0xffffff); cupSet(w, -20.6, 0.45, 63.9, 0x16a34a); seat(-19.3, 0.45, 63.4, -PI / 2, { name: 'Member' }); [[-18.9, 55.0], [-18.9, 59.0]].forEach(([x, z]) => K.potPlant(w, x, 0.06, z, 1.4, 0x16a34a));
+  { const T = w.tf(-31.0, 0, 50.0, PI / 2); T.slab('m', 0x7c4a1e, 0, 0, 0, 2.4, 0.9, 0.9, 0.04); T.add('e', rbox(2.3, 0.5, 0.8, 0.03, 1), 0xdff6ff, 0, 1.15, 0); for (let i = 0; i < 4; i++) paddleV(w, ...T.P(-0.8 + i * 0.55, 0.92, 0), PI / 2, TEES[i * 2], 0x111827, false, 1.5); txt(w, 'HALL OF FAME PADDLES', ...T.P(0, 1.55, 0.46), PI / 2, 0.12, 0x7c4a1e); }
+  K.tableR(w, -22.0, 52.4, 0.6, 0.78, 0xffffff); K.chair(w, -22.0, 0, 51.4, 0, 0x16a34a); K.chair(w, -22.0, 0, 53.4, PI, 0x16a34a); seat(-22.0, 0.5, 51.5, 0, { name: 'Member' }); cupSet(w, -21.8, 0.78, 52.3, 0xffffff);
+  person(-29.6, 60.4, 0.4, { name: 'Member' }); person(-20.2, 61.6, -PI / 2, { name: 'Member' });
+  person(-32.8, 54.6, -PI / 2, { name: 'Member' }); person(-32.6, 61.0, -PI / 2, { name: 'Member' }); person(-27.4, 54.9, 0, { name: 'Member' }); person(-24.5, 50.4, PI, { name: 'Member' }); person(-22.8, 58.4, 1.8, { name: 'Member' });
+  seat(-30.1, 0.45, 68.5, PI, { name: 'Member' }); seat(-28.9, 0.45, 68.5, PI, { name: 'Member' });
+  // lounge: coffee-bar regular, game players, TV watcher
+  person(-48.0, 55.0, 0, { name: 'Member' }); seat(-38.4, 0.62, 53.5, PI / 2, { name: 'Member' }); person(-40.6, 47.4, PI, { name: 'Member' }); person(-45.6, 54.6, 0.6, { name: 'Member' });
+  K.plant(w, -51.2, 45.2, 0.9); fan(w, -44, 48.5, 5.5);
+  // locker room: vanity + sinks, towels, gym bags, bottles, laundry, scale, plants, people
+  { const T = w.tf(-47.5, 0, 57.45, 0); T.slab('g', 0x334155, 0, 0, 0, 3.0, 0.88, 0.6, 0.04); T.box('m', 0xf1f5f9, 0, 0.88, 0, 3.1, 0.06, 0.66, 0.02); [-0.8, 0.8].forEach((a) => { T.add('g', lathe([[0, 0], [0.2, 0.02], [0.22, 0.12], [0, 0.12]], 20, 'sink'), 0xffffff, a, 0.86, 0.02); T.add('x', cyl(8), 0xcbd5e1, a, 0.94, -0.22, 0, 0, 0, 0.015, 0.2, 0.015); T.add('x', cyl(8), 0xcbd5e1, a, 1.13, -0.22, PI / 2, 0, 0, 0.012, 0.14, 0.012); }); T.add('e', rbox(2.8, 1.1, 0.03, 0.01, 1), 0xdff6ff, 0, 1.8, -0.28); bottle(w, -48.5, 0.94, 57.6, 0xa855f7); bottle(w, -46.6, 0.94, 57.6, 0x22c55e); }
+  [[-50.6, 0xffffff], [-50.0, 0x38bdf8], [-49.4, 0x16a34a]].forEach(([x, c]) => towel(w, x, 1.9, 69.6, PI, c)); for (let i = 0; i < 4; i++) w.add('x', cyl(6), 0xcbd5e1, -50.6 + i * 0.6, 1.88, 69.75, PI / 2, 0, 0, 0.015, 0.12, 0.015);
+  gymBag(w, -44.6, 0.56, 66.6, 0.1, 0xef4444); gymBag(w, -41.6, 0.56, 60.2, -0.2, 0x2563eb); gymBag(w, -42.2, 0, 61.2, 0.6, 0x111827); bottle(w, -43.4, 0.56, 66.7, 0x38bdf8); bottle(w, -43.0, 0.56, 60.3, 0xe6ff3b); shoePair(w, -44.0, 65.8, 0.3, 0xffffff); shoePair(w, -41.0, 61.1, -0.4, 0x16a34a);
+  { const x = -38.8, z = 68.8; w.add('f', lathe([[0, 0], [0.32, 0], [0.36, 0.8], [0, 0.8]], 22, 'hamper'), 0x93c5fd, x, 0, z); for (let i = 0; i < 4; i++) w.add('f', sph(10), TEES[i * 2], x - 0.15 + (i % 2) * 0.3, 0.82, z - 0.1 + (i >> 1) * 0.2, 0, 0, 0, 0.18, 0.08, 0.16); w.solid(x - 0.36, 0, z - 0.36, x + 0.36, 0.9, z + 0.36); }
+  { const x = -46.2, z = 60.2; w.add('g', rbox(0.4, 0.06, 0.4, 0.03, 1), 0xf1f5f9, x, 0.03, z); w.add('l', rbox(0.12, 0.01, 0.06, 0.005, 1), 0x22c55e, x, 0.065, z + 0.1, 0, 0, 0, 1, 1, 1, 0.5); }
+  K.plant(w, -51.0, 58.2, 0.8); fan(w, -43, 64, 5.5); K.rug(w, -43, 63.4, 0, 6.0, 1.6, 0x1e3a8a, 0x93c5fd); person(-39.5, 62.4, -PI / 2, { name: 'Member' });
+  person(-46.0, 68.3, 0, { name: 'Member' }); person(-45.0, 64.7, PI, { name: 'Member' }); seat(-41.6, 0.5, 60.0, PI, { name: 'Member' }); person(-47.8, 58.3, PI, { name: 'Member' }); person(-36.9, 66.8, -PI / 2, { name: 'Member' });
+}
+function snackFill(w) { w.region = 'in_snack';
+  // condiment station by the door, queue ropes at the counter, window bar with stools along the south wall
+  { const T = w.tf(-16.2, 0, 84.0, -PI / 2); T.slab('g', 0x16a34a, 0, 0, 0, 1.6, 0.95, 0.6, 0.05); T.box('m', 0xfef3c7, 0, 0.95, 0, 1.7, 0.05, 0.66, 0.02); [[0xef4444, -0.55], [0xfcd34d, -0.35], [0x22c55e, -0.15]].forEach(([c, a]) => { T.add('g', rcyl(0.06, 0.22, 0.03, 14), c, a, 1.0, 0); T.add('g', cone(10), c, a, 1.22, 0, 0, 0, 0, 0.025, 0.06, 0.025); });
+    T.box('x', 0xcbd5e1, 0.25, 1.0, 0, 0.2, 0.24, 0.16, 0.02); T.add('g', rbox(0.16, 0.12, 0.12, 0.01, 1), 0xffffff, 0.25, 1.3, 0); for (let i = 0; i < 5; i++) T.add('x', cyl(6), TEES[i], 0.6 + (i % 3) * 0.02, 1.0, (i - 2) * 0.02, (i - 2) * 0.08, 0, 0.05 * (i - 2), 0.006, 0.26, 0.006); T.add('g', lathe([[0, 0], [0.08, 0], [0.09, 0.2], [0, 0.2]], 16, 'strawcup'), 0xffffff, 0.6, 1.0, 0); txt(w, 'SAUCES', ...T.P(0, 1.65, -0.28), -PI / 2, 0.16, 0x166534); T.box('m', 0xfef3c7, 0, 1.5, -0.3, 1.0, 0.3, 0.04, 0.02); }
+  stanchions(w, 'z', -28.4, 82.6, 86.4); stanchions(w, 'z', -27.2, 82.6, 86.4);
+  { const T = w.tf(-27.0, 0, 93.6, PI); T.box('m', 0xb7773f, 0, 1.0, 0, 5.0, 0.06, 0.45, 0.02); [-2.3, 2.3].forEach((a) => T.box('x', 0x94a3b8, a, 0, 0.1, 0.06, 1.0, 0.06, 0.01)); for (let i = 0; i < 4; i++) { const sx = -1.8 + i * 1.2; const P = T.P(sx, 0, -0.55); K.stool(w, P[0], P[2], [0xef4444, 0x16a34a, 0xfcd34d, 0x16a34a][i]); } }
+  // pickle barrel, plants, ceiling fan, table settings
+  { const x = -17.2, z = 93.0; w.add('m', lathe([[0, 0], [0.42, 0], [0.5, 0.5], [0.42, 1.0], [0, 1.0]], 24, 'barrel'), 0x8b5a2b, x, 0, z); [0.15, 0.85].forEach((y) => w.add('x', torus(0.03, 24), 0x334155, x, y, z, PI / 2, 0, 0, 0.47, 0.47, 0.47)); for (let i = 0; i < 5; i++) w.add('g', capsule(10), 0x4d7c0f, x - 0.2 + (i % 3) * 0.2, 1.02, z - 0.1 + (i >> 1) * 0.12, PI / 2, 0, 0.3 * i, 0.07, 0.12, 0.07); txt(w, 'PICKLES 50¢', x, 1.25, z - 0.52, PI, 0.13, 0x166534); w.solid(x - 0.5, 0, z - 0.5, x + 0.5, 1.0, z + 0.5); }
+  K.tableR(w, -18.6, 91.8, 0.55, 0.78, 0xffffff); K.stool(w, -17.7, 92.6, 0xef4444); K.stool(w, -19.5, 92.6, 0x16a34a); seat(-17.7, 0.66, 92.6, PI * 0.8, { name: 'Snacker' }); seat(-19.5, 0.66, 92.6, -PI * 0.8, { name: 'Snacker' }); cupSet(w, -18.5, 0.78, 91.7, 0xfcd34d); K.tray(w, -18.8, 0.78, 91.5, 0.4);
+  [[-33.2, 93.3], [-33.2, 80.7], [-14.8, 90.9]].forEach(([x, z]) => K.plant(w, x, z, 0.8)); fan(w, -22, 87.8, 4.4);
+  [[-24, 89], [-20, 89], [-24, 92.4]].forEach(([x, z], i) => { cupSet(w, x + 0.25, 0.8, z + 0.1, TEES[i + 1]); cupSet(w, x - 0.3, 0.8, z - 0.15, TEES[i + 4]); K.tray(w, x, 0.8, z, i); });
+  // people: queue, window bar, booth partners, cook
+  person(-27.8, 83.4, -PI / 2, { name: 'Snacker' }); person(-27.8, 84.6, -PI / 2, { name: 'Snacker' }); person(-27.8, 85.8, -PI / 2, { name: 'Snacker' }); person(-16.8, 85.2, -PI / 2, { name: 'Snacker' });
+  seat(-28.8, 0.66, 93.05, PI, { name: 'Snacker' }); seat(-26.4, 0.66, 93.05, PI, { name: 'Snacker' }); seat(-22.5, 0.45, 82.0, 0, { name: 'Snacker' }); seat(-19.0, 0.45, 82.0, 0, { name: 'Snacker' });
+  person(-32.7, 90.0, -PI / 2, { staff: true, name: 'Cook' }); person(-32.7, 84.6, -PI / 2, { staff: true, name: 'Cook' });
+}
+function trainFill(w) { const c = COURTS.train; w.region = 'in_train';
+  // north strip: water station, paddle rack, benches, stretching mats, ball carts
+  K.cooler(w, 29.2, 78.8); K.cooler(w, 30.0, 78.8); for (let i = 0; i < 6; i++) cupSet(w, 30.8 + (i % 3) * 0.12, 0.88, 78.6 + (i >> 1 & 1) * 0.12, 0xffffff); w.slab('m', 0xb7773f, 31.0, 0, 78.7, 0.8, 0.86, 0.5, 0.03);
+  paddleBoard(w, 35.5, 78.15, 0, 8); K.bench(w, 35.5, 79.6, PI, 0x1e3a8a); K.bench(w, 40.5, 79.6, PI, 0x1e3a8a);
+  [44.2, 45.4, 46.6].forEach((x, i) => gymMat(w, x, 80.8, [0x2563eb, 0x16a34a, 0xff4fa0][i]));
+  { const x = 48.2, z = 79.4; w.add('x', rbox(0.9, 0.06, 0.6, 0.02, 1), 0x334155, x, 0.25, z); [-0.4, 0.4].forEach((a) => [-0.25, 0.25].forEach((b) => w.add('x', cyl(6), 0x94a3b8, x + a, 0, z + b, 0, 0, 0, 0.015, 0.95, 0.015))); w.add('x', cyl(6), 0x94a3b8, x - 0.45, 0.95, z, PI / 2, 0, 0, 0.015, 0.6, 0.015); ballsOn(w, x, z, 0, 0); for (let i = 0; i < 40; i++) w.add('g', sph(8), 0xe6ff3b, x - 0.38 + (i % 8) * 0.11, 0.33 + (i / 32 | 0) * 0.09, z - 0.22 + ((i >> 3) % 4) * 0.13, 0, 0, 0, 0.045, 0.045, 0.045); w.solid(x - 0.45, 0, z - 0.3, x + 0.45, 1.0, z + 0.3); }
+  { const T = w.tf(31.5, 0, 81.3, 0); for (let i = 0; i < 9; i++) T.add('f', rbox(0.06, 0.02, 0.8, 0.01, 1), 0xfcd34d, -2 + i * 0.5, 0.1, 0); [-0.4, 0.4].forEach((b) => T.add('f', rbox(4.1, 0.015, 0.05, 0.01, 1), 0xfcd34d, 0, 0.1, b)); cones(w, 28.8, 82.6, 3, 0.7); }
+  person(30.3, 81.3, PI / 2, { name: 'Player' }); person(32.4, 81.3, PI / 2, { name: 'Player' }); person(34.4, 82.5, -PI / 2, { staff: true, name: 'Coach' }); K.crate(w, 47.0, 0, 82.4, 0.7, 0x1e3a8a); K.crate(w, 47.0, 0.7, 82.4, 0.6, 0xfde047);
+  person(44.2, 81.2, PI, { name: 'Player' }); person(45.4, 80.5, PI / 2, { name: 'Player' }); seat(40.0, 0.55, 79.7, 0, { name: 'Player' }); person(29.8, 79.9, 0.4, { name: 'Player' });
+  // south strip: rebound wall with two players, ball baskets
+  { const T = w.tf(35, 0, 109.5, PI); T.slab('g', 0xf8fafc, 0, 0, 0, 11, 2.6, 0.2, 0.04); T.box('l', 0x22c55e, 0, 0.86, 0.11, 11, 0.06, 0.02, 0.01, 0.4); [-3, 0, 3].forEach((a) => { T.box('g', 0xef4444, a, 1.4, 0.11, 0.7, 0.7, 0.02, 0.01); T.box('g', 0xffffff, a, 1.6, 0.12, 0.3, 0.3, 0.02, 0.01); }); txt(w, 'REBOUND WALL', ...T.P(0, 2.25, 0.13), PI, 0.24, 0x1e3a8a); }
+  person(32.0, 106.8, 0, { name: 'Player' }); person(38.0, 106.6, 0.2, { name: 'Player' }); person(45.0, 107.6, -0.6, { name: 'Player' }); ballsOn(w, 35, 107.5, 14, 2.5); hopper(w, 29.4, 0, 107.6); cones(w, 41, 106, 4, 0.9);
+  // coaches by the court + scattered balls in the run-off
+  person(c.x - 5.4, c.z - 7.0, PI / 2, { staff: true, name: 'Coach' }); person(c.x + 5.4, c.z + 7.0, -PI / 2, { staff: true, name: 'Coach' }); ballsOn(w, c.x + 5.0, c.z - 9.0, 10, 1.2); ballsOn(w, c.x - 5.0, c.z + 9.0, 8, 1.2);
+  // drill desk queue + video room viewers
+  person(21.0, 83.2, PI, { name: 'Player' }); person(21.6, 84.4, PI, { name: 'Player' }); person(18.2, 90.6, PI / 2, { name: 'Player' }); K.plant(w, 16.9, 93.0, 0.8); K.plant(w, 26.3, 78.9, 0.8);
+  person(24.6, 104.6, 0.3, { name: 'Player' }); person(19.0, 108.6, PI, { name: 'Player' });
 }
