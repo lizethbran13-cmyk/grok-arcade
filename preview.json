@@ -1,6 +1,6 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online.",
-  "updated": "2026-10-17",
+  "updated": "2026-10-16",
   "items": [
     {
       "game": "grocery",
@@ -14,13 +14,13 @@
     {
       "issue": 45,
       "game": "pumpkinhollow",
-      "name": "Spookster Mega Pack",
+      "name": "Spookster Mega Pack (live)",
       "size": "MEGA",
-      "what": "Grok Pumpkin Hollow MEGA DLC: green sludge is bubbling out of a fenced-off site, and under it is THE GLOOMWORKS, a hidden underground facility full of mad scientists and spooky tests. Investigate who built it and why (and who keeps opening the sludge valves!), unlock 6 new skins, and play Spooky Mode 2.0 (BOO, HAUNT, VANISH, FLICKER + the Night Shift challenge, based on Grok Spooks' Spook 'Em). Luna, Pi-rat, Snowie, Candy and Torty visit. 175 tickets.",
-      "stage": "building",
-      "when": "In the lab now",
-      "gname": "Grok Pumpkin Hollow",
-      "key": "grokDLC.pumpkinhollow.spookster_mega_pack"
+      "what": "Grok Pumpkin Hollow MEGA DLC: green sludge is bubbling out of a fenced-off site, and under it is THE GLOOMWORKS, a hidden underground facility full of mad scientists and spooky tests. Investigate who built it and why (and who keeps opening the sludge valves!), unlock 6 new skins, and play Spooky Mode 2.0 (BOO, HAUNT, VANISH, FLICKER + the Night Shift challenge, based on Grok Spooks' Spook 'Em). Luna, Pi-rat, Snowie, Candy and Torty visit. 175 tickets in the DLC Machine. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 16",
+      "key": "grokDLC.pumpkinhollow.spookster_mega_pack",
+      "shippedAt": "2026-10-17T01:07:12Z"
     },
     {
       "game": "ruffsources",
@@ -242,16 +242,6 @@
   ],
   "previews": [
     {
-      "id": "ph-spookster",
-      "game": "pumpkinhollow",
-      "issue": 45,
-      "name": "Spookster Mega Pack",
-      "url": "previews/ph-spookster/",
-      "playable": true,
-      "built": "2026-10-16",
-      "notes": "MEGA DLC (not shipped): the fenced Sludge Site + THE GLOOMWORKS underground facility (7 walk-in rooms, mad scientists, spooky tests, green sludge), the Who-built-it-and-why mystery, Gloopy, 8 Glow Vials, 6 new skins and Spooky Mode 2.0 (BOO / HAUNT / VANISH / FLICKER + Night Shift). Unlocked in the Time Jumper; add ?locked=1 to see the locked teaser"
-    },
-    {
       "id": "grocery",
       "game": "grocery",
       "name": "Grok Grocery Tycoon",
@@ -396,6 +386,18 @@
       "built": "2026-10-12",
       "archived": "2026-10-12",
       "notes": "North Pole Event Center on the real calendar. Test dates: ?npdate=2026-10-14 (Reindeer Games live), 2026-10-31 (Halloween Party), 2026-11-26 (Elf Parade), 2026-12-25 (Christmas Day Party)",
+      "playable": true
+    },
+    {
+      "id": "ph-spookster",
+      "game": "pumpkinhollow",
+      "issue": 45,
+      "name": "Spookster Mega Pack",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/ph-spookster-beta/",
+      "built": "2026-10-16",
+      "archived": "2026-10-17",
+      "notes": "MEGA DLC (not shipped): the fenced Sludge Site + THE GLOOMWORKS underground facility (7 walk-in rooms, mad scientists, spooky tests, green sludge), the Who-built-it-and-why mystery, Gloopy, 8 Glow Vials, 6 new skins and Spooky Mode 2.0 (BOO / HAUNT / VANISH / FLICKER + Night Shift). Unlocked in the Time Jumper; add ?locked=1 to see the locked teaser",
       "playable": true
     }
   ],
