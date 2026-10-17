@@ -5,11 +5,12 @@
     {
       "game": "arcade",
       "key": "bob_live_sync",
-      "name": "Bob's Account Desk: Live Sync",
+      "name": "Bob's Account Desk: Live Sync (live)",
       "size": "Feature",
-      "what": "Grok Arcade: LIVE SYNC comes to Bob's Account Desk! Turn it on and Bob gives you a 6-digit ID. Type it on your other device and tap YES on a linked one (with a match code, so nobody sneaks in). Up to 3 devices, see them all and unlink any. Tickets, prizes, DLC and every Grok game's progress sync both ways by themselves: the newest change wins, an empty save never wipes progress, and Bob keeps a backup before every update (Undo last sync). Share with friends lets a friend peek at your stats with your ID and compare (look, don't touch). Works offline and catches up later. Beta in the Time Jumper!",
-      "stage": "building",
-      "when": "Started Oct 16 · beta in the Time Jumper"
+      "what": "Grok Arcade: LIVE SYNC comes to Bob's Account Desk! Turn it on and Bob gives you a 6-digit ID. Type it on your other device and tap YES on a linked one (with a match code, so nobody sneaks in). Up to 3 devices, see them all and unlink any. Tickets, prizes, DLC and every Grok game's progress sync both ways by themselves: the newest change wins, an empty save never wipes progress, and Bob keeps a backup before every update (Undo last sync). Share with friends lets a friend peek at your stats with your ID and compare (look, don't touch). Works offline and catches up later. Live now at Bob's desk! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 16",
+      "shippedAt": "2026-10-17T05:51:04Z"
     },
     {
       "issue": 48,
@@ -323,19 +324,20 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "bob-livesync",
       "game": "arcade",
       "name": "Bob's Account Desk: Live Sync",
-      "url": "previews/bob-livesync/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/bob-livesync-beta/",
       "built": "2026-10-16",
-      "notes": "Live Sync at Bob's desk: turn it on for a 6-digit ID, link up to 3 devices (type the ID, tap YES on a linked device), saves sync both ways by themselves, share with friends + Peek at a friend, offline-safe. Preview uses the test server and this preview's own sandbox save; your real save is never touched."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-16",
+      "notes": "Live Sync at Bob's desk: turn it on for a 6-digit ID, link up to 3 devices (type the ID, tap YES on a linked device), saves sync both ways by themselves, share with friends + Peek at a friend, offline-safe. Preview uses the test server and this preview's own sandbox save; your real save is never touched.",
+      "playable": true
+    },
     {
       "id": "pickleballpark",
       "game": "pickleballpark",
