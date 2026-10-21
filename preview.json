@@ -365,16 +365,6 @@
   ],
   "previews": [
     {
-      "id": "grocery-online-pass",
-      "game": "grocery",
-      "issue": 46,
-      "name": "Super Shop Online Pass",
-      "url": "previews/grocery-online-pass/",
-      "playable": true,
-      "built": "2026-10-21",
-      "notes": "Online Store desk in your store with 3 order types: in-store pickup, same-day delivery (your shopper picks the items, then a Grok Van drives them to Maple Lane) and 2-day shipping from the new walk-in Shopsville Ship Center (racks, packing line, conveyor, truck dock, workers, Martina 'Torty' as boss). Plus your own phone: orders, calls, meetings, shop upgrades, buy stock, reviews. DLC is unlocked in the preview; add ?locked=1 to see it locked."
-    },
-    {
       "id": "drvic-lostlab",
       "game": "drvic",
       "name": "Grok Dr. Vic: The Lost Lab",
@@ -382,6 +372,16 @@
       "playable": true,
       "built": "2026-10-21",
       "notes": "NEW spooky Halloween game on the new Shadowlight engine. First playable: Vic's home lab intro (Ratita Goo explodes!), Old Town Street (overgrown street, 12 boarded shops, walk-in Bev's Diner, rusty cars, Candy finds the hedge gap), the Ratita Industries lab Floor 1 + Floor 2 and all 11 underground levels (streamed one at a time), 36 clues, 40 anomalies to film, followers + battery, goo slips and jump-scares, Luna, Pi-rat, Snowie, Torty and Candy, and the GO VIRAL ending. Preview uses its own sandbox save."
+    },
+    {
+      "id": "grocery-online-pass",
+      "game": "grocery",
+      "issue": 46,
+      "name": "Super Shop Online Pass",
+      "url": "previews/grocery-online-pass/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Detail pass: busy Online Orders zone (pickup line with stanchions, full cubbies, bag rack, parked carts, scanner charging dock, restocker + 2nd clerk), Ship Center with varied labelled stock, totes, wrapped pallets, rack barcodes, aisle signs, floor markings, pallet jacks and more workers, and a lively Maple Lane (cars, fences, porch packages, kids and neighbours). 3 order types: in-store pickup, same-day Grok Van delivery, 2-day shipping. Phone: orders, calls, meetings, upgrades, buy stock. DLC is unlocked in the preview; add ?locked=1 to see it locked."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

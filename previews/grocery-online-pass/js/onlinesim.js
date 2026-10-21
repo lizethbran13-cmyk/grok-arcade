@@ -61,7 +61,24 @@ export class Online {
     this.packers = [0, 1, 2].map((i) => { const px = [89.5, 93, 96.5][i]; const a = this.person(4651 + i * 11, true, 0xf59e0b, px, -24.5); a.reg = 'wh'; a.role = 'packer'; a.home = [px, -24.5]; a.ry = PI; a.idx = i; a.cap = true; return a; });
     this.whBoss = this.person(4691, true, 0x0f766e, 99, -41.6); this.whBoss.reg = 'wh'; this.whBoss.ry = PI;
     this.loader = this.person(4699, true, 0xf59e0b, 92, -19.5); this.loader.reg = 'wh'; this.loader.cap = true; this.loader.loop = [[88.8, -19.5], [91.3, -19.5], [91.3, -21.5], [88.8, -21.5]]; this.loader.wi = 0;
-    for (const a of [...this.pickers, ...this.drivers, ...this.packers]) a.st = 'idle'; }
+    for (const a of [...this.pickers, ...this.drivers, ...this.packers]) a.st = 'idle'; this.mkLife(); }
+  // background life: pickup line, 2nd clerk, restocker, rack pickers + pallet-jack runner in the Ship Center, neighbours on Maple Lane
+  mkLife() { const L = this.life = []; const P = (seed, staff, shirt, x, z, ry, reg, o = {}) => { const a = this.person(seed, staff, shirt, x, z); a.ry = ry; a.reg = reg; Object.assign(a, o); a.sp0 = o.sp || 1.2; a.sp = 0; L.push(a); return a; };
+    [18.1, 18.9, 19.7].forEach((x, i) => P(4801 + i * 13, false, null, x, -12.6, PI / 2, 's1', { idle: 1, carry: i === 1 }));
+    P(4841, true, 0x14b8a6, 22.75, -8.95, -PI / 2, 's1', { idle: 1 });
+    P(4851, true, 0x0d9488, 18.5, -14.45, 0, 's1', { loop: [[18.5, -14.45], [19.1, -14.45], [19.55, -14.4], [19.1, -14.45]], stop: [2.2, 1.6, 1.4, 0], face: [0, 0, PI / 2, 0], sp: 0.9 });
+    P(4861, true, 0xf59e0b, 86.4, -39.1, PI / 2, 'wh', { cap: true, cart: true, loop: [[86.4, -39.1], [89.5, -39.1], [92.8, -39.1], [89.5, -39.1]], stop: [1.5, 2.0, 1.5, 2.0], face: [PI, 0, PI, PI], sp: 1.2 });
+    P(4871, true, 0xf59e0b, 92.6, -34.5, -PI / 2, 'wh', { cap: true, cart: true, loop: [[92.6, -34.5], [88.0, -34.5], [86.3, -34.5], [90.2, -34.5]], stop: [1.8, 1.6, 2.0, 1.2], face: [0, PI, 0, PI], sp: 1.2 });
+    P(4881, true, 0xf59e0b, 97.0, -29.4, 0, 'wh', { cap: true, loop: [[97.0, -29.4], [98.5, -27.5], [98.5, -24.0], [99.3, -23.4], [99.3, -21.0], [97.2, -20.6], [99.3, -21.0], [99.3, -23.4], [98.5, -24.0], [98.5, -27.5]], stop: [1.5, 0, 0, 0, 0, 1.5, 0, 0, 0, 0], carryOn: [0, 1, 1, 1, 1, 0, 0, 0, 0, 1], sp: 1.3 });
+    P(4891, false, 0xef4444, -80, 116.3, PI / 2, 'out', { loop: [[-82, 116.3], [82, 116.3]], stop: [1, 1], sp: 2.6 });
+    P(4895, false, 0x22c55e, 9.4, 119.6, 0, 'out', { kid: 1, loop: [[9.4, 119.6], [9.8, 121.4], [8.9, 120.9]], stop: [0.6, 0.8, 0.4], face: [PI, PI, PI], sp: 1.8 });
+    P(4897, false, 0xfacc15, 30, 116.0, -PI / 2, 'out', { kid: 1, loop: [[38, 116.0], [-38, 116.0]], stop: [2, 2], sp: 1.0 });
+    P(4901, false, 0x7c3aed, -47.4, 115.9, PI / 2, 'out', { idle: 1 }); P(4903, false, 0xf97316, -46.6, 115.9, -PI / 2, 'out', { idle: 1 });
+    P(4907, false, 0x0ea5e9, -73.9, 117.05, 0, 'out', { idle: 1, pickT: 1 }); P(4909, false, 0xfb7185, 68.6, 116.6, PI, 'out', { idle: 1 });
+    for (const a of L) { if (a.kid) a.look.kid = true; a.wi = 0; a.wait = Math.random() * 2; } }
+  stepLife(dt) { for (const a of this.life || []) { if (a.pick > 0) a.pick = Math.max(0, a.pick - dt * 0.8); if (a.idle) { a.sp = 0; if (a.pickT && a.pick <= 0 && Math.random() < dt * 0.3) a.pick = 0.8; continue; }
+      if (a.wait > 0) { a.wait -= dt; a.sp = 0; continue; } const t = a.loop[a.wi]; if (this.move(a, t, dt, a.sp0)) { a.sp = 0; if (a.face && a.face[a.wi] != null && a.stop && a.stop[a.wi]) a.ry = a.face[a.wi]; a.wait = a.stop ? a.stop[a.wi] : 0; if (a.wait > 0.5 && a.reg !== 'out') a.pick = 0.8; if (a.carryOn) a.carry = !!a.carryOn[a.wi]; a.wi = (a.wi + 1) % a.loop.length; } } }
+
   petModel(id) { let p = this.pets[id]; if (!p) { p = this.pets[id] = makePet(id, { s: id === 'torty' ? 0.85 : 1.15 }); p.y = 0.06; this.g.add(p.root); p.root.visible = false; } return p; }
   homeVisible(id) { const n = this.g.npcs.find((q) => q.id === id); return !!(n && n.root.visible) || this.g.petAway(id); }
   // ---------------------------------------------------------------- order flow
@@ -91,7 +108,7 @@ export class Online {
   update(dt) { if (!this.ok) return; this.T += dt; const o = this.S, open = S.time >= OPEN && S.time < CLOSE - 30; const gm = dt * 2; // MPS = 2 game minutes per real second
     if (o.on && open && o.orders.filter((q) => q.st !== 'shipped').length < 7 && Math.random() < this.rate() * gm) this.spawnOrder();
     if (!o.tut && this.g.app.state === 'play' && !this.g.app.busy) { o.tut = 1; persist(); setTimeout(() => this.spawnOrder('pickup', 'luna'), 1500); setTimeout(() => this.spawnOrder('delivery'), 9000); setTimeout(() => this.spawnOrder('ship', 'pirat'), 16000); toast('🛒 Super Shop Online Pass: your Online Store desk is open (front right of Main St)!'); }
-    this.stepPickers(dt); this.stepDrivers(dt); this.stepPickupCustomers(dt); this.stepShip(dt); this.stepFork(dt);
+    this.stepPickers(dt); this.stepDrivers(dt); this.stepPickupCustomers(dt); this.stepShip(dt); this.stepFork(dt); this.stepLife(dt);
     const l = this.loader; { const t = l.loop[l.wi]; if (this.move(l, t, dt, 1.2)) { l.wi = (l.wi + 1) % l.loop.length; l.carry = l.wi % 2 === 0; } } }
   move(a, t, dt, sp) { const dx = t[0] - a.x, dz = t[1] - a.z, d = Math.hypot(dx, dz); if (d < 0.08) { a.sp = 0; return true; } const s = Math.min(d, sp * dt); a.x += dx / d * s; a.z += dz / d * s; let dy = Math.atan2(dx, dz) - a.ry; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); a.ry += dy * Math.min(1, dt * 10); a.sp = sp; a.wt = (a.wt || 0) + dt * sp * 4.2; return false; }
   walk(a, dt, sp) { if (!a.path.length) { a.sp = 0; return true; } if (this.move(a, a.path[0], dt, sp)) a.path.shift(); return !a.path.length; }
@@ -101,10 +118,10 @@ export class Online {
       if (a.st === 'pick') { a.pt -= dt * this.speed('pick'); a.pick = 0.4 + Math.abs(Math.sin(a.pt * 4)) * 0.6; if (a.pt <= 0) { a.pick = 0; a.stops.shift(); if (a.stops.length) { a.path = this.route(a, a.stops[0].x, a.stops[0].z); a.st = 'go'; } else { a.path = this.toDesk(a, a.home[0], a.home[1]); a.st = 'back'; } } return; }
       if (a.st === 'back') { if (this.walk(a, dt, sp)) { const ord = a.job; a.job = null; a.st = 'idle'; a.cart = false; if (ord && o.orders.includes(ord)) { this.take(ord); ord.st = 'ready'; ord.readyAt = nowA(); ord.cwait = 4 + Math.random() * 6; sfx('pop'); } } } }); }
   // pickup customers (pets as VIP cameos) walk in from the door, wait at the PICKUP mat, take the bag and leave
-  stepPickupCustomers(dt) { const o = this.S, G = this.G; for (const ord of o.orders) { if (ord.type !== 'pickup' || ord.st !== 'ready') continue; if (!ord.c) { ord.cwait -= dt; if (ord.cwait > 0) continue; const a = this.person(ord.id * 37 + 11, false, null, G.doorX + 1.2, G.front + 3); a.reg = 'any'; a.cust = ord; a.path = [[G.doorX + 1.2, G.front - 2.2], [G.doorX + 1.6, -15.0], [20.75, -15.0], [20.75, DESK.z - 0.7 + (ord.id % 3) * 0.7]]; a.st = 'in'; ord.c = a; a.pet = ord.pet && !this.homeVisible(ord.pet) ? ord.pet : null; } }
+  stepPickupCustomers(dt) { const o = this.S, G = this.G; for (const ord of o.orders) { if (ord.type !== 'pickup' || ord.st !== 'ready') continue; if (!ord.c) { ord.cwait -= dt; if (ord.cwait > 0) continue; const a = this.person(ord.id * 37 + 11, false, null, G.doorX + 1.2, G.front + 3); a.reg = 'any'; a.cust = ord; a.path = [[G.doorX + 1.2, G.front - 2.2], [G.doorX + 1.6, -15.0], [15.8, -15.0], [17.0, -11.0], [20.75, DESK.z - 0.7 + (ord.id % 3) * 0.7]]; a.st = 'in'; ord.c = a; a.pet = ord.pet && !this.homeVisible(ord.pet) ? ord.pet : null; } }
     for (let i = this.ag.length - 1; i >= 0; i--) { const a = this.ag[i]; if (!a.cust) continue; const ord = a.cust;
       if (a.st === 'in') { if (this.walk(a, dt, 1.3)) { a.st = 'wait'; a.ry = PI / 2; a.wait = this.S.up.lockers ? 1.5 : 6; } }
-      else if (a.st === 'wait') { a.wait -= dt; if (a.wait <= 0 || a.handed) { a.st = 'out'; a.carry = true; const late = Math.max(0, (ord.readyAt || nowA()) - ord.due); this.pay(ord, a.handed ? 3 + (Math.random() * 4 | 0) : 1, Math.min(5, this.stars(ord, late) + (a.handed ? 0 : 0)), a.x, a.z); a.path = [[20.75, -15.0], [G.doorX - 1.4, -15.0], [G.doorX - 1.2, G.front - 2.2], [G.doorX - 1.0, G.front + 4]]; } }
+      else if (a.st === 'wait') { a.wait -= dt; if (a.wait <= 0 || a.handed) { a.st = 'out'; a.carry = true; const late = Math.max(0, (ord.readyAt || nowA()) - ord.due); this.pay(ord, a.handed ? 3 + (Math.random() * 4 | 0) : 1, Math.min(5, this.stars(ord, late) + (a.handed ? 0 : 0)), a.x, a.z); a.path = [[17.0, -11.2], [15.6, -15.2], [G.doorX - 1.4, -15.0], [G.doorX - 1.2, G.front - 2.2], [G.doorX - 1.0, G.front + 4]]; } }
       else if (a.st === 'out') { if (this.walk(a, dt, 1.4)) { this.ag.splice(i, 1); } } } }
   // delivery: driver shops the order with a cart, walks out to the Grok van, drives to Maple Lane, drops the bag on the porch, drives back
   vanPath(from, h) { const lz = (z) => z + 2.4; return [[from[0], from[1] + 2.0], [24.5, 6.4], [24.5, lz(14)], [30, lz(14)], [30, lz(110)], [h.curb[0], lz(110)]]; }
