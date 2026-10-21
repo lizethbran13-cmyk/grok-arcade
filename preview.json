@@ -3,6 +3,16 @@
   "updated": "2026-10-21",
   "items": [
     {
+      "issue": 46,
+      "game": "grocery",
+      "name": "Super Shop Online Pass",
+      "size": "Expansion",
+      "what": "Grok Grocery Tycoon: your store goes ONLINE! An Online Store desk takes orders 3 ways: in-store pickup, same-day delivery (a shopper picks the items in your store, then a Grok Van drives them to a house on Maple Lane) and shipping in 2 days from the brand-new walk-in Shopsville Ship Center, packed with racks, a packing line, a conveyor, a truck dock and workers, run by Martina \"Torty\". Plus your own phone: check orders, call people to set things up, hold meetings, buy upgrades and more stock. Keep your star rating up! Luna, Pi-rat, Snowie, Candy and Torty order too. 75 tickets.",
+      "stage": "building",
+      "when": "Started Oct 21 · beta in the Time Jumper",
+      "key": "grokDLC.grocery.super_shop_online_pass"
+    },
+    {
       "issue": 50,
       "game": "arcade",
       "name": "Bigger Hall + Bonus Zone East Wing",
@@ -363,6 +373,16 @@
       "playable": true,
       "built": "2026-10-21",
       "notes": "Detail pass: East Wing has the Prize Peek island (Luna on top), Easy + Tricky claws, the Ticket Muncher 9000, a lounge, Grandma's snack cart, a light-up floor path and visitors playing. Grandma Mrs' desk has tea, cookies, a radio, family photos, a rocking chair and Candy napping. The Grand Gallery (behind the Annex) has chandeliers, wall art, the Golden Cartridge, visitors and Torty on a visit. Preview uses its own sandbox save."
+    },
+    {
+      "id": "grocery-online-pass",
+      "game": "grocery",
+      "issue": 46,
+      "name": "Super Shop Online Pass",
+      "url": "previews/grocery-online-pass/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Online Store desk in your store with 3 order types: in-store pickup, same-day delivery (your shopper picks the items, then a Grok Van drives them to Maple Lane) and 2-day shipping from the new walk-in Shopsville Ship Center (racks, packing line, conveyor, truck dock, workers, Martina 'Torty' as boss). Plus your own phone: orders, calls, meetings, shop upgrades, buy stock, reviews. DLC is unlocked in the preview; add ?locked=1 to see it locked."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
