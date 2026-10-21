@@ -1,7 +1,17 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
-  "updated": "2026-10-16",
+  "updated": "2026-10-21",
   "items": [
+    {
+      "issue": 47,
+      "game": "skytours",
+      "name": "Super Sky High Expansion",
+      "size": "MEGA",
+      "what": "Grok Snowie Sky Tours MEGA DLC: fly SUPER SKY HIGH (the ceiling goes from 175 m to 320 m) to three floating sky areas that change how you fly: Frostbite Isle (snowfall, gusts and ice that builds up on your wings), Ember Isle (a live volcano with thermal updrafts, ash haze and lava bombs) and the Fly High Arena, where you battle high-tech planes and copters in foam-bubble dogfights (free-for-all, or team up with Candy; Easy, Normal or Ace). Plus the Sky Highway boost rings, 6 Sky Gems and 6 new badges. 175 tickets.",
+      "stage": "building",
+      "when": "In the Time Jumper now",
+      "key": "grokDLC.skytours.super_sky_high_expansion"
+    },
     {
       "game": "arcade",
       "key": "bob_live_sync",
@@ -324,7 +334,18 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "skytours-superskyhigh",
+      "game": "skytours",
+      "issue": 47,
+      "name": "Super Sky High Expansion",
+      "url": "previews/skytours-superskyhigh/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Frostbite Isle (snow, gusts, wing icing), Ember Isle volcano (thermals, ash, lava bombs), Fly High Arena bot battles (free-for-all or team up with Candy, 3 levels), Sky Highway boost rings, 6 Sky Gems, 6 badges, ceiling raised to 320 m. DLC is unlocked automatically in the preview."
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
