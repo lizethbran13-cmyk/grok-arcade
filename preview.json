@@ -13,15 +13,6 @@
       "key": "grokDLC.grocery.super_shop_online_pass"
     },
     {
-      "issue": 50,
-      "game": "arcade",
-      "name": "Bigger Hall + Bonus Zone East Wing",
-      "size": "Expansion",
-      "what": "Grok Arcade: the Hall of Records got cramped again, so it grows a GRAND GALLERY behind the Records Annex (the exhibits squeezed into the aisles move in, plus room for 14 more games). The Bonus Zone breaks through its east wall into a whole new EAST WING, so every bonus cabinet is full size again with room for 56. And meet GRANDMA MRS, Gary's great-great-grandmother and the new head attendant of the Bonus Zone: very nice, sometimes TOO nice (cookies!), easily sidetracked into drama, and her phone is always broken. Fix it for tickets.",
-      "stage": "building",
-      "when": "Started Oct 17 · beta in the Time Jumper"
-    },
-    {
       "issue": 47,
       "game": "skytours",
       "name": "Super Sky High Expansion",
@@ -30,6 +21,16 @@
       "stage": "building",
       "when": "In the Time Jumper now",
       "key": "grokDLC.skytours.super_sky_high_expansion"
+    },
+    {
+      "issue": 50,
+      "game": "arcade",
+      "name": "Bigger Hall + Bonus Zone East Wing (live)",
+      "size": "Expansion",
+      "what": "Grok Arcade: the Hall of Records got cramped again, so it grows a GRAND GALLERY behind the Records Annex (the exhibits squeezed into the aisles move in, plus room for 14 more games). The Bonus Zone breaks through its east wall into a whole new EAST WING, so every bonus cabinet is full size again with room for 56. And meet GRANDMA MRS, Gary's great-great-grandmother and the new head attendant of the Bonus Zone: very nice, sometimes TOO nice (cookies!), easily sidetracked into drama, and her phone is always broken. Fix it for tickets. Live now in Grok Arcade! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 21",
+      "shippedAt": "2026-10-21T22:20:09Z"
     },
     {
       "game": "arcade",
@@ -365,16 +366,6 @@
       "notes": "Frostbite Isle (snow, gusts, wing icing), Ember Isle volcano (thermals, ash, lava bombs), Fly High Arena bot battles (free-for-all or team up with Candy, 3 levels), Sky Highway boost rings, 6 Sky Gems, 6 badges, ceiling raised to 320 m. DLC is unlocked automatically in the preview."
     },
     {
-      "id": "hall-bonus",
-      "game": "arcade",
-      "issue": 50,
-      "name": "Bigger Hall + Bonus Zone East Wing",
-      "url": "previews/hall-bonus/",
-      "playable": true,
-      "built": "2026-10-21",
-      "notes": "Detail pass: East Wing has the Prize Peek island (Luna on top), Easy + Tricky claws, the Ticket Muncher 9000, a lounge, Grandma's snack cart, a light-up floor path and visitors playing. Grandma Mrs' desk has tea, cookies, a radio, family photos, a rocking chair and Candy napping. The Grand Gallery (behind the Annex) has chandeliers, wall art, the Golden Cartridge, visitors and Torty on a visit. Preview uses its own sandbox save."
-    },
-    {
       "id": "grocery-online-pass",
       "game": "grocery",
       "issue": 46,
@@ -387,6 +378,18 @@
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "hall-bonus",
+      "game": "arcade",
+      "issue": 50,
+      "name": "Bigger Hall + Bonus Zone East Wing",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/hall-bonus-beta/",
+      "built": "2026-10-21",
+      "archived": "2026-10-21",
+      "notes": "Detail pass: East Wing has the Prize Peek island (Luna on top), Easy + Tricky claws, the Ticket Muncher 9000, a lounge, Grandma's snack cart, a light-up floor path and visitors playing. Grandma Mrs' desk has tea, cookies, a radio, family photos, a rocking chair and Candy napping. The Grand Gallery (behind the Annex) has chandeliers, wall art, the Golden Cartridge, visitors and Torty on a visit. Preview uses its own sandbox save.",
+      "playable": true
+    },
     {
       "id": "bob-livesync",
       "game": "arcade",
