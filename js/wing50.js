@@ -284,7 +284,7 @@
     add(rc, bx(0.5, 0.04, 0.45), ph('#3ff0ff', 10), 0, 0.5, 0.02); FX.rock = rc; reg('Rocking chair', rc); A.addSolid(D.x + 0.95, D.x + 1.65, D.z - 2.45, D.z - 1.75, 'Rocking chair');
     var bd = grp('Candy\u2019s dog bed', D.x + 1.25, D.z + 1.9); add(bd, new T.TorusGeometry(0.36, 0.12, 8, 18), ph('#60a5fa', 15), 0, 0.12, 0).rotation.x = Math.PI / 2; add(bd, cy(0.34, 0.34, 0.06, 18), ph('#bfdbfe', 10), 0, 0.05, 0);
     reg('Candy\u2019s dog bed', bd); A.addSolid(D.x + 0.77, D.x + 1.73, D.z + 1.42, D.z + 2.38, 'Candy\u2019s dog bed');
-    var cn = pet('pl_candy', bd, 0, 0.08, 0, -2.2, 0.7); if (cn) { cn.rotation.z = 0.0; FX.candy = cn; }
+    var cn = pet('pl_candy', bd, 0, 0.08, 0, -2.2, 1.15); if (cn) { cn.rotation.z = 0.0; FX.candy = cn; }
     // zzz bubble over sleeping Candy
     var z = canvasPlane(bd, 128, 128, 0.35, function (c, w, h) { c.fillStyle = '#ffffff'; c.font = 'bold 54px "Trebuchet MS",sans-serif'; c.fillText('z', 20, 110); c.font = 'bold 40px sans-serif'; c.fillText('z', 66, 70); c.font = 'bold 28px sans-serif'; c.fillText('z', 96, 36); }, 0.1, 0.9, 0); z.material.transparent = true; z.rotation.y = -Math.PI / 2; FX.zzz = z;
   }
@@ -316,13 +316,19 @@
     inst(G2, frameGeo, gold, frames, 'Gallery art frames');
     // big painting on the back of the Annex wall: Gus and Barnaby, "a family portrait" (Gus is not smiling)
     canvasPlane(G2, 512, 256, 2.4, function (c, w, h) { c.fillStyle = '#3a1430'; c.fillRect(0, 0, w, h); c.strokeStyle = '#e8b84a'; c.lineWidth = 12; c.strokeRect(6, 6, w - 12, h - 12); [[170, '#5b4636', '#f5f5f5', 0], [340, '#3f8f5a', '#f5f5f5', 1]].forEach(function (p) { c.fillStyle = p[1]; c.fillRect(p[0] - 50, 120, 100, 110); c.fillStyle = '#f3c9a8'; c.beginPath(); c.arc(p[0], 95, 38, 0, 7); c.fill(); c.strokeStyle = '#7a2a2a'; c.lineWidth = 5; c.beginPath(); if (p[3]) c.arc(p[0], 100, 16, 0.2, Math.PI - 0.2); else { c.moveTo(p[0] - 14, 112); c.lineTo(p[0] + 14, 112); } c.stroke(); });
-      c.fillStyle = '#f5e6c8'; c.font = 'italic 22px Georgia'; c.textAlign = 'center'; c.fillText('Gus & Uncle Barnaby (Gus asked for this to be removed)', w / 2, h - 18); }, 10, 3.0, AZ + 0.43);
+      c.fillStyle = '#f5e6c8'; c.font = 'italic 22px Georgia'; c.textAlign = 'center'; c.fillText('Gus & Uncle Barnaby (Gus asked for this to be removed)', w / 2, h - 18); }, 10, 4.25, W.maxZ - 0.03, Math.PI);
     // plants + visitors + Torty on a visit
     plants(G2, [[2.65, 64.45], [17.35, 64.45], [8.0, 49.05], [12.0, 49.05], [8.6, 64.9], [11.4, 64.9]].filter(function (q) { return Math.abs(q[0] - 10) > 0.5; }), 'Gallery');
     visitor(G2, 4.1, 53.4, -Math.PI / 2, 5, 'look'); visitor(G2, 15.9, 55.4, Math.PI / 2, 6, 'look'); visitor(G2, 8.2, 60.4, Math.PI, 1, 'look'); visitor(G2, 12.4, 51.2, 0.4, 2, 'wave');
-    var to = pet('pl_torty', G2, 13.2, 0, 59.6, Math.PI / 2 + 0.4, 0.9); FX.torty = to;
-    var tc = canvasPlane(G2, 256, 96, 1.0, function (c, w, h) { c.fillStyle = '#fff7ed'; c.fillRect(0, 0, w, h); c.strokeStyle = '#a16207'; c.lineWidth = 6; c.strokeRect(3, 3, w - 6, h - 6); c.fillStyle = '#7c2d12'; c.font = 'bold 30px "Trebuchet MS",sans-serif'; c.textAlign = 'center'; c.fillText('Torty is visiting!', w / 2, 60); }, 13.2, 1.35, 59.6, Math.PI / 2); tc.material.transparent = true; FX.tortyTag = tc;
-    A.addSolid(12.75, 13.65, 59.15, 60.05, 'Torty (visiting)');
+    var to = pet('pl_torty', G2, 13.2, 0, 59.6, Math.PI / 2 + 0.4, 1.9); FX.torty = to;
+    var tc = canvasPlane(G2, 256, 96, 1.0, function (c, w, h) { c.fillStyle = '#fff7ed'; c.fillRect(0, 0, w, h); c.strokeStyle = '#a16207'; c.lineWidth = 6; c.strokeRect(3, 3, w - 6, h - 6); c.fillStyle = '#7c2d12'; c.font = 'bold 30px "Trebuchet MS",sans-serif'; c.textAlign = 'center'; c.fillText('Torty is visiting!', w / 2, 60); }, 13.2, 1.75, 59.6, -Math.PI / 2); tc.material.transparent = true; FX.tortyTag = tc;
+    A.addSolid(12.6, 13.8, 59.0, 60.2, 'Torty (visiting)');
+    // centre display: the Golden Cartridge case (every Grok game's first save, on velvet)
+    var gc = new T.Group(); gc.name = 'Golden Cartridge case'; gc.position.set(10, 0, 54.4); G2.add(gc);
+    add(gc, bx(1.1, 0.9, 1.1), ph('#3a1430', 20), 0, 0.45, 0); add(gc, bx(1.16, 0.06, 1.16), gold, 0, 0.92, 0); add(gc, bx(1.0, 0.8, 1.0), new T.MeshPhongMaterial({ color: '#e0f7ff', transparent: true, opacity: 0.3, shininess: 120, depthWrite: false }), 0, 1.35, 0);
+    var crt = add(gc, bx(0.42, 0.5, 0.1), gold, 0, 1.3, 0); FX.cart = crt; add(gc, bx(0.3, 0.2, 0.11), ph('#ff4fd8', 30), 0, 1.36, 0);
+    canvasPlane(gc, 512, 160, 1.0, function (c, w, h) { c.fillStyle = '#22120a'; c.fillRect(0, 0, w, h); c.fillStyle = '#ffe14d'; c.font = 'bold 38px Georgia,serif'; c.textAlign = 'center'; c.fillText('THE GOLDEN CARTRIDGE', w / 2, 70); c.fillStyle = '#f5e6c8'; c.font = 'italic 30px Georgia,serif'; c.fillText('do not touch \u00b7 Gus', w / 2, 125); }, 0, 0.5, -0.56, Math.PI);
+    gc.updateMatrixWorld(true); A.regItem('Golden Cartridge case', 'prop', gc); A.addSolid(9.42, 10.58, 53.82, 54.98, 'Golden Cartridge case');
   }
   function pets() {
     // Luna sits on top of the Prize Peek dome (she is NOT guarding it, she is planning), Snowie naps on the loveseat
@@ -335,16 +341,17 @@
     if (FX.luna) FX.luna.rotation.y = 0.6 + Math.sin(t * 0.7) * 0.8;
     if (FX.rock) FX.rock.rotation.x = Math.sin(t * 1.4) * 0.06;
     if (FX.zzz) { FX.zzz.position.y = 0.85 + ((t * 0.25) % 1) * 0.3; FX.zzz.material.opacity = 1 - ((t * 0.25) % 1); }
-    if (FX.candy) FX.candy.scale.y = 0.7 * (1 + Math.sin(t * 2) * 0.03);
+    if (FX.candy) FX.candy.scale.y = 1.15 * (1 + Math.sin(t * 2) * 0.03);
     FX.vis.forEach(function (v) { if (v.g.parent !== ROOT) return; var s = Math.sin(t * 6 + v.ph); if (v.pose === 'play') { v.aL.rotation.x = -1.0 + s * 0.15; v.aR.rotation.x = -1.0 - s * 0.15; } else { v.aR.rotation.z = Math.sin(t * 5 + v.ph) * 0.5 + 0.5; } v.hd.rotation.y = Math.sin(t * 0.8 + v.ph) * 0.2; });
   }
   function animGallery(t) {
+    if (FX.cart) FX.cart.rotation.y = t * 0.8;
     if (FX.torty) FX.torty.rotation.y = Math.PI / 2 + 0.4 + Math.sin(t * 0.5) * 0.25;
     FX.vis.forEach(function (v) { if (v.g.parent !== GROOT) return; v.hd.rotation.y = Math.sin(t * 0.5 + v.ph) * 0.35; if (v.pose === 'wave') v.aR.rotation.z = Math.sin(t * 4 + v.ph) * 0.4 + 0.4; });
   }
 
   WG.build = function (api) {
-    A = api; B = api.BZX; if (!B) return;
+    A = api; B = api.BZX; WG._scene = api.scene; if (!B) return;
     ROOT = new T.Group(); ROOT.name = 'East Wing'; A.scene.add(ROOT);
     shell(); parlor(); desk(); gallery();
     GROOT = new T.Group(); GROOT.name = 'Grand Gallery decor'; A.scene.add(GROOT);
