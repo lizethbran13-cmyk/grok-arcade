@@ -372,7 +372,7 @@
       "url": "previews/drvic-lostlab/",
       "playable": true,
       "built": "2026-10-21",
-      "notes": "NEW spooky Halloween game on the new Shadowlight engine. First playable: Vic's home lab intro (Ratita Goo explodes!), Old Town Street (overgrown street, 12 boarded shops, walk-in Bev's Diner, rusty cars, Candy finds the hedge gap), the Ratita Industries lab Floor 1 + Floor 2 and all 11 underground levels (streamed one at a time), 36 clues, 40 anomalies to film, followers + battery, goo slips and jump-scares, Luna, Pi-rat, Snowie, Torty and Candy, and the GO VIRAL ending. Preview uses its own sandbox save."
+      "notes": "NEW spooky Halloween game on the new Shadowlight engine. Detail pass v2: every room on every level is packed with themed props, wall posters/signs/vents/pipes and abandoned-lab mess. B2 is a real Goo Factory (vats, tanks, jar conveyor, control panels), B6 a Robot Workshop (broken robots, robot arms, tool walls, blueprints), B7 a brick sewer with a water channel and arches, a smaller Goo Core on B11, doorways between rooms, and a busier Old Town + Bev's Diner. Luna, Pi-rat, Snowie, Torty and Candy are all there. Preview uses its own sandbox save."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

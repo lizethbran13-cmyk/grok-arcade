@@ -98,10 +98,10 @@ export const ZONES = {
     pets: [] },
   b11: { name: 'B11 · The Goo Core', kind: 'lab', music: 'boss', floor: 'concrete', wall: 0x2f3a2c, fc1: 0x2a3326, fc2: 0x222a1f, corr: 0x2a3526, h: 6.0, tag: 'B11',
     rooms: ['goo', 'core', 'boiler', 'servers', 'core', 'storage'], west: { to: 'b10', label: 'Great doors → B10', up: true },
-    clues: [{ id: 'b11_confess', room: 1, dx: 0, dz: 3, kind: 'tape', title: 'Grimsby\'s last tape', text: '"If you are hearing this, someone found Gooliath. Yes, the founders planned it, and I helped. We made Old Town empty on purpose. There. I said it." (This is the proof!)' },
-      { id: 'b11_code', room: 4, dx: 0, dz: 3, kind: 'blueprint', title: 'Core shut-off panel', text: 'The founders\' shut-off panel. With Snowie\'s code 1-9-0-3, the Core can be put to sleep forever, and the goo babies can live happily in the sewers.' },
+    clues: [{ id: 'b11_confess', room: 1, dx: -3.2, dz: -1.6, kind: 'tape', title: 'Grimsby\'s last tape', text: '"If you are hearing this, someone found Gooliath. Yes, the founders planned it, and I helped. We made Old Town empty on purpose. There. I said it." (This is the proof!)' },
+      { id: 'b11_code', room: 4, dx: 3.2, dz: -1.6, kind: 'blueprint', title: 'Core shut-off panel', text: 'The founders\' shut-off panel. With Snowie\'s code 1-9-0-3, the Core can be put to sleep forever, and the goo babies can live happily in the sewers.' },
       { id: 'b11_cart', room: 3, dx: 0, dz: 0, kind: 'photo', title: 'Fresh cheese cart', text: 'A cheese cart with today\'s date on the receipt. Grimsby fed Gooliath this morning. He can\'t be far...' }],
-    anoms: [{ id: 'b11_core', room: 1, dx: 0, dz: -2, type: 'core', fol: 250000 }, { id: 'b11_core2', room: 4, dx: 0, dz: -2, type: 'core', fol: 200000 }, { id: 'b11_pop', room: 2, dx: 0, dz: 0, type: 'blob', fol: 150000, pop: true }],
+    anoms: [{ id: 'b11_core', room: 1, dx: 0, dz: 3.2, type: 'core', fol: 250000 }, { id: 'b11_core2', room: 4, dx: 0, dz: 3.2, type: 'core', fol: 200000 }, { id: 'b11_pop', room: 2, dx: 0, dz: 0, type: 'blob', fol: 150000, pop: true }],
     pets: [{ id: 'luna', at: 'corr', x: 8, z: 1.3, lines: [['Luna', 'Dr. Vic, this is it. Gooliath is in the two Core rooms. Get the proof, then hit POST THE TRUTH on your phone.'], ['Luna', 'Our great-great-great-grandparents were not innocent at all. But we can fix it. Together.']] },
       { id: 'pirat', at: 'corr', x: 10, z: -1.3, lines: [['Pi-rat', 'Arr, I\'ve got me one good eye on the door. If Grimsby shows up, he\'s not getting past!']] }, { id: 'snowie', at: 'corr', x: 12.5, z: 1.3, lines: [['Snowie', 'Eep! Code 1-9-0-3 is ready for the shut-off panel. You can do it!']] }] },
 };
