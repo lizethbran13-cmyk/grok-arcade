@@ -3,12 +3,14 @@
   "updated": "2026-10-21",
   "items": [
     {
+      "issue": 53,
       "game": "drvic",
-      "name": "Grok Dr. Vic: The Lost Lab",
+      "name": "Grok Dr. Vic: The Lost Lab (live)",
       "size": "New Game",
-      "what": "NEW spooky Halloween game on the brand-new Shadowlight engine: play down-on-his-luck scientist Dr. Vic, explore abandoned Old Town Street and the secret Ratita Industries lab (2 floors + 11 underground levels), film anomalies to go viral and uncover what Luna, Pi-rat and Snowie's great-great-great-grandparents really did.",
-      "stage": "building",
-      "when": "In the lab now"
+      "what": "Grok Dr. Vic: The Lost Lab is open! A spooky Halloween exploration game on the brand-new Shadowlight engine: sneak down abandoned Old Town Street, find the hidden Ratita Industries lab and explore its 2 floors and 11 underground levels by flashlight (the Goo Factory, the Robot Workshop, the brick sewer and the Goo Core), film anomalies to go viral and uncover what Luna, Pi-rat and Snowie's great-great-great-grandparents really did. Play it in ADVENTURE, plus bonus game #45 Goo Cam!",
+      "stage": "shipped",
+      "when": "Oct 21",
+      "shippedAt": "2026-10-21T23:49:37Z"
     },
     {
       "issue": 46,
@@ -364,19 +366,20 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "drvic-lostlab",
       "game": "drvic",
       "name": "Grok Dr. Vic: The Lost Lab",
-      "url": "previews/drvic-lostlab/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/drvic-lostlab-beta/",
       "built": "2026-10-21",
-      "notes": "NEW spooky Halloween game on the new Shadowlight engine. Detail pass v2: every room on every level is packed with themed props, wall posters/signs/vents/pipes and abandoned-lab mess. B2 is a real Goo Factory (vats, tanks, jar conveyor, control panels), B6 a Robot Workshop (broken robots, robot arms, tool walls, blueprints), B7 a brick sewer with a water channel and arches, a smaller Goo Core on B11, doorways between rooms, and a busier Old Town + Bev's Diner. Luna, Pi-rat, Snowie, Torty and Candy are all there. Preview uses its own sandbox save."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-21",
+      "notes": "NEW spooky Halloween game on the new Shadowlight engine. Detail pass v2: every room on every level is packed with themed props, wall posters/signs/vents/pipes and abandoned-lab mess. B2 is a real Goo Factory (vats, tanks, jar conveyor, control panels), B6 a Robot Workshop (broken robots, robot arms, tool walls, blueprints), B7 a brick sewer with a water channel and arches, a smaller Goo Core on B11, doorways between rooms, and a busier Old Town + Bev's Diner. Luna, Pi-rat, Snowie, Torty and Candy are all there. Preview uses its own sandbox save.",
+      "playable": true
+    },
     {
       "id": "grocery-online-pass",
       "game": "grocery",

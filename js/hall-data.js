@@ -2053,6 +2053,71 @@ GA.HALL_DATA = {
 "quip": "Snowie flew past the Hall window three times to wave at her pictures. The third time she was upside down. On purpose, she says.",
 "noOld": "Grok Snowie Sky Tours just took off. Its Time Jumper beta is in the Save Vault (Final Beta). Please keep your paws inside the copter."
 },
+"drvic": {
+"repo": "grok-dr-vic",
+"history": [
+{
+"date": "Oct 21",
+"ver": "1.0",
+"title": "Opening night",
+"text": "Dr. Victor's inventions keep flopping (Ratita Goo was a total disaster), so he becomes an urban explorer who needs to go viral. Sneak down abandoned Old Town Street, find the hidden Ratita Industries lab behind the bushes and explore 2 floors and 11 underground levels by flashlight: the Goo Factory, the Robot Workshop, the brick sewer and the Goo Core. Film anomalies for followers and find out what Luna, Pi-rat and Snowie's great-great-great-grandparents really did. The first game on the new Shadowlight engine (real flashlight shadows, mossy brick, rusty metal)."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/drvic/1.webp",
+"cap": "Old Town Street at night: abandoned for 22 years, and the drains glow green",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/drvic/2.webp",
+"cap": "Bev's Diner, frozen in time on Old Town Street",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/drvic/3.webp",
+"cap": "The hidden Ratita Industries lab behind the bushes",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/drvic/4.webp",
+"cap": "Lab Floor 1: the old lobby, under Dr. Vic's flashlight",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/drvic/5.webp",
+"cap": "B2, the Goo Factory: glowing vats and the Ratita Goo jar line",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/drvic/6.webp",
+"cap": "B6, the Robot Workshop: broken robots, robot arms and blueprints",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/drvic/7.webp",
+"cap": "B7, the brick sewer passages",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/drvic/8.webp",
+"cap": "B11, the Goo Core, deep under the lab",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/drvic/cover.webp",
+"quip": "Pi-rat says his great-great-great-grandpa was “just a janitor.” Pi-rat is not making eye contact.",
+"noOld": "Grok Dr. Vic: The Lost Lab just opened. Its Time Jumper beta is in the Save Vault (Final Beta). Bring a flashlight!"
+},
 "pickleballpark": {
 "repo": "grok-pickleball-park",
 "history": [

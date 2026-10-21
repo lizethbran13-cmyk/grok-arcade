@@ -83,6 +83,9 @@
     pickleballpark: function (g) { var o = new T.Group(); o.position.y = 0.3; g.add(o); var ct = ph('#2563eb', 40), wl = ph('#ffffff', 40); add(g, bx(0.3, 0.02, 0.18), ph('#15803d', 30), 0, 0.22, 0); add(g, bx(0.26, 0.022, 0.15), ct, 0, 0.225, 0); add(g, bx(0.006, 0.024, 0.15), wl, 0, 0.226, 0); add(g, bx(0.26, 0.05, 0.006), ph('#334155', 30), 0, 0.26, 0);
       var pd = add(g, cy(0.06, 0.06, 0.012, 20), ph('#111827', 60), -0.07, 0.36, 0.03); pd.rotation.x = Math.PI / 2; pd.scale.set(1, 1, 1.15); add(g, bx(0.02, 0.07, 0.014), ph('#ef4444', 40), -0.07, 0.27, 0.03); add(o, sp(0.03, 14), ph('#e6ff3b', 80), 0.22, 0.02, 0);
       add(o, sp(0.025, 10), ph('#e6ff3b', 60), -0.11, 0.03, 0.19); add(o, sp(0.028, 10), ph('#16a34a', 50), -0.11, 0.03, -0.19); add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
+    drvic: function (g) { var o = new T.Group(); o.position.y = 0.3; g.add(o); add(g, cy(0.07, 0.07, 0.17, 20), ph('#d1fae5', 90), 0, 0.31, 0); add(g, cy(0.06, 0.06, 0.12, 20), new T.MeshBasicMaterial({ color: '#4ade80' }), 0, 0.29, 0);
+      add(g, cy(0.072, 0.072, 0.035, 20), ph('#ff4fa0', 40), 0, 0.3, 0); add(g, cy(0.075, 0.075, 0.03, 20), ph('#94a3b8', 90), 0, 0.41, 0); add(o, bx(0.08, 0.05, 0.04), ph('#1f2937', 30), 0.22, 0.02, 0); add(o, sp(0.03, 10), ph('#ddd6fe', 50), -0.11, 0.03, 0.19); add(o, sp(0.025, 10), ph('#facc15', 50), -0.11, 0.03, -0.19);
+      add(g, cy(0.16, 0.19, 0.06, 24), gold(), 0, 0.03, 0); g.userData.spin = o; },
     grocery: function (g) { var gr = ph('#16a34a', 70), wr = ph('#cbd5e1', 90); add(g, bx(0.2, 0.1, 0.13), gr, 0, 0.3, 0); add(g, bx(0.012, 0.012, 0.15), wr, -0.13, 0.38, 0); [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(function (q) { add(g, sp(0.02, 10), ph('#1f2937', 30), q[0] * 0.07, 0.235, q[1] * 0.05); });
       add(g, sp(0.03, 12), ph('#ef4444', 70), -0.04, 0.37, 0); add(g, bx(0.035, 0.06, 0.035), ph('#facc15', 50), 0.02, 0.38, 0.02); add(g, sp(0.026, 12), ph('#22c55e', 50), 0.07, 0.37, -0.02); },
     skytours: function (g) { var o = new T.Group(); o.position.y = 0.3; g.add(o); var pk = ph('#ff4fa0', 80); add(g, sp(0.07, 18), pk, 0, 0.3, 0).scale.set(1.3, 0.85, 0.9); add(g, sp(0.04, 14), ph('#bae6fd', 100), 0.05, 0.31, 0); add(g, cy(0.012, 0.008, 0.12, 8), pk, -0.12, 0.3, 0).rotation.z = Math.PI / 2;
@@ -413,7 +416,7 @@
     FUT.forEach(function (f) { slots.push(f); });
     var GAL = []; // Grand Gallery: west wall, east wall (front to back), far wall, then the back of the Annex wall
     [0, 1, 2, 3, 4, 5, 6].forEach(function (i) { GAL.push([W.minX, AZ + 2.4 + i * 2.0, Math.PI / 2]); GAL.push([W.maxX, AZ + 2.4 + i * 2.0, -Math.PI / 2]); });
-    [0, 1, 2, 3, 4, 5].forEach(function (i) { GAL.push([W.minX + 2.8 + i * 2.08, W.maxZ, Math.PI]); });
+    [0, 1, 4, 5].forEach(function (i) { GAL.push([W.minX + 2.8 + i * 2.08, W.maxZ, Math.PI]); }); // (far wall: the middle two spots are the Gallery fern + its two plants)
     [3.9, 5.9, 14.1, 16.1].forEach(function (x) { GAL.push([x, AZ + 0.4, 0]); });
     GAL.forEach(function (f) { slots.push(f); });
     var par = A.scene;

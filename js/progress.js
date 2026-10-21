@@ -98,6 +98,7 @@
     ringdash: [30, 'Ring Champ', 'Score 30 in Ring Dash', '\uD83D\uDE81'],
     cartdash: [30, 'Cart Champ', 'Score 30 in Cart Dash', '\uD83D\uDED2'],
     targetdrill: [30, 'Drill Champ', 'Score 30 in Target Drill', '\uD83C\uDFAF'],
+    goocam: [30, 'Viral Vlogger', 'Score 30 in Goo Cam', '\uD83D\uDCF9'],
     wash: [35, 'Shine Master', 'Score 35 in Sparkle Car Wash', '\uD83E\uDEE7'],
     flip: [35, 'Grill Master', 'Score 35 in Patty Panic', '\uD83C\uDF54'],
     boulder: [40, 'Boulder Dodger', 'Score 40 in Boulder Run', '\uD83E\uDEA8'],
@@ -193,6 +194,8 @@
   A.push({ id: 'cart_pro', cat: 'High Scores', icon: '\uD83E\uDDFA', name: 'Clean-Up Crew Captain', desc: 'Catch 40 groceries in one game of Cart Dash', p: function () { return [ev('cart40') ? 1 : 0, 1]; } });
   A.push({ id: 'shop_pal', cat: 'Prizes', icon: '\uD83D\uDED2', name: 'Shopsville Regular', desc: 'Own the Mini Grok Cart Keychain, the Milky the Carton Plush and the Golden Grocery Cup', p: function () { return [['kc_grokcart', 'pl_milky', 'tr_grocery'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'drill_pro', cat: 'High Scores', icon: '\uD83C\uDFAF', name: 'Training Center Ace', desc: 'Return 40 balls in one game of Target Drill', p: function () { return [ev('drill40') ? 1 : 0, 1]; } });
+  A.push({ id: 'goo_pro', cat: 'High Scores', icon: '\uD83D\uDC7B', name: 'Gone Viral', desc: 'Film 40 anomalies in one game of Goo Cam', p: function () { return [ev('goo40') ? 1 : 0, 1]; } });
+  A.push({ id: 'vic_pal', cat: 'Prizes', icon: '\uD83E\uDDEA', name: 'Lost Lab Explorer', desc: 'Own the Ratita Goo Jar Keychain, the Dr. Vic Plush and the Golden Goo Vat Cup', p: function () { return [['kc_goojar', 'pl_drvic', 'tr_drvic'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'park_pal', cat: 'Prizes', icon: '\uD83E\uDD52', name: 'Park Ladder Regular', desc: 'Own the MaxGrit Paddle Keychain, the Dinky the Pickleball Plush and the Pickle King Cup', p: function () { return [['kc_maxgrit', 'pl_dinky', 'tr_pickleballpark'].filter(function (k) { return S.owned[k]; }).length, 3]; } });
   A.push({ id: 'boo_pro', cat: 'High Scores', icon: '\uD83C\uDF6C', name: 'Sweet Haul', desc: 'Drop 40 candies into buckets in one game of Boo Drop', p: function () { return [ev('boo40') ? 1 : 0, 1]; } });
   A.push({ id: 'ph_pal', cat: 'Prizes', icon: '\uD83C\uDF83', name: 'Pumpkin Hollow Pal', desc: 'Own the Moon Lantern Keychain, the Wisp Ghost Plush and the Golden Pumpkin Cup', p: function () { return [['kc_moonlantern', 'pl_wisp', 'tr_pumpkinhollow'].filter(function (k) { return S.owned[k]; }).length, 3]; } });

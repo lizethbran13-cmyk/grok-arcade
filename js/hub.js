@@ -936,6 +936,29 @@
         g.fillStyle = '#16a34a'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.strokeStyle = '#e6ff3b'; g.lineWidth = 2; g.strokeRect(w * 0.06 + 3, 9, w * 0.88 - 6, 20); g.font = font(11); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK PICKLEBALL PARK', w / 2, 23);
         break;
       }
+      case 'drvic': {
+        // Grok Dr. Vic: The Lost Lab: night over abandoned Old Town Street, the hidden Ratita Industries lab behind the bushes, Dr. Vic's flashlight beam sweeping, a ghost peeking from a window, green goo glow
+        var gdv = g.createLinearGradient(0, 0, 0, h); gdv.addColorStop(0, '#0b1020'); gdv.addColorStop(0.55, '#1e1b4b'); gdv.addColorStop(0.56, '#1f2a24'); gdv.addColorStop(1, '#111814'); g.fillStyle = gdv; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#fef9c3'; g.beginPath(); g.arc(w * 0.8, h * 0.12, 9, 0, 7); g.fill(); g.fillStyle = '#0b1020'; g.beginPath(); g.arc(w * 0.8 + 4, h * 0.12 - 2, 8, 0, 7); g.fill();
+        g.fillStyle = '#334155'; g.fillRect(w * 0.18, h * 0.24, w * 0.64, h * 0.32); g.fillStyle = '#475569'; g.fillRect(w * 0.16, h * 0.22, w * 0.68, 5); g.fillStyle = '#7f1d1d'; rrF(g, w * 0.26, h * 0.26, w * 0.48, 12, 3); g.font = font(8); g.textAlign = 'center'; g.fillStyle = '#fecaca'; g.fillText('RATITA INDUSTRIES', w / 2, h * 0.26 + 9);
+        for (i = 0; i < 3; i++) { var dwx = w * (0.24 + i * 0.2); g.fillStyle = i === 1 ? 'rgba(74,222,128,' + (0.45 + 0.3 * Math.sin(t * 3)) + ')' : '#0f172a'; g.fillRect(dwx, h * 0.34, w * 0.12, h * 0.08); }
+        var gpk = Math.max(0, Math.sin(t * 0.9)); g.fillStyle = 'rgba(221,214,254,' + gpk + ')'; g.beginPath(); g.arc(w * 0.5, h * 0.375, 5, Math.PI, 0); g.lineTo(w * 0.5 + 5, h * 0.41); g.lineTo(w * 0.5 - 5, h * 0.41); g.fill();
+        g.fillStyle = '#14532d'; for (i = 0; i < 7; i++) { g.beginPath(); g.arc(w * (0.05 + i * 0.15), h * 0.56, 14, Math.PI, 0); g.fill(); }
+        var dvbx = w * 0.5 + Math.sin(t * 0.8) * w * 0.25; g.fillStyle = 'rgba(254,249,195,.22)'; g.beginPath(); g.moveTo(w * 0.32, h * 0.78); g.lineTo(dvbx - 22, h * 0.42); g.lineTo(dvbx + 22, h * 0.42); g.closePath(); g.fill();
+        g.fillStyle = '#f8fafc'; rrF(g, w * 0.27, h * 0.76, 14, 22, 4); g.fillStyle = '#f5c9a5'; g.beginPath(); g.arc(w * 0.27 + 7, h * 0.74, 6, 0, 7); g.fill(); g.fillStyle = '#6b4f3a'; g.fillRect(w * 0.27 + 1, h * 0.72 - 2, 12, 3); g.fillStyle = '#facc15'; g.fillRect(w * 0.27 + 12, h * 0.77, 6, 4);
+        g.fillStyle = 'rgba(74,222,128,.7)'; g.beginPath(); g.ellipse(w * 0.72, h * 0.9, 18, 5, 0, 0, 7); g.fill();
+        g.fillStyle = '#052e16'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.strokeStyle = '#4ade80'; g.lineWidth = 2; g.strokeRect(w * 0.06 + 3, 9, w * 0.88 - 6, 20); g.font = font(12); g.textAlign = 'center'; g.fillStyle = '#bbf7d0'; g.fillText('DR. VIC: THE LOST LAB', w / 2, 23);
+        break;
+      }
+      case 'goocam': {
+        var ggc = g.createLinearGradient(0, 0, 0, h); ggc.addColorStop(0, '#1c1f1c'); ggc.addColorStop(1, '#0a0d0b'); g.fillStyle = ggc; g.fillRect(0, 0, w, h);
+        var gfx = w * (0.5 + Math.sin(t * 0.9) * 0.28), gfy = h * (0.5 + Math.cos(t * 0.7) * 0.18), gr2 = g.createRadialGradient(gfx, gfy, 4, gfx, gfy, 40); gr2.addColorStop(0, 'rgba(254,249,195,.55)'); gr2.addColorStop(1, 'rgba(254,249,195,0)'); g.fillStyle = gr2; g.beginPath(); g.arc(gfx, gfy, 40, 0, 7); g.fill();
+        var ghx = w * 0.62, ghy = h * 0.45, gvis = Math.max(0, 1 - Math.hypot(ghx - gfx, ghy - gfy) / 45); g.fillStyle = 'rgba(196,181,253,' + gvis + ')'; g.beginPath(); g.arc(ghx, ghy - 3, 11, Math.PI, 0); g.lineTo(ghx + 11, ghy + 10); g.lineTo(ghx - 11, ghy + 10); g.fill();
+        g.fillStyle = '#4ade80'; g.beginPath(); g.ellipse(w * 0.28, h * 0.72, 14, 9, 0, 0, 7); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 2; [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (s) { g.beginPath(); g.moveTo(gfx + s[0] * 24, gfy + s[1] * 16); g.lineTo(gfx + s[0] * 24, gfy + s[1] * 24); g.lineTo(gfx + s[0] * 16, gfy + s[1] * 24); g.stroke(); });
+        if (Math.floor(t * 2) % 2) { g.fillStyle = '#ef4444'; g.beginPath(); g.arc(w * 0.12, h * 0.2, 4, 0, 7); g.fill(); }
+        g.font = font(17); g.textAlign = 'center'; g.fillStyle = '#4ade80'; g.fillText('GOO CAM', w / 2, 22);
+        break;
+      }
       case 'targetdrill': {
         var gdr = g.createLinearGradient(0, 0, 0, h); gdr.addColorStop(0, '#4ade80'); gdr.addColorStop(1, '#16a34a'); g.fillStyle = gdr; g.fillRect(0, 0, w, h);
         var dmx = w * 0.12, dnet = h * 0.42; g.fillStyle = '#2563eb'; g.fillRect(dmx, h * 0.14, w - 2 * dmx, h * 0.84); g.fillStyle = 'rgba(250,204,21,.25)'; g.fillRect(dmx, dnet - h * 0.11, w - 2 * dmx, h * 0.22);
