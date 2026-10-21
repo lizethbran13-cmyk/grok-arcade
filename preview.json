@@ -3,6 +3,15 @@
   "updated": "2026-10-21",
   "items": [
     {
+      "issue": 50,
+      "game": "arcade",
+      "name": "Bigger Hall + Bonus Zone East Wing",
+      "size": "Expansion",
+      "what": "Grok Arcade: the Hall of Records got cramped again, so it grows a GRAND GALLERY behind the Records Annex (the exhibits squeezed into the aisles move in, plus room for 14 more games). The Bonus Zone breaks through its east wall into a whole new EAST WING, so every bonus cabinet is full size again with room for 56. And meet GRANDMA MRS, Gary's great-great-grandmother and the new head attendant of the Bonus Zone: very nice, sometimes TOO nice (cookies!), easily sidetracked into drama, and her phone is always broken. Fix it for tickets.",
+      "stage": "building",
+      "when": "Started Oct 17 · beta in the Time Jumper"
+    },
+    {
       "issue": 47,
       "game": "skytours",
       "name": "Super Sky High Expansion",
@@ -344,6 +353,16 @@
       "playable": true,
       "built": "2026-10-21",
       "notes": "Frostbite Isle (snow, gusts, wing icing), Ember Isle volcano (thermals, ash, lava bombs), Fly High Arena bot battles (free-for-all or team up with Candy, 3 levels), Sky Highway boost rings, 6 Sky Gems, 6 badges, ceiling raised to 320 m. DLC is unlocked automatically in the preview."
+    },
+    {
+      "id": "hall-bonus",
+      "game": "arcade",
+      "issue": 50,
+      "name": "Bigger Hall + Bonus Zone East Wing",
+      "url": "previews/hall-bonus/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Hall of Records: new Grand Gallery behind the Annex (the crowded middle exhibits moved in, room for 14 more). Bonus Zone: a big arch opens into the East Wing, and every bonus cabinet is full size again. Grandma Mrs (Gary's great-great-grandma) is the head attendant: cookies, drama, and fix her phone for tickets. Preview uses its own sandbox save."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
