@@ -23,12 +23,13 @@
     {
       "issue": 47,
       "game": "skytours",
-      "name": "Super Sky High Expansion",
+      "name": "Super Sky High Expansion (live)",
       "size": "MEGA",
-      "what": "Grok Snowie Sky Tours MEGA DLC: fly SUPER SKY HIGH (the ceiling goes from 175 m to 320 m) to three floating sky areas that change how you fly: Frostbite Isle (snowfall, gusts and ice that builds up on your wings), Ember Isle (a live volcano with thermal updrafts, ash haze and lava bombs) and the Fly High Arena, where you battle high-tech planes and copters in foam-bubble dogfights (free-for-all, or team up with Candy; Easy, Normal or Ace). Plus the Sky Highway boost rings, 6 Sky Gems and 6 new badges. 175 tickets.",
-      "stage": "building",
-      "when": "In the Time Jumper now",
-      "key": "grokDLC.skytours.super_sky_high_expansion"
+      "what": "Grok Snowie Sky Tours MEGA DLC: fly SUPER SKY HIGH (the ceiling goes from 175 m to 320 m) to three floating sky areas that change how you fly: Frostbite Isle (snowfall, gusts and ice that builds up on your wings), Ember Isle (a live volcano with thermal updrafts, ash haze and lava bombs) and the Fly High Arena, where you battle high-tech planes and copters in foam-bubble dogfights (free-for-all, or team up with Candy; Easy, Normal or Ace). Plus the Sky Highway boost rings, 6 Sky Gems and 6 new badges. 175 tickets. Live now in Grok Snowie Sky Tours! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 21",
+      "key": "grokDLC.skytours.super_sky_high_expansion",
+      "shippedAt": "2026-10-21T22:36:38Z"
     },
     {
       "issue": 50,
@@ -381,20 +382,22 @@
       "playable": true,
       "built": "2026-10-21",
       "notes": "NEW spooky Halloween game on the new Shadowlight engine. First playable: Vic's home lab intro (Ratita Goo explodes!), Old Town Street (overgrown street, 12 boarded shops, walk-in Bev's Diner, rusty cars, Candy finds the hedge gap), the Ratita Industries lab Floor 1 + Floor 2 and all 11 underground levels (streamed one at a time), 36 clues, 40 anomalies to film, followers + battery, goo slips and jump-scares, Luna, Pi-rat, Snowie, Torty and Candy, and the GO VIRAL ending. Preview uses its own sandbox save."
-    },
+    }
+  ],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "skytours-superskyhigh",
       "game": "skytours",
       "issue": 47,
       "name": "Super Sky High Expansion",
-      "url": "previews/skytours-superskyhigh/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/skytours-superskyhigh-beta/",
       "built": "2026-10-21",
-      "notes": "Pass 3: correct zone names on Ember Isle / Arena / lobby, fuller Ember Isle terrace (scorched trees, rocks, lava-rock walls, benches, tourists), volcano damage scaled by speed (slow bump = small scrape, hard hit = crash + tow). Plus pass 2: volcano, Lava Lab, Frostbite village + Cocoa Lodge, Fly High Arena, 3 new aircraft, pet cameos."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-21",
+      "notes": "Pass 3: correct zone names on Ember Isle / Arena / lobby, fuller Ember Isle terrace (scorched trees, rocks, lava-rock walls, benches, tourists), volcano damage scaled by speed (slow bump = small scrape, hard hit = crash + tow). Plus pass 2: volcano, Lava Lab, Frostbite village + Cocoa Lodge, Fly High Arena, 3 new aircraft, pet cameos.",
+      "playable": true
+    },
     {
       "id": "hall-bonus",
       "game": "arcade",
