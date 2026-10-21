@@ -3,13 +3,21 @@
   "updated": "2026-10-21",
   "items": [
     {
+      "game": "drvic",
+      "name": "Grok Dr. Vic: The Lost Lab",
+      "size": "New Game",
+      "what": "NEW spooky Halloween game on the brand-new Shadowlight engine: play down-on-his-luck scientist Dr. Vic, explore abandoned Old Town Street and the secret Ratita Industries lab (2 floors + 11 underground levels), film anomalies to go viral and uncover what Luna, Pi-rat and Snowie's great-great-great-grandparents really did.",
+      "stage": "building",
+      "when": "In the lab now"
+    },
+    {
       "issue": 46,
       "game": "grocery",
       "name": "Super Shop Online Pass",
       "size": "Expansion",
       "what": "Grok Grocery Tycoon: your store goes ONLINE! An Online Store desk takes orders 3 ways: in-store pickup, same-day delivery (a shopper picks the items in your store, then a Grok Van drives them to a house on Maple Lane) and shipping in 2 days from the brand-new walk-in Shopsville Ship Center, packed with racks, a packing line, a conveyor, a truck dock and workers, run by Martina \"Torty\". Plus your own phone: check orders, call people to set things up, hold meetings, buy upgrades and more stock. Keep your star rating up! Luna, Pi-rat, Snowie, Candy and Torty order too. 75 tickets.",
       "stage": "building",
-      "when": "Started Oct 21 · beta in the Time Jumper",
+      "when": "Started Oct 21 \u00b7 beta in the Time Jumper",
       "key": "grokDLC.grocery.super_shop_online_pass"
     },
     {
@@ -151,7 +159,7 @@
       "game": "fc",
       "name": "Fiesta Kits (live)",
       "size": "Mini Pack",
-      "what": "Grok FC: 4 festive teams with real 3D sombreros, party hats and flower crowns, the rainbow Piñata Ball and 3D fireworks + confetti on fiesta goals.",
+      "what": "Grok FC: 4 festive teams with real 3D sombreros, party hats and flower crowns, the rainbow Pi\u00f1ata Ball and 3D fireworks + confetti on fiesta goals.",
       "stage": "shipped",
       "when": "Oct 12",
       "shippedAt": "2026-10-12T16:30:00Z"
@@ -374,6 +382,15 @@
       "playable": true,
       "built": "2026-10-21",
       "notes": "Pass 2: real volcano Ember Isle (Lava Lab, Tortuga Tech heat station, observation deck), Frostbite village + walk-in Cocoa Lodge, Fly High Arena stadium (crowds, jumbotrons, Snowie announcer, pit hangar), 3 new DLC aircraft, pet cameos, arena no longer gets volcano effects."
+    },
+    {
+      "id": "drvic-lostlab",
+      "game": "drvic",
+      "name": "Grok Dr. Vic: The Lost Lab",
+      "url": "previews/drvic-lostlab/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "NEW spooky Halloween game on the new Shadowlight engine. First playable: Vic's home lab intro (Ratita Goo explodes!), Old Town Street (overgrown street, 12 boarded shops, walk-in Bev's Diner, rusty cars, Candy finds the hedge gap), the Ratita Industries lab Floor 1 + Floor 2 and all 11 underground levels (streamed one at a time), 36 clues, 40 anomalies to film, followers + battery, goo slips and jump-scares, Luna, Pi-rat, Snowie, Torty and Candy, and the GO VIRAL ending. Preview uses its own sandbox save."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
@@ -600,6 +617,10 @@
     "pickleballpark": {
       "name": "Grok Pickleball Park",
       "cover": "assets/wip/pickleballpark/cover.webp"
+    },
+    "drvic": {
+      "name": "Grok Dr. Vic: The Lost Lab",
+      "cover": "assets/wip/drvic/cover.webp"
     }
   }
 }
