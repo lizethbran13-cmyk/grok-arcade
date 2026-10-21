@@ -138,6 +138,11 @@
     var plaster = ph('#5a2333', 8), wood = ph('#4a2c1a', 30), woodL = ph('#6b4226', 40);
     add(shell, bx(th, H, D + th), plaster, w.minX - th / 2, H / 2, cz); add(shell, bx(th, H, D + th), plaster, w.maxX + th / 2, H / 2, cz);
     add(shell, bx(Wd + th * 2, H, th), plaster, cx, H / 2, w.maxZ + th / 2);
+    // (#50) the old back wall now divides the Annex from the Grand Gallery, with a door in the middle
+    var AZ = w.annexZ || 48, gdl = w.doorX - (w.galDoorHW || 1.5), gdr = w.doorX + (w.galDoorHW || 1.5);
+    add(shell, bx(gdl - w.minX, H, th), plaster, (w.minX + gdl) / 2, H / 2, AZ + th / 2); add(shell, bx(w.maxX - gdr, H, th), plaster, (gdr + w.maxX) / 2, H / 2, AZ + th / 2);
+    add(shell, bx(gdr - gdl, H - w.doorH, th), plaster, w.doorX, w.doorH + (H - w.doorH) / 2, AZ + th / 2);
+    [gdl, gdr].forEach(function (x) { add(shell, bx(0.16, w.doorH + 0.1, th + 0.12), gold(), x, (w.doorH + 0.1) / 2, AZ + th / 2); }); add(shell, bx(gdr - gdl + 0.32, 0.16, th + 0.12), gold(), w.doorX, w.doorH + 0.05, AZ + th / 2);
     // north wall inner face (the back of the arcade's south wall) gets the same plaster
     add(shell, bx(w.doorX - w.doorHW - w.minX, H, 0.04), plaster, (w.minX + w.doorX - w.doorHW) / 2, H / 2, w.minZ + 0.02);
     add(shell, bx(w.maxX - w.doorX - w.doorHW, H, 0.04), plaster, (w.maxX + w.doorX + w.doorHW) / 2, H / 2, w.minZ + 0.02);
@@ -146,6 +151,7 @@
     function runZ(x, y, h, d, mat) { add(shell, bx(d, h, D), mat, x, y, cz); }
     [[0.55, 1.1, 0.05, wood], [1.12, 0.07, 0.09, woodL], [H - 0.12, 0.24, 0.14, woodL], [H - 0.3, 0.05, 0.1, gold()], [0.05, 0.1, 0.08, woodL]].forEach(function (r) {
       runZ(w.minX + r[2] / 2, r[0], r[1], r[2], r[3]); runZ(w.maxX - r[2] / 2, r[0], r[1], r[2], r[3]); runX(w.maxZ - r[2] / 2, r[0], r[1], r[2], r[3], w.minX, w.maxX);
+      [AZ - r[2] / 2, AZ + th + r[2] / 2].forEach(function (zz) { if (r[0] < w.doorH) { runX(zz, r[0], r[1], r[2], r[3], w.minX, gdl - 0.08); runX(zz, r[0], r[1], r[2], r[3], gdr + 0.08, w.maxX); } else runX(zz, r[0], r[1], r[2], r[3], w.minX, w.maxX); });
       if (r[0] < w.doorH) { runX(w.minZ + r[2] / 2 + 0.04, r[0], r[1], r[2], r[3], w.minX, w.doorX - w.doorHW); runX(w.minZ + r[2] / 2 + 0.04, r[0], r[1], r[2], r[3], w.doorX + w.doorHW, w.maxX); }
       else runX(w.minZ + r[2] / 2 + 0.04, r[0], r[1], r[2], r[3], w.minX, w.maxX);
     });
@@ -153,7 +159,7 @@
     var ce = add(shell, new T.PlaneGeometry(Wd, D), ph('#2a1810', 10), cx, H, cz); ce.rotation.x = Math.PI / 2;
     for (var x = w.minX + 2; x < w.maxX - 0.5; x += 2) add(shell, bx(0.18, 0.22, D), wood, x, H - 0.11, cz);
     for (var z = w.minZ + 2.2; z < w.maxZ - 0.5; z += 2.2) add(shell, bx(Wd, 0.2, 0.18), wood, cx, H - 0.1, z);
-    [[6, 16.4], [14, 16.4], [6, 22], [14, 22], [10, 20.6], [6, 28.4], [14, 28.4], [6, 36.4], [14, 36.4], [6, 44.6], [14, 44.6], [10, 45.2]].forEach(function (p) {
+    [[6, 16.4], [14, 16.4], [6, 22], [14, 22], [10, 20.6], [6, 28.4], [14, 28.4], [6, 36.4], [14, 36.4], [6, 44.6], [14, 44.6], [10, 45.2], [6, 52.6], [14, 52.6], [10, 57.2], [6, 61.6], [14, 61.6]].forEach(function (p) {
       add(shell, cy(0.012, 0.012, 0.9, 6), brass(), p[0], H - 0.45, p[1]);
       var sh = add(shell, new T.SphereGeometry(0.32, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), new T.MeshPhongMaterial({ color: '#c9993a', shininess: 80, side: T.DoubleSide }), p[0], H - 0.95, p[1]); void sh;
       add(shell, sp(0.13, 14), glowM('#fff3c4'), p[0], H - 1.0, p[1]);
@@ -161,7 +167,7 @@
     });
     // a warm light for the wing (cheap: one hemisphere-ish point light above the middle)
     // (booth #32) one warm light per half: the original Hall + the Records Annex behind it
-    [[cx, w.minZ + 6.8], [cx, w.minZ + 20.5], [cx, w.maxZ - 5.5]].forEach(function (q) { var pl = new T.PointLight('#ffd9a0', 0.55, 16, 1.6); pl.position.set(q[0], H - 0.6, q[1]); shell.add(pl); });
+    [[cx, w.minZ + 6.8], [cx, w.minZ + 20.5], [cx, (w.annexZ || 48) - 5.5], [cx, w.maxZ - 8.5]].forEach(function (q) { var pl = new T.PointLight('#ffd9a0', 0.55, 16, 1.6); pl.position.set(q[0], H - 0.6, q[1]); shell.add(pl); });
     // camera walls of the wing are added by the hub (outer box); add the visible door trim on both sides
     A.walls.push({ minX: w.minX - 0.4, maxX: w.minX, minY: -1, maxY: 99, minZ: w.minZ, maxZ: w.maxZ });
     A.walls.push({ minX: w.minX, maxX: w.maxX, minY: H - 0.3, maxY: 99, minZ: w.minZ, maxZ: w.maxZ }); // ceiling: keeps the camera inside the wing
@@ -396,38 +402,30 @@
     A = api; W = api.WING;
     buildShell(); buildEntrance();
     var games = GA.MAIN_GAMES.filter(function (g) { return GA.HALL_DATA && GA.HALL_DATA[g.id]; });
-    var slots = [];
+    // (#50) the Hall got cramped again, so the free-standing exhibits in the aisles moved into the new Grand Gallery (z 48.4..66, behind the Annex).
+    // Order: original Hall side walls, the Annex's back wall (two each side of the new gallery door), the Annex niches, then the Grand Gallery.
+    var AZ = W.annexZ || 48, slots = [];
     [0, 1, 2, 3, 4].forEach(function (i) { slots.push([W.minX, W.minZ + 2.2 + i * 2.0, Math.PI / 2]); });
-    [0, 1, 2, 3, 4, 5].forEach(function (i) { slots.push([W.minX + 2.8 + i * 2.08, W.maxZ, Math.PI]); });
+    [0, 1, 4, 5].forEach(function (i) { slots.push([W.minX + 2.8 + i * 2.08, AZ, Math.PI]); });
     [4, 3, 2, 1, 0].forEach(function (i) { slots.push([W.maxX, W.minZ + 2.2 + i * 2.0, -Math.PI / 2]); });
-    // overflow: one more exhibit at the back end of each side wall (clear of the back-wall exhibits)
     slots.push([W.minX, W.minZ + 12.2, Math.PI / 2]); slots.push([W.maxX, W.minZ + 12.2, -Math.PI / 2]);
-    // 19th: free-standing on the right of Gus's desk, facing the entrance
-    slots.push([W.doorX + 4.4, W.minZ + 5.6, Math.PI]);
-    // 20th / 21st: free-standing on the left of Gus's desk, then beside the Golden Joystick statue facing it
-    if (games.length > 19) slots.push([W.doorX - 4.4, W.minZ + 5.6, Math.PI]);
-    if (games.length > 20) slots.push([W.doorX - 3.6, W.minZ + 9.2, Math.PI / 2]);
-    // 22nd: mirrored on the other side of the Golden Joystick statue
-    if (games.length > 21) slots.push([W.doorX + 3.6, W.minZ + 9.2, -Math.PI / 2]);
-    // 23rd: free-standing just inside the entrance on the right, facing the room's centre
-    if (games.length > 22) slots.push([W.doorX + 3.6, W.minZ + 2.2, -Math.PI / 2]);
-    // (booth #32) room to grow: 8 wall niches in the Records Annex (games #24-#31). Empty ones show a dust-sheeted "coming soon" pedestal.
     var FUT = []; [0, 1, 2, 3].forEach(function (i) { FUT.push([W.minX, W.minZ + 16.2 + i * 2.1, Math.PI / 2]); FUT.push([W.maxX, W.minZ + 16.2 + i * 2.1, -Math.PI / 2]); });
     FUT.forEach(function (f) { slots.push(f); });
-    // 32nd: free-standing just inside the entrance on the left, mirroring the 23rd (a touch deeper so it clears the DLC Machine)
-    if (games.length > 31) slots.push([W.doorX - 3.6, W.minZ + 2.4, Math.PI / 2]);
-    // 33rd: free-standing in the middle of the Records Annex, facing Barnaby's lounge sofa
-    if (games.length > 32) slots.push([W.doorX, W.minZ + 23.4, 0]);
-    // 34th: beside the 33rd, also facing the lounge (clear of the memorabilia case and Barnaby's sorting station)
-    if (games.length > 33) slots.push([W.doorX + 2.6, W.minZ + 23.4, 0]);
+    var GAL = []; // Grand Gallery: west wall, east wall (front to back), far wall, then the back of the Annex wall
+    [0, 1, 2, 3, 4, 5, 6].forEach(function (i) { GAL.push([W.minX, AZ + 2.4 + i * 2.0, Math.PI / 2]); GAL.push([W.maxX, AZ + 2.4 + i * 2.0, -Math.PI / 2]); });
+    [0, 1, 2, 3, 4, 5].forEach(function (i) { GAL.push([W.minX + 2.8 + i * 2.08, W.maxZ, Math.PI]); });
+    [3.9, 5.9, 14.1, 16.1].forEach(function (x) { GAL.push([x, AZ + 0.4, 0]); });
+    GAL.forEach(function (f) { slots.push(f); });
     var par = A.scene;
     games.forEach(function (gm, i) { var s = slots[i]; if (!s) return; exhibit(gm, GA.HALL_DATA[gm.id], s[0], s[1], s[2]); });
-    H3.freeSlots = slots.slice(games.length).filter(function (s) { return FUT.indexOf(s) >= 0; });
+    H3.freeSlots = slots.slice(games.length).filter(function (s) { return FUT.indexOf(s) >= 0 || GAL.indexOf(s) >= 0; }); H3.gameCount = games.length; H3.galSlots = GAL;
     H3.slotCount = slots.length;
     // wood pilasters between the exhibits
     for (var i = 0; i < 4; i++) { pilaster(par, W.minX, W.minZ + 3.2 + i * 2.0, Math.PI / 2); pilaster(par, W.maxX, W.minZ + 3.2 + i * 2.0, -Math.PI / 2); }
     if (games.length > 16) pilaster(par, W.minX, W.minZ + 11.2, Math.PI / 2); if (games.length > 17) pilaster(par, W.maxX, W.minZ + 11.2, -Math.PI / 2);
+    [0, 4].forEach(function (i) { pilaster(par, W.minX + 3.84 + i * 2.08, AZ, Math.PI); });
     for (i = 0; i < 5; i++) pilaster(par, W.minX + 3.84 + i * 2.08, W.maxZ, Math.PI);
+    for (i = 0; i < 6; i++) { pilaster(par, W.minX, AZ + 3.4 + i * 2.0, Math.PI / 2); pilaster(par, W.maxX, AZ + 3.4 + i * 2.0, -Math.PI / 2); }
     buildDesk(); buildDLC();
     // (booth #32) the Records Annex: Uncle Barnaby, seats, reading nook, photo booth, Stamp-O-Matic, Exhibit of the Week, future niches
     if (GA.Hall2 && GA.Hall2.build) { try { GA.Hall2.build(A, { ph: ph, gold: gold, brass: brass, chrome: chrome, add: add, bx: bx, cy: cy, sp: sp, to: to, cn: cn, cvs: cvs, rr: rr, plaqueTex: plaqueTex, planeM: planeM, darker: darker, EMB: EMB, ROOTS: ROOTS, pilaster: pilaster, free: H3.freeSlots, V: V }); } catch (e) { if (window.console) console.warn('Records Annex failed to build', e); } }

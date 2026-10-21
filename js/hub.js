@@ -5,9 +5,10 @@
   var Hub = GA.Hub = {};
 
   var ROOM = { minX: -18, maxX: 18, minZ: -12, maxZ: 12, h: 5 };
-  var WING = { minX: 2, maxX: 18, minZ: ROOM.maxZ + 0.4, maxZ: 48, doorX: 10, doorHW: 1.5, doorH: 3.3 }; // Hall of Game Records wing behind the bonus zone's south wall (booth #32: the Records Annex doubles it, z 26..48)
+  var WING = { minX: 2, maxX: 18, minZ: ROOM.maxZ + 0.4, maxZ: 66, annexZ: 48, galDoorHW: 1.5, doorX: 10, doorHW: 1.5, doorH: 3.3 }; // (#50) the Grand Gallery adds z 48.4..66 behind the Annex's back wall (door at x 10) // Hall of Game Records wing behind the bonus zone's south wall (booth #32: the Records Annex doubles it, z 26..48)
   var FOOD = { minX: ROOM.minX, maxX: WING.minX - 0.4, minZ: ROOM.maxZ + 0.4, maxZ: 26, doorX: -11.6, doorHW: 1.5, doorH: 3.3 }; // Food Court behind the main hall's south wall (west of the Hall wing)
-  var PREV = { minX: ROOM.minX, maxX: WING.minX - 0.4, minZ: FOOD.maxZ + 0.4, maxZ: WING.maxZ, doorX: -0.77, doorHW: 0.72, doorH: 3.0, h: 5.6 }; // Ratita Preview Center: behind the Food Court, door between the slushie machine and the ice cream freezer
+  var PREV = { minX: ROOM.minX, maxX: WING.minX - 0.4, minZ: FOOD.maxZ + 0.4, maxZ: WING.annexZ, doorX: -0.77, doorHW: 0.72, doorH: 3.0, h: 5.6 }; // Ratita Preview Center: behind the Food Court, door between the slushie machine and the ice cream freezer
+  var BZX = { minX: ROOM.maxX + 0.4, maxX: 32, minZ: ROOM.minZ, maxZ: ROOM.maxZ, archHW: 3.0, archH: 3.4 }; // (#50) Bonus Zone East Wing (Grandma Mrs's wing), through a wide arch in the bonus room's east wall
   var REGIONS = []; // far-away walk-in areas (rooftop deck, secret basement) registered by js/areas.js: {name,minX,maxX,minZ,maxZ,maxY,spawn:{x,z}}
   var DIV_X = 6, DOOR = 2.6, PR = 0.42; // divider wall x, half door width, player radius
   var MAIN_STEP = GA.MAIN_GAMES.length > 15 ? 1.48 : GA.MAIN_GAMES.length > 14 ? 1.55 : GA.MAIN_GAMES.length > 13 ? 1.66 : GA.MAIN_GAMES.length > 12 ? 1.78 : GA.MAIN_GAMES.length > 11 ? 1.95 : GA.MAIN_GAMES.length > 10 ? 2.1 : GA.MAIN_GAMES.length > 9 ? 2.3 : GA.MAIN_GAMES.length > 8 ? 2.5 : GA.MAIN_GAMES.length > 7 ? 2.8 : 3.2, MAIN_X0 = GA.MAIN_GAMES.length > 15 ? -17.22 : GA.MAIN_GAMES.length > 14 ? -16.95 : GA.MAIN_GAMES.length > 13 ? -17.0 : GA.MAIN_GAMES.length > 11 ? -16.9 : GA.MAIN_GAMES.length > 10 ? -16.5 : GA.MAIN_GAMES.length > 9 ? -16.2 : GA.MAIN_GAMES.length > 8 ? -15.6 : -6 - (GA.MAIN_GAMES.length - 1) * MAIN_STEP / 2; // main cabinets centred in the main hall (x -18..6)
@@ -17,8 +18,8 @@
      (under the raised BEST SCORES board), then a third row on the bonus side of the divider wall, clear of the doorway
      (room for 27). Only past that do the east-wall cabinets squeeze. */
   var BONUS_EAST = 16, BONUS_NORTH_X = [9.7, 11.2, 12.7, 14.2], BONUS_DIV_Z = [-9.2, -7.7, -6.2, -4.7, 4.7, 6.2, 7.7, 9.2];
-  var BONUS_CAP = BONUS_EAST + BONUS_NORTH_X.length + BONUS_DIV_Z.length;
-  var BONUS_K = 1, BONUS_STEP = 0; if (GA.wallBonus().length > BONUS_CAP) { var nE0 = GA.wallBonus().length - BONUS_CAP + BONUS_EAST; BONUS_K = 23.2 / (1.44 * nE0 + 0.04 * (nE0 - 1)); BONUS_STEP = 1.48 * BONUS_K; }
+  var BONUS_CAP = 56; void BONUS_EAST; // (#50) 24 in the bonus room + 32 in the East Wing
+  var BONUS_K = 1, BONUS_STEP = 0; if (GA.wallBonus().length > BONUS_CAP) { BONUS_K = 1; }
   var SPAWN = { x: -6, z: 5.2, yaw: 0 };
 
   var renderer, scene, camera, canvas;
@@ -131,7 +132,8 @@
     mesh(box(WING.doorHW * 2, H - WING.doorH, th), wallMat, WING.doorX, WING.doorH + (H - WING.doorH) / 2, ROOM.maxZ + th / 2);
     mesh(box(FOOD.doorHW * 2, H - FOOD.doorH, th), wallMat, FOOD.doorX, FOOD.doorH + (H - FOOD.doorH) / 2, ROOM.maxZ + th / 2);
     mesh(box(th, H, D), wallMat, ROOM.minX - th / 2, H / 2, 0);
-    mesh(box(th, H, D), wallMat, ROOM.maxX + th / 2, H / 2, 0);
+    var eSeg = (D / 2) - BZX.archHW; [-1, 1].forEach(function (sd) { mesh(box(th, H, eSeg), wallMat, ROOM.maxX + th / 2, H / 2, sd * (BZX.archHW + eSeg / 2)); });
+    mesh(box(th, H - BZX.archH, BZX.archHW * 2), wallMat, ROOM.maxX + th / 2, BZX.archH + (H - BZX.archH) / 2, 0);
     // outer walls are kept to the arcade building (z -40..40) so the far-away rooftop deck and basement (js/areas.js) stay walkable
     addWall(-60, 60, -1, 99, -40, ROOM.minZ);
     // south wall: solid except the doorways into the Food Court and the Hall of Game Records wing (both add their own inner decor)
@@ -140,7 +142,11 @@
     walls.push({ minX: fL, maxX: fR, minY: FOOD.doorH, maxY: 99, minZ: ROOM.maxZ, maxZ: ROOM.maxZ + th });
     addWall(FOOD.maxX, WING.minX, -1, 99, ROOM.maxZ, WING.maxZ); addWall(WING.maxX, 60, -1, 99, ROOM.maxZ, WING.maxZ + 12); addWall(WING.minX - 0.4, 60, -1, 99, WING.maxZ, WING.maxZ + 12); addWall(-60, WING.minX - 0.4, -1, 99, PREV.maxZ, WING.maxZ + 12); addWall(-60, PREV.minX, -1, 99, FOOD.maxZ, PREV.maxZ); addWall(PREV.minX, PREV.doorX - PREV.doorHW, -1, 99, FOOD.maxZ, PREV.minZ); addWall(PREV.doorX + PREV.doorHW, WING.minX - 0.4, -1, 99, FOOD.maxZ, PREV.minZ); walls.push({ minX: PREV.doorX - PREV.doorHW, maxX: PREV.doorX + PREV.doorHW, minY: PREV.doorH, maxY: 99, minZ: FOOD.maxZ, maxZ: PREV.minZ }); walls.push({ minX: PREV.minX, maxX: PREV.maxX, minY: PREV.h - 0.3, maxY: 99, minZ: PREV.minZ, maxZ: PREV.maxZ }); // the Food Court ends at z 26 (its back wall has the Preview Center door), the Hall wing runs on to its Records Annex
     walls.push({ minX: FOOD.minX, maxX: FOOD.maxX, minY: H - 0.3, maxY: 99, minZ: FOOD.minZ, maxZ: FOOD.maxZ }); // Food Court ceiling (keeps the camera inside)
-    addWall(-60, ROOM.minX, -1, 99, -40, 40); addWall(ROOM.maxX, 60, -1, 99, -40, 40);
+    addWall(-60, ROOM.minX, -1, 99, -40, 40); addWall(ROOM.maxX, 60, -1, 99, -40, ROOM.minZ); addWall(ROOM.maxX, 60, -1, 99, ROOM.maxZ, 40);
+    // (#50) the bonus room's east wall opens into the East Wing; the Annex's back wall opens into the Grand Gallery
+    addWall(ROOM.maxX, BZX.minX, -1, 99, ROOM.minZ, -BZX.archHW); addWall(ROOM.maxX, BZX.minX, -1, 99, BZX.archHW, ROOM.maxZ); walls.push({ minX: ROOM.maxX, maxX: BZX.minX, minY: BZX.archH, maxY: 99, minZ: -BZX.archHW, maxZ: BZX.archHW });
+    addWall(BZX.maxX, 60, -1, 99, ROOM.minZ, ROOM.maxZ); walls.push({ minX: BZX.minX, maxX: BZX.maxX, minY: H - 0.3, maxY: 99, minZ: BZX.minZ, maxZ: BZX.maxZ });
+    addWall(WING.minX, WING.doorX - WING.galDoorHW, -1, 99, WING.annexZ, WING.annexZ + th); addWall(WING.doorX + WING.galDoorHW, WING.maxX, -1, 99, WING.annexZ, WING.annexZ + th); walls.push({ minX: WING.doorX - WING.galDoorHW, maxX: WING.doorX + WING.galDoorHW, minY: WING.doorH, maxY: 99, minZ: WING.annexZ, maxZ: WING.annexZ + th });
     // divider with a doorway into the Bonus Zone
     var len = ROOM.maxZ - DOOR, divMat = lam('#4a2a86'), doorH = 3.3;
     mesh(box(th, H, len), divMat, DIV_X, H / 2, ROOM.minZ + len / 2);
@@ -162,7 +168,7 @@
     strip(ROOM.minX, ROOM.maxZ - e, DIV_X, ROOM.maxZ - e, 4.4, cyan); strip(DIV_X, ROOM.maxZ - e, ROOM.maxX, ROOM.maxZ - e, 4.4, pink);
     strip(ROOM.minX + e, ROOM.minZ, ROOM.minX + e, ROOM.maxZ, 4.4, pink); strip(ROOM.maxX - e, ROOM.minZ, ROOM.maxX - e, ROOM.maxZ, 4.4, yel);
     strip(ROOM.minX, ROOM.minZ + e, ROOM.maxX, ROOM.minZ + e, 0.1, cyan); strip(ROOM.minX, ROOM.maxZ - e, fL, ROOM.maxZ - e, 0.1, cyan); strip(fR, ROOM.maxZ - e, dL, ROOM.maxZ - e, 0.1, cyan); strip(dR, ROOM.maxZ - e, ROOM.maxX, ROOM.maxZ - e, 0.1, cyan);
-    strip(ROOM.minX + e, ROOM.minZ, ROOM.minX + e, ROOM.maxZ, 0.1, cyan); strip(ROOM.maxX - e, ROOM.minZ, ROOM.maxX - e, ROOM.maxZ, 0.1, pink);
+    strip(ROOM.minX + e, ROOM.minZ, ROOM.minX + e, ROOM.maxZ, 0.1, cyan); strip(ROOM.maxX - e, ROOM.minZ, ROOM.maxX - e, -BZX.archHW, 0.1, pink); strip(ROOM.maxX - e, BZX.archHW, ROOM.maxX - e, ROOM.maxZ, 0.1, pink);
     [-0.22, 0.22].forEach(function (o) { strip(DIV_X + o, ROOM.minZ, DIV_X + o, -DOOR, 4.4, o < 0 ? pink : cyan); strip(DIV_X + o, DOOR, DIV_X + o, ROOM.maxZ, 4.4, o < 0 ? pink : cyan); });
     // ceiling light bars
     for (var lx = -14; lx <= 14; lx += 7) { var lb = mesh(box(4, 0.06, 0.25), basic('#e9e2ff'), lx, ROOM.h - 0.05, -4); var lb2 = lb.clone(); lb2.position.z = 4; scene.add(lb2); }
@@ -183,7 +189,7 @@
 
   function buildSigns() {
     var GALL = !!(GA.Areas && GA.Areas.galleryLayout), s1 = GALL ? sign('GAME GALLERY\nall ' + GA.MAIN_GAMES.length + ' Grok games inside', 5.6, 1.0, '#3ff0ff') : sign('MAIN GAMES\nLizeth\'s Grok games', 7, 1.5, '#3ff0ff'); s1.position.set(-6, GALL ? 4.4 : 3.75, ROOM.minZ + 0.03); wallSign('MAIN GAMES', s1);
-    var s2 = sign('BONUS ZONE\nNew mini games - earn tickets!', 7, 1.5, '#ff4fd8'); s2.position.set(ROOM.maxX - 0.03, 3.75, 0); s2.rotation.y = -Math.PI / 2; wallSign('BONUS ZONE', s2);
+    var s2 = sign('BONUS ZONE\nEast Wing this way - Grandma Mrs is in!', 6.0, 1.15, '#ff4fd8'); s2.position.set(ROOM.maxX - 0.03, 4.2, 0); s2.rotation.y = -Math.PI / 2; wallSign('BONUS ZONE', s2);
     var s3 = sign('BONUS ZONE  >', 4.6, 1.2, '#ff4fd8'); s3.position.set(DIV_X - 0.23, 4.1, 0); s3.rotation.y = -Math.PI / 2; wallSign('BONUS ZONE >', s3);
     var s3b = sign((GA.Areas && GA.Areas.galleryLayout) ? '< GAME GALLERY' : '< MAIN GAMES', 4.6, 1.2, '#3ff0ff'); s3b.position.set(DIV_X + 0.23, 4.1, 0); s3b.rotation.y = Math.PI / 2; wallSign('< MAIN GAMES', s3b);
     var s4 = sign('GROK ARCADE', 5.0, 1.0, '#ffe14d'); s4.position.set(ROOM.minX + 0.03, 3.4, 0.7); s4.rotation.y = Math.PI / 2; wallSign('GROK ARCADE', s4);
@@ -1288,15 +1294,24 @@
       GA.MAIN_GAMES.forEach(function (gm, i) { var q = GL[i], c = buildCabinet(gm, 'main', q.x, q.z, q.rot, 1); c.gallery = true; c.sec = q.sec; });
       var nw = GA.Areas.newestGame(), sc2 = buildCabinet(nw, 'main', GA.Areas.SPOT.x, ROOM.minZ + 0.6, 0, 1); sc2.spot = true;
     } else GA.MAIN_GAMES.forEach(function (gm, i) { buildCabinet(gm, 'main', MAIN_X0 + i * MAIN_STEP, ROOM.minZ + 0.6, 0); });
-    // bonus games: along the east wall of the bonus room, facing west
-    var nAll = GA.wallBonus().length, nOver = BONUS_NORTH_X.length + BONUS_DIV_Z.length, nb = nAll > BONUS_EAST ? Math.max(BONUS_EAST, nAll - nOver) : nAll, stepB = BONUS_STEP || (nb > 15 ? 1.46 : nb > 14 ? 1.5 : nb > 13 ? 1.62 : nb > 12 ? 1.75 : nb > 11 ? 1.9 : nb > 10 ? 2.05 : nb > 9 ? 2.25 : nb > 8 ? 2.55 : nb > 7 ? 2.8 : nb > 6 ? 3.2 : nb > 5 ? 3.6 : 4);
-    GA.wallBonus().forEach(function (gm, i) {
-      if (i < nb) return buildCabinet(gm, 'bonus', ROOM.maxX - 0.6, -(nb - 1) * stepB / 2 + i * stepB, -Math.PI / 2);
-      var j = i - nb; // overflow rows: north wall of the bonus room (facing south), then the divider wall (facing east)
-      if (j < BONUS_NORTH_X.length) buildCabinet(gm, 'bonus', BONUS_NORTH_X[j], ROOM.minZ + 0.6, 0);
-      else buildCabinet(gm, 'bonus', DIV_X + 0.75, BONUS_DIV_Z[j - BONUS_NORTH_X.length], Math.PI / 2);
-    });
+    // bonus games (#50): full size everywhere. Bonus room east wall (both sides of the East Wing arch), its north wall, the divider wall,
+    // then the East Wing: its east wall, north wall and south wall (room for 56). Only past that do the East Wing's east-wall cabinets squeeze.
+    bonusSlots().forEach(function (q, i) { var gm = GA.wallBonus()[i]; if (gm) buildCabinet(gm, 'bonus', q[0], q[1], q[2], q[3]); });
   }
+  function bonusSlots() {
+    var out = [], n = GA.wallBonus().length, i, z;
+    for (i = 0; i < 6; i++) out.push([ROOM.maxX - 0.6, ROOM.minZ + 0.75 + i * 1.48, -Math.PI / 2]);
+    for (i = 5; i >= 0; i--) out.push([ROOM.maxX - 0.6, ROOM.maxZ - 0.75 - i * 1.48, -Math.PI / 2]);
+    BONUS_NORTH_X.forEach(function (x) { out.push([x, ROOM.minZ + 0.6, 0]); });
+    BONUS_DIV_Z.forEach(function (zz) { out.push([DIV_X + 0.75, zz, Math.PI / 2]); });
+    var rest = n - out.length, nE = Math.max(Math.min(rest, 16), rest - 16), k = 1, st = 1.48;
+    if (nE > 16) { k = 23.2 / (1.44 * nE + 0.04 * (nE - 1)); st = 1.48 * k; }
+    for (i = 0; i < nE; i++) { z = -(nE - 1) * st / 2 + i * st; out.push([BZX.maxX - 0.6, z, -Math.PI / 2, k]); }
+    for (i = 0; i < 8; i++) out.push([BZX.minX + 1.6 + i * 1.5, BZX.minZ + 0.6, 0]);
+    for (i = 0; i < 8; i++) out.push([BZX.minX + 1.6 + i * 1.5, BZX.maxZ - 0.6, Math.PI]);
+    return out;
+  }
+  Hub.bonusSlots = bonusSlots;
 
   /* ---------- multiplayer antenna ---------- */
   var ANT = { x: 1.4, z: -3.4 };
@@ -1899,7 +1914,7 @@
 
   /* ---------- extension API (claw machines build into the hub with the same helpers) ---------- */
   function api() { return { T: T, scene: scene, mesh: mesh, box: box, cyl: cyl, sph: sph, plane: plane, lam: lam, basic: basic, sign: sign, decal: decal, mkCanvas: mkCanvas, canvasTex: canvasTex, neonText: neonText, font: font,
-    addSolid: addSolid, addWall: addWall, walls: walls, regItem: regItem, begin: begin, end: end, noAud: noAud, wallSign: wallSign, cabinets: cabinets, anims: anims, glowTex: glowTex, ROOM: ROOM, PREV: PREV, WING: WING, FOOD: FOOD, REGIONS: REGIONS, DIV_X: DIV_X, attract: function (id, g, w, h, t) { attract(id, g, w, h, t, {}); }, camera: function () { return camera; }, renderer: function () { return renderer; },
+    addSolid: addSolid, addWall: addWall, walls: walls, regItem: regItem, begin: begin, end: end, noAud: noAud, wallSign: wallSign, cabinets: cabinets, anims: anims, glowTex: glowTex, ROOM: ROOM, PREV: PREV, WING: WING, BZX: BZX, FOOD: FOOD, REGIONS: REGIONS, DIV_X: DIV_X, attract: function (id, g, w, h, t) { attract(id, g, w, h, t, {}); }, camera: function () { return camera; }, renderer: function () { return renderer; },
     pose: function () { return { x: P.x, z: P.z, face: P.face, speed: P.speed }; } }; }
 
   /* ---------- layout audit ---------- */
@@ -1924,7 +1939,7 @@
       { name: 'Food Court / Preview wall E', minX: PREV.doorX + PREV.doorHW, maxX: PREV.maxX, minY: 0, maxY: H, minZ: FOOD.maxZ, maxZ: PREV.minZ },
       { name: 'Preview door lintel', minX: PREV.doorX - PREV.doorHW, maxX: PREV.doorX + PREV.doorHW, minY: PREV.doorH, maxY: H, minZ: FOOD.maxZ, maxZ: PREV.minZ } ];
     function within(p, r, my) { return p.minX >= r.minX - EPS && p.maxX <= r.maxX + EPS && p.minZ >= r.minZ - EPS && p.maxZ <= r.maxZ + EPS && p.maxY <= my + EPS; }
-    function inArea(p) { if (within(p, ROOM, ROOM.h) || within(p, WING, ROOM.h) || within(p, FOOD, ROOM.h) || within(p, PREV, PREV.h)) return true; for (var q = 0; q < REGIONS.length; q++) if (within(p, REGIONS[q], REGIONS[q].maxY || ROOM.h)) return true; return false; }
+    function inArea(p) { if (within(p, ROOM, ROOM.h) || within(p, BZX, ROOM.h) || within(p, WING, ROOM.h) || within(p, FOOD, ROOM.h) || within(p, PREV, PREV.h)) return true; for (var q = 0; q < REGIONS.length; q++) if (within(p, REGIONS[q], REGIONS[q].maxY || ROOM.h)) return true; return false; }
     // 1) physical things clipping into each other or into the divider wall
     for (var i = 0; i < phys.length; i++) {
       for (var j = i + 1; j < phys.length; j++) if (ov(phys[i], phys[j])) out.overlaps.push([phys[i].name, phys[j].name]);
@@ -1955,7 +1970,7 @@
       var reach = 0; for (a = 0; a < seen.length; a++) reach += seen[a];
       return { r: r, nx: nx, nz: nz, seen: seen, reach: reach };
     }
-    var fills = [flood({ minX: ROOM.minX, maxX: ROOM.maxX, minZ: ROOM.minZ, maxZ: WING.maxZ }, SPAWN)].concat(REGIONS.map(function (r) { return flood(r, r.spawn); }));
+    var fills = [flood({ minX: ROOM.minX, maxX: BZX.maxX, minZ: ROOM.minZ, maxZ: WING.maxZ }, SPAWN)].concat(REGIONS.map(function (r) { return flood(r, r.spawn); }));
     out.reachableCells = fills[0].reach; out.regionCells = {}; fills.slice(1).forEach(function (f) { out.regionCells[f.r.name] = f.reach; });
     cabinets.forEach(function (cb) {
       var f = cb.front, r = cb.r || 1.45, okSpot = false;
@@ -1991,6 +2006,7 @@
     if (GA.Areas && GA.Areas.build) { try { GA.Areas.build(api()); } catch (e) { if (window.console) console.warn('Food Court / Rooftop / Basement failed to build', e); } }
     if (GA.Attic && GA.Attic.build) { try { GA.Attic.build(api()); } catch (e) { if (window.console) console.warn('Attic failed to build', e); } }
     if (GA.Preview && GA.Preview.build) { try { GA.Preview.build(api()); } catch (e) { if (window.console) console.warn('Ratita Preview Center failed to build', e); } }
+    if (GA.Wing50 && GA.Wing50.build) { try { GA.Wing50.build(api()); } catch (e) { if (window.console) console.warn('East Wing / Grand Gallery failed to build', e); } }
     if (GA.Account3D && GA.Account3D.build) { try { GA.Account3D.build(api()); } catch (e) { if (window.console) console.warn('Bob\u2019s Account Desk failed to build', e); } }
     buildGary(); buildPlayer(); setupInput();
     // restore position when coming back from a main game
@@ -2044,6 +2060,7 @@
   Hub.setCamOverride = function (fn) { camOv = fn || null; };
   Hub.setEmote = function (n) { EMO.name = n || null; EMO.t0 = time; if (n) { EMO.was = true; P.speed = 0; } };
   Hub.emote = function () { return EMO.name; };
+  Hub.BZX = BZX;
   Hub.addRegion = function (r) { REGIONS.push(r); return r; };
   Hub.solidsNear = function (x, z, r) { r = r || 0.6; return solids.filter(function (b) { return x > b.minX - r && x < b.maxX + r && z > b.minZ - r && z < b.maxZ + r; }).map(function (b) { return b.name + ' ' + [b.minX, b.maxX, b.minZ, b.maxZ].map(function (v) { return +v.toFixed(2); }).join(','); }); }; // debug / tests
   Hub.regionAt = function (x, z) { return regionAt(x, z); };

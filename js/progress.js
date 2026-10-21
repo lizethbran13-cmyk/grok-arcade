@@ -258,6 +258,9 @@
   // Ratita Preview Center
   A.push({ id: 'pv_qa', cat: 'Arcade', icon: '\uD83D\uDCCB', name: 'Sneak Peek', desc: 'Finish Lili\u2019s QA checklist in the Ratita Preview Center', p: function () { return [ev('pvQA') ? 1 : 0, 1]; } });
   A.push({ id: 'pv_glitch', cat: 'Arcade', icon: '\u26A1', name: 'Glitch Tourist', desc: 'Survive a Time Jumper malfunction (Ratita Industries apologizes)', p: function () { return [ev('pvGlitch') ? 1 : 0, 1]; } });
+  // Bonus Zone East Wing (#50): Grandma Mrs
+  A.push({ id: 'gm_phone', cat: 'Arcade', icon: '\uD83D\uDCF1', name: 'Grandma\u2019s Tech Support', desc: 'Fix Grandma Mrs\u2019s phone in the Bonus Zone East Wing', p: function () { return [ev('gmFix') ? 1 : 0, 1]; } });
+  A.push({ id: 'gm_fav', cat: 'Arcade', icon: '\uD83C\uDF6A', name: 'Grandma\u2019s Favorite', desc: 'Fix Grandma Mrs\u2019s phone 10 times (she says you\u2019re her favorite, she says that to everyone)', p: function () { return [Math.min(10, ev('gmFix')), 10]; } });
   GA.ACHIEVEMENTS = A;
 
   function prog(a) { var r = a.p(); return { cur: Math.min(r[0] || 0, r[1]), goal: r[1] }; }

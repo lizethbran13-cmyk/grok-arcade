@@ -116,11 +116,11 @@
 
   /* ---------- 2. future niches (empty slots for games #24+) ---------- */
   function niches() {
-    var fr = K.free || [];
+    var fr = (K.free || []).slice(0, 6); // (#50) only the next 6 empty spots get a dust-sheeted niche (the rest of the Grand Gallery stays open wall)
     fr.forEach(function (s, i) {
       var g = new T.Group(); g.name = 'Reserved niche ' + i; g.position.set(s[0], 0, s[1]); g.rotation.y = s[2]; A.scene.add(g); ROOTS.push(g);
       add(g, bx(1.44, 3.3, 0.1), ph('#2a1d3a', 20), 0, 1.75, 0.05); add(g, bx(1.44, 0.06, 0.12), K.gold(), 0, 3.42, 0.06); add(g, bx(1.44, 0.06, 0.12), K.gold(), 0, 0.08, 0.06);
-      var n = K.free.length, num = 24 + i;
+      var n = K.free.length, num = (GA.Hall3D.gameCount || 23) + 1 + i;
       var pq = K.plaqueTex(512, 150, 'COMING SOON', 'reserved for game #' + num + ' \u00b7 Gus is "thrilled"', '#bfe9ff', '#1d1430'); K.planeM(1.3, 0.38, pq.tex, g, 0, 3.0, 0.11);
       add(g, bx(1.0, 0.7, 0.04), ph('#3b2a50', 10), 0, 2.2, 0.11); add(g, bx(1.08, 0.78, 0.03), K.gold(), 0, 2.2, 0.09);
       canvasPlane(g, 256, 180, 0.94, 0.661, function (c, w, h) { c.fillStyle = '#120a22'; c.fillRect(0, 0, w, h); c.strokeStyle = 'rgba(191,233,255,.35)'; c.setLineDash([10, 8]); c.lineWidth = 4; c.strokeRect(14, 14, w - 28, h - 28); c.setLineDash([]); c.fillStyle = '#bfe9ff'; c.font = 'bold 96px Georgia,serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('?', w / 2, h / 2 + 6); }, 0, 2.2, 0.135);
@@ -508,7 +508,7 @@
     var lastScr = -1;
     A.anims.push(function (t) {
       var dt = st.lt ? Math.min(0.05, t - st.lt) : 0.016; st.lt = t;
-      var p = A.pose(), inA = p.x > W.minX && p.x < W.maxX && p.z > 26.2 && p.z < W.maxZ; st.inAnnex = inA;
+      var p = A.pose(), inA = p.x > W.minX && p.x < W.maxX && p.z > 26.2 && p.z < (W.annexZ || 48); st.inAnnex = inA;
       // stood up by walking away: put the player at the seat's front and give the camera back
       if (st.sit && !H2.posing && GA.Hub.emote() !== 'sit') { var s0 = st.sit; st.sit = null; GA.Hub.setCamOverride(null); GA.Hub.setPlayer(s0.fx, s0.fz); if (H2.onStand) H2.onStand(s0); }
       if (st.sit) st.sitT += dt;
