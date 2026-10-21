@@ -362,7 +362,7 @@
       "url": "previews/hall-bonus/",
       "playable": true,
       "built": "2026-10-21",
-      "notes": "Hall of Records: new Grand Gallery behind the Annex (the crowded middle exhibits moved in, room for 14 more). Bonus Zone: a big arch opens into the East Wing, and every bonus cabinet is full size again. Grandma Mrs (Gary's great-great-grandma) is the head attendant: cookies, drama, and fix her phone for tickets. Preview uses its own sandbox save."
+      "notes": "Detail pass: East Wing has the Prize Peek island (Luna on top), Easy + Tricky claws, the Ticket Muncher 9000, a lounge, Grandma's snack cart, a light-up floor path and visitors playing. Grandma Mrs' desk has tea, cookies, a radio, family photos, a rocking chair and Candy napping. The Grand Gallery (behind the Annex) has chandeliers, wall art, the Golden Cartridge, visitors and Torty on a visit. Preview uses its own sandbox save."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

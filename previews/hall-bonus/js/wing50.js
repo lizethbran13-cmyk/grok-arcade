@@ -5,7 +5,7 @@
    and her phone is always broken. Talk to her at her attendant desk (js/grandma-ui.js). */
 (function () {
   'use strict';
-  var T = THREE, WG = GA.Wing50 = {}, A, B, ROOT;
+  var T = THREE, WG = GA.Wing50 = {}, A, B, ROOT, GROOT, FX = { tiles: null, crys: [], vis: [], kiosk: null };
   var mats = {};
   function ph(c, s, e) { var k = c + '|' + (s || 30) + '|' + (e || ''); return mats[k] || (mats[k] = new T.MeshPhongMaterial({ color: c, shininess: s || 30, emissive: e ? new T.Color(e) : new T.Color(0) })); }
   function add(p, g, m, x, y, z) { var o = new T.Mesh(g, m); o.position.set(x || 0, y || 0, z || 0); p.add(o); return o; }
@@ -66,11 +66,11 @@
     [[0, 0.8], [0.05, 0.86], [-0.05, 0.9]].forEach(function (q) { add(tb, cy(0.07, 0.07, 0.025, 12), ph('#c58a4a', 10), q[0], q[1], 0); });
     reg('Cookie table', tb); A.addSolid(25.15, 26.05, 6.95, 7.85, 'Cookie table');
     // bean bags (the Bonus Zone's famous ones got a second set out here)
-    [[21.6, 7.2, '#3ff0ff'], [22.9, 8.0, '#ffe14d'], [21.4, -7.6, '#ff4fd8']].forEach(function (q, i) {
+    [[21.6, 7.2, '#3ff0ff'], [22.9, 8.0, '#ffe14d'], [19.9, 8.9, '#ff4fd8']].forEach(function (q, i) {
       var b = grp('East Wing bean bag ' + i, q[0], q[1]); var m = add(b, sp(0.5, 16), ph(q[2], 20), 0, 0.3, 0); m.scale.set(1, 0.6, 1); add(b, sp(0.32, 12), ph(q[2], 20), 0, 0.5, -0.22).scale.set(1, 0.8, 0.6);
       reg('East Wing bean bag ' + i, b); A.addSolid(q[0] - 0.5, q[0] + 0.5, q[1] - 0.5, q[1] + 0.5, 'East Wing bean bag ' + i);
     });
-    [[19.0, -10.9], [19.0, 10.9]].forEach(function (q, i) { var pg = grp('East Wing plant ' + i, q[0], q[1]); add(pg, cy(0.26, 0.2, 0.5, 14), ph('#d97706', 20), 0, 0.25, 0); for (var k = 0; k < 6; k++) { var lf = add(pg, sp(0.2, 8), ph('#22a55a', 10), Math.cos(k) * 0.14, 0.7 + (k % 3) * 0.12, Math.sin(k) * 0.14); lf.scale.set(0.6, 1.4, 0.6); } reg('East Wing plant ' + i, pg); A.addSolid(q[0] - 0.27, q[0] + 0.27, q[1] - 0.27, q[1] + 0.27, 'East Wing plant ' + i); });
+    // (plants are instanced in detailWing)
   }
 
   /* ---------- Grandma Mrs + her attendant desk ---------- */
@@ -159,15 +159,210 @@
     [[10, 64.6]].forEach(function (q, i) { var f = grp('Gallery fern ' + i, q[0], q[1]); add(f, cy(0.3, 0.24, 0.6, 16), ph('#efe6d8', 60), 0, 0.3, 0); for (var k = 0; k < 8; k++) { var lf = add(f, sp(0.22, 8), ph('#2f9e55', 10), Math.cos(k * 0.8) * 0.2, 0.85 + (k % 3) * 0.12, Math.sin(k * 0.8) * 0.2); lf.scale.set(0.5, 1.5, 0.5); } reg('Gallery fern ' + i, f); A.addSolid(q[0] - 0.31, q[0] + 0.31, q[1] - 0.31, q[1] + 0.31, 'Gallery fern ' + i); });
   }
 
+  /* ================= (#50 detail pass) ================= */
+  var SH = {}; // shared geometries for the repeated props
+  function sg(k, f) { return SH[k] || (SH[k] = f()); }
+  function inst(par, geo, mat, list, name) { // list: [x, y, z, ry, sx, sy, sz]
+    var m = new T.InstancedMesh(geo, mat, list.length), o = new T.Object3D(); m.name = name || 'instanced';
+    list.forEach(function (q, i) { o.position.set(q[0], q[1], q[2]); o.rotation.set(0, q[3] || 0, 0); o.scale.set(q[4] || 1, q[5] || q[4] || 1, q[6] || q[4] || 1); o.updateMatrix(); m.setMatrixAt(i, o.matrix); });
+    m.instanceMatrix.needsUpdate = true; par.add(m); A.noAud(m); return m;
+  }
+  function plants(par, pts, tag) { // pot + 7 leaves each, all instanced: 2 draw calls for every plant in the room
+    var pots = [], leaves = [];
+    pts.forEach(function (q, i) { pots.push([q[0], 0.25, q[1]]); for (var k = 0; k < 7; k++) { var a = k * 0.9 + i; leaves.push([q[0] + Math.cos(a) * 0.15, 0.68 + (k % 3) * 0.13, q[1] + Math.sin(a) * 0.15, a, 0.55, 1.5, 0.55]); } A.addSolid(q[0] - 0.28, q[0] + 0.28, q[1] - 0.28, q[1] + 0.28, tag + ' plant ' + i); });
+    inst(par, sg('pot', function () { return cy(0.27, 0.2, 0.5, 14); }), ph('#d97706', 20), pots, tag + ' plant pots');
+    inst(par, sg('leaf', function () { return sp(0.2, 8); }), ph('#22a55a', 10), leaves, tag + ' plant leaves');
+  }
+  function canvasPlane(par, cw, chh, pw, draw, x, y, z, ry) { // plane height follows the canvas aspect: pictures never stretch
+    var t = cvsTex(cw, chh, draw), m = new T.Mesh(new T.PlaneGeometry(pw, pw * chh / cw), new T.MeshBasicMaterial({ map: t.tex })); m.position.set(x, y, z); m.rotation.y = ry || 0; par.add(m); return m;
+  }
+  /* chunky cartoon visitor (shared geometry + a few cached materials) */
+  var SKIN = ['#f1c7a5', '#c68b59', '#8d5524', '#f3d2b3'], SHIRT = ['#3ff0ff', '#ffe14d', '#4ade80', '#ff7a3d', '#a78bfa', '#f472b6', '#60a5fa'];
+  function visitor(par, x, z, ry, k, pose) {
+    var g = new T.Group(); g.position.set(x, 0, z); g.rotation.y = ry; par.add(g); A.noAud(g);
+    var sk = ph(SKIN[k % 4], 15), sh = ph(SHIRT[k % 7], 20), pa = ph(['#334155', '#1e3a8a', '#4b5563', '#78350f'][k % 4], 15), hr = ph(['#2b1a10', '#f5d06f', '#111827', '#8b4513'][k % 4], 10);
+    var leg = sg('vleg', function () { return bx(0.17, 0.62, 0.2); }), body = sg('vbody', function () { return bx(0.5, 0.6, 0.3); }), arm = sg('varm', function () { return bx(0.14, 0.5, 0.16); }), head = sg('vhead', function () { return sp(0.22, 14); }), eye = sg('veye', function () { return sp(0.03, 6); });
+    [-0.12, 0.12].forEach(function (lx) { add(g, leg, pa, lx, 0.31, 0); }); add(g, body, sh, 0, 0.92, 0);
+    var aL = add(g, arm, sh, -0.33, 0.95, 0.02), aR = add(g, arm, sh, 0.33, 0.95, 0.02);
+    if (pose === 'play') { aL.rotation.x = aR.rotation.x = -1.0; aL.position.z = aR.position.z = 0.18; aL.position.y = aR.position.y = 1.0; }
+    var hd = add(g, head, sk, 0, 1.45, 0); add(hd, sp(0.23, 12), hr, 0, 0.07, -0.04).scale.set(1, 0.7, 1); [-0.08, 0.08].forEach(function (ex) { add(hd, eye, ph('#1f1235', 5), ex, 0.02, 0.2); });
+    FX.vis.push({ g: g, hd: hd, aL: aL, aR: aR, pose: pose, ph: k * 1.7 });
+    return g;
+  }
+  function pet(id, par, x, y, z, ry, s) { if (!GA.Prize3D || !GA.Prize3D.build) return null; var m = GA.Prize3D.build(id); m.position.set(x, y, z); m.rotation.y = ry || 0; m.scale.setScalar(s || 1); par.add(m); A.noAud(m); return m; }
+  function cabAt(o) { // a walk-up spot for a prop (claw machines / ticket kiosk use the arcade's own handlers)
+    var an = new T.Group(); an.name = 'anchor ' + o.id; an.position.set(o.x - o.dir[0] * 1.75, 0, o.z - o.dir[1] * 1.75); an.rotation.y = Math.atan2(o.dir[0], o.dir[1]); A.scene.add(an); an.updateMatrixWorld(true);
+    var c = { game: { id: o.id, name: o.name, desc: o.desc || '', color: o.color || '#ffe14d' }, kind: o.kind, ar: !!o.ar, id: o.id, group: an, owner: o.group, x: o.x, z: o.z, rot: 0,
+      front: new T.Vector3(o.x, 0, o.z), dir: new T.Vector3(o.dir[0], 0, o.dir[1]), glow: new T.MeshBasicMaterial({ transparent: true, opacity: 0 }), nextDraw: Infinity, r: o.r || 1.1, data: o.data || {} };
+    A.cabinets.push(c); return c;
+  }
+
+  function detailWing() {
+    var wood = ph('#6b4226', 30), chrome = ph('#cfd8e6', 110), glass = new T.MeshPhongMaterial({ color: '#dff6ff', transparent: true, opacity: 0.32, shininess: 120, depthWrite: false });
+    // 1) light-up floor path from the arch to Grandma's desk (one instanced mesh, colours chase along it)
+    var tiles = [], cols = []; for (var ix = 0; ix < 5; ix++) for (var iz = 0; iz < 3; iz++) tiles.push([21.9 + ix * 0.62, 0.016, -0.62 + iz * 0.62, 0, 1]);
+    var tm = inst(ROOT, sg('tile', function () { var g = new T.PlaneGeometry(0.56, 0.56); g.rotateX(-Math.PI / 2); return g; }), new T.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.75, depthWrite: false }), tiles, 'Light-up floor path');
+    tm.renderOrder = 1; tm.instanceColor = new T.InstancedBufferAttribute(new Float32Array(tiles.length * 3), 3); FX.tiles = tm;
+    var ring = cvsTex(512, 512, function (g, w, h) { g.strokeStyle = '#ff9ed2'; g.lineWidth = 14; g.shadowColor = '#ff4fd8'; g.shadowBlur = 24; g.beginPath(); g.arc(w / 2, h / 2, 220, 0, 7); g.stroke(); g.strokeStyle = '#3ff0ff'; g.shadowColor = '#3ff0ff'; g.beginPath(); g.arc(w / 2, h / 2, 180, 0, 7); g.stroke(); g.shadowBlur = 0; g.fillStyle = '#ffe14d'; g.font = 'bold 44px "Trebuchet MS",sans-serif'; g.textAlign = 'center'; g.fillText('PRIZES!', w / 2, h / 2 + 15); });
+    var rd = new T.Mesh(new T.PlaneGeometry(2.6, 2.6), new T.MeshBasicMaterial({ map: ring.tex, transparent: true, depthWrite: false })); rd.rotation.x = -Math.PI / 2; rd.position.set(22.6, 0.014, -6.6); rd.renderOrder = 1; ROOT.add(rd); A.noAud(rd);
+    // 2) centre island: the Prize Peek kiosk (glass dome, spinning plushies, Luna sits on top "guarding" it)
+    var k = grp('Prize Peek kiosk', 22.6, -6.6);
+    add(k, cy(0.85, 0.95, 0.8, 28), ph('#ff4fd8', 40, '#3a0024'), 0, 0.4, 0); add(k, cy(0.9, 0.9, 0.06, 28), chrome, 0, 0.83, 0);
+    add(k, new T.SphereGeometry(0.82, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), glass, 0, 0.86, 0); add(k, cy(0.12, 0.12, 0.08, 12), chrome, 0, 1.7, 0);
+    var tt = new T.Group(); tt.position.y = 0.86; k.add(tt); FX.kiosk = tt;
+    ['pl_candy', 'pl_snowie', 'pl_torty', 'pl_pirat'].forEach(function (id, i) { var m = pet(id, tt, Math.cos(i * 1.57) * 0.42, 0, Math.sin(i * 1.57) * 0.42, -i * 1.57 + Math.PI / 2, 0.4); void m; });
+    var lt = canvasPlane(k, 512, 128, 1.5, function (g, w, h) { g.fillStyle = '#1d1430'; g.fillRect(0, 0, w, h); g.fillStyle = '#ffe14d'; g.font = 'bold 54px "Trebuchet MS",sans-serif'; g.textAlign = 'center'; g.fillText('PRIZE PEEK', w / 2, 62); g.fillStyle = '#fff'; g.font = 'bold 28px sans-serif'; g.fillText('win them at the claws!', w / 2, 106); }, 0, 0.45, 0.955); void lt;
+    reg('Prize Peek kiosk', k); A.addSolid(21.7, 23.5, -7.5, -5.7, 'Prize Peek kiosk');
+    // 3) north wall: two claw machines (the arcade's real Easy + Tricky claws) and the Ticket Muncher redemption kiosk
+    [['easy', 21.4, '#3ff0ff', 'EASY CLAW'], ['tricky', 27.4, '#ff4fd8', 'TRICKY CLAW']].forEach(function (q) {
+      var c = grp('East Wing claw ' + q[0], q[1], -11.35), base = ph(q[2], 40, q[2] === '#3ff0ff' ? '#06343a' : '#3a0024');
+      add(c, bx(1.1, 0.9, 1.0), base, 0, 0.45, 0); add(c, bx(1.1, 1.0, 1.0), glass, 0, 1.4, 0); add(c, bx(1.14, 0.22, 1.04), base, 0, 2.0, 0);
+      [[-0.53, -0.48], [0.53, -0.48], [-0.53, 0.48], [0.53, 0.48]].forEach(function (p) { add(c, bx(0.05, 1.0, 0.05), chrome, p[0], 1.4, p[1]); });
+      add(c, cy(0.01, 0.01, 0.5, 4), chrome, 0.1, 1.65, 0.05); var cl = add(c, cy(0.09, 0.05, 0.12, 8), chrome, 0.1, 1.38, 0.05); void cl;
+      ['pl_luna', 'pl_candy', 'pl_snowie', 'pl_pirat', 'pl_torty'].forEach(function (id, i) { pet(id, c, -0.32 + (i % 3) * 0.3, 0.92, -0.2 + Math.floor(i / 3) * 0.32, i, 0.28); });
+      canvasPlane(c, 512, 128, 1.04, function (g, w, h) { g.fillStyle = '#120a22'; g.fillRect(0, 0, w, h); g.fillStyle = q[2]; g.font = 'bold 64px "Trebuchet MS",sans-serif'; g.textAlign = 'center'; g.fillText(q[3], w / 2, 86); }, 0, 2.0, 0.53);
+      add(c, bx(0.3, 0.06, 0.2), ph('#111827', 20), -0.3, 0.92, 0.42); add(c, sp(0.05, 8), ph('#ff4040', 40), -0.3, 1.0, 0.42);
+      reg('East Wing claw ' + q[0], c); A.addSolid(q[1] - 0.57, q[1] + 0.57, -12, -10.83, 'East Wing claw ' + q[0]);
+      cabAt({ id: q[0], kind: 'claw', name: q[3], x: q[1], z: -10.0, dir: [0, -1], r: 1.0, group: c });
+    });
+    var tk = grp('Ticket Muncher 9000', 24.4, -11.35);
+    add(tk, bx(1.3, 1.9, 0.9), ph('#ffe14d', 40, '#2a2000'), 0, 0.95, 0); add(tk, bx(1.0, 0.6, 0.05), A.basic('#1d1430'), 0, 1.45, 0.46);
+    canvasPlane(tk, 512, 256, 0.96, function (g, w, h) { g.fillStyle = '#1d1430'; g.fillRect(0, 0, w, h); g.fillStyle = '#ffe14d'; g.font = 'bold 56px "Trebuchet MS",sans-serif'; g.textAlign = 'center'; g.fillText('TICKET', w / 2, 80); g.fillText('MUNCHER 9000', w / 2, 140); g.fillStyle = '#7df9a0'; g.font = 'bold 34px sans-serif'; g.fillText('redeem prizes here \u2192', w / 2, 210); }, 0, 1.45, 0.49);
+    add(tk, bx(0.5, 0.08, 0.2), ph('#111827', 20), 0, 0.85, 0.5); add(tk, cy(0.18, 0.18, 0.06, 16), A.basic('#ff4fd8'), 0, 2.0, 0.2);
+    reg('Ticket Muncher 9000', tk); A.addSolid(23.75, 25.05, -12, -10.9, 'Ticket Muncher 9000');
+    cabAt({ id: 'gm_tickets', kind: 'prize', name: 'Ticket Muncher 9000', x: 24.4, z: -10.0, dir: [0, -1], r: 1.0, group: tk });
+    // 4) seating cluster on the rug: loveseat + coffee table (Snowie naps on the loveseat)
+    var ls = grp('East Wing loveseat', 23.3, 4.6, Math.PI / 2), fab = ph('#7c3aed', 12);
+    add(ls, bx(1.7, 0.42, 0.8), fab, 0, 0.33, 0); add(ls, bx(1.7, 0.6, 0.2), fab, 0, 0.75, -0.32); [-1, 1].forEach(function (sd) { add(ls, bx(0.18, 0.55, 0.8), fab, sd * 0.85, 0.55, 0); });
+    add(ls, bx(0.5, 0.3, 0.12), ph('#ffe14d', 10), -0.45, 0.68, -0.18); reg('East Wing loveseat', ls); A.addSolid(22.9, 23.7, 3.7, 5.5, 'East Wing loveseat');
+    var ct = grp('East Wing coffee table', 24.9, 4.6); add(ct, bx(0.9, 0.05, 0.6), wood, 0, 0.42, 0); [[-0.38, -0.24], [0.38, -0.24], [-0.38, 0.24], [0.38, 0.24]].forEach(function (p) { add(ct, cy(0.03, 0.03, 0.4, 6), wood, p[0], 0.2, p[1]); });
+    add(ct, cy(0.1, 0.08, 0.08, 12), ph('#ff9ed2', 30), 0.2, 0.49, 0); add(ct, bx(0.3, 0.03, 0.22), ph('#60a5fa', 10), -0.2, 0.46, 0.05); reg('East Wing coffee table', ct); A.addSolid(24.45, 25.35, 4.3, 4.9, 'East Wing coffee table');
+    // 5) Grandma's snack cart on the south wall (Pi-rat is "helping")
+    var sc = grp('Grandma\u2019s snack cart', 25.0, 11.4, Math.PI);
+    add(sc, bx(1.6, 0.9, 0.8), ph('#f472b6', 30), 0, 0.55, 0); add(sc, bx(1.7, 0.05, 0.9), ph('#ffffff', 50), 0, 1.02, 0);
+    [-1, 1].forEach(function (sd) { add(sc, cy(0.03, 0.03, 1.1, 6), chrome, sd * 0.78, 1.55, 0.38); }); add(sc, bx(1.7, 0.06, 0.95), ph('#ff4fd8', 20), 0, 2.12, 0.1);
+    add(sc, cy(0.16, 0.2, 0.18, 14), ph('#c58a4a', 10), -0.5, 1.14, 0.1); for (var c3 = 0; c3 < 3; c3++) add(sc, cy(0.1, 0.1, 0.03, 12), ph('#e2a35a', 10), 0.1 + c3 * 0.22, 1.06, 0.15);
+    add(sc, cy(0.09, 0.09, 0.22, 12), ph('#7df9a0', 40), 0.55, 1.15, -0.15);
+    [-0.6, 0.6].forEach(function (wx) { add(sc, cy(0.12, 0.12, 0.06, 12), ph('#111827', 10), wx, 0.12, 0.36).rotation.z = Math.PI / 2; });
+    canvasPlane(sc, 512, 128, 1.5, function (g, w, h) { g.fillStyle = '#fff2f8'; g.fillRect(0, 0, w, h); g.fillStyle = '#a8325a'; g.font = 'bold 50px "Comic Sans MS","Trebuchet MS",cursive'; g.textAlign = 'center'; g.fillText('Grandma\u2019s Snacks \u2665 FREE', w / 2, 82); }, 0, 0.62, 0.41);
+    pet('pl_pirat', sc, 0.0, 1.05, -0.2, 0.5, 0.5);
+    reg('Grandma\u2019s snack cart', sc); A.addSolid(24.15, 25.85, 10.95, 12, 'Grandma\u2019s snack cart');
+    // 6) plants (instanced) + visitors playing the cabinets
+    plants(ROOT, [[19.0, -10.9], [19.0, 10.9], [22.75, -11.35], [25.95, -11.35], [31.2, -11.2], [31.2, 11.2], [21.2, 11.35], [28.6, 11.35]], 'East Wing');
+    visitor(ROOT, 29.9, -5.92, Math.PI / 2, 0, 'play'); visitor(ROOT, 29.9, 2.96, Math.PI / 2, 1, 'play'); visitor(ROOT, 29.9, 7.4, Math.PI / 2, 2, 'play');
+    visitor(ROOT, 27.4, -9.95, Math.PI, 3, 'play'); visitor(ROOT, 25.0, 10.2, 0, 4, 'wave');
+  }
+
+  function detailDesk() {
+    var D = WG.DESK, g = grp('Grandma desk props', D.x, D.z), top = 1.06;
+    // tea set: teapot + two cups on saucers
+    var china = ph('#ffffff', 80), rose = ph('#f472b6', 40);
+    var tp = add(g, sp(0.13, 14), china, 0.15, top + 0.12, 0.35); tp.scale.set(1, 0.85, 1); add(g, cy(0.03, 0.05, 0.12, 8), china, 0.15, top + 0.12, 0.2).rotation.x = -1.0; add(g, sp(0.035, 8), rose, 0.15, top + 0.24, 0.35);
+    add(g, new T.TorusGeometry(0.06, 0.015, 6, 12), china, 0.15, top + 0.13, 0.5);
+    [0.62, 1.0].forEach(function (z) { add(g, cy(0.07, 0.07, 0.01, 12), rose, 0.2, top + 0.005, z); add(g, cy(0.05, 0.035, 0.07, 10), china, 0.2, top + 0.045, z); });
+    // cookie jar (pig-pink, with a lid and a cookie stuck in the top)
+    add(g, cy(0.13, 0.15, 0.24, 16), ph('#ff9eb8', 40), 0.25, top + 0.12, -0.35); add(g, cy(0.14, 0.13, 0.04, 16), ph('#ff7fa6', 40), 0.25, top + 0.26, -0.35); add(g, cy(0.06, 0.06, 0.015, 10), ph('#c58a4a', 10), 0.25, top + 0.3, -0.33).rotation.x = 1.2;
+    // little radio
+    add(g, bx(0.22, 0.14, 0.12), ph('#b45309', 30), 0.32, top + 0.07, 0.0); add(g, cy(0.04, 0.04, 0.01, 12), ph('#e5e7eb', 60), 0.32, top + 0.08, 0.06).rotation.y = 0; var ant = add(g, cy(0.004, 0.004, 0.3, 4), ph('#d1d5db', 80), 0.38, top + 0.28, 0.0); ant.rotation.z = -0.4;
+    // framed old photos of Gary's family (drawn portraits; each photo keeps its own aspect)
+    var PH = [['Gary, age 7', '#7dd3fc', 1], ['Great-great-grandpa Walt', '#fcd34d', 2], ['The family, 1952', '#fda4af', 4]];
+    PH.forEach(function (q, i) {
+      var f = new T.Group(); f.position.set(0.3, top, -0.85 + i * 0.27 + (i === 2 ? 0.05 : 0)); f.rotation.y = -Math.PI / 2 + (i - 1) * 0.25; g.add(f);
+      add(f, bx(0.24, 0.3, 0.02), ph('#c9993a', 80), 0, 0.15, 0); f.children[0].rotation.x = -0.12;
+      canvasPlane(f, 160, 200, 0.2, function (c, w, h) { c.fillStyle = '#f5e6c8'; c.fillRect(0, 0, w, h); c.fillStyle = q[1]; c.fillRect(10, 10, w - 20, h - 50); for (var n = 0; n < q[2]; n++) { var px = w / 2 + (n - (q[2] - 1) / 2) * 30; c.fillStyle = '#f1c7a5'; c.beginPath(); c.arc(px, 70, 14, 0, 7); c.fill(); c.fillStyle = '#6b4226'; c.fillRect(px - 12, 86, 24, 50); }
+        c.fillStyle = '#4a1030'; c.font = 'italic 15px Georgia,serif'; c.textAlign = 'center'; c.fillText(q[0], w / 2, h - 18); }, 0, 0.15, 0.012).rotation.x = -0.12;
+    });
+    A.noAud(g);
+    // NO RUNNING, DEARS sign (A-frame, beside the desk) + rocking chair behind the desk + Candy's dog bed
+    var sgn = grp('NO RUNNING, DEARS sign', D.x - 1.6, D.z - 2.2, -0.5);
+    [-1, 1].forEach(function (sd) { var b = add(sgn, bx(0.6, 0.85, 0.03), ph('#fffbe6', 20), 0, 0.45, sd * 0.12); b.rotation.x = sd * 0.25; });
+    canvasPlane(sgn, 256, 340, 0.54, function (c, w, h) { c.fillStyle = '#fffbe6'; c.fillRect(0, 0, w, h); c.strokeStyle = '#f472b6'; c.lineWidth = 10; c.strokeRect(8, 8, w - 16, h - 16); c.fillStyle = '#a8325a'; c.textAlign = 'center'; c.font = 'bold 44px "Comic Sans MS","Trebuchet MS",cursive'; c.fillText('NO', w / 2, 80); c.fillText('RUNNING,', w / 2, 140); c.fillText('DEARS', w / 2, 200); c.font = '60px sans-serif'; c.fillText('\u2665', w / 2, 290); }, 0, 0.47, 0.16).rotation.x = -0.25;
+    reg('NO RUNNING, DEARS sign', sgn); A.addSolid(D.x - 1.95, D.x - 1.25, D.z - 2.5, D.z - 1.9, 'NO RUNNING, DEARS sign');
+    var rc = grp('Rocking chair', D.x + 1.3, D.z - 2.1, -Math.PI / 2 - 0.3), wd = ph('#7a4a2a', 30);
+    add(rc, bx(0.6, 0.06, 0.55), wd, 0, 0.45, 0); add(rc, bx(0.6, 0.7, 0.05), wd, 0, 0.85, -0.26); add(rc, bx(0.5, 0.4, 0.06), ph('#f7c8d8', 10), 0, 0.85, -0.22);
+    [-0.28, 0.28].forEach(function (sx) { var r2 = add(rc, new T.TorusGeometry(0.6, 0.025, 6, 20, 1.2), wd, sx, 0.62, 0); r2.rotation.y = Math.PI / 2; r2.rotation.z = -Math.PI / 2 - 0.6; add(rc, cy(0.02, 0.02, 0.4, 6), wd, sx, 0.24, 0.2); add(rc, cy(0.02, 0.02, 0.4, 6), wd, sx, 0.24, -0.2); });
+    add(rc, bx(0.5, 0.04, 0.45), ph('#3ff0ff', 10), 0, 0.5, 0.02); FX.rock = rc; reg('Rocking chair', rc); A.addSolid(D.x + 0.95, D.x + 1.65, D.z - 2.45, D.z - 1.75, 'Rocking chair');
+    var bd = grp('Candy\u2019s dog bed', D.x + 1.25, D.z + 1.9); add(bd, new T.TorusGeometry(0.36, 0.12, 8, 18), ph('#60a5fa', 15), 0, 0.12, 0).rotation.x = Math.PI / 2; add(bd, cy(0.34, 0.34, 0.06, 18), ph('#bfdbfe', 10), 0, 0.05, 0);
+    reg('Candy\u2019s dog bed', bd); A.addSolid(D.x + 0.77, D.x + 1.73, D.z + 1.42, D.z + 2.38, 'Candy\u2019s dog bed');
+    var cn = pet('pl_candy', bd, 0, 0.08, 0, -2.2, 1.15); if (cn) { cn.rotation.z = 0.0; FX.candy = cn; }
+    // zzz bubble over sleeping Candy
+    var z = canvasPlane(bd, 128, 128, 0.35, function (c, w, h) { c.fillStyle = '#ffffff'; c.font = 'bold 54px "Trebuchet MS",sans-serif'; c.fillText('z', 20, 110); c.font = 'bold 40px sans-serif'; c.fillText('z', 66, 70); c.font = 'bold 28px sans-serif'; c.fillText('z', 96, 36); }, 0.1, 0.9, 0); z.material.transparent = true; z.rotation.y = -Math.PI / 2; FX.zzz = z;
+  }
+
+  function detailGallery() {
+    var W = A.WING, AZ = W.annexZ || 48, gold = ph('#e8b84a', 90, '#3a2400'), G2 = GROOT;
+    // crystal chandeliers (crystals instanced), two along the centre
+    var crys = [];
+    [[10, 53.0], [10, 61.0]].forEach(function (q) {
+      add(G2, cy(0.012, 0.012, 0.6, 6), gold, q[0], 4.7, q[1]); add(G2, new T.TorusGeometry(0.55, 0.035, 8, 28), gold, q[0], 4.35, q[1]).rotation.x = Math.PI / 2; add(G2, new T.TorusGeometry(0.32, 0.03, 8, 22), gold, q[0], 4.15, q[1]).rotation.x = Math.PI / 2;
+      add(G2, sp(0.14, 12), A.basic('#fff3c4'), q[0], 4.05, q[1]);
+      for (var i = 0; i < 16; i++) { var a = i / 16 * Math.PI * 2; crys.push([q[0] + Math.cos(a) * 0.55, 4.22, q[1] + Math.sin(a) * 0.55, a, 0.6, 1.6, 0.6]); if (i % 2 === 0) crys.push([q[0] + Math.cos(a) * 0.32, 4.02, q[1] + Math.sin(a) * 0.32, a, 0.5, 1.3, 0.5]); }
+      var gl = new T.Sprite(new T.SpriteMaterial({ map: A.glowTex, color: '#ffe9b0', transparent: true, opacity: 0.6, depthWrite: false, blending: T.AdditiveBlending })); gl.scale.set(2.2, 2.2, 1); gl.position.set(q[0], 4.1, q[1]); G2.add(gl);
+    });
+    inst(G2, sg('crys', function () { return new T.OctahedronGeometry(0.06, 0); }), new T.MeshPhongMaterial({ color: '#e0f7ff', shininess: 120, specular: '#ffffff', emissive: '#334455' }), crys, 'Chandelier crystals');
+    // wall art above the exhibits (game-themed paintings, 4 shared textures, every frame matches its canvas aspect)
+    var ART = [
+      function (c, w, h) { var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#3ff0ff'); g.addColorStop(1, '#1d1430'); c.fillStyle = g; c.fillRect(0, 0, w, h); c.fillStyle = '#ffe14d'; c.beginPath(); c.arc(w * 0.7, h * 0.35, 30, 0, 7); c.fill(); c.fillStyle = '#4ade80'; c.fillRect(0, h * 0.75, w, h * 0.25); },
+      function (c, w, h) { c.fillStyle = '#2a1050'; c.fillRect(0, 0, w, h); for (var i = 0; i < 6; i++) { c.fillStyle = ['#ff4fd8', '#3ff0ff', '#ffe14d'][i % 3]; c.fillRect(20 + i * 38, h - 30 - i * 14, 26, 20 + i * 14); } },
+      function (c, w, h) { c.fillStyle = '#fef3c7'; c.fillRect(0, 0, w, h); c.fillStyle = '#a7adbb'; c.beginPath(); c.ellipse(w / 2, h * 0.62, 50, 34, 0, 0, 7); c.fill(); c.beginPath(); c.arc(w / 2 + 44, h * 0.48, 26, 0, 7); c.fill(); c.fillStyle = '#ffb3c8'; c.beginPath(); c.arc(w / 2 + 40, h * 0.3, 14, 0, 7); c.fill(); c.fillStyle = '#4a1030'; c.font = 'italic 16px Georgia'; c.fillText('Luna, in oils', 10, h - 10); },
+      function (c, w, h) { c.fillStyle = '#7c2d12'; c.fillRect(0, 0, w, h); c.fillStyle = '#fcd34d'; c.beginPath(); c.arc(w / 2, h / 2, 46, 0, 7); c.fill(); c.fillStyle = '#a16207'; c.beginPath(); c.ellipse(w / 2, h * 0.78, 70, 24, 0, 0, 7); c.fill(); c.fillStyle = '#fff'; c.font = 'italic 16px Georgia'; c.fillText('Torty at sunset', 10, h - 10); }
+    ];
+    var texs = ART.map(function (f) { return cvsTex(256, 160, f).tex; }), artGeo = new T.PlaneGeometry(1.2, 0.75), frameGeo = bx(1.32, 0.87, 0.04), frames = [];
+    for (var i = 0; i < 7; i++) {
+      [[W.minX + 0.03, Math.PI / 2, W.minX + 0.01], [W.maxX - 0.03, -Math.PI / 2, W.maxX - 0.01]].forEach(function (s, j) {
+        var z = AZ + 2.4 + i * 2.0, m = new T.Mesh(artGeo, new T.MeshBasicMaterial({ map: texs[(i + j * 2) % 4] })); m.position.set(s[0] + (j ? -0.02 : 0.02), 4.15, z); m.rotation.y = s[1]; G2.add(m); A.noAud(m); frames.push([s[2], 4.15, z, s[1]]);
+      });
+    }
+    inst(G2, frameGeo, gold, frames, 'Gallery art frames');
+    // big painting on the back of the Annex wall: Gus and Barnaby, "a family portrait" (Gus is not smiling)
+    canvasPlane(G2, 512, 256, 2.4, function (c, w, h) { c.fillStyle = '#3a1430'; c.fillRect(0, 0, w, h); c.strokeStyle = '#e8b84a'; c.lineWidth = 12; c.strokeRect(6, 6, w - 12, h - 12); [[170, '#5b4636', '#f5f5f5', 0], [340, '#3f8f5a', '#f5f5f5', 1]].forEach(function (p) { c.fillStyle = p[1]; c.fillRect(p[0] - 50, 120, 100, 110); c.fillStyle = '#f3c9a8'; c.beginPath(); c.arc(p[0], 95, 38, 0, 7); c.fill(); c.strokeStyle = '#7a2a2a'; c.lineWidth = 5; c.beginPath(); if (p[3]) c.arc(p[0], 100, 16, 0.2, Math.PI - 0.2); else { c.moveTo(p[0] - 14, 112); c.lineTo(p[0] + 14, 112); } c.stroke(); });
+      c.fillStyle = '#f5e6c8'; c.font = 'italic 22px Georgia'; c.textAlign = 'center'; c.fillText('Gus & Uncle Barnaby (Gus asked for this to be removed)', w / 2, h - 18); }, 10, 4.25, W.maxZ - 0.03, Math.PI);
+    // plants + visitors + Torty on a visit
+    plants(G2, [[2.65, 64.45], [17.35, 64.45], [8.0, 49.05], [12.0, 49.05], [8.6, 64.9], [11.4, 64.9]].filter(function (q) { return Math.abs(q[0] - 10) > 0.5; }), 'Gallery');
+    visitor(G2, 4.1, 53.4, -Math.PI / 2, 5, 'look'); visitor(G2, 15.9, 55.4, Math.PI / 2, 6, 'look'); visitor(G2, 8.2, 60.4, Math.PI, 1, 'look'); visitor(G2, 12.4, 51.2, 0.4, 2, 'wave');
+    var to = pet('pl_torty', G2, 13.2, 0, 59.6, Math.PI / 2 + 0.4, 1.9); FX.torty = to;
+    var tc = canvasPlane(G2, 256, 96, 1.0, function (c, w, h) { c.fillStyle = '#fff7ed'; c.fillRect(0, 0, w, h); c.strokeStyle = '#a16207'; c.lineWidth = 6; c.strokeRect(3, 3, w - 6, h - 6); c.fillStyle = '#7c2d12'; c.font = 'bold 30px "Trebuchet MS",sans-serif'; c.textAlign = 'center'; c.fillText('Torty is visiting!', w / 2, 60); }, 13.2, 1.75, 59.6, -Math.PI / 2); tc.material.transparent = true; FX.tortyTag = tc;
+    A.addSolid(12.6, 13.8, 59.0, 60.2, 'Torty (visiting)');
+    // centre display: the Golden Cartridge case (every Grok game's first save, on velvet)
+    var gc = new T.Group(); gc.name = 'Golden Cartridge case'; gc.position.set(10, 0, 54.4); G2.add(gc);
+    add(gc, bx(1.1, 0.9, 1.1), ph('#3a1430', 20), 0, 0.45, 0); add(gc, bx(1.16, 0.06, 1.16), gold, 0, 0.92, 0); add(gc, bx(1.0, 0.8, 1.0), new T.MeshPhongMaterial({ color: '#e0f7ff', transparent: true, opacity: 0.3, shininess: 120, depthWrite: false }), 0, 1.35, 0);
+    var crt = add(gc, bx(0.42, 0.5, 0.1), gold, 0, 1.3, 0); FX.cart = crt; add(gc, bx(0.3, 0.2, 0.11), ph('#ff4fd8', 30), 0, 1.36, 0);
+    canvasPlane(gc, 512, 160, 1.0, function (c, w, h) { c.fillStyle = '#22120a'; c.fillRect(0, 0, w, h); c.fillStyle = '#ffe14d'; c.font = 'bold 38px Georgia,serif'; c.textAlign = 'center'; c.fillText('THE GOLDEN CARTRIDGE', w / 2, 70); c.fillStyle = '#f5e6c8'; c.font = 'italic 30px Georgia,serif'; c.fillText('do not touch \u00b7 Gus', w / 2, 125); }, 0, 0.5, -0.56, Math.PI);
+    gc.updateMatrixWorld(true); A.regItem('Golden Cartridge case', 'prop', gc); A.addSolid(9.42, 10.58, 53.82, 54.98, 'Golden Cartridge case');
+  }
+  function pets() {
+    // Luna sits on top of the Prize Peek dome (she is NOT guarding it, she is planning), Snowie naps on the loveseat
+    var k = FX.kiosk && FX.kiosk.parent; if (k) { var l = pet('pl_luna', k, 0, 1.72, 0, 0.6, 0.55); FX.luna = l; }
+    pet('pl_snowie', ROOT, 23.3, 0.55, 5.25, Math.PI / 2, 0.45);
+  }
+  function animWing(t) {
+    if (FX.tiles) { var c = new T.Color(), n = FX.tiles.count; for (var i = 0; i < n; i++) { var ix = Math.floor(i / 3); c.setHSL(((ix * 0.12 - t * 0.35) % 1 + 1) % 1, 0.9, 0.6 + 0.15 * Math.sin(t * 4 - ix)); FX.tiles.setColorAt(i, c); } FX.tiles.instanceColor.needsUpdate = true; }
+    if (FX.kiosk) FX.kiosk.rotation.y = t * 0.5;
+    if (FX.luna) FX.luna.rotation.y = 0.6 + Math.sin(t * 0.7) * 0.8;
+    if (FX.rock) FX.rock.rotation.x = Math.sin(t * 1.4) * 0.06;
+    if (FX.zzz) { FX.zzz.position.y = 0.85 + ((t * 0.25) % 1) * 0.3; FX.zzz.material.opacity = 1 - ((t * 0.25) % 1); }
+    if (FX.candy) FX.candy.scale.y = 1.15 * (1 + Math.sin(t * 2) * 0.03);
+    FX.vis.forEach(function (v) { if (v.g.parent !== ROOT) return; var s = Math.sin(t * 6 + v.ph); if (v.pose === 'play') { v.aL.rotation.x = -1.0 + s * 0.15; v.aR.rotation.x = -1.0 - s * 0.15; } else { v.aR.rotation.z = Math.sin(t * 5 + v.ph) * 0.5 + 0.5; } v.hd.rotation.y = Math.sin(t * 0.8 + v.ph) * 0.2; });
+  }
+  function animGallery(t) {
+    if (FX.cart) FX.cart.rotation.y = t * 0.8;
+    if (FX.torty) FX.torty.rotation.y = Math.PI / 2 + 0.4 + Math.sin(t * 0.5) * 0.25;
+    FX.vis.forEach(function (v) { if (v.g.parent !== GROOT) return; v.hd.rotation.y = Math.sin(t * 0.5 + v.ph) * 0.35; if (v.pose === 'wave') v.aR.rotation.z = Math.sin(t * 4 + v.ph) * 0.4 + 0.4; });
+  }
+
   WG.build = function (api) {
-    A = api; B = api.BZX; if (!B) return;
+    A = api; B = api.BZX; WG._scene = api.scene; if (!B) return;
     ROOT = new T.Group(); ROOT.name = 'East Wing'; A.scene.add(ROOT);
     shell(); parlor(); desk(); gallery();
+    GROOT = new T.Group(); GROOT.name = 'Grand Gallery decor'; A.scene.add(GROOT);
+    detailWing(); detailDesk(); detailGallery(); pets();
     WG.built = true;
     var idleT = 9, seen = false;
     A.anims.push(function (t) {
       var dt = WG._lt ? Math.min(0.05, t - WG._lt) : 0.016; WG._lt = t;
-      var p = A.pose(); if (p.x < A.ROOM.maxX - 10 || p.z > A.ROOM.maxZ + 2) { if (BUB && BUB.T > 0) { BUB.T = 0; BUB.s.visible = false; } return; }
+      var p0 = A.pose(); ROOT.visible = p0.x > 4 && p0.z < 16; GROOT.visible = p0.z > 34 && p0.x > 0; if (GROOT.visible) animGallery(t);
+      if (ROOT.visible) animWing(t);
+      var p = p0; if (p.x < A.ROOM.maxX - 10 || p.z > A.ROOM.maxZ + 2) { if (BUB && BUB.T > 0) { BUB.T = 0; BUB.s.visible = false; } return; }
       var D = WG.DESK, dx = p.x - (D.x + 0.95), dz = p.z - D.z, d = Math.hypot(dx, dz);
       GM.body.position.y = Math.abs(Math.sin(t * 1.3)) * 0.015;
       var want = d < 9 ? Math.max(-0.9, Math.min(0.9, Math.atan2(dz, -dx))) : Math.sin(t * 0.4) * 0.4; if (!isFinite(want)) want = 0;
