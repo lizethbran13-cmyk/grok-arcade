@@ -13,12 +13,13 @@
     {
       "issue": 46,
       "game": "grocery",
-      "name": "Super Shop Online Pass",
+      "name": "Super Shop Online Pass (live)",
       "size": "Expansion",
-      "what": "Grok Grocery Tycoon: your store goes ONLINE! An Online Store desk takes orders 3 ways: in-store pickup, same-day delivery (a shopper picks the items in your store, then a Grok Van drives them to a house on Maple Lane) and shipping in 2 days from the brand-new walk-in Shopsville Ship Center, packed with racks, a packing line, a conveyor, a truck dock and workers, run by Martina \"Torty\". Plus your own phone: check orders, call people to set things up, hold meetings, buy upgrades and more stock. Keep your star rating up! Luna, Pi-rat, Snowie, Candy and Torty order too. 75 tickets.",
-      "stage": "building",
-      "when": "Started Oct 21 · beta in the Time Jumper",
-      "key": "grokDLC.grocery.super_shop_online_pass"
+      "what": "Grok Grocery Tycoon: your store goes ONLINE! An Online Store desk takes orders 3 ways: in-store pickup, same-day delivery (a shopper picks the items in your store, then a Grok Van drives them to a house on Maple Lane) and shipping in 2 days from the brand-new walk-in Shopsville Ship Center, packed with racks, a packing line, a conveyor, a truck dock and workers, run by Martina \"Torty\". Plus your own phone: check orders, call people to set things up, hold meetings, buy upgrades and more stock. Keep your star rating up! Luna, Pi-rat, Snowie, Candy and Torty order too. 75 tickets. Live now in Grok Grocery Tycoon! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 21",
+      "key": "grokDLC.grocery.super_shop_online_pass",
+      "shippedAt": "2026-10-21T22:46:50Z"
     },
     {
       "issue": 47,
@@ -372,20 +373,22 @@
       "playable": true,
       "built": "2026-10-21",
       "notes": "NEW spooky Halloween game on the new Shadowlight engine. First playable: Vic's home lab intro (Ratita Goo explodes!), Old Town Street (overgrown street, 12 boarded shops, walk-in Bev's Diner, rusty cars, Candy finds the hedge gap), the Ratita Industries lab Floor 1 + Floor 2 and all 11 underground levels (streamed one at a time), 36 clues, 40 anomalies to film, followers + battery, goo slips and jump-scares, Luna, Pi-rat, Snowie, Torty and Candy, and the GO VIRAL ending. Preview uses its own sandbox save."
-    },
+    }
+  ],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "grocery-online-pass",
       "game": "grocery",
       "issue": 46,
       "name": "Super Shop Online Pass",
-      "url": "previews/grocery-online-pass/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grocery-online-pass-beta/",
       "built": "2026-10-21",
-      "notes": "Detail pass: busy Online Orders zone (pickup line with stanchions, full cubbies, bag rack, parked carts, scanner charging dock, restocker + 2nd clerk), Ship Center with varied labelled stock, totes, wrapped pallets, rack barcodes, aisle signs, floor markings, pallet jacks and more workers, and a lively Maple Lane (cars, fences, porch packages, kids and neighbours). 3 order types: in-store pickup, same-day Grok Van delivery, 2-day shipping. Phone: orders, calls, meetings, upgrades, buy stock. DLC is unlocked in the preview; add ?locked=1 to see it locked."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-21",
+      "notes": "Detail pass: busy Online Orders zone (pickup line with stanchions, full cubbies, bag rack, parked carts, scanner charging dock, restocker + 2nd clerk), Ship Center with varied labelled stock, totes, wrapped pallets, rack barcodes, aisle signs, floor markings, pallet jacks and more workers, and a lively Maple Lane (cars, fences, porch packages, kids and neighbours). 3 order types: in-store pickup, same-day Grok Van delivery, 2-day shipping. Phone: orders, calls, meetings, upgrades, buy stock. DLC is unlocked in the preview; add ?locked=1 to see it locked.",
+      "playable": true
+    },
     {
       "id": "skytours-superskyhigh",
       "game": "skytours",
