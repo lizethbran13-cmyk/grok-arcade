@@ -6,13 +6,13 @@
 //   ⚔️ Fly High Arena: floating stadium bowl, crowds, jumbotrons, banners, floodlights, announcer booth, themed cover,
 //      plus the lobby with the pit hangar (walk-in)
 import * as THREE from 'three';
-import * as K from './kit.js?v=st9';
-import { rbox } from './world.js?v=st9';
-import { rcyl, sph, cyl, cone, torus, capsule, tube, wedge, star, blobGeo, lathe } from './shapes.js?v=st9';
-import { txt, pad, pine, snowman, bone, pendant, frameArt, cloud } from './map.js?v=st9';
-import { ZONES, SPOTS } from './map.js?v=st9';
-import { shell, part, onSide } from './bld.js?v=st9';
-import { ROOMS, fireplace, armchair, mug, shelfRack, lightString, books, counter, plush, wallSign } from './rooms.js?v=st9';
+import * as K from './kit.js?v=st10';
+import { rbox } from './world.js?v=st10';
+import { rcyl, sph, cyl, cone, torus, capsule, tube, wedge, star, blobGeo, lathe } from './shapes.js?v=st10';
+import { txt, pad, pine, snowman, bone, pendant, frameArt, cloud } from './map.js?v=st10';
+import { ZONES, SPOTS } from './map.js?v=st10';
+import { shell, part, onSide } from './bld.js?v=st10';
+import { ROOMS, fireplace, armchair, mug, shelfRack, lightString, books, counter, plush, wallSign } from './rooms.js?v=st10';
 const PI = Math.PI;
 export const FROST = { id: 'frost', name: '❄️ Frostbite Isle', x: -280, z: 235, y: 205, r: 62, zone: 160 };
 export const EMBER = { id: 'ember', name: '🌋 Ember Isle', x: 300, z: -290, y: 195, r: 72, zone: 160 };
@@ -171,6 +171,16 @@ function buildEmber(w, L) { const I = EMBER, X = I.x, Z = I.z, Y = I.y, V = VOLC
   n = 0; for (let i = 0; i < 90 && n < 12; i++) { const a = R() * PI * 2, d = 25 + R() * 44, x = X + Math.cos(a) * d, z = Z + Math.sin(a) * d; if (!free(x, z)) continue; outcrop(w, x, z, 1 + R() * 1.4); n++; }
   n = 0; for (let i = 0; i < 90 && n < 7; i++) { const a = R() * PI * 2, d = V.base + 7 + R() * 12, x = V.x + Math.cos(a) * d, z = V.z + Math.sin(a) * d; if (!free(x, z)) continue; vent(w, x, z); n++; }
   [[0.4, 'DANGER: HOT LAVA', 'NO WALKING ON THE VOLCANO'], [1.5, 'KEEP OUT', 'ERUPTION ZONE'], [2.6, 'CAUTION: LAVA BOMBS', 'FLY HIGH OR STAY BACK'], [3.7, 'HOT ROCKS', 'DO NOT LICK (PUP TOWN)'], [4.8, 'STEAM VENTS', 'MIND YOUR WHISKERS'], [5.7, 'DANGER: HOT LAVA', 'HEAT-PROOF PAD ONLY']].forEach(([a, s1, s2]) => { const d = V.base + 4, x = V.x + Math.cos(a) * d, z = V.z + Math.sin(a) * d; if (Math.hypot(x - X, z - Z) < I.r - 3) warn(w, x, z, Math.atan2(x - V.x, z - V.z), s1, s2); });
+  // ---- pass 3: fill the flat terrace - more scorched trees + rocks, low lava-rock walls and benches along the paths, tourists ----
+  n = 0; for (let i = 0; i < 260 && n < 22; i++) { const a = R() * PI * 2, d = 18 + R() * 50, x = X + Math.cos(a) * d, z = Z + Math.sin(a) * d; if (!free(x, z)) continue; charred(w, x, z, 0.7 + R() * 0.7); n++; }
+  n = 0; for (let i = 0; i < 260 && n < 18; i++) { const a = R() * PI * 2, d = 22 + R() * 46, x = X + Math.cos(a) * d, z = Z + Math.sin(a) * d; if (!free(x, z)) continue; outcrop(w, x, z, 0.5 + R() * 0.9, n % 2 ? 0x3a3532 : 0x44403c, 0x57534e); n++; }
+  for (let i = 0; i < 140; i++) { const a = R() * PI * 2, d = 15 + R() * 55, x = X + Math.cos(a) * d, z = Z + Math.sin(a) * d; if (!free(x, z)) continue; w.add('m', blobGeo(i & 63, 0.3, 1), [0x292524, 0x44403c, 0x57534e][i % 3], x, 0.12, z, R(), R() * 6, R(), 0.3 + R() * 0.4, 0.2 + R() * 0.25, 0.3 + R() * 0.4); }
+  { const PP = [[X - 38, Z - 2], [X - 38, Z + 24], [X - 18, Z + 44], [X, Z + 52], [X + 20, Z + 50], [X + 34, Z + 44]]; let bn = 0;
+    for (let i = 0; i < PP.length - 1; i++) { const [ax, az] = PP[i], [bx, bz] = PP[i + 1], L = Math.hypot(bx - ax, bz - az), ux = (bx - ax) / L, uz = (bz - az) / L, nx = -uz, nz = ux, ry = Math.atan2(ux, uz);
+      for (const sd of [-1, 1]) for (let t = 0.15; t < 0.9; t += 0.07) { const x = ax + (bx - ax) * t + nx * sd * 4.2, z = az + (bz - az) * t + nz * sd * 4.2; if (!free(x, z)) continue; w.add('m', blobGeo(((t * 100) | 0) + i * 7 & 63, 0.22, 1), (t * 14 | 0) % 2 ? 0x3a3532 : 0x292524, x, 0.32, z, 0, ry + R() * 0.3, 0, 0.75, 0.42 + R() * 0.12, 0.6); if (((t * 14) | 0) % 5 === 0) w.add('l', sph(5), 0xff6a1a, x, 0.6, z, 0, 0, 0, 0.12, 0.05, 0.12, 0.5); }
+      const mx = (ax + bx) / 2 + nx * 2.8, mz = (az + bz) / 2 + nz * 2.8; if (free(mx, mz) || Math.hypot(mx - X, mz - Z) < I.r - 4) { K.bench(w, mx, mz, ry + PI / 2, 0x78716c); bn++; } }
+    const look = [{ skin: 0, hair: 2, hairC: 1, shirt: 3, pants: 1 }, { skin: 3, hair: 1, hairC: 0, shirt: 6, pants: 2 }, { skin: 1, hair: 5, hairC: 3, shirt: 2, pants: 0 }, { skin: 4, hair: 3, hairC: 0, shirt: 7, pants: 3 }];
+    [['sky_tour1', 'Tourist Ana', 'I came for the volcano and stayed for the gift shop. Wait, is there a gift shop?'], ['sky_tour2', 'Tourist Raj', 'The sign says do not lick the hot rocks. Who would even... oh. Pup Town. Got it.'], ['sky_tour3', 'Hiker Lou', 'Stay on the paths! The lava-rock walls are there for a reason.'], ['sky_tour4', 'Photographer Kim', 'Best selfie spot in the whole sky. Just keep your eyebrows away from the vents.']].forEach(([id, name, line], k) => { const a = PP[k + 1], b = PP[k + 2]; npc(human({ id, look: look[k], at: [a[0], a[1]], y: Y + 0.02, walk: [[a[0], a[1]], [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], [b[0], b[1]]], name, lines: [[name, line]] })); }); }
   K.fenceRun(w, 'x', Z - 6, X - 26, X - 12, 1.1, 0xf97316);
   // ---- heat-proof pad ----
   pad(w, 'sky_ember', X - 38, Z - 28, Y, 0xf97316, 'Ember Isle Heat-Proof Pad', 'ember', true); w.oy = Y; SPOTS.emberPad = [X - 38, Z - 28];

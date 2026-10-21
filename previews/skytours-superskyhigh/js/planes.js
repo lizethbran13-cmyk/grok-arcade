@@ -1,10 +1,10 @@
 // Grok Snowie Sky Tours - the hangar fleet: seven real 3D aircraft (3 copters, 4 fixed-wing), each with its own handling,
 // plus layered crash damage (scuffs -> dents + smoke -> bent parts, taped patches). Forward is +z, wheels/skids sit on y=0.
 import * as THREE from 'three';
-import { Builder, P, blob } from './geo.js?v=st9';
-import { compact } from './compact.js?v=st9';
-import { MATS } from './mats.js?v=st9';
-import { textGeo } from './text3d.js?v=st9';
+import { Builder, P, blob } from './geo.js?v=st10';
+import { compact } from './compact.js?v=st10';
+import { MATS } from './mats.js?v=st10';
+import { textGeo } from './text3d.js?v=st10';
 const PI = Math.PI;
 // kind: heli (hover, stick = fly that way) | wing (always flying forward, min speed, rolls out on landing)
 // spd = top speed, acc = response, climb = m/s, turn = rad/s (wing), arm = damage taken x, rep = repair cost x, fare = payout x
@@ -157,7 +157,7 @@ function copterDash([ex, ey, ez]) { const grp = new THREE.Group(); grp.userData.
   const s = MB(); s.x.add(P.cyl, 0x334155, ex, ey - 0.95, ez + 0.32, 0.25, 0, 0, 0.022, 0.62, 0.022); s.g.add(P.capsule, 0x111827, ex, ey - 0.62, ez + 0.4, 0.25, 0, 0, 0.07, 0.1, 0.07); s.g.add(P.sphere, 0xef4444, ex + 0.02, ey - 0.54, ez + 0.42, 0, 0, 0, 0.022);
   grp.add(meshFrom(s, false)); return grp; }
 // ---------------- SUPER SKY HIGH EXPANSION aircraft (DLC #47): only in the lineup when the DLC is owned ----------------
-import { SKY_ON } from './dlc.js?v=st9';
+import { SKY_ON } from './dlc.js?v=st10';
 MODELS.jetcopter = (A, B) => { const b = MB(), dk = 0x1e293b, acc = B === 0xffffff ? 0x3ff0ff : B;
   fuse(b.g, A, 0, 1.6, 0.0, 1.7, 7.2, 1.55); b.g.add(P.cone, A, 0, 1.55, 4.1, PI / 2, 0, 0, 0.85, 1.6, 0.75); b.g.add(P.capsule, acc, 0, 1.15, 0, PI / 2, 0, 0, 1.72, 4.4, 0.55);
   b.e.add(P.sphere, 0x7dd3fc, 0, 2.05, 2.0, 0, 0, 0, 0.85, 0.62, 1.5); b.x.add(P.torus, dk, 0, 1.8, 2.0, PI / 2, 0, 0, 0.86, 1.48, 0.25);

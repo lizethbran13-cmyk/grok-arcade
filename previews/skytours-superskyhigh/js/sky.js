@@ -6,18 +6,18 @@
 // plus the Sky Highway (boost rings that carry you up there), 6 Sky Gems and new badges. Ceiling raised from 175 m to 320 m.
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { E } from './engine.js?v=st9';
-import { PADS, Hf, WATER_Y } from './map.js?v=st9';
-import { S, persist } from './save.js?v=st9';
-import { sfx } from './audio.js?v=st9';
-import { talk, toast } from './uikit.js?v=st9';
-import { textGeo } from './text3d.js?v=st9';
-import { PLANE, buildPlane } from './planes.js?v=st9';
-import { held } from './input.js?v=st9';
+import { E } from './engine.js?v=st10';
+import { PADS, Hf, WATER_Y } from './map.js?v=st10';
+import { S, persist } from './save.js?v=st10';
+import { sfx } from './audio.js?v=st10';
+import { talk, toast } from './uikit.js?v=st10';
+import { textGeo } from './text3d.js?v=st10';
+import { PLANE, buildPlane } from './planes.js?v=st10';
+import { held } from './input.js?v=st10';
 const PI = Math.PI, clamp = (v, a, b) => Math.max(a, Math.min(b, v)), wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
-import { DLC_KEY, skyOwned } from './dlc.js?v=st9';
-import { FROST, EMBER, VOLC, ARENA, LOBBY, ISLES, VENTS, LAVA, COVER, JUMBO, PIT, volcR } from './skyworld.js?v=st9';
-import { SPOTS } from './map.js?v=st9';
+import { DLC_KEY, skyOwned } from './dlc.js?v=st10';
+import { FROST, EMBER, VOLC, ARENA, LOBBY, ISLES, VENTS, LAVA, COVER, JUMBO, PIT, volcR } from './skyworld.js?v=st10';
+import { SPOTS } from './map.js?v=st10';
 export { DLC_KEY, skyOwned, FROST, EMBER, ARENA };
 const CRATER = { x: VOLC.x, z: VOLC.z, y: EMBER.y + VOLC.h, r: VOLC.top };
 ARENA.lobby = { x: LOBBY.x, z: LOBBY.z, y: LOBBY.y, r: LOBBY.r };
@@ -45,7 +45,7 @@ export function installSky(Game) { Object.assign(Game.prototype, SKY);
   const a0 = Game.prototype.areaName; Game.prototype.areaName = function () { const s = this.sky; if (s && s.on) { if (s.bt) return '⚔️ Fly High Arena · ' + LEVELS[s.bt.lv].n; const c = this.mode === 'walk' ? this.me : this.cop, A = skyArea(c.x, c.y, c.z); if (A) return A.name; } return a0.call(this); };
   const t0 = Game.prototype.target; Game.prototype.target = function () { const s = this.sky; if (s && s.bt) { const c = this.cop, e = s.bt.bots.filter((b) => b.hp > 0 && b.team !== 0).sort((a, b) => Math.hypot(a.x - c.x, a.z - c.z) - Math.hypot(b.x - c.x, b.z - c.z))[0]; if (e) return { x: e.x, y: e.y, z: e.z, n: e.name }; } return t0.call(this); };
 }
-function skyArea(x, y, z) { if (y < 120) return null; if (Math.hypot(x - ARENA.x, z - ARENA.z) < ARENA.r + 25 && y > ARENA.floor - 25) return ARENA; if (Math.hypot(x - LOBBY.x, z - LOBBY.z) < LOBBY.r + 12) return { name: '⚔️ Arena Lobby' }; for (const I of [FROST, EMBER]) if (Math.hypot(x - I.x, z - I.z) < I.zone) return I; if (y > 180) return { name: '☁️ Super Sky High' }; return null; }
+function skyArea(x, y, z) { if (y < 120) return null; if (Math.hypot(x - ARENA.x, z - ARENA.z) < ARENA.r + 25 && y > ARENA.floor - 25) return ARENA; if (Math.hypot(x - LOBBY.x, z - LOBBY.z) < LOBBY.r + 12) return { name: '⚔️ Arena Lobby' }; { let B = null, bd = 1e9; for (const I of [FROST, EMBER]) { const d = Math.hypot(x - I.x, z - I.z); if (d < I.zone && d < bd) { bd = d; B = I; } } if (B) return B; } if (y > 180) return { name: '☁️ Super Sky High' }; return null; }
 
 const SKY = {
   skyCeil() { return this.sky && this.sky.on ? CEIL1 : CEIL0; },
@@ -108,7 +108,7 @@ const SKY = {
     // ---- island undersides: you can't fly through rock ----
     if (fly) for (const I of ISLES) { const d = Math.hypot(c.x - I.x, c.z - I.z); const bottom = I.y - 4 - (I.lobby ? 26 : I.r * 1.1) * Math.max(0, 1 - d / I.r); if (d < I.r && c.y < I.y - 3.5 && c.y + 3 > bottom) { const hs = Math.hypot(c.vx, c.vz); if (c.y + 3 - bottom < 3) { c.y = bottom - 3; c.vy = Math.min(c.vy, 0); } else { const k = (I.r - d + 0.5) / Math.max(d, 0.01); c.x += (c.x - I.x) * k; c.z += (c.z - I.z) * k; if (PLANE(c.id).kind === 'wing') c.yaw = Math.atan2(c.x - I.x, c.z - I.z); c.vx *= 0.3; c.vz *= 0.3; } if (hs > 8 && (!s.rockT || T - s.rockT > 1.5)) { s.rockT = T; sfx('hit'); this.setHp(c.hp - 3); toast('🪨 Bonk on the island rock! −3% (repairs cost coins at the Repair Shop)'); } } }
     // the volcano cone is solid rock: push out, and a fast hit is a real bump
-    if (fly && c.y > EMBER.y - 1 && c.y < CRATER.y) { const dx = c.x - VOLC.x, dz = c.z - VOLC.z, d = Math.hypot(dx, dz), a = Math.atan2(dz, dx), R = volcR(c.y - EMBER.y, a) + 2.2; if (d < R && d > VOLC.top - 2) { const k = R / Math.max(d, 0.01); c.x = VOLC.x + dx * k; c.z = VOLC.z + dz * k; const hs = Math.hypot(c.vx, c.vz); c.vx *= 0.2; c.vz *= 0.2; c.vy = Math.max(c.vy, 2); if (PLANE(c.id).kind === 'wing') c.yaw = Math.atan2(dx, dz); if (hs > 10 && (!s.rockT || T - s.rockT > 1.5)) { s.rockT = T; sfx('hit'); this.setHp(c.hp - 5); toast('🌋 Bonk on the volcano! −5%'); } } }
+    if (fly && c.y > EMBER.y - 1 && c.y < CRATER.y) { const dx = c.x - VOLC.x, dz = c.z - VOLC.z, d = Math.hypot(dx, dz), a = Math.atan2(dz, dx), R = volcR(c.y - EMBER.y, a) + 2.2; if (d < R && d > VOLC.top - 2) { const k = R / Math.max(d, 0.01); c.x = VOLC.x + dx * k; c.z = VOLC.z + dz * k; const hs = Math.hypot(c.vx, c.vz); c.vx *= 0.2; c.vz *= 0.2; c.vy = Math.max(c.vy, 2); if (PLANE(c.id).kind === 'wing') c.yaw = Math.atan2(dx, dz); const sp = hs; if (sp > 1.5 && (!s.rockT || T - s.rockT > 1.2)) { s.rockT = T; const dmg = Math.max(1, Math.min(30, Math.round(sp * 0.6))); sfx('hit'); this.setHp(c.hp - dmg); if (c.hp <= 0 || sp > 26) { this.crash('bonk', Math.min(1.5, sp / 30)); return; } toast(dmg <= 3 ? '🌋 Little scrape on the volcano! −' + dmg + '%' : dmg < 12 ? '🌋 Bonk on the volcano! −' + dmg + '%' : '🌋 BIG volcano crash! −' + dmg + '%'); } c.x += dx / Math.max(d, 0.01) * 0.6; c.z += dz / Math.max(d, 0.01) * 0.6; } }
     // arena cover blocks
     if (fly && s.bt) for (const b of s.cover) { const dx = c.x - b.x, dy = c.y + 1.2 - b.y, dz = c.z - b.z; if (Math.abs(dx) < b.h && Math.abs(dy) < b.h * 0.6 + 0.6 && Math.abs(dz) < b.h) { const ax = b.h - Math.abs(dx), az = b.h - Math.abs(dz); if (ax < az) { c.x += Math.sign(dx) * ax; c.vx = 0; } else { c.z += Math.sign(dz) * az; c.vz = 0; } if (PLANE(c.id).kind === 'wing') c.yaw += 1.2 * dt * 10; } }
     // first time up here: a hello from Snowie

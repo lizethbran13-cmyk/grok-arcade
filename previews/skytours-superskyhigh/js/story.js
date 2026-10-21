@@ -1,6 +1,6 @@
 // Snowie's tour commentary, the cameo chats, rescue lines and ring courses.
-import { S } from './save.js?v=st9';
-import { TOURS, RESCUES, TOWNS } from './map.js?v=st9';
+import { S } from './save.js?v=st10';
+import { TOURS, RESCUES, TOWNS } from './map.js?v=st10';
 export const FACTS = {
   arch: ['Snowie', 'Welcome to Pup Town! That arch is a REAL bone... okay, it\'s concrete. But every dog in town has licked it at least once.'],
   hydrant: ['Snowie', 'The Giant Hydrant holds all of Pup Town\'s water. On hot days they turn on the side nozzles and the whole town has a splash party!'],

@@ -2,13 +2,13 @@
 // ratings, out-of-service planes) and a tow-drone that ALWAYS comes: it runs every frame, every phase has a timeout that
 // snaps it to its goal, there's a NaN/out-of-bounds guard, a self-heal watchdog, and a manual 🛸 Call Tow button.
 import * as THREE from 'three';
-import { E } from './engine.js?v=st9';
-import { Hf, PADS, WATER_Y, SPOTS } from './map.js?v=st9';
-import { readMove, edge, held } from './input.js?v=st9';
-import { S, persist } from './save.js?v=st9';
-import { sfx } from './audio.js?v=st9';
-import { talk, toast } from './uikit.js?v=st9';
-import { PLANE, PLANES } from './planes.js?v=st9';
+import { E } from './engine.js?v=st10';
+import { Hf, PADS, WATER_Y, SPOTS } from './map.js?v=st10';
+import { readMove, edge, held } from './input.js?v=st10';
+import { S, persist } from './save.js?v=st10';
+import { sfx } from './audio.js?v=st10';
+import { talk, toast } from './uikit.js?v=st10';
+import { PLANE, PLANES } from './planes.js?v=st10';
 const PI = Math.PI, wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a)), clamp = (v, a, b) => Math.max(a, Math.min(b, v)), LIM = 490;
 const _v = new THREE.Vector3(), _w = new THREE.Vector3(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), near = [];
 export const UPGRADES = [

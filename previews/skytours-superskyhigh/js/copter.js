@@ -2,15 +2,15 @@
 // any kid can fly with one thumb: stick = fly that way (camera-relative), UP/DOWN buttons = climb/descend, auto-hover.
 // Plus the tow-drone that rescues you after a (harmless!) crash landing.
 import * as THREE from 'three';
-import { Builder, P } from './geo.js?v=st9';
-import { compact } from './compact.js?v=st9';
-import { MATS } from './mats.js?v=st9';
-import { textGeo } from './text3d.js?v=st9';
-import { makePet } from './pets.js?v=st9';
-import { makeHuman } from './humans.js?v=st9';
-import { buildPlane, PLANE } from './planes.js?v=st9';
+import { Builder, P } from './geo.js?v=st10';
+import { compact } from './compact.js?v=st10';
+import { MATS } from './mats.js?v=st10';
+import { textGeo } from './text3d.js?v=st10';
+import { makePet } from './pets.js?v=st10';
+import { makeHuman } from './humans.js?v=st10';
+import { buildPlane, PLANE } from './planes.js?v=st10';
 const PI = Math.PI;
-export { PAINTS, PLANES, PLANE } from './planes.js?v=st9';
+export { PAINTS, PLANES, PLANE } from './planes.js?v=st10';
 const MB = () => ({ f: new Builder(), g: new Builder(), m: new Builder(), l: new Builder(), x: new Builder(), e: new Builder() });
 function meshFrom(b, shadow = true) { const g = new THREE.Group(); for (const k in b) { if (!b[k].parts.length) continue; const m = new THREE.Mesh(compact(b[k].build(), k), MATS[k]); m.castShadow = shadow && k !== 'l' && k !== 'e'; m.receiveShadow = k !== 'l'; if (k === 'e') m.renderOrder = 2; g.add(m); } return g; }
 // the player's aircraft: any of the seven hangar models (planes.js), swappable at the Plane Lineup, with live damage

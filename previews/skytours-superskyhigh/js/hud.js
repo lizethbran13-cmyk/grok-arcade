@@ -1,9 +1,9 @@
 // HUD: area chip, objective + distance, tour/rescue counters, altitude/speed, flight buttons and the context action button.
-import { $ } from './util.js?v=st9';
-import { S } from './save.js?v=st9';
-import { goal } from './story.js?v=st9';
-import { PLANE } from './planes.js?v=st9';
-import { TOURS, RESCUES, Hf, WATER_Y } from './map.js?v=st9';
+import { $ } from './util.js?v=st10';
+import { S } from './save.js?v=st10';
+import { goal } from './story.js?v=st10';
+import { PLANE } from './planes.js?v=st10';
+import { TOURS, RESCUES, Hf, WATER_Y } from './map.js?v=st10';
 export class HUD {
   region(n) { const e = $('hArea'); if (e && e.textContent !== n) { e.textContent = n; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } }
   setAct(a) { const b = $('tAct'); const k = a ? a.label : ''; if (k === this._ak) return; this._ak = k; if (a) { b.classList.remove('hidden'); b.textContent = a.label; } else b.classList.add('hidden'); }

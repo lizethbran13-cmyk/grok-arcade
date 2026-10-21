@@ -2,9 +2,9 @@
 // Ticket Rush (Tour Office), Rotor Tune-up (Hangar), Sky Ace (Pilot Lounge arcade), Stamp the Forms (Pup Town Hall),
 // Frost the Pup-Tarts (Barkery), Shell Match (Shell Museum), Wire It Up (Ratita Gadget Shop), Gift Wrap Rush (Toy Workshop),
 // Marshmallow Catch (Cocoa Cabin).
-import { S, persist } from './save.js?v=st9';
-import { sfx } from './audio.js?v=st9';
-import { panel, loop, rr, ptr } from './uikit.js?v=st9';
+import { S, persist } from './save.js?v=st10';
+import { sfx } from './audio.js?v=st10';
+import { panel, loop, rr, ptr } from './uikit.js?v=st10';
 const $q = (c, s) => c.querySelector(s);
 const W = 480, H = 400;
 export const MG_NAMES = { tickets: ['🎟️', 'Ticket Rush'], tune: ['🔧', 'Rotor Tune-up'], skyace: ['🕹️', 'Sky Ace'], forms: ['📝', 'Stamp the Forms'], frost: ['🦴', 'Frost the Pup-Tarts'], shells: ['🐚', 'Shell Match'], wires: ['🔌', 'Wire It Up'], wrap: ['🎁', 'Gift Wrap Rush'], marsh: ['☕', 'Marshmallow Catch'] };
