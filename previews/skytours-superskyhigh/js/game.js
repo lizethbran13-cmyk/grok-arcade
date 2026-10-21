@@ -1,30 +1,32 @@
 // Grok Snowie Sky Tours - flying, landing, walking into buildings, tour stops, rescues, ring courses, crash + tow-drone.
 import * as THREE from 'three';
-import { E, setEnvironment, followShadow } from './engine.js?v=st8';
-import { World } from './world.js?v=st8';
-import { buildMap, SPOTS, ENV, Hf, TOWNS, PADS, TOURS, RESCUES, ZONES, STAMPS, WATER_Y, LAKE } from './map.js?v=st8';
-import { BUILDINGS, buildingAt } from './bld.js?v=st8';
-import { Walker } from './walker.js?v=st8';
-import { FollowCam } from './cam.js?v=st8';
-import { makePet, animPet } from './pets.js?v=st8';
-import { makeKitten } from './dogs.js?v=st8';
-import { makeHuman, animHuman } from './humans.js?v=st8';
-import { readMove, edge, held } from './input.js?v=st8';
-import { updateFrustum, inView, LightPool } from './perf.js?v=st8';
-import { FX } from './fx.js?v=st8';
-import { S, persist } from './save.js?v=st8';
-import { sfx } from './audio.js?v=st8';
-import { talk, talking, toast } from './uikit.js?v=st8';
-import { textGeo } from './text3d.js?v=st8';
-import { makeCopter, makeTowDrone, PAINTS } from './copter.js?v=st8';
-import { FACTS, LINES, RESCUE_LINES, PET_NAMES, COURSES, goal, LETTERS } from './story.js?v=st8';
-import { ROOMS, COTTAGE_IDS } from './rooms.js?v=st8';
-import { MG_NAMES } from './mg.js?v=st8';
-import { installCare, hpOf } from './care.js?v=st8';
-import { installFleet } from './fleet.js?v=st8';
-import { PLANE, PLANES, buildPlane } from './planes.js?v=st8';
-import { IN } from './input.js?v=st8';
-import { installSky } from './sky.js?v=st8';
+import { E, setEnvironment, followShadow } from './engine.js?v=st9';
+import { World } from './world.js?v=st9';
+import { buildMap, SPOTS, ENV, Hf, TOWNS, PADS, TOURS, RESCUES, ZONES, STAMPS, WATER_Y, LAKE } from './map.js?v=st9';
+import { BUILDINGS, buildingAt } from './bld.js?v=st9';
+import { Walker } from './walker.js?v=st9';
+import { FollowCam } from './cam.js?v=st9';
+import { makePet, animPet } from './pets.js?v=st9';
+import { makeKitten } from './dogs.js?v=st9';
+import { makeHuman, animHuman } from './humans.js?v=st9';
+import { readMove, edge, held } from './input.js?v=st9';
+import { updateFrustum, inView, LightPool } from './perf.js?v=st9';
+import { FX } from './fx.js?v=st9';
+import { S, persist } from './save.js?v=st9';
+import { sfx } from './audio.js?v=st9';
+import { talk, talking, toast } from './uikit.js?v=st9';
+import { textGeo } from './text3d.js?v=st9';
+import { makeCopter, makeTowDrone, PAINTS } from './copter.js?v=st9';
+import { FACTS, LINES, RESCUE_LINES, PET_NAMES, COURSES, goal, LETTERS } from './story.js?v=st9';
+import { ROOMS, COTTAGE_IDS } from './rooms.js?v=st9';
+import { MG_NAMES } from './mg.js?v=st9';
+import { installCare, hpOf } from './care.js?v=st9';
+import { installFleet } from './fleet.js?v=st9';
+import { PLANE, PLANES, buildPlane } from './planes.js?v=st9';
+import { IN } from './input.js?v=st9';
+import { installSky } from './sky.js?v=st9';
+import { buildSkyWorld } from './skyworld.js?v=st9';
+import { SKY_ON } from './dlc.js?v=st9';
 const clampN = (v, a, b) => Math.max(a, Math.min(b, v));
 const PI = Math.PI, wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 const _r = new THREE.Ray(), _v = new THREE.Vector3(), _b = new THREE.Box3(), _s = new THREE.Vector3();
@@ -39,7 +41,7 @@ export class Game {
   constructor(app) {
     this.app = app; this.scene = E.scene; this.T = 0; this.mode = 'fly'; this.race = null; this.detT = 0;
     const w = this.world = new World(); { const R = E.renderer, rt = new THREE.WebGLRenderTarget(4, 4), sc = new THREE.Scene(); w.uploader = (m) => { const fc = m.frustumCulled; m.frustumCulled = false; const par = m.parent; sc.add(m); const prev = R.getRenderTarget(), sm = R.shadowMap.autoUpdate; R.shadowMap.autoUpdate = false; R.setRenderTarget(rt); R.render(sc, E.camera); R.setRenderTarget(prev); R.shadowMap.autoUpdate = sm; sc.remove(m); if (par) par.add(m); m.frustumCulled = fc; }; w._upRT = rt; }
-    buildMap(w); w.finalize(this.scene); w.uploader = null; w._upRT.dispose();
+    buildMap(w); if (SKY_ON) buildSkyWorld(w); w.finalize(this.scene); w.uploader = null; w._upRT.dispose();
     { const wm = new THREE.Mesh(new THREE.PlaneGeometry(1100, 1100, 1, 1).rotateX(-PI / 2), new THREE.MeshStandardMaterial({ color: 0x1e90e8, roughness: 0.12, metalness: 0.05, transparent: true, opacity: 0.88 })); wm.position.y = WATER_Y; wm.receiveShadow = true; wm.renderOrder = 1; this.scene.add(wm); this.water = wm; }
     setEnvironment(ENV); this.lightPool = new LightPool(this.scene, w.lights, 4); this.fx = new FX(this.scene);
     // the copter (starts parked on Pad A), the tow-drone, and you
@@ -121,7 +123,7 @@ export class Game {
     push(SPOTS.cocoa[0], SPOTS.cocoa[1], 2.4, '☕ Hot cocoa', () => this.cocoa());
     push(SPOTS.log[0], SPOTS.log[1], 2.6, '📒 Pilot\'s log', () => this.app.pause());
     push(SPOTS.dogpark[0], SPOTS.dogpark[1], 4, '🎾 Throw a ball', () => { sfx('bark'); toast('🎾 Fetch! Every dog in the park went zooming.'); this.fx.burst(this.me.x, this.me.y + 1, this.me.z, 0xfacc15, 8, 3); });
-    for (const a of ROOMS.acts) push(a.x, a.z, a.r, a.label, () => { if (a.mg) this.mg(a.mg); else if (a.chore) this.chore(a.chore); else if (a.talk) talk(a.talk); else if (a.letter) this.letter(); });
+    for (const a of ROOMS.acts) push(a.x, a.z, a.r, a.label, () => { if (a.mg) this.mg(a.mg); else if (a.chore) this.chore(a.chore); else if (a.talk) talk(a.talk); else if (a.letter) this.letter(); }, undefined, a.y);
     this.acts.push({ board: true, r: 3.6, label: '🚁 Board your aircraft', f: () => this.board(), walk: true }); this.fleetActs(); }
   mg(id) { const app = this.app; app.paused = true; app.busy = true; app.ui.minigame(id, () => app.resume()); }
   chore(c) { const first = c.helped && !S.helped.includes(c.id); if (first) { S.helped.push(c.id); persist(); } sfx(first ? 'win' : 'ding'); this.fx.burst(this.me.x, this.me.y + 1.4, this.me.z, c.fx || 0xffd23f, first ? 18 : 8, 2.5); if (c.zoom) this.me.zoom = c.zoom;
@@ -163,10 +165,10 @@ export class Game {
     for (const r of RESCUES) { if (S.rescues.includes(r.id)) continue; const d = Math.hypot(c.x - r.x, c.z - r.z); if (d < bd) { bd = d; best = { x: r.x, y: r.y + 3, z: r.z, n: r.name }; } } if (best) return best;
     for (const co of COURSES) if (!S.rings[co.id]) return { x: co.pts[0][0], y: co.pts[0][1], z: co.pts[0][2], n: co.name }; return null; }
   // ---------------- smart rendering ----------------
-  setVis(force) { const me = this.me, walking = this.mode === 'walk'; const b = walking ? buildingAt(me.x, me.z) : null; const cp = E.camera.position;
+  setVis(force) { const me = this.me, walking = this.mode === 'walk'; const b = walking ? buildingAt(me.x, me.z, me.y) : null; const cp = E.camera.position;
     if (b !== this.inB || force) { this.inB = b; } const RM = this.world.regionMeshes;
     for (const B of BUILDINGS) { const inIt = B === b; (RM['roof_' + B.id] || []).forEach((m) => m.visible = !inIt); const cx = (B.x0 + B.x1) / 2, cz = (B.z0 + B.z1) / 2; const d = Math.hypot(cp.x - cx, cp.z - cz); const show = inIt || d < 75; (RM['in_' + B.id] || []).forEach((m) => m.visible = show); }
-    this.detT -= 1; if (this.detT <= 0 || force) { this.detT = 15; for (const m of this.world.detailMeshes) { const ws = m.userData.ws; if (!ws) continue; m.visible = cp.distanceTo(ws.center) - ws.radius < 230; } for (const m of this.world.farMeshes) { const ws = m.userData.ws; if (!ws) continue; m.visible = cp.distanceTo(ws.center) - ws.radius > 200; } } }
+    this.detT -= 1; if (this.detT <= 0 || force) { this.detT = 15; for (const m of this.world.detailMeshes) { const ws = m.userData.ws; if (!ws) continue; m.visible = cp.distanceTo(ws.center) - ws.radius < (m.userData.dr || 230); } for (const m of this.world.farMeshes) { const ws = m.userData.ws; if (!ws) continue; m.visible = cp.distanceTo(ws.center) - ws.radius > 200; } } }
   fades() { const b = this.inB, c = E.camera.position, me = this.me; _v.set(me.x, me.y + 1.2, me.z).sub(c); const L = _v.length(); _r.set(c, _v.normalize());
     for (const B of BUILDINGS) for (const f of B.fades) { let hide = false; if (B === b) { _b.copy(f.box).expandByScalar(0.05); const p = _r.intersectBox(_b, _s); hide = !!p && c.distanceTo(p) < L - 0.3; } if (f._h !== hide) { f._h = hide; f.meshes.forEach((m) => m.visible = !hide); } } }
   walkGoal() { const b = this.inB, nH = COTTAGE_IDS.length;

@@ -1,13 +1,13 @@
 // Grok Snowie Sky Tours - the Plane Lineup on the airfield apron (all seven aircraft parked as real 3D models), the plane on
 // the Repair Hangar lift, the hangar crew (Mechanic Brie + Torty's Tortuga Tech) and their interactions.
 import * as THREE from 'three';
-import { SPOTS, PADS } from './map.js?v=st8';
-import { S, persist } from './save.js?v=st8';
-import { sfx } from './audio.js?v=st8';
-import { talk, toast } from './uikit.js?v=st8';
-import { textGeo } from './text3d.js?v=st8';
-import { PLANES, PLANE, buildPlane } from './planes.js?v=st8';
-import { hpOf, repairCost, UPGRADES } from './care.js?v=st8';
+import { SPOTS, PADS } from './map.js?v=st9';
+import { S, persist } from './save.js?v=st9';
+import { sfx } from './audio.js?v=st9';
+import { talk, toast } from './uikit.js?v=st9';
+import { textGeo } from './text3d.js?v=st9';
+import { PLANES, PLANE, buildPlane } from './planes.js?v=st9';
+import { hpOf, repairCost, UPGRADES } from './care.js?v=st9';
 const PI = Math.PI;
 const DISPLAY_PAINT = { classic: 0, rescue: 5, twin: 3, biplane: 2, seaplane: 1, cargo: 4, jet: 0 };
 export function installFleet(Game) { Object.assign(Game.prototype, FLEET); }

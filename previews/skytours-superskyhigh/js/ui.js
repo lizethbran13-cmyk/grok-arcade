@@ -1,16 +1,16 @@
 // Grok Snowie Sky Tours - menus: title, look editor, how to fly, journal (pause), map, paint shop, postcards.
-import { GAMES, MG_NAMES } from './mg.js?v=st8';
-import { $, esc } from './util.js?v=st8';
-import { S, persist, resetSave } from './save.js?v=st8';
-import { sfx, setSound } from './audio.js?v=st8';
-import { panel, closePanel, on, loop, ptr, rr } from './uikit.js?v=st8';
-import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=st8';
-import { COURSES, goal, PET_NAMES } from './story.js?v=st8';
-import { TOURS, RESCUES, STAMPS, TOWNS, PADS, Hf, WATER_Y, LAKE } from './map.js?v=st8';
-import { PAINTS } from './copter.js?v=st8';
-import { PLANES, PLANE } from './planes.js?v=st8';
-import { hpOf, repairCost, UPGRADES, INSURANCE } from './care.js?v=st8';
-import { COTTAGE_IDS } from './rooms.js?v=st8';
+import { GAMES, MG_NAMES } from './mg.js?v=st9';
+import { $, esc } from './util.js?v=st9';
+import { S, persist, resetSave } from './save.js?v=st9';
+import { sfx, setSound } from './audio.js?v=st9';
+import { panel, closePanel, on, loop, ptr, rr } from './uikit.js?v=st9';
+import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js?v=st9';
+import { COURSES, goal, PET_NAMES } from './story.js?v=st9';
+import { TOURS, RESCUES, STAMPS, TOWNS, PADS, Hf, WATER_Y, LAKE } from './map.js?v=st9';
+import { PAINTS } from './copter.js?v=st9';
+import { PLANES, PLANE } from './planes.js?v=st9';
+import { hpOf, repairCost, UPGRADES, INSURANCE } from './care.js?v=st9';
+import { COTTAGE_IDS } from './rooms.js?v=st9';
 const hex = (c) => '#' + c.toString(16).padStart(6, '0');
 let mapImg = null;
 export class UI {

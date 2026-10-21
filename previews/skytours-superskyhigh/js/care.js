@@ -2,13 +2,13 @@
 // ratings, out-of-service planes) and a tow-drone that ALWAYS comes: it runs every frame, every phase has a timeout that
 // snaps it to its goal, there's a NaN/out-of-bounds guard, a self-heal watchdog, and a manual 🛸 Call Tow button.
 import * as THREE from 'three';
-import { E } from './engine.js?v=st8';
-import { Hf, PADS, WATER_Y, SPOTS } from './map.js?v=st8';
-import { readMove, edge, held } from './input.js?v=st8';
-import { S, persist } from './save.js?v=st8';
-import { sfx } from './audio.js?v=st8';
-import { talk, toast } from './uikit.js?v=st8';
-import { PLANE, PLANES } from './planes.js?v=st8';
+import { E } from './engine.js?v=st9';
+import { Hf, PADS, WATER_Y, SPOTS } from './map.js?v=st9';
+import { readMove, edge, held } from './input.js?v=st9';
+import { S, persist } from './save.js?v=st9';
+import { sfx } from './audio.js?v=st9';
+import { talk, toast } from './uikit.js?v=st9';
+import { PLANE, PLANES } from './planes.js?v=st9';
 const PI = Math.PI, wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a)), clamp = (v, a, b) => Math.max(a, Math.min(b, v)), LIM = 490;
 const _v = new THREE.Vector3(), _w = new THREE.Vector3(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), near = [];
 export const UPGRADES = [
@@ -102,14 +102,14 @@ const CARE = {
     if (c.ct > 1.8 && (!this.tow || this.tow.ph === 'away')) this.startTow(); else if (c.ct > 5) { this.tow = null; this.startTow(); }
     this.syncCopter(dt); },
   // ---------------- tow-drone ----------------
-  towDest() { const c = this.cop; if (c.hp <= 0) { const r = PADS.find((p) => p.id === 'repair'); if (r) return r; } let best = PADS[0], bd = 1e9; for (const p of PADS) { if (p.town === 'ship' || p.water) continue; const d = Math.hypot(p.x - c.x, p.z - c.z); if (d < bd) { bd = d; best = p; } } return best; },
+  towDest() { const c = this.cop; if (c.hp <= 0) { const r = PADS.find((p) => p.id === 'repair'); if (r) return r; } let best = PADS[0], bd = 1e9; for (const p of PADS) { if (p.town === 'ship' || p.water || p.sky || p.y > 100) continue; const d = Math.hypot(p.x - c.x, p.z - c.z); if (d < bd) { bd = d; best = p; } } return best; },
   callTow() { const c = this.cop; if (this.mode !== 'fly') return; if (this.tow && this.tow.ph !== 'away') { toast('🛸 The tow-drone is already on its way!'); return; }
     if (c.mode === 'crash') { this.startTow(); return; } this.startTow(true); },
   startTow(manual) { const c = this.cop, d = this.drone; this.guard(); if (this.race && manual) { this.race = null; this.showRings(); }
     const pad = this.towDest(); const dp = d.root.position; const sx = clamp(c.x + 30, -LIM, LIM), sz = clamp(c.z + 20, -LIM, LIM); dp.set(sx, Math.max(c.y + 40, Hf(sx, sz) + 30), sz); d.root.visible = true;
     const px = pad.strip ? (pad.strip[0] + pad.strip[2]) / 2 : pad.x, pz = pad.strip ? (pad.strip[1] + pad.strip[3]) / 2 : pad.z;
     let mx = c.y; for (let i = 0; i <= 16; i++) { const k = i / 16; mx = Math.max(mx, Hf(c.x + (px - c.x) * k, c.z + (pz - c.z) * k)); }
-    this.tow = { ph: 'in', t: 0, tt: 0, pad, px, pz, manual: !!manual, cruise: Math.min(200, Math.max(c.y + 14, mx + 30, pad.y + 20)) }; c.mode = 'tow'; c.vx = c.vy = c.vz = 0; c.sp = 0; c.onPad = null; if (manual) { this.fare = null; this.rate(-0.1); }
+    this.tow = { ph: 'in', t: 0, tt: 0, pad, px, pz, manual: !!manual, cruise: Math.min(340, Math.max(c.y + 14, mx + 30, pad.y + 20)) }; c.mode = 'tow'; c.vx = c.vy = c.vz = 0; c.sp = 0; c.onPad = null; if (manual) { this.fare = null; this.rate(-0.1); }
     toast(manual ? '🛸 Tow-drone called! Hang tight, it\'s a free ride home.' : '🛸 Tow-drone on the way!'); sfx('hook'); },
   towTick(dt) { const T = this.tow; if (!T) return; const c = this.cop, d = this.drone, dp = d.root.position, HANG = 7.2 + (c.M ? Math.max(0, c.M.len - 10) * 0.25 : 0); T.t += dt; T.tt += dt;
     d.props.forEach((p, i) => p.rotation.y += dt * 30 * (i % 2 ? 1 : -1)); d.root.rotation.y += dt * 0.3;

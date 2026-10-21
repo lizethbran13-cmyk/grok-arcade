@@ -356,16 +356,6 @@
   ],
   "previews": [
     {
-      "id": "skytours-superskyhigh",
-      "game": "skytours",
-      "issue": 47,
-      "name": "Super Sky High Expansion",
-      "url": "previews/skytours-superskyhigh/",
-      "playable": true,
-      "built": "2026-10-21",
-      "notes": "Frostbite Isle (snow, gusts, wing icing), Ember Isle volcano (thermals, ash, lava bombs), Fly High Arena bot battles (free-for-all or team up with Candy, 3 levels), Sky Highway boost rings, 6 Sky Gems, 6 badges, ceiling raised to 320 m. DLC is unlocked automatically in the preview."
-    },
-    {
       "id": "grocery-online-pass",
       "game": "grocery",
       "issue": 46,
@@ -374,6 +364,16 @@
       "playable": true,
       "built": "2026-10-21",
       "notes": "Online Store desk in your store with 3 order types: in-store pickup, same-day delivery (your shopper picks the items, then a Grok Van drives them to Maple Lane) and 2-day shipping from the new walk-in Shopsville Ship Center (racks, packing line, conveyor, truck dock, workers, Martina 'Torty' as boss). Plus your own phone: orders, calls, meetings, shop upgrades, buy stock, reviews. DLC is unlocked in the preview; add ?locked=1 to see it locked."
+    },
+    {
+      "id": "skytours-superskyhigh",
+      "game": "skytours",
+      "issue": 47,
+      "name": "Super Sky High Expansion",
+      "url": "previews/skytours-superskyhigh/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Pass 2: real volcano Ember Isle (Lava Lab, Tortuga Tech heat station, observation deck), Frostbite village + walk-in Cocoa Lodge, Fly High Arena stadium (crowds, jumbotrons, Snowie announcer, pit hangar), 3 new DLC aircraft, pet cameos, arena no longer gets volcano effects."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

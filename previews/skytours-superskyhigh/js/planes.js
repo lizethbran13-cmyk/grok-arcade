@@ -1,10 +1,10 @@
 // Grok Snowie Sky Tours - the hangar fleet: seven real 3D aircraft (3 copters, 4 fixed-wing), each with its own handling,
 // plus layered crash damage (scuffs -> dents + smoke -> bent parts, taped patches). Forward is +z, wheels/skids sit on y=0.
 import * as THREE from 'three';
-import { Builder, P, blob } from './geo.js?v=st8';
-import { compact } from './compact.js?v=st8';
-import { MATS } from './mats.js?v=st8';
-import { textGeo } from './text3d.js?v=st8';
+import { Builder, P, blob } from './geo.js?v=st9';
+import { compact } from './compact.js?v=st9';
+import { MATS } from './mats.js?v=st9';
+import { textGeo } from './text3d.js?v=st9';
 const PI = Math.PI;
 // kind: heli (hover, stick = fly that way) | wing (always flying forward, min speed, rolls out on landing)
 // spd = top speed, acc = response, climb = m/s, turn = rad/s (wing), arm = damage taken x, rep = repair cost x, fare = payout x
@@ -156,3 +156,34 @@ function copterDash([ex, ey, ez]) { const grp = new THREE.Group(); grp.userData.
   pn.add(meshFrom(b, false));
   const s = MB(); s.x.add(P.cyl, 0x334155, ex, ey - 0.95, ez + 0.32, 0.25, 0, 0, 0.022, 0.62, 0.022); s.g.add(P.capsule, 0x111827, ex, ey - 0.62, ez + 0.4, 0.25, 0, 0, 0.07, 0.1, 0.07); s.g.add(P.sphere, 0xef4444, ex + 0.02, ey - 0.54, ez + 0.42, 0, 0, 0, 0.022);
   grp.add(meshFrom(s, false)); return grp; }
+// ---------------- SUPER SKY HIGH EXPANSION aircraft (DLC #47): only in the lineup when the DLC is owned ----------------
+import { SKY_ON } from './dlc.js?v=st9';
+MODELS.jetcopter = (A, B) => { const b = MB(), dk = 0x1e293b, acc = B === 0xffffff ? 0x3ff0ff : B;
+  fuse(b.g, A, 0, 1.6, 0.0, 1.7, 7.2, 1.55); b.g.add(P.cone, A, 0, 1.55, 4.1, PI / 2, 0, 0, 0.85, 1.6, 0.75); b.g.add(P.capsule, acc, 0, 1.15, 0, PI / 2, 0, 0, 1.72, 4.4, 0.55);
+  b.e.add(P.sphere, 0x7dd3fc, 0, 2.05, 2.0, 0, 0, 0, 0.85, 0.62, 1.5); b.x.add(P.torus, dk, 0, 1.8, 2.0, PI / 2, 0, 0, 0.86, 1.48, 0.25);
+  [-1, 1].forEach((s) => { wingC(b.g, A, s * 1.9, 1.5, -0.6, 2.4, 1.2, 0.12, s * 0.25, s * 0.08); b.x.add(P.cyl, dk, s * 1.25, 1.35, -2.6, PI / 2, 0, 0, 0.42, 1.8, 0.42); b.l.add(P.cyl, 0x3ff0ff, s * 1.25, 1.35, -3.55, PI / 2, 0, 0, 0.3, 0.06, 0.3, 1.8);
+    b.g.add(P.rbox, acc, s * 0.6, 2.3, -3.4, -0.4, 0, s * -0.35, 0.12, 1.4, 1.0); b.x.add(P.rbox, 0x64748b, s * 1.0, 0.3, 0.2, 0, 0, 0, 0.12, 0.12, 3.4); rod(b.x, 0x64748b, [s * 1.0, 0.3, 1.2], [s * 0.7, 1.0, 1.0], 0.06); rod(b.x, 0x64748b, [s * 1.0, 0.3, -0.9], [s * 0.7, 1.0, -0.9], 0.06); });
+  b.x.add(P.cyl, 0x94a3b8, 0, 2.5, 0.1, 0, 0, 0, 0.16, 0.9, 0.16); label(b.g, 'THUNDER', 0.24, 0xffffff, 0.87, 1.25, -0.4, PI / 2); label(b.g, 'THUNDER', 0.24, 0xffffff, -0.87, 1.25, -0.4, -PI / 2);
+  lights(b, -3.1, 3.1, 1.55, -0.8, [0, 2.9, -3.9]); b.f.add(P.rbox, 0x334155, 0, 1.1, 0.6, 0, 0, 0, 1.4, 0.4, 2.4);
+  const body = meshFrom(b), r1 = rotor(3, 4.2, dk, acc), r2 = rotor(3, 4.0, dk, 0xffffff), d = disc(4.4); r1.position.set(0, 3.0, 0.1); r2.position.set(0, 3.45, 0.1); d.position.set(0, 3.5, 0.1); body.add(r1, r2, d);
+  return { body, spin: [{ o: r1, ax: 'y', k: 44 }, { o: r2, ax: 'y', k: -44 }], discs: [d], jet: [[-1.25, 1.35, -3.6], [1.25, 1.35, -3.6]], seat: { pilot: [-0.45, 1.05, 1.5], snowie: [0.45, 1.25, 1.6], eye: [-0.4, 2.15, 1.9] }, smoke: [0, 2.6, -1.0], dents: [[0.85, 1.6, 0.4, 0.28], [-0.85, 1.4, -0.8, 0.26], [1.9, 1.5, -0.6, 0.26], [-1.9, 1.5, -0.6, 0.26], [0.3, 2.3, -1.6, 0.22], [0.6, 2.3, -3.4, 0.2]], bend: { at: [0.6, 2.3, -3.4], fin: [0.12, 1.4, 1.0, acc], rz: -0.35 }, rad: 2.6, len: 9, span: 8.4 }; };
+MODELS.stealth = (A, B) => { const b = MB(), body0 = A === 0xffffff ? 0x334155 : A, edge = B === 0xffffff ? 0xa78bfa : B;
+  fuse(b.g, body0, 0, 1.45, 0.4, 1.3, 6.4, 0.9); b.g.add(P.cone, body0, 0, 1.4, 4.1, PI / 2, 0, 0, 0.6, 1.8, 0.4);
+  [-1, 1].forEach((s) => { const sw = 0.95; for (let k = 0; k < 3; k++) { const L = 5.4 - k * 1.2, cx = s * (0.4 + L / 2 * Math.cos(sw)), cz = 0.6 - k * 1.2 - L / 2 * Math.sin(sw); wingC(b.g, body0, cx, 1.35, cz, L, 2.4, 0.13, s * sw, 0); } b.l.add(P.rboxS, edge, s * 2.6, 1.42, -1.9, 0, s * 0.95, 0, 5.2, 0.05, 0.12, 1.4); b.g.add(P.rbox, body0, s * 0.9, 2.0, -2.7, 0, 0, s * 0.5, 0.1, 1.3, 1.4); b.x.add(P.rbox, 0x0f172a, s * 0.5, 1.4, -3.0, 0, 0, 0, 0.7, 0.4, 1.0); b.l.add(P.rbox, edge, s * 0.5, 1.4, -3.52, 0, 0, 0, 0.55, 0.22, 0.05, 1.6);
+    rod(b.x, 0x475569, [s * 1.4, 0.35, -0.6], [s * 1.1, 1.2, -0.5], 0.06); wheel(b, s * 1.45, 0.3, -0.6, 0.3, 0.2); });
+  b.e.add(P.sphere, 0x6d28d9, 0, 1.95, 1.7, 0, 0, 0, 0.5, 0.4, 1.3); rod(b.x, 0x475569, [0, 0.3, 2.6], [0, 1.1, 2.4], 0.06); wheel(b, 0, 0.26, 2.6, 0.26, 0.16); label(b.g, 'MIDNIGHT', 0.22, edge, 0, 1.92, -1.4, 0);
+  lights(b, -4.9, 4.9, 1.4, -2.8, [0, 2.9, -3.2]); b.f.add(P.rbox, 0x0f172a, 0, 1.5, 1.2, 0, 0, 0, 0.7, 0.3, 2.0);
+  const body = meshFrom(b); return { body, spin: [], discs: [], jet: [[-0.5, 1.4, -3.6], [0.5, 1.4, -3.6]], seat: { pilot: [0, 1.2, 1.6], snowie: [0, 1.4, 0.6], eye: [0, 2.6, 2.1], pitch: 0.0 }, smoke: [0, 1.9, -2.5], dents: [[0.6, 1.6, 0.4, 0.26], [-0.6, 1.5, -1.0, 0.24], [2.6, 1.45, -2.0, 0.28], [-2.4, 1.45, -1.8, 0.26], [0.2, 1.9, -2.0, 0.2], [0.9, 2.4, -2.8, 0.2]], bend: { at: [0.9, 2.4, -2.8], fin: [0.1, 1.3, 1.4, body0], rz: 0.5 }, rad: 2.6, len: 9, span: 10.6 }; };
+MODELS.hover = (A, B) => { const b = MB(), dk = 0x1f2937, acc = B === 0xffffff ? 0xffd23f : B;
+  b.g.add(P.sphere, A, 0, 1.6, 0, 0, 0, 0, 1.6, 1.1, 2.2); b.g.add(P.capsule, acc, 0, 1.2, 0, PI / 2, 0, 0, 1.62, 2.6, 0.5); b.e.add(P.sphere, 0x99f6e4, 0, 2.15, 0.9, 0, 0, 0, 1.05, 0.8, 1.3);
+  const fans = []; [[-1, 1], [1, 1], [-1, -1], [1, -1]].forEach(([sx, sz]) => { const x = sx * 2.5, z = sz * 2.0; rod(b.x, dk, [sx * 0.9, 1.5, sz * 0.8], [x, 1.7, z], 0.14); b.g.add(P.torus, acc, x, 1.7, z, PI / 2, 0, 0, 1.25, 1.25, 1.1); b.x.add(P.cyl, dk, x, 1.7, z, 0, 0, 0, 0.2, 0.5, 0.2); b.l.add(P.torus, 0x3ff0ff, x, 1.45, z, PI / 2, 0, 0, 1.15, 1.15, 0.3, 1.4); fans.push([x, 1.75, z]); });
+  [-1, 1].forEach((s) => { b.x.add(P.rbox, 0x64748b, s * 1.0, 0.25, 0, 0, 0, 0, 0.14, 0.14, 2.6); rod(b.x, 0x64748b, [s * 1.0, 0.25, 0.8], [s * 0.8, 0.9, 0.7], 0.06); rod(b.x, 0x64748b, [s * 1.0, 0.25, -0.8], [s * 0.8, 0.9, -0.7], 0.06); });
+  label(b.g, 'AURORA', 0.24, 0x111827, 1.62, 1.3, -0.2, PI / 2); label(b.g, 'AURORA', 0.24, 0x111827, -1.62, 1.3, -0.2, -PI / 2); lights(b, -3.7, 3.7, 1.7, 0, [0, 2.7, -2.0]); b.f.add(P.rbox, 0x334155, 0, 1.2, 0.3, 0, 0, 0, 1.4, 0.4, 1.8);
+  const body = meshFrom(b), spin = [], discs = []; for (const [x, y, z] of fans) { const r = rotor(3, 1.05, dk, acc); r.position.set(x, y, z); body.add(r); spin.push({ o: r, ax: 'y', k: 60 }); const d = disc(1.1); d.position.set(x, y + 0.05, z); body.add(d); discs.push(d); }
+  return { body, spin, discs, seat: { pilot: [-0.45, 1.0, 0.7], snowie: [0.45, 1.2, 0.8], eye: [-0.4, 2.1, 1.1] }, smoke: [0, 2.6, -0.6], dents: [[1.3, 1.6, 0.2, 0.28], [-1.3, 1.5, -0.6, 0.26], [2.5, 1.7, 2.0, 0.24], [-2.5, 1.7, -2.0, 0.24], [0.4, 2.5, -1.0, 0.22], [-0.6, 1.2, 1.6, 0.2]], bend: { at: [2.5, 1.7, -2.0] }, rad: 3.4, len: 6.6, span: 7.6 }; };
+export const DLC_PLANES = [
+  { id: 'jetcopter', dlc: true, name: 'Thunder Jet-Copter', kind: 'heli', price: 450, spd: 46, acc: 2.0, climb: 17, turn: 2.6, arm: 1.1, rep: 1.3, fare: 1.3, emoji: '⚡', desc: 'SUPER SKY HIGH: coaxial twin rotors plus two rear jet boosters. Hovers like a copter, zooms like a jet.' },
+  { id: 'stealth', dlc: true, name: 'Midnight Stealth Wing', kind: 'wing', price: 600, spd: 64, min: 18, acc: 1.8, climb: 18, turn: 1.6, arm: 1.2, rep: 1.6, fare: 1.4, emoji: '🌙', desc: 'SUPER SKY HIGH: a glowing-edged flying wing. The fastest thing in the sky. Needs a runway to land.' },
+  { id: 'hover', dlc: true, name: 'Aurora Hover-Drone', kind: 'heli', price: 380, spd: 38, acc: 2.4, climb: 15, turn: 3.2, arm: 0.9, rep: 1.1, fare: 1.2, emoji: '🛸', desc: 'SUPER SKY HIGH: four glowing ducted fans. Turns on a cheese crumb and lands on any pad.' },
+];
+if (SKY_ON) PLANES.push(...DLC_PLANES);

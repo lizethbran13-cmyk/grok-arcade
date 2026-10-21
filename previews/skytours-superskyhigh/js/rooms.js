@@ -1,8 +1,8 @@
 // Grok Snowie Sky Tours - dense, walk-in interiors: extra props, residents, chores and mini-game stations for every building.
 // All geometry goes into the building's own 'in_<id>' region (culled / hidden with the interior).
-import * as K from './kit.js?v=st8';
-import { rbox } from './world.js?v=st8';
-import { txt, bone, pendant, frameArt, clockW, bed, paperStackA, pine } from './map.js?v=st8';
+import * as K from './kit.js?v=st9';
+import { rbox } from './world.js?v=st9';
+import { txt, bone, pendant, frameArt, clockW, bed, paperStackA, pine } from './map.js?v=st9';
 const { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, wedge } = K;
 const PI = Math.PI, pick = K.pick, BR = [0xef4444, 0x3b82f6, 0xfacc15, 0x22c55e, 0xa855f7, 0xf97316, 0xec4899, 0x14b8a6];
 export const ROOMS = { npcs: [], acts: [] };
@@ -261,3 +261,4 @@ export function cottageRoom(w, b, theme, door) { const id = b.id, C = COTT[id]; 
   const sp = P(...spots[C.chore[0]]); act({ room: id, x: sp[0], z: sp[1], r: 1.7, label: C.chore[1], chore: { id, msg: C.chore[2], fx: ac, helped: true } });
   const np = P(0.7, -0.5); npc(Object.assign({ id: 'res_' + id, room: id, at: np, yaw: a, name: C.who[0], lines: [[C.who[0], C.line]] }, C.who[1], C.who[1].breed ? { s: 0.72 } : C.who[1].pet === 'torty' ? {} : { s: 1.0 }));
 }
+export { fireplace, armchair, mug, shelfRack, lightString, books, counter, plush, wallSign };

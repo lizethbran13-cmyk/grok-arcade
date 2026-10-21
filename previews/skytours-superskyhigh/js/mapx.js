@@ -2,11 +2,11 @@
 // Lineup and control tower, runways at every town, a seaplane dock, Cheddar Farm, Rainbow Falls, the Whispering Woods camp,
 // roads between the towns and purposeful groves/orchards (placed on flat ground and sunk into slopes, with far-only LOD).
 import * as THREE from 'three';
-import * as K from './kit.js?v=st8';
-import { rbox } from './world.js?v=st8';
-import { shell, onSide } from './bld.js?v=st8';
-import { textGeo } from './text3d.js?v=st8';
-import { Hf, TOWNS, LAKE, WATER_Y, PADS, TOURS, ZONES, SPOTS, pad, pine, roundTree, txt, sinkY, slopeAt } from './map.js?v=st8';
+import * as K from './kit.js?v=st9';
+import { rbox } from './world.js?v=st9';
+import { shell, onSide } from './bld.js?v=st9';
+import { textGeo } from './text3d.js?v=st9';
+import { Hf, TOWNS, LAKE, WATER_Y, PADS, TOURS, ZONES, SPOTS, pad, pine, roundTree, txt, sinkY, slopeAt } from './map.js?v=st9';
 const { rcyl, lathe, sph, cyl, cone, torus, capsule, tube, blobGeo } = K;
 const PI = Math.PI, R = K.R, pick = K.pick; const txtGeo = (str, size) => textGeo(str, size, size * 0.25);
 // reserved footprints: nothing decorative may be planted here (buildings, pads, runways, roads)
