@@ -3,6 +3,24 @@
   "updated": "2026-10-21",
   "items": [
     {
+      "game": "grocery",
+      "name": "Same-Day Rush: Drive the Grok Van (with a catch)",
+      "size": "Free Patch",
+      "what": "Grok Grocery Tycoon: a big 🚐 Drive Same-Day button and a how-to-drive card from Pi-rat, so anyone can take the Grok Van out. The catch: a tight ⏱️ delivery timer. Late orders get the customer a refund and cost you a star (and a bit of store rating). The van is faster, but crashes hurt it more and take 10 seconds off the clock. Plus 🚐/🚚 Test Ride at the Ship Center: drive the van or the truck anytime, no orders, no timer. Torty's Tow and Hop out always work, so you are never stuck.",
+      "stage": "building",
+      "when": "In the lab now",
+      "key": "grocery_sameday_catch"
+    },
+    {
+      "game": "arcade",
+      "name": "Multiplayer for Torty Town, Dr. Vic: The Lost Lab, Grocery Tycoon and Sky Tours",
+      "size": "Feature",
+      "what": "Multiplayer for Torty Town, Dr. Vic: The Lost Lab, Grocery Tycoon and Sky Tours. Coming up next on the list!",
+      "stage": "queued",
+      "when": "Coming up",
+      "key": "multiplayer_4games"
+    },
+    {
       "issue": 52,
       "game": "grocery",
       "name": "Grocery Tycoon Patch: Packing Help + Drive the Truck (live)",
@@ -376,7 +394,17 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "grocery-sameday-catch",
+      "game": "grocery",
+      "name": "Same-Day Rush: Drive the Grok Van (with a catch)",
+      "url": "previews/grocery-sameday-catch/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Big 🚐 Drive Same-Day button (top right) + Pi-rat's how-to-drive card. The catch: a tight timer (75s + 30s per order, crash = -10s); late = customer refund + lose a star + store rating dip. Van is faster but takes 1.6x crash damage. NEW 🚐/🚚 Test Ride at the Ship Center dock and the van bay: free roam, no orders, no timer (repairs still apply). Torty's Tow + Hop out always work. Preview uses its own sandbox save."
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
