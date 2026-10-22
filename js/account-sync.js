@@ -103,7 +103,7 @@
   // this device's own settings never sync (graphics level, sound, the multiplayer antenna)
   // #60: board caches (refetched on every look) and half-typed booth drafts are per-device too. They used to sync, and every board
   // refresh on one device restarted the arcade on the other (often while you were on GitHub sending a suggestion).
-  var LOCAL = [K_ACC, 'grokArcade.gfx', 'grokArcade.muted', 'grokArcade.antenna.last', 'grokArcade.sbBoard', 'grokArcade.dlcBoard', 'grokArcade.sbDraft', 'grokArcade.dlcDraft', 'grokArcade.sbPending', 'grokArcade.dlcPending'];
+  var LOCAL = [K_ACC, 'grokArcade.gfx', 'grokArcade.muted', 'grokArcade.antenna.last', 'grokArcade.sbBoard', 'grokArcade.dlcBoard', 'grokArcade.sbDraft', 'grokArcade.dlcDraft', 'grokArcade.sbPending', 'grokArcade.dlcPending', 'grokArcade.rmBoard', 'grokArcade.rmDraft', 'grokArcade.rmPending'];
   function localKeys() { var o = AC.keys(false); LOCAL.forEach(function (k) { delete o[k]; }); Object.keys(o).forEach(function (k) { if (/^grokArcade\.pv/.test(k)) delete o[k]; }); return o; }
   function scan() {
     var first = getJ(K_META, null) == null, cur = localKeys(), meta = getJ(K_META, {}) || {}, now = Date.now(), changed = 0, k;

@@ -17,7 +17,7 @@
   AC.MAX_DEVICES = 3; AC.QR_MAX = 2300; // a phone camera can still read a QR this dense; bigger saves use copy / share / file / link
   AC.HOME = (function () { try { return location.origin + location.pathname; } catch (e) { return 'https://lizethbran13-cmyk.github.io/grok-arcade/'; } })(); // this page (the live arcade, or the Time Jumper preview while it's a beta)
   // never transferred: this device's own id + backups, multiplayer peer ids, data the arcade just re-downloads, dev/test switches
-  var SKIP = [K_BAK, K_DEV, K_LOG, K_REV, 'grokArcade.pvIssues', 'grokArcade.pvJson', 'grokArcade.devUrls', 'grokNet.pid', 'grokNet.peer', 'grokNet.turn', 'grokArcade.sync', 'grokArcade.sync.meta', 'grokArcade.sync.backup', 'grokArcade.syncReopen', 'grokArcade.sbBoard', 'grokArcade.dlcBoard', 'grokArcade.sbDraft', 'grokArcade.dlcDraft', 'grokArcade.sbPending', 'grokArcade.dlcPending'];
+  var SKIP = [K_BAK, K_DEV, K_LOG, K_REV, 'grokArcade.pvIssues', 'grokArcade.pvJson', 'grokArcade.devUrls', 'grokNet.pid', 'grokNet.peer', 'grokNet.turn', 'grokArcade.sync', 'grokArcade.sync.meta', 'grokArcade.sync.backup', 'grokArcade.syncReopen', 'grokArcade.sbBoard', 'grokArcade.dlcBoard', 'grokArcade.sbDraft', 'grokArcade.dlcDraft', 'grokArcade.sbPending', 'grokArcade.dlcPending', 'grokArcade.rmBoard', 'grokArcade.rmDraft', 'grokArcade.rmPending'];
   var SKIP_PFX = ['grokPreview.']; // Time Jumper sandboxes (work-in-progress builds, not real saves)
 
   /* ---------- storage: in a Time Jumper preview the page's localStorage is sandboxed (grokPreview.<id>.*). Exports read the REAL
