@@ -63,7 +63,7 @@ function blockTex() {
   const t = new THREE.CanvasTexture(c); t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestMipmapLinearFilter; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
   return BLOCKTEX = t;
 }
-const COL = { grass: 0x7db84a, dgrass: 0x3f8a38, dry: 0xc8a84a, sand: 0xead08a, snow: 0xf6f9fc, rock: 0x8f857c, mud: 0x8a6a42, bed: 0x3a6a8a, red: 0xc8603a, ice: 0xbfe8f6, road: 0x75695b, plank: 0x9a6a3a, moss: 0x5d8a46, pad: 0xd8d2c4, gate: 0xf0c24b,
+const COL = { grass: 0x7db84a, dgrass: 0x3f8a38, dry: 0xc8a84a, sand: 0xead08a, snow: 0xf6f9fc, rock: 0x8f857c, mud: 0x8a6a42, bed: 0x3a6a8a, red: 0xc8603a, ice: 0xbfe8f6, road: 0x75695b, plank: 0x6e5038, moss: 0x5d8a46, pad: 0xd8d2c4, gate: 0xf0c24b,
   crys: 0x7af0ff, deep: 0x4a4a58, lava: 0xff6a1a, pink: 0xf6a8c8, cobble: 0x7a7a80, glow: 0xffe08a };
 const MATS = {};
 function M(name) { return MATS[name] || (MATS[name] = mat(COL[name] || 0x888888)); }
@@ -219,6 +219,7 @@ function buildProps(m) {
   }
   const glow = (w, h, d, color, x, y, z, g) => { GLOW = true; box(w, h, d, color, x, y, z, g); GLOW = false; };
   const light = (x, y, z, color, kind) => lights.push({ x, y, z, color, kind });
+  const signs = [];
   for (const p of m.props) {
     const s = p.s || 1, g = { x: p.x, y: m.h(p.x, p.z), z: p.z }; G0 = g;
     if (p.k === 'tree') { box(0.5, 2.4 * s, 0.5, 0x6b4423, 0, 1.2 * s, 0, g); box(2.2 * s, 1.6 * s, 2.2 * s, 0x3f8a3a, 0, 2.6 * s, 0, g); box(1.4 * s, 1.1 * s, 1.4 * s, 0x58b24a, 0, 3.6 * s, 0, g); }
@@ -250,7 +251,19 @@ function buildProps(m) {
     /* ---- Re-Blocked props ---- */
     else if (p.k === 'crystal') { if (p.wall) { g.x += p.wall[0] * 0.35; g.z += p.wall[1] * 0.35; } const c = rnd() < 0.5 ? 0x7af0ff : 0xc08aff; glow(0.5 * s, 1.8 * s, 0.5 * s, c, 0, 0.9 * s, 0, g); glow(0.35 * s, 1.1 * s, 0.35 * s, c, 0.45 * s, 0.55 * s, 0.2, g); glow(0.3 * s, 0.8 * s, 0.3 * s, c, -0.35 * s, 0.4 * s, -0.25, g); box(1.3 * s, 0.3, 1.1 * s, 0x4a4a58, 0, 0.15, 0, g); light(g.x, g.y + 1.4, g.z, c, 'crystal'); }
     else if (p.k === 'stalag') { box(0.9 * s, 1.2 * s, 0.9 * s, 0x6a6470, 0, 0.6 * s, 0, g); box(0.5 * s, 1.0 * s, 0.5 * s, 0x7a7480, 0, 1.6 * s, 0, g); box(0.25, 0.7 * s, 0.25, 0x8a8490, 0, 2.4 * s, 0, g); if (m.ceil) { const cy = m.ceil - g.y; box(0.8 * s, 1.0 * s, 0.8 * s, 0x5a5462, 0.6, cy - 0.5 * s, 0.4, g); box(0.35, 0.8 * s, 0.35, 0x6a6470, 0.6, cy - 1.3 * s, 0.4, g); } }
-    else if (p.k === 'gshroom') { const c = rnd() < 0.5 ? 0x5affb0 : 0xffd84a; box(0.18, 0.5 * s, 0.18, 0xe8e0d0, 0, 0.25 * s, 0, g); glow(0.6 * s, 0.22, 0.6 * s, c, 0, 0.55 * s, 0, g); box(0.12, 0.3, 0.12, 0xe8e0d0, 0.35, 0.15, 0.2, g); glow(0.32, 0.12, 0.32, c, 0.35, 0.33, 0.2, g); }
+    else if (p.k === 'gshroom') { const c = rnd() < 0.5 ? 0x5affb0 : 0xffd84a, cd = c === 0x5affb0 ? 0x2a9a6a : 0xc8962a;
+      const one = (ox, oz, sc) => { box(0.22 * sc, 0.9 * sc, 0.22 * sc, 0xe8e0d0, ox, 0.45 * sc, oz, g); box(0.34 * sc, 0.12 * sc, 0.34 * sc, 0xd8ccb8, ox, 0.12 * sc, oz, g); box(0.85 * sc, 0.12 * sc, 0.85 * sc, cd, ox, 0.86 * sc, oz, g); glow(0.75 * sc, 0.28 * sc, 0.75 * sc, c, ox, 1.05 * sc, oz, g); glow(0.42 * sc, 0.16 * sc, 0.42 * sc, c, ox, 1.25 * sc, oz, g); box(0.12 * sc, 0.06, 0.12 * sc, 0xffffff, ox + 0.2 * sc, 1.2 * sc, oz + 0.1 * sc, g); };
+      one(0, 0, s); one(0.5, 0.3, s * 0.6); one(-0.35, 0.4, s * 0.45); }
+    else if (p.k === 'rockform') { box(2.2 * s, 1.4 * s, 1.8 * s, 0x5a5a66, 0, 0.7 * s, 0, g); box(1.4 * s, 1.2 * s, 1.2 * s, 0x6a6a76, 0.3, 1.9 * s, -0.2, g); box(0.7 * s, 0.9 * s, 0.7 * s, 0x7a7a86, 0.2, 2.9 * s, 0, g); box(1 * s, 0.7 * s, 1 * s, 0x4a4a56, -1.1 * s, 0.35 * s, 0.6, g); glow(0.25, 0.6, 0.25, 0xc08aff, -0.6 * s, 1.6 * s, 0.5, g); }
+    else if (p.k === 'rubble') { for (let q = 0; q < 4; q++) { const w = 0.25 + rnd() * 0.35; box(w, w * 0.7, w, rnd() < 0.5 ? 0x6a6a74 : 0x56566a, (rnd() - 0.5) * 1.4, w * 0.35, (rnd() - 0.5) * 1.4, g); } }
+    else if (p.k === 'puddle') { box(2.4 * s, 0.06, 1.6 * s, 0x2a5a8a, 0, 0.03, 0, g); box(1.6 * s, 0.07, 2.2 * s, 0x2f6a9a, 0.3, 0.035, 0.2, g); glow(0.3, 0.08, 0.3, 0x7af0ff, 0.5, 0.06, -0.3, g); }
+    else if (p.k === 'ratplay') { box(5, 0.25, 3, 0xc8a06a, 0, 0.12, 0, g); for (let q = 0; q < 10; q++) box(0.3, 0.08, 0.3, 0xe8d8a8, -2.2 + (q % 5) * 1.1, 0.29, q < 5 ? -1 : 1, g);
+      box(1.6, 1.4, 1.4, 0x6a4a8a, -1.5, 0.95, 0, g); box(1.8, 0.4, 1.6, 0xf0c24b, -1.5, 1.85, 0, g); box(0.6, 0.6, 0.1, 0x2a1a1a, -1.5, 0.6, 0.71, g); box(0.4, 0.4, 0.1, 0x9ad0f0, -1.1, 1.2, 0.71, g);
+      box(2.2, 0.4, 0.4, 0x7ad2ff, 0.4, 1.9, 0, g); box(0.4, 1.4, 0.4, 0x7ad2ff, 1.5, 1.4, 0, g); box(0.4, 0.4, 1.2, 0xff7ab8, 1.5, 0.5, 0.6, g);
+      box(0.6, 0.12, 1.8, 0x9a6a3a, 0.4, 0.75, -0.9, g); box(0.12, 1.4, 0.12, 0xb8c0c8, 2.1, 0.8, -1.3, g); box(0.12, 1.4, 0.12, 0xb8c0c8, 2.1, 0.8, 1.3, g); box(0.1, 0.08, 2.6, 0xe25b4a, 2.1, 1.1, 0, g); box(0.4, 0.3, 2.2, 0xe25b4a, 2.1, 0.95, 0, g);
+      box(0.15, 1.1, 1.1, 0x9a9aa8, 0.4, 0.8, 1.0, g); box(0.6, 0.3, 0.6, 0xffd23f, -0.3, 0.4, 1.1, g); }
+    else if (p.k === 'bedding') { box(2.6, 0.2, 1.4, 0xe8d8a8, 0, 0.1, 0, g); box(0.6, 0.3, 0.6, 0xf4f0e2, -0.6, 0.25, 0.2, g); box(0.5, 0.25, 0.5, 0xff9ad0, 0.7, 0.22, -0.1, g); }
+    else if (p.k === 'zsign') { box(0.12, 1.5, 0.12, 0x6b4423, -0.9, 0.75, 0, g); box(0.12, 1.5, 0.12, 0x6b4423, 0.9, 0.75, 0, g); box(2.1, 0.62, 0.1, 0x6b4423, 0, 1.45, 0, g); signs.push({ t: p.t, c: p.c, x: g.x, y: g.y + 1.45, z: g.z + 0.06 }); }
     else if (p.k === 'torch') { box(0.18, 1.6, 0.18, 0x6b4423, 0, 0.8, 0, g); box(0.3, 0.2, 0.3, 0x3a3a3a, 0, 1.65, 0, g); glow(0.22, 0.3, 0.22, 0xffb02a, 0, 1.9, 0, g); glow(0.12, 0.18, 0.12, 0xfff0a0, 0, 2.1, 0, g); light(g.x, g.y + 2.1, g.z, 0xffa040, 'torch'); }
     else if (p.k === 'cart') { box(0.15, 0.1, 3.4, 0x8a8a90, -0.5, 0.1, 0, g); box(0.15, 0.1, 3.4, 0x8a8a90, 0.5, 0.1, 0, g); for (const tz of [-1.4, -0.7, 0, 0.7, 1.4]) box(1.4, 0.08, 0.25, 0x6b4423, 0, 0.04, tz, g); box(1.2, 0.7, 1.4, 0x5a5a62, 0, 0.6, 0, g); box(1.0, 0.25, 1.2, 0x2a2a2a, 0, 1.0, 0, g); glow(0.3, 0.2, 0.3, 0x7af0ff, -0.2, 1.15, 0.1, g); glow(0.25, 0.18, 0.25, 0xffd84a, 0.25, 1.12, -0.2, g); }
     else if (p.k === 'cherry') { box(0.5, 2.6 * s, 0.5, 0x5a3a2a, 0, 1.3 * s, 0, g); box(0.3, 0.3, 1.4 * s, 0x5a3a2a, 0, 2.2 * s, 0.5, g); box(2.8 * s, 1.4 * s, 2.8 * s, 0xf6a8c8, 0, 3.0 * s, 0, g); box(2 * s, 1 * s, 2 * s, 0xffc4dc, 0.3, 3.9 * s, -0.2, g); box(1.2 * s, 0.6 * s, 1.2 * s, 0xf090b8, -0.8, 2.4 * s, 0.9, g); box(1.6 * s, 0.05, 1.4 * s, 0xf8b8d0, 0.6, 0.03, 0.5, g); }
@@ -307,6 +320,9 @@ function buildProps(m) {
   const pm = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, map: blockTex(), roughness: 0.78, envMapIntensity: 0.4, side: THREE.DoubleSide })); pm.castShadow = true; pm.receiveShadow = true; grp.add(pm);
   if (gbase) { const g2 = new THREE.BufferGeometry(); g2.setAttribute('position', new THREE.Float32BufferAttribute(GPp, 3)); g2.setAttribute('color', new THREE.Float32BufferAttribute(GCc, 3)); g2.setIndex(GIi); grp.add(new THREE.Mesh(g2, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide }))); }
   V.lights = lights;
+  // world-space sign faces: 4:1 canvas on a 2:0.5 plane (never stretched), they sit on posts and never float over the HUD
+  signs.forEach((sg) => { const c = document.createElement('canvas'); c.width = 256; c.height = 64; const x = c.getContext('2d'); x.fillStyle = '#f4ead2'; x.fillRect(0, 0, 256, 64); x.strokeStyle = sg.c; x.lineWidth = 8; x.strokeRect(4, 4, 248, 56); x.fillStyle = '#2a1a10'; x.font = 'bold 30px Trebuchet MS, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(sg.t, 128, 34);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; const pl = new THREE.Mesh(new THREE.PlaneGeometry(2, 0.5), new THREE.MeshStandardMaterial({ map: t, roughness: 0.8 })); pl.position.set(sg.x, sg.y, sg.z); grp.add(pl); const b2 = pl.clone(); b2.rotation.y = Math.PI; b2.position.z -= 0.12; grp.add(b2); });
   // floating labels for gates / sanctuaries / camp spots
   const lab = (text, x, y, z, color, w) => {
     const c = document.createElement('canvas'); c.width = 512; c.height = 128; const g = c.getContext('2d');
@@ -315,8 +331,6 @@ function buildProps(m) {
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, fog: false, toneMapped: false })); sp.scale.set(w || 7, (w || 7) / 4, 1); sp.position.set(x, y, z); grp.add(sp);
   };
   m.gates.forEach((gt) => lab(gt.label, gt.x, m.h(gt.x, gt.z) + 6.5, gt.z + (m.id === 'camp' ? (gt.south ? -1 : 1) : -1)));
-  if (m.id === 'camp') lab('PET CORNER', 0, 4.4, 28.7, '#ff7ab8', 6);
-  (m.zoneSigns || []).forEach((z) => lab(z.t, z.x, m.h(z.x, z.z) + 3.4, z.z, z.c, 3.6));
   (m.sanct || []).forEach((sc) => lab(sc.name.toUpperCase(), sc.x, 7, sc.z, '#' + sc.color.toString(16), 12));
   if (m.board) lab('CASE BOARD', m.board.x, 5, m.board.z - 0.5, '#e25b4a', 6);
   if (m.shop) lab('UPGRADES', m.shop.x + 1, 5.6, m.shop.z - 4, '#3fc8ff', 6);
