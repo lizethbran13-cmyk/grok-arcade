@@ -318,6 +318,39 @@
   P.stats = function () { return JSON.parse(JSON.stringify(st)); };
   P.check = check;
 
+  /* one-time gift popups wait for the hub and show one after the other (never on top of each other) */
+  var GQ = [], gqBusy = false, gqWait = null;
+  function giftToast(msg, ms, mimi) { GQ.push([msg, ms, mimi]); gqPump(); }
+  function gqPump() {
+    if (gqBusy || !GQ.length) return;
+    var hud = document.getElementById('hud');
+    if (!hud || hud.classList.contains('hidden') || !(GA.Fix && GA.Fix.toast)) { if (!gqWait) { var tries = 0; gqWait = setInterval(function () { var h = document.getElementById('hud'); if (++tries > 480) { clearInterval(gqWait); gqWait = null; return; } if (h && !h.classList.contains('hidden') && GA.Fix && GA.Fix.toast) { clearInterval(gqWait); gqWait = null; gqPump(); } }, 500); } return; }
+    gqBusy = true; var it = GQ.shift();
+    setTimeout(function () {
+      try { GA.Audio.play('win'); } catch (e) {}
+      GA.Fix.toast(it[0], it[1]);
+      if (it[2] && GA.Mimi && GA.Mimi.say) try { GA.Mimi.say(it[2], 7); } catch (e) {}
+      setTimeout(function () { gqBusy = false; gqPump(); }, it[1] + 600);
+    }, 1400);
+  }
+  P._giftQueue = function () { return GQ.length + (gqBusy ? 1 : 0); };
+
+  /* Oct 22 Welcome Bonus from Mimi (David's request): 600 tickets, once per save, including saves that already exist
+     (key gift.welcome600, synced by Bob's Account Desk with the rest of the save), LIVE arcade save only.
+     Mimi's daily gift and Party Night are separate and unchanged. */
+  function giftWelcome600() {
+    try {
+      var path = (location.pathname || '').replace(/\\/g, '/');
+      if (/\/(archive|previews)\//.test(path)) return;
+      if (GA.store.get('gift.welcome600', 0)) return;
+      GA.store.set('gift.welcome600', 1);
+      GA.addTickets(600);
+      if (GA.onTickets) GA.onTickets(GA.getTickets());
+      giftToast('\uD83E\uDD16\uD83D\uDC96 MIMI: HI HI HI! Welcome to Grok Arcade! Here\u2019s your 600-ticket Welcome Bonus, just from me! Have SO much fun!!', 7000, 'Welcome welcome WELCOME! I gave you 600 tickets! That\u2019s my favorite number today!');
+    } catch (e) { /* ignore */ }
+  }
+  GA.giftWelcome = giftWelcome600;
+
   /* Oct 22 Halloween Bonus (David's request): 550 tickets, once per save (key gift.halloween550, synced with the rest of the
      grokArcade.* save by Bob's Account Desk), LIVE arcade save only. The older one-time gifts (300 Silver Trophy refund and
      1,000 Luna refund) were retired at the same time; their flags stay in old saves, and nobody loses tickets. */
@@ -330,17 +363,7 @@
       GA.addTickets(550);
       if (GA.onTickets) GA.onTickets(GA.getTickets());
       if (GA.Prog && GA.Prog.event) try { GA.Prog.event('halloween550'); } catch (e) {}
-      var tries = 0, iv = setInterval(function () {
-        var hud = document.getElementById('hud');
-        if (++tries > 240) { clearInterval(iv); return; }
-        if (hud && !hud.classList.contains('hidden')) {
-          clearInterval(iv);
-          setTimeout(function () {
-            try { GA.Audio.play('win'); } catch (e) {}
-            if (GA.Fix && GA.Fix.toast) GA.Fix.toast('\uD83C\uDF83 HAPPY HALLOWEEN! \uD83D\uDC7B Luna, Pi-rat, Snowie, Candy and Torty went trick-or-treating and brought you a 550-ticket Halloween Bonus! \uD83C\uDF6C Spend them at the Prize Counter. Boo!', 7000);
-          }, 1400);
-        }
-      }, 500);
+      giftToast('\uD83C\uDF83 HAPPY HALLOWEEN! \uD83D\uDC7B Luna, Pi-rat, Snowie, Candy and Torty went trick-or-treating and brought you a 550-ticket Halloween Bonus! \uD83C\uDF6C Spend them at the Prize Counter. Boo!', 7000);
     } catch (e) { /* ignore */ }
   }
   GA.giftHalloween = giftHalloween550;
@@ -352,6 +375,7 @@
       // wait until the player is in the hub (not on the title screen) before announcing
       if (got.length) { var tries = 0, iv = setInterval(function () { var hud = document.getElementById('hud'); if (++tries > 240) clearInterval(iv); if (hud && !hud.classList.contains('hidden')) { clearInterval(iv); setTimeout(function () { if (GA.Fix && GA.Fix.toast) GA.Fix.toast('New: Achievements! You already unlocked ' + got.length + '. See them in the Achievement Gallery.', 4500); }, 1200); } }, 500); }
     }
+    giftWelcome600();
     giftHalloween550();
     pump();
   }
