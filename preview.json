@@ -18,9 +18,10 @@
       "game": "arcade",
       "name": "Suggestion Booth & DLC Machine fix",
       "size": "Free Patch",
-      "what": "David's bug report: submitting in the Suggestion Booth or the DLC Machine sometimes reloaded the arcade, and the Suggestion, DLC and Lili's boards stopped updating. Fixed in the Time Jumper: submits never restart the game and keep your text until you tap IT SENT (resending a DLC idea is free), and all three boards share one GitHub check, refresh on their own and say when they couldn't.",
-      "stage": "building",
-      "when": "In the Time Jumper now"
+      "what": "David's bug report, fixed: submitting in the Suggestion Booth or the DLC Machine never reloads the arcade any more, your text stays until you tap IT SENT (resending a DLC idea is free), and the Suggestion, DLC and Lili's boards share one GitHub check, refresh on their own and say when they couldn't.",
+      "stage": "shipped",
+      "when": "Shipped Oct 21",
+      "shippedAt": "2026-10-22T05:00:00Z"
     },
     {
       "game": "grocery",
@@ -444,16 +445,6 @@
       "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Fly side by side in your own aircraft, or walk up to a friend's parked aircraft and tap Ride along. Hop out anytime: your own aircraft is parked on the nearest pad."
     },
     {
-      "id": "arcade-booth-fix",
-      "game": "arcade",
-      "issue": 60,
-      "name": "Suggestion Booth & DLC Machine fix",
-      "url": "previews/arcade-booth-fix/",
-      "playable": true,
-      "built": "2026-10-21",
-      "notes": "Submits never crash or reload, your text stays until IT SENT, boards refresh (one GitHub check for all 3) and say when they couldn't"
-    },
-    {
       "id": "drvic-multiplayer",
       "game": "drvic",
       "name": "Dr. Vic: The Lost Lab Multiplayer",
@@ -465,6 +456,18 @@
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "arcade-booth-fix",
+      "game": "arcade",
+      "issue": 60,
+      "name": "Suggestion Booth & DLC Machine fix",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/arcade-booth-fix-beta/",
+      "built": "2026-10-21",
+      "archived": "2026-10-21",
+      "notes": "Submits never crash or reload, your text stays until IT SENT, boards refresh (one GitHub check for all 3) and say when they couldn't",
+      "playable": true
+    },
     {
       "id": "petparty",
       "game": "petparty",
