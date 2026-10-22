@@ -398,7 +398,8 @@ body.boostzone #btn-boost { display: flex; }
 #boost-fill { height: 100%; width: 60%; background: linear-gradient(90deg,#1e8fff,#3ff0ff); transition: width .1s; }
 #boost-hud.on #boost-fill { background: linear-gradient(90deg,#3ff0ff,#ffffff,#3ff0ff); background-size: 200% 100%; animation: bfl .4s linear infinite; }
 @keyframes bfl { from { background-position: 0 0; } to { background-position: 200% 0; } }
-body.touch #boost-hud { bottom: auto; top: max(54px, env(safe-area-inset-top)); width: min(260px, 52vw); }
+/* phones: tuck the boost bar under the lives badge so it never covers the zone sign */
+body.touch #boost-hud { bottom: auto; left: max(12px, env(safe-area-inset-left)); transform: none; top: calc(max(10px, env(safe-area-inset-top)) + 100px); width: min(220px, 40vw); font-size: 14px; }
 .rank { font-size: 1.4em; color: #ffd23f; }
 #online-card label.on-l { display: block; margin: 8px 0; font-weight: bold; }
 #online-card input { font: bold 18px "Trebuchet MS",system-ui,sans-serif; padding: 8px 10px; border-radius: 10px; border: 2px solid #3ff0ff; background: #0d0630; color: #fff; width: 10em; text-transform: none; }
