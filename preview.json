@@ -25,12 +25,13 @@
     {
       "issue": 55,
       "game": "blocks",
-      "name": "Grok Blocks: Re-Blocked",
+      "name": "Grok Blocks: Re-Blocked (live)",
       "size": "Remaster",
-      "what": "Grok Blocks remastered on a brand new shiny engine: still blocky, but Minecraft-bright with soft shadows, a sky with sun, moon and stars, and real day/night. New Crystal Caves (dark tunnels, glowing crystals, lava, mine ore with your pickaxe, headlamp) and Blossom Hills (cherry trees, koi pond, lanterns), 6 new animals, 4 new cases and a Pet Corner with Luna, Pi-rat, Snowie, Candy and Torty. Everything from the original stays.",
-      "stage": "building",
-      "when": "In the lab now · beta in the Time Jumper",
-      "key": "blocks_reblocked"
+      "what": "The Grok Blocks remaster is live in the Arcade, right next to the original in the Adventure hall! A shiny new engine with soft shadows, a day/night cycle, the dark glowing Crystal Caves with a mining camp and lava, Blossom Hills, new blocks, mobs and tools, and the Pet Corner with Luna, Pi-rat, Snowie, Candy and Torty. Live now! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 21",
+      "key": "blocks_reblocked",
+      "shippedAt": "2026-10-22T06:12:00Z"
     },
     {
       "game": "skytours",
@@ -467,20 +468,21 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "blocks-reblocked",
       "game": "blocks",
       "issue": 55,
       "name": "Grok Blocks: Re-Blocked",
-      "url": "previews/blocks-reblocked/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/blocks-reblocked-beta/",
       "built": "2026-10-21",
-      "notes": "Remaster of Grok Blocks on a new shiny engine (soft shadows, sky with sun/moon/stars, block textures, day/night on by default). New: Crystal Caves (real tunnels and chambers, glowing wall crystals, lava, a mining camp, mine ore with your pickaxe, headlamp) and Blossom Hills (cherry trees, koi pond, lanterns), 6 new animals, 4 new cases, Pet Corner with Torty's habitat, Candy's yard and the Rat Palace. Everything from the original is still in."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-21",
+      "notes": "Remaster of Grok Blocks on a new shiny engine (soft shadows, sky with sun/moon/stars, block textures, day/night on by default). New: Crystal Caves (real tunnels and chambers, glowing wall crystals, lava, a mining camp, mine ore with your pickaxe, headlamp) and Blossom Hills (cherry trees, koi pond, lanterns), 6 new animals, 4 new cases, Pet Corner with Torty's habitat, Candy's yard and the Rat Palace. Everything from the original is still in.",
+      "playable": true
+    },
     {
       "id": "grocery-multiplayer",
       "game": "grocery",

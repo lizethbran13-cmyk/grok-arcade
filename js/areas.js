@@ -1090,8 +1090,8 @@
   AR.GAL = GAL;
   // walls: N = north (z = minZ, facing +z), E = east (x = maxX, facing -x), S = south (z = maxZ, facing -z)
   AR.GAL_SECTIONS = [
-    { id: 'adv', name: 'ADVENTURE', icon: '\uD83D\uDDFA\uFE0F', col: '#4ade80', ids: ['sky', 'land', 'voxels', 'poke', 'heist', 'detective', 'spooks', 'dash', 'blocks', 'hunters', 'drvic'], wall: 'N', from: 72.9, slots: 11 },
-    { id: 'race', name: 'RACING', icon: '\uD83C\uDFC1', col: '#f97316', ids: ['grid', 'surfers', 'rides', 'kart'], wall: 'N', from: 92.2, slots: 5 },
+    { id: 'adv', name: 'ADVENTURE', icon: '\uD83D\uDDFA\uFE0F', col: '#4ade80', ids: ['sky', 'land', 'voxels', 'poke', 'heist', 'detective', 'spooks', 'dash', 'blocks', 'blocksrb', 'hunters', 'drvic'], wall: 'N', from: 72.9, slots: 12 },
+    { id: 'race', name: 'RACING', icon: '\uD83C\uDFC1', col: '#f97316', ids: ['grid', 'surfers', 'rides', 'kart'], wall: 'N', from: 94.0, slots: 4 },
     { id: 'sport', name: 'SPORTS', icon: '\uD83C\uDFC6', col: '#38bdf8', ids: ['fc', 'pickle', 'sports', 'pickleballpark'], wall: 'E', from: -12.2, slots: 4 },
     { id: 'more', name: 'MORE GAMES', icon: '\u2728', col: '#e879f9', ids: [], wall: 'E', from: -4.75, slots: 1 },
     { id: 'hubs', name: 'HUBS & WORLDS', icon: '\uD83C\uDFE2', col: '#ff8a3d', ids: ['ratitahq', 'puptown', 'torty', 'northpole', 'pumpkinhollow', 'ruffsources', 'skytours', 'grocery'], wall: 'E', from: -2.5, slots: 8 },

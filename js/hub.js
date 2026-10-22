@@ -664,6 +664,14 @@
         g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#5dff8a'; g.fillText('GROK SPOOKS', w / 2, 24);
         break;
       }
+      case 'blocksrb': {
+        var rb1 = g.createLinearGradient(0, 0, 0, h); rb1.addColorStop(0, '#0b1030'); rb1.addColorStop(1, '#2a2050'); g.fillStyle = rb1; g.fillRect(0, 0, w, h);
+        for (i = 0; i < w / 16 + 1; i++) { var rh = 26 + ((i * 41) % 5) * 7; g.fillStyle = i % 2 ? '#4a4a5c' : '#3e3e50'; g.fillRect(i * 16, h - rh, 16, rh); }
+        for (i = 0; i < 6; i++) { var cx2 = 14 + i * (w - 28) / 5, pul = 0.6 + Math.sin(t * 3 + i) * 0.4; g.fillStyle = i % 2 ? 'rgba(122,240,255,' + pul + ')' : 'rgba(192,138,255,' + pul + ')'; g.fillRect(cx2, h - 62 - (i % 3) * 8, 8, 22); g.fillRect(cx2 + 9, h - 52, 6, 12); }
+        g.fillStyle = '#ff6a1a'; g.fillRect(w * 0.55, h - 22, 40, 8);
+        g.font = font(18); g.textAlign = 'center'; g.fillStyle = '#7af0ff'; g.fillText('GROK BLOCKS', w / 2, 24); g.font = font(14); g.fillStyle = '#c08aff'; g.fillText('RE-BLOCKED', w / 2, 44);
+        break;
+      }
       case 'blocks': {
         var gb1 = g.createLinearGradient(0, 0, 0, h); gb1.addColorStop(0, '#ffcf8a'); gb1.addColorStop(1, '#ffe9b8'); g.fillStyle = gb1; g.fillRect(0, 0, w, h);
         for (i = 0; i < w / 16 + 1; i++) { var bh = 34 + ((i * 37) % 5) * 6; g.fillStyle = i % 2 ? '#7cc24a' : '#6bb33e'; g.fillRect(i * 16, h - bh, 16, bh); g.fillStyle = '#a0703c'; g.fillRect(i * 16, h - bh + 10, 16, 4); }
