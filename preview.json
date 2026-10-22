@@ -436,15 +436,6 @@
       "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Co-op shift: stock, bag, pack and drive together; every job or delivery a friend finishes pays the crew a team tip, and you see friends driving the Grok Van or truck."
     },
     {
-      "id": "skytours-multiplayer",
-      "game": "skytours",
-      "name": "Sky Tours Multiplayer",
-      "url": "previews/skytours-multiplayer/",
-      "playable": true,
-      "built": "2026-10-21",
-      "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Fly side by side in your own aircraft, or walk up to a friend's parked aircraft and tap Ride along. Hop out anytime: your own aircraft is parked on the nearest pad."
-    },
-    {
       "id": "drvic-multiplayer",
       "game": "drvic",
       "name": "Dr. Vic: The Lost Lab Multiplayer",
@@ -452,6 +443,15 @@
       "playable": true,
       "built": "2026-10-21",
       "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Explore the lab as a crew: clues anyone finds go on everyone's Case Board."
+    },
+    {
+      "id": "skytours-multiplayer",
+      "game": "skytours",
+      "name": "Sky Tours Multiplayer",
+      "url": "previews/skytours-multiplayer/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Fly side by side in your own aircraft, or walk up to a friend's parked aircraft and tap Ride along. Hop out anytime: your own aircraft is parked on the nearest pad."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
