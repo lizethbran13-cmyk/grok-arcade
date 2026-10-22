@@ -5,32 +5,35 @@
     {
       "issue": 59,
       "game": "ratita",
-      "name": "Ratita Rescue MEGA DLC: Old Town Lab",
+      "name": "Ratita Rescue MEGA DLC: Old Town Lab (live)",
       "size": "175",
-      "what": "The abandoned lab on Old Town Street built by Luna, Pi-rat and Snowie's villainous great-great-great-grandparents: Founders' Hall, Goo Works, Founders' Vault",
-      "stage": "building",
-      "when": "In the lab now · WIP preview in the Time Jumper",
-      "key": "grokDLC.ratita.you_choose"
+      "what": "The abandoned lab on Old Town Street built by Luna, Pi-rat and Snowie's villainous great-great-great-grandparents: Founders' Hall, Goo Works, Founders' Vault Live now in Grok Ratita Rescue: unlock it at the DLC Machine! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 22",
+      "key": "grokDLC.ratita.you_choose",
+      "shippedAt": "2026-10-22T18:50:35Z"
     },
     {
       "issue": 58,
       "game": "grocery",
-      "name": "Grocery Tycoon: Holiday Mini Pack",
+      "name": "Grocery Tycoon: Holiday Mini Pack (live)",
       "size": "Mini Pack",
-      "what": "You chose, so we picked: HOLIDAY DECOR, UNIFORMS and a THANKSGIVING AISLE! Switch every store you run to Harvest (Thanksgiving) or Winter Holidays decorations (garlands, wreaths, ceiling lights, hanging pumpkins or snowflakes, a pumpkin + hay or Christmas tree entrance display, and a decorated storefront), pick one of 7 apron + cap uniforms for your staff (and you), and stock a brand-new Thanksgiving Aisle with turkeys, pies, cranberry sauce, stuffing, gravy and sweet potatoes, topped with plush Luna, Pi-rat, Snowie, Candy and Torty. Mini Pack, 25 tickets.",
-      "stage": "building",
-      "when": "In the lab now · WIP preview in the Time Jumper",
-      "key": "grokDLC.grocery.you_choose"
+      "what": "You chose, so we picked: HOLIDAY DECOR, UNIFORMS and a THANKSGIVING AISLE! Switch every store you run to Harvest (Thanksgiving) or Winter Holidays decorations (garlands, wreaths, ceiling lights, hanging pumpkins or snowflakes, a pumpkin + hay or Christmas tree entrance display, and a decorated storefront), pick one of 7 apron + cap uniforms for your staff (and you), and stock a brand-new Thanksgiving Aisle with turkeys, pies, cranberry sauce, stuffing, gravy and sweet potatoes, topped with plush Luna, Pi-rat, Snowie, Candy and Torty. Mini Pack, 25 tickets. Live now in Grok Grocery Tycoon: unlock it at the DLC Machine! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 22",
+      "key": "grokDLC.grocery.you_choose",
+      "shippedAt": "2026-10-22T18:50:35Z"
     },
     {
       "issue": 57,
       "game": "drvic",
-      "name": "Dr. Vic: The Sunken Lab",
+      "name": "Dr. Vic: The Sunken Lab (live)",
       "size": "MEGA Expansion",
-      "what": "You chose, so we picked: THE SUNKEN LAB! The glowing Old Town storm drain leads to a secret 1911 Ratita lab under Old Town Lake: the Dive Dock (mini-sub, moon pool, brass diving suits, sonar), the Aquarium Wing (glow-fish tanks, jellyfish, a glow-kelp farm, an observation lounge with giant portholes) and the Deep Core, home of the sleeping GOOCTOPUS. 9 new clues and 9 anomalies to film, seawater leaks that slide you back to the hatch, and a GO LIVE finale. Cameos from Pi-rat, Candy, Snowie, Luna and Torty. MEGA Expansion, 175 tickets.",
-      "stage": "building",
-      "when": "In the lab now · WIP preview in the Time Jumper",
-      "key": "grokDLC.drvic.you_choose"
+      "what": "You chose, so we picked: THE SUNKEN LAB! The glowing Old Town storm drain leads to a secret 1911 Ratita lab under Old Town Lake: the Dive Dock (mini-sub, moon pool, brass diving suits, sonar), the Aquarium Wing (glow-fish tanks, jellyfish, a glow-kelp farm, an observation lounge with giant portholes) and the Deep Core, home of the sleeping GOOCTOPUS. 9 new clues and 9 anomalies to film, seawater leaks that slide you back to the hatch, and a GO LIVE finale. Cameos from Pi-rat, Candy, Snowie, Luna and Torty. MEGA Expansion, 175 tickets. Live now in Grok Dr. Vic: unlock it at the DLC Machine! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 22",
+      "key": "grokDLC.drvic.you_choose",
+      "shippedAt": "2026-10-22T18:50:35Z"
     },
     {
       "issue": 56,
@@ -528,40 +531,46 @@
       "playable": true,
       "built": "2026-10-22",
       "notes": "First playable of the Grok Land sequel. Try BOOST ZONES on the title screen: Meadow Rush (boost meter, grind rails, loop, homing attack, air dash, rings, S rank under 18s). New worlds: Red Rock Trail, Mesa Mines, Cheese Conveyor (Ratita Industries), Shell-Tough Test Track (Tortuga Tech), plus all 12 classic levels with the new graphics. Online co-op from the title screen. Cameos: Luna, Pi-rat, Snowie, Candy, Torty."
-    },
+    }
+  ],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
-      "id": "drvic-sunken-lab",
-      "game": "drvic",
-      "issue": 57,
-      "name": "Dr. Vic: The Sunken Lab (MEGA DLC)",
-      "url": "previews/drvic-sunken-lab/",
-      "playable": true,
+      "id": "ratita-old-town-lab",
+      "game": "ratita",
+      "issue": 59,
+      "name": "Ratita Rescue MEGA DLC: Old Town Lab",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/ratita-old-town-lab-beta/",
       "built": "2026-10-22",
-      "notes": "WIP MEGA DLC (175 tickets when it ships). In Old Town Street, find the glowing storm drain near the fair banner and climb down: 3 new levels under Old Town Lake (Dive Dock, Aquarium Wing, Deep Core), 7 new room types, 9 clues, 9 anomalies, seawater leaks you can slip on, Snowie's valve wheel opens the deep lift, the sleeping Gooctopus and a GO LIVE finale. Cameos: Pi-rat, Candy, Snowie, Luna, Torty."
+      "archived": "2026-10-22",
+      "notes": "WIP preview: 3 lab levels, 3 bosses, pet cameos",
+      "playable": true
     },
     {
       "id": "grocery-holiday-mini-pack",
       "game": "grocery",
       "issue": 58,
       "name": "Grocery Tycoon: Holiday Mini Pack",
-      "url": "previews/grocery-holiday-mini-pack/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grocery-holiday-mini-pack-beta/",
       "built": "2026-10-22",
-      "notes": "WIP Mini Pack (25 tickets when it ships). Open the Journal (📒) and tap 🦃 Holiday: pick Harvest or Winter Holidays decorations for every store you run, and one of 7 uniforms for your staff (and you, in Career). Main St already has a Thanksgiving Aisle (turkeys, pies, cranberry sauce, stuffing, gravy, sweet potatoes) with harvest endcaps and plush Luna, Pi-rat, Snowie, Candy and Torty; build more from any sales-floor slot."
+      "archived": "2026-10-22",
+      "notes": "WIP Mini Pack (25 tickets when it ships). Open the Journal (📒) and tap 🦃 Holiday: pick Harvest or Winter Holidays decorations for every store you run, and one of 7 uniforms for your staff (and you, in Career). Main St already has a Thanksgiving Aisle (turkeys, pies, cranberry sauce, stuffing, gravy, sweet potatoes) with harvest endcaps and plush Luna, Pi-rat, Snowie, Candy and Torty; build more from any sales-floor slot.",
+      "playable": true
     },
     {
-      "id": "ratita-old-town-lab",
-      "game": "ratita",
-      "issue": 59,
-      "name": "Ratita Rescue MEGA DLC: Old Town Lab",
-      "url": "previews/ratita-old-town-lab/",
-      "playable": true,
+      "id": "drvic-sunken-lab",
+      "game": "drvic",
+      "issue": 57,
+      "name": "Dr. Vic: The Sunken Lab (MEGA DLC)",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/drvic-sunken-lab-beta/",
       "built": "2026-10-22",
-      "notes": "WIP preview: 3 lab levels, 3 bosses, pet cameos"
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-22",
+      "notes": "WIP MEGA DLC (175 tickets when it ships). In Old Town Street, find the glowing storm drain near the fair banner and climb down: 3 new levels under Old Town Lake (Dive Dock, Aquarium Wing, Deep Core), 7 new room types, 9 clues, 9 anomalies, seawater leaks you can slip on, Snowie's valve wheel opens the deep lift, the sleeping Gooctopus and a GO LIVE finale. Cameos: Pi-rat, Candy, Snowie, Luna, Torty.",
+      "playable": true
+    },
     {
       "id": "remaster-works",
       "game": "arcade",
