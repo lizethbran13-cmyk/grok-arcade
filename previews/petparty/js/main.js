@@ -100,7 +100,7 @@ function startParty(humans) {
   P.order = pool.slice(0, S.len); S.last = P.order.slice(); save();
   P.roster = roster; P.stars = roster.map(() => 0); P.round = 0; P.local = roster.findIndex((p) => p.pid === 'me'); P.guests = shuffle(GUESTS.map((g, i) => i));
   if (P.mode === 'host') bcast({ t: 'start', roster: roster.map((p) => Object.assign({}, p, { pid: p.pid === 'me' ? P.room.pid : p.pid })), order: P.order, stars: P.stars });
-  setPh('live', { lines: [['rico', "Gooood evening! You're watching GROK PET PARTY, LIVE on Tortuga TV! 📺"], ['martina', 'Brought to you by Ratita Industries… and Tortuga Tech: shell-tough since forever! 🐢'], ['rico', `Tonight: ${P.order.length} mini-games and a GRAND FINAL. Let's meet our contestants!`]], dur: 9 });
+  setPh('live', { lines: [['rico', "Gooood evening! You're watching GROK PET PARTY, LIVE on Tortuga TV! 📺"], ['martina', 'Brought to you by Ratita Industries… and Tortuga Tech: shell-tough since forever! 🐢'], ['rico', 'Love it, Torty! Our favourite co-host, folks!'], ['rico', `Tonight: ${P.order.length} mini-games and a GRAND FINAL. Let's meet our contestants!`]], dur: 9 });
 }
 function setPh(ph, d = {}) { d.stars = P.stars; d.round = P.round; enterPh(ph, d); bcast({ t: 'ph', ph, d }); }
 function enterPh(ph, d) {
@@ -113,7 +113,7 @@ function enterPh(ph, d) {
   if (ph === 'play') { ui(''); hud(true); $('actBtn').textContent = gameById(d.gid).act || '★'; $('actBtn').classList.toggle('hidden', !gameById(d.gid).act); sfx('go'); }
   if (ph === 'end') { hud(false); const pl = d.places; ui(`<div class="card"><h2>${gameById(d.gid).ic} RESULTS</h2>${pl.map((r) => `<div class="row res ${r.i === P.local ? 'me' : ''}"><b>${['🥇', '🥈', '🥉', '4️⃣'][r.place - 1]}</b><i style="background:${R[r.i].color}"></i>${esc(R[r.i].name)}<span>+${r.st} ⭐</span></div>`).join('')}</div>`, 'pop');
     const me = pl.find((r) => r.i === P.local); if (me && me.place === 1) { JINGLE.win(); } else sfx('point'); }
-  if (ph === 'stand') { leaveGame(); showStudio(); ui(''); studio.setRoster(R, P.stars); studio.camShot('podium'); studio.drawScreen('STANDINGS', R.map((p, i) => `${p.name} ${P.stars[i]}⭐`).join(' · '), '#3f7dff'); }
+  if (ph === 'stand') { leaveGame(); showStudio(); ui(''); studio.setRoster(R, P.stars); studio.camShot(d.intro ? 'podium' : 'board'); studio.drawScreen('STANDINGS', R.map((p, i) => [p.name, P.stars[i], p.color, i]).sort((a, b) => b[1] - a[1]), '#3f7dff'); }
   if (ph === 'guest') { studio.camShot('guest'); const gd = GUESTS[d.g]; studio.showGuest(gd); studio.setRoster(R, P.stars); studio.drawScreen(`GUEST: ${gd.n.toUpperCase()}`, 'booked by Ruffsources', '#3b4a8f', '⭐'); JINGLE.guest(); }
   if (ph === 'finalIntro') { leaveGame(); showStudio(); studio.showGuest(null); studio.camShot('wide'); studio.drawScreen('THE GRAND FINAL', 'Crown Chase · DOUBLE stars', '#ffb000', '👑'); JINGLE.final(); }
   if (ph === 'crown') { leaveGame(); showStudio(); ui(''); hud(false); studio.champX = -3.6 + d.champ * 2.4; studio.setRoster(R, P.stars); studio.champ = d.champ; studio.celebrate = 1; studio.camShot('champ'); studio.drawScreen(`${R[d.champ].name.toUpperCase()}`, '👑 PARTY CHAMP 👑', '#ffb000'); burst(0, 9, -3); JINGLE.win(); }
@@ -127,7 +127,7 @@ function nextAfterRound() {
   if (P.round < P.order.length) { const gi = P.guests[P.round % P.guests.length], gd = GUESTS[gi];
     // a guest every round: Candy (Ruffsources) introduces them, and they give last place a little boost so nobody is left behind
     const lastI = P.stars.indexOf(Math.min(...P.stars)); P.stars[lastI] += 1;
-    setPh('guest', { g: gi, dur: 9, lines: [['candy', `Woof! Ruffsources booked tonight's surprise guest… give it up for ${gd.n.toUpperCase()}!`], ['guest', gd.line], ['guest', `${gd.gift} (${P.roster[lastI].name})`], [P.round % 2 ? 'martina' : 'rico', P.round % 2 ? "Thanks, Torty! — It's MARTINA on air, Rico! 😤" : 'This guest spot is brought to you by Ratita Industries!']] }); }
+    setPh('guest', { g: gi, dur: 9, lines: [['candy', `Woof! Ruffsources booked tonight's surprise guest… give it up for ${gd.n.toUpperCase()}!`], ['guest', gd.line], ['guest', `${gd.gift} (${P.roster[lastI].name})`], ...(P.round % 2 ? [['rico', 'What a guest! Thanks for the intro, Torty!'], ['martina', 'Aww, anytime, Rico! Everybody calls me Torty around here. 🐢💚']] : [['rico', 'This guest spot is brought to you by Ratita Industries!']])] }); }
 }
 function hostStep(dt) {
   const d = P.d; P.phT -= dt;

@@ -79,10 +79,15 @@ export class Studio {
       const c = pd.c.getContext('2d'); c.fillStyle = '#0d0820'; c.fillRect(0, 0, 512, 160); c.fillStyle = p.color; c.fillRect(0, 0, 512, 14); c.font = '900 52px system-ui'; c.fillStyle = '#fff'; c.textAlign = 'center'; c.fillText(p.name, 256, 72, 480); c.font = '900 50px system-ui'; c.fillStyle = '#ffd23f'; c.fillText('⭐ ' + (stars ? stars[i] : 0), 256, 136); pd.tex.needsUpdate = true; });
     this.pods.forEach((pd, i) => pd.g.visible = i < roster.length); }
   drawScreen(t1, t2, col = '#ff3fb4', ic = '') { const c = this.scrC.getContext('2d'), w = 1024, h = 576; const gr = c.createLinearGradient(0, 0, w, h); gr.addColorStop(0, col); gr.addColorStop(1, '#2a0a4a'); c.fillStyle = gr; c.fillRect(0, 0, w, h);
-    c.globalAlpha = 0.15; c.fillStyle = '#fff'; for (let k = 0; k < 14; k++) { c.beginPath(); c.moveTo(w / 2, h / 2); c.arc(w / 2, h / 2, w, k / 14 * Math.PI * 2, (k + 0.5) / 14 * Math.PI * 2); c.fill(); } c.globalAlpha = 1;
-    c.textAlign = 'center'; c.fillStyle = '#fff'; if (ic) { c.font = '160px system-ui'; c.fillText(ic, w / 2, 230); }
-    c.font = `900 ${ic ? 80 : 100}px system-ui`; c.fillText(t1, w / 2, ic ? 350 : 290, w - 60); c.font = '800 46px system-ui'; c.fillStyle = '#ffe58a'; c.fillText(t2 || '', w / 2, ic ? 430 : 380, w - 60);
-    c.font = '800 28px system-ui'; c.fillStyle = '#c9ffe9'; c.fillText('Sponsored by RATITA INDUSTRIES & TORTUGA TECH', w / 2, h - 34); this.scr.needsUpdate = true; }
+    c.globalAlpha = 0.15; c.fillStyle = '#fff'; for (let k = 0; k < 14; k++) { c.beginPath(); c.moveTo(w / 2, h * 0.3); c.arc(w / 2, h * 0.3, w, k / 14 * Math.PI * 2, (k + 0.5) / 14 * Math.PI * 2); c.fill(); } c.globalAlpha = 1;
+    // everything sits in the TOP part of the screen: the podium heads cover the bottom from the podium camera
+    c.textAlign = 'center'; c.font = '800 22px system-ui'; c.fillStyle = '#c9ffe9'; c.fillText('RATITA INDUSTRIES × TORTUGA TECH', w / 2, 34, w * 0.44);
+    if (Array.isArray(t2)) { // standings: one centred column in the middle 46% of the screen, so a portrait phone always sees all of it
+      const x0 = w * 0.27, cw = w * 0.46; c.font = '900 56px system-ui'; c.fillStyle = '#fff'; c.fillText(t1, w / 2, 100, cw);
+      t2.forEach((r, k) => { const y = 124 + k * 62; c.fillStyle = '#000a'; c.fillRect(x0, y, cw, 54); c.fillStyle = r[2]; c.fillRect(x0, y, 12, 54); c.textAlign = 'left'; c.font = '900 32px system-ui'; c.fillStyle = '#fff'; c.fillText(`${k + 1}. ${r[0]}`, x0 + 24, y + 38, cw * 0.62); c.textAlign = 'right'; c.fillStyle = '#ffd23f'; c.fillText(r[1] + ' ⭐', x0 + cw - 14, y + 38); });
+      c.textAlign = 'center'; this.scr.needsUpdate = true; return; }
+    c.fillStyle = '#fff'; if (ic) { c.font = '110px system-ui'; c.fillText(ic, w / 2, 160); }
+    c.font = `900 ${ic ? 70 : 90}px system-ui`; c.fillText(t1, w / 2, ic ? 245 : 170, w - 80); c.font = '800 42px system-ui'; c.fillStyle = '#ffe58a'; c.fillText(t2 || '', w / 2, ic ? 305 : 240, w - 80); this.scr.needsUpdate = true; }
   showGuest(gd) { if (this.guest) { this.grp.remove(this.guest); this.guest = null; } if (!gd) return; const h = makeHuman(gd.look); h.position.set(8.2, 0, -1.6); this.grp.add(h); this.guest = h; this.guestT = 0; }
   update(dt, talk) { const t = E.t; animHuman(this.rico, t, talk === 'rico'); animHuman(this.martina, t + 1, talk === 'martina'); animChar(this.candy, t, talk === 'candy' ? 1.5 : 0, false); this.candy.rotation.y = Math.sin(t * 0.8) * 0.4;
     this.crew.forEach((h, k) => animHuman(h, t + k, false)); this.spots.forEach((s, k) => { s.rotation.z = Math.sin(t * 0.7 + k) * 0.35; s.rotation.x = Math.cos(t * 0.5 + k * 1.3) * 0.25; });
@@ -90,7 +95,7 @@ export class Studio {
     if (this.guest) { this.guestT += dt; const g = this.guest, tx = 4.4, tz = 0.6; g.position.x = damp(g.position.x, tx, 1.6, dt); g.position.z = damp(g.position.z, tz, 1.6, dt); g.position.y = 0.4 * Math.min(1, Math.max(0, (8.2 - g.position.x) / 1.5)); g.rotation.y = Math.abs(g.position.x - tx) > 0.3 ? -Math.PI / 2 : -0.3; animHuman(g, t, talk === 'guest'); }
     if (this.crownM) { this.crownM.visible = !!this.celebrate; const p = this.pods[this.champ || 0]; if (p && this.celebrate) { this.crownM.position.set(p.g.position.x, 0.4 + 1.15 + 1.2 + (p.mesh ? p.mesh.position.y - 1.15 : 0) + 0.15, p.g.position.z + 0.2); this.crownM.rotation.y = t * 1.5; } } }
   camShot(name) { if (name !== this.shot) this._ci = 0; this.shot = name; } // TV-style hard cuts between camera shots
-  camera(dt) { const cam = E.camera, S = { wide: [[0, 5.4, 13], [0, 2.2, -3]], podium: [[0, 3.6, 4.8], [0, 1.8, -3.4]], host: [[-1.5, 2.8, 3.5], [-5.6, 1.8, -1.6]], guest: [[2.4, 2.8, 6.4], [5.6, 1.5, -1.2]], screen: [[0, 4.2, 6.0], [0, 4.0, -9]], champ: [[this.champX || 0, 3.4, 4.6], [this.champX || 0, 2.4, -3.4]] }[this.shot] || [[0, 5.4, 13], [0, 2.2, -3]];
+  camera(dt) { const cam = E.camera, S = { wide: [[0, 5.4, 13], [0, 2.2, -3]], podium: [[0, 3.6, 4.8], [0, 1.8, -3.4]], host: [[-1.5, 2.8, 3.5], [-5.6, 1.8, -1.6]], guest: [[2.4, 2.8, 6.4], [5.6, 1.5, -1.2]], screen: [[0, 4.2, 6.0], [0, 4.0, -9]], board: [[0, 6.2, 3.0], [0, 5.6, -9]], champ: [[this.champX || 0, 3.4, 4.6], [this.champX || 0, 2.4, -3.4]] }[this.shot] || [[0, 5.4, 13], [0, 2.2, -3]];
     const fit = Math.max(1, 0.75 / cam.aspect) ** 0.95; const want = new THREE.Vector3(...S[0]).sub(new THREE.Vector3(...S[1])).multiplyScalar(fit).add(new THREE.Vector3(...S[1]));
     if (!this._ci) { cam.position.copy(want); this._look = new THREE.Vector3(...S[1]); this._ci = 1; } cam.position.lerp(want, 1 - Math.exp(-3 * dt)); this._look.lerp(new THREE.Vector3(...S[1]), 1 - Math.exp(-3 * dt)); cam.lookAt(this._look); }
 }

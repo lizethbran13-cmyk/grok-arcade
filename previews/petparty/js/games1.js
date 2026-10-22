@@ -43,7 +43,7 @@ export class CheeseDash extends Arena {
     if (d < r) { if (d < 1e-4) return [x, b[1] - r]; return [px + dx / d * r, pz + dz / d * r]; } } return null; };
   build() {
     const g = this.grp, b = new Batch(), H = this.H; sky(E.scene, '#ffcf5a', '#ff8a3d');
-    const fl = new THREE.Mesh(G.plane(), new THREE.MeshStandardMaterial({ map: checkerTex('chk_cheese', '#ffe9a8', '#ffd770', 8), roughness: 0.6 })); fl.material.map.wrapS = fl.material.map.wrapT = THREE.RepeatWrapping; fl.material.map.repeat.set(this.N / 2, this.N / 2);
+    const fl = new THREE.Mesh(G.plane(), new THREE.MeshStandardMaterial({ map: cheeseFloorTex(), roughness: 0.55 })); fl.material.map.wrapS = fl.material.map.wrapT = THREE.RepeatWrapping; fl.material.map.repeat.set(this.N, this.N);
     fl.rotation.x = -Math.PI / 2; fl.scale.set(H * 2, H * 2, 1); fl.position.y = 0.01; fl.receiveShadow = true; g.add(fl);
     for (const w of this.boxes) { const cx = (w[0] + w[2]) / 2, cz = (w[1] + w[3]) / 2, sx = w[2] - w[0], sz = w[3] - w[1];
       b.add(G.box(), mat('#f5b82e', { roughness: 0.5 }), cx, 0.55, cz, sx, 1.1, sz); b.add(G.box(), mat('#ffd75e'), cx, 1.12, cz, sx + 0.04, 0.06, sz + 0.04);
@@ -53,8 +53,26 @@ export class CheeseDash extends Arena {
     this.trapM = this.traps.map((t) => { const m = new THREE.Group(); m.position.set(this.cx(t.i), 0.02, this.cz(t.j)); part(G.box(), mat('#b07a45'), 0, 0.05, 0, 0.9, 0.08, 0.55, m); const bar = part(G.box(), mat('#c0c4cc', { metalness: 0.8, roughness: 0.25 }), 0, 0.12, -0.22, 0.85, 0.04, 0.04, m); m.userData.bar = bar;
       part(G.box(), mat('#ff3b3b', { emissive: '#ff0000', emissiveIntensity: 0.6 }), 0, 0.1, 0.1, 0.2, 0.03, 0.2, m); g.add(m); return m; });
     this.thiefM = this.thieves.map((t) => { const m = makeChar(t.id, '#ff9d00'); m.scale.setScalar(CS * 0.9); m.position.set(t.x, 0, t.z); g.add(m); return m; });
+    this.dress(b, g);
     b.build(g); arenaRing(g, H, H, { led: '#ffb000', floor: '#5a2f12', rail: '#fff3c4' });
     sign(g, textTex('cd_t', ['CHEESE DASH', 'by Ratita Industries'], 720, 200, { bg1: '#ffb000', bg2: '#d86a00' }), 6, 0, 2.6, -H - 0.35, 0);
+  }
+  dress(b, g) { // pillars + lamps at wall ends, crusty top trim, mouse holes, tiny Ratita signs, cheese wheels on wall tops, crates outside
+    const pil = new Map(), H = this.H; let k = 0;
+    const holeM = mat('#2a1606', { roughness: 1 }), signT = textTex('cd_sign', ['RATITA', '🧀 →'], 256, 128, { bg1: '#ff3fb4', bg2: '#a3127a', border: '#ffd23f' });
+    for (const w of this.boxes) { const sx = w[2] - w[0], sz = w[3] - w[1], cx = (w[0] + w[2]) / 2, cz = (w[1] + w[3]) / 2, horiz = sx > sz;
+      for (const [px, pz] of horiz ? [[w[0], cz], [w[2], cz]] : [[cx, w[1]], [cx, w[3]]]) { const key = Math.round(px * 4) + ',' + Math.round(pz * 4); if (!pil.has(key)) pil.set(key, [px, pz]); }
+      b.add(G.box(), mat('#e0a020', { roughness: 0.7 }), cx, 0.06, cz, sx + 0.06, 0.12, sz + 0.06); // baseboard
+      if (Math.max(sx, sz) > 3) { k++; continue; } // outer border handled by the ring
+      const face = (k % 2 ? 1 : -1) * 0.26, fx = horiz ? cx : cx + face, fz = horiz ? cz + face : cz, ry = horiz ? (face > 0 ? 0 : Math.PI) : (face > 0 ? Math.PI / 2 : -Math.PI / 2);
+      if (k % 4 === 0) { b.add(G.cyl(), holeM, fx + (horiz ? 0.5 : 0), 0.0, fz + (horiz ? 0 : 0.5), 0.2, 0.06, 0.2, 0, Math.PI / 2, 0); b.map.get(G.cyl().uuid + holeM.uuid).list.at(-1)[7] = horiz ? 0 : Math.PI / 2; }
+      if (k % 4 === 2) sign(g, signT, 0.7, fx + (horiz ? -0.4 : 0) + (horiz ? 0 : Math.sign(face) * 0.03), 0.62, fz + (horiz ? Math.sign(face) * 0.03 : -0.4), ry, 2, '#5a2f12');
+      if (k % 3 === 1) { b.add(G.cyl(), mat('#ffc928', { roughness: 0.4 }), cx, 1.27, cz, 0.32, 0.22, 0.32); b.add(G.cyl(), mat('#f0a818'), cx, 1.27, cz, 0.33, 0.06, 0.33); }
+      k++; }
+    for (const [px, pz] of pil.values()) { b.add(G.box(), mat('#d88a10', { roughness: 0.5 }), px, 0.62, pz, 0.62, 1.24, 0.62); b.add(G.box(), mat('#ff3fb4', { emissive: '#a3127a', emissiveIntensity: 0.4 }), px, 1.27, pz, 0.68, 0.08, 0.68); }
+    let n = 0; for (const [px, pz] of pil.values()) { if (n++ % 3) continue; b.add(G.cylLo(), mat('#3a2a1a', { metalness: 0.5 }), px, 1.55, pz, 0.04, 0.5, 0.04); b.add(G.sph(), mat('#fff2b0', { emissive: '#ffcc55', emissiveIntensity: 2.2 }), px, 1.85, pz, 0.13); }
+    // outside the maze: Ratita crates, stacked cheese wheels, mouse-sized sign posts
+    for (let t = -H + 1; t < H; t += 2.4) for (const [x, z] of [[-H - 0.45, t], [H + 0.45, t + 1.2]]) { crate(b, x, 0, z, 0.5, t); b.add(G.cyl(), mat('#ffc928', { roughness: 0.4 }), x, 0.62, z + 0.6, 0.26, 0.2, 0.26); b.add(G.cyl(), mat('#ffc928', { roughness: 0.4 }), x, 0.82, z + 0.6, 0.22, 0.2, 0.22); }
   }
   ai(i) { const a = this.av[i], [ci, cj] = this.cell(a.x, a.z); a.re = (a.re || 0) - 1 / 30;
     if (!a.path || !a.path.length || a.re < 0) { a.re = 0.4 + Math.random() * 0.4; a.path = this.bfs(ci, cj, (p, q) => this.cheese.some((c) => c[0] === p && c[1] === q && c[2] > 0)); }
@@ -85,6 +103,10 @@ export class CheeseDash extends Arena {
     this.thieves.forEach((t, k) => { const m = this.thiefM[k], px = m.position.x, pz = m.position.z; m.position.x = damp(px, t.x, 12, dt); m.position.z = damp(pz, t.z, 12, dt); m.rotation.y = t.ry || 0; animChar(m, E.t, t.eat > 0 ? 0 : 2.4, false); });
   }
 }
+function cheeseFloorTex() { // one square tile per maze cell (repeat N x N on a square floor, so never stretched)
+  return canvasTex('cheeseFloor', 256, 256, (c, w, h) => { c.fillStyle = '#f7e2a6'; c.fillRect(0, 0, w, h); c.fillStyle = '#efd58a'; for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) if ((x + y) % 2) c.fillRect(x * 64, y * 64, 64, 64);
+    c.strokeStyle = '#d9b860'; c.lineWidth = 4; c.strokeRect(2, 2, w - 4, h - 4); c.fillStyle = '#e9c46a'; c.beginPath(); c.moveTo(108, 150); c.lineTo(160, 150); c.lineTo(108, 112); c.closePath(); c.fill();
+    c.fillStyle = '#d8a93a'; for (const [x, y, r] of [[122, 140, 5], [140, 145, 4]]) { c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); } }); }
 function geoWedge() { const s = new THREE.Shape(); s.moveTo(0, 0); s.lineTo(1, 0); s.lineTo(0, 0.7); s.lineTo(0, 0); const g = new THREE.ExtrudeGeometry(s, { depth: 0.6, bevelEnabled: false }); g.translate(-0.33, -0.1, -0.3); return g; }
 
 /* ================= SHELL SLIDE: slide Torty down the ice onto the target ================= */

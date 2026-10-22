@@ -412,7 +412,7 @@
       "url": "previews/petparty/",
       "playable": true,
       "built": "2026-10-21",
-      "notes": "First playable: the party game show LIVE on Tortuga TV (sponsored by Ratita Industries + Tortuga Tech). 7 mini-games in random order (Cheese Dash, Shell Slide, Candy's Catch, Goo Floor, Pickleball Smash, Pi-rat's Treasure Dig, Bumper Shells) + the Grand Final Crown Chase. Hosts Rico + Martina 'Torty', Candy's Ruffsources guest desk with celebrity guests (Dr. Vic, Penny, Mimi, Lily, Lili, Gary from IT). Solo vs party bots or online with a 5-letter room code (up to 4). Preview uses its own sandbox save."
+      "notes": "Detail pass v2: denser Cheese Dash maze (lamps, mouse holes, Ratita signs, cheese wheels), fuller Bumper Shells + Treasure Dig, clean portrait standings board. The party game show LIVE on Tortuga TV: 7 mini-games in random order + the Grand Final Crown Chase, Candy's Ruffsources guests, solo vs party bots or online rooms for 4. Preview uses its own sandbox save."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
