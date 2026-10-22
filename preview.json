@@ -27,9 +27,9 @@
       "game": "arcade",
       "name": "Multiplayer for Torty Town, Dr. Vic: The Lost Lab, Grocery Tycoon and Sky Tours",
       "size": "Feature",
-      "what": "Multiplayer for Torty Town, Dr. Vic: The Lost Lab, Grocery Tycoon and Sky Tours. Coming up next on the list!",
-      "stage": "queued",
-      "when": "Coming up",
+      "what": "Online co-op for up to 3 friends (5-letter room codes, name tags, see each other indoors and out, and nobody gets stuck if someone leaves) in Torty Town and Dr. Vic: The Lost Lab (explore and solve mysteries together, shared clues), Grocery Tycoon (co-op shifts with team tips, see friends driving the Grok Van and truck) and Sky Tours (fly side by side, or ride along in a friend's aircraft). Try the betas in the Time Jumper!",
+      "stage": "building",
+      "when": "In the lab now · 4 betas in the Time Jumper",
       "key": "multiplayer_4games"
     },
     {
@@ -406,7 +406,44 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "torty-multiplayer",
+      "game": "torty",
+      "name": "Torty Town Multiplayer",
+      "url": "previews/torty-multiplayer/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Explore together and solve the Sunstone mystery: any clue a friend finds goes in everyone's journal."
+    },
+    {
+      "id": "drvic-multiplayer",
+      "game": "drvic",
+      "name": "Dr. Vic: The Lost Lab Multiplayer",
+      "url": "previews/drvic-multiplayer/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Explore the lab as a crew: clues anyone finds go on everyone's Case Board."
+    },
+    {
+      "id": "grocery-multiplayer",
+      "game": "grocery",
+      "name": "Grocery Tycoon Multiplayer",
+      "url": "previews/grocery-multiplayer/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Co-op shift: stock, bag, pack and drive together; every job or delivery a friend finishes pays the crew a team tip, and you see friends driving the Grok Van or truck."
+    },
+    {
+      "id": "skytours-multiplayer",
+      "game": "skytours",
+      "name": "Sky Tours Multiplayer",
+      "url": "previews/skytours-multiplayer/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Fly side by side in your own aircraft, or walk up to a friend's parked aircraft and tap Ride along. Hop out anytime: your own aircraft is parked on the nearest pad."
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
