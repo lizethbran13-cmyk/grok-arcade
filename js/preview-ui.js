@@ -293,7 +293,8 @@
       if (area !== 'preview' && area !== 'glitch' && area !== 'food') greeted = false;
       backBtn(area === 'glitch'); }
   };
-  PR.onData = function () { refreshJumper(); };
+  // #60: an open Scheduled Additions board refreshes itself when new data arrives (it used to keep showing what it had when it opened)
+  PR.onData = function () { refreshJumper(); try { if (GA.AreasUI && GA.AreasUI.kind && GA.AreasUI.kind() === 'pv_board' && GA.AreasUI.isOpen && GA.AreasUI.isOpen()) openBoard(); } catch (e) {} };
   function chronoHook() { if (!GA.MG || !GA.MG.hooks || UI._ch) return; UI._ch = true;
     GA.MG.hooks.start.push(function (id) { if (id === 'chrono') mark('chrono'); });
     GA.MG.hooks.over.push(function (id, score) { if (id !== 'chrono' || score < GA.CHRONO_TARGET) return; if (grant('mini_jumper')) setTimeout(function () { toast('\u23F3 ' + score + ' in Chrono Courier! You won the RARE Mini Time Jumper!', 4600); }, 600); }); }

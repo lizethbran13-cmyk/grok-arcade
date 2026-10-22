@@ -101,7 +101,9 @@
   var CRC = null;
   function crc32(s) { if (!CRC) { CRC = []; for (var n = 0; n < 256; n++) { var c = n; for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; CRC[n] = c >>> 0; } } var x = -1; for (var i = 0; i < s.length; i++) x = (x >>> 8) ^ CRC[(x ^ s.charCodeAt(i)) & 255]; return ((x ^ -1) >>> 0).toString(36) + '.' + s.length.toString(36); }
   // this device's own settings never sync (graphics level, sound, the multiplayer antenna)
-  var LOCAL = [K_ACC, 'grokArcade.gfx', 'grokArcade.muted', 'grokArcade.antenna.last'];
+  // #60: board caches (refetched on every look) and half-typed booth drafts are per-device too. They used to sync, and every board
+  // refresh on one device restarted the arcade on the other (often while you were on GitHub sending a suggestion).
+  var LOCAL = [K_ACC, 'grokArcade.gfx', 'grokArcade.muted', 'grokArcade.antenna.last', 'grokArcade.sbBoard', 'grokArcade.dlcBoard', 'grokArcade.sbDraft', 'grokArcade.dlcDraft', 'grokArcade.sbPending', 'grokArcade.dlcPending'];
   function localKeys() { var o = AC.keys(false); LOCAL.forEach(function (k) { delete o[k]; }); Object.keys(o).forEach(function (k) { if (/^grokArcade\.pv/.test(k)) delete o[k]; }); return o; }
   function scan() {
     var first = getJ(K_META, null) == null, cur = localKeys(), meta = getJ(K_META, {}) || {}, now = Date.now(), changed = 0, k;
@@ -150,6 +152,9 @@
       if (GA.MG && GA.MG.isOpen && GA.MG.isOpen()) return false;
       var desk = GA.AreasUI && GA.AreasUI.isOpen && GA.AreasUI.isOpen() && GA.AreasUI.kind() === 'account';
       if (desk) return true;
+      // #60: never while the Suggestion Booth / DLC Machine / any panel is open (a submit sends you to GitHub, which hides the tab)
+      if ((GA.SB && GA.SB.isOpen && GA.SB.isOpen()) || (GA.DLC && GA.DLC.isOpen && GA.DLC.isOpen()) || document.body.classList.contains('pzOn')) return false;
+      if (Date.now() - (GA.submitAt || 0) < 10 * 60000) return false; // a booth/DLC submit just went to GitHub: let the player come back first
       if (GA.AreasUI && GA.AreasUI.isOpen && GA.AreasUI.isOpen()) return false;
       var t = document.getElementById('title'); if (t && !t.classList.contains('hidden')) return true; // still on the title screen
       return document.visibilityState === 'hidden' || Date.now() - lastInput > 20000;
