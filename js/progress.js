@@ -318,52 +318,32 @@
   P.stats = function () { return JSON.parse(JSON.stringify(st)); };
   P.check = check;
 
-  /* One-time makeup gift: David bought the Silver Trophy (tr_silver, 300) by accident.
-     He keeps the trophy; we refund the tickets once per device on the LIVE arcade save only. */
-  /* One-time makeup gift #2 (Oct 16): David's pet rat Luna went shopping at the Prize Counter on his phone.
-     He keeps the prizes; we refund 1,000 tickets once per device (own key, separate from refund300), LIVE arcade save only. */
-  function giftRefundLuna(after) {
+  /* Oct 22 Halloween Bonus (David's request): 550 tickets, once per save (key gift.halloween550, synced with the rest of the
+     grokArcade.* save by Bob's Account Desk), LIVE arcade save only. The older one-time gifts (300 Silver Trophy refund and
+     1,000 Luna refund) were retired at the same time; their flags stay in old saves, and nobody loses tickets. */
+  function giftHalloween550() {
     try {
       var path = (location.pathname || '').replace(/\\/g, '/');
       if (/\/(archive|previews)\//.test(path)) return;
-      if (GA.store.get('gift.lunaRefund1000', 0)) return;
-      GA.store.set('gift.lunaRefund1000', 1);
-      GA.addTickets(1000);
+      if (GA.store.get('gift.halloween550', 0)) return;
+      GA.store.set('gift.halloween550', 1);
+      GA.addTickets(550);
       if (GA.onTickets) GA.onTickets(GA.getTickets());
+      if (GA.Prog && GA.Prog.event) try { GA.Prog.event('halloween550'); } catch (e) {}
       var tries = 0, iv = setInterval(function () {
         var hud = document.getElementById('hud');
         if (++tries > 240) { clearInterval(iv); return; }
         if (hud && !hud.classList.contains('hidden')) {
           clearInterval(iv);
           setTimeout(function () {
-            if (GA.Fix && GA.Fix.toast) GA.Fix.toast('\uD83D\uDC00 Luna went on a shopping spree! Gus grumbled, but here\u2019s a 1,000-ticket refund. Keep the prizes, and keep an eye on that rat.', 6500);
-          }, 1400 + (after ? 6000 : 0)); // wait for the Silver Trophy toast if it showed this visit
-        }
-      }, 500);
-    } catch (e) { /* ignore */ }
-  }
-
-  function giftRefund300() {
-    try {
-      var path = (location.pathname || '').replace(/\\/g, '/');
-      // Never fire in preview/archive copies (they keep separate saves / aren't the live booth)
-      if (/\/(archive|previews)\//.test(path)) return;
-      if (GA.store.get('gift.refund300', 0)) return;
-      GA.store.set('gift.refund300', 1);
-      GA.addTickets(300);
-      if (GA.onTickets) GA.onTickets(GA.getTickets());
-      var tries = 0, iv = setInterval(function () {
-        var hud = document.getElementById('hud');
-        if (++tries > 240) { clearInterval(iv); return; }
-        if (hud && !hud.classList.contains('hidden')) {
-          clearInterval(iv);
-          setTimeout(function () {
-            if (GA.Fix && GA.Fix.toast) GA.Fix.toast('\uD83C\uDF9F\uFE0F Gus grumbled, but here\u2019s your 300-ticket refund for the Silver Trophy. You can keep the trophy. Don\u2019t tell anyone.', 5200);
+            try { GA.Audio.play('win'); } catch (e) {}
+            if (GA.Fix && GA.Fix.toast) GA.Fix.toast('\uD83C\uDF83 HAPPY HALLOWEEN! \uD83D\uDC7B Luna, Pi-rat, Snowie, Candy and Torty went trick-or-treating and brought you a 550-ticket Halloween Bonus! \uD83C\uDF6C Spend them at the Prize Counter. Boo!', 7000);
           }, 1400);
         }
       }, 500);
     } catch (e) { /* ignore */ }
   }
+  GA.giftHalloween = giftHalloween550;
 
   function init() {
     var got = check(firstRun);
@@ -372,9 +352,7 @@
       // wait until the player is in the hub (not on the title screen) before announcing
       if (got.length) { var tries = 0, iv = setInterval(function () { var hud = document.getElementById('hud'); if (++tries > 240) clearInterval(iv); if (hud && !hud.classList.contains('hidden')) { clearInterval(iv); setTimeout(function () { if (GA.Fix && GA.Fix.toast) GA.Fix.toast('New: Achievements! You already unlocked ' + got.length + '. See them in the Achievement Gallery.', 4500); }, 1200); } }, 500); }
     }
-    var had300 = !!GA.store.get('gift.refund300', 0);
-    giftRefund300();
-    giftRefundLuna(!had300 && !!GA.store.get('gift.refund300', 0));
+    giftHalloween550();
     pump();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
