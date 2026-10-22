@@ -4,12 +4,14 @@
   "items": [
     {
       "game": "petparty",
-      "name": "Grok Pet Party",
+      "name": "Grok Pet Party (live)",
       "size": "New Game",
-      "what": "NEW party game show LIVE on the all-new Tortuga TV Network, sponsored by Ratita Industries and Tortuga Tech! 1-4 players (online room codes or solo vs party bots) battle through 7 mini-games in random order: Cheese Dash, Shell Slide, Candy's Catch, Goo Floor, Pickleball Smash, Pi-rat's Treasure Dig and Bumper Shells, then the Grand Final Crown Chase crowns the Party Champ. Hosts Rico and Martina \"Torty\", and Candy's Ruffsources desk books celebrity guests (Dr. Vic, Penny, Mimi, Lily, Lili, Gary from IT). Tickets and trophies!",
-      "stage": "building",
-      "when": "In the lab now · beta in the Time Jumper",
-      "key": "pet_party"
+      "what": "Grok Pet Party is live on the Tortuga TV Network! A party game show for up to 4 players (room codes) or solo against bots, sponsored by Ratita Industries and Tortuga Tech: 7 mini-games in random order plus the Crown Chase finale, with Candy from Ruffsources bringing out celebrity guests. Play it in PARTY, plus bonus game #46 Buzzer Blitz!",
+      "stage": "shipped",
+      "when": "Oct 21",
+      "key": "pet_party",
+      "issue": 54,
+      "shippedAt": "2026-10-22T03:44:02Z"
     },
     {
       "game": "grocery",
@@ -404,19 +406,20 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "petparty",
       "game": "petparty",
       "name": "Grok Pet Party",
-      "url": "previews/petparty/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/petparty-beta/",
       "built": "2026-10-21",
-      "notes": "Detail pass v2: denser Cheese Dash maze (lamps, mouse holes, Ratita signs, cheese wheels), fuller Bumper Shells + Treasure Dig, clean portrait standings board. The party game show LIVE on Tortuga TV: 7 mini-games in random order + the Grand Final Crown Chase, Candy's Ruffsources guests, solo vs party bots or online rooms for 4. Preview uses its own sandbox save."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-21",
+      "notes": "Detail pass v2: denser Cheese Dash maze (lamps, mouse holes, Ratita signs, cheese wheels), fuller Bumper Shells + Treasure Dig, clean portrait standings board. The party game show LIVE on Tortuga TV: 7 mini-games in random order + the Grand Final Crown Chase, Candy's Ruffsources guests, solo vs party bots or online rooms for 4. Preview uses its own sandbox save.",
+      "playable": true
+    },
     {
       "id": "grocery-sameday-catch",
       "game": "grocery",

@@ -248,7 +248,7 @@
     pet('pl_pirat', sc, 0.0, 1.05, -0.2, 0.5, 0.5);
     reg('Grandma\u2019s snack cart', sc); A.addSolid(24.15, 25.85, 10.95, 12, 'Grandma\u2019s snack cart');
     // 6) plants (instanced) + visitors playing the cabinets
-    plants(ROOT, [[19.0, -10.9], [19.0, 10.9], [22.75, -11.35], [25.95, -11.35], [31.2, -11.2], [31.2, 11.2], [21.2, 11.35], [28.6, 11.35]], 'East Wing');
+    plants(ROOT, [[19.0, -10.9], [19.0, 10.9], [22.75, -11.35], [25.95, -11.35], [30.0, -11.35], [30.0, 11.35], [21.2, 11.35], [28.6, 11.35]], 'East Wing');
     visitor(ROOT, 29.9, -5.92, Math.PI / 2, 0, 'play'); visitor(ROOT, 29.9, 2.96, Math.PI / 2, 1, 'play'); visitor(ROOT, 29.9, 7.4, Math.PI / 2, 2, 'play');
     visitor(ROOT, 27.4, -9.95, Math.PI, 3, 'play'); visitor(ROOT, 25.0, 10.2, 0, 4, 'wave');
   }

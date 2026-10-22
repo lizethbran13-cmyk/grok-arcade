@@ -1096,7 +1096,7 @@
     { id: 'more', name: 'MORE GAMES', icon: '\u2728', col: '#e879f9', ids: [], wall: 'E', from: -4.75, slots: 1 },
     { id: 'hubs', name: 'HUBS & WORLDS', icon: '\uD83C\uDFE2', col: '#ff8a3d', ids: ['ratitahq', 'puptown', 'torty', 'northpole', 'pumpkinhollow', 'ruffsources', 'skytours', 'grocery'], wall: 'E', from: -2.5, slots: 8 },
     { id: 'life', name: 'LIFE SIMS', icon: '\uD83C\uDFE1', col: '#facc15', ids: ['pets', 'life', 'disaster', 'eatsville'], wall: 'S', from: 75.0, slots: 6 },
-    { id: 'party', name: 'PARTY', icon: '\uD83C\uDF89', col: '#ff4fd8', ids: ['party', 'brawl', 'ratita'], wall: 'S', from: 87.2, slots: 6 }];
+    { id: 'party', name: 'PARTY', icon: '\uD83C\uDF89', col: '#ff4fd8', ids: ['party', 'brawl', 'ratita', 'petparty'], wall: 'S', from: 87.2, slots: 6 }];
   var GSTEP = 1.75;
   function slotPos(sec, k) { var d = sec.from + k * GSTEP;
     if (sec.wall === 'N') return { x: d, z: GAL.minZ + 0.6, rot: 0 };

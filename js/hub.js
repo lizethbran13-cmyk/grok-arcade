@@ -936,6 +936,16 @@
         g.fillStyle = '#16a34a'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.strokeStyle = '#e6ff3b'; g.lineWidth = 2; g.strokeRect(w * 0.06 + 3, 9, w * 0.88 - 6, 20); g.font = font(11); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK PICKLEBALL PARK', w / 2, 23);
         break;
       }
+      case 'petparty': {
+        // Grok Pet Party: Tortuga TV Network studio, spotlights sweeping, 4 podiums, a crown on a pedestal
+        var gpp = g.createLinearGradient(0, 0, 0, h); gpp.addColorStop(0, '#1e0b3a'); gpp.addColorStop(1, '#0b1030'); g.fillStyle = gpp; g.fillRect(0, 0, w, h);
+        for (i = 0; i < 2; i++) { var spx = w * (0.5 + Math.sin(t * 0.8 + i * 2.5) * 0.35); g.fillStyle = i ? 'rgba(56,189,248,.18)' : 'rgba(255,79,216,.2)'; g.beginPath(); g.moveTo(w * (0.2 + i * 0.6), 0); g.lineTo(spx - 26, h * 0.8); g.lineTo(spx + 26, h * 0.8); g.closePath(); g.fill(); }
+        g.fillStyle = '#facc15'; g.beginPath(); var crx = w * 0.5, cry = h * 0.42 + Math.sin(t * 2) * 3; g.moveTo(crx - 16, cry + 8); g.lineTo(crx - 16, cry - 6); g.lineTo(crx - 8, cry + 1); g.lineTo(crx, cry - 10); g.lineTo(crx + 8, cry + 1); g.lineTo(crx + 16, cry - 6); g.lineTo(crx + 16, cry + 8); g.closePath(); g.fill();
+        var ppc = ['#f472b6', '#4ade80', '#facc15', '#38bdf8'];
+        for (i = 0; i < 4; i++) { var pdx = w * (0.14 + i * 0.24); g.fillStyle = ppc[i]; rrF(g, pdx - 14, h * 0.7, 28, h * 0.2, 4); g.fillStyle = '#ef4444'; g.beginPath(); g.ellipse(pdx, h * 0.7, 9, 4, 0, 0, 7); g.fill(); g.fillStyle = '#e5e7eb'; g.beginPath(); g.arc(pdx, h * 0.62 + Math.abs(Math.sin(t * 3 + i)) * -4, 8, 0, 7); g.fill(); }
+        g.fillStyle = '#831843'; rrF(g, w * 0.06, 6, w * 0.88, 26, 6); g.strokeStyle = '#ff4fd8'; g.lineWidth = 2; g.strokeRect(w * 0.06 + 3, 9, w * 0.88 - 6, 20); g.font = font(12); g.textAlign = 'center'; g.fillStyle = '#fbcfe8'; g.fillText('PET PARTY \u00b7 LIVE', w / 2, 24);
+        break;
+      }
       case 'drvic': {
         // Grok Dr. Vic: The Lost Lab: night over abandoned Old Town Street, the hidden Ratita Industries lab behind the bushes, Dr. Vic's flashlight beam sweeping, a ghost peeking from a window, green goo glow
         var gdv = g.createLinearGradient(0, 0, 0, h); gdv.addColorStop(0, '#0b1020'); gdv.addColorStop(0.55, '#1e1b4b'); gdv.addColorStop(0.56, '#1f2a24'); gdv.addColorStop(1, '#111814'); g.fillStyle = gdv; g.fillRect(0, 0, w, h);
@@ -957,6 +967,14 @@
         g.fillStyle = '#4ade80'; g.beginPath(); g.ellipse(w * 0.28, h * 0.72, 14, 9, 0, 0, 7); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 2; [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (s) { g.beginPath(); g.moveTo(gfx + s[0] * 24, gfy + s[1] * 16); g.lineTo(gfx + s[0] * 24, gfy + s[1] * 24); g.lineTo(gfx + s[0] * 16, gfy + s[1] * 24); g.stroke(); });
         if (Math.floor(t * 2) % 2) { g.fillStyle = '#ef4444'; g.beginPath(); g.arc(w * 0.12, h * 0.2, 4, 0, 7); g.fill(); }
         g.font = font(17); g.textAlign = 'center'; g.fillStyle = '#4ade80'; g.fillText('GOO CAM', w / 2, 22);
+        break;
+      }
+      case 'buzzer': {
+        var gbz = g.createLinearGradient(0, 0, 0, h); gbz.addColorStop(0, '#1e0b3a'); gbz.addColorStop(1, '#0b1030'); g.fillStyle = gbz; g.fillRect(0, 0, w, h);
+        var blit = Math.floor(t * 1.5) % 4;
+        for (i = 0; i < 4; i++) { var bzx = w * (0.3 + (i % 2) * 0.4), bzy = h * (0.45 + Math.floor(i / 2) * 0.3); g.fillStyle = '#1f2937'; rrF(g, bzx - 26, bzy - 22, 52, 44, 6); g.fillStyle = i === blit ? '#ef4444' : '#7f1d1d'; g.beginPath(); g.ellipse(bzx, bzy, 15, 9, 0, 0, 7); g.fill();
+          if (i === blit) { g.strokeStyle = '#facc15'; g.lineWidth = 2; g.strokeRect(bzx - 26, bzy - 22, 52, 44); } }
+        g.font = font(17); g.textAlign = 'center'; g.fillStyle = '#ff4fd8'; g.fillText('BUZZER BLITZ', w / 2, 22);
         break;
       }
       case 'targetdrill': {

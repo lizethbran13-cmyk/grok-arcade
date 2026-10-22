@@ -2053,6 +2053,71 @@ GA.HALL_DATA = {
 "quip": "Snowie flew past the Hall window three times to wave at her pictures. The third time she was upside down. On purpose, she says.",
 "noOld": "Grok Snowie Sky Tours just took off. Its Time Jumper beta is in the Save Vault (Final Beta). Please keep your paws inside the copter."
 },
+"petparty": {
+"repo": "grok-pet-party",
+"history": [
+{
+"date": "Oct 21",
+"ver": "1.0",
+"title": "Opening night",
+"text": "Grok Pet Party goes live on the Tortuga TV Network! Up to 4 players (room codes) or solo against bots, sponsored by Ratita Industries and Tortuga Tech. Hosts Rico and Martina \"Torty\" run 7 mini-games in random order (Cheese Dash, Shell Slide, Candy's Catch, Goo Floor, Pickleball Smash, Pi-rat's Treasure Dig, Bumper Shells) and the Crown Chase finale, while Candy from Ruffsources brings out celebrity guests between rounds."
+}
+],
+"versions": [],
+"pics": [
+{
+"src": "assets/hall/petparty/1.webp",
+"cap": "The title card: Grok Pet Party, live on the Tortuga TV Network",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/petparty/2.webp",
+"cap": "Four podiums, one spotlight: Rico and Martina \"Torty\" host",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/petparty/3.webp",
+"cap": "Candy from Ruffsources brings out a celebrity guest: Dr. Vic!",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/petparty/4.webp",
+"cap": "Cheese Dash: grab the most cheese before the buzzer",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/petparty/5.webp",
+"cap": "Shell Slide down the Tortuga Tech ice ramp",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/petparty/6.webp",
+"cap": "Pickleball Smash, the Pickleball Park way",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/petparty/7.webp",
+"cap": "Bumper Shells: knock everyone off the ring",
+"w": 390,
+"h": 844
+},
+{
+"src": "assets/hall/petparty/8.webp",
+"cap": "Crown Chase finale: the Party Champ is crowned",
+"w": 390,
+"h": 844
+}
+],
+"cover": "assets/hall/petparty/cover.webp",
+"quip": "Candy booked Gary from IT as a celebrity guest. Gary is still not sure why. He waved anyway.",
+"noOld": "Grok Pet Party just went live. Its Time Jumper preview is in the Save Vault. Grab a buzzer!"
+},
 "drvic": {
 "repo": "grok-dr-vic",
 "history": [
