@@ -1,20 +1,20 @@
 // DLC #46 Super Shop Online Pass: the online order loop (queue, pickers, the Grok van, the Ship Center), the Online Store desk,
 // pet cameos, and your 📱 phone (calls, meetings, the online shop, stock orders, reviews).
 import * as THREE from 'three';
-import { OWN, WH, DESK, VAN_HOME, HOUSES, vanProto } from './online.js?v=ggt19';
-import { S, persist, news } from './save.js?v=ggt19';
-import { GEOM } from './map.js?v=ggt19';
-import { ROADS } from './map.js?v=ggt19';
-import { STORE, FIX, DEPTS } from './data.js?v=ggt19';
-import { OPEN, CLOSE, EV, fmtClock } from './sim.js?v=ggt19';
-import { panel, on, toast, talk, esc } from './uikit.js?v=ggt19';
-import { sfx } from './audio.js?v=ggt19';
-import { Builder, P } from './geo.js?v=ggt19';
-import { compact } from './compact.js?v=ggt19';
-import { MATS } from './mats.js?v=ggt19';
-import { makePet, animPet } from './pets.js?v=ggt19';
-import { inView } from './perf.js?v=ggt19';
-import { Patch52 } from './patch52.js?v=ggt19';
+import { OWN, WH, DESK, VAN_HOME, HOUSES, vanProto } from './online.js?v=ggt20';
+import { S, persist, news } from './save.js?v=ggt20';
+import { GEOM } from './map.js?v=ggt20';
+import { ROADS } from './map.js?v=ggt20';
+import { STORE, FIX, DEPTS } from './data.js?v=ggt20';
+import { OPEN, CLOSE, EV, fmtClock } from './sim.js?v=ggt20';
+import { panel, on, toast, talk, esc } from './uikit.js?v=ggt20';
+import { sfx } from './audio.js?v=ggt20';
+import { Builder, P } from './geo.js?v=ggt20';
+import { compact } from './compact.js?v=ggt20';
+import { MATS } from './mats.js?v=ggt20';
+import { makePet, animPet } from './pets.js?v=ggt20';
+import { inView } from './perf.js?v=ggt20';
+import { Patch52 } from './patch52.js?v=ggt20';
 const PI = Math.PI, $ = (id) => document.getElementById(id), $m = (n) => '$' + Math.round(n).toLocaleString('en-US');
 const NAMES = ['Ava R.', 'Mateo G.', 'Noah P.', 'Sofia L.', 'Liam K.', 'Mia T.', 'Ethan W.', 'Zoe B.', 'Leo M.', 'Isla C.', 'Grandma Rosa', 'Mr. Whiskers', 'The Okafors', 'Mrs. Parsnip'];
 const PETS = { luna: ['Luna', '🐭'], pirat: ['Pi-rat', '🏴‍☠️'], snowie: ['Snowie', '🐁'], candy: ['Candy', '🐶'], torty: ['Martina "Torty"', '🐢'] };

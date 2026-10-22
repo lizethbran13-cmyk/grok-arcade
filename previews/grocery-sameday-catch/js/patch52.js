@@ -2,16 +2,16 @@
 // hand-off, and YOU behind the wheel: the Ship Center truck for 2-day shipping and the Grok Van for same-day delivery, with a GPS
 // route, real crashes (damage, repair bill, late parcels) and Torty's Tow back to the dock so you're never stuck.
 import * as THREE from 'three';
-import { E } from './engine.js?v=ggt19';
-import { IN } from './input.js?v=ggt19';
-import { S, persist } from './save.js?v=ggt19';
-import { DEPTS, DEPT_IDS, FIX } from './data.js?v=ggt19';
-import { fmtClock } from './sim.js?v=ggt19';
-import { panel, toast, talk, talking } from './uikit.js?v=ggt19';
-import { sfx } from './audio.js?v=ggt19';
-import { HOUSES, VAN_HOME, WH } from './online.js?v=ggt19';
-import { CEDAR, APTS, ROADS52 } from './east52.js?v=ggt19';
-import { makePet, animPet } from './pets.js?v=ggt19';
+import { E } from './engine.js?v=ggt20';
+import { IN } from './input.js?v=ggt20';
+import { S, persist } from './save.js?v=ggt20';
+import { DEPTS, DEPT_IDS, FIX } from './data.js?v=ggt20';
+import { fmtClock } from './sim.js?v=ggt20';
+import { panel, toast, talk, talking } from './uikit.js?v=ggt20';
+import { sfx } from './audio.js?v=ggt20';
+import { HOUSES, VAN_HOME, WH } from './online.js?v=ggt20';
+import { CEDAR, APTS, ROADS52 } from './east52.js?v=ggt20';
+import { makePet, animPet } from './pets.js?v=ggt20';
 const PI = Math.PI, $ = (id) => document.getElementById(id), $m = (n) => '$' + Math.round(n).toLocaleString('en-US');
 const nowA = () => S.day * 1440 + S.time;
 // ---------------------------------------------------------------- delivery spots (Maple Lane + the new east side)
@@ -35,6 +35,19 @@ function plen(P) { let L = 0; for (let i = 1; i < P.length; i++) L += Math.hypot
 function labelSprite() { const cv = document.createElement('canvas'); cv.width = 512; cv.height = 128; const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true })); sp.renderOrder = 20; sp.visible = false; sp.userData = { cv, tex, t: '' }; return sp; }
 function setLabel(sp, t, col = '#0f766e') { if (sp.userData.t === t + col) return; sp.userData.t = t + col; const { cv, tex } = sp.userData, g = cv.getContext('2d'); g.clearRect(0, 0, 512, 128); g.font = '900 46px system-ui, -apple-system, sans-serif'; const w = Math.min(500, g.measureText(t).width + 44); g.fillStyle = col; g.strokeStyle = '#fff'; g.lineWidth = 7; g.beginPath(); g.roundRect((512 - w) / 2, 18, w, 84, 30); g.fill(); g.stroke(); g.beginPath(); g.moveTo(236, 100); g.lineTo(276, 100); g.lineTo(256, 124); g.closePath(); g.fillStyle = col; g.fill(); g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(t, 256, 61, 480); tex.needsUpdate = true; }
 export class Patch52 {
+  // camera pull-in, cheap + reliable: the world's own collision boxes (what the walking camera uses) plus tree canopies
+  // (only trunks are solid, so each trunk-shaped box gets a leafy sphere on top). Returns 0..1 of the wanted distance.
+  camClear(v, px, py, pz, truck) { const w = this.g.world, near = this._cn || (this._cn = []); const ox = v.x, oy = 2.6, oz = v.z; let dx = px - ox, dy = py - oy, dz = pz - oz; const L = Math.hypot(dx, dy, dz) || 1; dx /= L; dy /= L; dz /= L;
+    const minK = (truck ? 3.6 : 2.8) / L; let k = 1; const inV = (s) => ox > s.min[0] - 0.4 && ox < s.max[0] + 0.4 && oz > s.min[2] - 0.4 && oz < s.max[2] + 0.4;
+    const hit = w.ray({ x: ox, y: oy, z: oz }, { x: dx, y: dy, z: dz }, L + 1.0, (s) => !s.nocam && !s.floor && s.cam !== false && !s.off && s.max[1] > 1.2 && !inV(s)); if (hit < L + 1.0) k = Math.min(k, (hit - 1.0) / L);
+    w.near(Math.min(ox, px) - 4, Math.min(oz, pz) - 4, Math.max(ox, px) + 4, Math.max(oz, pz) + 4, near);
+    for (const s of near) { if (s.off || s.dyn) continue; const sw = s.max[0] - s.min[0], sd = s.max[2] - s.min[2], h = s.max[1] - s.min[1]; if (s.min[1] > 0.3 || sw > 1.2 || sd > 1.2 || h < 1.8 || h / Math.max(sw, sd) < 3) continue;
+      const cx = (s.min[0] + s.max[0]) / 2, cz = (s.min[2] + s.max[2]) / 2, cy = s.max[1] + h * 0.35, R = h * 0.75 + 0.6; // leafy crown + a little air
+      const t = Math.max(0, Math.min(L + 1.2, (cx - ox) * dx + (cy - oy) * dy + (cz - oz) * dz)); const qx = ox + dx * t - cx, qy = oy + dy * t - cy, qz = oz + dz * t - cz; const dd = Math.hypot(qx, qy, qz);
+      if (dd < R) { const back = Math.sqrt(R * R - dd * dd); k = Math.min(k, (t - back - 0.3) / L); } (this._cr || (this._cr = [])).push(cx, cy, cz, R + 1.4); }
+    // camera bubble: a crown right BESIDE the camera (not on the line to the van) still fills the screen, so pull in until clear
+    const cr = this._cr || []; for (let it = 0; it < 8 && k > minK; it++) { const t = L * k, qx = ox + dx * t, qy = oy + dy * t + (1 - k) * 2.2, qz = oz + dz * t; let bad = false; for (let i = 0; i < cr.length; i += 4) if (Math.hypot(qx - cr[i], qy - cr[i + 1], qz - cr[i + 2]) < cr[i + 3]) { bad = true; break; } if (!bad) break; k -= 0.1; } cr.length = 0;
+    return Math.max(minK, Math.min(1, k)); }
   _inVeh(o, v) { const r = this.d && this.d.kind === 'truck' ? this.on.truckM : this.on.vanM[0]; while (o) { if (o === r) return true; o = o.parent; } return false; }
   constructor(on) { this.on = on; this.g = on.g; const sc = this.g.scene; this.T = 0;
     const chev = new THREE.Shape(); chev.moveTo(-0.55, -0.35); chev.lineTo(0, 0.35); chev.lineTo(0.55, -0.35); chev.lineTo(0.55, -0.05); chev.lineTo(0, 0.6); chev.lineTo(-0.55, -0.05); chev.closePath(); const cg = new THREE.ShapeGeometry(chev); cg.rotateX(-PI / 2); cg.rotateY(PI);
@@ -109,6 +122,7 @@ body.drv52 #toast{top:calc(env(safe-area-inset-top) + 385px + var(--wip, 0px))}#
     const veh = kind === 'truck' ? on.truck : on.vans[0]; veh.st = 'drive'; veh.x = home.x; veh.z = home.z; veh.ry = 0;
     const tlim = kind === 'van' && !test ? 75 + 30 * load.length : 0;
     this.d = { kind, veh, home, load, test: !!test, tlim, tLeft: tlim, lateMsg: 0, v: 0, dmg: 0, steer: 0, crashes: 0, cool: 0, shake: 0, tgt: null, route: null, rt: 0, done: 0, earned: 0, towed: 0, gps: 0 };
+     // camera pull-in rays need fresh bounds on instanced trees/bushes/signs
     const me = this.g.me; me.setVisible(false); this.prevFP = this.g.fp; if (this.g.fp) this.g.toggleFP(); me.setVisible(false); this.showDrive(true); this.nextTarget(); sfx('honk');
     toast(test ? `${kind === 'truck' ? '🚚' : '🚐'} TEST RIDE! Drive anywhere, no orders, no timer. Crashes still cost repairs · 🐢 Tow or 🚪 Hop out anytime` : kind === 'truck' ? `🚚 ${load.length} parcel${load.length > 1 ? 's' : ''} loaded! Follow the blue arrows · 🐁 Snowie is your GPS` : `⏱️ SAME-DAY RUSH: ${tlim}s to deliver ${load.length} order${load.length > 1 ? 's' : ''}! Late = refund + lost star. The van is FAST but fragile · 🏴‍☠️ Pi-rat rides along`); persist(); }
   showDrive(on) { $('dr52').classList.toggle('hidden', !on); document.body.classList.toggle('drv52', !!on); ['tJump', 'tView'].forEach((id) => { const e = $(id); if (e) e.style.display = on ? 'none' : ''; }); const ph = $('hPhone'); if (ph) ph.style.visibility = on ? 'hidden' : ''; }
@@ -128,7 +142,7 @@ body.drv52 #toast{top:calc(env(safe-area-inset-top) + 385px + var(--wip, 0px))}#
     // chase camera (drag to look around; eases back behind you)
     const c = E.camera; if (IN.camDX || IN.camDY) { d.look = (d.look || 0) - IN.camDX * 0.006; IN.camDX = IN.camDY = 0; d.lookT = 1.5; } d.lookT = (d.lookT || 0) - dt; if (d.lookT <= 0) d.look = (d.look || 0) * Math.max(0, 1 - dt * 2);
     const yaw = v.ry + PI + (d.look || 0), back = truck ? 14 : 10.5, up = truck ? 7.6 : 6.0; const sx = (Math.random() - 0.5) * d.shake, sy = (Math.random() - 0.5) * d.shake;
-    const tx = v.x + Math.sin(yaw) * back, tz = v.z + Math.cos(yaw) * back; d.cx = d.cx == null ? tx : d.cx + (tx - d.cx) * Math.min(1, dt * 5); d.cz = d.cz == null ? tz : d.cz + (tz - d.cz) * Math.min(1, dt * 5); let px = d.cx, pz = d.cz, py = up; d.ocf = (d.ocf || 0) + 1; if (d.ocf % 3 === 0) { const o = new THREE.Vector3(v.x, 3, v.z), to = new THREE.Vector3(px - v.x, py - 3, pz - v.z), L = to.length(); to.normalize(); const rc = this._rc || (this._rc = new THREE.Raycaster()); rc.set(o, to); rc.far = L; rc.camera = c; const hits = rc.intersectObjects(this.g.scene.children, true).filter(h => h.object.isMesh && !h.object.isSprite && h.object.visible && !(h.object.material && h.object.material.transparent) && !this._inVeh(h.object, v) && h.distance > 4); d.occ = hits.length ? Math.max(2.5, hits[0].distance - 0.6) / L : 1; } const k = d.occK = (d.occK == null ? 1 : d.occK + ((d.occ || 1) - d.occK) * Math.min(1, dt * 8)); px = v.x + (px - v.x) * k; pz = v.z + (pz - v.z) * k; py = 3 + (py - 3) * k + (1 - k) * 3; c.position.set(px + sx, py + sy, pz); c.lookAt(v.x + Math.sin(v.ry) * 7, 1.2, v.z + Math.cos(v.ry) * 7); if (c.fov !== E.baseFov) { c.fov = E.baseFov; c.updateProjectionMatrix(); }
+    const tx = v.x + Math.sin(yaw) * back, tz = v.z + Math.cos(yaw) * back; d.cx = d.cx == null ? tx : d.cx + (tx - d.cx) * Math.min(1, dt * 5); d.cz = d.cz == null ? tz : d.cz + (tz - d.cz) * Math.min(1, dt * 5); let px = d.cx, pz = d.cz, py = up; d.ocf = (d.ocf || 0) + 1; if (d.ocf % 2 === 0) { const r = this.camClear(v, px, py, pz, truck); d.occ = r; } const tgtK = d.occ || 1; const k = d.occK = (d.occK == null ? tgtK : d.occK + (tgtK - d.occK) * Math.min(1, dt * (tgtK < d.occK ? 18 : 3))); px = v.x + (px - v.x) * k; pz = v.z + (pz - v.z) * k; py = 3 + (py - 3) * k + (1 - k) * 3 + (1 - k) * 2.2; c.position.set(px + sx, py + sy, pz); c.lookAt(v.x + Math.sin(v.ry) * 7, 1.2, v.z + Math.cos(v.ry) * 7); if (c.fov !== E.baseFov) { c.fov = E.baseFov; c.updateProjectionMatrix(); }
     if (d.dmg >= 100 && !d.brokeMsg) { d.brokeMsg = 1; sfx('deny'); toast(`💥 The ${truck ? 'truck' : 'van'} broke down! Tap 🐢 Torty's Tow`); }
     $('dTow').classList.toggle('hot', d.dmg >= 100); return true; }
   collide() { const d = this.d, v = d.veh, w = this.g.world, truck = d.kind === 'truck'; const R = truck ? 1.35 : 1.15, H = truck ? 2.4 : 1.8; const near = this._near || (this._near = []);
@@ -171,7 +185,7 @@ body.drv52 #toast{top:calc(env(safe-area-inset-top) + 385px + var(--wip, 0px))}#
     const P = d.route; let ax = t.x, az = t.z, acc = 0; for (let i = 1; i < P.length; i++) { const L = Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); if (acc + L > 14) { const k = (14 - acc) / L; ax = P[i - 1][0] + (P[i][0] - P[i - 1][0]) * k; az = P[i - 1][1] + (P[i][1] - P[i - 1][1]) * k; break; } acc += L; }
     const a = this.arrow; a.visible = true; a.scale.setScalar(d.kind === 'truck' ? 1.4 : 1.2); a.position.set(v.x, (d.kind === 'truck' ? 4.9 : 3.8) + Math.sin(this.T * 4) * 0.12, v.z); const ay = Math.atan2(ax - v.x, az - v.z); a.rotation.set(0, ay, 0);
     const b = this.beacon; b.visible = true; b.position.set(t.x, 15, t.z); b.material.color.setHex(t.home ? 0x38bdf8 : 0x22c55e); b.material.opacity = 0.16 + 0.08 * Math.sin(this.T * 4); this.ring.visible = true; this.ring.position.set(t.x, 0.12, t.z); this.ring.scale.setScalar(3 + 0.3 * Math.sin(this.T * 5)); this.ringMat.color.setHex(t.home ? 0x38bdf8 : 0x22c55e);
-    const sp = this.labels[0]; setLabel(sp, t.home ? '🅿️ ' + t.name : `📦 #${t.ord.id} ${t.dest.fam}`, t.home ? '#0369a1' : '#15803d'); sp.visible = true; sp.position.set(t.x, 5.0, t.z); sp.scale.set(8, 2, 1);
+    const sp = this.labels[0]; setLabel(sp, t.home ? '🅿️ ' + t.name : `📦 #${t.ord.id} ${t.dest.fam}`, t.home ? '#0369a1' : '#15803d'); sp.position.set(t.x, 5.0, t.z); sp.scale.set(8, 2, 1); sp.visible = E.camera.position.distanceTo(sp.position) > 10; // never fills the screen right next to the stop
     // HUD
     const dist = plen(P); let rel = ay - v.ry; rel = Math.atan2(Math.sin(rel), Math.cos(rel)); $('dGA').style.transform = `rotate(${-rel}rad)`; $('dTo').textContent = (t.home ? '🅿️ ' : '📍 ') + t.name + ' · ' + Math.round(dist) + ' m';
     const left = d.load.filter((q) => q.st === 'drive').length; const tm = d.tlim ? (d.tLeft > 0 ? `⏱️ ${Math.ceil(d.tLeft)}s · ` : '⏰ LATE · ') : ''; $('dTop').classList.toggle('rush', !!d.tlim && d.tLeft <= 15); $('dSub').textContent = tm + `${d.kind === 'truck' ? '🚚' : '🚐'} ${Math.round(Math.abs(d.v) * 3.6 * 0.62)} mph · ${left} stop${left === 1 ? '' : 's'} left · 🔧 ${Math.round(d.dmg)}%${t.ord && t.ord.due ? ' · due ' + fmtClock(t.ord.due % 1440) : ''}`; $('dDmg').style.width = Math.round(d.dmg) + '%';

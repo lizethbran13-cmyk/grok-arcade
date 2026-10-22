@@ -1,6 +1,6 @@
 // Grok Grocery Tycoon - dialogue, shopper questions, daily tasks and the goal hint.
-import { S } from './save.js?v=ggt19';
-import { RANKS, GOALS } from './data.js?v=ggt19';
+import { S } from './save.js?v=ggt20';
+import { RANKS, GOALS } from './data.js?v=ggt20';
 export const LINES = {
   gus0: [['Grandpa Gus', 'Welcome to our store on Main St! I opened it forty years ago with one shelf and a very patient tortoise.'], ['Grandpa Gus', 'You start as a courtesy clerk: bag groceries, round up carts in the lot, stock shelves, mop spills and help shoppers find things.'], ['Grandpa Gus', 'Work hard and Penny will promote you. Cashier, department lead, assistant manager, store manager... and one day? Maybe you\'ll buy this place from me.']],
   gus: [['Grandpa Gus', 'Carts in the lot? Spills in aisle five? Those are your treasure hunt, kiddo. Every job gets you closer to a promotion.']],

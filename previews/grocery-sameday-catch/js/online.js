@@ -3,11 +3,11 @@
 // Maple Lane (the homes the orders go to), and your own phone (calls, meetings, the online shop, stock orders).
 // Locked unless the arcade sold you grokDLC.grocery.super_shop_online_pass (Time Jumper builds are unlocked for testing).
 import * as THREE from 'three';
-import * as K from './kit.js?v=ggt19';
-import { buildEast, eastTreeOk } from './east52.js?v=ggt19';
-import { rbox } from './world.js?v=ggt19';
-import { shell, part, onSide } from './bld.js?v=ggt19';
-import { PI, pick, rcyl, sph, cyl, cone, torus, capsule, txt, poster, wallWord, clockW, pendant, rack, pallet, planter, trash, bags, produceCrate, grokLogo, cartStatic, star, heart } from './art.js?v=ggt19';
+import * as K from './kit.js?v=ggt20';
+import { buildEast, eastTreeOk } from './east52.js?v=ggt20';
+import { rbox } from './world.js?v=ggt20';
+import { shell, part, onSide } from './bld.js?v=ggt20';
+import { PI, pick, rcyl, sph, cyl, cone, torus, capsule, txt, poster, wallWord, clockW, pendant, rack, pallet, planter, trash, bags, produceCrate, grokLogo, cartStatic, star, heart } from './art.js?v=ggt20';
 export const KEY = 'grokDLC.grocery.super_shop_online_pass';
 const QS = (() => { try { return new URLSearchParams(location.search); } catch (e) { return new URLSearchParams(''); } })();
 export function owned() { try { if (QS.get('locked') === '1') return false; if (QS.get('dlc') === '1') return true; if (/\/(previews|archive)\//.test(location.pathname)) return true;

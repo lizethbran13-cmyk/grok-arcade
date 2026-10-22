@@ -2,14 +2,14 @@
 // (Fernhill Farm Co-op, Ratita Industries, Tortuga Tech), Ruffsources Staffing, Town Hall + Health Dept, the Grok Goods Lab
 // and Shopsville Park. Every building is walk-in.
 import * as THREE from 'three';
-import * as K from './kit.js?v=ggt19';
-import { rbox } from './world.js?v=ggt19';
-import { shell, part, onSide } from './bld.js?v=ggt19';
-import { STORES } from './data.js?v=ggt19';
-import { storeBuilding } from './stores.js?v=ggt19';
-import { supplierDetail } from './supfill.js?v=ggt19';
-import { buildOnline, treeOk, OWN as OWN52 } from './online.js?v=ggt19';
-import { PI, R, pick, BRIGHT, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, wedge, txt, poster, wallWord, clockW, pendant, rack, pallet, cartStatic, planter, awning, trash, bags, produceCrate, grokLogo } from './art.js?v=ggt19';
+import * as K from './kit.js?v=ggt20';
+import { rbox } from './world.js?v=ggt20';
+import { shell, part, onSide } from './bld.js?v=ggt20';
+import { STORES } from './data.js?v=ggt20';
+import { storeBuilding } from './stores.js?v=ggt20';
+import { supplierDetail } from './supfill.js?v=ggt20';
+import { buildOnline, treeOk, OWN as OWN52 } from './online.js?v=ggt20';
+import { PI, R, pick, BRIGHT, rcyl, lathe, sph, cyl, cone, torus, capsule, tube, star, heart, blobGeo, wedge, txt, poster, wallWord, clockW, pendant, rack, pallet, cartStatic, planter, awning, trash, bags, produceCrate, grokLogo } from './art.js?v=ggt20';
 export const SPOTS = {}; export const GEOM = {};
 export const ENV = { sunDir: [0.5, 0.8, 0.32], sunColor: 0xfff3e0, sunI: 2.5, hemiSky: 0xdaf0ff, hemiGround: 0x7a9a5a, hemiI: 0.62, skyTop: 0x3b8beb, skyMid: 0xb3dcff, skyBot: 0xeef8ff, fog: 0xdcefff, fogD: 0.0036, exposure: 1.0, envI: 0.85, bloomT: 1.05, bloomS: 0.32, sunDisc: 1, stars: 0 };
 export const ROADS = { ew: [-56, 14, 50, 110], ns: [-30, 30], x0: -104, x1: 104, z0: -61, z1: 115 };

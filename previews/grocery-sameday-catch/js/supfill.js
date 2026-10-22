@@ -1,7 +1,7 @@
 // Grok Grocery Tycoon - detail pass for the supplier buildings (DC, Ratita, Tortuga, Ruffsources, Town Hall, Fernhill Farm, Grok Goods Lab)
-import * as K from './kit.js?v=ggt19';
-import { rbox } from './world.js?v=ggt19';
-import { PI, R, pick, BRIGHT, rcyl, sph, cyl, txt, poster, pendant, rack, pallet, produceCrate } from './art.js?v=ggt19';
+import * as K from './kit.js?v=ggt20';
+import { rbox } from './world.js?v=ggt20';
+import { PI, R, pick, BRIGHT, rcyl, sph, cyl, txt, poster, pendant, rack, pallet, produceCrate } from './art.js?v=ggt20';
 const bin = (w, x, z, col, ry = 0) => { const T = w.tf(x, 0, z, ry); T.slab('m', 0x8b5a2b, 0, 0, 0, 1.8, 0.75, 1.1, 0.05); T.box('m', 0x5b3a1e, 0, 0.62, 0, 1.6, 0.06, 0.9, 0.02); for (let i = 0; i < 18; i++) T.add('g', sph(8), col, -0.65 + (i % 6) * 0.26, 0.74 + (i % 3 === 1 ? 0.06 : 0) + Math.floor(i / 12) * 0.12, -0.28 + Math.floor((i % 12) / 6) * 0.42 + (Math.floor(i / 12) ? 0.2 : 0), 0, 0, 0, 0.13); T.box('g', 0xffffff, 0, 0.32, 0.56, 0.6, 0.3, 0.02, 0.01); };
 const barrel = (w, x, z, col) => { w.add('m', rcyl(0.42, 0.9, 0.06, 16), 0x92400e, x, 0, z); w.add('x', rcyl(0.44, 0.06, 0.02, 16), 0x334155, x, 0.2, z); w.add('x', rcyl(0.44, 0.06, 0.02, 16), 0x334155, x, 0.7, z); for (let i = 0; i < 7; i++) w.add('g', sph(8), col, x + Math.cos(i) * 0.22 * (i % 2 ? 1 : 0.4), 0.95, z + Math.sin(i) * 0.22 * (i % 2 ? 1 : 0.4), 0, 0, 0, 0.12); w.solid(x - 0.42, 0, z - 0.42, x + 0.42, 1.0, z + 0.42, { cam: false }); };
 const chest = (w, x, z, ry = 0) => { const T = w.tf(x, 0, z, ry); T.slab('m', 0x14b8a6, 0, 0, 0, 1.8, 0.85, 0.9, 0.06); T.box('e', 0xcfefff, 0, 0.85, 0, 1.7, 0.04, 0.8, 0.02); for (let i = 0; i < 8; i++) T.box('g', pick([0x60a5fa, 0x22d3ee, 0xa78bfa, 0xf472b6]), -0.65 + (i % 4) * 0.43, 0.6, -0.18 + Math.floor(i / 4) * 0.36, 0.36, 0.22, 0.3, 0.03); T.box('l', 0x22c55e, 0.7, 0.6, 0.46, 0.12, 0.06, 0.01, 0.01); };

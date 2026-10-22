@@ -1,9 +1,9 @@
 // HUD: area chip, goal line, money / clock / rank chips, carried case + carts, the context action button.
-import { $ } from './util.js?v=ggt19';
-import { S } from './save.js?v=ggt19';
-import { goal } from './story.js?v=ggt19';
-import { RANKS, DEPTS } from './data.js?v=ggt19';
-import { fmtClock, storeIds, mine } from './sim.js?v=ggt19';
+import { $ } from './util.js?v=ggt20';
+import { S } from './save.js?v=ggt20';
+import { goal } from './story.js?v=ggt20';
+import { RANKS, DEPTS } from './data.js?v=ggt20';
+import { fmtClock, storeIds, mine } from './sim.js?v=ggt20';
 export class HUD {
   region(n) { const e = $('hArea'); if (e && e.textContent !== n) { e.textContent = n; e.classList.remove('pop'); void e.offsetWidth; e.classList.add('pop'); } }
   setAct(a) { const b = $('tAct'); const k = a ? a.label : ''; if (k === this._ak) return; this._ak = k; if (a) { b.classList.remove('hidden'); b.textContent = a.label; } else b.classList.add('hidden'); }

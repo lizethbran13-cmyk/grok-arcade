@@ -1,10 +1,10 @@
 // Grok Grocery Tycoon - the walk-in supermarket buildings (your stores + Bargain Bonanza). The sales floor fixtures are
 // instanced separately (fixtures.js); this builds the shell, back rooms, checkout front, walls, facade, parking and truck dock.
-import * as K from './kit.js?v=ggt19';
-import { rbox } from './world.js?v=ggt19';
-import { shell, part, onSide } from './bld.js?v=ggt19';
-import { storeGeom } from './data.js?v=ggt19';
-import { PI, R, pick, BRIGHT, rcyl, lathe, sph, cyl, cone, torus, capsule, star, blobGeo, txt, poster, wallWord, clockW, pendant, rack, pallet, cartStatic, planter, awning, trash, bags, produceCrate, grokLogo } from './art.js?v=ggt19';
+import * as K from './kit.js?v=ggt20';
+import { rbox } from './world.js?v=ggt20';
+import { shell, part, onSide } from './bld.js?v=ggt20';
+import { storeGeom } from './data.js?v=ggt20';
+import { PI, R, pick, BRIGHT, rcyl, lathe, sph, cyl, cone, torus, capsule, star, blobGeo, txt, poster, wallWord, clockW, pendant, rack, pallet, cartStatic, planter, awning, trash, bags, produceCrate, grokLogo } from './art.js?v=ggt20';
 export const BOT = lathe([[0, 0], [0.5, 0], [0.5, 0.55], [0.2, 0.75], [0.18, 1], [0, 1]], 9, 'sbot');
 export function wallShelf(w, axis, at, from, to, side, cols) { const L = to - from, c = (from + to) / 2; // shelving run against a wall (x-axis = along x at z=at)
   const T = axis === 'x' ? w.tf(c, 0, at, side > 0 ? 0 : PI) : w.tf(at, 0, c, side > 0 ? PI / 2 : -PI / 2);

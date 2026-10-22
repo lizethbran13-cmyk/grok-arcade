@@ -1,8 +1,8 @@
 // Grok Grocery Tycoon - the live store simulation: shoppers walk the real aisles, buy from real shelves, queue at real
 // checkout lanes; staff stock, scan and mop; trucks deliver; the clock runs the day. Pure data: game.js draws it.
-import { S, persist, capOf, news } from './save.js?v=ggt19';
-import { FIX, DEPTS, DEPT_IDS, STORE, ROLES, CAMEOS, typeOf } from './data.js?v=ggt19';
-import { GEOM, ROADS } from './map.js?v=ggt19';
+import { S, persist, capOf, news } from './save.js?v=ggt20';
+import { FIX, DEPTS, DEPT_IDS, STORE, ROLES, CAMEOS, typeOf } from './data.js?v=ggt20';
+import { GEOM, ROADS } from './map.js?v=ggt20';
 export const OPEN = 7 * 60, CLOSE = 22 * 60, MPS = 2; // game minutes per real second
 export const EV = []; // UI events: {t:'toast'|'banner', m}
 let NID = 1;

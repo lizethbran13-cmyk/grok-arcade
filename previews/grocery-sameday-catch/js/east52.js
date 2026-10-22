@@ -1,9 +1,9 @@
 // Patch #51/#52 (free, Super Shop Online Pass owners): east Shopsville, where you can drive the Grok Van and the Ship Center truck.
 // Route 9 runs east past the "Welcome to Shopsville" arch to Cedar Rd: Riverside Apartments (lobby + Grok Lockers), Cedar Court
 // (3 family homes on a cul-de-sac), Grok Gas & Snacks, the Shopsville Sports Field, Cedar Park and the Community Garden.
-import * as K from './kit.js?v=ggt19';
-import { rbox } from './world.js?v=ggt19';
-import { PI, rcyl, sph, cyl, cone, torus, capsule, txt, planter, trash, grokLogo } from './art.js?v=ggt19';
+import * as K from './kit.js?v=ggt20';
+import { rbox } from './world.js?v=ggt20';
+import { PI, rcyl, sph, cyl, cone, torus, capsule, txt, planter, trash, grokLogo } from './art.js?v=ggt20';
 export const EAST = { x0: 104, x1: 238, z0: -60, z1: 136 };
 export const ROADS52 = { ew: [{ z: -56, x0: -104, x1: 104 }, { z: 14, x0: -104, x1: 236 }, { z: 50, x0: -104, x1: 104 }, { z: 110, x0: -104, x1: 104 }, { z: 70, x0: 150, x1: 224 }],
   ns: [{ x: -30, z0: -61, z1: 115 }, { x: 30, z0: -61, z1: 115 }, { x: 150, z0: -48, z1: 75 }] };

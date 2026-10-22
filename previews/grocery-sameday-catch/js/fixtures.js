@@ -1,11 +1,11 @@
 // Grok Grocery Tycoon - store fixtures you can build, swap and stock. Each fixture type is modelled once per stock level
 // (full / half / empty) and drawn with InstancedMeshes per store, so a whole sales floor costs a handful of draw calls.
 import * as THREE from 'three';
-import { World, rbox } from './world.js?v=ggt19';
-import { MATS } from './mats.js?v=ggt19';
-import { textGeo } from './text3d.js?v=ggt19';
-import { rcyl, lathe, sph, cyl, cone, torus, capsule, star, blobGeo } from './shapes.js?v=ggt19';
-import { FIX, SHELF_TYPES, DEPTS } from './data.js?v=ggt19';
+import { World, rbox } from './world.js?v=ggt20';
+import { MATS } from './mats.js?v=ggt20';
+import { textGeo } from './text3d.js?v=ggt20';
+import { rcyl, lathe, sph, cyl, cone, torus, capsule, star, blobGeo } from './shapes.js?v=ggt20';
+import { FIX, SHELF_TYPES, DEPTS } from './data.js?v=ggt20';
 const PI = Math.PI;
 let seed = 1; const R = () => (seed = (seed * 16807) % 2147483647) / 2147483647; const pick = (a) => a[(R() * a.length) | 0];
 const BOX = new THREE.BoxGeometry(1, 1, 1), CYL = new THREE.CylinderGeometry(1, 1, 1, 10, 1), SPH = new THREE.SphereGeometry(1, 9, 6), CAP = new THREE.CapsuleGeometry(0.5, 1, 2, 6);
