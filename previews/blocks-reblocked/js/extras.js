@@ -64,6 +64,12 @@ X.onMap = function (m, scene) {
     const y = m.h(pd.x, pd.z); g.position.set(pd.x, y, pd.z); g.rotation.y = pd.ang || 0; scene.add(g);
     GB.View._envDirty = 1; pets.push({ id: pd.id, g, body, x: pd.x, z: pd.z, y, ang: pd.ang || 0, t: Math.random() * 9 });
   });
+  (m.npcs || []).forEach((nd) => {
+    const g = new THREE.Group(); const body = V().blocky([[0.32, 0.8, 0.36, 0x2a3a5a, -0.18, 0.4, 0], [0.32, 0.8, 0.36, 0x2a3a5a, 0.18, 0.4, 0], [0.8, 0.75, 0.5, nd.color, 0, 1.17, 0], [0.22, 0.65, 0.24, nd.color, -0.52, 1.15, 0], [0.22, 0.65, 0.24, nd.color, 0.52, 1.15, 0], [0.5, 0.5, 0.5, 0xe8b890, 0, 1.8, 0], [0.54, 0.16, 0.54, 0x4a2a1a, 0, 2.1, 0], [0.08, 0.08, 0.02, 0x1a1a1a, -0.11, 1.84, 0.26], [0.08, 0.08, 0.02, 0x1a1a1a, 0.11, 1.84, 0.26], [0.3, 0.3, 0.1, 0xf0c24b, 0.5, 1.0, 0.25]]);
+    g.add(body); const tag = nameTag(nd.name.replace('Visitor ', ''), '#f0c24b'); tag.position.y = 2.7; g.add(tag);
+    const y = m.h(nd.x, nd.z); g.position.set(nd.x, y, nd.z); g.rotation.y = nd.ang; scene.add(g); GB.View._envDirty = 1;
+    pets.push({ id: 'npc', npc: nd, g, body, x: nd.x, z: nd.z, y, ang: nd.ang, t: Math.random() * 9 });
+  });
   (m.ores || []).forEach((od) => { const g = oreMesh(od.kind); g.position.set(od.x, m.h(od.x, od.z), od.z); scene.add(g); ores.push({ id: od.id, kind: od.kind, x: od.x, z: od.z, g, left: true }); });
   // ambient particles: fireflies, petals, snow, cave motes
   const kind = m.ceil ? 'motes' : m.biome === 'blossom' ? 'petals' : m.biome === 'snow' ? 'snow' : 'flies';
@@ -95,9 +101,9 @@ X.frame = function (t, night, cave) {
   const G = GB.G, me = G && G.GS && G.GS.me;
   for (const p of pets) {
     p.t += 0.016;
-    p.body.position.y = Math.abs(Math.sin(p.t * 3)) * 0.06; // happy little bounce
+    p.body.position.y = p.npc ? 0 : Math.abs(Math.sin(p.t * 3)) * 0.06; // happy little bounce
     if (me) { const dx = me.x - p.x, dz = me.z - p.z, d = Math.hypot(dx, dz); if (d < 8) { let want = Math.atan2(dx, dz), dy = want - p.g.rotation.y; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); p.g.rotation.y += dy * 0.08; }
-      if (d < 3.6 && G.GS.ui === 'game' && performance.now() > talkT) { const L = LINES[p.id]; let line = L[(Math.random() * L.length) | 0]; if (line === lastTalk) line = L[(L.indexOf(line) + 1) % L.length]; lastTalk = line; G.hint(PETNAME[p.id] + ': ' + line, 6); talkT = performance.now() + 9000; } }
+      if (d < 3.6 && G.GS.ui === 'game' && performance.now() > talkT && p.npc) { G.hint(p.npc.name + ': ' + p.npc.line, 6); talkT = performance.now() + 9000; } else if (d < 3.6 && G.GS.ui === 'game' && performance.now() > talkT) { const L = LINES[p.id]; let line = L[(Math.random() * L.length) | 0]; if (line === lastTalk) line = L[(L.indexOf(line) + 1) % L.length]; lastTalk = line; G.hint(PETNAME[p.id] + ': ' + line, 6); talkT = performance.now() + 9000; } }
   }
   for (const o of ores) if (o.left && o.kind !== 'coal') { const s = 1 + Math.sin(t * 3 + o.id) * 0.02; o.g.scale.setScalar(s); }
   if (parts) {

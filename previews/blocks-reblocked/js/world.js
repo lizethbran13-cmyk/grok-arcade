@@ -124,7 +124,7 @@ function buildCamp() {
   roadLine(m, pl, 2, M.ROAD, true);
   World.GATES.forEach((g) => { if (!g.south) roadLine(m, [[0, -2], [g.x * 0.4, -24], [g.x, -44], [g.x, -53]], 2, M.ROAD); });
   roadLine(m, [[0, -2], [0, 34]], 2, M.ROAD);
-  World.GATES.forEach((g) => { if (g.south) roadLine(m, [[0, 34], [g.x * 0.6, 40], [g.x, 46], [g.x, 53]], 2, M.ROAD); });
+  roadLine(m, [[0, 34], [0, 47]], 2, M.ROAD); World.GATES.forEach((g) => { if (g.south) roadLine(m, [[0, 47], [g.x, 47], [g.x, 53]], 2, M.ROAD); });
   roadLine(m, [[-9, 8], [-24, 12], [-36, 12]], 2, M.ROAD);
   roadLine(m, [[9, 8], [24, 12], [36, 12]], 2, M.ROAD);
   // gates in the north wall
@@ -143,18 +143,40 @@ function buildCamp() {
   m.props.push({ k: 'fire', x: 0, z: -2 }); solidRect(m, -1, -3, 0, -2, 1);
   m.props.push({ k: 'flag', x: 3, z: -11 });
   [[-14, 22], [-8, 26], [8, 26], [14, 22]].forEach((p) => { m.props.push({ k: 'tent', x: p[0], z: p[1] }); solidRect(m, p[0] - 2, p[1] - 1, p[0] + 1, p[1] + 1, 2); });
-  // Remaster: Pet Corner (family pets hang out here), lamp posts, benches, flower beds
-  m.pets = [{ id: 'torty', x: -12, z: 36, ang: 0.4 }, { id: 'candy', x: -4, z: 38, ang: -0.3 }, { id: 'luna', x: 6, z: 37, ang: 0.2 }, { id: 'pirat', x: 9, z: 39, ang: -0.6 }, { id: 'snowie', x: 4, z: 40, ang: 0.5 }];
-  m.props.push({ k: 'pond', x: -13, z: 40 }); solidRect(m, -16, 38, -10, 42, 2);
-  m.props.push({ k: 'kennel', x: -5, z: 42 }); solidRect(m, -7, 41, -3, 43, 2);
-  m.props.push({ k: 'rathouse', x: 7, z: 42.5 }); solidRect(m, 5, 41, 9, 44, 2);
-  m.props.push({ k: 'petsign', x: 0, z: 44 });
-  for (let x = -17; x <= 11; x += 2) m.props.push({ k: 'pfence', x: x + 0.5, z: 45.5 });
-  m.props.push({ k: 'bowl', x: -2.5, z: 40, c: 0xff4fa0 }, { k: 'bowl', x: -1.5, z: 40.5, c: 0x3a8ad2 }, { k: 'ball', x: -7, z: 36 }, { k: 'cheese', x: 10.5, z: 41 }, { k: 'hay', x: -9, z: 41.5 }, { k: 'lettuce', x: -10.5, z: 37.5 }, { k: 'wheel', x: 11, z: 38.5 }, { k: 'ttsign', x: -16, z: 36 });
-  solidRect(m, 10, 38, 11, 38, 1); solidRect(m, -10, 41, -9, 41, 1);
-  [[-6, 4], [6, 4], [-6, -8], [6, -8], [-3, 33], [3, 33], [-20, -8], [20, -8], [-22, 40], [22, 40]].forEach((p) => { m.props.push({ k: 'lamp', x: p[0] + 0.5, z: p[1] + 0.5 }); solidRect(m, p[0], p[1], p[0], p[1], 1); });
+  // Remaster: Pet Corner, south of the campfire. Left: Torty's habitat. Right: Candy's yard and the rat cages.
+  const PAD = (x0, z0, x1, z1, mt, alt) => { for (let z = z0; z <= z1; z++) for (let x = x0; x <= x1; x++) { const j = m.idx(x + 0.5, z + 0.5); if (j >= 0 && !(m.road && m.road[j])) m.Mt[j] = alt != null && hash3(x, z, 12) < 0.3 ? alt : mt; } };
+  const fenceX = (x0, x1, z, c) => { for (let x = x0; x < x1; x += 2) m.props.push({ k: 'pfence', x: x + 0.5, z: z + 0.5, c }); solidRect(m, x0, z, x1 - 1, z, 3); };
+  const fenceZ = (x, z0, z1, c) => { for (let z = z0; z < z1; z += 2) m.props.push({ k: 'pfencez', x: x + 0.5, z: z + 0.5, c }); solidRect(m, x, z0, x, z1 - 1, 3); };
+  // Torty's habitat (x -21..-5, z 30..44)
+  PAD(-21, 30, -5, 44, M.SAND, M.MOSS);
+  fenceX(-21, -5, 29, 0x9a6a3a); fenceX(-21, -5, 44, 0x9a6a3a); fenceZ(-22, 30, 44, 0x9a6a3a); fenceZ(-5, 30, 36, 0x9a6a3a); fenceZ(-5, 40, 44, 0x9a6a3a);
+  m.props.push({ k: 'pond', x: -16, z: 34 }); solidRect(m, -19, 32, -13, 36, 2);
+  m.props.push({ k: 'burrow', x: -10, z: 41 }); solidRect(m, -12, 40, -8, 42, 2);
+  m.props.push({ k: 'ttsign', x: -6.5, z: 38.5 });
+  [[-20, 31], [-20, 38], [-19, 42], [-14, 43], [-7, 31], [-12, 31], [-17, 39]].forEach((q) => m.props.push({ k: 'fern', x: q[0] + 0.5, z: q[1] + 0.5, s: 1.1 }));
+  [[-8, 34], [-13, 38], [-18, 41], [-9, 44]].forEach((q) => m.props.push({ k: 'lettuce', x: q[0] + 0.5, z: q[1] + 0.5 }));
+  [[-11, 35], [-15, 40], [-7, 42]].forEach((q) => m.props.push({ k: 'flowers', x: q[0] + 0.5, z: q[1] + 0.5 }));
+  m.props.push({ k: 'rock', x: -20, z: 35, s: 0.7 }, { k: 'rock', x: -13.5, z: 43, s: 0.5 }, { k: 'hlamp', x: -9, z: 31 });
+  // Candy's yard (x 5..13, z 30..44)
+  PAD(5, 30, 13, 44, M.DGRASS);
+  fenceX(5, 13, 29, 0xffffff); fenceX(5, 13, 44, 0xffffff); fenceZ(4, 30, 36, 0xffffff); fenceZ(4, 40, 44, 0xffffff);
+  m.props.push({ k: 'kennel', x: 10, z: 41 }); solidRect(m, 8, 40, 12, 42, 2);
+  m.props.push({ k: 'bowl', x: 7, z: 42, c: 0xff4fa0 }, { k: 'bowl', x: 7.8, z: 42.5, c: 0x3a8ad2 }, { k: 'ball', x: 8, z: 33 }, { k: 'bone', x: 11, z: 35 }, { k: 'tug', x: 6.5, z: 37 }, { k: 'hoop', x: 10, z: 31.5 }, { k: 'tire', x: 12, z: 38 }, { k: 'ball', x: 11.5, z: 32.5 });
+  // Rat cages (x 15..21, z 30..44): Luna, Pi-rat and Snowie's play palace
+  PAD(15, 30, 21, 44, M.PAD);
+  m.props.push({ k: 'ratcage', x: 18, z: 39 }); solidRect(m, 16, 37, 20, 41, 2);
+  m.props.push({ k: 'wheel', x: 16.5, z: 33.5 }, { k: 'cheese', x: 19.5, z: 32.5 }, { k: 'hay', x: 20, z: 43 }, { k: 'lettuce', x: 16, z: 43 });
+  fenceX(15, 21, 29, 0x3a8ad2); fenceX(15, 21, 44, 0x3a8ad2); fenceZ(22, 30, 44, 0x3a8ad2); fenceZ(14, 30, 36, 0x3a8ad2); fenceZ(14, 40, 44, 0x3a8ad2);
+  // the shared walk: benches, flower beds, signs, lamps
+  m.props.push({ k: 'bench', x: -3, z: 32 }, { k: 'bench', x: 3, z: 32 }, { k: 'bench', x: -3, z: 42, rot: Math.PI }, { k: 'bench', x: 3, z: 42, rot: Math.PI });
+  m.props.push({ k: 'flowerbed', x: -3.2, z: 36.5 }, { k: 'flowerbed', x: 3.2, z: 36.5 }, { k: 'flowerbed', x: -3.2, z: 39.5 }, { k: 'flowerbed', x: 3.2, z: 39.5 });
+  m.props.push({ k: 'petsign', x: 0, z: 28.5 });
+  m.zoneSigns = [{ t: "TORTY'S HABITAT", x: -13, z: 29.3, c: '#5ad27a' }, { t: "CANDY'S YARD", x: 9, z: 29.3, c: '#ff4fa0' }, { t: 'RAT PALACE', x: 18, z: 29.3, c: '#7eb6e0' }];
+  m.npcs = [{ x: -3, z: 32.8, ang: 0, color: 0xe25b4a, name: 'Visitor Maya', line: 'I came all the way from Pup Town to see Torty! Did you know Torty\u2019s real name is Martina?' }, { x: 2.2, z: 41.2, ang: Math.PI, color: 0x9a5ad2, name: 'Visitor Leo', line: 'Candy fetched my hat three times. Best ranger camp ever!' }];
+  m.pets = [{ id: 'torty', x: -12, z: 38, ang: 0.6 }, { id: 'candy', x: 8.5, z: 36, ang: -0.4 }, { id: 'luna', x: 17, z: 35, ang: 0.2 }, { id: 'pirat', x: 19.5, z: 35.5, ang: -0.5 }, { id: 'snowie', x: 18, z: 43, ang: 2.6 }];
+  [[-6, 4], [6, 4], [-6, -8], [6, -8], [-2, 30], [2, 44], [-20, -8], [20, -8], [-24, 47], [24, 47]].forEach((p) => { m.props.push({ k: 'lamp', x: p[0] + 0.5, z: p[1] + 0.5 }); solidRect(m, p[0], p[1], p[0], p[1], 1); });
   [[-4, 6, 0], [4, 6, 0], [-5, -6, Math.PI], [5, -6, Math.PI]].forEach((p) => { m.props.push({ k: 'bench', x: p[0], z: p[1], rot: p[2] }); });
-  [[-17, -8], [17, -8], [-8, 15], [8, 15], [-18, 30], [18, 30]].forEach((p) => m.props.push({ k: 'flowerbed', x: p[0], z: p[1] }));
+  [[-17, -8], [17, -8], [-8, 15], [8, 15], [-18, 30.5], [18, 30.5]].forEach((p) => { if (Math.abs(p[0]) > 14 && p[1] > 29) return; m.props.push({ k: 'flowerbed', x: p[0], z: p[1] }); });
   // sanctuaries (fenced, with a gap facing camp)
   const S1 = { id: 'sun', name: 'Sunlands Sanctuary', x0: -51, x1: -24, z0: -6, z1: 30, gate: 'e', habitat: ['savanna', 'jungle', 'desert'], color: 0xf0c24b };
   const S2 = { id: 'frost', name: 'Frostmarsh Sanctuary', x0: 24, x1: 51, z0: -6, z1: 30, gate: 'w', habitat: ['snow', 'wet'], color: 0x7eb6e0 };
@@ -275,11 +297,12 @@ function buildBiome(id) {
   for (let z = 86; z < m.half; z++) for (let x = -3; x <= 3; x++) { const j = m.idx(x + 0.5, z + 0.5); if (j >= 0) { m.S[j] = 0; m.H[j] = m.H[m.idx(0, 84)]; m.Mt[j] = M.GATE; } }
   m.gates.push({ to: 'camp', x: 0, z: 92, r: 3.8, label: 'BASE CAMP' });
   m.props.push({ k: 'arch', x: 0, z: 89.5, to: 'camp', label: 'BASE CAMP', rot: Math.PI });
+  if (id === 'caves') carveCaves(m, loop, pc);
   // flora
-  const counts = { savanna: [['acacia', 70], ['bush', 80], ['rock', 18], ['mound', 14], ['grass', 260]], jungle: [['jtree', 190], ['bush', 160], ['fern', 200], ['rock', 12]],
-    snow: [['pine', 120], ['rock', 30], ['bush', 30], ['grass', 60], ['igloo', 3]],
-    caves: [['crystal', 80], ['stalag', 110], ['gshroom', 140], ['rock', 30], ['bush', 30], ['cart', 8]],
-    blossom: [['cherry', 110], ['bamboo', 90], ['bush', 90], ['flowers', 280], ['slantern', 18], ['rock', 14]], wet: [['mangrove', 60], ['reed', 260], ['bush', 90], ['lily', 90]], desert: [['cactus', 70], ['rock', 40], ['bush', 60], ['bones', 14]] };
+  const counts = { savanna: [['acacia', 90], ['bush', 140], ['rock', 30], ['mound', 20], ['grass', 520], ['flowers', 90]], jungle: [['jtree', 190], ['bush', 160], ['fern', 200], ['rock', 12]],
+    snow: [['pine', 170], ['rock', 50], ['bush', 50], ['grass', 90], ['igloo', 3]],
+    caves: [['crystal', 30], ['stalag', 40], ['rock', 20]],
+    blossom: [['cherry', 140], ['bamboo', 110], ['bush', 140], ['flowers', 560], ['slantern', 18], ['rock', 24]], wet: [['mangrove', 60], ['reed', 260], ['bush', 90], ['lily', 90]], desert: [['cactus', 110], ['rock', 70], ['bush', 100], ['bones', 20]] };
   (counts[id] || []).forEach(([k, n]) => {
     for (let c = 0; c < n; c++) {
       const x = Math.floor((r() * 2 - 1) * 86) + 0.5, z = Math.floor((r() * 2 - 1) * 86) + 0.5, j = m.idx(x, z);
@@ -298,7 +321,7 @@ function buildBiome(id) {
   // Remaster extras: torches along cave trails, lanterns in blossom, mineable ore, pet cameos
   if (id === 'caves' || id === 'blossom') { for (let a = 0; a < loop.length; a++) { const p = loop[a], q = loop[(a + 1) % loop.length], dx = q[0] - p[0], dz = q[1] - p[1], L = Math.hypot(dx, dz) || 1; const x = Math.floor(p[0] - dz / L * 4.5) + 0.5, z = Math.floor(p[1] + dx / L * 4.5) + 0.5, j = m.idx(x, z); if (j < 0 || m.S[j] || m.Mt[j] === M.LAVA) continue; addProp(m, { k: id === 'caves' ? 'torch' : 'slantern', x, z }, 0); } }
   m.ores = [];
-  if (id === 'caves') { for (let c = 0; c < 400 && m.ores.length < 46; c++) { const x = Math.floor((r() * 2 - 1) * 84) + 0.5, z = Math.floor((r() * 2 - 1) * 84) + 0.5, j = m.idx(x, z); if (j < 0 || m.S[j] || (m.road && m.road[j]) || m.Mt[j] === M.LAVA || Math.hypot(x, z - 84) < 12) continue; const kind = r() < 0.25 ? 'gold' : r() < 0.55 ? 'gem' : 'coal'; m.ores.push({ id: m.ores.length, kind, x, z }); m.S[j] = 1; } }
+  if (id === 'caves') { for (let c = 0; c < 6000 && m.ores.length < 46; c++) { const x = Math.floor((r() * 2 - 1) * 84) + 0.5, z = Math.floor((r() * 2 - 1) * 84) + 0.5, j = m.idx(x, z); if (j < 0 || m.S[j] || (m.road && m.road[j]) || m.Mt[j] === M.LAVA || Math.hypot(x, z - 84) < 12) continue; if (![1, -1, N, -N].some((d) => m.S[j + d] === 1)) continue; const kind = r() < 0.25 ? 'gold' : r() < 0.55 ? 'gem' : 'coal'; m.ores.push({ id: m.ores.length, kind, x, z }); m.S[j] = 1; } }
   const petAt = { caves: ['pirat', 'luna'], snow: ['snowie'], blossom: ['candy'], jungle: ['torty'], savanna: ['luna'], desert: ['pirat'], wet: ['torty'] }[id] || [];
   m.pets = [];
   petAt.forEach((pid, n) => { const a = n * 1.3 + 0.6; for (let t = 0; t < 30; t++) { const x = Math.floor(Math.cos(a + t * 0.2) * (10 + t)) + 0.5, z = 70 - Math.floor(Math.sin(a) * 6) - t * 0.5 + 0.5, j = m.idx(x, z); if (j < 0 || m.S[j] || m.Mt[j] === M.LAVA || m.H[j] < m.wl) continue; m.pets.push({ id: pid, x, z, ang: Math.PI }); break; } });
@@ -315,6 +338,57 @@ function buildBiome(id) {
     m.spots.push({ x, z });
   }
   return m;
+}
+/* Crystal Caves: solid rock everywhere except tunnels (around every trail) and chambers. Walls stand 6 blocks
+   tall under a low ceiling; crystals grow out of the walls, glow mushrooms cluster in damp corners, and one
+   chamber is an old mining camp with tracks, carts, crates and lanterns. */
+function carveCaves(m, loop, pc) {
+  const N = m.N, open = new Uint8Array(N * N), FLOOR = 3, WALL = 9;
+  const ch = [[0, 84, 13], [pc.x, pc.z, 14]];
+  [0, 4, 8, 12, 16].forEach((a, n) => ch.push([loop[a][0], loop[a][1], 12 + (n % 3) * 2]));
+  ch.push([0, -6, 11]);
+  m.chambers = ch; m.mineCamp = { x: loop[8][0], z: loop[8][1] };
+  for (let k = 0; k < N; k++) for (let i = 0; i < N; i++) {
+    const j = k * N + i, x = i - m.half + 0.5, z = k - m.half + 0.5;
+    for (const c of ch) { const r = c[2] + (vnoise(x / 5, z / 5, 31) - 0.5) * 5; if ((x - c[0]) * (x - c[0]) + (z - c[1]) * (z - c[1]) < r * r) { open[j] = 1; break; } }
+    if (m.Mt[j] === M.GATE) open[j] = 1;
+  }
+  // tunnels: dilate the roads
+  let front = []; for (let j = 0; j < N * N; j++) if (m.road && m.road[j]) { open[j] = 1; front.push(j); }
+  for (let step = 0; step < 4; step++) { const nf = []; for (const j of front) { const i = j % N, k = (j / N) | 0; for (const q of [i > 0 ? j - 1 : -1, i < N - 1 ? j + 1 : -1, k > 0 ? j - N : -1, k < N - 1 ? j + N : -1]) { if (q < 0 || open[q]) continue; if (step === 3 && hash3(q % N, (q / N) | 0, 41) < 0.5) continue; open[q] = 1; nf.push(q); } } front = nf; }
+  for (let k = 0; k < N; k++) for (let i = 0; i < N; i++) {
+    const j = k * N + i, edge = Math.min(i, k, N - 1 - i, N - 1 - k);
+    if (!open[j] || edge < 5) { m.H[j] = WALL + (hash3(i, k, 42) < 0.15 ? 1 : 0); m.Mt[j] = hash3(i, k, 43) < 0.3 ? M.ROCK : M.DEEP; m.S[j] = 1; continue; }
+    if (m.Mt[j] !== M.LAVA) m.H[j] = Math.max(FLOOR, Math.min(FLOOR + 1, m.H[j]));
+    if (m.Mt[j] === M.ROCK) m.Mt[j] = M.COBBLE;
+  }
+  m.ceil = WALL + 3;
+  // lava pools glowing in a few chambers (always a safe rim next to the trail)
+  [3, 5, 6].forEach((ci) => { const c = ch[ci]; if (!c) return; const px = c[0] + c[2] * 0.45, pz = c[1] - c[2] * 0.3;
+    for (let dz = -4; dz <= 4; dz++) for (let dx = -5; dx <= 5; dx++) { if (dx * dx / 25 + dz * dz / 16 > 1) continue; const j = m.idx(px + dx, pz + dz); if (j < 0 || m.S[j]) continue; let near = false; for (let a = -2; a <= 2 && !near; a++) for (let b = -2; b <= 2; b++) { const q = m.idx(px + dx + a, pz + dz + b); if (q >= 0 && m.road && m.road[q]) { near = true; break; } } if (near) continue; m.H[j] = 1; m.Mt[j] = M.LAVA; } });
+  const wallNext = (i, k) => { for (const d of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const q = (k + d[1]) * N + i + d[0]; if (m.S[q] === 1 && m.H[q] >= WALL) return d; } return null; };
+  const r = rng(m.seed * 3 + 7), road = (j) => m.road && m.road[j];
+  // crystal clusters + mushrooms hug the walls
+  for (let k = 6; k < N - 6; k++) for (let i = 6; i < N - 6; i++) {
+    const j = k * N + i; if (m.S[j] || road(j) || m.Mt[j] === M.LAVA) continue; const d = wallNext(i, k); if (!d) continue;
+    const x = i - m.half + 0.5, z = k - m.half + 0.5, h = hash3(i, k, 44);
+    if (Math.hypot(x - m.mineCamp.x, z - m.mineCamp.z) < 9) continue;
+    if (h < 0.14) addProp(m, { k: 'crystal', x, z, s: 0.8 + r() * 0.7, wall: d }, 0);
+    else if (h < 0.3 && vnoise(x / 9, z / 9, 45) > 0.5) { m.props.push({ k: 'gshroom', x, z, s: 0.8 + r() * 0.6 }); m.cover[j] = 1; }
+    else if (h < 0.34) m.props.push({ k: 'stalag', x, z, s: 0.6 + r() * 0.4 });
+  }
+  // mushroom groves in the quiet chambers
+  ch.slice(2).forEach((c, n) => { if (n === 2) return; for (let t = 0; t < 26; t++) { const a = r() * 6.28, dd = c[2] * (0.45 + r() * 0.4), x = Math.floor(c[0] + Math.cos(a) * dd) + 0.5, z = Math.floor(c[1] + Math.sin(a) * dd) + 0.5, j = m.idx(x, z); if (j < 0 || m.S[j] || road(j) || m.Mt[j] === M.LAVA) continue; m.props.push({ k: 'gshroom', x, z, s: 0.7 + r() * 0.8 }); m.cover[j] = 1; } });
+  // mining camp
+  const mc = m.mineCamp; flatten(m, mc.x, mc.z, 8, FLOOR, M.PLANK);
+  for (let dz = -8; dz <= 8; dz++) for (let dx = -8; dx <= 8; dx++) { const j = m.idx(mc.x + dx, mc.z + dz); if (j >= 0 && dx * dx + dz * dz <= 64 && hash3(dx, dz, 46) < 0.5) m.Mt[j] = M.COBBLE; }
+  m.props.push({ k: 'rails', x: mc.x - 5, z: mc.z, len: 14 }, { k: 'cart', x: mc.x - 5, z: mc.z - 3 }, { k: 'cart', x: mc.x - 5, z: mc.z + 4 });
+  solidRect(m, mc.x - 6, mc.z - 4, mc.x - 4, mc.z + 5, 1);
+  [[3, -4], [4, -3], [3, -2]].forEach((o) => { m.props.push({ k: 'crates', x: mc.x + o[0], z: mc.z + o[1] }); });
+  solidRect(m, mc.x + 2, mc.z - 5, mc.x + 5, mc.z - 1, 1);
+  m.props.push({ k: 'minetent', x: mc.x + 3, z: mc.z + 4 }); solidRect(m, mc.x + 1, mc.z + 3, mc.x + 5, mc.z + 5, 2);
+  m.props.push({ k: 'pickrack', x: mc.x, z: mc.z - 6 }, { k: 'barrel', x: mc.x + 6, z: mc.z + 1 }, { k: 'barrel', x: mc.x + 6.6, z: mc.z + 2 }, { k: 'minesign', x: mc.x, z: mc.z + 7 });
+  [[-2, -6], [6, -3], [-2, 6], [6, 6]].forEach((o) => m.props.push({ k: 'lantern', x: mc.x + o[0], z: mc.z + o[1] }));
 }
 function build(id) { return id === 'camp' ? buildCamp() : buildBiome(id); }
 })();

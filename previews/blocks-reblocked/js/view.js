@@ -248,7 +248,7 @@ function buildProps(m) {
     else if (p.k === 'arch') { const pc = p.cave ? 0x5a5a66 : p.to === 'blossom' ? 0xd23a3a : 0x6b4423, tc = p.cave ? 0x7af0ff : p.to === 'blossom' ? 0x2a2a2a : 0xf0c24b; box(0.8, 4, 0.8, pc, -4.4, 2, 0, g); box(0.8, 4, 0.8, pc, 4.4, 2, 0, g); if (p.cave) glow(9.6, 0.8, 0.9, tc, 0, 4.2, 0, g); else box(9.6, 0.8, 0.9, tc, 0, 4.2, 0, g); if (p.to === 'blossom') box(11, 0.4, 1, 0xd23a3a, 0, 4.8, 0, g); if (p.cave) { light(g.x - 4.4, g.y + 4.5, g.z, 0x7af0ff, 'crystal'); } }
     else if (p.k === 'sign') { box(0.2, 1.4, 3, p.color || 0xf4f0e2, 0, 1.6, 0, g); box(0.2, 1.6, 0.2, 0x6b4423, 0, 0.6, -1.2, g); box(0.2, 1.6, 0.2, 0x6b4423, 0, 0.6, 1.2, g); }
     /* ---- Re-Blocked props ---- */
-    else if (p.k === 'crystal') { const c = rnd() < 0.5 ? 0x7af0ff : 0xc08aff; glow(0.5 * s, 1.8 * s, 0.5 * s, c, 0, 0.9 * s, 0, g); glow(0.35 * s, 1.1 * s, 0.35 * s, c, 0.45 * s, 0.55 * s, 0.2, g); glow(0.3 * s, 0.8 * s, 0.3 * s, c, -0.35 * s, 0.4 * s, -0.25, g); box(1.3 * s, 0.3, 1.1 * s, 0x4a4a58, 0, 0.15, 0, g); light(g.x, g.y + 1.4, g.z, c, 'crystal'); }
+    else if (p.k === 'crystal') { if (p.wall) { g.x += p.wall[0] * 0.35; g.z += p.wall[1] * 0.35; } const c = rnd() < 0.5 ? 0x7af0ff : 0xc08aff; glow(0.5 * s, 1.8 * s, 0.5 * s, c, 0, 0.9 * s, 0, g); glow(0.35 * s, 1.1 * s, 0.35 * s, c, 0.45 * s, 0.55 * s, 0.2, g); glow(0.3 * s, 0.8 * s, 0.3 * s, c, -0.35 * s, 0.4 * s, -0.25, g); box(1.3 * s, 0.3, 1.1 * s, 0x4a4a58, 0, 0.15, 0, g); light(g.x, g.y + 1.4, g.z, c, 'crystal'); }
     else if (p.k === 'stalag') { box(0.9 * s, 1.2 * s, 0.9 * s, 0x6a6470, 0, 0.6 * s, 0, g); box(0.5 * s, 1.0 * s, 0.5 * s, 0x7a7480, 0, 1.6 * s, 0, g); box(0.25, 0.7 * s, 0.25, 0x8a8490, 0, 2.4 * s, 0, g); if (m.ceil) { const cy = m.ceil - g.y; box(0.8 * s, 1.0 * s, 0.8 * s, 0x5a5462, 0.6, cy - 0.5 * s, 0.4, g); box(0.35, 0.8 * s, 0.35, 0x6a6470, 0.6, cy - 1.3 * s, 0.4, g); } }
     else if (p.k === 'gshroom') { const c = rnd() < 0.5 ? 0x5affb0 : 0xffd84a; box(0.18, 0.5 * s, 0.18, 0xe8e0d0, 0, 0.25 * s, 0, g); glow(0.6 * s, 0.22, 0.6 * s, c, 0, 0.55 * s, 0, g); box(0.12, 0.3, 0.12, 0xe8e0d0, 0.35, 0.15, 0.2, g); glow(0.32, 0.12, 0.32, c, 0.35, 0.33, 0.2, g); }
     else if (p.k === 'torch') { box(0.18, 1.6, 0.18, 0x6b4423, 0, 0.8, 0, g); box(0.3, 0.2, 0.3, 0x3a3a3a, 0, 1.65, 0, g); glow(0.22, 0.3, 0.22, 0xffb02a, 0, 1.9, 0, g); glow(0.12, 0.18, 0.12, 0xfff0a0, 0, 2.1, 0, g); light(g.x, g.y + 2.1, g.z, 0xffa040, 'torch'); }
@@ -264,7 +264,21 @@ function buildProps(m) {
     else if (p.k === 'pond') { box(6, 0.3, 4, 0x8a8a8a, 0, 0.15, 0, g); box(5.2, 0.32, 3.2, 0x3a9ad0, 0, 0.17, 0, g); box(0.9, 0.1, 0.9, 0x5aa04a, -1.5, 0.36, 0.5, g); box(0.7, 0.1, 0.7, 0x5aa04a, 1.2, 0.36, -0.6, g); box(1.2, 0.6, 1.0, 0x9a9a9a, 2.4, 0.3, 1.4, g); box(0.5, 0.15, 0.3, 0xff8a3a, 0.4, 0.36, 0.3, g); }
     else if (p.k === 'kennel') { box(3, 2, 2.4, 0xd25a7a, 0, 1, 0, g); box(3.3, 0.3, 2.7, 0x8a3a4a, 0, 2.1, 0, g); box(1.2, 1.2, 0.1, 0x2a1a1a, 0, 0.6, 1.22, g); box(1.6, 0.3, 0.1, 0xffffff, 0, 1.6, 1.24, g); box(0.6, 0.25, 0.6, 0x3a6ad2, 1.8, 0.12, 1.4, g); box(0.4, 0.1, 0.4, 0xc8a06a, 1.8, 0.28, 1.4, g); box(0.25, 0.25, 0.7, 0xf2f2f2, -1.9, 0.12, 1.3, g); }
     else if (p.k === 'rathouse') { box(3.4, 2.2, 2.6, 0xf0c24b, 0, 1.1, 0, g); box(3.7, 0.3, 2.9, 0x6a4a8a, 0, 2.3, 0, g); box(2.4, 0.6, 2, 0x6a4a8a, 0, 2.7, 0, g); box(0.8, 0.8, 0.1, 0x2a1a1a, -0.8, 0.4, 1.32, g); box(0.6, 0.6, 0.1, 0x9ad0f0, 0.8, 1.3, 1.32, g); box(0.8, 0.5, 0.8, 0xf2d24a, 2.1, 0.25, 1, g); box(0.3, 0.3, 0.3, 0xe8a83a, 2.1, 0.6, 1, g); }
-    else if (p.k === 'pfence') { box(0.2, 1.0, 0.2, 0xffffff, 0, 0.5, 0, g); box(2, 0.14, 0.1, 0xffffff, 1, 0.75, 0, g); box(2, 0.14, 0.1, 0xffffff, 1, 0.4, 0, g); }
+    else if (p.k === 'rails') { const L = p.len || 12; box(0.15, 0.1, L, 0x8a8a90, -0.5, 0.1, 0, g); box(0.15, 0.1, L, 0x8a8a90, 0.5, 0.1, 0, g); for (let tz = -L / 2 + 0.4; tz < L / 2; tz += 0.8) box(1.4, 0.08, 0.25, 0x6b4423, 0, 0.04, tz, g); box(1.6, 0.6, 0.3, 0x6b4423, 0, 0.3, L / 2, g); }
+    else if (p.k === 'minetent') { box(4, 0.15, 3, 0x6b4423, 0, 0.08, 0, g); box(0.15, 2.4, 0.15, 0x6b4423, -1.9, 1.2, -1.4, g); box(0.15, 2.4, 0.15, 0x6b4423, 1.9, 1.2, -1.4, g); box(0.15, 2.4, 0.15, 0x6b4423, -1.9, 1.2, 1.4, g); box(0.15, 2.4, 0.15, 0x6b4423, 1.9, 1.2, 1.4, g); box(4.3, 0.2, 3.3, 0xc8a24a, 0, 2.45, 0, g); box(1.6, 0.6, 0.8, 0x8a5a2a, -0.9, 0.45, -0.6, g); box(0.8, 0.5, 0.8, 0x5a7a9a, 1, 0.33, 0.6, g); glow(0.25, 0.3, 0.25, 0xffc070, -0.9, 0.95, -0.6, g); light(g.x, g.y + 1.6, g.z, 0xffb060, 'torch'); }
+    else if (p.k === 'pickrack') { box(2.4, 0.15, 0.4, 0x6b4423, 0, 1.4, 0, g); box(0.15, 1.5, 0.15, 0x6b4423, -1.1, 0.75, 0, g); box(0.15, 1.5, 0.15, 0x6b4423, 1.1, 0.75, 0, g); for (const x of [-0.6, 0, 0.6]) { box(0.08, 1.1, 0.08, 0x8a5a2a, x, 0.85, 0.15, g); box(0.5, 0.1, 0.1, 0x9aa0a8, x, 1.3, 0.15, g); } }
+    else if (p.k === 'barrel') { box(0.8, 1, 0.8, 0x8a5a2a, 0, 0.5, 0, g); box(0.84, 0.1, 0.84, 0x3a3a3a, 0, 0.25, 0, g); box(0.84, 0.1, 0.84, 0x3a3a3a, 0, 0.75, 0, g); }
+    else if (p.k === 'minesign') { box(0.15, 1.6, 0.15, 0x6b4423, -1, 0.8, 0, g); box(0.15, 1.6, 0.15, 0x6b4423, 1, 0.8, 0, g); box(2.6, 0.8, 0.12, 0x9a6a3a, 0, 1.5, 0, g); glow(0.3, 0.3, 0.13, 0xffd23f, -0.8, 1.5, 0.01, g); }
+    else if (p.k === 'lantern') { box(0.15, 2.2, 0.15, 0x3a3a3a, 0, 1.1, 0, g); box(0.5, 0.08, 0.08, 0x3a3a3a, 0.2, 2.15, 0, g); glow(0.3, 0.35, 0.3, 0xffc070, 0.4, 1.9, 0, g); light(g.x + 0.4, g.y + 1.9, g.z, 0xffb060, 'torch'); }
+    else if (p.k === 'pfence') { const c = p.c || 0xffffff; box(0.2, 1.0, 0.2, c, 0, 0.5, 0, g); box(2, 0.14, 0.1, c, 1, 0.75, 0, g); box(2, 0.14, 0.1, c, 1, 0.4, 0, g); }
+    else if (p.k === 'pfencez') { const c = p.c || 0xffffff; box(0.2, 1.0, 0.2, c, 0, 0.5, 0, g); box(0.1, 0.14, 2, c, 0, 0.75, 1, g); box(0.1, 0.14, 2, c, 0, 0.4, 1, g); }
+    else if (p.k === 'burrow') { box(4, 1.4, 3, 0x8a6440, 0, 0.7, 0, g); box(3, 0.8, 2.4, 0x9a7450, 0, 1.6, 0, g); box(1.4, 0.9, 0.2, 0x2a1a10, 0, 0.45, 1.5, g); box(1.8, 0.2, 0.4, 0x7a5430, 0, 0.1, 1.8, g); box(0.6, 0.5, 0.6, 0x5aa04a, 1.4, 2.1, -0.4, g); box(0.4, 0.4, 0.4, 0x7ad25a, -1.2, 2.0, 0.5, g); }
+    else if (p.k === 'bone') { box(0.7, 0.15, 0.2, 0xf4f0e2, 0, 0.08, 0, g); box(0.2, 0.2, 0.35, 0xf4f0e2, -0.35, 0.1, 0, g); box(0.2, 0.2, 0.35, 0xf4f0e2, 0.35, 0.1, 0, g); }
+    else if (p.k === 'tug') { box(1.4, 0.12, 0.12, 0xe25b4a, 0, 0.06, 0, g); box(0.2, 0.2, 0.2, 0xf4f4f4, -0.7, 0.1, 0, g); box(0.2, 0.2, 0.2, 0x3a8ad2, 0.7, 0.1, 0, g); }
+    else if (p.k === 'hoop') { box(0.15, 1.4, 0.15, 0xffffff, -0.9, 0.7, 0, g); box(0.15, 1.4, 0.15, 0xffffff, 0.9, 0.7, 0, g); box(1.6, 0.15, 0.12, 0xff4fa0, 0, 1.1, 0, g); box(0.15, 0.8, 0.12, 0xff4fa0, -0.75, 0.75, 0, g); box(0.15, 0.8, 0.12, 0xff4fa0, 0.75, 0.75, 0, g); box(1.6, 0.15, 0.12, 0xff4fa0, 0, 0.4, 0, g); }
+    else if (p.k === 'tire') { box(1.2, 0.35, 1.2, 0x2a2a2a, 0, 0.18, 0, g); box(0.6, 0.37, 0.6, 0x3f8a38, 0, 0.18, 0, g); }
+    else if (p.k === 'ratcage') { box(4.4, 0.3, 4.4, 0xd8d2c4, 0, 0.15, 0, g); for (const dx of [-2.1, -1.05, 0, 1.05, 2.1]) for (const dz of [-2.1, 2.1]) { box(0.06, 2.6, 0.06, 0xb8c0c8, dx, 1.45, dz, g); box(0.06, 2.6, 0.06, 0xb8c0c8, dz, 1.45, dx, g); } box(4.4, 0.12, 4.4, 0xb8c0c8, 0, 2.8, 0, g); box(4.4, 0.12, 0.08, 0xb8c0c8, 0, 1.5, 2.1, g); box(3.6, 0.15, 1.4, 0xf0c24b, 0, 1.4, -1.2, g); box(1.2, 0.8, 1.0, 0x6a4a8a, -1.3, 0.7, 1.2, g); box(0.5, 0.5, 0.1, 0x2a1a1a, -1.3, 0.6, 1.71, g); box(0.4, 0.4, 2.6, 0x7ad2ff, 1.4, 1.8, 0, g); box(0.15, 1.2, 0.5, 0x9a6a3a, 0.4, 0.9, -0.3, g); box(1.2, 0.08, 0.7, 0xe25b4a, -0.6, 2.2, 0.6, g); box(0.9, 0.12, 0.6, 0xc8a06a, 1.2, 0.36, 1.3, g); }
+    else if (p.k === 'hlamp') { box(0.2, 1.6, 0.2, 0x6b4423, 0, 0.8, 0, g); glow(0.5, 0.3, 0.5, 0xffc070, 0, 1.75, 0, g); light(g.x, g.y + 1.8, g.z, 0xffb060, 'lamp'); }
     else if (p.k === 'bowl') { box(0.6, 0.2, 0.6, p.c || 0xff4fa0, 0, 0.1, 0, g); box(0.45, 0.06, 0.45, 0xc8a06a, 0, 0.21, 0, g); }
     else if (p.k === 'ball') { box(0.45, 0.45, 0.45, 0xffd84a, 0, 0.23, 0, g); box(0.47, 0.1, 0.47, 0xe25b4a, 0, 0.23, 0, g); }
     else if (p.k === 'cheese') { box(1.0, 0.5, 0.8, 0xffd23f, 0, 0.25, 0, g); box(0.15, 0.15, 0.02, 0xe0a820, 0.2, 0.3, 0.41, g); box(0.12, 0.12, 0.02, 0xe0a820, -0.25, 0.18, 0.41, g); }
@@ -301,7 +315,8 @@ function buildProps(m) {
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, fog: false, toneMapped: false })); sp.scale.set(w || 7, (w || 7) / 4, 1); sp.position.set(x, y, z); grp.add(sp);
   };
   m.gates.forEach((gt) => lab(gt.label, gt.x, m.h(gt.x, gt.z) + 6.5, gt.z + (m.id === 'camp' ? (gt.south ? -1 : 1) : -1)));
-  if (m.id === 'camp') lab('PET CORNER', 0, 4.6, 44.4, '#ff7ab8', 6);
+  if (m.id === 'camp') lab('PET CORNER', 0, 4.4, 28.7, '#ff7ab8', 6);
+  (m.zoneSigns || []).forEach((z) => lab(z.t, z.x, m.h(z.x, z.z) + 3.4, z.z, z.c, 3.6));
   (m.sanct || []).forEach((sc) => lab(sc.name.toUpperCase(), sc.x, 7, sc.z, '#' + sc.color.toString(16), 12));
   if (m.board) lab('CASE BOARD', m.board.x, 5, m.board.z - 0.5, '#e25b4a', 6);
   if (m.shop) lab('UPGRADES', m.shop.x + 1, 5.6, m.shop.z - 4, '#3fc8ff', 6);
@@ -426,7 +441,8 @@ V.sync = function (W, me, others) {
 V.frame = function (target, dt, lookYaw) {
   const y = V.map.h(target.x, target.z);
   const behind = CAM.yaw;
-  const dist = CAM.dist, pitch = CAM.pitch;
+  const caveCam = V.map && V.map.ceil && CAM.dist === 11;
+  const dist = caveCam ? 7.5 : CAM.dist, pitch = caveCam ? 0.66 : CAM.pitch;
   const cx = target.x - Math.sin(behind) * dist * Math.cos(pitch);
   const cz = target.z - Math.cos(behind) * dist * Math.cos(pitch);
   const cy = y + 2.2 + Math.sin(pitch) * dist;

@@ -473,7 +473,7 @@
       "url": "previews/blocks-reblocked/",
       "playable": true,
       "built": "2026-10-21",
-      "notes": "Remaster of Grok Blocks on a new shiny engine (soft shadows, sky with sun/moon/stars, block textures, day/night on by default). New: Crystal Caves (dark, lava, glowing crystals, mine ore with your pickaxe, headlamp) and Blossom Hills (cherry trees, koi pond, lanterns), 6 new animals, 4 new cases, Pet Corner with Luna, Pi-rat, Snowie, Candy and Torty. Everything from the original is still in."
+      "notes": "Remaster of Grok Blocks on a new shiny engine (soft shadows, sky with sun/moon/stars, block textures, day/night on by default). New: Crystal Caves (real tunnels and chambers, glowing wall crystals, lava, a mining camp, mine ore with your pickaxe, headlamp) and Blossom Hills (cherry trees, koi pond, lanterns), 6 new animals, 4 new cases, Pet Corner with Torty's habitat, Candy's yard and the Rat Palace. Everything from the original is still in."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
