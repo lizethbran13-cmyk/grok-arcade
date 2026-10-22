@@ -29,7 +29,7 @@
   PV.boardName = function (it) { var n = it.name || 'Mystery build'; return it.stage === 'shipped' ? n.replace(/\s*\(live\)\s*$/i, '') : n; }; // the JUST SHIPPED column already says it's live
   function labs(it) { return (it.labels || []).map(function (l) { return String(l.name || l).toLowerCase(); }); }
   PV.stageOf = function (it) {
-    var l = labs(it); if (l.indexOf('dlc') < 0 && l.indexOf('suggestion') < 0) return null;
+    var l = labs(it); if (l.indexOf('dlc') < 0 && l.indexOf('suggestion') < 0 && l.indexOf('remaster') < 0) return null;
     if (l.indexOf('shipped') >= 0) return 'shipped';
     if (it.state === 'closed') return l.indexOf('wontfix') >= 0 || it.state_reason === 'not_planned' ? null : 'shipped';
     return l.indexOf('in-progress') >= 0 ? 'building' : 'queued';

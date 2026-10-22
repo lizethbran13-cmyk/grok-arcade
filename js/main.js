@@ -195,10 +195,17 @@
     d.querySelector('.bGo').addEventListener('click', function () { GA.Hub.teleport('dlc'); closeMenu(); GA.Audio.play('near'); });
     return d;
   }
+  function rmCard() {
+    var d = document.createElement('div'); d.className = 'card pzMenuCard'; d.style.setProperty('--c', '#4ade80'); d.setAttribute('data-game', 'remaster');
+    d.innerHTML = '<div class="cName">Tortuga Remaster Works</div><div class="cDesc">Torty\u2019s workshop: file Remaster, Sequel and Quality-of-Life tickets at the Remaster Machine, read the Remaster Board and see shipped remasters.</div><div class="cBtns"><button class="bPlay">&#128034; OPEN</button><button class="bGo">GO TO</button></div>';
+    d.querySelector('.bPlay').addEventListener('click', function () { GA.Audio.unlock(); closeMenu(true); GA.RemasterUI.open(); });
+    d.querySelector('.bGo').addEventListener('click', function () { closeMenu(); GA.Audio.play('near'); if (GA.Remaster && GA.Remaster.enter) GA.Remaster.enter(); });
+    return d;
+  }
   function buildMenu() {
     var gm = $('gridMain'), gb = $('gridBonus');
     var ph = document.createElement('h2'); ph.className = 'secTitle pzSec'; ph.innerHTML = 'Prizes, Records &amp; Suggestions <small>spend tickets &middot; trophies &middot; game history &middot; suggest patches &amp; DLC</small>';
-    var pgd = document.createElement('div'); pgd.className = 'grid'; pgd.id = 'gridPrize'; pgd.appendChild(pzCard('prizes')); pgd.appendChild(pzCard('gallery')); pgd.appendChild(clawCard()); pgd.appendChild(sbCard()); if (GA.Hall) pgd.appendChild(hallCard()); if (GA.DLC) pgd.appendChild(dlcCard());
+    var pgd = document.createElement('div'); pgd.className = 'grid'; pgd.id = 'gridPrize'; pgd.appendChild(pzCard('prizes')); pgd.appendChild(pzCard('gallery')); pgd.appendChild(clawCard()); pgd.appendChild(sbCard()); if (GA.Hall) pgd.appendChild(hallCard()); if (GA.DLC) pgd.appendChild(dlcCard()); if (GA.RemasterUI) pgd.appendChild(rmCard());
     var mainTitle = document.querySelector('#menuScroll .secTitle.main'); if (mainTitle) { mainTitle.parentNode.insertBefore(ph, mainTitle); mainTitle.parentNode.insertBefore(pgd, mainTitle); if (GA.Carry) GA.Carry.buildMenu(mainTitle); }
     $('gridMp').appendChild(mpCard());
     GA.MAIN_GAMES.forEach(function (g) { gm.appendChild(card(g, false)); });
@@ -257,7 +264,7 @@
     GA.Fix.init();
     GA.Fix.onChange = function () { showPrompt(GA.Hub.near()); };
     GA.Hub.onNear = function (cab) { if (cab) GA.Audio.play('near'); showPrompt(cab); };
-    GA.Hub.onArea = function (bonus, area) { var a = $('areaLabel'), hall = area === 'hall', AN = { preview: 'RATITA PREVIEW CENTER', glitch: 'GL1TCH R00M', food: 'FOOD COURT', roof: 'ROOFTOP PARTY', basement: 'SECRET BASEMENT', gallery: 'GAME GALLERY', attic: 'THE ATTIC', attic2: 'COBWEB LIBRARY', attic3: 'FOGGY OBSERVATORY', maint: 'MAINTENANCE', tunnel: 'SECRET TUNNEL', tlab: 'LILY\u2019S TIME LAB', oldarc: 'GROK ARCADE \u00b7 1983' }; a.textContent = AN[area] || (hall ? 'HALL OF RECORDS' : bonus ? 'BONUS ZONE' : 'ARCADE FLOOR'); a.classList.toggle('bonus', bonus); a.classList.toggle('hall', hall); ['food', 'roof', 'basement', 'gallery', 'attic', 'attic2', 'attic3', 'maint'].forEach(function (k) { a.classList.toggle('ar_' + k, area === k); }); if (bonus && started && GA.Prog) GA.Prog.event('bonusZone'); };
+    GA.Hub.onArea = function (bonus, area) { var a = $('areaLabel'), hall = area === 'hall', AN = { remaster: 'TORTUGA REMASTER WORKS', preview: 'RATITA PREVIEW CENTER', glitch: 'GL1TCH R00M', food: 'FOOD COURT', roof: 'ROOFTOP PARTY', basement: 'SECRET BASEMENT', gallery: 'GAME GALLERY', attic: 'THE ATTIC', attic2: 'COBWEB LIBRARY', attic3: 'FOGGY OBSERVATORY', maint: 'MAINTENANCE', tunnel: 'SECRET TUNNEL', tlab: 'LILY\u2019S TIME LAB', oldarc: 'GROK ARCADE \u00b7 1983' }; a.textContent = AN[area] || (hall ? 'HALL OF RECORDS' : bonus ? 'BONUS ZONE' : 'ARCADE FLOOR'); a.classList.toggle('bonus', bonus); a.classList.toggle('hall', hall); ['food', 'roof', 'basement', 'gallery', 'attic', 'attic2', 'attic3', 'maint'].forEach(function (k) { a.classList.toggle('ar_' + k, area === k); }); if (bonus && started && GA.Prog) GA.Prog.event('bonusZone'); };
 
     $('startBtn').addEventListener('click', start);
     $('title').addEventListener('click', function (e) { if (e.target === $('title')) start(); });
