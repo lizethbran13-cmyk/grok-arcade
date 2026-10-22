@@ -4,12 +4,13 @@
   "items": [
     {
       "game": "grocery",
-      "name": "Same-Day Rush: Drive the Grok Van (with a catch)",
+      "name": "Same-Day Rush: Drive the Grok Van (live)",
       "size": "Free Patch",
-      "what": "Grok Grocery Tycoon: a big 🚐 Drive Same-Day button and a how-to-drive card from Pi-rat, so anyone can take the Grok Van out. The catch: a tight ⏱️ delivery timer. Late orders get the customer a refund and cost you a star (and a bit of store rating). The van is faster, but crashes hurt it more and take 10 seconds off the clock. Plus 🚐/🚚 Test Ride at the Ship Center: drive the van or the truck anytime, no orders, no timer. Torty's Tow and Hop out always work, so you are never stuck.",
-      "stage": "building",
-      "when": "In the lab now",
-      "key": "grocery_sameday_catch"
+      "what": "Grok Grocery Tycoon: a big 🚐 Drive Same-Day button and a how-to-drive card from Pi-rat, so anyone can take the Grok Van out. The catch: a tight ⏱️ delivery timer. Late orders get the customer a refund and cost you a star (and a bit of store rating). The van is faster, but crashes hurt it more and take 10 seconds off the clock. Plus 🚐/🚚 Test Ride at the Ship Center: drive the van or the truck anytime, no orders, no timer. Torty's Tow and Hop out always work, so you are never stuck. Live now in Grok Grocery Tycoon! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 21",
+      "key": "grocery_sameday_catch",
+      "shippedAt": "2026-10-22T02:46:12Z"
     },
     {
       "game": "arcade",
@@ -394,19 +395,20 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "grocery-sameday-catch",
       "game": "grocery",
       "name": "Same-Day Rush: Drive the Grok Van (with a catch)",
-      "url": "previews/grocery-sameday-catch/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grocery-sameday-catch-beta/",
       "built": "2026-10-21",
-      "notes": "Big 🚐 Drive Same-Day button (top right) + Pi-rat's how-to-drive card. The catch: a tight timer (75s + 30s per order, crash = -10s); late = customer refund + lose a star + store rating dip. Van is faster but takes 1.6x crash damage. 🚐/🚚 Test Ride at the Ship Center dock and the van bay: free roam, no orders, no timer (repairs still apply). Smarter driving camera that never clips into trees, bushes or signs. Torty's Tow + Hop out always work. Preview uses its own sandbox save."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-21",
+      "notes": "Big 🚐 Drive Same-Day button (top right) + Pi-rat's how-to-drive card. The catch: a tight timer (75s + 30s per order, crash = -10s); late = customer refund + lose a star + store rating dip. Van is faster but takes 1.6x crash damage. 🚐/🚚 Test Ride at the Ship Center dock and the van bay: free roam, no orders, no timer (repairs still apply). Smarter driving camera that never clips into trees, bushes or signs. Torty's Tow + Hop out always work. Preview uses its own sandbox save.",
+      "playable": true
+    },
     {
       "id": "grocery-patch-52",
       "game": "grocery",
