@@ -3,6 +3,16 @@
   "updated": "2026-10-22",
   "items": [
     {
+      "issue": 56,
+      "game": "land",
+      "name": "Grok Land 2",
+      "size": "Sequel",
+      "what": "Our first Grok game sequel! A brand-new Boost Mode for high-speed Boost Zones (boost meter, grind rails, loops, homing attack, air dash, rings that shield you, real crash consequences and S-A-B-C ranks), new worlds (Candy's Canyon, Mesa Mines, Ratita Industries' Cheese Conveyor, Tortuga Tech's Shell-Tough Test Track), better graphics on every remastered classic level, online co-op rooms, and cameos from Luna, Pi-rat, Snowie, Candy and Torty.",
+      "stage": "building",
+      "when": "In the lab now",
+      "key": "land2"
+    },
+    {
       "issue": 61,
       "game": "arcade",
       "name": "Tortuga Remaster Works (live)",
