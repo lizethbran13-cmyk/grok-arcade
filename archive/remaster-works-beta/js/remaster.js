@@ -90,7 +90,7 @@
     var pl2 = new T.PointLight('#c4ffe0', 0.6, 20, 1.5); pl2.position.set(B.maxX - 5, H - 0.8, cz); g.add(pl2);
     // walls are solid
     [[B.minX - 1, B.maxX + 1, B.minZ - 1, B.minZ], [B.minX - 1, B.maxX + 1, B.maxZ, B.maxZ + 1], [B.minX - 1, B.minX, B.minZ - 1, B.maxZ + 1], [B.maxX, B.maxX + 1, B.minZ - 1, B.maxZ + 1]].forEach(function (q) { A.addWall(q[0], q[1], -1, 99, q[2], q[3]); });
-    A.addWall(B.minX, B.maxX, H - 0.3, 99, B.minZ, B.maxZ);
+    A.walls.push({ minX: B.minX, maxX: B.maxX, minY: H - 0.3, maxY: 99, minZ: B.minZ, maxZ: B.maxZ }); // ceiling: camera-only
     // big signs: entrance banner on the back (east) wall above the machine, and a welcome sign on the door wall
     var big = cvs(1024, 256, function (c, w, h) { var gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#14532d'); gr.addColorStop(1, '#0b2b1c'); c.fillStyle = gr; rr(c, 4, 4, w - 8, h - 8, 26); c.fill(); c.strokeStyle = SAND; c.lineWidth = 8; c.stroke();
       txt(c, 'TORTUGA REMASTER WORKS', w / 2, 92, 96, GREEN, w - 60, true); txt(c, 'remasters \u00b7 sequels \u00b7 quality-of-life fixes', w / 2, 168, 40, '#fef3c7', w - 80); txt(c, 'a Tortuga Tech Inc. facility \u00b7 electronics by Ratita Industries', w / 2, 218, 30, '#fbcfe8', w - 80); });
