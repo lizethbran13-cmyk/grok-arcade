@@ -3,6 +3,15 @@
   "updated": "2026-10-21",
   "items": [
     {
+      "issue": 52,
+      "game": "grocery",
+      "name": "Grocery Tycoon Patch: Packing Help + Drive the Truck",
+      "size": "Free Patch",
+      "what": "Grok Grocery Tycoon free patch for Super Shop Online Pass (David's idea #52): easy packing with floor arrows, glowing shelves and a checklist that says which aisle or rack, a Stop packing button so staff take over, a $3,000 welcome bonus for new players (and a one-time gift for existing saves), and YOU drive the Ship Center truck (2-day shipping) and the Grok Van (same-day) on real roads to new spots past Maple Lane: Cedar Court and Riverside Apartments. GPS, crashes, repair bills and Torty's Tow.",
+      "stage": "building",
+      "when": "In the lab now"
+    },
+    {
       "issue": 53,
       "game": "drvic",
       "name": "Grok Dr. Vic: The Lost Lab (live)",
@@ -366,7 +375,18 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "grocery-patch-52",
+      "game": "grocery",
+      "issue": 52,
+      "name": "Grocery Tycoon Patch: Packing Help + Drive the Truck",
+      "url": "previews/grocery-patch-52/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "FREE patch for Super Shop Online Pass (#52/#51). Packing guidance: floor arrows, glowing shelves, a checklist with aisle/rack + bay, a clear pack station. NEW Stop packing button hands the order to staff (slower, 10% less pay). New players start with +$3,000 (existing saves get a one-time $3,000 gift). DRIVE the Ship Center truck (2-day) and the Grok Van (same-day): GPS route, gas/brake, crashes = damage + repair bill + late parcels, Torty's Tow back to the dock. New delivery spots past Maple Lane: Cedar Road, Cedar Court and Riverside Apartments, plus a gas station, sports field and Cedar Park. Snowie and Pi-rat ride along. Preview uses its own sandbox save."
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
