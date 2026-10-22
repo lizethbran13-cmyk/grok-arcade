@@ -37,7 +37,7 @@ function stepConfetti(dt) { if (!confetti.count) return; const m = new THREE.Mat
 function ui(html, cls = '') { const u = $('ui'); u.innerHTML = html ? `<div class="screen ${cls}">${html}</div>` : ''; u.classList.toggle('open', !!html); return u.firstChild; }
 function hud(on) { $('hud').classList.toggle('hidden', !on); $('touch').classList.toggle('hidden', !on); }
 function title() {
-  leaveGame(); P.ph = 'title'; hud(false); bubble(); showStudio(); studio.camShot('wide'); studio.setRoster(CHARS.slice(0, 4).map((c, i) => ({ name: c.n, char: c.id, color: COLORS[i] })), [0, 0, 0, 0]); studio.drawScreen('GROK PET PARTY', 'LIVE on Tortuga TV · tonight!');
+  leaveGame(); P.ph = 'title'; hud(false); $('tvbug').classList.add('hidden'); bubble(); showStudio(); studio.camShot('wide'); studio.setRoster(CHARS.slice(0, 4).map((c, i) => ({ name: c.n, char: c.id, color: COLORS[i] })), [0, 0, 0, 0]); studio.drawScreen('GROK PET PARTY', 'LIVE on Tortuga TV · tonight!');
   const el = ui(`<div class="logo">GROK<br><b>PET PARTY</b></div><div class="live">● LIVE on <b>TORTUGA TV</b></div>
     <p class="sub">The party game show for 1–4 players! 7 mini-games + the Grand Final.<br>Sponsored by <b class="rat">Ratita Industries</b> &amp; <b class="tor">Tortuga Tech</b></p>
     <button class="go" id="bSolo">🎉 PLAY (you + party bots)</button><button class="go alt" id="bOnline">🌐 PLAY ONLINE (room code)</button>
@@ -84,7 +84,7 @@ function onNet(d, from) {
   if (!d || typeof d !== 'object') return;
   if (P.mode === 'host' || (P.room && P.room.isHost)) { if (d.t === 'in') P.inputs[from] = { mx: clamp(+d.mx || 0, -1, 1), mz: clamp(+d.mz || 0, -1, 1), a: d.a ? 1 : 0 }; return; }
   if (d.t === 'start') { P.mode = 'client'; P.roster = d.roster; P.order = d.order; P.stars = d.stars; P.local = P.roster.findIndex((p) => p.pid === P.room.pid); if (P.local < 0) P.local = 0; }
-  else if (d.t === 'ph') enterPh(d.ph, d.d);
+  else if (d.t === 'ph') { $('tvbug').classList.remove('hidden'); enterPh(d.ph, d.d); }
   else if (d.t === 's' && P.game && P.ph === 'play') { P.game.apply(d.s); (d.m || []).forEach(showMsg); }
 }
 const bcast = (d) => { if (P.mode === 'host' && P.room) P.room.broadcast(d); };
@@ -102,7 +102,7 @@ function startParty(humans) {
   if (P.mode === 'host') bcast({ t: 'start', roster: roster.map((p) => Object.assign({}, p, { pid: p.pid === 'me' ? P.room.pid : p.pid })), order: P.order, stars: P.stars });
   setPh('live', { lines: [['rico', "Gooood evening! You're watching GROK PET PARTY, LIVE on Tortuga TV! 📺"], ['martina', 'Brought to you by Ratita Industries… and Tortuga Tech: shell-tough since forever! 🐢'], ['rico', 'Love it, Torty! Our favourite co-host, folks!'], ['rico', `Tonight: ${P.order.length} mini-games and a GRAND FINAL. Let's meet our contestants!`]], dur: 9 });
 }
-function setPh(ph, d = {}) { d.stars = P.stars; d.round = P.round; enterPh(ph, d); bcast({ t: 'ph', ph, d }); }
+function setPh(ph, d = {}) { $('tvbug').classList.remove('hidden'); d.stars = P.stars; d.round = P.round; enterPh(ph, d); bcast({ t: 'ph', ph, d }); }
 function enterPh(ph, d) {
   P.ph = ph; P.d = d; P.phT = d.dur || 4; P.lineI = -1; if (d.stars) P.stars = d.stars; if (d.round != null) P.round = d.round; $('skip').classList.toggle('hidden', P.mode === 'client' || ph === 'play');
   const R = P.roster;
