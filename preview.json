@@ -3,6 +3,15 @@
   "updated": "2026-10-21",
   "items": [
     {
+      "game": "petparty",
+      "name": "Grok Pet Party",
+      "size": "New Game",
+      "what": "NEW party game show LIVE on the all-new Tortuga TV Network, sponsored by Ratita Industries and Tortuga Tech! 1-4 players (online room codes or solo vs party bots) battle through 7 mini-games in random order: Cheese Dash, Shell Slide, Candy's Catch, Goo Floor, Pickleball Smash, Pi-rat's Treasure Dig and Bumper Shells, then the Grand Final Crown Chase crowns the Party Champ. Hosts Rico and Martina \"Torty\", and Candy's Ruffsources desk books celebrity guests (Dr. Vic, Penny, Mimi, Lily, Lili, Gary from IT). Tickets and trophies!",
+      "stage": "building",
+      "when": "In the lab now · beta in the Time Jumper",
+      "key": "pet_party"
+    },
+    {
       "game": "grocery",
       "name": "Same-Day Rush: Drive the Grok Van (live)",
       "size": "Free Patch",
@@ -395,7 +404,17 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "petparty",
+      "game": "petparty",
+      "name": "Grok Pet Party",
+      "url": "previews/petparty/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "First playable: the party game show LIVE on Tortuga TV (sponsored by Ratita Industries + Tortuga Tech). 7 mini-games in random order (Cheese Dash, Shell Slide, Candy's Catch, Goo Floor, Pickleball Smash, Pi-rat's Treasure Dig, Bumper Shells) + the Grand Final Crown Chase. Hosts Rico + Martina 'Torty', Candy's Ruffsources guest desk with celebrity guests (Dr. Vic, Penny, Mimi, Lily, Lili, Gary from IT). Solo vs party bots or online with a 5-letter room code (up to 4). Preview uses its own sandbox save."
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
@@ -682,6 +701,10 @@
     "drvic": {
       "name": "Grok Dr. Vic: The Lost Lab",
       "cover": "assets/wip/drvic/cover.webp"
+    },
+    "petparty": {
+      "name": "Grok Pet Party",
+      "cover": "assets/wip/petparty/cover.webp"
     }
   }
 }
