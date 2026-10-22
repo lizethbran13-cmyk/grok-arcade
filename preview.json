@@ -9,7 +9,7 @@
       "size": "Sequel",
       "what": "Our first Grok game sequel! A brand-new Boost Mode for high-speed Boost Zones (boost meter, grind rails, loops, homing attack, air dash, rings that shield you, real crash consequences and S-A-B-C ranks), new worlds (Candy's Canyon, Mesa Mines, Ratita Industries' Cheese Conveyor, Tortuga Tech's Shell-Tough Test Track), better graphics on every remastered classic level, online co-op rooms, and cameos from Luna, Pi-rat, Snowie, Candy and Torty.",
       "stage": "building",
-      "when": "In the lab now",
+      "when": "In the lab now · beta in the Time Jumper",
       "key": "land2"
     },
     {
@@ -488,7 +488,18 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "grok-land-2",
+      "game": "land",
+      "issue": 56,
+      "name": "Grok Land 2",
+      "url": "previews/grok-land-2/",
+      "playable": true,
+      "built": "2026-10-22",
+      "notes": "First playable of the Grok Land sequel. Try BOOST ZONES on the title screen: Meadow Rush (boost meter, grind rails, loop, homing attack, air dash, rings, S rank under 18s). New worlds: Red Rock Trail, Mesa Mines, Cheese Conveyor (Ratita Industries), Shell-Tough Test Track (Tortuga Tech), plus all 12 classic levels with the new graphics. Online co-op from the title screen. Cameos: Luna, Pi-rat, Snowie, Candy, Torty."
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
