@@ -3,6 +3,16 @@
   "updated": "2026-10-22",
   "items": [
     {
+      "issue": 58,
+      "game": "grocery",
+      "name": "Grocery Tycoon: Holiday Mini Pack",
+      "size": "Mini Pack",
+      "what": "You chose, so we picked: HOLIDAY DECOR, UNIFORMS and a THANKSGIVING AISLE! Switch every store you run to Harvest (Thanksgiving) or Winter Holidays decorations (garlands, wreaths, ceiling lights, hanging pumpkins or snowflakes, a pumpkin + hay or Christmas tree entrance display, and a decorated storefront), pick one of 7 apron + cap uniforms for your staff (and you), and stock a brand-new Thanksgiving Aisle with turkeys, pies, cranberry sauce, stuffing, gravy and sweet potatoes, topped with plush Luna, Pi-rat, Snowie, Candy and Torty. Mini Pack, 25 tickets.",
+      "stage": "building",
+      "when": "In the lab now · WIP preview in the Time Jumper",
+      "key": "grokDLC.grocery.you_choose"
+    },
+    {
       "issue": 57,
       "game": "drvic",
       "name": "Dr. Vic: The Sunken Lab",
@@ -518,6 +528,16 @@
       "playable": true,
       "built": "2026-10-22",
       "notes": "WIP MEGA DLC (175 tickets when it ships). In Old Town Street, find the glowing storm drain near the fair banner and climb down: 3 new levels under Old Town Lake (Dive Dock, Aquarium Wing, Deep Core), 7 new room types, 9 clues, 9 anomalies, seawater leaks you can slip on, Snowie's valve wheel opens the deep lift, the sleeping Gooctopus and a GO LIVE finale. Cameos: Pi-rat, Candy, Snowie, Luna, Torty."
+    },
+    {
+      "id": "grocery-holiday-mini-pack",
+      "game": "grocery",
+      "issue": 58,
+      "name": "Grocery Tycoon: Holiday Mini Pack",
+      "url": "previews/grocery-holiday-mini-pack/",
+      "playable": true,
+      "built": "2026-10-22",
+      "notes": "WIP Mini Pack (25 tickets when it ships). Open the Journal (📒) and tap 🦃 Holiday: pick Harvest or Winter Holidays decorations for every store you run, and one of 7 uniforms for your staff (and you, in Career). Main St already has a Thanksgiving Aisle (turkeys, pies, cranberry sauce, stuffing, gravy, sweet potatoes) with harvest endcaps and plush Luna, Pi-rat, Snowie, Candy and Torty; build more from any sales-floor slot."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
