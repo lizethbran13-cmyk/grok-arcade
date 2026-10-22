@@ -31,6 +31,8 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-sky/', color: '#38bdf8', color2: '#fde047' },
   { id: 'land', mp: true, name: 'Grok Land', desc: 'A 3D platformer adventure across 8 worlds.',
     url: 'https://lizethbran13-cmyk.github.io/grok-land/', color: '#4ade80', color2: '#f97316' },
+  { id: 'land2', mp: true, name: 'Grok Land 2', desc: 'THE SEQUEL! Three high-speed Boost Zones (Meadow Rush, Canyon Rush and Shell Speedway) with a boost meter, grind rails, loops, homing attacks, air dash and S-A-B-C ranks. New worlds: Red Rock Trail, Mesa Mines, Ratita\u2019s Cheese Conveyor and Tortuga Tech\u2019s Shell-Tough Test Track, plus all 12 classic levels with new graphics. Online co-op and cameos from Luna, Pi-rat, Snowie, Candy and Torty!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-land-2/', color: '#22d3ee', color2: '#facc15' },
   { id: 'grid', mp: true, name: 'Grok Grid', desc: 'F1-style racing on 8 tracks, now with easier steering. Go for pole! NEW DLC: Super Grid Expansion.',
     url: 'https://lizethbran13-cmyk.github.io/grok-grid/', color: '#f43f5e', color2: '#ffffff' },
   { id: 'voxels', mp: true, name: 'Grok Voxels', desc: 'A blocky voxel shooter. Aim, blast, survive.',

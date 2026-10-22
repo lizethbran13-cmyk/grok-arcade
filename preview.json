@@ -38,12 +38,13 @@
     {
       "issue": 56,
       "game": "land",
-      "name": "Grok Land 2",
+      "name": "Grok Land 2 (live)",
       "size": "Sequel",
-      "what": "Our first Grok game sequel! A brand-new Boost Mode with THREE high-speed Boost Zones: Meadow Rush (now twice as long, with Sunflower Hills), NEW Canyon Rush (mine rails and the Gold Rush Loop) and NEW Shell Speedway (Tortuga Tech's race track). Boost meter, grind rails, loops, homing attack, air dash, rings that shield you, real crash consequences and S-A-B-C ranks. Plus new worlds (Candy's Canyon, Mesa Mines, Ratita Industries' Cheese Conveyor, Tortuga Tech's Shell-Tough Test Track), better graphics on every remastered classic level, online co-op rooms, and cameos from Luna, Pi-rat, Snowie, Candy and Torty.",
-      "stage": "building",
-      "when": "In the lab now · Boost Zones update in the Time Jumper",
-      "key": "land2"
+      "what": "Grok Land 2, the first Grok sequel, is live in the Arcade right next to Grok Land in the Adventure hall! Three high-speed Boost Zones (Meadow Rush, Canyon Rush and Shell Speedway) with a boost meter, grind rails, loops, homing attack, air dash and S-A-B-C ranks; new worlds (Red Rock Trail, Mesa Mines, Ratita's Cheese Conveyor, Tortuga Tech's Shell-Tough Test Track); all 12 classic levels with better graphics; online co-op; and cameos from Luna, Pi-rat, Snowie, Candy and Torty. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 22",
+      "key": "land2",
+      "shippedAt": "2026-10-22T20:15:00Z"
     },
     {
       "issue": 61,
@@ -521,20 +522,21 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "grok-land-2",
       "game": "land",
       "issue": 56,
       "name": "Grok Land 2",
-      "url": "previews/grok-land-2/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grok-land-2-beta/",
       "built": "2026-10-22",
-      "notes": "Boost Zones update: 3 Boost Zones on the title screen. Meadow Rush is now twice as long (windmill field, lake rail, Sunflower Hills loop); NEW Canyon Rush (mine rails, Gold Rush Loop, rim rail to the trading post) and NEW Shell Speedway (Tortuga Tech track, banked rail, crash-test lab loop, chicane). Results show one Rings row, the phone boost bar no longer covers the zone sign, and falling off a rail puts you back on track (costs rings or a heart). Also: Red Rock Trail, Mesa Mines, Cheese Conveyor, Shell-Tough Test Track, all 12 classic levels remastered, online co-op. Cameos: Luna, Pi-rat, Snowie, Candy, Torty."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-22",
+      "notes": "Boost Zones update: 3 Boost Zones on the title screen. Meadow Rush is now twice as long (windmill field, lake rail, Sunflower Hills loop); NEW Canyon Rush (mine rails, Gold Rush Loop, rim rail to the trading post) and NEW Shell Speedway (Tortuga Tech track, banked rail, crash-test lab loop, chicane). Results show one Rings row, the phone boost bar no longer covers the zone sign, and falling off a rail puts you back on track (costs rings or a heart). Also: Red Rock Trail, Mesa Mines, Cheese Conveyor, Shell-Tough Test Track, all 12 classic levels remastered, online co-op. Cameos: Luna, Pi-rat, Snowie, Candy, Torty.",
+      "playable": true
+    },
     {
       "id": "ratita-old-town-lab",
       "game": "ratita",

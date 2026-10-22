@@ -15,9 +15,9 @@
   ];
   /* the shelf: shipped remasters + sequels (add new ones here when they ship) */
   GA.REMASTER_SHELF = GA.REMASTER_SHELF || [
+    { name: 'Grok Land 2', kind: 'Sequel', game: 'land2', issue: 56, shipped: '2026-10-22', desc: 'The first Grok sequel: three Boost Zones (Meadow Rush, Canyon Rush, Shell Speedway), new worlds, better graphics on all 12 classics, online co-op and pet cameos.' },
     { name: 'Grok Blocks: Re-Blocked', kind: 'Remaster', game: 'blocksrb', issue: 55, shipped: '2026-10-21', desc: 'Grok Blocks on a shiny new engine: day and night, shiny ice and water, the dark glowing Crystal Caves, Blossom Hills and the Pet Corner.' },
     { name: 'Grok Rides Remastered', kind: 'Remaster', game: 'rides', desc: 'Grok Rides rebuilt on the Tempest engine: a huge free-roam world with 31 rides, real jobs, races, weather and co-op.' },
-    { name: 'Grok Land sequel', kind: 'Sequel', game: 'land', issue: 56, soon: true, desc: 'More levels, great multiplayer, better graphics and a speedy Boost Mode. Being built now!' }
   ];
   var RM = GA.RemasterUI = {}, openNow = false, tab = 'new', type = 'Remaster', loading = false;
   function $(id) { return document.getElementById(id); }

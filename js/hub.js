@@ -436,6 +436,16 @@
         g.fillStyle = '#0ea5e9'; for (i = 0; i < 5; i++) g.fillRect(x - 18 + i * 9, y - 3, 4, 3);
         break;
       }
+      case 'land2': {
+        var l2 = g.createLinearGradient(0, 0, 0, h); l2.addColorStop(0, '#38bdf8'); l2.addColorStop(1, '#bae6fd'); g.fillStyle = l2; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#c2410c'; g.fillRect(0, h - 40, w * 0.45, 40); g.fillStyle = '#22c55e'; g.fillRect(w * 0.45, h - 26, w * 0.55, 26);
+        g.strokeStyle = '#facc15'; g.lineWidth = 4; g.beginPath(); g.arc(w * 0.68, h - 62, 26, 0, Math.PI * 2); g.stroke();
+        var l2p = (t * 0.9) % 1; x = 10 + l2p * (w - 20); y = h - 34 - Math.abs(Math.sin(l2p * Math.PI * 3)) * 18;
+        for (i = 1; i < 5; i++) { g.fillStyle = 'rgba(34,211,238,' + (0.5 - i * 0.1) + ')'; g.fillRect(x - 6 - i * 9, y - 6, 8, 10); }
+        g.fillStyle = '#f97316'; g.fillRect(x - 6, y - 8, 12, 14); g.fillStyle = '#fff'; g.fillRect(x - 3, y - 5, 3, 3); g.fillRect(x + 2, y - 5, 3, 3);
+        g.font = font(20); g.textAlign = 'center'; g.fillStyle = '#0c4a6e'; g.fillText('GROK LAND 2', w / 2, 24); g.font = font(13); g.fillStyle = '#c2410c'; g.fillText('BOOST MODE', w / 2, 42);
+        break;
+      }
       case 'land': {
         g.fillStyle = '#7dd3fc'; g.fillRect(0, 0, w, h);
         g.fillStyle = '#22c55e'; g.fillRect(0, h - 22, w, 22);
