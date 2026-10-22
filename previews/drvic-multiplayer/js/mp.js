@@ -40,7 +40,7 @@ export class MP {
   bind(room) { this.room = room; const app = this.app;
     room.on('status', (t) => this.status(t, true));
     room.on('open', () => { this.status('Connected!', true); this.names[room.pid] = this.myName(); for (const p of room.players()) this.names[p.pid] = this.names[p.pid] || p.name; this.roomPanel(); toast(room.isHost ? '🌐 Room ' + room.code + ' is open!' : '🌐 Joined room ' + room.code + '!'); });
-    room.on('join', (p) => { if (p.pid !== room.pid) toast('👋 ' + p.name + ' joined!'); this.names[p.pid] = p.name; if (app.state !== 'play' || (app.busy && document.querySelector('.mpCode'))) this.roomPanel(); this.cfg.onJoin && this.cfg.onJoin(p); });
+    room.on('join', (p) => { if (p.pid !== room.pid) toast('👋 ' + p.name + ' joined!'); this.names[p.pid] = p.name; if (document.querySelector('.mpCode')) this.roomPanel(); this.cfg.onJoin && this.cfg.onJoin(p); });
     room.on('leave', (p) => { toast('👋 ' + (this.names[p.pid] || p.name) + ' left. Keep going!'); this.drop(p.pid); if (document.querySelector('.mpCode')) this.roomPanel(); });
     room.on('message', (d, from) => this.onMsg(d, from));
     room.on('reconnecting', () => toast('Lost the host, reconnecting…'));

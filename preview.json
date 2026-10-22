@@ -426,15 +426,6 @@
       "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Explore together and solve the Sunstone mystery: any clue a friend finds goes in everyone's journal."
     },
     {
-      "id": "drvic-multiplayer",
-      "game": "drvic",
-      "name": "Dr. Vic: The Lost Lab Multiplayer",
-      "url": "previews/drvic-multiplayer/",
-      "playable": true,
-      "built": "2026-10-21",
-      "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Explore the lab as a crew: clues anyone finds go on everyone's Case Board."
-    },
-    {
       "id": "grocery-multiplayer",
       "game": "grocery",
       "name": "Grocery Tycoon Multiplayer",
@@ -461,6 +452,15 @@
       "playable": true,
       "built": "2026-10-21",
       "notes": "Submits never crash or reload, your text stays until IT SENT, boards refresh (one GitHub check for all 3) and say when they couldn't"
+    },
+    {
+      "id": "drvic-multiplayer",
+      "game": "drvic",
+      "name": "Dr. Vic: The Lost Lab Multiplayer",
+      "url": "previews/drvic-multiplayer/",
+      "playable": true,
+      "built": "2026-10-21",
+      "notes": "Co-op for up to 3 (Time Jumper beta, not live). Host a room, friends join with the 5-letter code; name tags; you see each other indoors and out; if a friend or the host leaves, everyone keeps playing solo. Explore the lab as a crew: clues anyone finds go on everyone's Case Board."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
