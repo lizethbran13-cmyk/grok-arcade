@@ -1,5 +1,31 @@
 /* Grok Arcade - game catalog */
 window.GA = window.GA || {};
+/* #60: every GitHub board read (Suggestion Board, DLC Board, Lili's board) goes through here: it always revalidates (so a stale copy never
+   sticks; an unchanged answer is a free 304 that doesn't use up GitHub's 60-an-hour limit) and gives up after 12 s instead of
+   leaving a board stuck on "Loading..." forever (a stalled request on a phone used to block every later refresh). */
+GA.ghFetch = function (url, ms) {
+  var ac = null, tm = 0; try { ac = new AbortController(); } catch (e) {}
+  var p = fetch(url, { headers: { Accept: 'application/vnd.github+json' }, cache: 'no-cache', signal: ac ? ac.signal : undefined });
+  var to = new Promise(function (_, rej) { tm = setTimeout(function () { try { if (ac) ac.abort(); } catch (e) {} rej(new Error('timeout')); }, ms || 12000); });
+  return Promise.race([p, to]).then(function (r) { clearTimeout(tm); return r; }, function (e) { clearTimeout(tm); throw e; });
+};
+/* #60: ONE GitHub request feeds all three boards (Suggestion Board, DLC Board, Lili's board): each board used to make its own, so a
+   couple of visits (or reloads) used up GitHub's 60-checks-an-hour limit for the whole house and the boards stopped updating.
+   Requests in flight are shared, and an answer less than 45 s old is reused. */
+(function () {
+  var URL = 'https://api.github.com/repos/lizethbran13-cmyk/grok-arcade/issues?state=all&per_page=100&sort=updated', last = null, inflight = null;
+  GA.ghIssues = function (force) {
+    if (inflight) return inflight;
+    if (last && Date.now() - last.t < (force ? 45000 : 120000)) return Promise.resolve(last.a);
+    inflight = GA.ghFetch(URL).then(function (r) {
+      if (!r.ok) { var e = new Error('http ' + r.status); e.status = r.status; e.reset = +r.headers.get('x-ratelimit-reset') || 0; throw e; }
+      return r.json();
+    }).then(function (a) { if (!Array.isArray(a)) throw new Error('bad data'); last = { t: Date.now(), a: a }; inflight = null; return a; },
+      function (e) { inflight = null; throw e; });
+    return inflight;
+  };
+  GA.ghLabeled = function (a, lab) { return (a || []).filter(function (it) { return (it.labels || []).some(function (l) { return String(l.name || l).toLowerCase() === lab; }); }); };
+})();
 GA.MAIN_GAMES = [
   { id: 'sky', mp: true, name: 'Grok Sky', desc: 'Fly real planes, from a Cessna to the A380, across 10 cities with friends. Then ride Starship to the Moon and Mars!',
     url: 'https://lizethbran13-cmyk.github.io/grok-sky/', color: '#38bdf8', color2: '#fde047' },

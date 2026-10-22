@@ -46,7 +46,7 @@
     { id: 'super_shop_online_pass', game: 'grocery', name: 'Super Shop Online Pass', size: 'exp', issue: 46, desc: 'Your Shopsville store goes ONLINE! Open the Online Store desk and take orders 3 ways: \uD83D\uDECD\uFE0F in-store PICKUP from the cubbies and lockers, \uD83D\uDE90 same-day DELIVERY (a shopper picks the items, then a Grok Van drives them to a house on Maple Lane) and \uD83D\uDCE6 SHIPPING in 2 days from the brand-new walk-in Shopsville Ship Center, with racks, a packing line, a conveyor, a truck dock and workers, run by Martina \u201cTorty\u201d. Plus your own \uD83D\uDCF1 phone app: check orders, call people, hold meetings, buy upgrades and order more stock. Keep your star rating up! Luna, Pi-rat, Snowie, Candy and Torty order too.' }
   ];
   GA.DLC_SHIPPED.forEach(function (it) { if (!GA.DLC_SHOP.some(function (x) { return x.game === it.game && x.id === it.id; })) GA.DLC_SHOP.push(it); });
-  var K_MINE = 'grokArcade.dlcIdeas', K_BOARD = 'grokArcade.dlcBoard', K_OWNED = 'grokArcade.dlcOwned', K_DRAFT = 'grokArcade.dlcDraft', K_FREE = 'grokArcade.dlcFreeUsed';
+  var K_MINE = 'grokArcade.dlcIdeas', K_BOARD = 'grokArcade.dlcBoard', K_OWNED = 'grokArcade.dlcOwned', K_DRAFT = 'grokArcade.dlcDraft', K_FREE = 'grokArcade.dlcFreeUsed', K_PEND = 'grokArcade.dlcPending';
   var D = GA.DLC = {}, openNow = false, tab = 'new', size = 'mini', loading = false;
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -55,6 +55,7 @@
   function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   function toast(m, ms) { if (GA.Fix && GA.Fix.toast) GA.Fix.toast(m, ms || 3200); }
   function gus(t) { if (GA.Hall3D && GA.Hall3D.say) GA.Hall3D.say(t, 5); var el = $('dlcGus'); if (el) el.textContent = t; }
+  function ago(ts) { var s = Math.max(0, (Date.now() - ts) / 1000); if (s < 60) return 'just now'; if (s < 3600) return Math.floor(s / 60) + ' min ago'; if (s < 86400) return Math.floor(s / 3600) + ' h ago'; return Math.floor(s / 86400) + ' d ago'; }
   function sizeOf(id) { return GA.DLC_SIZES.find(function (s) { return s.id === id; }) || GA.DLC_SIZES[0]; }
   function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 30) || 'dlc'; }
   function tix() { return GA.getTickets(); }
@@ -100,26 +101,37 @@
   function saveDraft() { store(K_DRAFT, form()); }
   function msg(h, cls) { var m = $('dlcMsg'); m.innerHTML = h; m.className = 'sbMsg ' + (cls || ''); }
   D.submit = function (via) {
+    try { return submitNow(via); } catch (e) {
+      try { msg('Hmm, that didn\u2019t go through. Your idea is still here: tap <b>PRINT &amp; SUBMIT</b> to try again.', 'bad'); } catch (e2) {}
+      return { ok: false, why: 'error' };
+    }
+  };
+  function submitNow(via) {
     var f = form();
     if (f.name.trim().length < 3) { msg('Give your DLC a name first (at least 3 letters).', 'bad'); snd('buzz'); gus('No name? I can\u2019t file a nameless DLC. That\u2019s chaos.'); return { ok: false, why: 'name' }; }
     if ((f.text || '').trim().length < 4) { msg('Say what\u2019s in it: new levels, skins, a boss, a world...', 'bad'); snd('buzz'); return { ok: false, why: 'text' }; }
-    var cost = D.ideaCost();
+    // #60: sending the SAME idea again (GitHub didn't open, or the tab reloaded while you were there) is free and keeps its ticket number
+    var pend = load(K_PEND, null), again = pend && pend.name === f.name.trim() && pend.text === f.text.trim() && pend.game === f.game;
+    var cost = again ? 0 : D.ideaCost();
     if (cost && tix() < cost) { msg('Submitting costs ' + cost + ' tickets and you have ' + tix() + '. Play a bonus game to earn a few more!', 'bad'); snd('buzz'); gus('No tickets, no filing. Rules are rules.'); return { ok: false, why: 'tickets', need: cost - tix() }; }
     if (cost && !D.spend(cost)) return { ok: false, why: 'tickets' };
-    if (!cost) store(K_FREE, 1);
-    var s = D.compose(f.game, f.size, f.name, f.text), num = 'DLC-' + Date.now().toString(36).toUpperCase().slice(-6);
+    if (!cost && !again) store(K_FREE, 1);
+    var s = D.compose(f.game, f.size, f.name, f.text), num = again ? pend.num : 'DLC-' + Date.now().toString(36).toUpperCase().slice(-6);
     D.lastUrl = s.url; D.last = { num: num, s: s, f: f, cost: cost };
-    var mine = load(K_MINE, []); mine.unshift({ t: Date.now(), num: num, game: f.game, size: f.size, name: f.name.trim(), text: f.text.trim(), via: via || 'GitHub', cost: cost }); store(K_MINE, mine.slice(0, 100));
-    if (GA.Prog) GA.Prog.event('dlcIdea');
+    if (!again) { var mine = load(K_MINE, []); mine.unshift({ t: Date.now(), num: num, game: f.game, size: f.size, name: f.name.trim(), text: f.text.trim(), via: via || 'GitHub', cost: cost }); store(K_MINE, mine.slice(0, 100)); }
+    if (!again && GA.Prog) GA.Prog.event('dlcIdea');
+    GA.submitAt = Date.now();
+    store(K_DRAFT, f); // kept until you tap IT SENT / NEW IDEA, so nothing is lost
+    store(K_PEND, via === 'Copied' ? null : { num: num, game: f.game, size: f.size, name: f.name.trim(), text: f.text.trim(), url: s.url, t: Date.now(), cost: again ? pend.cost : cost });
     if (GA.Hall3D && GA.Hall3D.print) GA.Hall3D.print();
     snd('win');
     if (via === 'Copied') { copyText(s.copy); }
     else { var w = null; try { w = window.open(s.url, '_blank', 'noopener'); } catch (e) {} D.popupBlocked = !w; }
-    $('dlcName').value = ''; $('dlcText').value = ''; store(K_DRAFT, null);
-    showTicket(num, f, s, cost, via);
+    if (via === 'Copied') store(K_DRAFT, null);
+    showTicket(num, f, s, again ? (pend.cost || 0) : cost, via);
     gus(['Filed. Under \u201CThings I didn\u2019t ask for.\u201D', 'Another DLC idea? Fine. Stamped. APPROVED. Probably.', 'Ooh, ' + s.size.name + '. Fancy. I\u2019ll put it on the pile.'][Math.floor(Math.random() * 3)]);
-    return { ok: true, num: num, cost: cost, left: tix(), url: s.url };
-  };
+    return { ok: true, num: num, cost: cost, left: tix(), url: s.url, again: !!again };
+  }
   function copyText(txt) {
     D.lastCopy = txt;
     try { if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(txt).catch(function () {}); } catch (e) {}
@@ -131,9 +143,11 @@
       '<div class="dlcTkName">' + esc(f.name.trim()) + '</div><div class="dlcTkRow"><span>GAME</span><b>' + esc(f.game) + '</b></div><div class="dlcTkRow"><span>SIZE</span><b>' + s.size.icon + ' ' + esc(s.size.name) + '</b></div>' +
       '<div class="dlcTkRow"><span>UNLOCK PRICE</span><b>' + s.size.price + ' tickets</b></div><div class="dlcTkRow"><span>FILING FEE</span><b>' + (cost ? cost + ' tickets' : 'FREE (first idea!)') + '</b></div>' +
       '<div class="dlcTkWhat">' + esc(f.text.trim()) + '</div><div class="dlcBar" aria-hidden="true"></div><div class="dlcStamp">FILED BY GUS</div></div>' +
-      '<div class="sbMsg ok" id="dlcMsg">' + (via === 'Copied' ? '\uD83D\uDCCB Copied! Paste it to your assistant.' : 'GitHub opened in a new tab: tap <b>Create</b> there to send it to the DLC Board.' + (D.popupBlocked ? ' <a href="' + esc(s.url) + '" target="_blank" rel="noopener">Open GitHub</a>' : '')) + ' Saved under <b>My DLC</b>.</div>' +
+      '<div class="sbMsg ok" id="dlcMsg">' + (via === 'Copied' ? '\uD83D\uDCCB Copied! Paste it to your assistant.' : 'GitHub opened in a new tab: tap <b>Create</b> there to send it to the DLC Board.' + (D.popupBlocked ? ' <a href="' + esc(s.url) + '" target="_blank" rel="noopener">Open GitHub</a>' : '')) + ' Saved under <b>My DLC</b>.' + (via === 'Copied' ? '' : '<div class="sbBtns"><button class="bigBtn" id="dlcSent" type="button">\u2705 IT SENT</button><button class="bigBtn alt" id="dlcAgain" type="button">\uD83D\uDD01 SEND AGAIN <small>FREE</small></button></div><small>Your idea stays saved until you tap IT SENT.</small>') + '</div>' +
       '<div class="sbBtns"><button class="bigBtn" id="dlcAnother" type="button">\u270F\uFE0F NEW IDEA</button><button class="bigBtn alt" id="dlcSeeBoard" type="button">\uD83D\uDCCB BOARD</button></div>';
-    $('dlcAnother').addEventListener('click', function () { snd('click'); setTab('new'); });
+    $('dlcAnother').addEventListener('click', function () { snd('click'); store(K_PEND, null); store(K_DRAFT, null); setTab('new'); });
+    if ($('dlcSent')) $('dlcSent').addEventListener('click', function () { snd('coin'); store(K_PEND, null); store(K_DRAFT, null); msg('\uD83C\uDF89 Sent! It shows on the <b>DLC Board</b> in a minute. Saved under <b>My DLC</b>.', 'ok'); });
+    if ($('dlcAgain')) $('dlcAgain').addEventListener('click', function () { snd('click'); var pd = load(K_PEND, null); if (!pd) return; var w = null; try { w = window.open(pd.url, '_blank', 'noopener'); } catch (e) {} GA.submitAt = Date.now(); if (!w) msg('Tap here to open GitHub: <a href="' + esc(pd.url) + '" target="_blank" rel="noopener">Open GitHub</a>. Your idea stays saved until you tap IT SENT.', 'ok'); });
     $('dlcSeeBoard').addEventListener('click', function () { snd('click'); setTab('board'); });
     refreshTix();
   }
@@ -150,7 +164,8 @@
       '<div id="dlcMsg" class="sbMsg">Submitting ' + (cost ? 'costs ' + cost + ' tickets' : 'is <b>free</b> the first time, then ' + GA.DLC_IDEA_COST + ' tickets') + '. When your DLC gets built it shows up in the <b>DLC Shop</b> to unlock with tickets.</div>';
     Array.prototype.forEach.call(document.querySelectorAll('.dlcSize'), function (b) { b.addEventListener('click', function () { size = b.getAttribute('data-s'); Array.prototype.forEach.call(document.querySelectorAll('.dlcSize'), function (x) { x.classList.toggle('on', x === b); }); saveDraft(); snd('click'); }); });
     ['dlcGame', 'dlcName', 'dlcText'].forEach(function (id) { $(id).addEventListener('input', saveDraft); $(id).addEventListener('keydown', function (e) { e.stopPropagation(); }); });
-    $('dlcSubmit').addEventListener('click', function () { D.submit('GitHub'); }); $('dlcCopy').addEventListener('click', function () { D.submit('Copied'); });
+    $('dlcSubmit').addEventListener('click', function () { D.submit('GitHub'); });
+    var pd = load(K_PEND, null); if (pd && pd.name === (d.name || '').trim() && pd.text === (d.text || '').trim()) { $('dlcSubmit').innerHTML = '\uD83D\uDD01 SEND AGAIN <small>FREE</small>'; msg('\uD83D\uDCDD Your last DLC idea (ticket #' + esc(pd.num) + ') is still here in case it didn\u2019t send. Tap SEND AGAIN, or change it for a new idea.', 'ok'); } $('dlcCopy').addEventListener('click', function () { D.submit('Copied'); });
   }
   function renderShop() {
     var list = GA.DLC_SHOP;
@@ -192,15 +207,18 @@
   };
   function fetchBoard() {
     if (loading) return; loading = true; renderBoard('Loading the DLC Board\u2026');
-    fetch(API, { headers: { Accept: 'application/vnd.github+json' } }).then(function (r) { if (!r.ok) { var e = new Error('http'); e.status = r.status; throw e; } return r.json(); })
-      .then(function (iss) { store(K_BOARD, { t: Date.now(), items: D.parse(iss) }); loading = false; renderBoard(); })
-      .catch(function (e) { loading = false; renderBoard(!e.status ? '\uD83D\uDCE1 Looks like you\u2019re offline. Showing the last board we saved.' : e.status === 403 || e.status === 429 ? '\u23F3 GitHub needs a little break. Showing the last saved board.' : 'Couldn\u2019t load the board right now (' + e.status + ').'); });
+    GA.ghIssues(true)
+      .then(function (all) { store(K_BOARD, { t: Date.now(), items: D.parse(GA.ghLabeled(all, 'dlc')) }); loading = false; renderBoard(); })
+      .catch(function (e) { loading = false; var mins = e.reset ? Math.max(1, Math.ceil((e.reset * 1000 - Date.now()) / 60000)) : 0;
+        if (!load(K_BOARD, null)) { var pv = load('grokArcade.pvIssues', null); if (pv && pv.items) store(K_BOARD, { t: pv.t || 0, items: D.parse(GA.ghLabeled(pv.items, 'dlc')) }); }
+        try { renderBoard(!e.status ? '\uD83D\uDCE1 Couldn\u2019t refresh (offline or GitHub is slow). Showing the last board we saved.' : e.status === 403 || e.status === 429 ? '\u23F3 Couldn\u2019t refresh: GitHub needs a little break (too many checks this hour).' + (mins ? ' Try again in about ' + mins + ' min.' : '') + ' Showing the last saved board.' : 'Couldn\u2019t refresh the board right now (' + e.status + '). Showing the last saved one.'); } catch (er) {} });
   }
   D.refresh = fetchBoard;
   function renderBoard(m) {
-    if (tab !== 'board') return;
-    var c = load(K_BOARD, null), h = '<div class="sbBar"><button id="dlcRefresh" class="pzTab on" type="button">\uD83D\uDD04 Refresh</button><span class="sbWhen">' + (c ? 'Live from GitHub' : 'Not loaded yet') + '</span></div>';
+    if (tab !== 'board' || !$('dlcBody')) return;
+    var c = load(K_BOARD, null), h = '<div class="sbBar"><button id="dlcRefresh" class="pzTab on" type="button">\uD83D\uDD04 Refresh</button><span class="sbWhen">' + (c ? 'Updated ' + ago(c.t) : 'Not loaded yet') + '</span></div>';
     if (m) h += '<div class="sbMsg' + (loading ? '' : ' warn') + '" id="dlcBoardMsg">' + esc(m) + '</div>';
+    if (!c && m && !loading) h += '<div class="sbEmpty">Nothing saved yet. Tap <b>Refresh</b> in a little bit.</div>';
     if (c && c.items) {
       if (!c.items.length) h += '<div class="sbEmpty">No DLC ideas on the board yet. Be the first!</div>';
       h += c.items.map(function (i) { return '<div class="sbItem dlcBoardItem" data-n="' + i.n + '"><div class="sbTop"><span class="sbSt ' + i.st + '">' + ST[i.st][1] + ' ' + ST[i.st][0] + '</span><span class="sbGameTag">' + esc(i.game) + '</span>' + (i.size ? '<span class="sbType">' + esc(i.size) + '</span>' : '') + '</div><div class="sbTitle">' + esc(i.name) + '</div><div class="sbMeta">#' + i.n + ' \u00b7 <a href="' + esc(i.url) + '" target="_blank" rel="noopener">open</a></div></div>'; }).join('');

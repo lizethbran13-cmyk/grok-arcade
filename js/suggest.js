@@ -5,7 +5,7 @@
   var REPO = 'lizethbran13-cmyk/grok-arcade';
   var API = 'https://api.github.com/repos/' + REPO + '/issues?labels=suggestion&state=all&per_page=50&sort=updated';
   var API_C = 'https://api.github.com/repos/' + REPO + '/issues/comments?sort=created&direction=desc&per_page=60';
-  var K_MINE = 'grokArcade.suggestions', K_BOARD = 'grokArcade.sbBoard', K_DRAFT = 'grokArcade.sbDraft';
+  var K_MINE = 'grokArcade.suggestions', K_BOARD = 'grokArcade.sbBoard', K_DRAFT = 'grokArcade.sbDraft', K_PEND = 'grokArcade.sbPending';
   var SB = GA.SB = {};
   var openNow = false, tab = 'new', loading = false, type = 'Idea';
   function $(id) { return document.getElementById(id); }
@@ -44,14 +44,32 @@
   function valid(f) { if ((f.title + f.text).trim().length < 4) { $('sbMsg').textContent = 'Write a few words about your idea or bug first.'; $('sbMsg').className = 'sbMsg bad'; snd('buzz'); return false; } return true; }
   function saveDraft() { store(K_DRAFT, form()); }
   function clearForm() { $('sbTitle').value = ''; $('sbText').value = ''; store(K_DRAFT, null); }
-  function submit() {
-    var f = form(); if (!valid(f)) return;
-    var s = SB.compose(f.game, f.type, f.title, f.text); SB.lastUrl = s.url;
-    var w = null; try { w = window.open(s.url, '_blank', 'noopener'); } catch (e) {}
-    remember({ game: f.game, type: f.type, title: s.title, text: f.text || f.title }, 'GitHub');
-    clearForm();
-    $('sbMsg').innerHTML = 'GitHub opened in a new tab \u2014 tap <b>Create</b> there to send it. Saved under <b>My suggestions</b>.' + (w ? '' : ' <a href="' + esc(s.url) + '" target="_blank" rel="noopener">Open GitHub</a>');
-    $('sbMsg').className = 'sbMsg ok'; snd('win');
+  /* #60: SUBMIT never clears your text until you say it sent, so a hiccup (GitHub not opening, the tab getting reloaded while you were
+     on GitHub) never loses it. The suggestion is remembered once; "send again" just reopens GitHub. */
+  function pendingMsg(p, w) {
+    return 'GitHub opened in a new tab: tap <b>Create</b> there to send it.' + (w ? '' : ' <a href="' + esc(p.url) + '" target="_blank" rel="noopener">Open GitHub</a>') + pendBtns();
+  }
+  function pendBtns() {
+    return '<div class="sbBtns sbPendBtns"><button id="sbSent" class="bigBtn" type="button">\u2705 IT SENT</button><button id="sbAgain" class="bigBtn alt" type="button">\uD83D\uDD01 SEND AGAIN</button></div><small>Your text stays here until you tap IT SENT.</small>';
+  }
+  function wirePending() {
+    var a = $('sbSent'), b = $('sbAgain');
+    if (a) a.addEventListener('click', function () { snd('coin'); store(K_PEND, null); clearForm(); $('sbMsg').innerHTML = '\uD83C\uDF89 Sent! It shows on the <b>Suggestion Board</b> in a minute. Saved under <b>My suggestions</b>.'; $('sbMsg').className = 'sbMsg ok'; });
+    if (b) b.addEventListener('click', function () { snd('click'); submit(true); });
+  }
+  function submit(again) {
+    try {
+      var f = form(); if (!valid(f)) return;
+      var s = SB.compose(f.game, f.type, f.title, f.text); SB.lastUrl = s.url;
+      var p = load(K_PEND, null), same = p && p.title === f.title && p.text === f.text && p.game === f.game;
+      GA.submitAt = Date.now(); saveDraft();
+      var w = null; try { w = window.open(s.url, '_blank', 'noopener'); } catch (e) {}
+      if (!same) remember({ game: f.game, type: f.type, title: s.title, text: f.text || f.title }, 'GitHub');
+      store(K_PEND, { game: f.game, type: f.type, title: f.title, text: f.text, url: s.url, t: Date.now() });
+      $('sbMsg').innerHTML = pendingMsg({ url: s.url }, w); $('sbMsg').className = 'sbMsg ok'; wirePending(); snd(again ? 'click' : 'win');
+    } catch (e) {
+      try { $('sbMsg').innerHTML = 'Hmm, that didn\u2019t go through. Your text is still here: tap <b>SUBMIT</b> to try again.'; $('sbMsg').className = 'sbMsg bad'; } catch (e2) {}
+    }
   }
   function copyText(txt) {
     SB.lastCopy = txt;
@@ -64,7 +82,7 @@
     var s = SB.compose(f.game, f.type, f.title, f.text);
     copyText(s.copy).then(function (ok) {
       remember({ game: f.game, type: f.type, title: s.title, text: f.text || f.title }, 'Copied');
-      clearForm();
+      clearForm(); store(K_PEND, null);
       $('sbMsg').innerHTML = ok ? '\uD83D\uDCCB Copied! Paste it to your assistant. Saved under <b>My suggestions</b>.' : 'Couldn\u2019t reach the clipboard \u2014 here it is to copy by hand:<br><textarea class="sbCopyBox" readonly>' + esc(s.copy) + '</textarea>';
       $('sbMsg').className = 'sbMsg ok'; snd('coin');
     });
@@ -92,30 +110,33 @@
     if (loading) return; loading = true; renderBoard('Loading the board\u2026');
     var rl = null;
     function getJ(u) {
-      return fetch(u, { headers: { Accept: 'application/vnd.github+json' } }).then(function (r) {
+      return GA.ghFetch(u).then(function (r) {
         if (!r.ok) { var e = new Error('http ' + r.status); e.status = r.status; e.reset = +r.headers.get('x-ratelimit-reset') || 0; e.left = r.headers.get('x-ratelimit-remaining'); throw e; }
         rl = r.headers.get('x-ratelimit-remaining'); return r.json();
       });
     }
-    getJ(API).then(function (issues) {
+    GA.ghIssues(true).then(function (all) {
+      var issues = GA.ghLabeled(all, 'suggestion');
       var needC = issues.some(function (i) { return i.comments > 0; });
       return (needC ? getJ(API_C).catch(function () { return []; }) : Promise.resolve([])).then(function (cm) {
-        var items = parse(issues, cm); store(K_BOARD, { t: Date.now(), items: items }); loading = false; renderBoard(null, rl);
+        var items = parse(issues, cm); store(K_BOARD, { t: Date.now(), items: items }); loading = false; SB.boardAt = Date.now(); renderBoard(null, rl);
       });
     }).catch(function (e) {
       loading = false; var msg;
-      if (!navigator.onLine || !e.status) msg = '\uD83D\uDCE1 Looks like you\u2019re offline. Showing the last board we saved.';
-      else if (e.status === 403 || e.status === 429) { var mins = e.reset ? Math.max(1, Math.ceil((e.reset * 1000 - Date.now()) / 60000)) : 0; msg = '\u23F3 GitHub needs a little break (too many checks this hour).' + (mins ? ' Try again in about ' + mins + ' min.' : '') + ' Showing the last saved board.'; }
+      if (!navigator.onLine || !e.status) msg = '\uD83D\uDCE1 Couldn\u2019t refresh (offline or GitHub is slow). Showing the last board we saved.';
+      else if (e.status === 403 || e.status === 429) { var mins = e.reset ? Math.max(1, Math.ceil((e.reset * 1000 - Date.now()) / 60000)) : 0; msg = '\u23F3 Couldn\u2019t refresh: GitHub needs a little break (too many checks this hour).' + (mins ? ' Try again in about ' + mins + ' min.' : '') + ' Showing the last saved board.'; }
       else if (e.status === 404 || e.status === 410) msg = 'The suggestion board isn\u2019t switched on yet.';
-      else msg = 'Couldn\u2019t load the board right now (' + e.status + '). Showing the last saved one.';
-      renderBoard(msg);
+      else msg = 'Couldn\u2019t refresh the board right now (' + e.status + '). Showing the last saved one.';
+      if (!load(K_BOARD, null)) { var pv = load('grokArcade.pvIssues', null); if (pv && pv.items) store(K_BOARD, { t: pv.t || 0, items: parse(GA.ghLabeled(pv.items, 'suggestion'), []) }); } // Lili's saved copy
+      try { renderBoard(msg); } catch (er) {}
     });
   }
   SB.refresh = fetchBoard;
   function renderBoard(msg, rl) {
-    if (tab !== 'board') return;
+    if (tab !== 'board' || !$('sbBody')) return;
     var c = load(K_BOARD, null), h = '<div class="sbBar"><button id="sbRefresh" class="pzTab on" type="button">\uD83D\uDD04 Refresh</button><span class="sbWhen">' + (c ? 'Updated ' + ago(c.t) : 'Not loaded yet') + '</span></div>';
     if (msg) h += '<div class="sbMsg' + (loading ? '' : ' warn') + '" id="sbBoardMsg">' + esc(msg) + '</div>';
+    if (!c && msg && !loading) h += '<div class="sbEmpty">Nothing saved yet. Tap <b>Refresh</b> in a little bit.</div>';
     if (c && c.items) {
       if (!c.items.length) h += '<div class="sbEmpty">No suggestions on the board yet. Be the first!</div>';
       var cnt = { new: 0, work: 0, done: 0, wont: 0 }; c.items.forEach(function (i) { cnt[i.st]++; });
@@ -140,9 +161,11 @@
       '<label class="sbL">Details<textarea id="sbText" maxlength="1500" rows="4" placeholder="What happened, or what would make it more fun?">' + esc(d.text || '') + '</textarea></label>' +
       '<div class="sbBtns"><button id="sbSubmit" class="bigBtn" type="button">\uD83D\uDE80 SUBMIT</button><button id="sbCopy" class="bigBtn alt" type="button">\uD83D\uDCCB COPY</button></div>' +
       '<div id="sbMsg" class="sbMsg">SUBMIT opens GitHub with everything filled in. COPY lets you paste it to your assistant.</div>';
+    var pend = load(K_PEND, null);
     Array.prototype.forEach.call(document.querySelectorAll('.sbTypeBtn'), function (b) { b.addEventListener('click', function () { type = b.getAttribute('data-t'); Array.prototype.forEach.call(document.querySelectorAll('.sbTypeBtn'), function (x) { x.classList.toggle('on', x === b); }); saveDraft(); snd('click'); }); });
     ['sbGame', 'sbTitle', 'sbText'].forEach(function (id) { $(id).addEventListener('input', saveDraft); $(id).addEventListener('keydown', function (e) { e.stopPropagation(); }); });
-    $('sbSubmit').addEventListener('click', submit); $('sbCopy').addEventListener('click', copy);
+    $('sbSubmit').addEventListener('click', function () { submit(false); }); $('sbCopy').addEventListener('click', copy);
+    if (pend && pend.title === (d.title || '') && pend.text === (d.text || '')) { $('sbMsg').innerHTML = '\uD83D\uDCDD Your last suggestion is still here. Did it send?' + pendBtns(); $('sbMsg').className = 'sbMsg ok'; wirePending(); }
   }
   function renderMine() {
     var mine = load(K_MINE, []), board = (load(K_BOARD, null) || {}).items || [];

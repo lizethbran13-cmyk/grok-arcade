@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var PV = GA.PVD = {}, REPO = 'lizethbran13-cmyk/grok-arcade', ORIGIN = 'https://lizethbran13-cmyk.github.io/';
-  var API = 'https://api.github.com/repos/' + REPO + '/issues?state=all&per_page=60&sort=updated';
+  var API = 'https://api.github.com/repos/' + REPO + '/issues?state=all&per_page=100&sort=updated';
   var K_ISS = 'grokArcade.pvIssues', K_JSON = 'grokArcade.pvJson';
   PV.REPO = REPO; PV.ORIGIN = ORIGIN;
   function load(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
@@ -93,9 +93,9 @@
   PV.refresh = function (force) {
     if (PV.state.loading) return Promise.resolve(false);
     var fresh = Date.now() - (PV.state.issuesAt || 0) < 5 * 60000; PV.state.loading = true; PV.state.err = null;
-    var pj = fetch('preview.json?t=' + Math.floor(Date.now() / 60000), { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error('json ' + r.status); return r.json(); }).then(function (j) { PV.setJson(j, 'file'); }).catch(function () {});
-    var pi = (fresh && !force) ? Promise.resolve() : fetch(API, { headers: { Accept: 'application/vnd.github+json' } }).then(function (r) { if (!r.ok) { var e = new Error('http ' + r.status); e.status = r.status; throw e; } return r.json(); })
-      .then(function (a) { PV.setIssues(a, 'live'); }).catch(function (e) { PV.state.err = !navigator.onLine || !e.status ? 'offline' : (e.status === 403 || e.status === 429) ? 'ratelimit' : 'http'; changed(); });
+    var pj = GA.ghFetch('preview.json?t=' + Math.floor(Date.now() / 60000)).then(function (r) { if (!r.ok) throw new Error('json ' + r.status); return r.json(); }).then(function (j) { PV.setJson(j, 'file'); }).catch(function () {});
+    var pi = (fresh && !force) ? Promise.resolve() : GA.ghIssues(!!force)
+      .then(function (a) { if (!Array.isArray(a)) throw new Error('bad data'); PV.setIssues(a, 'live'); }).catch(function (e) { PV.state.err = !navigator.onLine || !e.status ? 'offline' : (e.status === 403 || e.status === 429) ? 'ratelimit' : 'http'; changed(); });
     return Promise.all([pj, pi]).then(function () { PV.state.loading = false; return true; });
   };
   // a preview is only offered once its page really answers (no fake entries)
