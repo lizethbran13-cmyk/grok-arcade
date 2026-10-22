@@ -37,7 +37,7 @@
     },
     {
       "issue": 56,
-      "game": "land",
+      "game": "land2",
       "name": "Grok Land 2 (live)",
       "size": "Sequel",
       "what": "Grok Land 2, the first Grok sequel, is live in the Arcade right next to Grok Land in the Adventure hall! Three high-speed Boost Zones (Meadow Rush, Canyon Rush and Shell Speedway) with a boost meter, grind rails, loops, homing attack, air dash and S-A-B-C ranks; new worlds (Red Rock Trail, Mesa Mines, Ratita's Cheese Conveyor, Tortuga Tech's Shell-Tough Test Track); all 12 classic levels with better graphics; online co-op; and cameos from Luna, Pi-rat, Snowie, Candy and Torty. Its Time Jumper beta lives on in the Save Vault.",
@@ -527,7 +527,7 @@
   "archive": [
     {
       "id": "grok-land-2",
-      "game": "land",
+      "game": "land2",
       "issue": 56,
       "name": "Grok Land 2",
       "label": "Final Beta (Time Jumper)",
