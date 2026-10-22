@@ -646,10 +646,10 @@ body.clawOn #joy,body.clawOn #prompt,body.clawOn #playBtn,body.clawOn #hint,body
 .arEmo span{font-size:22px}.arEmo.on{border-color:var(--yellow);background:rgba(255,225,77,.22);box-shadow:0 0 10px var(--yellow)}
 .arBarX{position:absolute;right:8px;top:6px;width:36px;height:36px;border-radius:10px;border:2px solid rgba(255,255,255,.4);background:rgba(255,255,255,.08);color:#fff;font-weight:bold;cursor:pointer}
 body.arEmo #prompt{display:none!important}
-#arMap{position:absolute;left:max(12px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));box-sizing:content-box;aspect-ratio:240/184;width:132px;height:auto;border-radius:12px;border:2px solid rgba(63,240,255,.7);box-shadow:0 0 10px rgba(63,240,255,.35);cursor:pointer;transition:width .2s,height .2s}
-#arMap.big{width:260px;height:auto}
-body.touch #arMap{bottom:auto;top:calc(max(12px,env(safe-area-inset-top)) + 122px);width:96px;height:auto}
-body.touch #arMap.big{width:240px;height:auto}
+#arMap{position:absolute;left:max(12px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));box-sizing:content-box;aspect-ratio:240/184;width:120px;height:92px;border-radius:12px;border:2px solid rgba(63,240,255,.7);box-shadow:0 0 10px rgba(63,240,255,.35);cursor:pointer;transition:width .2s,height .2s}
+#arMap.big{width:270px;height:207px}
+body.touch #arMap{bottom:auto;top:calc(max(12px,env(safe-area-inset-top)) + 122px);width:90px;height:69px}
+body.touch #arMap.big{width:240px;height:184px}
 body.touch.near #arMap{display:none}
 #arBoost{position:absolute;left:max(12px,env(safe-area-inset-left));bottom:calc(max(14px,env(safe-area-inset-bottom)) + 156px);max-width:min(300px,60vw);background:rgba(20,10,44,.82);border:2px solid #ff9a3a;border-radius:12px;padding:5px 9px;font-size:12.5px;font-weight:bold;color:#ffd7a8;pointer-events:none}
 body.touch #arBoost{bottom:auto;top:calc(max(12px,env(safe-area-inset-top)) + 248px);max-width:46vw}
