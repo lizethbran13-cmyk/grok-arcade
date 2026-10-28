@@ -106,7 +106,7 @@
   /* ---------------- cups ---------------- */
   function qualifyCWC() {
     const q = []; D.LEAGUES.forEach((lg) => { let tab; if (save.league && save.league.lg === lg.id && save.league.round > 0) tab = save.league; else { const keep = save.league; newLeague(lg.id, lg.teams[0].id); G.simSeason(99); tab = save.league; save.league = keep; } sorted(tab).slice(0, 2).forEach((id, i) => q.push({ id, why: (i ? '2nd' : '1st') + ' in ' + lg.n, pts: tab.table[id].Pts, rank: i })); });
-    const firsts = q.filter((x) => x.rank === 0), ups = q.filter((x) => x.rank === 1).sort((a, b) => b.pts - a.pts).slice(0, 2); return firsts.concat(ups);
+    persist(); const firsts = q.filter((x) => x.rank === 0), ups = q.filter((x) => x.rank === 1).sort((a, b) => b.pts - a.pts).slice(0, 2); return firsts.concat(ups);
   }
   function startCup(kind, mine) {
     let teams, why = {};
@@ -181,6 +181,9 @@
   (function () { const s = $('stick'), k = $('knob'); let id = null; const mv = (e) => { const r = s.getBoundingClientRect(), x = (e.clientX - r.left - 60) / 60, y = (e.clientY - r.top - 60) / 60, m = Math.min(1, Math.hypot(x, y)) / (Math.hypot(x, y) || 1); stick.x = x * m; stick.y = y * m; k.style.left = 38 + stick.x * 40 + 'px'; k.style.top = 38 + stick.y * 40 + 'px'; };
     s.addEventListener('pointerdown', (e) => { id = e.pointerId; s.setPointerCapture(id); mv(e); }); s.addEventListener('pointermove', (e) => { if (e.pointerId === id) mv(e); });
     const up = () => { id = null; stick.x = stick.y = 0; k.style.left = k.style.top = '38px'; }; s.addEventListener('pointerup', up); s.addEventListener('pointercancel', up); })();
+  function setFP(on) { save.fp = !!on; persist(); $('bFP').textContent = save.fp ? '📺 TV CAM' : '👁 1ST PERSON'; $('bFP').classList.toggle('on', save.fp); const t = $('tFP'); if (t) t.textContent = '👁 First-Person Mode: ' + (save.fp ? 'ON' : 'OFF'); if (match) { match.fpYaw = null; if (!save.fp) match.ps.forEach((pl) => { pl.g.visible = true; }); } H.fp(save.fp && !!match); if (match) comm(save.fp ? '👁 First-person! You see through your player\'s eyes.' : '📺 Back to the TV camera.'); }
+  G.setFP = setFP; $('bFP').onclick = () => setFP(!save.fp); $('tFP').onclick = () => setFP(!save.fp);
+  addEventListener('keydown', (e) => { if (e.key.toLowerCase() === 'v' && !e.repeat) setFP(!save.fp); });
   $('bPass').onclick = () => act('pass'); $('bShoot').onclick = () => act('shoot'); $('bSim').onclick = () => simRest();
   $('wx').addEventListener('click', (e) => { const b = e.target.closest('[data-w]'); if (b) setWx(b.dataset.w); });
   function setWx(w) { save.wx = w; persist(); H.weather(w); [].forEach.call($('wx').children, (b) => b.classList.toggle('on', b.dataset.w === w)); if (match) comm({ sun: '☀️ Glorious sunshine over the pitch!', night: '🌙 The floodlights blaze on!', rain: '🌧️ It\'s bucketing down — slick pitch, quick passing!', snow: '❄️ Snow is falling — the orange ball comes out!' }[w]); }
@@ -229,10 +232,12 @@
     // pick controlled home player
     const homeOwn = m.owner && m.owner.side === 0; let best = null, bd = 1e9; if (homeOwn) best = m.owner; else m.ps.forEach((pl) => { if (pl.side || pl.i === 0) return; const d = pl.pos.distanceTo(m.bp); if (d < bd) { bd = d; best = pl; } }); m.ctrl = best;
     const ix = (keys.d || keys.arrowright ? 1 : 0) - (keys.a || keys.arrowleft ? 1 : 0) + stick.x, iz = (keys.s || keys.arrowdown ? 1 : 0) - (keys.w || keys.arrowup ? 1 : 0) + stick.y, human = Math.hypot(ix, iz) > 0.15;
+    let mx = ix, mz = iz; if (save.fp && m.fpYaw != null) { const fx = Math.sin(m.fpYaw), fz = Math.cos(m.fpYaw); mx = fx * -iz + -fz * ix; mz = fz * -iz + fx * ix; }
     m.ps.forEach((pl) => {
       pl.cd = Math.max(0, pl.cd - dt); const dir = pl.side ? -1 : 1, mine = m.owner && m.owner.side === pl.side; let tgt;
-      if (pl === m.ctrl && human) tgt = pl.pos.clone().add(new T.Vector3(ix, 0, iz).normalize().multiplyScalar(5));
-      else if (pl.i === 0) tgt = new T.Vector3(-dir * (H.PW / 2 - 1.2), 0, Math.max(-3, Math.min(3, m.bp.z * 0.4)));
+      if (pl === m.ctrl && human) tgt = pl.pos.clone().add(new T.Vector3(mx, 0, mz).normalize().multiplyScalar(5));
+      else if (pl.i === 0) { tgt = new T.Vector3(-dir * (H.PW / 2 - 1.2), 0, Math.max(-3, Math.min(3, m.bp.z * 0.4)));
+        if (m.owner === pl && m.kick <= 0) { pl.hold = (pl.hold || 0) + dt; if (pl.hold > (pl.side === 1 || pl !== m.ctrl ? 1.1 : 2.6)) { pl.hold = 0; pass(pl); if (Math.random() < 0.3) comm('🧤 ' + pl.p.n + ' rolls it out!'); } } else pl.hold = 0; }
       else if (m.owner === pl) { tgt = new T.Vector3(goalX(pl.side), 0, pl.pos.z * 0.6 + Math.sin(m.t + pl.i) * 3); const dg = Math.abs(goalX(pl.side) - pl.pos.x);
         if (pl.side === 1 || pl !== m.ctrl) { let press = 99; m.ps.forEach((o) => { if (o.side !== pl.side) press = Math.min(press, o.pos.distanceTo(pl.pos)); }); if (dg < 17 && Math.random() < dt * 1.8) shoot(pl); else if (press < 2.2 && Math.random() < dt * (1 + pl.p.s.PAS / 40)) pass(pl); else if (Math.random() < dt * 0.25) pass(pl); } }
       else { const chaser = !mine && nearest(pl.side) === pl; if (chaser) tgt = m.bp.clone(); else { const sh = Math.max(-0.25, Math.min(0.25, m.bp.x / H.PW)); tgt = new T.Vector3((pl.home[0] * dir + sh + (mine ? 0.12 * dir : 0)) * H.PW, 0, pl.home[1] * dir * H.PH + m.bp.z * 0.3); } }
@@ -250,19 +255,33 @@
     else { m.bv.y -= 9.8 * dt; m.bp.addScaledVector(m.bv, dt); if (m.bp.y < 0.22) { m.bp.y = 0.22; m.bv.y = -m.bv.y * (H.wx === 'snow' ? 0.25 : 0.45); const fr = H.wx === 'rain' ? 0.6 : H.wx === 'snow' ? 1.6 : 1.0; m.bv.x *= Math.max(0, 1 - fr * dt); m.bv.z *= Math.max(0, 1 - fr * dt); } m.ball.rotation.x += m.bv.length() * dt * 3; }
     if (Math.abs(m.bp.x) > H.PW / 2) { if (Math.abs(m.bp.z) < 3.6 && m.bp.y < 2.44) return goal(m.bp.x > 0 ? 0 : 1); const def = m.bp.x > 0 ? 1 : 0, gk = m.ps.find((x) => x.side === def && x.i === 0); m.bp.set(gk.pos.x, 0.22, gk.pos.z); m.bv.set(0, 0, 0); m.owner = gk; touch(gk); }
     if (Math.abs(m.bp.z) > H.PH / 2 + 0.5) { const last = m.last[0], side = last ? 1 - last.side : 0, near = nearestTo(side, m.bp); m.bp.z = Math.sign(m.bp.z) * H.PH / 2; m.bv.set(0, 0, 0); near.pos.set(m.bp.x, 0, m.bp.z); m.owner = near; touch(near); }
+    // anti-stuck watchdog: a dead ball nobody reaches, or someone hogging it, gets moving again
+    if (!m.owner && m.bv.length() < 0.15) { m.dead = (m.dead || 0) + dt; if (m.dead > 3) { m.dead = 0; const n0 = nearestTo(0, m.bp, true), n1 = nearestTo(1, m.bp, true), nn = n0.pos.distanceTo(m.bp) < n1.pos.distanceTo(m.bp) ? n0 : n1; nn.cd = 0; nn.pos.set(m.bp.x - 0.3, 0, m.bp.z); m.owner = nn; touch(nn); } } else m.dead = 0;
+    if (m.owner) { if (m.hogBy === m.owner) m.hog += dt; else { m.hogBy = m.owner; m.hog = 0; } if (m.hog > (m.owner === m.ctrl ? 12 : 6)) { m.hog = 0; pass(m.owner); } } else m.hogBy = null;
+    if (!isFinite(m.bp.x) || !isFinite(m.bp.z) || !isFinite(m.bp.y)) kickoff(0);
     m.ball.position.copy(m.bp);
     m.pets.forEach((g, i) => { g.rotation.y = Math.atan2(m.bp.x - g.position.x, m.bp.z - g.position.z) * 0.5; g.userData.bob(m.t, m.cheer > 0 ? 3 : 0); });
     H.cheer(m.t, m.cheer > 0 ? 1 : 0.15);
+    // first-person camera: at the controlled player's eyes
+    m.ps.forEach((pl) => { pl.g.visible = !(save.fp && (pl === m.ctrl || Math.hypot(pl.pos.x - H.cam.position.x, pl.pos.z - H.cam.position.z) < 1.1)); });
+    if (save.fp && m.ctrl) { const c = m.ctrl, owns = m.owner === c, toB = Math.atan2(m.bp.x - c.pos.x, m.bp.z - c.pos.z), v = c.vel.length();
+      let want = owns ? (v > 1 ? Math.atan2(c.vel.x, c.vel.z) : (m.fpYaw != null ? m.fpYaw : toB)) : toB; if (m.fpYaw == null || m.fpCtl !== c) { m.fpYaw = owns ? (c.side ? -Math.PI / 2 : Math.PI / 2) : toB; m.fpCtl = c; }
+      let dy = want - m.fpYaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); m.fpYaw += dy * Math.min(1, dt * (owns ? 2.2 : 5));
+      const fx = Math.sin(m.fpYaw), fz = Math.cos(m.fpYaw), bob = Math.sin(m.t * 11) * 0.035 * Math.min(1, v / 6);
+      const eye = new T.Vector3(c.pos.x - fx * 1.2, 1.68 + bob, c.pos.z - fz * 1.2); H.cam.position.lerp(eye, Math.min(1, dt * 14));
+      const bd = Math.hypot(m.bp.x - eye.x, m.bp.z - eye.z), look = owns || bd < 2.5 ? new T.Vector3(eye.x + fx * 4.4, 0, eye.z + fz * 4.4) : new T.Vector3(m.bp.x, Math.min(m.bp.y, 3), m.bp.z);
+      H.cam.lookAt(look); H.fp(true); return; }
+    H.fp(false);
     // broadcast camera
     const port = innerWidth < innerHeight, cx = m.bp.x * (port ? 0.95 : 0.8), cz = port ? m.bp.z + 30 : 34 + m.bp.z * 0.25;
     H.cam.position.lerp(new T.Vector3(cx, port ? 30 : 24, cz), Math.min(1, dt * 3)); H.cam.lookAt(m.bp.x * 0.9, 0, m.bp.z * 0.55);
   }
-  G.frame = frame;
+  G.frame = frame; G.cur = () => match;
   function nearest(side) { return nearestTo(side, match.bp, true); }
   function nearestTo(side, p, noGk) { let b = null, bd = 1e9; match.ps.forEach((pl) => { if (pl.side !== side || (noGk && pl.i === 0)) return; const d = pl.pos.distanceTo(p); if (d < bd) { bd = d; b = pl; } }); return b; }
   function simRest() { const m = match; if (!m || m.over) return; const frac = Math.max(0, 1 - m.t / m.len); const r = simMatch(m.home, m.away, frac, { hg: m.hg, ag: m.ag, ev: m.ev }); m.hg = r.hg; m.ag = r.ag; m.t = m.len; score(); finish(); }
   G.simRest = simRest;
-  function finish() { const m = match; m.over = true; const res = { h: m.home.id, a: m.away.id, hg: m.hg, ag: m.ag, ev: m.ev }; m.res = res; comm('🏁 Full time! ' + m.home.short + ' ' + m.hg + ' - ' + m.ag + ' ' + m.away.short); setTimeout(() => ceremony(res), 900); }
+  function finish() { const m = match; m.over = true; const res = { h: m.home.id, a: m.away.id, hg: m.hg, ag: m.ag, ev: m.ev }; m.res = res; comm('🏁 Full time! ' + m.home.short + ' ' + m.hg + ' - ' + m.ag + ' ' + m.away.short); setTimeout(() => { if (match !== m) return; try { ceremony(res); } catch (e) { console.error(e); endMatchCleanup(); if (m.opt.onEnd) m.opt.onEnd(res); toTitle(); } }, 900); }
   /* ---------------- HD Man of the Match ---------------- */
   function ceremony(res) {
     const m = match, mm = motmOf(res, m.home, m.away); m.motm = mm;
@@ -278,7 +297,7 @@
   }
   G.ceremony = ceremony;
   $('mDone').onclick = () => { const m = match, res = m.res, opt = m.opt; endMatchCleanup(); if (opt.onEnd) opt.onEnd(res); if (opt.mode === 'league') leagueHub('table'); else if (opt.mode === 'cup') cupHub(); else toTitle(); };
-  function endMatchCleanup() { match = null; H.clear(); }
+  function endMatchCleanup() { match = null; H.fp(false); H.clear(); }
   /* ---------------- title showcase (3D backdrop) ---------------- */
   function showcase() {
     H.buildStadium('#7dd3fc'); H.weather('night'); const holl = D.team('mnsu').players.find((p) => p.n === 'Erling Holland'), kid = D.team('cro').players.find((p) => p.n === 'Luka Kidman');
@@ -287,9 +306,14 @@
     const ball = H.makeBall(); ball.position.set(0, 0.22, 0.8); H.world.add(ball); H.anims.push((dt, t) => { ball.rotation.y = t; H.cam.position.set(Math.sin(t * 0.15) * 9, 3.2, 9 + Math.cos(t * 0.15) * 1.5); H.cam.lookAt(0, 1.3, 0); });
   }
   /* ---------------- loop ---------------- */
-  H.init($('c')); let lt = performance.now(), tt = 0;
-  function loop(now) { const dt = Math.min(0.05, (now - lt) / 1000); lt = now; tt += dt; if (match && !match.over) frame(dt);
-    if (match && match.over && match.cpets) { match.ceremonyT += dt; const k = match.ceremonyT; H.cam.position.set(Math.sin(k * 0.25) * 6.5, 6.2, 12); H.cam.lookAt(0, 0.2, 0); match.cpets.forEach((g) => g.userData.bob(tt, 2)); }
-    H.tick(dt, tt); H.R.render(H.scene, H.cam); requestAnimationFrame(loop); }
+  H.init($('c')); setFP(save.fp); let lt = performance.now(), tt = 0;
+  function loop(now) { requestAnimationFrame(loop); const dt = Math.min(0.05, Math.max(0, (now - lt) / 1000)); lt = now; tt += dt;
+    try { if (match && !match.over) frame(dt);
+      if (match && match.over && match.cpets) { match.ceremonyT += dt; const k = match.ceremonyT; H.cam.position.set(Math.sin(k * 0.25) * 6.5, 6.2, 12); H.cam.lookAt(0, 0.2, 0); match.cpets.forEach((g) => g.userData.bob(tt, 2)); }
+      H.tick(dt, tt); if (!H.lost) H.R.render(H.scene, H.cam); } catch (e) { console.error('FC2 frame', e); if (match && !match.over) { try { kickoff(0); } catch (e2) { /* ignore */ } } } }
+  // iPhone can drop the WebGL context under memory pressure: recover instead of freezing on a black screen
+  $('c').addEventListener('webglcontextlost', (e) => { e.preventDefault(); H.lost = true; });
+  $('c').addEventListener('webglcontextrestored', () => { H.lost = false; if (match) { const mm = match; endMatchCleanup(); toast('Graphics reset - restarting match'); startMatch(mm.home, mm.away, mm.opt); } else toTitle(); });
+  document.addEventListener('visibilitychange', () => { lt = performance.now(); });
   toTitle(); requestAnimationFrame(loop);
 })();

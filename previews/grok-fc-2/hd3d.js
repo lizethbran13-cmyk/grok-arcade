@@ -21,9 +21,11 @@
     H.world = new T.Group(); H.scene.add(H.world);
     H.resize(); addEventListener('resize', H.resize);
   };
-  H.resize = function () { if (!H.R) return; H.R.setSize(innerWidth, innerHeight, false); H.cam.aspect = innerWidth / innerHeight; H.cam.fov = innerWidth < innerHeight ? 62 : 42; H.cam.updateProjectionMatrix(); };
+  H.resize = function () { if (!H.R) return; H.R.setSize(innerWidth, innerHeight, false); H.cam.aspect = innerWidth / innerHeight; H.cam.fov = H.fpOn ? (innerWidth < innerHeight ? 82 : 66) : innerWidth < innerHeight ? 62 : 42; H.cam.near = H.fpOn ? 0.1 : 0.5; H.cam.updateProjectionMatrix(); };
+  H.fp = function (on) { on = !!on; if (on === !!H.fpOn) return; H.fpOn = on; H.resize(); };
   H.clear = function () {
     H.world.traverse((o) => { if (o.userData.own && o.geometry) o.geometry.dispose(); const ms = o.material ? [].concat(o.material) : []; ms.forEach((mt) => { if (o.userData.own || mt.userData.own) { ['map', 'emissiveMap'].forEach((k) => { if (mt[k]) mt[k].dispose(); }); mt.dispose(); } }); });
+    H.world.traverse((o) => { if (o.isLight && o.shadow && o.shadow.map) { o.shadow.map.dispose(); o.shadow.map = null; } });
     H.scene.remove(H.world); H.world = new T.Group(); H.scene.add(H.world); H.precip = null; H.lamps = []; H.anims = [];
   };
   H.anims = [];
@@ -56,7 +58,7 @@
     // stands + crowd (instanced)
     const standM = M('#1f2937', { roughness: 0.8 });
     const sides = [[0, -L / 2 - 12, W + 24, 0], [0, L / 2 + 12, W + 24, Math.PI], [-W / 2 - 13, 0, L + 10, Math.PI / 2], [W / 2 + 13, 0, L + 10, -Math.PI / 2]];
-    const crowdN = IOS ? 1400 : 2600, cg = G('fan', () => new T.BoxGeometry(0.55, 0.8, 0.45)), crowd = own(new T.InstancedMesh(cg, new T.MeshStandardMaterial({ roughness: 0.8 }), crowdN));
+    const crowdN = IOS ? 1400 : 2600, cg = G('fan', () => new T.BoxGeometry(0.55, 0.8, 0.45)), crowd = own(new T.InstancedMesh(cg, own(new T.MeshStandardMaterial({ roughness: 0.8 })), crowdN));
     const cols = ['#ef4444', '#3b82f6', '#facc15', '#ffffff', '#22c55e', '#f472b6', homeKit || '#7dd3fc', homeKit || '#7dd3fc'];
     const dm = new T.Object3D(), col = new T.Color(); let ci = 0; H.fans = [];
     sides.forEach(([x, z, len, ry]) => {
@@ -72,15 +74,15 @@
     H.lamps = [];
     [[-W / 2 - 16, -L / 2 - 16], [W / 2 + 16, -L / 2 - 16], [-W / 2 - 16, L / 2 + 16], [W / 2 + 16, L / 2 + 16]].forEach(([x, z]) => {
       const pole = own(new T.Mesh(new T.CylinderGeometry(0.35, 0.6, 30, 10), M('#94a3b8', { metalness: 0.6, roughness: 0.4 }))); pole.position.set(x, 15, z); w.add(pole);
-      const head = own(new T.Mesh(new T.BoxGeometry(5, 3, 0.6), new T.MeshStandardMaterial({ color: '#fff', emissive: '#fffbe6', emissiveIntensity: 0.1 }))); head.position.set(x, 30.5, z); head.lookAt(0, 0, 0); w.add(head);
+      const head = own(new T.Mesh(new T.BoxGeometry(5, 3, 0.6), own(new T.MeshStandardMaterial({ color: '#fff', emissive: '#fffbe6', emissiveIntensity: 0.1 })))); head.position.set(x, 30.5, z); head.lookAt(0, 0, 0); w.add(head);
       const sl = new T.SpotLight('#fff6e0', 0, 140, 0.55, 0.5, 1.2); sl.position.set(x, 30, z); sl.target.position.set(x * 0.2, 0, z * 0.2); w.add(sl); w.add(sl.target); H.lamps.push({ sl, head });
     });
   };
   /* ---------------- weather ---------------- */
   H.weather = function (kind) {
     H.wx = kind; const night = kind === 'night', rain = kind === 'rain', snow = kind === 'snow';
-    H.scene.background = new T.Color(night ? '#060b1c' : rain ? '#6b7280' : snow ? '#cbd5e1' : '#7cc4ff');
-    H.scene.fog = new T.Fog(H.scene.background.getHex(), night ? 90 : rain ? 50 : snow ? 60 : 140, night ? 260 : rain ? 170 : snow ? 190 : 380);
+    H.scene.background = (H.scene.background || new T.Color()).set(night ? '#060b1c' : rain ? '#6b7280' : snow ? '#cbd5e1' : '#7cc4ff');
+    if (!H.scene.fog) H.scene.fog = new T.Fog(0); H.scene.fog.color.copy(H.scene.background); H.scene.fog.near = night ? 90 : rain ? 50 : snow ? 60 : 140; H.scene.fog.far = night ? 260 : rain ? 170 : snow ? 190 : 380;
     H.sun.intensity = night ? 0.12 : rain ? 0.9 : snow ? 1.3 : 2.4; H.sun.color.set(night ? '#9db4ff' : rain ? '#dfe6f0' : '#fff1d6');
     H.sun.position.set(night ? 10 : -30, night ? 60 : 55, 25); H.hemi.intensity = night ? 0.25 : rain ? 0.7 : snow ? 0.85 : 0.55;
     H.R.toneMappingExposure = night ? 1.25 : rain ? 0.95 : 1.05;
@@ -94,6 +96,8 @@
     }
   };
   H.tick = function (dt, t) {
+    if (H.grassMat && H.wx === 'rain') { H.grassMat.roughness = H.fpOn ? 0.75 : 0.35; H.grassMat.metalness = H.fpOn ? 0.04 : 0.15; }
+    if (H.precip) { const sn = H.precip.userData.snow; const pm = H.precip.material, att = !H.fpOn; if (pm.sizeAttenuation !== att) { pm.sizeAttenuation = att; pm.needsUpdate = true; } pm.size = H.fpOn ? (sn ? 3 : 1.6) : (sn ? 0.32 : 0.12); }
     if (H.precip) { const a = H.precip.geometry.attributes.position, s = H.precip.userData.snow; for (let i = 0; i < a.count; i++) { let y = a.getY(i) - dt * (s ? 3 : 28); if (y < 0) y += 40; a.setY(i, y); if (s) a.setX(i, a.getX(i) + Math.sin(t + i) * dt * 0.5); } a.needsUpdate = true; }
     for (let i = 0; i < H.anims.length; i++) H.anims[i](dt, t);
   };
@@ -209,7 +213,7 @@
     [-1, 1].forEach((s) => { const hd = own(new T.Mesh(new T.TorusGeometry(0.14, 0.03, 8, 16), gold)); hd.position.set(s * 0.38, 0.5, 0); cup.add(hd); });
     cup.position.set(1.6, 0.5, 1.6); cup.traverse((o) => { if (o.isMesh) o.castShadow = true; }); w.add(cup); H.cup = cup;
     const banner = H.text('MAN OF THE MATCH', 10, 2.5); banner.position.set(0, 6, -5); w.add(banner);
-    [[-7, 9, 6, '#fde68a'], [7, 9, 6, '#a5f3fc'], [0, 12, -6, '#ffffff']].forEach(([x, y, z, c]) => { const sl = new T.SpotLight(c, 1.6, 40, 0.4, 0.4, 1); sl.position.set(x, y, z); sl.target.position.set(0, 1, 0); sl.castShadow = x === 0; if (sl.castShadow) sl.shadow.mapSize.set(1024, 1024); w.add(sl); w.add(sl.target); });
+    [[-7, 9, 6, '#fde68a'], [7, 9, 6, '#a5f3fc'], [0, 12, -6, '#ffffff'], [0, 10, 9, '#ffe4f1']].forEach(([x, y, z, c], i) => { const L = H.lamps[i]; if (!L) return; const sl = L.sl; sl.color.set(c); sl.intensity = 1.6; sl.distance = 40; sl.angle = 0.4; sl.penumbra = 0.4; sl.decay = 1; sl.position.set(x, y, z); sl.target.position.set(0, 1, 0); }); H.sun.intensity = 0.9; H.sun.position.set(4, 20, 12);
     // confetti
     const n = 400, pos = new Float32Array(n * 3), colA = new Float32Array(n * 3), cl = new T.Color(); for (let i = 0; i < n; i++) { pos[i * 3] = (Math.random() - 0.5) * 14; pos[i * 3 + 1] = Math.random() * 10; pos[i * 3 + 2] = (Math.random() - 0.5) * 10; cl.set(['#facc15', '#f472b6', '#38bdf8', '#4ade80', '#ffffff'][i % 5]); colA.set([cl.r, cl.g, cl.b], i * 3); }
     const cg = new T.BufferGeometry(); cg.setAttribute('position', new T.BufferAttribute(pos, 3)); cg.setAttribute('color', new T.BufferAttribute(colA, 3));
