@@ -193,39 +193,43 @@
     },
     {
       "issue": 72,
-      "game": "other",
-      "name": "New Cool Game Idea — Part 4",
+      "game": "rodentia",
+      "name": "Grok Great Rodentia — Part 4 (live)",
       "size": "New Game",
-      "what": "Player suggestion from the Suggestion Booth (#72) queued on Lili’s board.",
-      "stage": "building",
-      "when": "Building Now"
+      "what": "Grok Great Rodentia is live in Grok Arcade! Year 000 1 shadow-light mystery across 4 districts of the USM crimson capital and 8 walk-in buildings: play Brie in Good Mode to clear the framed sisters, or Evil Twin Mode as Evil Luna, Evil Pi-rat or Evil Snowie. 12 conspiracy clues, Golden Gouda Wedges, 4 endings. Free Luna, Pi-rat, Snowie and Torty from National Ratita Prison and Candy from the seized RuffSources HQ. Find its cabinet in the Game Gallery (MORE GAMES). Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "shippedAt": "2026-10-28T22:59:41Z"
     },
     {
       "issue": 71,
-      "game": "other",
-      "name": "New Cool Game Idea — Part 3",
+      "game": "rodentia",
+      "name": "Grok Great Rodentia — Part 3 (live)",
       "size": "New Game",
-      "what": "Player suggestion from the Suggestion Booth (#71) queued on Lili’s board.",
-      "stage": "building",
-      "when": "Building Now"
+      "what": "Grok Great Rodentia is live in Grok Arcade! Year 000 1 shadow-light mystery across 4 districts of the USM crimson capital and 8 walk-in buildings: play Brie in Good Mode to clear the framed sisters, or Evil Twin Mode as Evil Luna, Evil Pi-rat or Evil Snowie. 12 conspiracy clues, Golden Gouda Wedges, 4 endings. Free Luna, Pi-rat, Snowie and Torty from National Ratita Prison and Candy from the seized RuffSources HQ. Find its cabinet in the Game Gallery (MORE GAMES). Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "shippedAt": "2026-10-28T22:59:41Z"
     },
     {
       "issue": 70,
-      "game": "other",
-      "name": "New Cool Game Idea — Part 2",
+      "game": "rodentia",
+      "name": "Grok Great Rodentia — Part 2 (live)",
       "size": "New Game",
-      "what": "Player suggestion from the Suggestion Booth (#70) queued on Lili’s board.",
-      "stage": "building",
-      "when": "Building Now"
+      "what": "Grok Great Rodentia is live in Grok Arcade! Year 000 1 shadow-light mystery across 4 districts of the USM crimson capital and 8 walk-in buildings: play Brie in Good Mode to clear the framed sisters, or Evil Twin Mode as Evil Luna, Evil Pi-rat or Evil Snowie. 12 conspiracy clues, Golden Gouda Wedges, 4 endings. Free Luna, Pi-rat, Snowie and Torty from National Ratita Prison and Candy from the seized RuffSources HQ. Find its cabinet in the Game Gallery (MORE GAMES). Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "shippedAt": "2026-10-28T22:59:41Z"
     },
     {
       "issue": 69,
-      "game": "other",
-      "name": "New Very Cool Game Idea",
+      "game": "rodentia",
+      "name": "Grok Great Rodentia (live)",
       "size": "New Game",
-      "what": "Player suggestion from the Suggestion Booth (#69) queued on Lili’s board.",
-      "stage": "building",
-      "when": "Building Now"
+      "what": "Grok Great Rodentia is live in Grok Arcade! Year 000 1 shadow-light mystery across 4 districts of the USM crimson capital and 8 walk-in buildings: play Brie in Good Mode to clear the framed sisters, or Evil Twin Mode as Evil Luna, Evil Pi-rat or Evil Snowie. 12 conspiracy clues, Golden Gouda Wedges, 4 endings. Free Luna, Pi-rat, Snowie and Torty from National Ratita Prison and Candy from the seized RuffSources HQ. Find its cabinet in the Game Gallery (MORE GAMES). Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "shippedAt": "2026-10-28T22:59:41Z"
     },
     {
       "issue": 68,
@@ -785,16 +789,6 @@
   ],
   "previews": [
     {
-      "id": "great-rodentia",
-      "game": "rodentia",
-      "issue": 69,
-      "name": "Grok Great Rodentia (#69-#72)",
-      "url": "previews/great-rodentia/",
-      "playable": true,
-      "built": "2026-10-28",
-      "notes": "Year 000 1 USM crimson capital mystery across 4 districts & 8 walk-in buildings; Brie Good Mode vs Evil Twin Mode (Evil Luna, Evil Pi-rat, Evil Snowie); 12 conspiracy clues, pet cameos (Candy, Torty, real sisters), 4 endings"
-    },
-    {
       "id": "grok-fc-2",
       "game": "fc",
       "issue": 74,
@@ -817,6 +811,18 @@
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "great-rodentia",
+      "game": "rodentia",
+      "issue": 69,
+      "name": "Grok Great Rodentia (#69-#72)",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/great-rodentia-beta/",
+      "built": "2026-10-28",
+      "archived": "2026-10-28",
+      "notes": "Year 000 1 USM crimson capital mystery across 4 districts & 8 walk-in buildings; Brie Good Mode vs Evil Twin Mode (Evil Luna, Evil Pi-rat, Evil Snowie); 12 conspiracy clues, pet cameos (Candy, Torty, real sisters), 4 endings",
+      "playable": true
+    },
     {
       "id": "retro-central-1995",
       "game": "arcade",
