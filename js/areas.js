@@ -1093,9 +1093,9 @@
     { id: 'adv', name: 'ADVENTURE', icon: '\uD83D\uDDFA\uFE0F', col: '#4ade80', ids: ['sky', 'land', 'land2', 'voxels', 'poke', 'heist', 'detective', 'spooks', 'dash', 'blocks', 'blocksrb', 'hunters', 'drvic'], wall: 'N', from: 72.0, slots: 13 },
     { id: 'race', name: 'RACING', icon: '\uD83C\uDFC1', col: '#f97316', ids: ['grid', 'surfers', 'rides', 'kart'], wall: 'N', from: 94.85, slots: 4 },
     { id: 'sport', name: 'SPORTS', icon: '\uD83C\uDFC6', col: '#38bdf8', ids: ['fc', 'pickle', 'sports', 'pickleballpark'], wall: 'E', from: -12.2, slots: 4 },
-    { id: 'more', name: 'MORE GAMES', icon: '\u2728', col: '#e879f9', ids: ['rodentia'], wall: 'E', from: -4.75, slots: 1 },
+    { id: 'more', name: 'MORE GAMES', icon: '\u2728', col: '#e879f9', ids: [], wall: 'E', from: -4.75, slots: 1 },
     { id: 'hubs', name: 'HUBS & WORLDS', icon: '\uD83C\uDFE2', col: '#ff8a3d', ids: ['ratitahq', 'puptown', 'torty', 'northpole', 'pumpkinhollow', 'ruffsources', 'skytours', 'grocery'], wall: 'E', from: -2.5, slots: 8 },
-    { id: 'life', name: 'LIFE SIMS', icon: '\uD83C\uDFE1', col: '#facc15', ids: ['pets', 'life', 'disaster', 'eatsville'], wall: 'S', from: 75.0, slots: 6 },
+    { id: 'life', name: 'LIFE SIMS', icon: '\uD83C\uDFE1', col: '#facc15', ids: ['pets', 'life', 'disaster', 'eatsville', 'rodentia'], wall: 'S', from: 75.0, slots: 6 },
     { id: 'party', name: 'PARTY', icon: '\uD83C\uDF89', col: '#ff4fd8', ids: ['party', 'brawl', 'ratita', 'petparty'], wall: 'S', from: 87.2, slots: 6 }];
   var GSTEP = 1.75;
   function slotPos(sec, k) { var d = sec.from + k * GSTEP;
