@@ -1,4 +1,4 @@
-/* Grok Arcade - MIMI'S TIME LAB (#88). A cozy walk-in lab behind Mimi's Customer Relations desk (door on the north wall).
+/* Grok Arcade - MIMI'S TIME LAB (#88). A cozy walk-in lab behind Mimi's Customer Relations desk (door on the west wall, beside the desk).
    Mimi hangs out inside next to her time machines, wall of clocks and retro props. The swirling RETRO CENTRAL portal opens
    /retro-central/ (1995) with your REAL save and tickets; its back button returns here via ../#mimilab.
    Far-away region: x -74..-56, z 126..144. */
@@ -6,7 +6,7 @@
   'use strict';
   var T = THREE, ML = GA.MimiLab = {}, H, A, add, bx, cy, sp, to, cvs, texPlane, mats = {};
   var B = ML.B = { name: 'mlab', minX: -74, maxX: -56, minZ: 126, maxZ: 144, maxY: 6, H: 4.6, spawn: { x: -58.2, z: 135 } };
-  var DOOR = { x: -16.2, z: -12 }, PORTAL = { x: -72.6, z: 135 }, live = false, ANIM = [];
+  var DOOR = { x: -18, z: -9.9 }, PORTAL = { x: -72.6, z: 135 }, live = false, ANIM = [];
   // coming back from Retro Central (../#mimilab): start inside the lab (the hub restores sessionStorage pos on build)
   try { if (/^#mimilab/.test(location.hash) || /[?&]area=mlab\b/.test(location.search)) { sessionStorage.setItem('grokArcade.pos', JSON.stringify({ x: B.spawn.x - 1.2, z: B.spawn.z, face: -Math.PI / 2, yaw: Math.PI / 2 })); ML.cameBack = true; history.replaceState(null, '', location.pathname); } } catch (e) {}
   function ph(c, s, e) { var k = 'p' + c + (s || 30) + (e || ''); return mats[k] || (mats[k] = new T.MeshPhongMaterial({ color: c, shininess: s || 30, specular: '#555555', emissive: e ? new T.Color(e) : new T.Color(0) })); }
@@ -160,17 +160,17 @@
     // floating clock gears near the ceiling
     for (var gi = 0; gi < 6; gi++) { var gr0 = add(r, to(0.35 + (gi % 3) * 0.12, 0.06, 6, 12), brass(), B.minX + 3 + gi * 2.4, h - 0.8 - (gi % 2) * 0.4, cz + (gi % 2 ? 2.5 : -1.5)); noA(gr0); (function (g, k) { ANIM.push(function (t) { g.rotation.z = t * (k % 2 ? 0.8 : -0.8); g.rotation.x = 0.4; }); })(gr0, gi); }
 
-    // ---- the door on the ARCADE FLOOR (north wall, left of Mimi's desk) ----
-    H.mkRoot('mlab_door'); var md = H.prop('mlab_door', 'Mimi\u2019s Time Lab door', DOOR.x, DOOR.z + 0.08, 0);
-    add(md, bx(1.7, 2.9, 0.14), ph('#7c3aed', 50), 0, 1.45, 0); add(md, bx(1.3, 2.5, 0.05), ph('#f0abfc', 50, '#3b0a3a'), 0, 1.3, 0.08); add(md, sp(0.07, 12), brass(), 0.48, 1.2, 0.14);
+    // ---- the door on the ARCADE FLOOR (west wall corner, between the cabinets and the Gallery, beside Mimi's desk) ----
+    H.mkRoot('mlab_door'); var md = H.prop('mlab_door', 'Mimi\u2019s Time Lab door', DOOR.x + 0.08, DOOR.z, Math.PI / 2);
+    add(md, bx(1.5, 2.9, 0.14), ph('#7c3aed', 50), 0, 1.45, 0); add(md, bx(1.1, 2.5, 0.05), ph('#f0abfc', 50, '#3b0a3a'), 0, 1.3, 0.08); add(md, sp(0.07, 12), brass(), 0.4, 1.2, 0.14);
     clock(md, 0, 2.2, 0.12, 0, 0.3, '#fef3c7', 'brass', 1.2);
-    sign(md, 1.9, 0.42, function (c, w2, h2) { c.fillStyle = '#1e1b4b'; c.fillRect(0, 0, w2, h2); c.strokeStyle = '#f472b6'; c.lineWidth = 6; c.strokeRect(4, 4, w2 - 8, h2 - 8); txt(c, '\u23F3 MIMI\u2019S TIME LAB', w2 / 2, h2 / 2 + 2, '#fde68a', 46); }, 0, 3.15, 0.1, 0);
-    var dgl = glowSprite('#f472b6', 2.4, 0.25); dgl.position.set(0, 1.4, 0.3); md.add(dgl);
-    H.inter({ id: 'at_mlab_door', kind: 'at_mlab_door', root: 'mlab_door', name: 'Mimi\u2019s Time Lab', col: '#f472b6', x: DOOR.x, z: DOOR.z + 1.3, dir: [0, 1], r: 1.0 });
+    sign(md, 1.6, 0.36, function (c, w2, h2) { c.fillStyle = '#1e1b4b'; c.fillRect(0, 0, w2, h2); c.strokeStyle = '#f472b6'; c.lineWidth = 6; c.strokeRect(4, 4, w2 - 8, h2 - 8); txt(c, '\u23F3 MIMI\u2019S TIME LAB', w2 / 2, h2 / 2 + 2, '#fde68a', 46); }, 0, 3.15, 0.1, 0);
+    var dgl = glowSprite('#f472b6', 2.0, 0.25); dgl.position.set(0, 1.4, 0.3); md.add(dgl);
+    H.inter({ id: 'at_mlab_door', kind: 'at_mlab_door', root: 'mlab_door', name: 'Mimi\u2019s Time Lab', col: '#f472b6', x: DOOR.x + 1.3, z: DOOR.z, dir: [1, 0], r: 1.0 });
 
     r.visible = false;
     var ct0 = GA.Hub.camTune; GA.Hub.camTune = function (a) { return a === 'mlab' ? { pitch: 0.44, dist: 5.6, ahead: 2.2, fov: 8 } : (ct0 ? ct0(a) : null); };
-    if (GA.Areas) { if (GA.Areas.FOGS) GA.Areas.FOGS.mlab = ['#2a1b4a', 18, 46]; if (GA.Areas.ARRIVE) { var go = GA.Areas.goTo; GA.Areas.ARRIVE.mlab = function () { go(B.spawn.x, B.spawn.z, -1, 0); }; GA.Areas.ARRIVE.mlab_out = function () { go(DOOR.x, DOOR.z + 1.6, 0, 1); }; } }
+    if (GA.Areas) { if (GA.Areas.FOGS) GA.Areas.FOGS.mlab = ['#2a1b4a', 18, 46]; if (GA.Areas.ARRIVE) { var go = GA.Areas.goTo; GA.Areas.ARRIVE.mlab = function () { go(B.spawn.x, B.spawn.z, -1, 0); }; GA.Areas.ARRIVE.mlab_out = function () { go(DOOR.x + 1.6, DOOR.z, 1, 0); }; } }
     if (GA.Mimi) { var h0 = GA.Mimi.handles, p0 = GA.Mimi.prompt, o0 = GA.Mimi.open; GA.Mimi.handles = function (k) { return /^at_mlab_/.test(k) || h0(k); }; GA.Mimi.prompt = function (cab) { return /^at_mlab_/.test(cab.kind) ? prompt(cab) : p0.apply(this, arguments); }; GA.Mimi.open = function (cab) { return /^at_mlab_/.test(cab.kind) ? open(cab) : o0.apply(this, arguments); };
       if (GA.Mimi.DEST && !GA.Mimi.DEST.some(function (d) { return d[2] === 'at_mlab_door'; })) GA.Mimi.DEST.push(['\u23F3', 'Mimi\u2019s Time Lab', 'at_mlab_door']); }
     if (GA.AtticUI) { var m0 = GA.AtticUI.map; GA.AtticUI.map = function (a) { return a === 'mlab' ? { minX: B.minX - 1, maxX: B.maxX + 1, minZ: B.minZ - 1, maxZ: B.maxZ + 1, rooms: [['MIMI\u2019S TIME LAB', B.minX, B.maxX, B.minZ, B.maxZ, '#f472b6']], marks: function () { return [['\uD83C\uDF00', PORTAL.x + 1, PORTAL.z], ['\uD83E\uDD16', cx + 1, B.minZ + 4.3], ['\uD83D\uDEAA', B.maxX - 0.6, cz]]; } } : (m0 ? m0(a) : null); }; }
