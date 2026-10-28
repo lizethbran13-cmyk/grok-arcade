@@ -263,9 +263,10 @@
       "game": "sky",
       "name": "Grok Sky Remastered",
       "size": "Remaster",
-      "what": "Remastered clouds, weather fronts, and cockpit instruments for Grok Sky.",
-      "stage": "queued",
-      "when": "Queued"
+      "what": "Remastered clouds, weather fronts, and cockpit instruments for Grok Sky: puffy lit clouds, 6 moving weather fronts (rain, snow, thunder cells), a glass-cockpit PFD with weather radar, and the Pet Crew Weather Station. Playable now in the Time Jumper!",
+      "stage": "building",
+      "when": "Preview in the Time Jumper",
+      "preview": true
     },
     {
       "issue": 59,
@@ -788,6 +789,16 @@
     }
   ],
   "previews": [
+    {
+      "id": "grok-sky-remastered",
+      "game": "sky",
+      "issue": 62,
+      "name": "Grok Sky Remastered",
+      "url": "previews/grok-sky-remastered/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "Puffy lit clouds, 6 moving weather fronts (rain, snow squalls, thunder cells that trip the lightning emergency), glass-cockpit PFD with weather radar, Pet Crew Weather Station (Luna, Pi-rat, Snowie, Candy, Torty) at your start airport"
+    },
     {
       "id": "grok-fc-2",
       "game": "fc",
