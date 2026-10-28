@@ -122,8 +122,12 @@
       "name": "Grok Sports: Re-Commanded",
       "size": "Remaster",
       "what": "Tortuga Remaster Works overhaul of Grok Sports Command with upgraded stadium lighting, sharper court physics, and pet mascot cameos.",
-      "stage": "queued",
-      "when": "Queued"
+      "stage": "building",
+      "when": "Building Now",
+      "preview": true,
+      "url": "previews/sports-recommanded/",
+      "playable": true,
+      "built": "2026-10-28"
     },
     {
       "issue": 82,
@@ -158,8 +162,12 @@
       "name": "Grok FC 2: Part 2",
       "size": "Sequel",
       "what": "Club cup brackets, custom kit creator, and stadium weather for the Grok FC sequel.",
-      "stage": "queued",
-      "when": "Queued"
+      "stage": "building",
+      "when": "Building Now",
+      "preview": true,
+      "url": "previews/grok-fc-2/",
+      "playable": true,
+      "built": "2026-10-28"
     },
     {
       "issue": 74,
@@ -167,8 +175,12 @@
       "name": "Grok FC 2",
       "size": "Sequel",
       "what": "Full sequel to Grok FC with sharper 3D pitches, through-balls, skill moves, and tournament leagues.",
-      "stage": "queued",
-      "when": "Queued"
+      "stage": "building",
+      "when": "Building Now",
+      "preview": true,
+      "url": "previews/grok-fc-2/",
+      "playable": true,
+      "built": "2026-10-28"
     },
     {
       "issue": 73,
@@ -781,6 +793,26 @@
       "playable": true,
       "built": "2026-10-28",
       "notes": "Year 000 1 USM crimson capital mystery across 4 districts & 8 walk-in buildings; Brie Good Mode vs Evil Twin Mode (Evil Luna, Evil Pi-rat, Evil Snowie); 12 conspiracy clues, pet cameos (Candy, Torty, real sisters), 4 endings"
+    },
+    {
+      "id": "grok-fc-2",
+      "game": "fc",
+      "issue": 74,
+      "name": "Grok FC 2",
+      "url": "previews/grok-fc-2/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "HD Shadow-Light engine, 6 bootleg leagues, World Tour Cup, Club World Cup, Dream Team + Transfer Market, weather, MOTM with pets (#74 & #75)"
+    },
+    {
+      "id": "sports-recommanded",
+      "game": "sports",
+      "issue": 83,
+      "name": "Grok Sports Re-Commanded",
+      "url": "previews/sports-recommanded/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "Turbo/Tempest Engine remaster, all 14 sports incl. bundled DLC, crowd, floodlights, pets"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
