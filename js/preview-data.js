@@ -82,11 +82,12 @@
     {
       "issue": 88,
       "game": "arcade",
-      "name": "Grok Arcade: Retro Central",
-      "size": "New Area",
-      "what": "A classic retro arcade wing packed with vintage pixel-era cabinets, CRT glow, high-score leaderboards, and classic token machines.",
-      "stage": "building",
-      "when": "Building Now"
+      "name": "Retro Central (1995) (live)",
+      "size": "New World",
+      "what": "Retro Central (1995) is live in Grok Arcade! Walk the neon 1995 mall, buy 6 consoles (1983–1995) at Gary's Console Stand with your real tickets, set them up in your walk-in Retro Home around a big CRT TV, and play 7 games: Super Torty 64, Speed Rat 1991, Speed Rat 2: Spin Dash, 8-Bit Plumber Bros. '85, Chrono Cheese, Shell Fighter '95 and Cyber-Maze '95. All 5 pets show up in 90s outfits. Find its cabinet in the Game Gallery (MORE GAMES). Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "shippedAt": "2026-10-28T22:31:39Z"
     },
     {
       "issue": 87,
@@ -772,16 +773,6 @@
   ],
   "previews": [
     {
-      "id": "retro-central-1995",
-      "game": "arcade",
-      "issue": 88,
-      "name": "Retro Central (1995) — Time Jumper World",
-      "url": "previews/retro-central-1995/",
-      "playable": true,
-      "built": "2026-10-28",
-      "notes": "Walk-in 1995 Retro Central Mall & Arcade Hall + Walk-in 1995 Retro Home Living Room! Buy 6 copycat & made-up consoles from 1983–1995 at Gary's 1995 Console Emporium and play them on your 32-inch CRT Tube TV or mall kiosks: Super Torty 64, Speed Rat 1991 & Speed Rat 2: Spin Dash, 8-Bit Plumber Bros. '85 & Super Dash Rat, NEW Chrono Cheese (16-bit SRES time-travel RPG with Luna, Pi-rat, Snowie, Candy & Torty cameos), Polygonal Shell Fighter '95, and Wireframe Cyber-Maze '95! Plus all 5 pets in 1995 outfits."
-    },
-    {
       "id": "great-rodentia",
       "game": "rodentia",
       "issue": 69,
@@ -794,6 +785,18 @@
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "retro-central-1995",
+      "game": "arcade",
+      "issue": 88,
+      "name": "Retro Central (1995) — Time Jumper World",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/retro-central-1995-beta/",
+      "built": "2026-10-28",
+      "archived": "2026-10-28",
+      "notes": "Walk-in 1995 Retro Central Mall & Arcade Hall + Walk-in 1995 Retro Home Living Room! Buy 6 copycat & made-up consoles from 1983–1995 at Gary's 1995 Console Emporium and play them on your 32-inch CRT Tube TV or mall kiosks: Super Torty 64, Speed Rat 1991 & Speed Rat 2: Spin Dash, 8-Bit Plumber Bros. '85 & Super Dash Rat, NEW Chrono Cheese (16-bit SRES time-travel RPG with Luna, Pi-rat, Snowie, Candy & Torty cameos), Polygonal Shell Fighter '95, and Wireframe Cyber-Maze '95! Plus all 5 pets in 1995 outfits.",
+      "playable": true
+    },
     {
       "id": "voxels-respawn",
       "game": "voxels",
