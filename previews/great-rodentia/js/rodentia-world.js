@@ -1,9 +1,9 @@
 // Grok Great Rodentia (Year 000 1 — 301 Post-Departure USM)
 // Builds the 4 Districts of Great Rodentia, reddish-dusk skyline, avenues, checkpoints, and 8 walk-in interiors.
-import * as K from './kit.js?v=gr1';
-import { shell, part, onSide, BUILDINGS } from './bld.js?v=gr1';
-import { rbox } from './world.js?v=gr1';
-import { txt, poster, wallWord, clockW, pendant, rack, pallet, planter, awning, trash, produceCrate } from './art.js?v=gr1';
+import * as K from './kit.js?v=gr2';
+import { shell, part, onSide, BUILDINGS } from './bld.js?v=gr2';
+import { rbox } from './world.js?v=gr2';
+import { txt, poster, wallWord, clockW, pendant, rack, pallet, planter, awning, trash, produceCrate } from './art.js?v=gr2';
 
 const PI = Math.PI;
 

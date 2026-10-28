@@ -1,9 +1,9 @@
 // Grok Great Rodentia — 3D Rat Walker & Platforming Controller (Brie & Evil Twin Sisters)
 import * as THREE from 'three';
-import { makeRat, animRat, setOutfit } from './models.js?v=gr1';
-import { topOf } from './world.js?v=gr1';
-import { readMove, edge, held } from './input.js?v=gr1';
-import { sfx } from './audio.js?v=gr1';
+import { makeRat, animRat, setOutfit } from './models.js?v=gr2';
+import { topOf } from './world.js?v=gr2';
+import { readMove, edge, held } from './input.js?v=gr2';
+import { sfx } from './audio.js?v=gr2';
 
 const GRAV = -26, JUMP = 10.6, DJUMP = 9.4, R = 0.42, H = 1.1, STEP = 0.65;
 const near = [];
@@ -111,7 +111,7 @@ export class RatHero {
 
     if (mag > 0.02) {
       const s = Math.sin(camYaw), c = Math.cos(camYaw);
-      const dx = mx * c + my * s, dz = -mx * s + my * c;
+      const dx = -mx * c + my * s, dz = mx * s + my * c; // right = camera-right (fixed reversed strafe)
       const ta = Math.atan2(dx, dz);
       let da = ((ta - this.yaw + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
       this.yaw += da * Math.min(1, dt * 14);

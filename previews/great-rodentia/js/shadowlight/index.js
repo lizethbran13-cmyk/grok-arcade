@@ -3,9 +3,9 @@
 // triplanar PBR surface detail (albedo/roughness/cavity + normal maps) injected into the shared batched materials (works on merged geometry with no UVs),
 // volumetric-style light shafts, drifting dust motes, and goo emissives tuned for bloom. Nothing here lowers quality automatically.
 import * as THREE from 'three';
-import { E } from '../engine.js?v=gr1';
-import { MATS } from '../mats.js?v=gr1';
-import { surface } from './textures.js?v=gr1';
+import { E } from '../engine.js?v=gr2';
+import { MATS } from '../mats.js?v=gr2';
+import { surface } from './textures.js?v=gr2';
 export const SL = { lights: [], flash: null, hero: null, dust: null, shafts: [], t: 0, set: null };
 // ---- triplanar detail injected into shared materials
 const SETS = { lab: { m: ['plaster', 0.55, 1.1], w: ['plaster', 0.7, 1.2], x: ['rust', 0.9, 1.4], g: ['tile', 0.45, 0.9], f: ['plaster', 0.3, 2.2] },

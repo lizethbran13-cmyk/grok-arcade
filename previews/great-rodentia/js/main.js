@@ -1,28 +1,28 @@
 // Main entry & game loop for Grok Great Rodentia (#69, #70, #71, #72)
 import * as THREE from 'three';
-import { E, initEngine, setEnvironment, followShadow, render, trackFps } from './engine.js?v=gr1';
-import { World } from './world.js?v=gr1';
-import { ENV, buildRodentiaWorld } from './interiors.js?v=gr1';
-import { BUILDINGS, buildingAt } from './bld.js?v=gr1';
-import { RatHero } from './walker.js?v=gr1';
-import { FollowCam } from './cam.js?v=gr1';
-import { FX } from './fx.js?v=gr1';
-import { initInput, edge, clearEdges } from './input.js?v=gr1';
-import { sfx, initAudio, setSound, SND } from './audio.js?v=gr1';
-import { S, load, save, resetSave, hasClue, addClue, isDistrictUnlocked, unlockDistrict } from './save.js?v=gr1';
-import { LORE_INTRO, DISTRICTS, CLUES, TWIN_PROFILES } from './story.js?v=gr1';
-import { makeRat, animRat, setOutfit, makeEnemy, animEnemy } from './models.js?v=gr1';
-import { makePet, animPet } from './pets.js?v=gr1';
-import { rbox } from './world.js?v=gr1';
-import { MATS, initMats } from './mats.js?v=gr1';
+import { E, initEngine, setEnvironment, followShadow, render, trackFps } from './engine.js?v=gr2';
+import { World } from './world.js?v=gr2';
+import { ENV, buildRodentiaWorld } from './interiors.js?v=gr2';
+import { BUILDINGS, buildingAt } from './bld.js?v=gr2';
+import { RatHero } from './walker.js?v=gr2';
+import { FollowCam } from './cam.js?v=gr2';
+import { FX } from './fx.js?v=gr2';
+import { initInput, edge, clearEdges } from './input.js?v=gr2';
+import { sfx, initAudio, setSound, SND } from './audio.js?v=gr2';
+import { S, load, save, resetSave, hasClue, addClue, isDistrictUnlocked, unlockDistrict } from './save.js?v=gr2';
+import { LORE_INTRO, DISTRICTS, CLUES, TWIN_PROFILES } from './story.js?v=gr2';
+import { makeRat, animRat, setOutfit, makeEnemy, animEnemy } from './models.js?v=gr2';
+import { makePet, animPet } from './pets.js?v=gr2';
+import { rbox } from './world.js?v=gr2';
+import { MATS, initMats } from './mats.js?v=gr2';
 const mat = (k, col) => new THREE.MeshBasicMaterial({ color: col, toneMapped: false });
 function makeCheeseWedge() { const g = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.24, 3, 1, false, 0, Math.PI * 2 / 3 * 1.5), new THREE.MeshStandardMaterial({ color: 0xffc400, emissive: 0x6b4a00, roughness: 0.4 })); return g; }
-import { initShadowlight, useSurfaceSet, setSpots, updateShadowlight, SL } from './shadowlight/index.js?v=gr1';
-import { $, clamp } from './util.js?v=gr1';
+import { initShadowlight, useSurfaceSet, setSpots, updateShadowlight, SL } from './shadowlight/index.js?v=gr2';
+import { $, clamp } from './util.js?v=gr2';
 import {
   toast, isTalking, startDialogue, stepDialogue,
   updateHud, setPrompt, openConspiracyBoard, openDistrictModal, showEndingModal
-} from './ui.js?v=gr1';
+} from './ui.js?v=gr2';
 
 const _v = new THREE.Vector3(), _s = new THREE.Vector3(), _b = new THREE.Box3(), _r = new THREE.Ray();
 
@@ -206,7 +206,7 @@ export class RodentiaGame {
     this.scene.add(p.root);
     this.pets.push(p);
     this.acts.push({
-      x, z, r: 2.7,
+      x, z, r: 2.7, pet: p,
       label: `🐾 Talk to ${name}`,
       f: () => {
         const lines = S.mode === 'evil' ? (linesEvil || linesGood) : linesGood;
@@ -217,22 +217,15 @@ export class RodentiaGame {
   }
 
   spawnCastAndClues() {
-    // --- PET CAMEOS: Luna, Pi-rat, Snowie, Candy & Torty greet Brie in the plazas (Shadow-light memories) ---
+    // --- PET CAMEOS: Luna, Pi-rat, Snowie, Candy & Torty are framed/captive at story start: real trio + Torty in prison, Candy at RuffSources; rally cameos appear only after the prison break ---
     const cameo = (id, opts, name, x, z, yaw, reg, line) => this.addPetNpc(id, opts, name, x, z, yaw, reg, [[name, line]], [[name, 'Hey! You only LOOK like us, clone. We know the real story.']]);
-    cameo('luna', { outfit: 'goggles' }, 'Luna (Shadow-light memory)', -2.6, -29.5, Math.PI, 'out', 'Brie! This is how I looked before Ratita Now framed us. Find the clues and free the real me in District 4!');
-    cameo('pirat', { outfit: 'pirate' }, 'Pi-rat (Shadow-light memory)', -1.0, -28.8, Math.PI, 'out', 'Yarr, one eye on everything! The fake poison charge smells fishier than a sardine barrel.');
-    cameo('snowie', { outfit: 'flower' }, 'Snowie (Shadow-light memory)', 1.0, -28.8, Math.PI, 'out', 'Snowie Sky Tours spotted crimson lights over the Clone Lab. Follow the shadows!');
-    cameo('candy', { s: 0.95 }, 'Candy (Shadow-light memory)', 2.8, -29.4, Math.PI, 'out', 'Woof! Grandma Gouda taught me to sniff out a frame-up. Start at her board!');
-    cameo('torty', { s: 0.9 }, 'Torty (Shadow-light memory)', 0, -27.2, Math.PI, 'out', 'Slow and steady, Brie. My Emergency Cheese Bank was pure—prove it!');
-    cameo('torty', { s: 1.0 }, 'Torty at the Bank', 10.8, -34.2, 1.2, 'in_bank', 'This was MY Emergency Cheese Bank. The vault behind me was sealed on a fake poison charge.');
-    cameo('luna', { outfit: 'goggles' }, 'Luna (Capitol rally)', -3.0, 51.5, Math.PI, 'out', 'The Capitol is right there. Expose the Evil Twins and the Golden Gouda truth!');
-    cameo('pirat', { outfit: 'pirate' }, 'Pi-rat (Capitol rally)', -1.2, 52.2, Math.PI, 'out', 'Prison break first, treasure second. Arr!');
-    cameo('snowie', { outfit: 'flower' }, 'Snowie (Capitol rally)', 1.2, 52.2, Math.PI, 'out', 'From up in the sky, the Capitol glows crimson. Something is wrong in there.');
-    cameo('candy', { s: 0.95 }, 'Candy (Capitol rally)', 3.0, 51.5, Math.PI, 'out', 'The Civil Task Force of Dogs has your back, Brie!');
+    { const r = cameo('luna', { outfit: 'goggles' }, 'Luna (Capitol rally)', -3.0, 51.5, Math.PI, 'out', 'The Capitol is right there. Expose the Evil Twins and the Golden Gouda truth!'); r.needFreed = true; }
+    { const r = cameo('pirat', { outfit: 'pirate' }, 'Pi-rat (Capitol rally)', -1.2, 52.2, Math.PI, 'out', 'Prison break first, treasure second. Arr!'); r.needFreed = true; }
+    { const r = cameo('snowie', { outfit: 'flower' }, 'Snowie (Capitol rally)', 1.2, 52.2, Math.PI, 'out', 'From up in the sky, the Capitol glows crimson. Something is wrong in there.'); r.needFreed = true; }
+    { const r = cameo('candy', { s: 0.95 }, 'Candy (Capitol rally)', 3.0, 51.5, Math.PI, 'out', 'The Civil Task Force of Dogs has your back, Brie!'); r.needFreed = true; }
     cameo('luna', { outfit: 'goggles' }, 'Luna (Vat hologram)', 14.0, 22.0, 0, 'in_clone', 'Dr. Evilest scanned our memories into these three vats to grow the Evil Twins!');
     cameo('pirat', { outfit: 'pirate' }, 'Pi-rat (Vat hologram)', 18.5, 22.0, 0, 'in_clone', 'Yarr! That middle vat cooked up Dread Pi-rat—crimson visor and all!');
     cameo('snowie', { outfit: 'flower' }, 'Snowie (Vat hologram)', 23.0, 22.0, 0, 'in_clone', 'Smash the manifest terminal behind you so everyone knows we were cloned!');
-    cameo('candy', { s: 0.95 }, 'Candy (Rescue backup)', -14.2, 52.0, -1.2, 'in_prison', 'Brie! You found the cells! Flip the Warden console to drop those laser bars!');
     this.addRatNpc('bram', 'taskforce', 'Clone Lab Tech', 15.0, 30.5, 0.4, 'in_clone', [['Clone Lab Tech', 'I only work the night shift! Dr. Evilest keeps the real sisters in District 4 Prison!']]);
     for (const [id, out, nm, x, z] of [['bram', 'taskforce', 'Bank Teller', 11.0, -37.6], ['grandpa', 'taskforce', 'Vault Guard', 15.4, -40.2]]) this.addRatNpc(id, out, nm, x, z, 0, 'in_bank', [[nm, 'The vault was sealed the night the poison rumour started. Nobody had the code but Torty.']]);
     for (const [x, z, yaw] of [[-5.2, -22, 1.5], [5.4, 3, -1.5], [-5.0, 28, 1.5], [5.2, 60, -1.5]]) this.addRatNpc('grandpa', 'none', 'Rodentia Citizen', x, z, yaw, 'out', [['Rodentia Citizen', 'Psst... the crimson-visor sisters walked right past here last night.']]);
@@ -630,6 +623,7 @@ export class RodentiaGame {
       n.root.visible = !n.region || n.region === 'out' || (RM[n.region] && RM[n.region][0] ? RM[n.region][0].visible : true);
     }
     for (const p of this.pets) {
+      if (p.needFreed && !(S.rescued && S.rescued.sisters)) { p.root.visible = false; continue; }
       p.root.visible = !p.region || p.region === 'out' || (RM[p.region] && RM[p.region][0] ? RM[p.region][0].visible : true);
     }
     for (const cm of this.clueMeshes) {
@@ -750,6 +744,7 @@ export class RodentiaGame {
     // Find nearest interactive object/NPC
     let best = null, bestD = 1e9;
     for (const a of this.acts) {
+      if (a.pet && !a.pet.root.visible) continue;
       const d = Math.hypot(me.x - a.x, me.z - a.z);
       if (d < a.r && d < bestD) {
         bestD = d;
