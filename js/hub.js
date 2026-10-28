@@ -434,6 +434,7 @@
         y = h * 0.45 + Math.sin(t * 2) * 6; x = w * 0.4;
         g.fillStyle = '#f8fafc'; g.fillRect(x - 30, y - 5, 60, 10); g.fillStyle = '#e11d48'; g.fillRect(x - 6, y - 2, 18, 22); g.fillRect(x - 6, y - 20, 18, 18); g.fillRect(x - 30, y - 14, 8, 10);
         g.fillStyle = '#0ea5e9'; for (i = 0; i < 5; i++) g.fillRect(x - 18 + i * 9, y - 3, 4, 3);
+        g.save(); g.translate(w / 2, 18); g.fillStyle = '#0284c7'; rrF(g, -62, -9, 124, 18, 6); g.font = font(11); g.textAlign = 'center'; g.fillStyle = '#fde047'; g.fillText('GROK SKY REMASTERED', 0, 4); g.restore();
         break;
       }
       case 'land2': {
@@ -502,6 +503,17 @@
         g.fillStyle = '#3b82f6'; g.fillRect(x - 30, y - 8, 10, 16); g.fillStyle = '#ef4444'; g.fillRect(w - 40, h / 2 - 8 + Math.sin(t * 3) * 10, 10, 16);
         g.fillStyle = '#fff'; g.beginPath(); g.arc(x, y, 5, 0, 7); g.fill();
         if (ph2 > 0.85) { g.font = font(26); g.textAlign = 'center'; g.fillStyle = '#fde047'; g.fillText('GOAL!', w / 2, 40); }
+        break;
+      }
+      case 'fc2': {
+        var gfc2 = g.createLinearGradient(0, 0, 0, h); gfc2.addColorStop(0, '#09152b'); gfc2.addColorStop(0.32, '#1e3a8a'); gfc2.addColorStop(0.33, '#16a34a'); gfc2.addColorStop(1, '#14532d'); g.fillStyle = gfc2; g.fillRect(0, 0, w, h);
+        for (i = 0; i < 6; i++) { g.fillStyle = i % 2 ? 'rgba(34,197,94,0.35)' : 'rgba(21,128,61,0.35)'; g.fillRect(i * w / 6, h * 0.33, w / 6, h * 0.67); }
+        g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 2; g.strokeRect(8, h * 0.37, w - 16, h * 0.56); g.beginPath(); g.arc(w / 2, h * 0.65, 16, 0, 7); g.moveTo(w / 2, h * 0.37); g.lineTo(w / 2, h * 0.93); g.stroke();
+        var p2 = (t * 0.65) % 1, bx2 = 24 + p2 * (w - 48), by2 = h * 0.65 + Math.sin(p2 * 9) * 18;
+        g.fillStyle = '#22c55e'; g.fillRect(bx2 - 22, by2 - 8, 10, 16); g.fillStyle = '#facc15'; g.fillRect(w - 36, h * 0.62 + Math.sin(t * 3.2) * 10, 10, 16);
+        g.fillStyle = '#fff'; g.beginPath(); g.arc(bx2, by2, 5.5, 0, 7); g.fill();
+        g.fillStyle = '#14532d'; rrF(g, w * 0.08, 6, w * 0.84, 24, 6); g.strokeStyle = '#facc15'; g.lineWidth = 2; g.strokeRect(w * 0.08 + 2, 8, w * 0.84 - 4, 20);
+        g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#fde047'; g.fillText('GROK FC 2 \u00b7 WORLD TOUR', w / 2, 23);
         break;
       }
       case 'brawl': {
@@ -769,7 +781,7 @@
         var cols7 = ['#ffffff', '#f97316', '#e6ff3b', '#a855f7', '#fde047'];
         for (i = 0; i < 5; i++) { var bx7 = ((t * (40 + i * 9) + i * 50) % (w + 30)) - 15, by7 = h * 0.62 + i * 9 - Math.abs(Math.sin(t * (3 + i * 0.4) + i)) * 26;
           g.fillStyle = 'rgba(0,0,0,.25)'; g.beginPath(); g.ellipse(bx7, h * 0.66 + i * 9, 6, 2, 0, 0, 7); g.fill(); g.fillStyle = cols7[i]; g.beginPath(); g.arc(bx7, by7, i === 3 ? 7 : 5.5, 0, 7); g.fill(); }
-        g.fillStyle = '#facc15'; rrF(g, w * 0.08, 6, w * 0.84, 26, 6); g.font = font(16); g.textAlign = 'center'; g.fillStyle = '#1e3a8a'; g.fillText('GROK SPORTS COMMAND', w / 2, 24);
+        g.fillStyle = '#facc15'; rrF(g, w * 0.08, 6, w * 0.84, 26, 6); g.font = font(16); g.textAlign = 'center'; g.fillStyle = '#1e3a8a'; g.fillText('SPORTS: RE-COMMANDED', w / 2, 24);
         break;
       }
       case 'kart': {

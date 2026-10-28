@@ -27,8 +27,8 @@ GA.ghFetch = function (url, ms) {
   GA.ghLabeled = function (a, lab) { return (a || []).filter(function (it) { return (it.labels || []).some(function (l) { return String(l.name || l).toLowerCase() === lab; }); }); };
 })();
 GA.MAIN_GAMES = [
-  { id: 'sky', mp: true, name: 'Grok Sky', desc: 'Fly real planes, from a Cessna to the A380, across 10 cities with friends. Then ride Starship to the Moon and Mars!',
-    url: 'https://lizethbran13-cmyk.github.io/grok-sky/', color: '#38bdf8', color2: '#fde047' },
+  { id: 'sky', mp: true, name: 'Grok Sky', desc: 'REMASTERED on the Cloudfront Engine! Fly real planes, from a Cessna to the A380, across 10 cities with friends, then ride Starship to the Moon and Mars. Now with puffy 3D cumulus & anvil cloud banks, 6 live moving weather fronts (Clear, Scattered, Rain Squall, Thunderhead, Snow Front, Golden Sunset), a glass-cockpit PFD with live weather radar, and the Pet Crew Weather Station with Tortuga & Ratita co-pilots!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/grok-sky-remastered/', color: '#38bdf8', color2: '#fde047' },
   { id: 'land', mp: true, name: 'Grok Land', desc: 'A 3D platformer adventure across 8 worlds.',
     url: 'https://lizethbran13-cmyk.github.io/grok-land/', color: '#4ade80', color2: '#f97316' },
   { id: 'land2', mp: true, name: 'Grok Land 2', desc: 'THE SEQUEL! Three high-speed Boost Zones (Meadow Rush, Canyon Rush and Shell Speedway) with a boost meter, grind rails, loops, homing attacks, air dash and S-A-B-C ranks. New worlds: Red Rock Trail, Mesa Mines, Ratita\u2019s Cheese Conveyor and Tortuga Tech\u2019s Shell-Tough Test Track, plus all 12 classic levels with new graphics. Online co-op and cameos from Luna, Pi-rat, Snowie, Candy and Torty!',
@@ -41,6 +41,8 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-surfers/', color: '#fb923c', color2: '#facc15' },
   { id: 'fc', mp: true, name: 'Grok FC', desc: '3D soccer, 5 stadiums, Dream Team. 1 v 1 or co-op online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-fc/', color: '#22c55e', color2: '#ffffff' },
+  { id: 'fc2', mp: true, name: 'Grok FC 2', desc: 'THE SEQUEL on the HD Shadow-Light Engine! Directional stadium floodlights, mowed grass stripes, real shadows, dynamic Day / Dusk / Night & Rain weather, and an 8-Stop World Tour Cup across Pup Town, Torty Town, Ratita Dome, North Pole, Pumpkin Hollow, Sky Tours Airfield, Shopsville and the Champions Final. Play 5v5 matches, Penalty Shootout, Free-Kick Challenge, 2-Player Local Versus, or Pet Mascot XI with Luna, Pi-rat, Snowie, Candy and Torty!',
+    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/grok-fc-2/', color: '#22c55e', color2: '#facc15' },
   { id: 'brawl', mp: true, name: 'Grok Brawl', desc: 'A 3D arena fighter. Punch, combo and unleash supers!',
     url: 'https://lizethbran13-cmyk.github.io/grok-brawl/', color: '#ff3d6e', color2: '#ffe14d' },
   { id: 'party', mp: true, name: 'Grok Land Party', desc: 'A party board game! Roll dice, collect stars, win mini games with friends.',
@@ -67,8 +69,8 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-heist/', color: '#a855f7', color2: '#ffd23f' },
   { id: 'pickle', mp: true, name: 'Grok Pickleball', desc: 'Real 3D pickleball with easy swipe-to-hit controls and an Assist Mode! Serve, dink and smash on 5 courts, beat 8 rivals in the Pickle Cup, play 4 mini games, and team up with friends online (up to 3).',
     url: 'https://lizethbran13-cmyk.github.io/grok-pickleball/', color: '#22c55e', color2: '#e6ff3b' },
-  { id: 'sports', mp: true, name: 'Grok Sports Command', desc: 'A giant 3D sports plaza with 10 sports: soccer, basketball, tennis, bowling, beach volleyball, mini golf, badminton, dodgeball, archery and table tennis! NEW DLC: Ratita Stadium Night (hockey, glow golf, cheese curling, mascot race + the Ratita Cup). Easy touch controls, Assist Mode, ranks, trophies, and up to 3 friends online.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-sports/', color: '#2563eb', color2: '#facc15' },
+  { id: 'sports', mp: true, name: 'Grok Sports: Re-Commanded', desc: 'REMASTERED on the Turbo / Tempest Engine! A giant 3D sports plaza with all 14 sports included: soccer, basketball, tennis, bowling, beach volleyball, mini golf, badminton, dodgeball, archery, table tennis, plus the night-lights Ratita Stadium (ice hockey, glow mini-golf, cheese curling, mascot race + the Ratita Cup). Directional sunlight, real shadows, Day / Golden Hour / Stadium Night lighting, Pet Mascot Parade, easy touch controls, Assist Mode, and up to 3 friends online.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/sports-recommanded/', color: '#2563eb', color2: '#facc15' },
   { id: 'kart', mp: true, name: 'Grok Kart Party', desc: 'A bright cartoony 3D kart racer! 8 tracks in 2 cups (city, canyon, candy, beach, haunted castle, snow, volcano, space), drifts and mini-turbos, ramps and gliders, 11 wacky items, Grand Prix, Time Trial ghosts, Balloon Battle and Coin Runners, 10 racers and kart parts to unlock, and online racing for up to 3.',
     url: 'https://lizethbran13-cmyk.github.io/grok-kart/', color: '#ff4fd8', color2: '#3ff0ff' },
   { id: 'disaster', mp: true, name: 'Grok Disaster Zone', desc: 'Survive cartoon disasters! A kaiju attack, tornadoes, meteors, tsunamis, lightning, volcanoes, quakes, blizzards and an alien invasion on 4 maps (Super Thunder Expansion DLC adds acid storms, a dragon, dinos, 3 maps and Weather Hunter mode). Hide in bunkers, basements and rooftops, earn coins, buy upgrades, and team up with up to 3 friends online!',

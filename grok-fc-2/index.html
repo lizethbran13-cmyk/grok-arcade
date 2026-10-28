@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>GROK FC 2 · HD Shadow-Light Engine</title>
+<link rel="stylesheet" href="style.css?v=74s">
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <!-- TITLE -->
+  <section id="sTitle" class="scr">
+    <div class="logo"><span class="g">GROK</span><span class="f">FC 2</span><small>HD SHADOW-LIGHT ENGINE</small></div>
+    <div class="modes">
+      <button class="mode" data-go="quick"><b>⚡ Quick Match</b><i>Regular Mode · any club or nation</i></button>
+      <button class="mode" data-go="leagues"><b>🏆 Bootleg Leagues</b><i>6 leagues · tables · top scorers · cards</i></button>
+      <button class="mode" data-go="wtc"><b>🌍 World Tour Cup</b><i>National teams knockout</i></button>
+      <button class="mode" data-go="cwc"><b>🏟️ Grok Club World Cup</b><i>Qualify via league standings</i></button>
+      <button class="mode hot" data-go="dream"><b>⭐ Dream Team Mode</b><i>Pre-made route or build your own · Transfer Market</i></button>
+    </div>
+    <button class="btn ghost" id="tFP" style="margin-top:12px">👁 First-Person Mode: OFF</button>
+    <div class="petbar" id="petbar"></div>
+    <p class="foot"><a href="../">← Grok Arcade</a> · Grok FC 2 (Issues #74 &amp; #75)</p>
+  </section>
+  <!-- TEAM SELECT -->
+  <section id="sTeams" class="scr hidden">
+    <header><button class="back" data-go="title">←</button><h2 id="tTitle">Choose your team</h2></header>
+    <div class="tabs" id="lgTabs"></div>
+    <div class="split"><div class="list" id="teamList"></div><div class="detail" id="teamDetail"></div></div>
+  </section>
+  <!-- DREAM -->
+  <section id="sDream" class="scr hidden">
+    <header><button class="back" data-go="title">←</button><h2>⭐ Dream Team Mode</h2></header>
+    <div id="dreamBody"></div>
+  </section>
+  <!-- LEAGUE HUB -->
+  <section id="sLeague" class="scr hidden">
+    <header><button class="back" data-go="title">←</button><h2 id="lgTitle">League</h2><button class="btn" id="lgPlay">▶ Play next match</button><button class="btn ghost" id="lgSim">⏩ Sim matchday</button></header>
+    <div class="tabs" id="statTabs"></div>
+    <div id="lgBody" class="panel"></div>
+  </section>
+  <!-- CUP -->
+  <section id="sCup" class="scr hidden">
+    <header><button class="back" data-go="title">←</button><h2 id="cupTitle">Cup</h2><button class="btn" id="cupPlay">▶ Play next round</button></header>
+    <div id="cupBody" class="panel"></div>
+  </section>
+  <!-- MATCH HUD -->
+  <section id="sMatch" class="hidden">
+    <div id="score"><span id="hN">HOME</span><b id="hS">0</b><em id="clock">0'</em><b id="aS">0</b><span id="aN">AWAY</span></div>
+    <div id="wx"><button data-w="sun">☀️ Sunny Day</button><button data-w="night">🌙 Floodlight Night</button><button data-w="rain">🌧️ Rainy Pitch</button><button data-w="snow">❄️ Snowy Pitch</button></div>
+    <div id="comm"></div>
+    <div id="pads"><div id="stick"><div id="knob"></div></div>
+      <div id="btns"><button id="bPass">PASS</button><button id="bShoot">SHOOT</button><button id="bSim">⏩ SIM</button></div><button id="bFP">👁 1ST PERSON</button></div>
+  </section>
+  <!-- MOTM -->
+  <section id="sMotm" class="hidden">
+    <div class="motm"><small>HD MAN OF THE MATCH</small><h1 id="mName">-</h1><p id="mLine"></p><p id="mPets" class="pets"></p>
+      <button class="btn" id="mDone">Continue ▶</button></div>
+  </section>
+  <div id="toast"></div>
+</div>
+<script src="three.min.js"></script>
+<script src="data.js?v=74s"></script>
+<script src="hd3d.js?v=74s"></script>
+<script src="game.js?v=74s"></script>
+</body>
+</html>

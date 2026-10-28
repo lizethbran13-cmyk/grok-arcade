@@ -104,15 +104,13 @@
     {
       "issue": 83,
       "game": "sports",
-      "name": "Grok Sports: Re-Commanded",
+      "name": "Grok Sports: Re-Commanded (live)",
       "size": "Remaster",
-      "what": "Tortuga Remaster Works overhaul of Grok Sports Command with upgraded stadium lighting, sharper court physics, and pet mascot cameos.",
-      "stage": "building",
-      "when": "Building Now",
-      "preview": true,
-      "url": "previews/sports-recommanded/",
-      "playable": true,
-      "built": "2026-10-28"
+      "what": "SHIPPED! Live on the Grok Sports: Re-Commanded cabinet in the Sports wing: Turbo / Tempest Engine overhaul with directional sunlight, real shadows, Day / Golden Hour / Stadium Night lighting, all 14 sports including the night-lights Ratita Stadium and Ratita Cup, and Pet Mascot Parade.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "built": "2026-10-28",
+      "shippedAt": "2026-10-28T23:25:00Z"
     },
     {
       "issue": 82,
@@ -143,29 +141,25 @@
     },
     {
       "issue": 75,
-      "game": "fc",
-      "name": "Grok FC 2: Part 2",
+      "game": "fc2",
+      "name": "Grok FC 2: Part 2 (live)",
       "size": "Sequel",
-      "what": "Club cup brackets, custom kit creator, and stadium weather for the Grok FC sequel.",
-      "stage": "building",
-      "when": "Building Now",
-      "preview": true,
-      "url": "previews/grok-fc-2/",
-      "playable": true,
-      "built": "2026-10-28"
+      "what": "SHIPPED! Bundled into the live Grok FC 2 cabinet in the Sports wing: 8-Stop World Tour Cup brackets across the Grok universe, Penalty Shootout, Free-Kick Challenge, 2-Player Local Versus, stadium weather, and Pet Mascot XI.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "built": "2026-10-28",
+      "shippedAt": "2026-10-28T23:25:00Z"
     },
     {
       "issue": 74,
-      "game": "fc",
-      "name": "Grok FC 2",
+      "game": "fc2",
+      "name": "Grok FC 2 (live)",
       "size": "Sequel",
-      "what": "Full sequel to Grok FC with sharper 3D pitches, through-balls, skill moves, and tournament leagues.",
-      "stage": "building",
-      "when": "Building Now",
-      "preview": true,
-      "url": "previews/grok-fc-2/",
-      "playable": true,
-      "built": "2026-10-28"
+      "what": "SHIPPED! New cabinet in the Sports wing: full sequel to Grok FC on the HD Shadow-Light Engine with directional stadium floodlights, mowed grass stripes, real shadows, dynamic Day/Dusk/Night & Rain weather, through-balls, skill moves, and an 8-Stop World Tour Cup.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "built": "2026-10-28",
+      "shippedAt": "2026-10-28T23:25:00Z"
     },
     {
       "issue": 73,
@@ -246,12 +240,12 @@
     {
       "issue": 62,
       "game": "sky",
-      "name": "Grok Sky Remastered",
+      "name": "Grok Sky Remastered (live)",
       "size": "Remaster",
-      "what": "Remastered clouds, weather fronts, and cockpit instruments for Grok Sky: puffy lit clouds, 6 moving weather fronts (rain, snow, thunder cells), a glass-cockpit PFD with weather radar, and the Pet Crew Weather Station. Playable now in the Time Jumper!",
-      "stage": "building",
-      "when": "Preview in the Time Jumper",
-      "preview": true
+      "what": "SHIPPED! Live on the Grok Sky cabinet in the Adventure wing: puffy 3D cumulus & anvil cloud banks with sunlit tops, 6 moving weather fronts (Clear, Scattered, Rain Squall, Thunderhead, Snow Front, Golden Sunset), a glass-cockpit PFD with live weather radar, and the Pet Crew Weather Station with Luna, Pi-rat, Snowie, Candy and Torty.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "shippedAt": "2026-10-28T23:25:00Z"
     },
     {
       "issue": 59,
@@ -773,40 +767,45 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
-    {
-      "id": "grok-fc-2",
-      "game": "fc",
-      "issue": 74,
-      "name": "Grok FC 2",
-      "url": "previews/grok-fc-2/",
-      "playable": true,
-      "built": "2026-10-28",
-      "notes": "HD Shadow-Light engine, 6 bootleg leagues, World Tour Cup, Club World Cup, Dream Team + Transfer Market, weather, MOTM with pets (#74 & #75)"
-    },
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "sports-recommanded",
       "game": "sports",
       "issue": 83,
       "name": "Grok Sports Re-Commanded",
-      "url": "previews/sports-recommanded/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/sports-recommanded-beta/",
       "built": "2026-10-28",
-      "notes": "Turbo/Tempest Engine remaster, all 14 sports incl. bundled DLC, crowd, floodlights, pets"
+      "archived": "2026-10-28",
+      "notes": "Turbo/Tempest Engine remaster, all 14 sports incl. bundled DLC, crowd, floodlights, pets",
+      "playable": true
+    },
+    {
+      "id": "grok-fc-2",
+      "game": "fc2",
+      "issue": 74,
+      "name": "Grok FC 2",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grok-fc-2-beta/",
+      "built": "2026-10-28",
+      "archived": "2026-10-28",
+      "notes": "HD Shadow-Light engine, 6 bootleg leagues, World Tour Cup, Club World Cup, Dream Team + Transfer Market, weather, MOTM with pets (#74 & #75)",
+      "playable": true
     },
     {
       "id": "grok-sky-remastered",
       "game": "sky",
       "issue": 62,
       "name": "Grok Sky Remastered",
-      "url": "previews/grok-sky-remastered/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grok-sky-remastered-beta/",
       "built": "2026-10-28",
-      "notes": "Puffy lit clouds, 6 moving weather fronts (rain, snow squalls, thunder cells that trip the lightning emergency), glass-cockpit PFD with weather radar, Pet Crew Weather Station (Luna, Pi-rat, Snowie, Candy, Torty) at your start airport"
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-28",
+      "notes": "Puffy lit clouds, 6 moving weather fronts (rain, snow squalls, thunder cells that trip the lightning emergency), glass-cockpit PFD with weather radar, Pet Crew Weather Station (Luna, Pi-rat, Snowie, Candy, Torty) at your start airport",
+      "playable": true
+    },
     {
       "id": "great-rodentia",
       "game": "rodentia",

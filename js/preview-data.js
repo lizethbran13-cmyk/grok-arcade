@@ -1,19 +1,6 @@
-/* Grok Arcade - RATITA PREVIEW CENTER data (booth: Preview Center). See PREVIEW.md.
-   preview.json (in this repo) lists upcoming builds/DLC ("items") and playable work-in-progress snapshots ("previews").
-   It is merged with the LIVE GitHub issues on grok-arcade (labels dlc / suggestion), the same way the DLC Board reads them:
-     open + "in-progress" (or preview.json says stage "building") -> BUILDING NOW, open -> UP NEXT, closed + "shipped" -> JUST SHIPPED (closed as not planned/wontfix -> hidden).
-   New booth ideas show up on their own (no code change), and preview.json fills in nicer names/descriptions.
-   Offline: the last good copy from localStorage, then the bundled fallback below. */
-(function () {
-  'use strict';
-  var PV = GA.PVD = {}, REPO = 'lizethbran13-cmyk/grok-arcade', ORIGIN = 'https://lizethbran13-cmyk.github.io/';
-  var API = 'https://api.github.com/repos/' + REPO + '/issues?state=all&per_page=100&sort=updated';
-  var K_ISS = 'grokArcade.pvIssues', K_JSON = 'grokArcade.pvJson';
-  PV.REPO = REPO; PV.ORIGIN = ORIGIN;
-  function load(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
-  function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-  // bundled fallback (a copy of preview.json at ship time) so a first offline visit still has a schedule
-  PV.FALLBACK = {
+/* Grok Arcade - baked-in fallback copy of preview.json so Lili's board and the Time Jumper work offline or if fetch fails */
+window.GA = window.GA || {};
+GA.PREVIEW_FALLBACK = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
   "updated": "2026-10-28",
   "items": [
@@ -119,15 +106,13 @@
     {
       "issue": 83,
       "game": "sports",
-      "name": "Grok Sports: Re-Commanded",
+      "name": "Grok Sports: Re-Commanded (live)",
       "size": "Remaster",
-      "what": "Tortuga Remaster Works overhaul of Grok Sports Command with upgraded stadium lighting, sharper court physics, and pet mascot cameos.",
-      "stage": "building",
-      "when": "Building Now",
-      "preview": true,
-      "url": "previews/sports-recommanded/",
-      "playable": true,
-      "built": "2026-10-28"
+      "what": "SHIPPED! Live on the Grok Sports: Re-Commanded cabinet in the Sports wing: Turbo / Tempest Engine overhaul with directional sunlight, real shadows, Day / Golden Hour / Stadium Night lighting, all 14 sports including the night-lights Ratita Stadium and Ratita Cup, and Pet Mascot Parade.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "built": "2026-10-28",
+      "shippedAt": "2026-10-28T23:25:00Z"
     },
     {
       "issue": 82,
@@ -158,29 +143,25 @@
     },
     {
       "issue": 75,
-      "game": "fc",
-      "name": "Grok FC 2: Part 2",
+      "game": "fc2",
+      "name": "Grok FC 2: Part 2 (live)",
       "size": "Sequel",
-      "what": "Club cup brackets, custom kit creator, and stadium weather for the Grok FC sequel.",
-      "stage": "building",
-      "when": "Building Now",
-      "preview": true,
-      "url": "previews/grok-fc-2/",
-      "playable": true,
-      "built": "2026-10-28"
+      "what": "SHIPPED! Bundled into the live Grok FC 2 cabinet in the Sports wing: 8-Stop World Tour Cup brackets across the Grok universe, Penalty Shootout, Free-Kick Challenge, 2-Player Local Versus, stadium weather, and Pet Mascot XI.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "built": "2026-10-28",
+      "shippedAt": "2026-10-28T23:25:00Z"
     },
     {
       "issue": 74,
-      "game": "fc",
-      "name": "Grok FC 2",
+      "game": "fc2",
+      "name": "Grok FC 2 (live)",
       "size": "Sequel",
-      "what": "Full sequel to Grok FC with sharper 3D pitches, through-balls, skill moves, and tournament leagues.",
-      "stage": "building",
-      "when": "Building Now",
-      "preview": true,
-      "url": "previews/grok-fc-2/",
-      "playable": true,
-      "built": "2026-10-28"
+      "what": "SHIPPED! New cabinet in the Sports wing: full sequel to Grok FC on the HD Shadow-Light Engine with directional stadium floodlights, mowed grass stripes, real shadows, dynamic Day/Dusk/Night & Rain weather, through-balls, skill moves, and an 8-Stop World Tour Cup.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "built": "2026-10-28",
+      "shippedAt": "2026-10-28T23:25:00Z"
     },
     {
       "issue": 73,
@@ -261,12 +242,12 @@
     {
       "issue": 62,
       "game": "sky",
-      "name": "Grok Sky Remastered",
+      "name": "Grok Sky Remastered (live)",
       "size": "Remaster",
-      "what": "Remastered clouds, weather fronts, and cockpit instruments for Grok Sky: puffy lit clouds, 6 moving weather fronts (rain, snow, thunder cells), a glass-cockpit PFD with weather radar, and the Pet Crew Weather Station. Playable now in the Time Jumper!",
-      "stage": "building",
-      "when": "Preview in the Time Jumper",
-      "preview": true
+      "what": "SHIPPED! Live on the Grok Sky cabinet in the Adventure wing: puffy 3D cumulus & anvil cloud banks with sunlit tops, 6 moving weather fronts (Clear, Scattered, Rain Squall, Thunderhead, Snow Front, Golden Sunset), a glass-cockpit PFD with live weather radar, and the Pet Crew Weather Station with Luna, Pi-rat, Snowie, Candy and Torty.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "shippedAt": "2026-10-28T23:25:00Z"
     },
     {
       "issue": 59,
@@ -788,40 +769,45 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
-    {
-      "id": "grok-sky-remastered",
-      "game": "sky",
-      "issue": 62,
-      "name": "Grok Sky Remastered",
-      "url": "previews/grok-sky-remastered/",
-      "playable": true,
-      "built": "2026-10-28",
-      "notes": "Puffy lit clouds, 6 moving weather fronts (rain, snow squalls, thunder cells that trip the lightning emergency), glass-cockpit PFD with weather radar, Pet Crew Weather Station (Luna, Pi-rat, Snowie, Candy, Torty) at your start airport"
-    },
-    {
-      "id": "grok-fc-2",
-      "game": "fc",
-      "issue": 74,
-      "name": "Grok FC 2",
-      "url": "previews/grok-fc-2/",
-      "playable": true,
-      "built": "2026-10-28",
-      "notes": "HD Shadow-Light engine, 6 bootleg leagues, World Tour Cup, Club World Cup, Dream Team + Transfer Market, weather, MOTM with pets (#74 & #75)"
-    },
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "sports-recommanded",
       "game": "sports",
       "issue": 83,
       "name": "Grok Sports Re-Commanded",
-      "url": "previews/sports-recommanded/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/sports-recommanded-beta/",
       "built": "2026-10-28",
-      "notes": "Turbo/Tempest Engine remaster, all 14 sports incl. bundled DLC, crowd, floodlights, pets"
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-28",
+      "notes": "Turbo/Tempest Engine remaster, all 14 sports incl. bundled DLC, crowd, floodlights, pets",
+      "playable": true
+    },
+    {
+      "id": "grok-fc-2",
+      "game": "fc2",
+      "issue": 74,
+      "name": "Grok FC 2",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grok-fc-2-beta/",
+      "built": "2026-10-28",
+      "archived": "2026-10-28",
+      "notes": "HD Shadow-Light engine, 6 bootleg leagues, World Tour Cup, Club World Cup, Dream Team + Transfer Market, weather, MOTM with pets (#74 & #75)",
+      "playable": true
+    },
+    {
+      "id": "grok-sky-remastered",
+      "game": "sky",
+      "issue": 62,
+      "name": "Grok Sky Remastered",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grok-sky-remastered-beta/",
+      "built": "2026-10-28",
+      "archived": "2026-10-28",
+      "notes": "Puffy lit clouds, 6 moving weather fronts (rain, snow squalls, thunder cells that trip the lightning emergency), glass-cockpit PFD with weather radar, Pet Crew Weather Station (Luna, Pi-rat, Snowie, Candy, Torty) at your start airport",
+      "playable": true
+    },
     {
       "id": "great-rodentia",
       "game": "rodentia",
@@ -1348,95 +1334,3 @@
     }
   }
 };
-  PV.state = { json: null, issues: null, src: 'fallback', issuesAt: 0, err: null, loading: false };
-  PV.listeners = [];
-  PV.onChange = function (f) { PV.listeners.push(f); };
-  function changed() { PV._model = null; PV.listeners.forEach(function (f) { try { f(); } catch (e) { if (window.console) console.warn('preview listener', e); } }); }
-
-  /* ---------- helpers ---------- */
-  function gameFromTitle(t) { // "[Grok Kart Party] DLC: Super kart expansion" -> {gid, name}
-    var m = /^\s*\[([^\]]{1,40})\]\s*(.*)$/.exec(t || ''), gname = m ? m[1].trim() : '', rest = (m ? m[2] : t || '').replace(/^\s*DLC\s*:\s*/i, '').trim();
-    var g = GA.MAIN_GAMES.find(function (x) { return x.name.toLowerCase() === gname.toLowerCase(); });
-    return { gid: g ? g.id : /arcade/i.test(gname) ? 'arcade' : 'other', gname: g ? g.name : gname || 'Grok Arcade', name: rest ? rest.charAt(0).toUpperCase() + rest.slice(1) : 'Mystery build' };
-  }
-  PV.gameFromTitle = gameFromTitle;
-  PV.boardName = function (it) { var n = it.name || 'Mystery build'; return it.stage === 'shipped' ? n.replace(/\s*\(live\)\s*$/i, '') : n; }; // the JUST SHIPPED column already says it's live
-  function labs(it) { return (it.labels || []).map(function (l) { return String(l.name || l).toLowerCase(); }); }
-  PV.stageOf = function (it) {
-    var l = labs(it); if (l.indexOf('dlc') < 0 && l.indexOf('suggestion') < 0 && l.indexOf('remaster') < 0) return null;
-    if (l.indexOf('shipped') >= 0) return 'shipped';
-    if (it.state === 'closed') return l.indexOf('wontfix') >= 0 || it.state_reason === 'not_planned' ? null : 'shipped';
-    return l.indexOf('in-progress') >= 0 ? 'building' : 'queued';
-  };
-  // brand-new games still in the Time Jumper have no catalog entry yet: their own id, title and cover live here (or in preview.json "wip"),
-  // so their betas never file under an older game with a similar name (Grok Pickleball Park is NOT Grok Pickleball)
-  PV.WIP = { pickleballpark: { name: 'Grok Pickleball Park', cover: 'assets/wip/pickleballpark/cover.webp' } };
-  PV.wip = function (gid) { var J = PV.state && PV.state.json, w = J && J.wip; return (w && w[gid]) || PV.WIP[gid] || null; };
-  PV.gameName = function (gid) { if (gid === 'arcade') return 'Grok Arcade'; var g = GA.findGame && GA.findGame(gid); if (g) return g.name; var w = PV.wip(gid); return w ? w.name : 'Grok Arcade'; };
-  PV.cover = function (gid) { var d = GA.HALL_DATA && GA.HALL_DATA[gid]; if (d && d.cover) return d.cover; var w = PV.wip(gid); return w && w.cover ? w.cover : null; };
-  PV.safeUrl = function (u) { // previews must live on the arcade's own GitHub Pages site (like versions/)
-    if (typeof u !== 'string' || !u) return null; try { var a = new URL(u, location.href); if (a.href.indexOf(ORIGIN) === 0 || a.origin === location.origin) return a.href; } catch (e) {} return null; };
-
-  /* ---------- the merged model: { building:[], queued:[], shipped:[], posters:[], previews:[] } ---------- */
-  PV.model = function () {
-    if (PV._model) return PV._model;
-    var J = PV.state.json || PV.FALLBACK, items = (J.items || []).map(function (x) { return Object.assign({}, x); }), byIssue = {}, out = [];
-    items.forEach(function (x) { if (x.issue) byIssue[x.issue] = x; });
-    var iss = PV.state.issues;
-    (iss || []).forEach(function (it) {
-      if (it.pull_request) return; var stg = PV.stageOf(it), j = byIssue[it.number], tg = gameFromTitle(it.title);
-      if (!stg) { if (j) j._hide = true; return; }
-      var o = j || { issue: it.number, game: tg.gid, name: tg.name, auto: true }; o.stage = j && j.stage === 'shipped' ? 'shipped' : j && j.stage === 'building' && stg === 'queued' ? 'building' : stg; o.live = true; o.url = it.html_url; o.upd = Date.parse(it.updated_at) || 0; o.closed = (j && Date.parse(j.shippedAt)) || Date.parse(it.closed_at) || 0; o.title = it.title; // preview.json wins: an issue left open after release must not bounce back to BUILDING NOW, and one closed late must not jump to the top of JUST SHIPPED (shippedAt is the real release time)
-      o.kind = labs(it).indexOf('dlc') >= 0 ? 'dlc' : 'build';
-      if (!j) { o.gname = tg.gname; items.push(o); }
-    });
-    items.forEach(function (x) { if (x._hide) return; x.gname = x.gname || PV.gameName(x.game); x.kind = x.kind || (x.size ? 'dlc' : 'build'); if (!x.url && x.issue) x.url = 'https://github.com/' + REPO + '/issues/' + x.issue; out.push(x); });
-    var order = {}; (J.items || []).forEach(function (x, i) { order[x.issue || x.key] = i; });
-    function ord(x) { var k = x.issue || x.key; return k in order ? order[k] : 1000 + (x.issue || 0); }
-    var M = { building: out.filter(function (x) { return x.stage === 'building'; }).sort(function (a, b) { return ord(a) - ord(b); }),
-      queued: out.filter(function (x) { return x.stage === 'queued'; }).sort(function (a, b) { return ord(a) - ord(b); }),
-      shipped: out.filter(function (x) { if (x.stage === 'shipped' && !x.closed && x.shippedAt) x.closed = Date.parse(x.shippedAt) || 0; return x.stage === 'shipped'; }).sort(function (a, b) { return (b.closed || 0) - (a.closed || 0) || ord(a) - ord(b); }).slice(0, 6) };
-    M.posters = M.building.concat(M.queued);
-    // Time Jumper: only entries that say playable, point at this site, and whose build hasn't shipped for real yet
-    var shippedIssue = {}; out.forEach(function (x) { if (x.stage === 'shipped' && x.issue) shippedIssue[x.issue] = 1; });
-    M.previews = (J.previews || []).filter(function (p) { return p && p.playable === true && p.id && PV.safeUrl(p.url) && !(p.issue && shippedIssue[p.issue]); })
-      .map(function (p) { return Object.assign({}, p, { url: PV.safeUrl(p.url), gname: PV.gameName(p.game) }); });
-    // Save Booth: the LAST preview of every game that shipped, archived forever (archive/<id>-beta/, own grokBeta.<id>. saves)
-    M.archive = (J.archive || []).filter(function (p) { return p && p.id && PV.safeUrl(p.url); })
-      .map(function (p) { return Object.assign({}, p, { url: PV.safeUrl(p.url), gname: PV.gameName(p.game), label: p.label || PV.BETA_LABEL }); });
-    var arch = {}; M.archive.forEach(function (p) { arch[p.id] = 1; });
-    M.previews = M.previews.filter(function (p) { return !arch[p.id]; });
-    M.pending = M.previews.map(function (p) { return Object.assign({}, p, { vault: 'In the Jumper now (will be archived at release)' }); });
-    M.updated = J.updated || ''; M.src = PV.state.src; M.live = !!iss;
-    PV._model = M; return M;
-  };
-
-  /* ---------- Save Booth betas -> the game's Hall of Records 'Old Versions' ---------- */
-  PV.BETA_LABEL = 'Final Beta (Time Jumper)';
-  PV.betasFor = function (gid) { var m = PV.model(); return (m.archive || []).filter(function (p) { return p.game === gid; }).map(function (p) {
-    return { label: 'beta-' + p.id, ver: 'Final Beta', title: p.label + (p.archived ? ' \u00b7 archived ' + p.archived : ''), url: p.url, thumb: PV.cover(gid) || 'icon.svg', beta: true, notes: p.notes || '' }; }); };
-  PV.mergeBetas = function (gid, d) { if (!d || !Array.isArray(d.versions)) return d; var b = PV.betasFor(gid), sig = b.map(function (v) { return v.label + v.url; }).join('|');
-    if (d._betaSig === sig) return d; d.versions = b.concat(d.versions.filter(function (v) { return !v.beta; })); d._betaSig = sig; return d; }; // the beta came before the real release, so it sits first (oldest)
-  function mergeAll() { var H = GA.HALL_DATA; if (H) Object.keys(H).forEach(function (k) { PV.mergeBetas(k, H[k]); }); }
-  PV.listeners.push(mergeAll);
-
-  /* ---------- loading ---------- */
-  PV.setJson = function (j, src) { if (j && Array.isArray(j.items)) { PV.state.json = j; PV.state.jsonSrc = src || 'file'; if (src !== 'cache') store(K_JSON, { t: Date.now(), j: j }); changed(); } };
-  PV.setIssues = function (a, src) { if (Array.isArray(a)) { PV.state.issues = a; PV.state.src = src || 'live'; if (src !== 'cache') { PV.state.issuesAt = Date.now(); store(K_ISS, { t: Date.now(), items: a.map(function (i) { return { number: i.number, title: i.title, state: i.state, state_reason: i.state_reason, labels: labs(i), html_url: i.html_url, updated_at: i.updated_at, closed_at: i.closed_at, pull_request: i.pull_request ? 1 : undefined }; }) }); } changed(); } };
-  PV.loadCached = function () { var c = load(K_JSON, null); if (c && c.j) PV.setJson(c.j, 'cache'); var ci = load(K_ISS, null); if (ci && ci.items) { PV.setIssues(ci.items, 'cache'); PV.state.issuesAt = ci.t || 0; } };
-  PV.refresh = function (force) {
-    if (PV.state.loading) return Promise.resolve(false);
-    var fresh = Date.now() - (PV.state.issuesAt || 0) < 5 * 60000; PV.state.loading = true; PV.state.err = null;
-    var pj = GA.ghFetch('preview.json?t=' + Math.floor(Date.now() / 60000)).then(function (r) { if (!r.ok) throw new Error('json ' + r.status); return r.json(); }).then(function (j) { PV.setJson(j, 'file'); }).catch(function () {});
-    var pi = (fresh && !force) ? Promise.resolve() : GA.ghIssues(!!force)
-      .then(function (a) { if (!Array.isArray(a)) throw new Error('bad data'); PV.setIssues(a, 'live'); }).catch(function (e) { PV.state.err = !navigator.onLine || !e.status ? 'offline' : (e.status === 403 || e.status === 429) ? 'ratelimit' : 'http'; changed(); });
-    return Promise.all([pj, pi]).then(function () { PV.state.loading = false; return true; });
-  };
-  // a preview is only offered once its page really answers (no fake entries)
-  var ping = {};
-  PV.check = function (p) {
-    if (!p || !p.url) return Promise.resolve(false); if (ping[p.url] && Date.now() - ping[p.url].t < 120000) return Promise.resolve(ping[p.url].ok);
-    return fetch(p.url, { method: 'GET', cache: 'no-store' }).then(function (r) { var ok = r.ok; ping[p.url] = { t: Date.now(), ok: ok }; return ok; }).catch(function () { ping[p.url] = { t: Date.now(), ok: false }; return false; });
-  };
-  PV.loadCached();
-})();

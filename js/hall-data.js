@@ -39,9 +39,23 @@ GA.HALL_DATA = {
 "ver": "4.1",
 "title": "Disasters!",
 "text": "Engine fires, blowouts, meteor showers and lightning storms, with checklists, alarms, mayday calls and a safe-landing score."
+},
+{
+"date": "Oct 28",
+"ver": "5.0",
+"title": "Grok Sky Remastered",
+"text": "Remastered on the Cloudfront Engine (#62): puffy 3D cumulus & anvil cloud banks with sunlit tops, 6 moving weather fronts (Clear, Scattered, Rain Squall, Thunderhead, Snow Front, Golden Sunset), a glass-cockpit PFD with live weather radar, and the Pet Crew Weather Station."
 }
 ],
 "versions": [
+{
+"label": "original",
+"ver": "4.1",
+"title": "The original Grok Sky (before Remastered)",
+"commit": "live",
+"url": "https://lizethbran13-cmyk.github.io/grok-sky/",
+"thumb": "assets/hall/sky/v-v4.webp"
+},
 {
 "label": "v1",
 "ver": "1.0",
@@ -1439,9 +1453,24 @@ GA.HALL_DATA = {
 "ver": "1.1",
 "title": "A real bowling alley",
 "text": "Bowling got a proper neon alley (wood lanes with arrows, gutters, other bowlers, a ball return, a pinsetter, glowing scoreboards and seats) and a real frame-by-frame scorecard. Badminton and table tennis got stands and crowds too."
+},
+{
+"date": "Oct 28",
+"ver": "2.0",
+"title": "Grok Sports: Re-Commanded",
+"text": "Remastered on the Turbo / Tempest Engine (#83): upgraded stadium lighting (Day, Golden Hour, Stadium Night), real directional shadows, all 14 sports including the night-lights Ratita Stadium and Ratita Cup, and Pet Mascot Parade."
 }
 ],
-"versions": [],
+"versions": [
+{
+"label": "original",
+"ver": "1.1",
+"title": "The original Grok Sports Command (before Re-Commanded)",
+"commit": "live",
+"url": "https://lizethbran13-cmyk.github.io/grok-sports/",
+"thumb": "assets/hall/sports/cover.webp"
+}
+],
 "pics": [
 {
 "src": "assets/hall/sports/1.webp",
