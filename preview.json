@@ -27,38 +27,42 @@
     {
       "issue": 81,
       "game": "voxels",
-      "name": "Grok Voxels: Respawn & Joystick Reset Button",
+      "name": "Grok Voxels: Respawn & Joystick Reset Button (live)",
       "size": "QoL Patch",
       "what": "Adds an always-accessible ↻ RESPAWN button under the minimap next to the 1ST/3RD camera toggle (plus K key shortcut) that resets any stuck digital joystick/touch/key state and respawns you at your latest checkpoint without losing a life. Playable now in the Time Jumper!",
-      "stage": "building",
-      "when": "In Jumper"
+      "stage": "shipped",
+      "when": "Oct 28",
+      "shippedAt": "2026-10-28T21:44:46.372Z"
     },
     {
       "issue": 79,
       "game": "brawl",
-      "name": "Grok Brawl: Controls & Jump Button QoL",
+      "name": "Grok Brawl: Controls & Jump Button QoL (live)",
       "size": "QoL Patch",
       "what": "Moves and enlarges the ▲ JUMP button into the primary bottom-right thumb position (matching Brawler Tale), reorganizes PUNCH/KICK/DASH/BLOCK/SPECIAL/SUPER into a clean non-overlapping thumb arc, and fixes joystick up-tilt locking out the JUMP button so ground, double, and triple jumps always register while moving. Playable now in the Time Jumper!",
-      "stage": "building",
-      "when": "In Jumper"
+      "stage": "shipped",
+      "when": "Oct 28",
+      "shippedAt": "2026-10-28T21:44:46.372Z"
     },
     {
       "issue": 77,
       "game": "grocery",
-      "name": "Grocery Tycoon: Grok Van & Torty’s Tow Touch Fix",
+      "name": "Grocery Tycoon: Grok Van & Torty’s Tow Touch Fix (live)",
       "size": "Bug Fix",
       "what": "Raises the driving HUD (#dr52, #dSide, #sd52) above the full-screen #touchZone overlay so mobile taps on Torty’s Tow, Hop Out, Honk, and pedals are never swallowed by the left thumb-stick, releases any held stick on breakdown, and displays a centered Breakdown recovery card with a Torty’s Tow button. Playable now in the Time Jumper!",
-      "stage": "building",
-      "when": "In Jumper"
+      "stage": "shipped",
+      "when": "Oct 28",
+      "shippedAt": "2026-10-28T21:44:46.372Z"
     },
     {
       "issue": 76,
       "game": "blocksrb",
-      "name": "Grok Blocks: Re-Blocked — Jeep Spawn Fix",
+      "name": "Grok Blocks: Re-Blocked — Jeep Spawn Fix (live)",
       "size": "Bug Fix",
       "what": "Moves the Base Camp jeep/truck spawn to a clear plaza road spot (4.5, 3.5) away from the southeast bench & lamp post, adds snapTruckClear() so the Jeep never spawns overlapping solid props in Ranger or Poacher mode, and allows turning while throttled at low speed. Playable now in the Time Jumper!",
-      "stage": "building",
-      "when": "In Jumper"
+      "stage": "shipped",
+      "when": "Oct 28",
+      "shippedAt": "2026-10-28T21:44:46.372Z"
     },
     {
       "issue": 88,
@@ -66,8 +70,8 @@
       "name": "Grok Arcade: Retro Central",
       "size": "New Area",
       "what": "A classic retro arcade wing packed with vintage pixel-era cabinets, CRT glow, high-score leaderboards, and classic token machines.",
-      "stage": "queued",
-      "when": "Queued"
+      "stage": "building",
+      "when": "Building Now"
     },
     {
       "issue": 87,
@@ -165,8 +169,8 @@
       "name": "New Cool Game Idea — Part 4",
       "size": "New Game",
       "what": "Player suggestion from the Suggestion Booth (#72) queued on Lili’s board.",
-      "stage": "queued",
-      "when": "Queued"
+      "stage": "building",
+      "when": "Building Now"
     },
     {
       "issue": 71,
@@ -174,8 +178,8 @@
       "name": "New Cool Game Idea — Part 3",
       "size": "New Game",
       "what": "Player suggestion from the Suggestion Booth (#71) queued on Lili’s board.",
-      "stage": "queued",
-      "when": "Queued"
+      "stage": "building",
+      "when": "Building Now"
     },
     {
       "issue": 70,
@@ -183,8 +187,8 @@
       "name": "New Cool Game Idea — Part 2",
       "size": "New Game",
       "what": "Player suggestion from the Suggestion Booth (#70) queued on Lili’s board.",
-      "stage": "queued",
-      "when": "Queued"
+      "stage": "building",
+      "when": "Building Now"
     },
     {
       "issue": 69,
@@ -192,8 +196,8 @@
       "name": "New Very Cool Game Idea",
       "size": "New Game",
       "what": "Player suggestion from the Suggestion Booth (#69) queued on Lili’s board.",
-      "stage": "queued",
-      "when": "Queued"
+      "stage": "building",
+      "when": "Building Now"
     },
     {
       "issue": 68,
@@ -751,50 +755,57 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
-    {
-      "id": "blocksrb-jeep-fix",
-      "game": "blocksrb",
-      "issue": 76,
-      "name": "Grok Blocks: Re-Blocked — Jeep Spawn Fix",
-      "url": "previews/blocksrb-jeep-fix/",
-      "playable": true,
-      "built": "2026-10-28",
-      "notes": "Moves the Camp jeep/truck spawn to a clear plaza road spot (4.5, 3.5) away from the southeast bench & lamp post, adds snapTruckClear() so the truck never spawns overlapping solid props in Ranger or Poacher mode, and allows turning while throttled at low speed."
-    },
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "voxels-respawn",
       "game": "voxels",
       "issue": 81,
       "name": "Grok Voxels — Respawn & Joystick Unstick Button",
-      "url": "previews/voxels-respawn/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/voxels-respawn-beta/",
       "built": "2026-10-28",
-      "notes": "Adds an always-accessible ↻ RESPAWN button under the minimap next to the 1ST/3RD camera toggle (plus K key shortcut) that resets any stuck digital joystick/touch/key state and respawns the player at the latest checkpoint without losing a life; also hardens window pointerup/pointercancel/touchend/blur cleanup on #joy-zone."
+      "archived": "2026-10-28",
+      "notes": "Adds an always-accessible ↻ RESPAWN button under the minimap next to the 1ST/3RD camera toggle (plus K key shortcut) that resets any stuck digital joystick/touch/key state and respawns the player at the latest checkpoint without losing a life; also hardens window pointerup/pointercancel/touchend/blur cleanup on #joy-zone.",
+      "playable": true
     },
     {
       "id": "brawl-controls",
       "game": "brawl",
       "issue": 79,
       "name": "Grok Brawl — Controls & Jump Button QoL",
-      "url": "previews/brawl-controls/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/brawl-controls-beta/",
       "built": "2026-10-28",
-      "notes": "Moves and enlarges the ▲ JUMP button (86px) into the primary bottom-right thumb position matching Brawler Tale, reorganizes PUNCH/KICK/DASH/BLOCK/SPECIAL/SUPER into a clean non-overlapping thumb arc, and fixes joystick up-tilt locking out the JUMP button so ground jumps, double jumps, and triple jumps always register while moving."
+      "archived": "2026-10-28",
+      "notes": "Moves and enlarges the ▲ JUMP button (86px) into the primary bottom-right thumb position matching Brawler Tale, reorganizes PUNCH/KICK/DASH/BLOCK/SPECIAL/SUPER into a clean non-overlapping thumb arc, and fixes joystick up-tilt locking out the JUMP button so ground jumps, double jumps, and triple jumps always register while moving.",
+      "playable": true
     },
     {
       "id": "grocery-van-fix",
       "game": "grocery",
       "issue": 77,
       "name": "Grok Grocery Tycoon — Grok Van & Torty's Tow Touch Fix",
-      "url": "previews/grocery-van-fix/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grocery-van-fix-beta/",
       "built": "2026-10-28",
-      "notes": "Raises the driving HUD (#dr52, #dSide, #sd52) above the full-screen #touchZone overlay (z-index 16 vs 11) so mobile touches on Torty's Tow, Hop Out, Honk, and pedals are never swallowed by the left thumb-stick, releases any active stick on breakdown, and displays a centered Breakdown recovery card with a Torty's Tow button."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-28",
+      "notes": "Raises the driving HUD (#dr52, #dSide, #sd52) above the full-screen #touchZone overlay (z-index 16 vs 11) so mobile touches on Torty's Tow, Hop Out, Honk, and pedals are never swallowed by the left thumb-stick, releases any active stick on breakdown, and displays a centered Breakdown recovery card with a Torty's Tow button.",
+      "playable": true
+    },
+    {
+      "id": "blocksrb-jeep-fix",
+      "game": "blocksrb",
+      "issue": 76,
+      "name": "Grok Blocks: Re-Blocked — Jeep Spawn Fix",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/blocksrb-jeep-fix-beta/",
+      "built": "2026-10-28",
+      "archived": "2026-10-28",
+      "notes": "Moves the Camp jeep/truck spawn to a clear plaza road spot (4.5, 3.5) away from the southeast bench & lamp post, adds snapTruckClear() so the truck never spawns overlapping solid props in Ranger or Poacher mode, and allows turning while throttled at low speed.",
+      "playable": true
+    },
     {
       "id": "pickleballpark-drive-dillers",
       "game": "pickleballpark",

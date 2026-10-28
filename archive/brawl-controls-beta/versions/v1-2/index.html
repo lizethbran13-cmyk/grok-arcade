@@ -5,10 +5,12 @@
 <meta name="robots" content="noindex,nofollow">
 <script>/* Ratita Preview shim: this page is a WORK-IN-PROGRESS preview. Its saves live under their own prefix so the real game's saves are never read or changed. */
 (function () {
-  var PFX = 'grokPreview.brawl-controls.';
+  var PFX = 'grokBeta.brawl-controls.';
   try {
     var SP = Storage.prototype, gI = SP.getItem, sI = SP.setItem, rI = SP.removeItem, kI = SP.key, cl = SP.clear, lenD = Object.getOwnPropertyDescriptor(SP, 'length');
     function mine(st) { var a = [], n = lenD.get.call(st); for (var i = 0; i < n; i++) { var k = kI.call(st, i); if (k && k.indexOf(PFX) === 0) a.push(k); } return a; }
+    // archived beta: its own save prefix. The first visit copies the old preview save over, so Time Jumper progress comes along.
+    try { var OLD = 'grokPreview.brawl-controls.'; [localStorage, sessionStorage].forEach(function (st) { if (mine(st).length) return; var n = lenD.get.call(st), ks = []; for (var i = 0; i < n; i++) { var k = kI.call(st, i); if (k && k.indexOf(OLD) === 0) ks.push(k); } ks.forEach(function (k) { sI.call(st, PFX + k.slice(OLD.length), gI.call(st, k)); }); }); } catch (e) {}
     SP.getItem = function (k) { return gI.call(this, PFX + k); };
     SP.setItem = function (k, v) { return sI.call(this, PFX + k, v); };
     SP.removeItem = function (k) { return rI.call(this, PFX + k); };
@@ -18,18 +20,19 @@
     if (window.indexedDB) { var IO = indexedDB.open.bind(indexedDB), ID = indexedDB.deleteDatabase.bind(indexedDB); indexedDB.open = function (n, v) { return v === undefined ? IO(PFX + n) : IO(PFX + n, v); }; indexedDB.deleteDatabase = function (n) { return ID(PFX + n); }; }
   } catch (e) { if (window.console) console.warn('preview shim', e); }
   function banner() { if (document.getElementById('ratitaWip')) return; var b = document.createElement('div'); b.id = 'ratitaWip';
-    b.setAttribute('style', 'position:fixed;left:8px;top:8px;z-index:2147483647;display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:12px;font:bold 12px Trebuchet MS,system-ui,sans-serif;color:#fff;background:repeating-linear-gradient(45deg,#b45309 0 10px,#111827 10px 20px);box-shadow:0 2px 10px rgba(0,0,0,.5);text-shadow:0 1px 2px #000;max-width:calc(100vw - 16px)');
-    b.innerHTML = '\uD83E\uDDEA WORK IN PROGRESS \u00b7 Grok Brawl — Controls  Jump Button QoL \u00b7 may be buggy <a href="../../../../" style="color:#5eead4">\u23EA back to the arcade</a> <button aria-label="hide" style="background:none;border:0;color:#fff;font:bold 14px sans-serif;cursor:pointer">\u00d7</button>';
+    b.setAttribute('style', 'position:fixed;left:8px;top:8px;z-index:2147483647;display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:12px;font:bold 12px Trebuchet MS,system-ui,sans-serif;color:#fff;background:repeating-linear-gradient(45deg,#0f766e 0 10px,#111827 10px 20px);box-shadow:0 2px 10px rgba(0,0,0,.5);text-shadow:0 1px 2px #000;max-width:calc(100vw - 16px)');
+    b.innerHTML = '\uD83D\uDCBE FINAL BETA \u00b7 Grok Brawl — Controls  Jump Button QoL \u00b7 from the Time Jumper Save Booth <a href="../../../../" style="color:#5eead4">\u23EA back to the arcade</a> <button aria-label="hide" style="background:none;border:0;color:#fff;font:bold 14px sans-serif;cursor:pointer">\u00d7</button>';
     b.querySelector('button').onclick = function () { b.remove(); }; document.body.appendChild(b); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', banner); else banner();
 })();
 </script>
 
-<script>/* Grok Arcade Hall of Game Records: archived old version 1.0 of grok-brawl. Saves are kept separate from the newest version. */
-(function(){var P='grokOldVersion.grok-brawl.v1:';try{var S=Storage.prototype,g=S.getItem,s=S.setItem,r=S.removeItem;function L(t){try{return t===window.localStorage;}catch(e){return false;}}
+
+<script>/* Grok Arcade Hall of Game Records: archived old version 1.2 of grok-brawl. Saves are kept separate from the newest version. */
+(function(){var P='grokOldVersion.grok-brawl.v1-2:';try{var S=Storage.prototype,g=S.getItem,s=S.setItem,r=S.removeItem;function L(t){try{return t===window.localStorage;}catch(e){return false;}}
 S.getItem=function(k){return g.call(this,L(this)?P+k:k);};S.setItem=function(k,v){return s.call(this,L(this)?P+k:k,v);};S.removeItem=function(k){return r.call(this,L(this)?P+k:k);};}catch(e){}
-window.GROK_OLD_VERSION={repo:'grok-brawl',label:'v1',ver:'1.0',prefix:P};
-function badge(){try{var d=document.createElement('div');d.id='grokOldVerBadge';d.setAttribute('style','position:fixed;left:50%;top:6px;transform:translateX(-50%);z-index:2147483647;background:rgba(20,10,43,.92);color:#ffe14d;font:bold 12px/1.3 system-ui,sans-serif;padding:6px 12px;border-radius:14px;border:2px solid #ff4fd8;box-shadow:0 2px 10px rgba(0,0,0,.4);pointer-events:none;transition:opacity .8s;text-align:center;max-width:90vw');d.textContent='\uD83D\uDCFC OLD VERSION 1.0 \u00b7 from the Hall of Game Records \u00b7 separate save';document.body.appendChild(d);setTimeout(function(){d.style.opacity='0';},6000);setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d);},7000);}catch(e){}}
+window.GROK_OLD_VERSION={repo:'grok-brawl',label:'v1-2',ver:'1.2',prefix:P};
+function badge(){try{var d=document.createElement('div');d.id='grokOldVerBadge';d.setAttribute('style','position:fixed;left:50%;top:6px;transform:translateX(-50%);z-index:2147483647;background:rgba(20,10,43,.92);color:#ffe14d;font:bold 12px/1.3 system-ui,sans-serif;padding:6px 12px;border-radius:14px;border:2px solid #ff4fd8;box-shadow:0 2px 10px rgba(0,0,0,.4);pointer-events:none;transition:opacity .8s;text-align:center;max-width:90vw');d.textContent='\uD83D\uDCFC OLD VERSION 1.2 \u00b7 from the Hall of Game Records \u00b7 separate save';document.body.appendChild(d);setTimeout(function(){d.style.opacity='0';},6000);setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d);},7000);}catch(e){}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',badge);else badge();})();</script>
 <meta name="robots" content="noindex">
 
@@ -57,8 +60,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   <div class="hbar p2"><img class="por" alt=""><div class="hinfo"><div class="hname"><span class="nm">P2</span><span class="tag">CPU</span></div>
     <div class="hp"><div class="trail"></div><div class="fill"></div></div>
     <div class="hrow"><div class="pips"><i></i><i></i></div><div class="meter"><div class="mfill"></div><div class="mseg"></div><span class="mtxt"></span></div></div></div></div>
+  <div class="hbar p3"><img class="por" alt=""><div class="hinfo"><div class="hname"><span class="nm">P3</span><span class="tag">P3</span></div>
+    <div class="hp"><div class="trail"></div><div class="fill"></div></div>
+    <div class="hrow"><div class="pips"><i></i><i></i></div><div class="meter"><div class="mfill"></div><div class="mseg"></div><span class="mtxt"></span></div></div></div></div>
   <button id="pauseBtn" aria-label="Pause">II</button>
-  <div class="combo" id="combo0"></div><div class="combo" id="combo1"></div>
+  <div class="combo" id="combo0"></div><div class="combo" id="combo1"></div><div class="combo" id="combo2"></div>
   <div id="trainBar" class="hidden">
     <span class="tl">DUMMY</span>
     <button data-dm="stand" class="on">STAND</button><button data-dm="block">BLOCK</button><button data-dm="jump">JUMP</button><button data-dm="cpu">CPU</button>
@@ -163,6 +169,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script src="js/ai.js"></script>
 <script src="js/input.js"></script>
 <script src="js/game.js"></script>
+<script src="peerjs.min.js"></script>
+<script src="js/grok-net.js"></script>
+<script src="js/online.js"></script>
 <script src="js/ui.js"></script>
 </body>
 </html>
