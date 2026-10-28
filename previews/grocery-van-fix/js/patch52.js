@@ -59,7 +59,7 @@ export class Patch52 {
     this.labels = [labelSprite(), labelSprite(), labelSprite()]; this.labels.forEach((s) => sc.add(s));
     this.smoke = []; { const sm = new THREE.MeshBasicMaterial({ color: 0x6b7280, transparent: true, opacity: 0.5, depthWrite: false }); for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.5, 10, 8), sm); m.visible = false; sc.add(m); this.smoke.push({ m, t: i / 6 }); } }
     this._m = new THREE.Matrix4(); this._q = new THREE.Quaternion(); this._v = new THREE.Vector3(); this._s = new THREE.Vector3(1, 1, 1); this._e = new THREE.Euler();
-    this.ui(); this.d = null; }
+    this.ui(); this.d = null; window.__p52 = this; }
   // ---------------------------------------------------------------- packing guidance
   locFor(d) { const m = this.on.mine; if (!m) return null; const me = this.g.me;
     if (m.mode === 'wh') { const i = Math.max(0, DEPT_IDS.indexOf(d)), r = i % 3, bay = Math.floor(i / 3) % 4; const rz = -41.4 + r * 4.6, ax = 86.5 + bay * 2; return { x: ax, z: rz + 2.3, sx: ax, sz: rz + 0.62, w: 2.1, h: 2.2, dd: 0.5, y: 1.15, w2: 2.2, name: `RACK ${'ABC'[r]} · Bay ${bay + 1}`, short: 'Rack ' + 'ABC'[r] }; }

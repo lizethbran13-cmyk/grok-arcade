@@ -3,6 +3,235 @@
   "updated": "2026-10-28",
   "items": [
     {
+      "issue": 64,
+      "game": "arcade",
+      "name": "Carrie’s Gift Booth (live)",
+      "size": "New Booth",
+      "what": "Gary’s daughter Carrie opens her pastel-pink & gold Gift Booth in the southwest corner of the Main Floor (Menu > Carrie’s Gift Booth)! Features the Ratita × Tortuga Gift-O-Matic 3000 capsule tower, Daily Gift Capsules with a 7-Day Streak Ladder, 6 Milestone Gift Boxes synced with Bob’s Account Desk, 11 Gift Collector Badges, and interactive Pet Crew Gift Helpers (Luna, Pi-rat, Snowie, Candy & Torty). Live now in Grok Arcade! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "key": "carrie_gift_booth",
+      "shippedAt": "2026-10-28T20:50:02Z"
+    },
+    {
+      "issue": 65,
+      "game": "pickleballpark",
+      "name": "Pickleball Park: Drive Dillers Expansion (live)",
+      "size": "Expansion",
+      "what": "Walk-in Drive Dillers Indoor Pickleball Center on the east avenue of Grok Pickleball Park! 3 climate-controlled indoor courts, Director Snowie’s 3-round Indoor Tournament for the Golden Dill Cup, and Courts Manager Lola & Candy’s Indoor & Silent Serve Foam Ball rule (bring an outdoor 40-hole ball indoors and Candy barks & steals it while Lola kicks you out!). 75 tickets at the DLC Machine. Live now in Grok Pickleball Park! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "key": "grokDLC.pickleballpark.drive_dillers_expansion",
+      "shippedAt": "2026-10-28T20:47:45Z"
+    },
+    {
+      "issue": 81,
+      "game": "voxels",
+      "name": "Grok Voxels: Respawn & Joystick Reset Button",
+      "size": "QoL Patch",
+      "what": "Adds an always-accessible ↻ RESPAWN button under the minimap next to the 1ST/3RD camera toggle (plus K key shortcut) that resets any stuck digital joystick/touch/key state and respawns you at your latest checkpoint without losing a life. Playable now in the Time Jumper!",
+      "stage": "building",
+      "when": "In Jumper"
+    },
+    {
+      "issue": 79,
+      "game": "brawl",
+      "name": "Grok Brawl: Controls & Jump Button QoL",
+      "size": "QoL Patch",
+      "what": "Moves and enlarges the ▲ JUMP button into the primary bottom-right thumb position (matching Brawler Tale), reorganizes PUNCH/KICK/DASH/BLOCK/SPECIAL/SUPER into a clean non-overlapping thumb arc, and fixes joystick up-tilt locking out the JUMP button so ground, double, and triple jumps always register while moving. Playable now in the Time Jumper!",
+      "stage": "building",
+      "when": "In Jumper"
+    },
+    {
+      "issue": 77,
+      "game": "grocery",
+      "name": "Grocery Tycoon: Grok Van & Torty’s Tow Touch Fix",
+      "size": "Bug Fix",
+      "what": "Raises the driving HUD (#dr52, #dSide, #sd52) above the full-screen #touchZone overlay so mobile taps on Torty’s Tow, Hop Out, Honk, and pedals are never swallowed by the left thumb-stick, releases any held stick on breakdown, and displays a centered Breakdown recovery card with a Torty’s Tow button. Playable now in the Time Jumper!",
+      "stage": "building",
+      "when": "In Jumper"
+    },
+    {
+      "issue": 76,
+      "game": "blocksrb",
+      "name": "Grok Blocks: Re-Blocked — Jeep Spawn Fix",
+      "size": "Bug Fix",
+      "what": "Moves the Base Camp jeep/truck spawn to a clear plaza road spot (4.5, 3.5) away from the southeast bench & lamp post, adds snapTruckClear() so the Jeep never spawns overlapping solid props in Ranger or Poacher mode, and allows turning while throttled at low speed. Playable now in the Time Jumper!",
+      "stage": "building",
+      "when": "In Jumper"
+    },
+    {
+      "issue": 88,
+      "game": "arcade",
+      "name": "Grok Arcade: Retro Central",
+      "size": "New Area",
+      "what": "A classic retro arcade wing packed with vintage pixel-era cabinets, CRT glow, high-score leaderboards, and classic token machines.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 87,
+      "game": "grocery",
+      "name": "Grok Grocery Tycoon: Store & Delivery Fixes",
+      "size": "QoL Patch",
+      "what": "Extra polish and bug fixes across Shopsville stores, stocking, checkout lanes, and delivery runs.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 85,
+      "game": "eatsville",
+      "name": "Eatsville Tycoon DLC: Online Order Mode",
+      "size": "Expansion",
+      "what": "Take online takeout and delivery orders from an in-diner tablet, pack meal bags at the express counter, and dispatch couriers across Eatsville.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 84,
+      "game": "pickleballpark",
+      "name": "Pickleball Park DLC: Super Smash Expansion",
+      "size": "Expansion",
+      "what": "Charged Super Smash shots, specialty power paddles, and an exhibition Smash Court in Grok Pickleball Park.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 83,
+      "game": "sports",
+      "name": "Grok Sports: Re-Commanded",
+      "size": "Remaster",
+      "what": "Tortuga Remaster Works overhaul of Grok Sports Command with upgraded stadium lighting, sharper court physics, and pet mascot cameos.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 82,
+      "game": "party",
+      "name": "Grok Land Party: Fiesta Expansion DLC Fixes",
+      "size": "Bug Fix",
+      "what": "Fixes and polish for the Fiesta Fits Mini Pack cosmetics, party horn, confetti cannon, and board events in Grok Land Party.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 80,
+      "game": "sky",
+      "name": "Grok Sky DLC: Super Travel Expansion",
+      "size": "Expansion",
+      "what": "Long-haul island routes, passenger terminals, and jetliners for Grok Sky.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 78,
+      "game": "heist",
+      "name": "Grok Heist Crew Remastered",
+      "size": "Remaster",
+      "what": "Tortuga Remaster Works upgrade for Grok Heist Crew with improved stealth lighting, laser grids, and gadget loadouts.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 75,
+      "game": "fc",
+      "name": "Grok FC 2: Part 2",
+      "size": "Sequel",
+      "what": "Club cup brackets, custom kit creator, and stadium weather for the Grok FC sequel.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 74,
+      "game": "fc",
+      "name": "Grok FC 2",
+      "size": "Sequel",
+      "what": "Full sequel to Grok FC with sharper 3D pitches, through-balls, skill moves, and tournament leagues.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 73,
+      "game": "arcade",
+      "name": "Grok Arcade: Online Play Update",
+      "size": "Feature",
+      "what": "Arcade-wide online room browser and quick-join party codes across multiplayer Grok games.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 72,
+      "game": "other",
+      "name": "New Cool Game Idea — Part 4",
+      "size": "New Game",
+      "what": "Player suggestion from the Suggestion Booth (#72) queued on Lili’s board.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 71,
+      "game": "other",
+      "name": "New Cool Game Idea — Part 3",
+      "size": "New Game",
+      "what": "Player suggestion from the Suggestion Booth (#71) queued on Lili’s board.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 70,
+      "game": "other",
+      "name": "New Cool Game Idea — Part 2",
+      "size": "New Game",
+      "what": "Player suggestion from the Suggestion Booth (#70) queued on Lili’s board.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 69,
+      "game": "other",
+      "name": "New Very Cool Game Idea",
+      "size": "New Game",
+      "what": "Player suggestion from the Suggestion Booth (#69) queued on Lili’s board.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 68,
+      "game": "voxels",
+      "name": "Grok Voxels: Re-Voxeled",
+      "size": "Remaster",
+      "what": "Tortuga Remaster Works voxel engine upgrade with dynamic lighting, new biomes, and smoother chunk streaming.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 66,
+      "game": "ratitahq",
+      "name": "Ratita HQ DLC: Tortuga Tech Expansion",
+      "size": "Expansion",
+      "what": "Martina “Torty” opens a Tortuga Tech Inc. wing inside Ratita Industries HQ with shell-tough test chambers and crossover gadgets.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 63,
+      "game": "grid",
+      "name": "Grok Grid 2",
+      "size": "Sequel",
+      "what": "High-speed sequel to Grok Grid with drift boost chains, custom garage tuning, and night neon circuits.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
+      "issue": 62,
+      "game": "sky",
+      "name": "Grok Sky Remastered",
+      "size": "Remaster",
+      "what": "Remastered clouds, weather fronts, and cockpit instruments for Grok Sky.",
+      "stage": "queued",
+      "when": "Queued"
+    },
+    {
       "issue": 59,
       "game": "ratita",
       "name": "Ratita Rescue MEGA DLC: Old Town Lab (live)",
@@ -534,16 +763,6 @@
       "notes": "Moves the Camp jeep/truck spawn to a clear plaza road spot (4.5, 3.5) away from the southeast bench & lamp post, adds snapTruckClear() so the truck never spawns overlapping solid props in Ranger or Poacher mode, and allows turning while throttled at low speed."
     },
     {
-      "id": "grocery-van-fix",
-      "game": "grocery",
-      "issue": 77,
-      "name": "Grok Grocery Tycoon — Grok Van & Torty's Tow Touch Fix",
-      "url": "previews/grocery-van-fix/",
-      "playable": true,
-      "built": "2026-10-28",
-      "notes": "Raises the driving HUD (#dr52, #dSide, #sd52) above the full-screen #touchZone overlay (z-index 16 vs 11) so mobile touches on Torty's Tow, Hop Out, Honk, and pedals are never swallowed by the left thumb-stick, releases any active stick on breakdown, and displays a centered Breakdown recovery card with a Torty's Tow button."
-    },
-    {
       "id": "voxels-respawn",
       "game": "voxels",
       "issue": 81,
@@ -562,6 +781,16 @@
       "playable": true,
       "built": "2026-10-28",
       "notes": "Moves and enlarges the ▲ JUMP button (86px) into the primary bottom-right thumb position matching Brawler Tale, reorganizes PUNCH/KICK/DASH/BLOCK/SPECIAL/SUPER into a clean non-overlapping thumb arc, and fixes joystick up-tilt locking out the JUMP button so ground jumps, double jumps, and triple jumps always register while moving."
+    },
+    {
+      "id": "grocery-van-fix",
+      "game": "grocery",
+      "issue": 77,
+      "name": "Grok Grocery Tycoon — Grok Van & Torty's Tow Touch Fix",
+      "url": "previews/grocery-van-fix/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "Raises the driving HUD (#dr52, #dSide, #sd52) above the full-screen #touchZone overlay (z-index 16 vs 11) so mobile touches on Torty's Tow, Hop Out, Honk, and pedals are never swallowed by the left thumb-stick, releases any active stick on breakdown, and displays a centered Breakdown recovery card with a Torty's Tow button."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
