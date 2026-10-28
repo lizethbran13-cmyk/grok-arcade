@@ -1,8 +1,7 @@
-/* Grok Arcade - baked-in fallback copy of preview.json so Lili's board and the Time Jumper work offline or if fetch fails */
-window.GA = window.GA || {};
-GA.PREVIEW_FALLBACK = {
+// Auto- mirrored from /preview.json for synchronous boot.
+window.GROK_PREVIEW_BOARD = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
-  "updated": "2026-10-28",
+  "updated": "2026-10-28T23:53:56.645Z",
   "items": [
     {
       "issue": 64,
@@ -227,8 +226,10 @@ GA.PREVIEW_FALLBACK = {
       "name": "Ratita HQ DLC: Tortuga Tech Expansion",
       "size": "Expansion",
       "what": "Martina “Torty” opens a Tortuga Tech Inc. wing inside Ratita Industries HQ with shell-tough test chambers and crossover gadgets.",
-      "stage": "queued",
-      "when": "Queued"
+      "stage": "building",
+      "when": "In the Jumper now",
+      "preview": true,
+      "previewUrl": "previews/ratitahq-tortuga-tech/"
     },
     {
       "issue": 63,
