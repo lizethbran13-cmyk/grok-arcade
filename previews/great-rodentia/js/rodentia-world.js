@@ -1,9 +1,9 @@
 // Grok Great Rodentia (Year 000 1 — 301 Post-Departure USM)
 // Builds the 4 Districts of Great Rodentia, reddish-dusk skyline, avenues, checkpoints, and 8 walk-in interiors.
-import * as K from './kit.js?v=gr2';
-import { shell, part, onSide, BUILDINGS } from './bld.js?v=gr2';
-import { rbox } from './world.js?v=gr2';
-import { txt, poster, wallWord, clockW, pendant, rack, pallet, planter, awning, trash, produceCrate } from './art.js?v=gr2';
+import * as K from './kit.js?v=gr3';
+import { shell, part, onSide, BUILDINGS } from './bld.js?v=gr3';
+import { rbox } from './world.js?v=gr3';
+import { txt, poster, wallWord, clockW, pendant, rack, pallet, planter, awning, trash, produceCrate } from './art.js?v=gr3';
 
 const PI = Math.PI;
 
@@ -128,14 +128,14 @@ export function buildRodentiaWorld(w) {
   // Perimeter city walls & distant reddish-dusk skyscrapers of Great Rodentia
   // South Harbor Dockhouse & North Supreme Capitol Rotunda (brightly lit, never a flat black wall!)
   w.slab('m', 0x7c2d12, 0, 0, -46.8, 22, 9.5, 4.5, 0.2);
-  w.add('m', rbox(22.6, 0.8, 5.0, 0.1), 0xfde047, 0, 9.6, -46.8);
+  w.add('m', rbox(22.6, 0.8, 5.0, 0.1), 0xfde047, 0, 9.6, -46.8); w.solid(-11.3, 9.2, -49.3, 11.3, 10.0, -44.3, { nofloor: true }); // camera blocker
   for (let wx = -8; wx <= 8; wx += 2.6) { w.add('l', rbox(1.5, 2.2, 0.12, 0.04), 0xffd27a, wx, 2.5, -44.5); w.add('l', rbox(1.5, 2.0, 0.12, 0.04), 0xffe49e, wx, 6.2, -44.5); }
   K.sign3d(w, 'RATS ISLE HARBOR FERRY', 0, 8.2, -44.4, 0, 0.42, 0xfde047, 0x7c2d12);
   awning(w, -9.5, 9.5, -44.1, 4.0, [0xdc2626, 0xfef3c7], 1);
   addLight(0, 5.0, -43.0, 0xffc87a, 28, 18, false, false);
   // North end: Grand Golden Capitol Façade closing the avenue
   w.slab('m', 0x991b1b, 0, 0, 74.5, 24, 12.0, 5.0, 0.2);
-  w.add('m', rbox(24.8, 0.9, 5.4, 0.1), 0xfacc15, 0, 12.1, 74.5);
+  w.add('m', rbox(24.8, 0.9, 5.4, 0.1), 0xfacc15, 0, 12.1, 74.5); w.solid(-12.4, 11.65, 71.8, 12.4, 12.55, 77.2, { nofloor: true });
   w.add('l', K.sph(20), 0xfacc15, 0, 14.5, 74.5, 0, 0, 0, 4.5, 3.2, 4.5, 0.6);
   for (const cx of [-8, -4.8, -1.6, 1.6, 4.8, 8]) w.add('m', K.cyl(16), 0xfef3c7, cx, 0, 71.8, 0, 0, 0, 0.45, 9.5, 0.45);
   for (let wx = -9; wx <= 9; wx += 3) { w.add('l', rbox(1.6, 2.6, 0.12, 0.04), 0xffe49e, wx, 3.2, 71.9); w.add('l', rbox(1.6, 2.4, 0.12, 0.04), 0xfde047, wx, 7.4, 71.9); }
@@ -175,7 +175,7 @@ export function buildRodentiaWorld(w) {
   // USM Year 000 1 Welcome Arch in District 1 Plaza (z = -38)
   w.slab('x', 0x475569, -5.8, 0, -39, 0.7, 5.2, 0.7, 0.08);
   w.slab('x', 0x475569, 5.8, 0, -39, 0.7, 5.2, 0.7, 0.08);
-  w.add('m', rbox(12.8, 1.1, 0.8, 0.12), 0x7f1d1d, 0, 5.4, -39);
+  w.add('m', rbox(12.8, 1.1, 0.8, 0.12), 0x7f1d1d, 0, 5.4, -39); w.solid(-6.4, 4.85, -39.4, 6.4, 5.95, -38.6, { nofloor: true });
   K.sign3d(w, 'GREAT RODENTIA - YEAR 000 1', 0, 5.45, -38.5, 0, 0.42, 0xfef08a, 0x450a0a);
 
   // District Checkpoint Gates at z = -15 (D2), z = 13 (D3), z = 41 (D4)
@@ -187,7 +187,7 @@ export function buildRodentiaWorld(w) {
   for (const gd of gateDefs) {
     w.slab('x', 0x334155, -6.2, 0, gd.z, 0.9, 4.8, 0.9, 0.08);
     w.slab('x', 0x334155, 6.2, 0, gd.z, 0.9, 4.8, 0.9, 0.08);
-    w.add('m', rbox(13.6, 0.95, 0.9, 0.1), 0x1e293b, 0, 4.9, gd.z);
+    w.add('m', rbox(13.6, 0.95, 0.9, 0.1), 0x1e293b, 0, 4.9, gd.z); w.solid(-6.8, 4.4, gd.z - 0.6, 6.8, 5.4, gd.z + 0.6, { nofloor: true }); // gate beam: camera pulls in front instead of hiding behind it
     txt(w, gd.title, 0, 4.75, gd.z - 0.48, PI, 0.28, gd.col, 'l', 0.6);
     txt(w, gd.title, 0, 4.75, gd.z + 0.48, 0, 0.28, gd.col, 'l', 0.6);
   }

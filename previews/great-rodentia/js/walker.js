@@ -1,9 +1,9 @@
 // Grok Great Rodentia — 3D Rat Walker & Platforming Controller (Brie & Evil Twin Sisters)
 import * as THREE from 'three';
-import { makeRat, animRat, setOutfit } from './models.js?v=gr2';
-import { topOf } from './world.js?v=gr2';
-import { readMove, edge, held } from './input.js?v=gr2';
-import { sfx } from './audio.js?v=gr2';
+import { makeRat, animRat, setOutfit } from './models.js?v=gr3';
+import { topOf } from './world.js?v=gr3';
+import { readMove, edge, held } from './input.js?v=gr3';
+import { sfx } from './audio.js?v=gr3';
 
 const GRAV = -26, JUMP = 10.6, DJUMP = 9.4, R = 0.42, H = 1.1, STEP = 0.65;
 const near = [];

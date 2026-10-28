@@ -1,8 +1,8 @@
 // UI manager for Grok Great Rodentia (#69, #70, #71, #72)
-import { $ } from './util.js?v=gr2';
-import { sfx } from './audio.js?v=gr2';
-import { S, save, hasClue, addClue, isDistrictUnlocked, unlockDistrict } from './save.js?v=gr2';
-import { LORE_INTRO, DISTRICTS, CLUES, TWIN_PROFILES, ENDINGS } from './story.js?v=gr2';
+import { $ } from './util.js?v=gr3';
+import { sfx } from './audio.js?v=gr3';
+import { S, save, hasClue, addClue, isDistrictUnlocked, unlockDistrict } from './save.js?v=gr3';
+import { LORE_INTRO, DISTRICTS, CLUES, TWIN_PROFILES, ENDINGS } from './story.js?v=gr3';
 
 let toastTimer = null;
 let dlgQueue = [];

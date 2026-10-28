@@ -1,28 +1,28 @@
 // Main entry & game loop for Grok Great Rodentia (#69, #70, #71, #72)
 import * as THREE from 'three';
-import { E, initEngine, setEnvironment, followShadow, render, trackFps } from './engine.js?v=gr2';
-import { World } from './world.js?v=gr2';
-import { ENV, buildRodentiaWorld } from './interiors.js?v=gr2';
-import { BUILDINGS, buildingAt } from './bld.js?v=gr2';
-import { RatHero } from './walker.js?v=gr2';
-import { FollowCam } from './cam.js?v=gr2';
-import { FX } from './fx.js?v=gr2';
-import { initInput, edge, clearEdges } from './input.js?v=gr2';
-import { sfx, initAudio, setSound, SND } from './audio.js?v=gr2';
-import { S, load, save, resetSave, hasClue, addClue, isDistrictUnlocked, unlockDistrict } from './save.js?v=gr2';
-import { LORE_INTRO, DISTRICTS, CLUES, TWIN_PROFILES } from './story.js?v=gr2';
-import { makeRat, animRat, setOutfit, makeEnemy, animEnemy } from './models.js?v=gr2';
-import { makePet, animPet } from './pets.js?v=gr2';
-import { rbox } from './world.js?v=gr2';
-import { MATS, initMats } from './mats.js?v=gr2';
+import { E, initEngine, setEnvironment, followShadow, render, trackFps } from './engine.js?v=gr3';
+import { World } from './world.js?v=gr3';
+import { ENV, buildRodentiaWorld } from './interiors.js?v=gr3';
+import { BUILDINGS, buildingAt } from './bld.js?v=gr3';
+import { RatHero } from './walker.js?v=gr3';
+import { FollowCam } from './cam.js?v=gr3';
+import { FX } from './fx.js?v=gr3';
+import { initInput, edge, clearEdges } from './input.js?v=gr3';
+import { sfx, initAudio, setSound, SND } from './audio.js?v=gr3';
+import { S, load, save, resetSave, hasClue, addClue, isDistrictUnlocked, unlockDistrict } from './save.js?v=gr3';
+import { LORE_INTRO, DISTRICTS, CLUES, TWIN_PROFILES } from './story.js?v=gr3';
+import { makeRat, animRat, setOutfit, makeEnemy, animEnemy } from './models.js?v=gr3';
+import { makePet, animPet } from './pets.js?v=gr3';
+import { rbox } from './world.js?v=gr3';
+import { MATS, initMats } from './mats.js?v=gr3';
 const mat = (k, col) => new THREE.MeshBasicMaterial({ color: col, toneMapped: false });
 function makeCheeseWedge() { const g = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.24, 3, 1, false, 0, Math.PI * 2 / 3 * 1.5), new THREE.MeshStandardMaterial({ color: 0xffc400, emissive: 0x6b4a00, roughness: 0.4 })); return g; }
-import { initShadowlight, useSurfaceSet, setSpots, updateShadowlight, SL } from './shadowlight/index.js?v=gr2';
-import { $, clamp } from './util.js?v=gr2';
+import { initShadowlight, useSurfaceSet, setSpots, updateShadowlight, SL } from './shadowlight/index.js?v=gr3';
+import { $, clamp } from './util.js?v=gr3';
 import {
   toast, isTalking, startDialogue, stepDialogue,
   updateHud, setPrompt, openConspiracyBoard, openDistrictModal, showEndingModal
-} from './ui.js?v=gr2';
+} from './ui.js?v=gr3';
 
 const _v = new THREE.Vector3(), _s = new THREE.Vector3(), _b = new THREE.Box3(), _r = new THREE.Ray();
 
@@ -181,7 +181,12 @@ export class RodentiaGame {
   }
 
   addRatNpc(id, outfit, name, x, z, yaw, reg, linesGood, linesEvil, onTalk = null) {
-    const rig = makeRat(id); if (rig.blaster) rig.blaster.visible = false; setOutfit(rig, outfit);
+    const real = name.startsWith('Real ');
+    const rig = makeRat(id, undefined, real && id === 'pirat' ? { extras: ['patch'] } : {}); if (rig.blaster) rig.blaster.visible = false; setOutfit(rig, outfit);
+    if (real) { // keep the real sisters readable under the red prison lights: grey Luna, tan one-eyed Pi-rat, snow-white Snowie
+      const glow = { luna: 0x8a90a0, pirat: 0x8a5a30, snowie: 0xffffff }[id] || 0; const amt = id === 'snowie' ? 0.55 : 0.3;
+      rig.root.traverse((o) => { if (o.isMesh && o.material && o.material.emissive) { o.material = o.material.clone(); o.material.emissive.setHex(glow); o.material.emissiveIntensity = amt; } });
+    }
     rig.root.position.set(x, 0, z);
     rig.root.rotation.y = yaw;
     this.scene.add(rig.root);
@@ -362,7 +367,7 @@ export class RodentiaGame {
 
     // --- DISTRICT 4 CAST (NATIONAL RATITA PRISON & USM CAPITOL) ---
     this.addRatNpc(
-      'luna', 'goggles', 'Real Luna (Imprisoned Founder)', -23.8, 50.5, 0.5, 'in_prison',
+      'luna', 'goggles', 'Real Luna (Imprisoned Founder)', -24.6, 50.5, 0.5, 'in_prison',
       [
         ['Real Luna', 'Brie! You traced the whole conspiracy! Nobody in the public knew what we were charged with because Warrant #0001-GG was classified TOP SECRET!'],
         ['Real Luna', 'Dr. Evilest cloned us to steal the Golden Gouda Relic across the street in the USM Capitol—because sealed inside its wax is the USM Emergency Supreme Authority Key!'],
@@ -398,7 +403,7 @@ export class RodentiaGame {
     );
 
     this.addRatNpc(
-      'snowie', 'flower', 'Real Snowie (Imprisoned Founder)', -21.2, 50.5, 0.5, 'in_prison',
+      'snowie', 'flower', 'Real Snowie (Imprisoned Founder)', -20.4, 50.5, 0.5, 'in_prison',
       [
         ['Real Snowie', 'Thank you, Brie! And look in Cell Block B right next to us—Torty (Martina) has been guarding the pure cheese sample this whole time!'],
       ],
