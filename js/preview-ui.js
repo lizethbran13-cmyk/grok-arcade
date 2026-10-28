@@ -181,18 +181,24 @@
       var n = 0; on('pvReboot', function () { n++; snd('point'); var e = $('pvRebootN'); if (e) e.textContent = n + ' / 5'; var b = $('pvReboot'); if (b) { b.classList.remove('hit'); void b.offsetWidth; b.classList.add('hit'); } if (n >= 5) { endReboot(true); openJumper(); } });
       on('pvOk', function () { close(); }); return;
     }
-    var html = '', P = m.previews;
+    var html = '', P = m.previews, LW = UI.LIVE_WORLDS;
+    var lwHtml = '<div class="pvWip" style="background:rgba(94,234,212,.15);color:#5eead4">\uD83D\uDD70\uFE0F MIMI\u2019S TIME LAB \u00b7 LIVE WORLDS \u00b7 your REAL save &amp; real tickets</div>' + LW.map(function (w, i) { return '<div class="pvPrev pvLive"><div><b>' + esc(w.name) + '</b><span>Live world \u00b7 always here</span><i>' + esc(w.notes) + '</i></div><button class="bigBtn" id="pvLive' + i + '">TIME TRAVEL!</button></div>'; }).join('');
     if (P.length) {
-      html = '<div class="pvWip">\u26A0 WORK IN PROGRESS \u00b7 previews may be buggy \u00b7 they use their OWN save, your real saves are safe</div>' + P.map(function (p, i) { return '<div class="pvPrev"><div><b>' + esc(p.name) + '</b><span>' + esc(p.gname) + (p.built ? ' \u00b7 snapshot ' + esc(p.built) : '') + '</span>' + (p.notes ? '<i>' + esc(p.notes) + '</i>' : '') + '</div><button class="bigBtn" id="pvGo' + i + '" disabled>CHECKING\u2026</button></div>'; }).join('');
+      html = lwHtml + '<div class="pvWip">\u26A0 WORK IN PROGRESS \u00b7 previews may be buggy \u00b7 they use their OWN save, your real saves are safe</div>' + P.map(function (p, i) { return '<div class="pvPrev"><div><b>' + esc(p.name) + '</b><span>' + esc(p.gname) + (p.built ? ' \u00b7 snapshot ' + esc(p.built) : '') + '</span>' + (p.notes ? '<i>' + esc(p.notes) + '</i>' : '') + '</div><button class="bigBtn" id="pvGo' + i + '" disabled>CHECKING\u2026</button></div>'; }).join('');
     } else {
       var nx = m.building.concat(m.queued).slice(0, 3);
-      html = '<div class="pvEmpty"><div class="pvBig">\uD83D\uDCA4</div><b>Nothing in the Jumper right now.</b><p>No build is playable yet. Builds still being made live on the poster wall and the Scheduled Additions board until they really work.</p>' + (nx.length ? '<div class="pvNext">Coming up: ' + nx.map(function (x) { return esc(x.name); }).join(' \u00b7 ') + '</div>' : '') + '</div>' + liliNote(pick(L.empty));
+      html = lwHtml + '<div class="pvEmpty"><div class="pvBig">\uD83D\uDCA4</div><b>Nothing in the Jumper right now.</b><p>No build is playable yet. Builds still being made live on the poster wall and the Scheduled Additions board until they really work.</p>' + (nx.length ? '<div class="pvNext">Coming up: ' + nx.map(function (x) { return esc(x.name); }).join(' \u00b7 ') + '</div>' : '') + '</div>' + liliNote(pick(L.empty));
     }
     show('pv_jumper', 'TIME JUMPER', 'Ratita Industries Model TJ-3 \u00b7 jumps logged: ' + jumps(), html, (P.length ? '' : '<button class="pill" id="pvCal">\u26A1 CALIBRATION JUMP</button> ') + '<button class="bigBtn" id="pvOk">BACK</button>');
     on('pvOk', function () { close(); }); on('pvCal', function () { doJump(null); });
+    LW.forEach(function (w, i) { on('pvLive' + i, function () { goLive(w); }); });
     P.forEach(function (p, i) { GA.PVD.check(p).then(function (ok) { var b = $('pvGo' + i); if (!b) return; b.disabled = !ok; b.textContent = ok ? 'JUMP IN!' : 'NOT READY'; if (ok) b.onclick = function () { doJump(p); }; }); });
   }
   UI.openJumper = openJumper;
+  /* Mimi's Time Lab LIVE worlds: shipped, permanent, real save (no sandbox, no malfunctions) */
+  UI.LIVE_WORLDS = [{ id: 'retro-central', name: 'Retro Central (1995)', url: 'retro-central/', notes: 'Jump back to 1995! Walk the neon mall, buy 6 consoles (1983\u20131995) at Gary\u2019s Console Stand with your real tickets, set them up in your Retro Home and play 7 games, including Super Torty 64, Speed Rat and Chrono Cheese. Luna, Pi-rat, Snowie, Candy and Torty are there in 90s outfits!' }];
+  function goLive(w) { snd('open'); toast('\uD83D\uDD70\uFE0F Time traveling to ' + w.name + '!', 2400); close(true); GA.Hub.savePos(); var f = $('fade'); if (f) f.classList.add('on'); setTimeout(function () { UI._nav(w.url); }, 380); setTimeout(function () { if (f) f.classList.remove('on'); }, 4000); }
+  UI.goLive = goLive;
 
   /* ---------- jump sequence ---------- */
   function camJump() { var x = PR.JUMPER.x, z = PR.JUMPER.z; GA.Hub.setCamOverride(function () { return [x + 3.4, 3.4, z - 8.6, x, 2.2, z]; }); }

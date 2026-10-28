@@ -84,7 +84,7 @@
       "game": "arcade",
       "name": "Retro Central (1995) (live)",
       "size": "New World",
-      "what": "Retro Central (1995) is live in Grok Arcade! Walk the neon 1995 mall, buy 6 consoles (1983–1995) at Gary's Console Stand with your real tickets, set them up in your walk-in Retro Home around a big CRT TV, and play 7 games: Super Torty 64, Speed Rat 1991, Speed Rat 2: Spin Dash, 8-Bit Plumber Bros. '85, Chrono Cheese, Shell Fighter '95 and Cyber-Maze '95. All 5 pets show up in 90s outfits. Find its cabinet in the Game Gallery (MORE GAMES). Its Time Jumper beta lives on in the Save Vault.",
+      "what": "Retro Central (1995) is live in Grok Arcade! Walk the neon 1995 mall, buy 6 consoles (1983–1995) at Gary's Console Stand with your real tickets, set them up in your walk-in Retro Home around a big CRT TV, and play 7 games: Super Torty 64, Speed Rat 1991, Speed Rat 2: Spin Dash, 8-Bit Plumber Bros. '85, Chrono Cheese, Shell Fighter '95 and Cyber-Maze '95. All 5 pets show up in 90s outfits. Find it in Mimi's Time Lab: open the Time Jumper in the Preview Center and pick it under LIVE WORLDS. Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Oct 28",
       "shippedAt": "2026-10-28T22:31:39Z"
