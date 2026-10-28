@@ -19,7 +19,7 @@
   } catch (e) { if (window.console) console.warn('preview shim', e); }
   function banner() { if (document.getElementById('ratitaWip')) return; var b = document.createElement('div'); b.id = 'ratitaWip';
     b.setAttribute('style', 'position:fixed;left:8px;top:8px;z-index:2147483647;display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:12px;font:bold 12px Trebuchet MS,system-ui,sans-serif;color:#fff;background:repeating-linear-gradient(45deg,#b45309 0 10px,#111827 10px 20px);box-shadow:0 2px 10px rgba(0,0,0,.5);text-shadow:0 1px 2px #000;max-width:calc(100vw - 16px)');
-    b.innerHTML = '\uD83E\uDDEA WORK IN PROGRESS \u00b7 Grok Great Rodentia (#69-#72) \u00b7 may be buggy <a href="../../" style="color:#5eead4">\u23EA back to the arcade</a> <button aria-label="hide" style="background:none;border:0;color:#fff;font:bold 14px sans-serif;cursor:pointer">\u00d7</button>';
+    b.innerHTML = '\uD83E\uDDEA WORK IN PROGRESS \u00b7 great-rodentia \u00b7 may be buggy <a href="../../" style="color:#5eead4">\u23EA back to the arcade</a> <button aria-label="hide" style="background:none;border:0;color:#fff;font:bold 14px sans-serif;cursor:pointer">\u00d7</button>';
     b.querySelector('button').onclick = function () { b.remove(); }; document.body.appendChild(b); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', banner); else banner();
 })();

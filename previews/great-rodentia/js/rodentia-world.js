@@ -126,8 +126,21 @@ export function buildRodentiaWorld(w) {
   });
 
   // Perimeter city walls & distant reddish-dusk skyscrapers of Great Rodentia
-  w.slab('m', 0x1e1320, 0, 0, -45.5, 80, 4.5, 1.2, 0.1);
-  w.slab('m', 0x1e1320, 0, 0, 73.5, 80, 4.5, 1.2, 0.1);
+  // South Harbor Dockhouse & North Supreme Capitol Rotunda (brightly lit, never a flat black wall!)
+  w.slab('m', 0x7c2d12, 0, 0, -46.8, 22, 9.5, 4.5, 0.2);
+  w.add('m', rbox(22.6, 0.8, 5.0, 0.1), 0xfde047, 0, 9.6, -46.8);
+  for (let wx = -8; wx <= 8; wx += 2.6) { w.add('l', rbox(1.5, 2.2, 0.12, 0.04), 0xffd27a, wx, 2.5, -44.5); w.add('l', rbox(1.5, 2.0, 0.12, 0.04), 0xffe49e, wx, 6.2, -44.5); }
+  K.sign3d(w, 'RATS ISLE HARBOR FERRY', 0, 8.2, -44.4, 0, 0.42, 0xfde047, 0x7c2d12);
+  awning(w, -9.5, 9.5, -44.1, 4.0, [0xdc2626, 0xfef3c7], 1);
+  addLight(0, 5.0, -43.0, 0xffc87a, 28, 18, false, false);
+  // North end: Grand Golden Capitol Façade closing the avenue
+  w.slab('m', 0x991b1b, 0, 0, 74.5, 24, 12.0, 5.0, 0.2);
+  w.add('m', rbox(24.8, 0.9, 5.4, 0.1), 0xfacc15, 0, 12.1, 74.5);
+  w.add('l', K.sph(20), 0xfacc15, 0, 14.5, 74.5, 0, 0, 0, 4.5, 3.2, 4.5, 0.6);
+  for (const cx of [-8, -4.8, -1.6, 1.6, 4.8, 8]) w.add('m', K.cyl(16), 0xfef3c7, cx, 0, 71.8, 0, 0, 0, 0.45, 9.5, 0.45);
+  for (let wx = -9; wx <= 9; wx += 3) { w.add('l', rbox(1.6, 2.6, 0.12, 0.04), 0xffe49e, wx, 3.2, 71.9); w.add('l', rbox(1.6, 2.4, 0.12, 0.04), 0xfde047, wx, 7.4, 71.9); }
+  K.sign3d(w, 'SUPREME CAPITOL OF RODENTIA', 0, 10.6, 71.8, PI, 0.42, 0xfde047, 0x7f1d1d);
+  addLight(0, 6.0, 69.5, 0xffe14d, 32, 22, false, false);
   w.slab('m', 0x1e1320, -38.5, 0, 14, 1.2, 4.5, 120, 0.1);
   w.slab('m', 0x1e1320, 38.5, 0, 14, 1.2, 4.5, 120, 0.1);
 
@@ -562,6 +575,24 @@ export function buildRodentiaWorld(w) {
   K.cooler(w, 19.2, -40.6); K.vending(w, 20.4, -27.4, PI, 0xfacc15);
   K.parcel(w, 25.6, 0, -33.0); K.parcel(w, 25.4, 0.5, -33.2); K.parcel(w, 25.8, 0, -34.0);
   wallWord(w, 'x', -41.4, 13.0, 4.25, 'EMERGENCY CHEESE RESERVE', 0.26, 0xfacc15, 1, 0.6);
+  w.region = 'out';
+  w.region = 'in_clone';
+  K.conveyor(w, 13.0, 26.0, 0, 6);
+  for (let k = -2; k <= 2; k++) K.crate(w, 13.0, 0.65, 26.0 + k * 1.1, 0.55, 0xef4444);
+  K.desk(w, 13.5, 32.5, PI, { L: 2.8, D: 1.2, top: 0x3f3f46 });
+  K.beaker(w, 13.0, 0.86, 32.5, 0x22c55e, 1.2, 0); K.beaker(w, 14.0, 0.86, 32.5, 0xa855f7, 1.2, 1);
+  K.cheeseRack(w, 10.2, 21.0, PI / 2, 4); K.cheeseRack(w, 10.2, 31.0, PI / 2, 4);
+  K.pipes(w, 'x', 16.5, 11, 26, 3.8);
+  K.hazard(w, 18.5, 23.0, 8.0, 2.0, 0);
+  K.potPlant(w, 9.2, 0, 17.5, 1.1); K.potPlant(w, 26.8, 0, 17.5, 1.1);
+  w.region = 'in_prison';
+  K.tableR(w, -15.5, 56.0, 1.1, 0.8, 0x475569);
+  K.chair(w, -15.5, 0, 54.4, 0, 0xdc2626); K.chair(w, -15.5, 0, 57.6, PI, 0xdc2626);
+  K.shelf(w, -9.2, 52.0, -PI / 2, 3.0, 2.5, 0.6, 0x334155);
+  K.shelf(w, -9.2, 60.0, -PI / 2, 3.0, 2.5, 0.6, 0x334155);
+  K.cooler(w, -9.4, 56.0); K.vending(w, -13.0, 66.6, PI, 0xef4444);
+  K.crate(w, -18.0, 0, 47.0, 0.9, 0x475569); K.crate(w, -19.2, 0, 47.2, 0.75, 0xb45309);
+  K.rug(w, -15.5, 56.0, 0, 4.2, 3.2, 0x1e293b, 0xef4444);
   w.region = 'out';
   return { spots, buildings: BUILDINGS };
 }

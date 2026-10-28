@@ -224,11 +224,16 @@ export class RodentiaGame {
     cameo('snowie', { outfit: 'flower' }, 'Snowie (Shadow-light memory)', 1.0, -28.8, Math.PI, 'out', 'Snowie Sky Tours spotted crimson lights over the Clone Lab. Follow the shadows!');
     cameo('candy', { s: 0.95 }, 'Candy (Shadow-light memory)', 2.8, -29.4, Math.PI, 'out', 'Woof! Grandma Gouda taught me to sniff out a frame-up. Start at her board!');
     cameo('torty', { s: 0.9 }, 'Torty (Shadow-light memory)', 0, -27.2, Math.PI, 'out', 'Slow and steady, Brie. My Emergency Cheese Bank was pure—prove it!');
-    cameo('torty', { s: 1.0 }, 'Torty at the Bank', 13.0, -33.0, -Math.PI / 2, 'in_bank', 'This was MY Emergency Cheese Bank. The vault behind me was sealed on a fake poison charge.');
+    cameo('torty', { s: 1.0 }, 'Torty at the Bank', 10.8, -34.2, 1.2, 'in_bank', 'This was MY Emergency Cheese Bank. The vault behind me was sealed on a fake poison charge.');
     cameo('luna', { outfit: 'goggles' }, 'Luna (Capitol rally)', -3.0, 51.5, Math.PI, 'out', 'The Capitol is right there. Expose the Evil Twins and the Golden Gouda truth!');
     cameo('pirat', { outfit: 'pirate' }, 'Pi-rat (Capitol rally)', -1.2, 52.2, Math.PI, 'out', 'Prison break first, treasure second. Arr!');
     cameo('snowie', { outfit: 'flower' }, 'Snowie (Capitol rally)', 1.2, 52.2, Math.PI, 'out', 'From up in the sky, the Capitol glows crimson. Something is wrong in there.');
     cameo('candy', { s: 0.95 }, 'Candy (Capitol rally)', 3.0, 51.5, Math.PI, 'out', 'The Civil Task Force of Dogs has your back, Brie!');
+    cameo('luna', { outfit: 'goggles' }, 'Luna (Vat hologram)', 14.0, 22.0, 0, 'in_clone', 'Dr. Evilest scanned our memories into these three vats to grow the Evil Twins!');
+    cameo('pirat', { outfit: 'pirate' }, 'Pi-rat (Vat hologram)', 18.5, 22.0, 0, 'in_clone', 'Yarr! That middle vat cooked up Dread Pi-rat—crimson visor and all!');
+    cameo('snowie', { outfit: 'flower' }, 'Snowie (Vat hologram)', 23.0, 22.0, 0, 'in_clone', 'Smash the manifest terminal behind you so everyone knows we were cloned!');
+    cameo('candy', { s: 0.95 }, 'Candy (Rescue backup)', -14.2, 52.0, -1.2, 'in_prison', 'Brie! You found the cells! Flip the Warden console to drop those laser bars!');
+    this.addRatNpc('bram', 'taskforce', 'Clone Lab Tech', 15.0, 30.5, 0.4, 'in_clone', [['Clone Lab Tech', 'I only work the night shift! Dr. Evilest keeps the real sisters in District 4 Prison!']]);
     for (const [id, out, nm, x, z] of [['bram', 'taskforce', 'Bank Teller', 11.0, -37.6], ['grandpa', 'taskforce', 'Vault Guard', 15.4, -40.2]]) this.addRatNpc(id, out, nm, x, z, 0, 'in_bank', [[nm, 'The vault was sealed the night the poison rumour started. Nobody had the code but Torty.']]);
     for (const [x, z, yaw] of [[-5.2, -22, 1.5], [5.4, 3, -1.5], [-5.0, 28, 1.5], [5.2, 60, -1.5]]) this.addRatNpc('grandpa', 'none', 'Rodentia Citizen', x, z, yaw, 'out', [['Rodentia Citizen', 'Psst... the crimson-visor sisters walked right past here last night.']]);
     // --- DISTRICT 1 CAST ---
