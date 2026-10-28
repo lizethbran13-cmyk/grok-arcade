@@ -253,6 +253,22 @@
       };
       bar.appendChild(b);
     });
+    (RC.EXTRA_CARTS || []).forEach(function (x) {
+      var b = document.createElement('button');
+      b.className = 'crt-switch-btn' + (x.gameId === currentGameId ? ' active' : '');
+      b.id = 'btnCart_' + x.gameId;
+      b.textContent = x.label;
+      b.onclick = function () {
+        var s = RC.load();
+        s.owned[x.consoleId] = true;
+        s.activeConsole = x.consoleId;
+        RC.save();
+        if (RC.refreshHomeConsoles) RC.refreshHomeConsoles();
+        RC.refreshHud();
+        RC.openCrtGame(x.gameId, true);
+      };
+      bar.appendChild(b);
+    });
   }
 
   RC.closeCrtGame = function () {

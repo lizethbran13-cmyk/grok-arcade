@@ -1,5 +1,6 @@
 /* Grok Arcade — RETRO CENTRAL (1995) Playable CRT & Kiosk Copycat Games (Issue #88)
    1. Super Torty 64 (1995 N64 / Mario 64 copycat — 3D perspective courtyard, triple jump, Goomba-Bots, 5 Power Stars)
+   7. Chrono Cheese (1995 16-bit SRES RPG / Chrono Trigger copycat with Luna, Pi-rat, Snowie, Candy & Torty)
    2. Speed Rat 1991: Green Hill (1991 Sega Genesis / Sonic 1 copycat — loops, golden rings, springs, Dr. Egg-Rat)
    3. Speed Rat 2: Spin Dash (1992-1995 Sonic 2 copycat — Chemical Zone, Spin-Dash turbo, sidekick Squeaks)
    4. 8-Bit Plumber Bros. '85 (1983-1991 NES/SNES Mario copycat — ? blocks, Super Cheese, pipes, flagpole)
@@ -387,7 +388,7 @@
       sequel: !!isSequel,
       t: 0,
       camX: 0,
-      x: 90,
+      x: 150,
       y: 346 - 22,
       vx: 0,
       vy: 0,
@@ -650,17 +651,41 @@
     }
 
     // Draw Cobalt-Blue Supersonic Speed Rat (with Red Sneakers!)
+    // Visibility: bright halo + dark outline so he pops against the blue 16-bit sky, plus a "1P" marker at start.
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.beginPath();
+    ctx.arc(px, py - 2, 27, 0, Math.PI * 2);
+    ctx.fill();
+    if (gs.t < 240) {
+      var bob = Math.sin(gs.t * 0.2) * 4;
+      ctx.fillStyle = '#facc15';
+      ctx.strokeStyle = '#111827';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(px - 11, py - 52 + bob); ctx.lineTo(px + 11, py - 52 + bob); ctx.lineTo(px, py - 38 + bob); ctx.closePath();
+      ctx.fill(); ctx.stroke();
+      ctx.font = '900 14px Trebuchet MS, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.strokeText('1P SPEED RAT', px, py - 58 + bob);
+      ctx.fillText('1P SPEED RAT', px, py - 58 + bob);
+    }
+    ctx.restore();
     ctx.save();
     ctx.translate(px, py);
+    ctx.strokeStyle = '#0b1020';
+    ctx.lineWidth = 3;
     if (gs.rolling || gs.spinCharge > 0) {
       ctx.rotate(gs.t * 0.65);
       ctx.fillStyle = '#2563eb';
       ctx.beginPath();
       ctx.arc(0, 0, 19, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = '#93c5fd';
+      ctx.strokeStyle = '#0b1020';
       ctx.lineWidth = 3;
       ctx.stroke();
+      ctx.strokeStyle = '#e0f2fe';
+      ctx.beginPath(); ctx.moveTo(-13, 0); ctx.lineTo(13, 0); ctx.moveTo(0, -13); ctx.lineTo(0, 13); ctx.stroke();
     } else {
       // Blue spikes & body
       ctx.fillStyle = '#2563eb';
@@ -672,6 +697,20 @@
       ctx.moveTo(-10, -14); ctx.lineTo(-26, -18); ctx.lineTo(-14, -4);
       ctx.moveTo(-10, -4); ctx.lineTo(-25, -4); ctx.lineTo(-12, 4);
       ctx.fill();
+      ctx.strokeStyle = '#0b1020'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(0, -4, 17, 0, Math.PI * 2); ctx.stroke();
+      // Round rat ears, peach muzzle, big eye & nose
+      ctx.fillStyle = '#1d4ed8';
+      ctx.beginPath(); ctx.arc(-5, -21, 7, 0, Math.PI * 2); ctx.arc(8, -20, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#fcd9b6';
+      ctx.beginPath(); ctx.ellipse(8, 1, 10, 7, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.ellipse(6, -9, 5, 6, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#111827';
+      ctx.beginPath(); ctx.arc(8, -9, 2.4, 0, Math.PI * 2); ctx.arc(18, 0, 2.6, 0, Math.PI * 2); ctx.fill();
+      // Long pink rat tail
+      ctx.strokeStyle = '#f9a8d4'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(-15, 6); ctx.quadraticCurveTo(-30, 14, -34, 2 + Math.sin(gs.t * 0.3) * 4); ctx.stroke();
       // Red power sneakers
       ctx.fillStyle = '#ef4444';
       ctx.fillRect(-14, 10, 12, 8);
@@ -1016,6 +1055,204 @@
     ctx.fillText('VIRTUAL-VISOR 95 · RED DATA CORES: ' + gs.cores + ' · SCORE: ' + gs.score, 24, 34);
   }
 
+
+  /* ======================================================================
+     7. CHRONO CHEESE (1995 16-Bit SRES RPG Copycat of Chrono Trigger)
+     Overworld + Active-Time-Battle with the 5 Family Pets cameoing.
+     ====================================================================== */
+  var CC_PETS = [
+    { id: 'luna', name: 'Luna', color: '#fbbf24', ear: '#92400e', tx: 4, ty: 3, line: 'Luna: "Hero! The Time Gate at the clock tower is leaking Cheese Paradoxes!"' },
+    { id: 'pirat', name: 'Pi-rat', color: '#9ca3af', ear: '#f9a8d4', tx: 10, ty: 2, line: 'Pi-rat: "Arr! I calculated it: 3.14159 Time Slimes ahead. Join ye with Cheese Beam!"' },
+    { id: 'snowie', name: 'Snowie', color: '#f8fafc', ear: '#fda4af', tx: 15, ty: 5, line: 'Snowie: "I\'ll cast Frost Squeak in battle! Press X for a Dual Tech!"' },
+    { id: 'candy', name: 'Candy', color: '#f472b6', ear: '#be185d', tx: 4, ty: 6, line: 'Candy: "Sweet! I heal with Candy Tonic when the ATB bar fills!"' },
+    { id: 'torty', name: 'Torty', color: '#22c55e', ear: '#14532d', tx: 12, ty: 6, line: 'Torty: "Slow and steady... the year 1000 AD Cheese Fair is to the east!"' }
+  ];
+  function initChronoCheese() {
+    gs = {
+      t: 0, mode: 'map', hx: 2 * 48 + 24, hy: 5 * 48 + 24, dir: 1, step: 0,
+      hp: 120, maxHp: 120, mp: 30, lvl: 1, xp: 0, score: 0, gold: 0, met: {},
+      dialog: 'CHRONO CHEESE (1995) · 600 A.D. — Talk to the 5 pets (SPACE) and battle Time Slimes!', dialogTimer: 200,
+      slimes: [{ x: 8 * 48, y: 5 * 48, alive: true }, { x: 12 * 48, y: 7 * 48, alive: true }, { x: 14 * 48, y: 2 * 48 + 20, alive: true }],
+      battle: null
+    };
+  }
+  function ccDrawPet(x, y, p, scale) {
+    var k = scale || 1;
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.beginPath(); ctx.ellipse(x, y + 14 * k, 12 * k, 4 * k, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = p.color; ctx.strokeStyle = '#111827'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, 12 * k, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = p.ear;
+    ctx.beginPath(); ctx.arc(x - 8 * k, y - 10 * k, 5 * k, 0, Math.PI * 2); ctx.arc(x + 8 * k, y - 10 * k, 5 * k, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#111827';
+    ctx.fillRect(x - 5 * k, y - 3 * k, 3 * k, 3 * k); ctx.fillRect(x + 2 * k, y - 3 * k, 3 * k, 3 * k);
+    ctx.font = '800 ' + Math.round(10 * k) + 'px Trebuchet MS, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#fff'; ctx.strokeStyle = '#111827'; ctx.lineWidth = 3;
+    ctx.strokeText(p.name, x, y - 20 * k); ctx.fillText(p.name, x, y - 20 * k);
+  }
+  function ccDrawHero(x, y, step, k) {
+    k = k || 1;
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.beginPath(); ctx.ellipse(x, y + 16 * k, 12 * k, 4 * k, 0, 0, Math.PI * 2); ctx.fill();
+    // spiky red hair (Chrono copycat) on a tan mouse hero
+    ctx.fillStyle = '#dc2626'; ctx.strokeStyle = '#111827'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(x - 12 * k, y - 8 * k); ctx.lineTo(x - 6 * k, y - 26 * k); ctx.lineTo(x, y - 14 * k); ctx.lineTo(x + 6 * k, y - 28 * k); ctx.lineTo(x + 12 * k, y - 8 * k); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#d6b48a';
+    ctx.beginPath(); ctx.arc(x, y - 6 * k, 10 * k, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#111827'; ctx.fillRect(x - 5 * k, y - 8 * k, 3 * k, 3 * k); ctx.fillRect(x + 2 * k, y - 8 * k, 3 * k, 3 * k);
+    ctx.fillStyle = '#2563eb'; ctx.fillRect(x - 9 * k, y + 3 * k, 18 * k, 10 * k); ctx.strokeRect(x - 9 * k, y + 3 * k, 18 * k, 10 * k);
+    ctx.fillStyle = '#facc15'; ctx.fillRect(x - 9 * k, y + 6 * k, 18 * k, 2 * k);
+    var leg = Math.sin(step) * 3 * k;
+    ctx.fillStyle = '#7c2d12'; ctx.fillRect(x - 7 * k, y + 13 * k + leg, 5 * k, 4 * k); ctx.fillRect(x + 2 * k, y + 13 * k - leg, 5 * k, 4 * k);
+    // cheese sword
+    ctx.fillStyle = '#fde047'; ctx.fillRect(x + 11 * k, y - 10 * k, 4 * k, 20 * k); ctx.strokeRect(x + 11 * k, y - 10 * k, 4 * k, 20 * k);
+  }
+  function ccDrawSlime(x, y, t, k) {
+    k = k || 1;
+    var sq = 1 + Math.sin(t * 0.15) * 0.08;
+    ctx.fillStyle = '#06b6d4'; ctx.strokeStyle = '#0c4a6e'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.ellipse(x, y, 15 * k * sq, 12 * k / sq, 0, Math.PI, 0); ctx.lineTo(x + 15 * k * sq, y + 6 * k); ctx.lineTo(x - 15 * k * sq, y + 6 * k); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.fillRect(x - 7 * k, y - 6 * k, 4 * k, 5 * k); ctx.fillRect(x + 3 * k, y - 6 * k, 4 * k, 5 * k);
+    ctx.fillStyle = '#facc15'; ctx.font = '900 ' + Math.round(9 * k) + 'px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('⏰', x, y - 14 * k);
+  }
+  function ccBox(x, y, w, h) {
+    var g = ctx.createLinearGradient(0, y, 0, y + h);
+    g.addColorStop(0, '#1e3a8a'); g.addColorStop(1, '#0b1440');
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 3; ctx.strokeRect(x + 2, y + 2, w - 4, h - 4);
+  }
+  function updateAndDrawChronoCheese(W, H) {
+    gs.t++;
+    if (gs.mode === 'battle') return ccBattle(W, H);
+    var TS = 48, COLS = 16, ROWS = 9, oy = 0;
+    var sp = 3.2, moved = false;
+    if (keys.left) { gs.hx -= sp; gs.dir = -1; moved = true; }
+    if (keys.right) { gs.hx += sp; gs.dir = 1; moved = true; }
+    if (keys.up) { gs.hy -= sp; moved = true; }
+    if (keys.down) { gs.hy += sp; moved = true; }
+    gs.hx = clamp(gs.hx, 20, W - 20); gs.hy = clamp(gs.hy, 70, H - 70);
+    if (moved) gs.step += 0.35;
+    // Tiles: grass, path, river, trees, clock tower
+    for (var ty = 0; ty < ROWS; ty++) for (var tx = 0; tx < COLS; tx++) {
+      var X = tx * TS, Y = ty * TS + oy;
+      var path = (ty === 5) || (tx === 9 && ty > 1);
+      ctx.fillStyle = path ? '#d6b37a' : ((tx + ty) % 2 ? '#3f9d3f' : '#47a847');
+      ctx.fillRect(X, Y, TS, TS);
+      if (!path && (tx * 7 + ty * 3) % 11 === 0) {
+        ctx.fillStyle = '#14532d'; ctx.beginPath(); ctx.arc(X + 24, Y + 20, 16, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#78350f'; ctx.fillRect(X + 20, Y + 32, 8, 12);
+      }
+    }
+    ctx.fillStyle = '#2563eb'; ctx.fillRect(0, 7 * TS + 20, 5 * TS, 18);
+    // Clock tower Time Gate
+    ctx.fillStyle = '#6b7280'; ctx.fillRect(W - 92, 60, 64, 110);
+    ctx.fillStyle = '#fde68a'; ctx.beginPath(); ctx.arc(W - 60, 92, 20, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#111827'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(W - 60, 92); ctx.lineTo(W - 60, 76); ctx.moveTo(W - 60, 92); ctx.lineTo(W - 50 + Math.sin(gs.t * 0.05) * 4, 98); ctx.stroke();
+    var gp = 0.5 + Math.sin(gs.t * 0.1) * 0.3;
+    ctx.fillStyle = 'rgba(168,85,247,' + gp + ')'; ctx.beginPath(); ctx.ellipse(W - 60, 150, 22, 16, 0, 0, Math.PI * 2); ctx.fill();
+
+    // Pets
+    var near = null;
+    CC_PETS.forEach(function (p) {
+      var px = p.tx * TS + 24, py = p.ty * TS + 24 + Math.sin(gs.t * 0.08 + p.tx) * 2;
+      ccDrawPet(px, py, p, 1);
+      if (Math.hypot(gs.hx - px, gs.hy - py) < 46) near = p;
+    });
+    if (near && justPressed.jump) {
+      gs.dialog = near.line; gs.dialogTimer = 220;
+      if (!gs.met[near.id]) { gs.met[near.id] = true; gs.score += 40; RC.sfx('ring'); RC.recordScore('chronocheese', gs.score, 2); }
+    }
+    // Slimes
+    gs.slimes.forEach(function (sl) {
+      if (!sl.alive) return;
+      var sx = sl.x + Math.sin(gs.t * 0.03 + sl.y) * 30;
+      ccDrawSlime(sx, sl.y + 24, gs.t, 1);
+      if (Math.hypot(gs.hx - sx, gs.hy - (sl.y + 24)) < 30) {
+        sl.alive = false;
+        gs.mode = 'battle';
+        gs.battle = { ehp: 60 + gs.lvl * 10, emax: 60 + gs.lvl * 10, atb: 0, eatb: 0, msg: 'A TIME SLIME appears! Wait for the ATB bar, then SPACE: Attack · X: Cheese Beam Tech', fx: 0, fxType: '', end: 0 };
+        RC.sfx('hit');
+      }
+    });
+    ccDrawHero(gs.hx, gs.hy, gs.step, 1.1);
+
+    // HUD
+    ccBox(10, 8, W - 20, 44);
+    ctx.font = '900 16px Trebuchet MS, sans-serif'; ctx.textAlign = 'left';
+    ctx.fillStyle = '#fde047'; ctx.fillText('CHRONO CHEESE', 24, 36);
+    ctx.fillStyle = '#fff'; ctx.fillText('HP ' + gs.hp + '/' + gs.maxHp + '   MP ' + gs.mp + '   LV ' + gs.lvl, 190, 36);
+    ctx.fillStyle = '#86efac'; ctx.textAlign = 'right'; ctx.fillText('PETS MET ' + Object.keys(gs.met).length + '/5 · G ' + gs.gold, W - 24, 36);
+    if (near) {
+      ctx.fillStyle = '#fff'; ctx.font = '800 12px Trebuchet MS'; ctx.textAlign = 'center';
+      ctx.fillText('SPACE: Talk', gs.hx, gs.hy + 34);
+    }
+    if (gs.dialogTimer > 0) {
+      gs.dialogTimer--;
+      ccBox(30, H - 66, W - 60, 54);
+      ctx.fillStyle = '#fff'; ctx.font = '800 14px Trebuchet MS, sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText(gs.dialog, 48, H - 34);
+    }
+    if (gs.slimes.every(function (s) { return !s.alive; })) {
+      gs.slimes.forEach(function (s) { s.alive = true; });
+      gs.dialog = 'The Time Gate swirls... more Time Slimes from 2300 A.D.! +20 Tickets!'; gs.dialogTimer = 200;
+      RC.recordScore('chronocheese', gs.score + 300, 20);
+    }
+  }
+  function ccBattle(W, H) {
+    var b = gs.battle;
+    // Battle backdrop: 16-bit forest at dusk
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#7c3aed'); g.addColorStop(0.55, '#f97316'); g.addColorStop(0.56, '#166534'); g.addColorStop(1, '#14532d');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    for (var i = 0; i < 9; i++) { ctx.fillStyle = '#052e16'; ctx.beginPath(); ctx.moveTo(i * 90, 240); ctx.lineTo(i * 90 + 45, 140); ctx.lineTo(i * 90 + 90, 240); ctx.fill(); }
+    ccDrawSlime(560, 230, gs.t, 3);
+    ccDrawHero(200, 220, gs.t * 0.1, 2);
+    // pets cheering in the back row
+    CC_PETS.forEach(function (p, idx) { ccDrawPet(70 + idx * 62, 300 + (idx % 2) * 8, p, 0.85); });
+    if (b.end === 0) {
+      b.atb = Math.min(100, b.atb + 0.9);
+      b.eatb = Math.min(100, b.eatb + 0.45);
+      if (b.atb >= 100 && justPressed.jump) {
+        var d = 14 + Math.floor(Math.random() * 8) + gs.lvl * 2; b.ehp -= d; b.atb = 0; b.fx = 20; b.fxType = 'slash';
+        b.msg = 'Hero slashes with the Cheese Sword! ' + d + ' damage!'; RC.sfx('hit');
+      } else if (b.atb >= 100 && justPressed.action && gs.mp >= 6) {
+        var d2 = 30 + gs.lvl * 3; b.ehp -= d2; b.atb = 0; gs.mp -= 6; b.fx = 30; b.fxType = 'beam';
+        var pal = CC_PETS[Math.floor(Math.random() * 5)];
+        b.msg = 'DUAL TECH: Hero + ' + pal.name + ' — CHEESE BEAM! ' + d2 + ' damage!'; RC.sfx('spindash');
+      }
+      if (b.eatb >= 100) {
+        var ed = 8 + Math.floor(Math.random() * 7); gs.hp = Math.max(1, gs.hp - ed); b.eatb = 0;
+        b.msg = 'Time Slime casts Paradox Goo! ' + ed + ' damage. Candy tosses a Candy Tonic!';
+        gs.hp = Math.min(gs.maxHp, gs.hp + 6);
+      }
+      if (b.ehp <= 0) {
+        b.ehp = 0; b.end = 90; gs.xp += 40; gs.gold += 25; gs.score += 200;
+        if (gs.xp >= gs.lvl * 60) { gs.lvl++; gs.maxHp += 15; gs.hp = gs.maxHp; gs.mp = 30; }
+        b.msg = 'VICTORY! +40 XP · +25 G · +6 Tickets! (Torty does a victory spin)'; RC.sfx('ring');
+        RC.recordScore('chronocheese', gs.score, 6);
+      }
+    } else if (--b.end <= 0) { gs.mode = 'map'; gs.battle = null; gs.dialog = 'Back on the 600 A.D. overworld. Find more Time Slimes!'; gs.dialogTimer = 140; return; }
+    if (b.fx > 0) {
+      b.fx--;
+      if (b.fxType === 'beam') { ctx.fillStyle = 'rgba(253,224,71,' + (b.fx / 30) + ')'; ctx.fillRect(230, 200, 330, 26); }
+      else { ctx.strokeStyle = '#fff'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(520, 180); ctx.lineTo(600, 270); ctx.stroke(); }
+    }
+    // Enemy HP
+    ccBox(470, 70, 240, 44);
+    ctx.fillStyle = '#fff'; ctx.font = '900 14px Trebuchet MS'; ctx.textAlign = 'left'; ctx.fillText('TIME SLIME', 486, 97);
+    ctx.fillStyle = '#7f1d1d'; ctx.fillRect(590, 86, 106, 12); ctx.fillStyle = '#ef4444'; ctx.fillRect(590, 86, 106 * b.ehp / b.emax, 12);
+    // Party menu with ATB
+    ccBox(10, H - 112, W - 20, 102);
+    ctx.fillStyle = '#fff'; ctx.font = '900 15px Trebuchet MS'; ctx.textAlign = 'left';
+    ctx.fillText('HERO   HP ' + gs.hp + '/' + gs.maxHp + '   MP ' + gs.mp, 30, H - 82);
+    ctx.fillText('ATB', 400, H - 82);
+    ctx.fillStyle = '#334155'; ctx.fillRect(440, H - 95, 200, 14);
+    ctx.fillStyle = b.atb >= 100 ? '#facc15' : '#38bdf8'; ctx.fillRect(440, H - 95, 2 * b.atb, 14);
+    ctx.fillStyle = '#fde047'; ctx.font = '800 13px Trebuchet MS';
+    ctx.fillText(b.atb >= 100 ? '▶ SPACE: Attack    X: Cheese Beam (6 MP)' : 'Waiting for ATB...', 30, H - 56);
+    ctx.fillStyle = '#e2e8f0'; ctx.fillText(b.msg, 30, H - 30);
+  }
+
   /* ======================================================================
      Main Emulator Loop & Public API
      ====================================================================== */
@@ -1030,6 +1267,7 @@
     else if (activeGameId === 'plumber85') updateAndDrawPlumber85(W, H);
     else if (activeGameId === 'shellfighter95') updateAndDrawShellFighter(W, H);
     else if (activeGameId === 'cybermaze95') updateAndDrawCyberMaze(W, H);
+    else if (activeGameId === 'chronocheese') updateAndDrawChronoCheese(W, H);
 
     justPressed.jump = false;
     justPressed.action = false;
@@ -1053,6 +1291,7 @@
     else if (activeGameId === 'plumber85') initPlumber85();
     else if (activeGameId === 'shellfighter95') initShellFighter();
     else if (activeGameId === 'cybermaze95') initCyberMaze();
+    else if (activeGameId === 'chronocheese') initChronoCheese();
     else initTorty64();
 
     if (rafId) cancelAnimationFrame(rafId);

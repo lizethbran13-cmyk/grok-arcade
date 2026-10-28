@@ -160,6 +160,11 @@
     }
   ];
 
+  /* Extra cartridges shown in the CRT console menu alongside each console's pack-in game */
+  RC.EXTRA_CARTS = [
+    { consoleId: 'sres91', gameId: 'chronocheese', label: 'Super Ratita SRES: Chrono Cheese (16-Bit RPG)' }
+  ];
+
   /* ---------- Playable Games Catalog ---------- */
   RC.GAMES = {
     torty64: {
@@ -211,6 +216,16 @@
       genre: 'Flat-Shaded 3D Polygon Ring Fighter (Virtua Fighter Copycat)',
       controls: 'Left / Right: Footwork · Z: Polygon Jab · X: Heavy Kick · SPACE: Shell Tornado Special!',
       goal: 'Win 2 rounds or knock Mecha-Rat 32X out of the 3D Arena Ring!'
+    },
+    chronocheese: {
+      id: 'chronocheese',
+      title: 'CHRONO CHEESE',
+      year: '1995',
+      consoleId: 'sres91',
+      consoleName: 'Super Ratita SRES 16-Bit (Chrono Trigger Copycat RPG)',
+      genre: '16-Bit Time-Travel Active-Time-Battle RPG (Chrono Trigger Copycat)',
+      controls: 'Arrows / WASD: Walk · SPACE: Talk / Attack · X: Cheese Beam Dual Tech',
+      goal: 'Meet Luna, Pi-rat, Snowie, Candy & Torty in 600 A.D. and beat the Time Slimes leaking from the Time Gate!'
     },
     cybermaze95: {
       id: 'cybermaze95',
