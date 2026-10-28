@@ -637,7 +637,7 @@
       GA.Areas.ARRIVE.maint = function () { go(MNT.spawn.x, MNT.spawn.z, 1, 0); };
       GA.Areas.ARRIVE.maint_back = function () { var c = CABS.at_mdoor; go(c.x - 0.6, c.z, -1, 0); }; }
     ['attic', 'attic2', 'attic3', 'maint'].forEach(function (k) { R[k].visible = false; live[k] = false; });
-    refreshInside(); refreshHatch(); AT.built = true; if (GA.Mimi && GA.Mimi.build) { try { GA.Mimi.build(); } catch (e) { if (window.console) console.warn('Mimi failed to build', e); } } if (GA.AtticUI && GA.AtticUI.init) GA.AtticUI.init(); if (GA.Retro && GA.Retro.build) { try { GA.Retro.build(); } catch (e) { if (window.console) console.warn('Time Machine failed to build', e); } }
+    refreshInside(); refreshHatch(); AT.built = true; if (GA.Mimi && GA.Mimi.build) { try { GA.Mimi.build(); } catch (e) { if (window.console) console.warn('Mimi failed to build', e); } } if (GA.AtticUI && GA.AtticUI.init) GA.AtticUI.init(); if (GA.Retro && GA.Retro.build) { try { GA.Retro.build(); } catch (e) { if (window.console) console.warn('Time Machine failed to build', e); } } if (GA.MimiLab && GA.MimiLab.build) { try { GA.MimiLab.build(); } catch (e) { if (window.console) console.warn('Mimi\u2019s Time Lab failed to build', e); } }
   };
   AT.travel = function (where, cb) { if (GA.Areas && GA.Areas.travel) GA.Areas.travel(where, cb); };
   AT.frame = function (t, dt) {
@@ -647,8 +647,8 @@
     ANIM.any.forEach(function (f) { f(t, dt); }); if (live.attic) ANIM.attic.forEach(function (f) { f(t, dt); }); if (live.attic2) ANIM.attic2.forEach(function (f) { f(t, dt); }); if (live.attic3) ANIM.attic3.forEach(function (f) { f(t, dt); }); if (live.maint) ANIM.maint.forEach(function (f) { f(t, dt); });
     if (IN.wkKey !== AT.weekKey() + AT.weeklyDone()) refreshInside();
     if (AT.UIframe) AT.UIframe(t, dt, area);
-    if (GA.Retro && GA.Retro.frame) GA.Retro.frame(t, dt);
-    if (R.mimi) { R.mimi.visible = !/^(attic|attic2|attic3|maint|roof|basement|gallery)$/.test(area); if (GA.Mimi && GA.Mimi.frame) GA.Mimi.frame(t, dt); }
+    if (GA.Retro && GA.Retro.frame) GA.Retro.frame(t, dt); if (GA.MimiLab && GA.MimiLab.frame) GA.MimiLab.frame(t, dt);
+    if (R.mimi) { R.mimi.visible = !/^(attic|attic2|attic3|maint|roof|basement|gallery|mlab)$/.test(area); if (GA.Mimi && GA.Mimi.frame) GA.Mimi.frame(t, dt); }
   };
   AT.mood = function () { return { area: GA.Hub.area(), spot: AT.spotIndex(), theme: AT.theme().id }; };
 })();
