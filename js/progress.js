@@ -267,6 +267,9 @@
   // Bonus Zone East Wing (#50): Grandma Mrs
   A.push({ id: 'gm_phone', cat: 'Arcade', icon: '\uD83D\uDCF1', name: 'Grandma\u2019s Tech Support', desc: 'Fix Grandma Mrs\u2019s phone in the Bonus Zone East Wing', p: function () { return [ev('gmFix') ? 1 : 0, 1]; } });
   A.push({ id: 'gm_fav', cat: 'Arcade', icon: '\uD83C\uDF6A', name: 'Grandma\u2019s Favorite', desc: 'Fix Grandma Mrs\u2019s phone 10 times (she says you\u2019re her favorite, she says that to everyone)', p: function () { return [Math.min(10, ev('gmFix')), 10]; } });
+  // Carrie’s Gift Booth (#64): Ratita Industries x Tortuga Tech Gift-O-Matic 3000
+  A.push({ id: 'gf_spin', cat: 'Arcade', icon: '\uD83C\uDF81', name: 'Capsule Crank', desc: 'Spin the Ratita \u00d7 Tortuga Gift-O-Matic 3000 at Carrie\u2019s Gift Booth', p: function () { return [ev('gfSpin') ? 1 : 0, 1]; } });
+  A.push({ id: 'gf_pets', cat: 'Arcade', icon: '\uD83D\uDC3E', name: 'Gift Crew High-Five', desc: 'Collect the Pet Crew check-in gifts from Luna, Pi-rat, Snowie, Candy and Torty at Carrie\u2019s Gift Booth', p: function () { return [Math.min(5, ev('gfPets')), 5]; } });
   GA.ACHIEVEMENTS = A;
 
   function prog(a) { var r = a.p(); return { cur: Math.min(r[0] || 0, r[1]), goal: r[1] }; }
@@ -367,6 +370,139 @@
     } catch (e) { /* ignore */ }
   }
   GA.giftHalloween = giftHalloween550;
+
+  /* ---------- Carrie’s Gift Booth (#64): Ratita Industries x Tortuga Tech Gift-O-Matic 3000 ----------
+     All state lives inside S.giftBooth (stored under grokArcade.prog via GA.store), so Bob’s Account Desk
+     and Firebase Live Sync carry it automatically and no gift can be spammed or re-rolled. */
+  function gbDay() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function gbState() {
+    if (!S.giftBooth || typeof S.giftBooth !== 'object') {
+      S.giftBooth = { welcome: false, lastSpinDay: '', spins: 0, lastCapsule: null, milestones: {}, pets: {} };
+    }
+    if (!S.giftBooth.milestones) S.giftBooth.milestones = {};
+    if (!S.giftBooth.pets) S.giftBooth.pets = {};
+    return S.giftBooth;
+  }
+  var GB_CAPSULES = [
+    { id: 'luna_gold', pet: 'Luna', petIcon: '\uD83D\uDC2D', maker: 'Ratita Industries', name: 'Luna\u2019s Golden Gear Capsule', icon: '\u2699\uFE0F', color: '#fbbf24', tix: 60, coins: 2, snackId: 'pizza', snackLabel: '\uD83C\uDF55 Pizza Slice Boost (x2 next bonus game)', note: 'Calibrated by Luna with 100% real Gouda-grade gears!' },
+    { id: 'torty_turbo', pet: 'Torty', petIcon: '\uD83D\uDC22', maker: 'Tortuga Tech', name: 'Torty\u2019s Shell-Shield Capsule', icon: '\uD83D\uDEE1\uFE0F', color: '#34d399', tix: 50, coins: 2, snackId: 'slushie', snackLabel: '\uD83E\uDD64 Turbo Slushie Boost (+50% speed for 2m)', note: 'Tortuga Tech drop-tested from the rooftop three times!' },
+    { id: 'pirat_booty', pet: 'Pi-rat', petIcon: '\uD83C\uDFF4\u200D\u2620\uFE0F', maker: 'Ratita \u00d7 Tortuga', name: 'Pi-rat\u2019s Treasure Chest Capsule', icon: '\uD83E\uDE99', color: '#f59e0b', tix: 75, coins: 3, snackId: 'nachos', snackLabel: '\uD83E\uDDC0 Lucky Nachos Boost (10+ ticket floor)', note: 'Yarr! Packed with shiny doubloons and extra arcade tickets!' },
+    { id: 'snowie_frost', pet: 'Snowie', petIcon: '\u2744\uFE0F', maker: 'Tortuga Tech', name: 'Snowie\u2019s Cloud-Nine Frost Capsule', icon: '\uD83D\uDCAB', color: '#38bdf8', tix: 45, coins: 2, snackId: 'icecream', snackLabel: '\uD83C\uDF66 Sugar Rush Boost (+5 tickets x3 games)', note: 'Chilled in Snowie\u2019s cloud hangar for maximum sparkle!' },
+    { id: 'candy_swirl', pet: 'Candy', petIcon: '\uD83C\uDF6D', maker: 'Ratita Industries', name: 'Candy\u2019s Sweet Swirl Capsule', icon: '\uD83C\uDF80', color: '#f472b6', tix: 55, coins: 2, snackId: 'icecream', snackLabel: '\uD83C\uDF66 Sugar Rush Boost (+5 tickets x3 games)', note: 'Wrapped in triple-striped cotton-candy ribbon by Candy!' }
+  ];
+  var GB_PETS = [
+    { id: 'luna', name: 'Luna', role: 'Ratita Lead Engineer', icon: '\uD83D\uDC2D', tix: 15, quote: 'Squeak! I welded the capsule chute so it never jams\u2014even when Gary plugs his coffee pot into it!' },
+    { id: 'pirat', name: 'Pi-rat', role: 'Treasure Quartermaster', icon: '\uD83C\uDFF4\u200D\u2620\uFE0F', tix: 15, quote: 'Yarr! Every good gift booth needs a treasure chest. Here be 15 shiny tickets from me secret stash!' },
+    { id: 'snowie', name: 'Snowie', role: 'White Fancy Rat \u00b7 Sky Mascot', icon: '\uD83D\uDC01', tix: 15, quote: 'Squeak! I flew the ribbons in from Sky Tours this morning! Carrie put a bow on my head!' },
+    { id: 'candy', name: 'Candy', role: 'Miniature Schnauzer \u00b7 Ribbon Stylist', icon: '\uD83D\uDC15', tix: 15, quote: 'Woof! Every gift capsule gets a sparkle inspection! Pink and gold bows make tickets 200% luckier!' },
+    { id: 'torty', name: 'Torty', role: 'Tortuga Tech Co-Founder', icon: '\uD83D\uDC22', tix: 15, quote: 'Slow and steady wins the jackpot! My shell-grade gears keep the Gift-O-Matic 3000 running smooth.' }
+  ];
+  function gbMilestonesDef() {
+    var cnt = P.counts(), gamesPlayed = bonusPlayed() + Object.keys(st.launched || {}).length;
+    return [
+      { id: 'm_visit', icon: '\uD83C\uDF80', name: 'Booth Grand Opening Box', desc: 'Visit Carrie\u2019s Gift Booth in the Arcade', cur: 1, goal: 1, tix: 40, coins: 1 },
+      { id: 'm_games', icon: '\uD83D\uDD79\uFE0F', name: 'Cabinet Hopper Gift Box', desc: 'Play at least 3 different Grok games', cur: Math.min(3, gamesPlayed), goal: 3, tix: 75, coins: 2 },
+      { id: 'm_badges', icon: '\uD83C\uDFC5', name: 'Badge Collector Gift Box', desc: 'Unlock 5 Arcade Achievements', cur: Math.min(5, cnt.ach), goal: 5, tix: 100, coins: 2 },
+      { id: 'm_prizes', icon: '\uD83E\uDDF8', name: 'Prize Counter VIP Box', desc: 'Collect 2 Prizes from the Prize Counter or Claw Machines', cur: Math.min(2, cnt.prizes), goal: 2, tix: 125, coins: 3 },
+      { id: 'm_legend', icon: '\uD83D\uDC51', name: 'Ratita \u00d7 Tortuga Master Box', desc: 'Unlock 12 Arcade Achievements', cur: Math.min(12, cnt.ach), goal: 12, tix: 200, coins: 4 }
+    ];
+  }
+  P.giftBoothState = function () {
+    var gb = gbState(), today = gbDay(), ms = gbMilestonesDef();
+    var readyMs = ms.filter(function (m) { return m.cur >= m.goal && !gb.milestones[m.id]; }).length;
+    var readyPets = GB_PETS.filter(function (p) { return !gb.pets[p.id]; }).length;
+    var canSpin = gb.lastSpinDay !== today;
+    return {
+      welcomeClaimed: !!gb.welcome,
+      canSpin: canSpin,
+      today: today,
+      spins: gb.spins || 0,
+      streakNext: ((gb.spins || 0) + 1) % 3 === 0,
+      lastCapsule: gb.lastCapsule,
+      milestones: ms.map(function (m) {
+        return { id: m.id, icon: m.icon, name: m.name, desc: m.desc, cur: m.cur, goal: m.goal, tix: m.tix, coins: m.coins, claimed: !!gb.milestones[m.id], ready: m.cur >= m.goal && !gb.milestones[m.id] };
+      }),
+      pets: GB_PETS.map(function (p) {
+        return { id: p.id, name: p.name, role: p.role, icon: p.icon, tix: p.tix, quote: p.quote, claimed: !!gb.pets[p.id] };
+      }),
+      readyCount: (!gb.welcome ? 1 : 0) + (canSpin ? 1 : 0) + readyMs + readyPets
+    };
+  };
+  P.claimGiftWelcome = function () {
+    var gb = gbState();
+    if (gb.welcome) return { ok: false, why: 'already' };
+    gb.welcome = true;
+    GA.addTickets(150);
+    if (GA.Areas && GA.Areas.addCoins) GA.Areas.addCoins(3);
+    if (GA.onTickets) GA.onTickets(GA.getTickets());
+    save(); check();
+    return { ok: true, tix: 150, coins: 3 };
+  };
+  P.spinGiftMachine = function () {
+    var gb = gbState(), today = gbDay();
+    if (gb.lastSpinDay === today) return { ok: false, why: 'today', capsule: gb.lastCapsule };
+    gb.lastSpinDay = today;
+    gb.spins = (gb.spins || 0) + 1;
+    // Deterministic-yet-varied pick using date + spin count so refreshing cannot exploit
+    var seed = today.split('-').reduce(function (a, b) { return a * 31 + (+b || 0); }, 7) + gb.spins * 13;
+    var base = GB_CAPSULES[Math.abs(seed) % GB_CAPSULES.length];
+    var streakBonus = (gb.spins % 3 === 0) ? 25 : 0;
+    var totalTix = base.tix + streakBonus;
+    GA.addTickets(totalTix);
+    if (GA.Areas && GA.Areas.addCoins) GA.Areas.addCoins(base.coins);
+    if (GA.Areas && GA.Areas.giveBoost && GA.SNACKS) {
+      var sn = GA.SNACKS.find(function (x) { return x.id === base.snackId; });
+      if (sn) GA.Areas.giveBoost(sn);
+    }
+    if (GA.onTickets) GA.onTickets(GA.getTickets());
+    var res = {
+      day: today,
+      spinNum: gb.spins,
+      id: base.id,
+      pet: base.pet,
+      petIcon: base.petIcon,
+      maker: base.maker,
+      name: base.name,
+      icon: base.icon,
+      color: base.color,
+      tix: totalTix,
+      baseTix: base.tix,
+      streakBonus: streakBonus,
+      coins: base.coins,
+      snackLabel: base.snackLabel,
+      note: base.note
+    };
+    gb.lastCapsule = res;
+    st.ev.gfSpin = (st.ev.gfSpin || 0) + 1;
+    save(); check();
+    return { ok: true, capsule: res };
+  };
+  P.claimGiftMilestone = function (id) {
+    var gb = gbState(), ms = gbMilestonesDef().find(function (m) { return m.id === id; });
+    if (!ms) return { ok: false, why: 'unknown' };
+    if (gb.milestones[id]) return { ok: false, why: 'already' };
+    if (ms.cur < ms.goal) return { ok: false, why: 'locked' };
+    gb.milestones[id] = Date.now();
+    GA.addTickets(ms.tix);
+    if (GA.Areas && GA.Areas.addCoins && ms.coins) GA.Areas.addCoins(ms.coins);
+    if (GA.onTickets) GA.onTickets(GA.getTickets());
+    save(); check();
+    return { ok: true, milestone: ms };
+  };
+  P.claimPetGift = function (petId) {
+    var gb = gbState(), pet = GB_PETS.find(function (p) { return p.id === petId; });
+    if (!pet) return { ok: false, why: 'unknown' };
+    if (gb.pets[petId]) return { ok: false, why: 'already', pet: pet };
+    gb.pets[petId] = Date.now();
+    GA.addTickets(pet.tix);
+    if (GA.onTickets) GA.onTickets(GA.getTickets());
+    st.ev.gfPets = Object.keys(gb.pets).length;
+    save(); check();
+    return { ok: true, pet: pet };
+  };
 
   function init() {
     var got = check(firstRun);

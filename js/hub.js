@@ -2068,6 +2068,7 @@
     if (GA.Wing50 && GA.Wing50.build) { try { GA.Wing50.build(api()); } catch (e) { if (window.console) console.warn('East Wing / Grand Gallery failed to build', e); } }
     if (GA.Remaster && GA.Remaster.build) { try { GA.Remaster.build(api()); } catch (e) { if (window.console) console.warn('Tortuga Remaster Works failed to build', e); } }
     if (GA.Account3D && GA.Account3D.build) { try { GA.Account3D.build(api()); } catch (e) { if (window.console) console.warn('Bob\u2019s Account Desk failed to build', e); } }
+    if (GA.Gift3D && GA.Gift3D.build) { try { GA.Gift3D.build(api()); } catch (e) { if (window.console) console.warn('Carrie\u2019s Gift Booth failed to build', e); } }
     buildGary(); buildPlayer(); setupInput();
     // restore position when coming back from a main game
     var saved = null; try { saved = JSON.parse(sessionStorage.getItem('grokArcade.pos') || 'null'); } catch (e) {}

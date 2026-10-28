@@ -872,3 +872,56 @@ body.touch .tmChip{top:calc(max(12px,env(safe-area-inset-top)) + 248px);bottom:a
 
 /* Tortuga Remaster Works */
 .rmPanel .pzTitle b{color:#4ade80}.rmTypes{grid-template-columns:repeat(2,1fr)}.rmType.on{border-color:#4ade80;background:rgba(74,222,128,.2);box-shadow:0 0 14px rgba(74,222,128,.5)}.rmLegend{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}.rmStamp{color:#16a34a;border-color:#16a34a}
+
+/* Carrie's Gift Booth (#64) */
+.arPanel.gbPanel{max-width:740px;border-color:#f472b6;background:linear-gradient(165deg,#1e1038 0%,#0f172a 60%,#042f2e 100%)}
+.gbSay{display:flex;gap:12px;align-items:center;background:rgba(236,72,153,.13);border:1.5px solid rgba(244,114,182,.45);border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.gbFace{width:54px;height:54px;flex:0 0 54px;border-radius:12px;overflow:hidden;border:2px solid #fbbf24;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.gbFace svg{width:100%;height:100%;display:block}
+.gbWho{font-size:13px;color:#f9a8d4;margin-bottom:3px}
+.gbWho b{color:#fde68a;font-size:15px;margin-right:6px}
+.gbQuote{font-size:14px;color:#fff;line-height:1.35}
+.gbBar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.gbWallet{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;color:#e2e8f0;background:rgba(15,23,42,.75);padding:6px 12px;border-radius:10px;border:1px solid rgba(251,191,36,.35)}
+.gbWallet b{color:#fde68a}
+.gbSync{color:#5eead4;font-weight:700}
+.gbTabs{display:flex;gap:6px;flex-wrap:wrap}
+.gbTab{background:rgba(30,41,59,.85);color:#cbd5e1;border:1.5px solid rgba(148,163,184,.35);border-radius:10px;padding:7px 12px;font:700 13px "Trebuchet MS",system-ui,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.gbTab.on{background:linear-gradient(135deg,#db2777,#7c3aed);color:#fff;border-color:#fbbf24;box-shadow:0 0 12px rgba(236,72,153,.45)}
+.gbDot{background:#fbbf24;color:#0f172a;font-style:normal;font-size:11px;font-weight:900;padding:1px 6px;border-radius:99px}
+.gbWrap{display:flex;flex-direction:column;gap:10px}
+.gbSubNote{font-size:13px;color:#cbd5e1;background:rgba(15,23,42,.6);padding:8px 12px;border-radius:10px;border:1px solid rgba(94,234,212,.25)}
+.gbCard{background:rgba(15,23,42,.78);border:1.5px solid rgba(148,163,184,.3);border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.gbCard.gbWelcome,.gbCard.ready{border-color:#fbbf24;background:linear-gradient(135deg,rgba(251,191,36,.14),rgba(219,39,119,.14))}
+.gbCard.gbDone,.gbCard.claimed{opacity:.82;border-color:rgba(52,211,153,.4)}
+.gbCardLeft{display:flex;gap:12px;align-items:center;flex:1 1 280px}
+.gbCardLeft b{display:block;font-size:15px;color:#fde68a;margin-bottom:3px}
+.gbCardLeft span{display:block;font-size:13px;color:#e2e8f0;line-height:1.35}
+.gbBigIco{font-size:32px;width:48px;height:48px;flex:0 0 48px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.07);border-radius:12px;border:1px solid rgba(251,191,36,.35)}
+.gbBadge{display:inline-block;background:#fbbf24;color:#1e1b4b;font-size:10px;font-weight:900;padding:2px 7px;border-radius:99px;margin-bottom:4px;letter-spacing:.5px}
+.gbGoldBtn{background:linear-gradient(135deg,#fbbf24,#f59e0b)!important;color:#1e1b4b!important;font-weight:900!important}
+.gbSpinBtn{background:linear-gradient(135deg,#14b8a6,#ec4899)!important;color:#fff!important;border:2px solid #fde68a!important}
+.gbPetBtn{background:linear-gradient(135deg,#ec4899,#8b5cf6)!important;color:#fff!important}
+.gbMachine{flex-direction:column;align-items:stretch;border-color:#2dd4bf}
+.gbMakerRow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-bottom:8px;border-bottom:1px solid rgba(94,234,212,.25);font-size:12px;font-weight:800}
+.gbMaker.ratita{color:#fde68a;background:rgba(251,191,36,.15);padding:3px 8px;border-radius:8px;border:1px solid rgba(251,191,36,.4)}
+.gbMaker.tortuga{color:#5eead4;background:rgba(20,184,166,.18);padding:3px 8px;border-radius:8px;border:1px solid rgba(45,212,191,.4)}
+.gbMakerX{color:#f472b6;font-size:15px}
+.gbModel{margin-left:auto;color:#94a3b8}
+.gbMachBody{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding-top:4px}
+.gbDomeArt{width:130px;flex:0 0 130px;display:flex;flex-direction:column;align-items:center}
+.gbDomeGlobe{width:106px;height:96px;border-radius:54px 54px 20px 20px;background:radial-gradient(circle at 35% 30%,rgba(224,242,254,.42),rgba(14,116,144,.25));border:2.5px solid #fbbf24;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;padding:10px;box-shadow:inset 0 0 16px rgba(56,189,248,.4)}
+.gbDomeGlobe span{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px;border:1.5px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.4)}
+.gbDomeBase{background:#0f766e;color:#fde68a;font-size:10px;font-weight:900;padding:4px 8px;border-radius:6px;border:1.5px solid #fbbf24;margin-top:-4px}
+.gbMachInfo{flex:1 1 260px}
+.gbMachInfo b{font-size:16px;color:#5eead4;display:block;margin-bottom:4px}
+.gbMachInfo p{font-size:13px;color:#e2e8f0;line-height:1.4;margin:0 0 10px}
+.gbCapResult{margin-top:8px;background:rgba(4,47,46,.85);border:2px solid var(--capCol,#fbbf24);border-radius:12px;padding:10px 12px}
+.gbCapTop{font-size:15px;color:#fde68a;margin-bottom:6px}
+.gbCapTop span{color:#94a3b8;font-size:12px}
+.gbCapPrizes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.gbCapPrizes span{background:rgba(255,255,255,.1);color:#fff;font-weight:700;font-size:12px;padding:4px 9px;border-radius:8px;border:1px solid rgba(251,191,36,.35)}
+.gbCapNote{font-size:12px;color:#a7f3d0}
+.gbMsTxt{flex:1}
+.gbBarTrack{height:7px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden;margin-top:6px}
+.gbBarFill{height:100%;background:linear-gradient(90deg,#14b8a6,#fbbf24,#ec4899);border-radius:99px}
