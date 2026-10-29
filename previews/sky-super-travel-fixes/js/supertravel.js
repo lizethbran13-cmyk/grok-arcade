@@ -247,11 +247,32 @@ ST.gate = (apt) => {
   if (t.stage === 'board') { if (apt.code !== tripCode(t.origin)) { toast('🚪 Your flight boards at ' + t.originName + '.', 'warn'); return; } ST.depart(); return; }
   toast('🧳 Finish arriving first: baggage claim' + (t.intl ? ' + arrivals customs' : '') + '.', 'warn');
 };
+ST.cabinProps = (pl) => {
+  if (!pl || pl.small || !pl.group) return; if (pl._stProps) { pl.group.remove(pl._stProps); pl._stProps.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); pl._stProps = null; }
+  const g = new THREE.Group(), cab = pl.seats.filter((s) => !s.cockpit); if (!cab.length) return;
+  const M = (c) => new THREE.MeshLambertMaterial({ color: c });
+  const scr = new THREE.InstancedMesh(new THREE.BoxGeometry(0.26, 0.17, 0.03), M(0x0f172a), cab.length);
+  const glow = new THREE.InstancedMesh(new THREE.BoxGeometry(0.22, 0.13, 0.01), new THREE.MeshBasicMaterial({ color: 0x38bdf8 }), cab.length);
+  const m = new THREE.Matrix4();
+  cab.forEach((s, i) => { m.makeTranslation(s.x, s.y + 0.55, s.z + 0.36); scr.setMatrixAt(i, m); m.makeTranslation(s.x, s.y + 0.55, s.z + 0.38); glow.setMatrixAt(i, m); });
+  g.add(scr, glow);
+  let z0 = Infinity, z1 = -Infinity; for (const s of cab) { z0 = Math.min(z0, s.z); z1 = Math.max(z1, s.z); }
+  const L = z1 - z0 + 1.2, zc = (z0 + z1) / 2;
+  for (const sx of [-1, 1]) {
+    const bin = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.36, L), M(0xe5e7eb)); bin.position.set(sx * 1.75, 1.85, zc); g.add(bin);
+    const lip = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.05, L), M(0x94a3b8)); lip.position.set(sx * 1.47, 1.7, zc); g.add(lip);
+  }
+  const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.02, L), new THREE.MeshBasicMaterial({ color: 0xfff7d6 })); lamp.position.set(0, 2.2, zc); g.add(lamp);
+  const zOf = (c, f) => { const zs = cab.filter((s) => s.cabinClass === c).map((s) => s.z); return zs.length ? f(...zs) : null; };
+  for (const [a, b, col] of [['first', 'business', 0x9f1239], ['business', 'economy', 0x1e3a8a]]) { const za = zOf(a, Math.max), zb = zOf(b, Math.min); if (za == null || zb == null) continue; for (const sx of [-1, 1]) { const c = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.6, 0.04), M(col)); c.position.set(sx * 1.55, 0.95, (za + zb) / 2); g.add(c); } }
+  const cart = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.95, 0.6), M(0x9ca3af)); cart.position.set(0, 0.48, z1 + 1.4); g.add(cart);
+  pl.group.add(g); pl._stProps = g;
+};
 ST.depart = () => {
   const t = T(), G = SKY.Game, P = SKY.Player; if (!t) return;
-  if (G.plane && G.plane.small) { G.planeType = ST.AIRLINER; }
+  if (ST._prevType == null) ST._prevType = G.planeType; G.planeType = ST.AIRLINER;
   G.start(t.origin, 'passenger');
-  const pl = G.plane; pl.ap.dest = W.city(t.dest); pl.ap.on = true; pl.ap.by = 'pilots';
+  const pl = G.plane; ST.cabinProps(pl); pl.ap.dest = W.city(t.dest); pl.ap.on = true; pl.ap.by = 'pilots';
   const want = t.cls === 'first' ? 'first' : t.cls === 'business' ? 'business' : 'economy';
   const cab = pl.seats.filter((s) => !s.cockpit);
   let seat = cab.find((s) => s.cabinClass === want && !s.occupant) || cab.find((s) => s.cabinClass === want) || cab.find((s) => !s.occupant) || cab[0];
@@ -260,12 +281,12 @@ ST.depart = () => {
   t.stage = 'flying'; t.left = 75; ST.flightLive = true; persist();
   toast('💺 You are a ' + CLASSES[t.cls].name + ' passenger (row ' + (seat ? seat.row + 1 : '?') + '). 🧑‍✈️ Captain Rex & First Officer Kim are flying you to ' + t.destName + '. Stand up and walk the cabin any time!', 'good');
 };
-ST.watch = () => { const P = SKY.Player, pl = SKY.Game.plane; const cap = pl.seats.find((s) => s.captain); if (!cap) return; P.leaveSeat(); const cd = pl.cockpitDoor; if (cd && !cd.broken) { cd.target = 1; cd.open = 1; cd.autoClose = 0; } P.mode = 'foot'; P.pos.set(0, 0.01, cap.z + 1.6); P.vel.set(0, 0, 0); P.yaw = 0; P.camMode = "tp"; P.pitch = -0.3; toast('👀 Watching Captain Rex & First Officer Kim fly. Tap 💺 My seat to sit back down.', 'good'); };
-ST.backToSeat = () => { const P = SKY.Player; const cd = SKY.Game.plane.cockpitDoor; if (cd && !cd.broken) cd.target = 0; P.camMode = "fp"; if (ST.mySeat) P.sitSeat(ST.mySeat); };
+ST.watch = () => { if (SKY.stCamWrap) SKY.stCamWrap(); const P = SKY.Player, pl = SKY.Game.plane; const cap = pl.seats.find((s) => s.captain); if (!cap) return; P.leaveSeat(); const cd = pl.cockpitDoor; if (cd && !cd.broken) { cd.target = 1; cd.open = 1; cd.autoClose = 0; } P.mode = 'foot'; P.pos.set(0, 0.01, cap.z + 0.9); P.vel.set(0, 0, 0); P.yaw = 0; P.camMode = "tp"; P.pitch = -0.3; ST.watching = true; toast('👀 Watching Captain Rex & First Officer Kim fly. Tap 💺 My seat to sit back down.', 'good'); };
+ST.backToSeat = () => { const P = SKY.Player; const cd = SKY.Game.plane.cockpitDoor; if (cd && !cd.broken) cd.target = 0; P.camMode = "fp"; ST.watching = false; if (ST.mySeat) P.sitSeat(ST.mySeat); };
 ST.skip = () => { const t = T(); if (t && t.stage === 'flying') t.left = 0; };
 ST.arrive = () => {
   const t = T(), G = SKY.Game, P = SKY.Player; if (!t) return; const C = CLASSES[t.cls];
-  ST.flightLive = false; G.fastTravel(t.dest, 'gate');
+  ST.flightLive = false; ST.watching = false; if (G.plane && G.plane._stProps) { G.plane.group.remove(G.plane._stProps); G.plane._stProps = null; } if (ST._prevType != null) { G.planeType = ST._prevType; ST._prevType = null; } G.fastTravel(t.dest, 'gate');
   P.hp = Math.min(100, P.hp + C.heal);
   const ok = ST.putInTerminal(tripCode(t.dest), 13, -4);
   t.stage = 'bags'; persist();
@@ -327,6 +348,7 @@ ST.returnWheel = () => { const pl = SKY.Game.plane; if (!pl || !pl.wheelStolen) 
 // watch landings and weather → real consequences
 let lastGround = true, lastVy = 0;
 ST.update = (dt) => {
+  { const ins = document.getElementById('instr'), P = SKY.Player; if (ins) ins.style.display = (ST.inTrip && ST.inTrip() && P.mode !== 'pilot') ? 'none' : ''; if (ST.watching && P.mode !== 'foot') ST.watching = false; }
   const G = SKY.Game, pl = G.plane; if (!pl || G.state !== 'play') return;
   if (!ST.owned()) { const f = $('stFlight'), g = $('stGuide'); if (f) f.style.display = 'none'; if (g) g.style.display = 'none'; return; }
   if (pl.onGround && !lastGround && !pl.crashed) { const vy = -lastVy; if (vy > 4.5) ST.damage('Hard landing (' + Math.round(vy * 196.85) + ' fpm)', Math.round(vy * 2), Math.round(vy * 3)); }
@@ -402,3 +424,13 @@ const oClose = G.closeUI; G.closeUI = function () { const p = $('stPanel'); if (
 const oMini = G.drawMinimap; G.drawMinimap = function () { const r = oMini.apply(this, arguments); try { const tg = ST.owned() && ST.target(); const P = SKY.Player; if (tg && P.frame === 'world') { const cv = $('minimap'), x = cv.getContext('2d'), Sz = cv.width, sc = Sz / 2 / 700, hdg = -P.yaw; const dx = (tg.v.x - P.pos.x) * sc, dz = (tg.v.z - P.pos.z) * sc; const rx = dx * Math.cos(-hdg) - dz * Math.sin(-hdg), rz = dx * Math.sin(-hdg) + dz * Math.cos(-hdg); const m = Math.hypot(rx, rz), lim = Sz / 2 - 10; const k = m > lim ? lim / m : 1; x.save(); x.font = 'bold 16px sans-serif'; x.textAlign = 'center'; x.lineWidth = 3; x.strokeStyle = '#000'; x.strokeText('★', Sz / 2 + rx * k, Sz / 2 + rz * k + 6); x.fillStyle = '#facc15'; x.fillText('★', Sz / 2 + rx * k, Sz / 2 + rz * k + 6); x.restore(); } } catch (e) { } return r; };
 const oUpd = G.update; G.update = function (dt) { const r = oUpd.apply(this, arguments); try { ST.update(dt); } catch (e) { if (!ST.err) { ST.err = 1; console.warn('supertravel', e); } } return r; };
 })();
+
+// Watch-cockpit camera: above & behind the bot pilots, looking down over the seat backs (applied after the game camera).
+SKY.stCamWrap = function () { const G = SKY.Game; if (!G || G.updateCamera._st) return; G._stCamWrap = true; const o = G.updateCamera; const e = new THREE.Euler(0, 0, 0, 'YXZ'), q = new THREE.Quaternion(), v = new THREE.Vector3();
+  G.updateCamera = function (dt) { o.call(this, dt); const cam = this.camera, pl = this.plane;
+    if (SKY.SuperTravel && SKY.SuperTravel.watching && pl && SKY.Player.frame === 'plane') { { v.set(0, 2.1, -12.75); cam.position.copy(pl.toWorld(v)); e.set(-1.1, 0, 0); q.setFromEuler(e); cam.quaternion.copy(pl.quat).multiply(q); if (cam._stFov == null) { cam._stFov = cam.fov; cam.fov = 100; cam.updateProjectionMatrix(); } } }
+    else if (cam._stFov != null) { cam.fov = cam._stFov; cam._stFov = null; cam.updateProjectionMatrix(); } }; G.updateCamera._st = true; };
+
+SKY.stCamApply = function (G) { const cam = G.camera, pl = G.plane, ST = SKY.SuperTravel;
+  if (ST && ST.watching && pl && SKY.Player.frame === 'plane') { const v = new THREE.Vector3(0, 2.1, -12.75); cam.position.copy(pl.toWorld(v)); cam.quaternion.copy(pl.quat).multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(-1.1, 0, 0, 'YXZ'))); if (cam._stFov == null) { cam._stFov = cam.fov; cam.fov = 100; cam.updateProjectionMatrix(); } }
+  else if (cam._stFov != null) { cam.fov = cam._stFov; cam._stFov = null; cam.updateProjectionMatrix(); } };

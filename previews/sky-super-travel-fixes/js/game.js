@@ -231,6 +231,7 @@ const G = SKY.Game = {
     this.fx.update(dt, new THREE.Vector3(0, -SKY.GRAV, 0), (x, y, z) => SKY.World.heightAt(x, z) + 0.05);
     this.events(dt);
     this.updateCamera(dt);
+    if (SKY.stCamApply) SKY.stCamApply(this);
     this.updateAudio(dt);
   },
   transferRegion(reg) {
@@ -319,7 +320,7 @@ const G = SKY.Game = {
   renderPlayerBody(wp, ww) {
     const P = SKY.Player; const showTP = P.camMode === 'tp' || ((P.mode === 'pilot' || (P.mode === 'seat' && P.rideCam)) && P.pilotCam === 'chase');
     if (SKY.Net && SKY.Net.renderRiders) SKY.Net.renderRiders(wp, ww); // 4.0: friends riding in the same plane
-    if (!showTP || P.dead || P.mode === 'drive' || P.mode === 'ride') return;
+    if (!showTP || (SKY.SuperTravel && SKY.SuperTravel.watching) || P.dead || P.mode === 'drive' || P.mode === 'ride') return;
     const b = P.body; b.frame = P.frame; b.pos.copy(P.pos); b.yaw = P.yaw;
     b.state = P.mode === 'seat' || P.mode === 'pilot' ? 'sit' : (P.frame === 'world' && P.chute ? 'para' : (Math.hypot(P.vel.x, P.vel.z) > 0.5 ? 'walk' : 'idle'));
     b.masked = P.masked; b.woozy = P.woozy; b.carry = !!P.held; b.panic = 0;
