@@ -97,11 +97,13 @@
     {
       "issue": 85,
       "game": "eatsville",
-      "name": "Eatsville Tycoon DLC: Online Order Mode",
+      "name": "Eatsville Tycoon: Online Order Mode DLC",
       "size": "Expansion",
-      "what": "Take online takeout and delivery orders from an in-diner tablet, pack meal bags at the express counter, and dispatch couriers across Eatsville.",
-      "stage": "queued",
-      "when": "Queued"
+      "what": "Online Order Dispatch counter & Curbside Pickup shelf inside your restaurant with all 5 family pets (Luna, Pi-rat, Snowie, Candy & Torty)! Take Tortuga Eats / Ratita Rush app orders: prep, seal in a thermal hot bag, hand over curbside or dispatch same-day delivery on your restaurant-matched scooter or thermal cruiser. Hot food earns big tips 🤑, cold food costs rating, refunds and gear wear, and Candy & Torty's free Emergency Reboot means you're never stuck.",
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "preview": true,
+      "previewUrl": "previews/eatsville-online-orders/"
     },
     {
       "issue": 84,
@@ -808,6 +810,16 @@
       "playable": true,
       "built": "2026-10-28",
       "notes": "Walk-in classroom with Lilith the Bot (on speaker with Lily the Bot), 4 subject stations, all 5 pets, Lesson Save Vault + submit your own Google Slides lesson, slideshows with Fun Facts + bonus questions, timed quizzes, Soccer goal/red-card quiz, Projector Integrity + free Candy & Torty Tutor Pass."
+    },
+    {
+      "id": "eatsville-online-orders",
+      "game": "eatsville",
+      "issue": 85,
+      "name": "Eatsville Tycoon: Online Order Mode DLC",
+      "url": "previews/eatsville-online-orders/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "Online Order Dispatch counter + Curbside Pickup shelf in your restaurant, Tortuga Eats / Ratita Rush app queue (prep, hot-bag sealing, curbside handoff, same-day delivery with live temp & route bars), restaurant-matched scooter or thermal cruiser, all 5 family pets, hot-drop tips vs cold-order consequences (rating, refund fee, bag/tablet wear) and Candy & Torty's free Emergency Reboot."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
