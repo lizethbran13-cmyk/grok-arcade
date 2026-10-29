@@ -170,9 +170,11 @@
       "game": "arcade",
       "name": "Grok Arcade: Online Play Update",
       "size": "Feature",
-      "what": "Arcade-wide online room browser and quick-join party codes across multiplayer Grok games.",
-      "stage": "queued",
-      "when": "Queued"
+      "what": "Online Play HQ at the Multiplayer Antenna: 40 of 41 Main Games online (all except Grok Surfers per Lizeth’s rule, with a “Lizeth Says Otherwise” override toggle!), Auto-Online Policy for all future games unless marked “No Need”, Arcade-Wide Room Browser & 1-Click Pet Crew Party Codes, all 5 pets (Luna, Pi-rat, Snowie, Candy, Torty) in 3D & Relay Crew, real disconnect/foul consequences, and Candy & Torty’s Free Emergency Signal Rebuild (never stuck!). Playable now in the Time Jumper!",
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "preview": true,
+      "previewUrl": "previews/online-play-update/"
     },
     {
       "issue": 72,
@@ -778,7 +780,18 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "online-play-update",
+      "game": "arcade",
+      "issue": 73,
+      "name": "Grok Arcade: Online Play Update",
+      "url": "previews/online-play-update/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "Online Play HQ at the Multiplayer Antenna — 40 of 41 Main Games online (all except Grok Surfers per Lizeth's rule, with a 'Lizeth Says Otherwise' override toggle!), Auto-Online Policy for all future games unless marked 'No Need', Arcade-Wide Room Browser & 1-Click Pet Crew Party Codes, all 5 pets (Luna, Pi-rat, Snowie, Candy, Torty) in 3D & Relay Crew, real disconnect/foul consequences, and Candy & Torty's Free Emergency Signal Rebuild (never stuck!)."
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
