@@ -789,13 +789,12 @@
   "previews": [
     {
       "id": "party-fiesta-fixes",
-      "game": "party",
+      "game": "arcade",
       "issue": 82,
-      "name": "Grok Land Party: Fiesta Expansion DLC Fixes",
+      "name": "party-fiesta-fixes",
       "url": "previews/party-fiesta-fixes/",
       "playable": true,
-      "built": "2026-10-28",
-      "notes": "Massive Fiesta World Overhaul! Added the grand 5th town Gran Pueblo Viejo (🏛️) with a Cathedral Clocktower, cobblestone avenues & fountain, 14 interactive carved-stone merchant shops across all 5 towns (28 items & buffs), 32 bustling 3D villagers & shopkeepers, all 5 family pets in 3D (Luna, Pi-rat, Snowie, Candy & Torty), patrolling Chili Cart & Beach Crab hazards with Stamina/coin consequences, and Candy & Torty's Free Emergency Bailout (0 🪙, never stuck!)."
+      "built": "2026-10-28"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

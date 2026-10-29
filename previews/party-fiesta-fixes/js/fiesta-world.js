@@ -393,50 +393,100 @@ W.clockTower = function () {
   return g;
 };
 
-/* ---------- All 5 Pets in 3D: Luna, Pi-rat, Snowie, Candy, Torty ---------- */
+/* ---------- All 5 Pets in 3D: Luna, Pi-rat, Snowie, Candy, Torty (Martina) ---------- */
 W.pet = function (id) {
   const g = new THREE.Group(), root = new THREE.Group(); g.add(root);
   const pillow = M(G.cyl20, 0x9b5de5, 0.85, 0.16, 0.85); pillow.position.y = 0.08; g.add(pillow);
   const rim = M(G.torus, 0xffd23f, 0.85, 0.85, 0.08); rim.rotation.x = Math.PI / 2; rim.position.y = 0.14; g.add(rim);
   if (id === 'luna') {
-    // Luna: sleek black/violet cat with golden crescent collar & pointy ears
-    const body = M(G.sphere, 0x262338, 0.34, 0.28, 0.44); body.position.set(0, 0.36, 0); root.add(body);
-    const head = M(G.sphere, 0x262338, 0.28, 0.26, 0.26); head.position.set(0, 0.64, 0.24); root.add(head);
-    [-0.14, 0.14].forEach((x) => { const ear = M(G.cone, 0x262338, 0.1, 0.22, 0.1); ear.position.set(x, 0.88, 0.22); root.add(ear); });
-    [-0.09, 0.09].forEach((x) => { const eye = M(G.sphereLo, basic(0xffe66d), 0.05); eye.position.set(x, 0.67, 0.48); root.add(eye); });
-    const collar = M(G.torus, 0xff4fd8, 0.22, 0.22, 0.04); collar.rotation.x = Math.PI / 2; collar.position.set(0, 0.48, 0.18); root.add(collar);
-    const moon = M(G.sphereLo, basic(0xffd23f), 0.07); moon.position.set(0, 0.45, 0.4); root.add(moon);
-    const tail = M(G.cyl8, 0x262338, 0.05, 0.45, 0.05); tail.position.set(0, 0.52, -0.38); tail.rotation.x = -0.6; root.add(tail);
+    // Luna: Grey Fancy Rat with round pink ears, tapered snout, pink nose & long rat tail
+    const body = M(G.sphere, 0x7a8090, 0.34, 0.29, 0.44); body.position.set(0, 0.36, -0.02); root.add(body);
+    const head = M(G.sphere, 0x868d9e, 0.25, 0.23, 0.31); head.position.set(0, 0.62, 0.24); root.add(head);
+    const snout = M(G.cone, 0x868d9e, 0.14, 0.2, 0.14); snout.rotation.x = Math.PI / 2; snout.position.set(0, 0.59, 0.5); root.add(snout);
+    const nose = M(G.sphereLo, 0xff9ab8, 0.048); nose.position.set(0, 0.6, 0.6); root.add(nose);
+    [-0.19, 0.19].forEach((x) => {
+      const ear = M(G.cyl, 0x868d9e, 0.14, 0.035, 0.14); ear.rotation.x = Math.PI / 2; ear.position.set(x, 0.79, 0.16); root.add(ear);
+      const inner = M(G.cyl, 0xffb3c8, 0.095, 0.04, 0.095); inner.rotation.x = Math.PI / 2; inner.position.set(x, 0.79, 0.17); root.add(inner);
+    });
+    [-0.09, 0.09].forEach((x) => { const eye = M(G.sphereLo, 0x181824, 0.044); eye.position.set(x, 0.65, 0.45); root.add(eye); });
+    const collar = M(G.torus, 0x9b5de5, 0.21, 0.21, 0.04); collar.rotation.x = Math.PI / 2; collar.position.set(0, 0.48, 0.18); root.add(collar);
+    const moon = M(G.sphereLo, basic(0xffd23f), 0.065); moon.position.set(0, 0.44, 0.38); root.add(moon);
+    const tail = M(G.cyl8, 0xe8a5b8, 0.042, 0.52, 0.03); tail.position.set(0, 0.36, -0.46); tail.rotation.x = -1.1; root.add(tail);
   } else if (id === 'pirat') {
-    // Pi-rat: swashbuckling rat with round ears, eyepatch & pirate tricorne hat
-    const body = M(G.sphere, 0x8d8694, 0.33, 0.3, 0.4); body.position.set(0, 0.38, 0); root.add(body);
-    const head = M(G.sphere, 0x9c95a3, 0.26, 0.24, 0.3); head.position.set(0, 0.64, 0.22); root.add(head);
-    [-0.2, 0.2].forEach((x) => { const ear = M(G.cyl, 0xffb3c8, 0.14, 0.04, 0.14); ear.rotation.x = Math.PI / 2; ear.position.set(x, 0.8, 0.16); root.add(ear); });
-    const eye = M(G.sphereLo, 0x111111, 0.045); eye.position.set(-0.09, 0.67, 0.47); root.add(eye);
-    const patch = M(G.sphereLo, 0x1a1a1a, 0.065); patch.position.set(0.09, 0.67, 0.47); root.add(patch);
+    // Pi-rat: One-Eyed Brown Fancy Rat with pirate eye patch, round ears, pirate hat & rat tail
+    const body = M(G.sphere, 0x7c5236, 0.34, 0.3, 0.44); body.position.set(0, 0.37, -0.02); root.add(body);
+    const head = M(G.sphere, 0x8d5f40, 0.25, 0.23, 0.31); head.position.set(0, 0.63, 0.24); root.add(head);
+    const snout = M(G.cone, 0x8d5f40, 0.14, 0.2, 0.14); snout.rotation.x = Math.PI / 2; snout.position.set(0, 0.6, 0.5); root.add(snout);
+    const nose = M(G.sphereLo, 0xff9ab8, 0.048); nose.position.set(0, 0.61, 0.6); root.add(nose);
+    [-0.19, 0.19].forEach((x) => {
+      const ear = M(G.cyl, 0x7c5236, 0.14, 0.035, 0.14); ear.rotation.x = Math.PI / 2; ear.position.set(x, 0.79, 0.16); root.add(ear);
+      const inner = M(G.cyl, 0xffb3c8, 0.095, 0.04, 0.095); inner.rotation.x = Math.PI / 2; inner.position.set(x, 0.79, 0.17); root.add(inner);
+    });
+    const eye = M(G.sphereLo, 0x111111, 0.045); eye.position.set(-0.09, 0.66, 0.46); root.add(eye);
+    const patch = M(G.sphereLo, 0x111111, 0.068); patch.position.set(0.09, 0.66, 0.46); root.add(patch);
+    const strap = M(G.torus, 0x111111, 0.25, 0.25, 0.025); strap.rotation.y = 0.35; strap.position.set(0, 0.66, 0.24); root.add(strap);
     const hat = M(G.cone, 0x23192d, 0.32, 0.22, 0.32); hat.position.set(0, 0.9, 0.2); root.add(hat);
     const trim = M(G.torus, 0xffd23f, 0.28, 0.28, 0.04); trim.rotation.x = Math.PI / 2; trim.position.set(0, 0.8, 0.2); root.add(trim);
+    const tail = M(G.cyl8, 0xd89aa8, 0.042, 0.52, 0.03); tail.position.set(0, 0.36, -0.46); tail.rotation.x = -1.1; root.add(tail);
   } else if (id === 'snowie') {
-    // Snowie: fluffy white polar pup with cyan fiesta scarf
-    const body = M(G.sphere, 0xffffff, 0.38, 0.32, 0.45); body.position.set(0, 0.38, 0); root.add(body);
-    const head = M(G.sphere, 0xffffff, 0.3, 0.28, 0.28); head.position.set(0, 0.68, 0.22); root.add(head);
-    [-0.16, 0.16].forEach((x) => { const ear = M(G.sphereLo, 0xe8f4ff, 0.1); ear.position.set(x, 0.88, 0.18); root.add(ear); });
-    [-0.09, 0.09].forEach((x) => { const eye = M(G.sphereLo, 0x1a2838, 0.045); eye.position.set(x, 0.7, 0.46); root.add(eye); });
-    const nose = M(G.sphereLo, 0x222222, 0.05); nose.position.set(0, 0.64, 0.5); root.add(nose);
-    const scarf = M(G.torus, 0x3ff0ff, 0.25, 0.25, 0.06); scarf.rotation.x = Math.PI / 2; scarf.position.set(0, 0.5, 0.18); root.add(scarf);
+    // Snowie: Pure White Fancy Rat with pink inner ears, pink nose, long tail & frosty cyan scarf
+    const body = M(G.sphere, 0xfafcff, 0.34, 0.29, 0.44); body.position.set(0, 0.36, -0.02); root.add(body);
+    const head = M(G.sphere, 0xffffff, 0.25, 0.23, 0.31); head.position.set(0, 0.62, 0.24); root.add(head);
+    const snout = M(G.cone, 0xffffff, 0.14, 0.2, 0.14); snout.rotation.x = Math.PI / 2; snout.position.set(0, 0.59, 0.5); root.add(snout);
+    const nose = M(G.sphereLo, 0xff9ab8, 0.048); nose.position.set(0, 0.6, 0.6); root.add(nose);
+    [-0.19, 0.19].forEach((x) => {
+      const ear = M(G.cyl, 0xffffff, 0.14, 0.035, 0.14); ear.rotation.x = Math.PI / 2; ear.position.set(x, 0.79, 0.16); root.add(ear);
+      const inner = M(G.cyl, 0xffbfd4, 0.095, 0.04, 0.095); inner.rotation.x = Math.PI / 2; inner.position.set(x, 0.79, 0.17); root.add(inner);
+    });
+    [-0.09, 0.09].forEach((x) => { const eye = M(G.sphereLo, 0xc92a52, 0.044); eye.position.set(x, 0.65, 0.45); root.add(eye); });
+    const scarf = M(G.torus, 0x3ff0ff, 0.22, 0.22, 0.05); scarf.rotation.x = Math.PI / 2; scarf.position.set(0, 0.49, 0.18); root.add(scarf);
+    const tail = M(G.cyl8, 0xffccd8, 0.042, 0.52, 0.03); tail.position.set(0, 0.36, -0.46); tail.rotation.x = -1.1; root.add(tail);
   } else if (id === 'candy') {
-    // Candy: pastel cotton-candy bunny with tall ears & bow
-    const body = M(G.sphere, 0xff9ad5, 0.34, 0.32, 0.4); body.position.set(0, 0.38, 0); root.add(body);
-    const head = M(G.sphere, 0xffb3e0, 0.27, 0.26, 0.26); head.position.set(0, 0.66, 0.2); root.add(head);
-    [-0.11, 0.11].forEach((x) => { const ear = M(G.cyl8, 0xff9ad5, 0.06, 0.34, 0.06); ear.position.set(x, 0.98, 0.18); root.add(ear); });
-    [-0.09, 0.09].forEach((x) => { const eye = M(G.sphereLo, 0x3a142d, 0.045); eye.position.set(x, 0.68, 0.43); root.add(eye); });
-    const bow = M(G.box, 0xffd23f, 0.24, 0.1, 0.08); bow.position.set(0, 0.5, 0.38); root.add(bow);
+    // Candy: Miniature Schnauzer (salt-and-pepper grey dog with white bushy schnauzer beard & eyebrows, folded ears)
+    const body = M(G.sphere, 0x767c86, 0.36, 0.31, 0.46); body.position.set(0, 0.4, -0.02); root.add(body);
+    [[-0.18, 0.2], [0.18, 0.2], [-0.18, -0.2], [0.18, -0.2]].forEach((p) => {
+      const leg = M(G.cyl8, 0xd8dee8, 0.075, 0.26, 0.075); leg.position.set(p[0], 0.22, p[1]); root.add(leg);
+    });
+    const head = M(G.box, 0x828894, 0.36, 0.32, 0.36); head.position.set(0, 0.68, 0.24); root.add(head);
+    // Bushy white schnauzer beard & muzzle
+    const muzzle = M(G.box, 0xf2f5fa, 0.28, 0.22, 0.24); muzzle.position.set(0, 0.58, 0.44); root.add(muzzle);
+    const beard = M(G.box, 0xffffff, 0.26, 0.18, 0.16); beard.position.set(0, 0.44, 0.45); root.add(beard);
+    // Bushy white schnauzer eyebrows
+    [-0.1, 0.1].forEach((x) => {
+      const brow = M(G.box, 0xffffff, 0.12, 0.05, 0.08); brow.position.set(x, 0.78, 0.42); brow.rotation.z = x < 0 ? 0.2 : -0.2; root.add(brow);
+      const eye = M(G.sphereLo, 0x1a1412, 0.044); eye.position.set(x, 0.71, 0.43); root.add(eye);
+    });
+    const nose = M(G.sphereLo, 0x18181c, 0.055); nose.position.set(0, 0.66, 0.56); root.add(nose);
+    // Folded V-shaped schnauzer ears
+    [-0.19, 0.19].forEach((x) => {
+      const ear = M(G.box, 0x565b64, 0.1, 0.2, 0.14); ear.position.set(x, 0.78, 0.2); ear.rotation.z = x < 0 ? 0.35 : -0.35; root.add(ear);
+    });
+    const collar = M(G.torus, 0xff4fd8, 0.23, 0.23, 0.045); collar.rotation.x = Math.PI / 2; collar.position.set(0, 0.51, 0.2); root.add(collar);
+    const tail = M(G.cyl8, 0x767c86, 0.05, 0.22, 0.05); tail.position.set(0, 0.58, -0.38); tail.rotation.x = -0.45; root.add(tail);
   } else {
-    // Torty: Tortuga Tech emerald turtle with golden tech shell & goggles
-    const shell = M(G.sphere, 0x2ab86a, 0.42, 0.3, 0.46); shell.position.set(0, 0.38, -0.02); root.add(shell);
-    const rimS = M(G.torus, 0xffd23f, 0.4, 0.4, 0.05); rimS.rotation.x = Math.PI / 2; rimS.position.set(0, 0.28, -0.02); root.add(rimS);
-    const head = M(G.sphere, 0x59d98e, 0.22, 0.2, 0.24); head.position.set(0, 0.52, 0.38); root.add(head);
-    const gog = M(G.box, basic(0x3ff0ff), 0.28, 0.09, 0.08); gog.position.set(0, 0.56, 0.58); root.add(gog);
+    // Torty (Martina): Desert Tortoise with domed tan/olive desert scute carapace & sturdy tortoise legs
+    const shell = M(G.sphere, 0x8c6d46, 0.44, 0.32, 0.48); shell.position.set(0, 0.39, -0.02); root.add(shell);
+    const scute = M(G.cyl8, 0x6e5332, 0.3, 0.18, 0.34); scute.position.set(0, 0.54, -0.02); root.add(scute);
+    const rimS = M(G.torus, 0xb59264, 0.42, 0.42, 0.055); rimS.rotation.x = Math.PI / 2; rimS.position.set(0, 0.27, -0.02); root.add(rimS);
+    [[-0.26, 0.22], [0.26, 0.22], [-0.26, -0.22], [0.26, -0.22]].forEach((p) => {
+      const leg = M(G.cyl8, 0x788254, 0.085, 0.2, 0.085); leg.position.set(p[0], 0.2, p[1]); root.add(leg);
+    });
+    const head = M(G.sphere, 0x788254, 0.2, 0.18, 0.24); head.position.set(0, 0.46, 0.42); root.add(head);
+    [-0.08, 0.08].forEach((x) => { const eye = M(G.sphereLo, 0x1a1812, 0.038); eye.position.set(x, 0.5, 0.6); root.add(eye); });
+    const badge = M(G.sphereLo, basic(0xffd23f), 0.07); badge.position.set(0, 0.62, 0.18); root.add(badge);
+  }
+  const petLabels = {
+    luna: '🐀 Luna · Grey Fancy Rat',
+    pirat: '🏴‍☠️ Pi-rat · One-Eyed Pirate Rat',
+    snowie: '🐁 Snowie · White Fancy Rat',
+    candy: '🐶 Candy · Mini Schnauzer',
+    torty: '🐢 Torty · Desert Tortoise'
+  };
+  if (GP.nameTag && petLabels[id]) {
+    const tag = GP.nameTag(petLabels[id], '#ffe14d');
+    tag.position.y = 1.45;
+    tag.scale.multiplyScalar(0.82);
+    g.add(tag);
   }
   GP.shadowy(g, true, false);
   g.userData.root = root;

@@ -91,11 +91,11 @@ const SHOPS = [
 FZ.SHOPS = SHOPS;
 
 const PETS_DATA = [
-  { id: 'luna', name: 'Luna', icon: '🐈‍⬛', title: 'Ratita Night Cat', area: 0, areaName: 'Fiesta Isles & Gran Pueblo Viejo', buff: 'speed', gift: 4, desc: 'Purrs a cosmic melody! Grants +4 coins, restores Stamina & boosts run speed!' },
-  { id: 'pirat', name: 'Pi-rat', icon: '🏴‍☠️', title: 'Swashbuckling Fiesta Rat', area: 2, areaName: 'Taco Pueblo & Gran Pueblo Viejo', buff: 'lucky', gift: 5, desc: 'Shares pirate doubloons! Grants +5 coins & 2x Lucky Coins buff!' },
-  { id: 'snowie', name: 'Snowie', icon: '🐻‍❄️', title: 'Frosty Shield Pup', area: 3, areaName: 'Maraca Bay & Gran Pueblo Viejo', buff: 'shield', gift: 4, desc: 'Wraps you in a cool breeze! Restores 100% Stamina & blocks Chili Cart / Crab hazards!' },
-  { id: 'candy', name: 'Candy', icon: '🐰', title: 'Cotton-Candy Rescue Bunny', area: 1, areaName: 'Piñata Plaza & Gran Pueblo Viejo', buff: 'magnet', gift: 4, desc: 'Sweet fiesta magic! Grants +4 coins, Sugar Magnet & co-runs Emergency Bailout!' },
-  { id: 'torty', name: 'Torty', icon: '🐢', title: 'Tortuga Tech Guardian Turtle', area: 0, areaName: 'Fiesta Isles & Gran Pueblo Viejo', buff: 'shield', gift: 5, desc: 'Shell-tough protector! Restores 100% Stamina, grants Tortuga Shield & free 0-coin Bailout!' }
+  { id: 'luna', name: 'Luna', icon: '🐀', title: 'Ratita Grey Fancy Rat', area: 0, areaName: 'Fiesta Isles & Gran Pueblo Viejo', buff: 'speed', gift: 4, desc: 'Sleek Grey Fancy Rat! Squeaks a cosmic melody, grants +4 coins, restores Stamina & boosts run speed!' },
+  { id: 'pirat', name: 'Pi-rat', icon: '🏴‍☠️', title: 'One-Eyed Pirate Fancy Rat', area: 2, areaName: 'Taco Pueblo & Gran Pueblo Viejo', buff: 'lucky', gift: 5, desc: 'One-Eyed Brown Fancy Rat with a pirate eyepatch! Shares +5 doubloon coins & 2x Lucky Coins buff!' },
+  { id: 'snowie', name: 'Snowie', icon: '🐁', title: 'Frosty White Fancy Rat', area: 3, areaName: 'Maraca Bay & Gran Pueblo Viejo', buff: 'shield', gift: 4, desc: 'Pure White Fancy Rat! Restores 100% Stamina & wraps you in a Frosty Shield against Chili Carts & Crabs!' },
+  { id: 'candy', name: 'Candy', icon: '🐶', title: 'Mini Schnauzer Guard Pup', area: 1, areaName: 'Piñata Plaza & Gran Pueblo Viejo', buff: 'magnet', gift: 4, desc: 'Bearded grey Miniature Schnauzer! Barks away hazards, grants +4 coins, Coin Magnet & co-runs Free Bailout!' },
+  { id: 'torty', name: 'Torty (Martina)', icon: '🐢', title: 'Tortuga Desert Tortoise', area: 0, areaName: 'Fiesta Isles & Gran Pueblo Viejo', buff: 'shield', gift: 5, desc: 'Shell-tough Desert Tortoise! Restores 100% Stamina, grants Tortuga Shield & free 0-coin Emergency Bailout!' }
 ];
 FZ.PETS = PETS_DATA;
 const EMOTES = { wave: ['\uD83D\uDC4B', 2], dance: ['\uD83D\uDC83', 99], flip: ['\uD83E\uDD38', 1], laugh: ['\uD83D\uDE02', 2] };
