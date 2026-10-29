@@ -230,8 +230,8 @@ const G = SKY.Game = {
     if (SKY.Starship) SKY.Starship.update(dt); // 4.0 Starship rides
     this.fx.update(dt, new THREE.Vector3(0, -SKY.GRAV, 0), (x, y, z) => SKY.World.heightAt(x, z) + 0.05);
     this.events(dt);
+    if (SKY.stCamTick) SKY.stCamTick();
     this.updateCamera(dt);
-    if (SKY.stCamApply) SKY.stCamApply(this);
     this.updateAudio(dt);
   },
   transferRegion(reg) {
@@ -274,7 +274,7 @@ const G = SKY.Game = {
     const cam = this.camera, pl = this.plane, P = SKY.Player;
     const q = new THREE.Quaternion(), e = new THREE.Euler(0, 0, 0, 'YXZ');
     if (!this.camOverride && SKY.Starship && SKY.Starship.camera(cam, dt)) { this.camPos.copy(cam.position); return; }
-    if (this.camOverride) { const o = this.camOverride; cam.position.set(o[0], o[1], o[2]); cam.up.set(0, 1, 0); cam.lookAt(o[3], o[4], o[5]); this.camPos.copy(cam.position); return; } // test/photo hook
+    if (this.camOverride) { const o = this.camOverride; cam.position.set(o[0], o[1], o[2]); if (o.length > 6) cam.up.set(o[6], o[7], o[8]); else cam.up.set(0, 1, 0); { const fv = o[9] || 75; if (cam.fov !== fv) { cam.fov = fv; cam.updateProjectionMatrix(); } } cam.lookAt(o[3], o[4], o[5]); this.camPos.copy(cam.position); return; } // test/photo hook
     if (P.mode === 'drive' && SKY.Cars && SKY.Cars.cur) { SKY.Cars.camera(cam, dt, this.camOrbit); }
     else if (P.dead && P.frame === 'world') { const t = this.time * 0.2; cam.position.set(P.pos.x + Math.cos(t) * 12, P.pos.y + 6, P.pos.z + Math.sin(t) * 12); cam.lookAt(P.pos); }
     else if ((P.mode === 'pilot' || (P.mode === 'seat' && P.rideCam)) && P.pilotCam === 'chase' && P.frame === 'plane') {
