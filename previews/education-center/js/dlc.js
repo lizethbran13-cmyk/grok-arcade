@@ -1,0 +1,258 @@
+/* Grok Arcade - DLC Machine 3000.
+   1) INVENT: pick a game, name an expansion pack, say what's in it and its size. Submitting costs a few tickets (your first idea is free),
+      prints a DLC ticket and opens a prefilled GitHub issue on grok-arcade with the "dlc" label (same way the Suggestion Booth works).
+   2) DLC SHOP: once a DLC is built and shipped it is listed in GA.DLC_SHOP and can be unlocked with tickets.
+      Buying sets localStorage['grokDLC.<game>.<id>'] (same origin as every game, lizethbran13-cmyk.github.io), which the game reads to unlock it.
+   3) MY DLC + DLC BOARD: your ideas, what you own, and the live board of every submitted idea and its status.
+   Prices are scaled by size and tuned to how fast tickets come in (a good bonus round pays about 8-15 tickets):
+   Mini Pack 25, Expansion 75, MEGA Expansion 175 (per David). */
+(function () {
+  'use strict';
+  var REPO = 'lizethbran13-cmyk/grok-arcade';
+  var API = 'https://api.github.com/repos/' + REPO + '/issues?labels=dlc&state=all&per_page=50&sort=updated';
+  GA.DLC_SIZES = [
+    { id: 'mini', name: 'Mini Pack', icon: '\uD83C\uDF81', ex: 'new items, skins or outfits', price: 25 },
+    { id: 'exp', name: 'Expansion', icon: '\uD83D\uDDFA\uFE0F', ex: 'a new level, area or mode', price: 75 },
+    { id: 'mega', name: 'MEGA Expansion', icon: '\uD83C\uDF0D', ex: 'a whole new world or campaign', price: 175 }
+  ];
+  GA.DLC_IDEA_COST = 5; // first idea is free
+  /* Shipped DLC you can unlock with tickets. When a DLC idea gets built, add it here:
+     { id: 'neon_skins', game: 'rides', name: 'Neon Paint Pack', size: 'mini', desc: '...' }  -> the game checks localStorage 'grokDLC.rides.neon_skins'. */
+  GA.DLC_SHOP = GA.DLC_SHOP || [];
+  /* shipped DLC (the game reads localStorage 'grokDLC.<game>.<id>' live; co-op guests can play the host's DLC in that session) */
+  GA.DLC_SHIPPED = [
+    { id: 'expansi_n_luna_pack', game: 'pets', name: 'Luna Pack', size: 'exp', issue: 13, desc: 'Moonlight Grove behind the new Moon Gate in the Pet Park: the Moon Market store + Moon Salon skins, 5 new pets (Chinchilla, Ferret, Guinea Pig, Sugar Glider, Fennec Fox), starry outfits, cosmic snacks, toys and furniture, fireflies, a wishing pond and stargazing.' },
+    { id: 'super_sonic_pack_expansion', game: 'dash', name: 'Super Sonic Pack', size: 'exp', issue: 14, desc: 'Two new worlds (Sunset Speedway + Starlight Carnival) with 12 new levels, the boss Roller Rex, the MEGA boss GIGA GRUMBOT, Super + Metal skins for every hero, and BOSS MODE: play as the villain against 3 CPU heroes!' },
+    { id: 's_per_fiesta_expansion', game: 'party', name: 'Super Fiesta Expansion', size: 'mega', issue: 15, desc: 'FIESTA MODE: free-roam the new Fiesta Isles with friends or CPU pals and visit 3 towns you can walk into (Pi\u00f1ata Plaza, Taco Pueblo, Maraca Bay). Meet 24 townsfolk, eat street food, dance, smash pi\u00f1atas, collect coins and challenge anyone to a mini game. Fill your 10-stamp Fiesta Passport for the Golden Sombrero. Also adds the Fiesta Isles party board.' },
+    { id: 'fly_high_item_pack', game: 'sky', name: 'Fly High Item Pack', size: 'mini', issue: 16, desc: 'A new \uD83D\uDCF1 phone with the \u26A1 ZipDrop app: a drone delivers your order in seconds, even inside a plane. 8 cartoony gadgets: Turbo Axe, Freeze Ray, Bubble Blaster, Party Ray, Mega Magnet, Leaf Blower 3000, Confetti Bomb and Rocket Boots. Plus snacks and stuff.' },
+    { id: 'ratita_industries_item_pack', game: 'voxels', name: 'Ratita Industries Item Pack', size: 'mini', issue: 19, desc: 'High-tech gear from Luna, Pi-rat and Snowie\u2019s lab: the \uD83E\uDDC0 Cheese Cannon, the chain-lightning Squeak Zapper and the freezing Snowie Sprayer, 3 gadgets (Robo-Rat Buddy drone, Bubble Shield, Jet Tail) and 5 rat skins (Luna Lab Coat, Pi-rat Captain, Snowie Frost Suit, Ratita CEO, Robo-Rat MK1). The new 3rd-person camera and Assist Mode are FREE for everyone.' },
+    { id: 'elite_brawler_pack_expansion', game: 'brawl', name: 'Elite Brawler Pack', size: 'mega', issue: 18, desc: 'BRAWLER TALE story mode: 6 chapters you explore in full 3D (run, jump, talk to NPCs, find crest shards) with 2.5D fights against rivals. 6 new fighters: JETT, KNOX and MAYA right away, plus SHADE, SOL and CHOMP who show up as ELITE CHALLENGERS in Arcade Mode (beat them to unlock). 3 new arenas (Sky Docks, Crystal Caverns, Jungle Ruins) and 4 new skins for every fighter (Elite, Shadow, Golden, Neon). Online: the host shares the pack with friends.' },
+    { id: 'ratita_industries_super_pack_e', game: 'spooks', name: 'Ratita Industries Super Pack', size: 'mini', issue: 23, desc: 'SPOOK \u2019EM mode: play as Wisp, a little ghost in Willowmere Mansion. BOO, HAUNT furniture, VANISH and FLICKER the lights to scare tourists, kids, influencers and Ghost Hunters out the door before dawn, solve 4 mansion mysteries for 3 lost photo pieces and unlock Family Night. Plus 2 new Ratita Industries lab floors with 2 new bosses: MECHA-RATITA 3000 and The Cheddar Phantom. Co-op: the host shares it.' },
+    { id: 'super_thunder_expansion', game: 'disaster', name: 'Super Thunder Expansion', size: 'mega', issue: 26, desc: '3 new disasters: ACID STORM (goo rain + puddles), DRAGON ATTACK (EMBERWING and her fire breath) and DINO DESTRUCTION (REXY the T-rex + trike stampedes). 3 new maps: Ratita HQ, Frostbite Village and Dino Valley. New WEATHER HUNTER mode: Ratita Industries hires you as a meteorologist to solve 3 blizzard mysteries (scan storm swirls, plant probes, launch weather balloons). Plus 6 achievements and 2 hats. Online: the host shares the pack.' },
+    { id: 'pickle_smash_expansion', game: 'pickle', name: 'Pickle Smash Expansion', size: 'exp', issue: 24, desc: 'SMASH MODE vs a CPU or a friend: pop-ups everywhere, smash winners worth 2 and super smashes 3! Fill your energy bar and unleash your Smasher\u2019s super: \uD83D\uDE80 Rocket Ball, \u2744\uFE0F Freeze Smash, \u26A1 Thunder Smash, \uD83C\uDFD0 Giant Ball, \uD83E\uDD52 Pickle Split, \uD83C\uDF4C Banana Curve. Plus 3 new venues (\uD83C\uDF0B Lava Island, \uD83D\uDE80 Moon Base, \uD83C\uDF6D Candy Stadium) and 3 new paddles (Rocket Blaster, Thunder Strike, Frost Bite).' },
+    { id: 'you_decide_what_to_add', game: 'detective', name: 'Midnight Express', size: 'exp', issue: 30, desc: 'A brand-new mystery aboard a fancy overnight train: who stole the Golden Cheese? Walk through 5 cars (dining, sleeper, luggage, engine, observation) while the countryside rolls by, question 6 suspects (and Torty!), dust for fingerprints, wear porter/waiter/conductor disguises to get into STAFF ONLY cars, pin clues on the corkboard, share clues in co-op and watch the big reveal.' },
+    { id: 'pi_rat_the_pirate_pack', game: 'ratita', name: 'Pi-rat the Pirate Pack', size: 'mega', issue: 29, desc: 'A whole pirate campaign as Pi-rat! Steer the Salty Cheddar (or use the Sea Chart) with Captain Eye Patch and his cranky parrot Grumbles to 5 islands: Cheddar Cove, Coconut Jungle, Mount Magma, Tortuga Lagoon and Skull Rock. Puzzles, lava, geysers and cannons, 5 bosses ending with Captain Clawbeard, gems, treasure chests and map pieces, Torty in the lagoon, plus the Dresser Shop: hats, clothes, fur skins and extras you can wear everywhere.' },
+    { id: 'good_life_pack', game: 'life', name: 'Good Life Pack', size: 'mini', issue: 27, desc: 'The Ratita Industries Gadget Shop opens in town! Buy 8 smooth 3D gadgets that really work: a Fix-It Hammer that repairs wrecked cars, a RatPhone 5 with a drone-delivery app, a Ratita Tablet for working from home, a Hover-Board, a Bubble Shield for rain, a Squeak Scanner pet-finder, Squeak Soda and Cheese Bites. Plus 5 new outfits: Luna Lab Coat, Pi-rat Captain, Snowie Frost Suit, Ratita CEO and Robo-Rat MK1. Works in co-op.' },
+    { id: 'super_kart_expansion', game: 'kart', name: 'Super Kart Expansion', size: 'exp', issue: 28, desc: 'Four new racers (Luna, Pi-rat and Snowie from Ratita Industries, plus Candy the schnauzer), two big new tracks in the new Ratita Cup (Ratita Labs Raceway with neon arches and cheese silos, and Torty\'s Garden Grand Prix with giant sunflowers and garden gnomes), and a new Time Trial: race the Ratita Staff ghosts for Bronze, Silver, Gold and Ratita Star medals, then climb the 10-rung Ratita Challenge Ladder. Works online: the host shares it with everyone in the room.' },
+    { id: 'create_you_own_mini_pack_for_g', game: 'party', name: 'Fiesta Fits', size: 'mini', issue: 31, desc: 'A party wardrobe with a live 3D preview: 6 new skins (Ratita Mascot suit, Party-Hat Gus, Disco Astronaut, Pi\u00f1ata Pal, Taco Suit, DJ Robo), 6 hats (party cone, mini sombrero, crown, propeller beanie, top hat, bunny ears) and 6 trails (confetti, sparkles, bubbles, hearts, music notes, rainbow). In a party tap \uD83C\uDF89 for 4 dance emotes, a CONFETTI CANNON and a bouncy PARTY HORN. Your outfit shows on the board, in mini games, in Fiesta Mode and on the podium, and online friends see it too.' },
+    { id: 'ratita_super_expansion', game: 'puptown', name: 'Ratita Super Expansion', size: 'mega', issue: 38, desc: 'RATITA ROW opens east of Paw Park (or take the Zip-Pad)! Walk into 5 new buildings: the Ratita Branch Office + R\u0026D Lab, the Gadget Store, the Gouda Byte Cheese-Tech Cafe, the R\u0026D Workshop and the Museum of Inventions, plus the Ratita Test Yard. Solve THE MISSING PROTOTYPE with Luna, Pi-rat, Snowie and Martina \u201cTorty\u201d (4 clues + a chase!), cut the Grand Opening ribbon, and play 4 new mini-games: Turbo Test Track, Squeak Zapper Range, Cheese-Tech Barista and Circuit Fixer. Earn Cheese Coins for 10 gadgets + wearables (Turbo Sneakers, Ratita Glider, Jet-Pup Pack, Bubble Shield, Propeller Cap, Cheese Crown...), find 12 Golden Gears and 9 new badges. 20 new Ratita employees and dogs to meet. Co-op: the host shares Ratita Row with friends.' },
+    { id: 'super_grid_expansion', game: 'grid', name: 'Super Grid Expansion', size: 'exp', issue: 40, desc: '3 new tracks (\u2601\uFE0F Sky Islands floating in the clouds, \uD83C\uDF6D Candy Kingdom, \uD83C\uDF0B Volcano Run), 4 new cars (Ratita Rocket, Thunder GT, Sandstorm Buggy, Comet Hover) with their own handling, boost pads + item gems (Turbo, Triple Turbo, Shield, Repair) and the SUPER GRID HUB: drive around freely, swap cars in the Garage, visit the Pit Stop Cafe, hit the stunt ramps, meet Torty and hunt 12 Golden Lug Nuts for GOLD paint. Online: the host shares the new tracks.' },
+    { id: 'you_choose', game: 'sports', name: 'Ratita Stadium Night', size: 'exp', issue: 39, desc: 'A huge night-lights RATITA STADIUM off the plaza with 4 new sports: \uD83C\uDFD2 Ice Hockey (2v2 / 3v3 on real ice), \uD83C\uDF1F Glow Mini-Golf (6 neon holes with cheese walls and ramps), \uD83E\uDDC0 Cheese Curling (sweep it to the button!) and the \uD83D\uDC2D Ratita Mascot Race (tap to run, swipe to jump hurdles). Plus the \uD83C\uDFC6 RATITA CUP tournament: 4 events, bronze/silver/gold/diamond cheese cups for your trophy case. Online: the DLC sports show up in the lobby when the host owns it.' },
+    { id: 'you_choose', game: 'fc', name: 'Fiesta Kits', size: 'mini', issue: 41, desc: '4 festive Grok FC teams with real 3D outfits: \uD83C\uDF89 FIESTA (sombreros), PI\u00D1ATA (party hats), MARIACHI (black + gold sombreros) and CALAVERA (marigold flower crowns), each with a 3D sash. Plus the rainbow Pi\u00F1ata Ball and fiesta goal celebrations: 3D fireworks and spinning papel-picado confetti. Pick them in Grok FC\u2019s team picker.' },
+    { id: 'merry_tracking_expansion', game: 'northpole', name: 'Merry Tracking Expansion', size: 'exp', issue: 43, desc: 'The North Pole Sleigh Port opens next to Flight Command HQ! Sleighs fly you to all 5 walk-in Regional Tracking Centers from santaupdate.com (Kiribati, Taipei, Sint-Niklaas, Bel\u00e9n, Barra de Navidad) to meet their Elf Supervisors, pass sector briefings and help set up. Fully online on Dec 24\u201325 with live Santa tracking. Pet cameos in every center.' },
+    { id: 'merry_events_expansion', game: 'northpole', name: 'Merry Events Expansion', size: 'exp', issue: 44, desc: 'The North Pole Event Center: live events on the real santaupdate.com calendar. The Annual Reindeer Games (Oct 13\u201317), the North Pole Halloween Party, the Thanksgiving Day Elf Parade and the Christmas Day Party, with Torty, Candy, Luna, Pi-rat and Snowie cheering in the grandstand.' },
+    { id: 'spookster_mega_pack', game: 'pumpkinhollow', name: 'Spookster Mega Pack', size: 'mega', issue: 45, desc: 'Green sludge is bubbling out of a fenced-off site, and under it hides THE GLOOMWORKS: a secret underground facility with 7 walk-in rooms full of mad scientists and spooky tests. Investigate who built it and why (and who keeps opening the sludge valves!): find 6 clues, crack the Case Board, befriend Gloopy and help Dr. Ivy mix the Forever Glow. Plus 8 Glow Vials, 6 new skins (Mad Scientist, Test Dummy, Hazmat, Night Guard, Sludge Monster, Phantom Scientist) and SPOOKY MODE 2.0 (based on Grok Spooks\u2019 Spook \u2019Em): BOO, HAUNT, VANISH and FLICKER as a ghost, plus the Night Shift challenge. Luna, Pi-rat, Snowie, Candy and Torty visit.' },
+    { id: 'super_sky_high_expansion', game: 'skytours', name: 'Super Sky High Expansion', size: 'mega', issue: 47, desc: 'Fly SUPER SKY HIGH (the ceiling goes from 175 m to 320 m) to 3 new sky areas: \uD83C\uDF0B EMBER ISLE, a real volcano with lava flows, thermal updrafts and lava bombs, a walk-in Lava Lab with Luna and Torty\u2019s Tortuga Tech heat-test station; \u2744\uFE0F FROSTBITE ISLE, with snowfall, gusts, wing ice, a village and winter market, the walk-in Cocoa Lodge (Candy naps by the fire), a sled hill and Pi-rat ice fishing; and the \uD83C\uDFDF\uFE0F FLY HIGH ARENA, with packed stands, jumbotrons and Snowie announcing your foam-bubble dogfights (free-for-all or team up with Candy). Plus 3 new aircraft: the Thunder Jet-Copter, the Midnight Stealth Wing (the fastest!) and the Aurora Hover-Drone, Sky Highway boost rings, 6 Sky Gems and 6 new badges.' },
+    { id: 'super_shop_online_pass', game: 'grocery', name: 'Super Shop Online Pass', size: 'exp', issue: 46, desc: 'Your Shopsville store goes ONLINE! Open the Online Store desk and take orders 3 ways: \uD83D\uDECD\uFE0F in-store PICKUP from the cubbies and lockers, \uD83D\uDE90 same-day DELIVERY (a shopper picks the items, then a Grok Van drives them to a house on Maple Lane) and \uD83D\uDCE6 SHIPPING in 2 days from the brand-new walk-in Shopsville Ship Center, with racks, a packing line, a conveyor, a truck dock and workers, run by Martina \u201cTorty\u201d. Plus your own \uD83D\uDCF1 phone app: check orders, call people, hold meetings, buy upgrades and order more stock. Keep your star rating up! Luna, Pi-rat, Snowie, Candy and Torty order too.' },
+    { id: 'you_choose', game: 'drvic', name: 'The Sunken Lab', size: 'mega', issue: 57, desc: 'The glowing Old Town storm drain leads down to a secret 1911 Ratita lab under Old Town Lake: the Dive Dock (mini-sub, moon pool, brass diving suits, sonar), the Aquarium Wing (glow-fish tanks, jellyfish, a glow-kelp farm, giant portholes) and the Deep Core, home of the sleeping GOOCTOPUS. 9 new clues and 9 anomalies to film, slippery seawater leaks, Snowie\u2019s valve wheel and a GO LIVE finale. Pi-rat, Candy, Snowie, Luna and Torty visit.' },
+    { id: 'you_choose', game: 'grocery', name: 'Holiday Mini Pack', size: 'mini', issue: 58, desc: 'Switch every store you run to Harvest (Thanksgiving) or Winter Holidays decorations: garlands, wreaths, ceiling lights, hanging pumpkins or snowflakes and decorated storefronts. Pick one of 7 apron + cap uniforms for your staff (and you), and stock a brand-new Thanksgiving Aisle with turkeys, pies, cranberry sauce, stuffing and plush Luna, Pi-rat, Snowie, Candy and Torty.' },
+    { id: 'drive_dillers_expansion', game: 'pickleballpark', name: 'Drive Dillers Expansion', size: 'exp', issue: 65, desc: 'Walk down Drive Dillers Avenue into the Drive Dillers Indoor Pickleball & Tournament Arena! 3 indoor hardwood courts (Emerald Rec Hall, Silent Serve Acoustic Wall Court, and Drive Dillers Center Stage with Umpire Pi-rat), Director Snowie\u2019s 3-round Indoor Tournament for the Golden Dill Cup (260 coins!), Luna\u2019s Silent Serve 42 dB lab, Torty\u2019s Drive Diller Pro Paddle rack, and Courts Manager Lola & Candy\u2019s strict Indoor & Silent Serve Foam Ball check (bring an outdoor ball and Candy barks & steals it while Lola kicks you out!).' },
+    { id: 'you_choose', game: 'ratita', name: 'Old Town Lab', size: 'mega', issue: 59, desc: 'The abandoned lab on Old Town Street, built by Luna, Pi-rat and Snowie\u2019s villainous great-great-great-grandparents. 3 new levels from the HQ door: Founders\u2019 Hall (beware the old Sweep-o-Matic, and don\u2019t wake Candy!), the Goo Works (Torty holds the drain plate; boss: Gloop the Goo-Sprayer) and the Founders\u2019 Vault, with lasers, tesla coils and the Founders\u2019 Grand-Bot.' },
+    { id: 'super_smash_expansion', game: 'pickleballpark', name: 'Super Smash Expansion', size: 'exp', issue: 84, desc: 'Walk down Super Smash Avenue into the Super Smash Pavilion & Arena! 3 themed Smash Courts (\uD83C\uDF0B Lava Island, \uD83D\uDE80 Moon Base, \uD83C\uDF6D Candy Stadium), 6 OG Super Smashers (Rocket Rita, Frosty Fran, Bolt Bo, Big Bertha, Dill Dan, Curvy Kiki) with 2-pt Smash & 3-pt Super Smash winners, 4 Specialty Power Paddles + Silent Serve Super Foam Ball, 3-Round Super Smash Cup for 280 coins, all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty), and Paddle Grit wear with Torty\u2019s Free Emergency Rebuild.' },
+    { id: 'tortuga_tech_expansion', game: 'ratitahq', name: 'Tortuga Tech Expansion', size: 'exp', issue: 66, desc: 'Martina \u201cTorty\u201d opens a massive Tortuga Tech Inc. Expansion Wing attached to the West Wing of Ratita Industries HQ! Walk through the indoor merger archway or South Merger Courtyard into 3 interactive Shell-Tough Test Chambers (50-Ton Hydraulic Drop Press, 900\u00b0C Thermal Plasma Forge, 88 MPH Bumper-Shell Impact Track), build 4 Ratita \u00d7 Tortuga Crossover Gadgets (Shell-Shield Jetpack Mk.IV, Carapace Grapple-Claw, Gouda-Core Shock Blaster, Turbo Bumper-Shell Pod), repair cracked shells at Plato\u2019s Repair Bench, and meet all 5 family pets.' }
+  ];
+  GA.DLC_SHIPPED.forEach(function (it) { if (!GA.DLC_SHOP.some(function (x) { return x.game === it.game && x.id === it.id; })) GA.DLC_SHOP.push(it); });
+  var K_MINE = 'grokArcade.dlcIdeas', K_BOARD = 'grokArcade.dlcBoard', K_OWNED = 'grokArcade.dlcOwned', K_DRAFT = 'grokArcade.dlcDraft', K_FREE = 'grokArcade.dlcFreeUsed', K_PEND = 'grokArcade.dlcPending';
+  var D = GA.DLC = {}, openNow = false, tab = 'new', size = 'mini', loading = false;
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function snd(n) { try { GA.Audio.play(n); } catch (e) {} }
+  function load(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
+  function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function toast(m, ms) { if (GA.Fix && GA.Fix.toast) GA.Fix.toast(m, ms || 3200); }
+  function gus(t) { if (GA.Hall3D && GA.Hall3D.say) GA.Hall3D.say(t, 5); var el = $('dlcGus'); if (el) el.textContent = t; }
+  function ago(ts) { var s = Math.max(0, (Date.now() - ts) / 1000); if (s < 60) return 'just now'; if (s < 3600) return Math.floor(s / 60) + ' min ago'; if (s < 86400) return Math.floor(s / 3600) + ' h ago'; return Math.floor(s / 86400) + ' d ago'; }
+  function sizeOf(id) { return GA.DLC_SIZES.find(function (s) { return s.id === id; }) || GA.DLC_SIZES[0]; }
+  function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 30) || 'dlc'; }
+  function tix() { return GA.getTickets(); }
+  function refreshTix() { if (GA.onTickets) GA.onTickets(tix()); var e = $('dlcTix'); if (e) e.textContent = tix(); }
+  /* tickets can never go below zero */
+  D.spend = function (n) { n = Math.max(0, Math.floor(+n || 0)); if (tix() < n) return false; GA.store.set('tickets', tix() - n); refreshTix(); return true; };
+  D.price = function (sizeId) { return sizeOf(sizeId).price; };
+  /* starter vouchers: your first Mini, first Expansion and first MEGA pack are free (David's patch) */
+  var K_VOUCH = 'grokArcade.dlcVouchersUsed';
+  D.free = function (sizeId) { return !load(K_VOUCH, {})[sizeId]; };
+  D.costOf = function (it) { return D.free(it.size) ? 0 : (it.price || D.price(it.size)); };
+  D.ideaCost = function () { return load(K_FREE, 0) ? GA.DLC_IDEA_COST : 0; };
+  D.key = function (item) { return 'grokDLC.' + item.game + '.' + item.id; };
+  D.owns = function (item) { if (typeof item === 'string') item = D.find(item); if (!item) return false; try { return !!localStorage.getItem(D.key(item)); } catch (e) { return !!load(K_OWNED, {})[item.game + '.' + item.id]; } };
+  D.find = function (id) { return GA.DLC_SHOP.find(function (x) { return x.id === id || x.game + '.' + x.id === id; }); };
+  D.buy = function (id) {
+    var it = D.find(id); if (!it) return { ok: false, why: 'unknown' };
+    if (D.owns(it)) return { ok: false, why: 'owned' };
+    var free = D.free(it.size), price = D.costOf(it);
+    if (tix() < price) return { ok: false, why: 'tickets', need: price - tix() };
+    if (!D.spend(price)) return { ok: false, why: 'tickets', need: price - tix() };
+    if (free) { var vu = load(K_VOUCH, {}); vu[it.size] = it.game + '.' + it.id; store(K_VOUCH, vu); }
+    var rec = { owned: true, id: it.id, game: it.game, name: it.name, t: Date.now(), from: 'grok-arcade' };
+    try { localStorage.setItem(D.key(it), JSON.stringify(rec)); } catch (e) {}
+    var o = load(K_OWNED, {}); o[it.game + '.' + it.id] = rec.t; store(K_OWNED, o);
+    try { var all = JSON.parse(localStorage.getItem('grokDLC.owned') || '[]'); if (all.indexOf(D.key(it)) < 0) all.push(D.key(it)); localStorage.setItem('grokDLC.owned', JSON.stringify(all)); } catch (e) {}
+    if (GA.Prog) GA.Prog.event('dlcBuy');
+    return { ok: true, left: tix(), key: D.key(it), free: free };
+  };
+
+  /* ---------- composing an idea ---------- */
+  D.compose = function (gameName, sz, name, text) {
+    var s = sizeOf(sz); name = String(name || '').trim().slice(0, 60); text = String(text || '').trim();
+    var g = GA.MAIN_GAMES.find(function (x) { return x.name === gameName; }) || { id: 'arcade', name: gameName };
+    var title = '[' + gameName + '] DLC: ' + name;
+    var body = '**Game:** ' + gameName + '\n**Size:** ' + s.name + ' (' + s.ex + ')\n**Unlock price:** ' + s.price + ' tickets\n**Unlock key (when shipped):** grokDLC.' + g.id + '.' + slug(name) + '\n\n### What\u2019s in it\n' + (text || name) +
+      '\n\n---\n_Printed by the DLC Machine 3000 in the Grok Arcade Hall of Game Records \u00b7 ' + new Date().toISOString().slice(0, 10) + '_';
+    var url = 'https://github.com/' + REPO + '/issues/new?title=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(body) + '&labels=dlc';
+    var copy = 'Grok Arcade DLC idea\nGame: ' + gameName + '\nSize: ' + s.name + ' (' + s.price + ' tickets to unlock)\nName: ' + name + '\nWhat\u2019s in it: ' + (text || name);
+    return { title: title, body: body, url: url, copy: copy, size: s, gameId: g.id, key: 'grokDLC.' + g.id + '.' + slug(name) };
+  };
+  function form() { return { game: $('dlcGame').value, size: size, name: $('dlcName').value, text: $('dlcText').value }; }
+  function saveDraft() { store(K_DRAFT, form()); }
+  function msg(h, cls) { var m = $('dlcMsg'); m.innerHTML = h; m.className = 'sbMsg ' + (cls || ''); }
+  D.submit = function (via) {
+    try { return submitNow(via); } catch (e) {
+      try { msg('Hmm, that didn\u2019t go through. Your idea is still here: tap <b>PRINT &amp; SUBMIT</b> to try again.', 'bad'); } catch (e2) {}
+      return { ok: false, why: 'error' };
+    }
+  };
+  function submitNow(via) {
+    var f = form();
+    if (f.name.trim().length < 3) { msg('Give your DLC a name first (at least 3 letters).', 'bad'); snd('buzz'); gus('No name? I can\u2019t file a nameless DLC. That\u2019s chaos.'); return { ok: false, why: 'name' }; }
+    if ((f.text || '').trim().length < 4) { msg('Say what\u2019s in it: new levels, skins, a boss, a world...', 'bad'); snd('buzz'); return { ok: false, why: 'text' }; }
+    // #60: sending the SAME idea again (GitHub didn't open, or the tab reloaded while you were there) is free and keeps its ticket number
+    var pend = load(K_PEND, null), again = pend && pend.name === f.name.trim() && pend.text === f.text.trim() && pend.game === f.game;
+    var cost = again ? 0 : D.ideaCost();
+    if (cost && tix() < cost) { msg('Submitting costs ' + cost + ' tickets and you have ' + tix() + '. Play a bonus game to earn a few more!', 'bad'); snd('buzz'); gus('No tickets, no filing. Rules are rules.'); return { ok: false, why: 'tickets', need: cost - tix() }; }
+    if (cost && !D.spend(cost)) return { ok: false, why: 'tickets' };
+    if (!cost && !again) store(K_FREE, 1);
+    var s = D.compose(f.game, f.size, f.name, f.text), num = again ? pend.num : 'DLC-' + Date.now().toString(36).toUpperCase().slice(-6);
+    D.lastUrl = s.url; D.last = { num: num, s: s, f: f, cost: cost };
+    if (!again) { var mine = load(K_MINE, []); mine.unshift({ t: Date.now(), num: num, game: f.game, size: f.size, name: f.name.trim(), text: f.text.trim(), via: via || 'GitHub', cost: cost }); store(K_MINE, mine.slice(0, 100)); }
+    if (!again && GA.Prog) GA.Prog.event('dlcIdea');
+    GA.submitAt = Date.now();
+    store(K_DRAFT, f); // kept until you tap IT SENT / NEW IDEA, so nothing is lost
+    store(K_PEND, via === 'Copied' ? null : { num: num, game: f.game, size: f.size, name: f.name.trim(), text: f.text.trim(), url: s.url, t: Date.now(), cost: again ? pend.cost : cost });
+    if (GA.Hall3D && GA.Hall3D.print) GA.Hall3D.print();
+    snd('win');
+    if (via === 'Copied') { copyText(s.copy); }
+    else { var w = null; try { w = window.open(s.url, '_blank', 'noopener'); } catch (e) {} D.popupBlocked = !w; }
+    if (via === 'Copied') store(K_DRAFT, null);
+    showTicket(num, f, s, again ? (pend.cost || 0) : cost, via);
+    gus(['Filed. Under \u201CThings I didn\u2019t ask for.\u201D', 'Another DLC idea? Fine. Stamped. APPROVED. Probably.', 'Ooh, ' + s.size.name + '. Fancy. I\u2019ll put it on the pile.'][Math.floor(Math.random() * 3)]);
+    return { ok: true, num: num, cost: cost, left: tix(), url: s.url, again: !!again };
+  }
+  function copyText(txt) {
+    D.lastCopy = txt;
+    try { if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(txt).catch(function () {}); } catch (e) {}
+    return Promise.resolve();
+  }
+  function showTicket(num, f, s, cost, via) {
+    var b = $('dlcBody');
+    b.innerHTML = '<div class="dlcTicket" id="dlcTicket"><div class="dlcTkTop">\uD83C\uDFAB DLC TICKET <span>#' + esc(num) + '</span></div>' +
+      '<div class="dlcTkName">' + esc(f.name.trim()) + '</div><div class="dlcTkRow"><span>GAME</span><b>' + esc(f.game) + '</b></div><div class="dlcTkRow"><span>SIZE</span><b>' + s.size.icon + ' ' + esc(s.size.name) + '</b></div>' +
+      '<div class="dlcTkRow"><span>UNLOCK PRICE</span><b>' + s.size.price + ' tickets</b></div><div class="dlcTkRow"><span>FILING FEE</span><b>' + (cost ? cost + ' tickets' : 'FREE (first idea!)') + '</b></div>' +
+      '<div class="dlcTkWhat">' + esc(f.text.trim()) + '</div><div class="dlcBar" aria-hidden="true"></div><div class="dlcStamp">FILED BY GUS</div></div>' +
+      '<div class="sbMsg ok" id="dlcMsg">' + (via === 'Copied' ? '\uD83D\uDCCB Copied! Paste it to your assistant.' : 'GitHub opened in a new tab: tap <b>Create</b> there to send it to the DLC Board.' + (D.popupBlocked ? ' <a href="' + esc(s.url) + '" target="_blank" rel="noopener">Open GitHub</a>' : '')) + ' Saved under <b>My DLC</b>.' + (via === 'Copied' ? '' : '<div class="sbBtns"><button class="bigBtn" id="dlcSent" type="button">\u2705 IT SENT</button><button class="bigBtn alt" id="dlcAgain" type="button">\uD83D\uDD01 SEND AGAIN <small>FREE</small></button></div><small>Your idea stays saved until you tap IT SENT.</small>') + '</div>' +
+      '<div class="sbBtns"><button class="bigBtn" id="dlcAnother" type="button">\u270F\uFE0F NEW IDEA</button><button class="bigBtn alt" id="dlcSeeBoard" type="button">\uD83D\uDCCB BOARD</button></div>';
+    $('dlcAnother').addEventListener('click', function () { snd('click'); store(K_PEND, null); store(K_DRAFT, null); setTab('new'); });
+    if ($('dlcSent')) $('dlcSent').addEventListener('click', function () { snd('coin'); store(K_PEND, null); store(K_DRAFT, null); msg('\uD83C\uDF89 Sent! It shows on the <b>DLC Board</b> in a minute. Saved under <b>My DLC</b>.', 'ok'); });
+    if ($('dlcAgain')) $('dlcAgain').addEventListener('click', function () { snd('click'); var pd = load(K_PEND, null); if (!pd) return; var w = null; try { w = window.open(pd.url, '_blank', 'noopener'); } catch (e) {} GA.submitAt = Date.now(); if (!w) msg('Tap here to open GitHub: <a href="' + esc(pd.url) + '" target="_blank" rel="noopener">Open GitHub</a>. Your idea stays saved until you tap IT SENT.', 'ok'); });
+    $('dlcSeeBoard').addEventListener('click', function () { snd('click'); setTab('board'); });
+    refreshTix();
+  }
+
+  /* ---------- tabs ---------- */
+  function renderNew() {
+    var d = load(K_DRAFT, null) || {}, games = GA.MAIN_GAMES.map(function (g) { return g.name; }).concat(['Grok Arcade']), sel = d.game && games.indexOf(d.game) >= 0 ? d.game : games[0]; size = d.size || size;
+    var cost = D.ideaCost();
+    $('dlcBody').innerHTML = '<label class="sbL">Which game?<select id="dlcGame">' + games.map(function (g) { return '<option' + (g === sel ? ' selected' : '') + '>' + esc(g) + '</option>'; }).join('') + '</select></label>' +
+      '<div class="sbL">How big?<div class="dlcSizes">' + GA.DLC_SIZES.map(function (s) { return '<button type="button" class="dlcSize' + (s.id === size ? ' on' : '') + '" data-s="' + s.id + '"><b>' + s.icon + ' ' + s.name + '</b><small>' + s.ex + '</small><i>' + s.price + ' \uD83C\uDF9F\uFE0F to unlock</i></button>'; }).join('') + '</div></div>' +
+      '<label class="sbL">DLC name<input id="dlcName" maxlength="60" placeholder="e.g. Volcano Island Pack" value="' + esc(d.name || '') + '"></label>' +
+      '<label class="sbL">What\u2019s in it?<textarea id="dlcText" maxlength="1500" rows="4" placeholder="New levels, skins, a boss, a whole new world...">' + esc(d.text || '') + '</textarea></label>' +
+      '<div class="sbBtns"><button id="dlcSubmit" class="bigBtn" type="button">\uD83D\uDDA8\uFE0F PRINT &amp; SUBMIT <small>' + (cost ? cost + ' \uD83C\uDF9F\uFE0F' : 'FREE') + '</small></button><button id="dlcCopy" class="bigBtn alt" type="button">\uD83D\uDCCB COPY</button></div>' +
+      '<div id="dlcMsg" class="sbMsg">Submitting ' + (cost ? 'costs ' + cost + ' tickets' : 'is <b>free</b> the first time, then ' + GA.DLC_IDEA_COST + ' tickets') + '. When your DLC gets built it shows up in the <b>DLC Shop</b> to unlock with tickets.</div>';
+    Array.prototype.forEach.call(document.querySelectorAll('.dlcSize'), function (b) { b.addEventListener('click', function () { size = b.getAttribute('data-s'); Array.prototype.forEach.call(document.querySelectorAll('.dlcSize'), function (x) { x.classList.toggle('on', x === b); }); saveDraft(); snd('click'); }); });
+    ['dlcGame', 'dlcName', 'dlcText'].forEach(function (id) { $(id).addEventListener('input', saveDraft); $(id).addEventListener('keydown', function (e) { e.stopPropagation(); }); });
+    $('dlcSubmit').addEventListener('click', function () { D.submit('GitHub'); });
+    var pd = load(K_PEND, null); if (pd && pd.name === (d.name || '').trim() && pd.text === (d.text || '').trim()) { $('dlcSubmit').innerHTML = '\uD83D\uDD01 SEND AGAIN <small>FREE</small>'; msg('\uD83D\uDCDD Your last DLC idea (ticket #' + esc(pd.num) + ') is still here in case it didn\u2019t send. Tap SEND AGAIN, or change it for a new idea.', 'ok'); } $('dlcCopy').addEventListener('click', function () { D.submit('Copied'); });
+  }
+  function renderShop() {
+    var list = GA.DLC_SHOP;
+    var h = '<div class="dlcShopHead">Shipped DLC you can unlock. Buying one unlocks it in that game right away (same save, just refresh the game).</div>';
+    var vl = GA.DLC_SIZES.filter(function (z) { return D.free(z.id); });
+    h += '<div class="dlcShopHead" style="background:linear-gradient(90deg,#ffe066,#ff8fd8);color:#3a1450;font-weight:800;border-radius:12px;padding:8px 10px">\uD83C\uDF81 STARTER VOUCHERS: ' + (vl.length ? 'your first ' + vl.map(function (z) { return z.name; }).join(', ') + ' ' + (vl.length > 1 ? 'are' : 'is') + ' FREE!' : 'all used. Thanks for being a DLC legend!') + '</div>';
+    if (!list.length) h += '<div class="sbEmpty">\uD83D\uDCE6 Nothing shipped yet!<br>When a DLC idea from the board gets built, it shows up here to unlock with tickets.<br><small>Prices: Mini Pack 25 \u00b7 Expansion 75 \u00b7 MEGA 175</small></div>';
+    h += list.map(function (it) {
+      var g = GA.findGame(it.game) || { name: it.game, color: '#ff4fd8' }, s = sizeOf(it.size), price = D.costOf(it), free = price === 0, own = D.owns(it), can = tix() >= price;
+      return '<div class="dlcItem' + (own ? ' owned' : ' locked') + '" data-dlc="' + esc(it.game + '.' + it.id) + '" style="--c:' + g.color + '"><div class="sbTop"><span class="sbSt ' + (own ? 'done' : 'new') + '">' + (own ? '\u2705 OWNED' : '\uD83D\uDD12 LOCKED') + '</span><span class="sbGameTag">' + esc(g.name) + '</span><span class="sbType">' + s.icon + ' ' + esc(s.name) + '</span></div>' +
+        '<div class="sbTitle">' + esc(it.name) + '</div><div class="sbLast">' + esc(it.desc || '') + '</div>' +
+        (own ? '<div class="sbMeta">Unlocked in ' + esc(g.name) + '. Have fun!' + (g.url ? ' <a class="dlcPlay" href="' + esc(g.url) + '" target="_blank" rel="noopener">\u25B6 PLAY</a>' : '') + '</div>' : '<button class="bigBtn dlcBuy" data-buy="' + esc(it.game + '.' + it.id) + '"' + (can ? '' : ' disabled') + '>' + (free ? '\uD83C\uDF81 UNLOCK FREE \u00b7 starter voucher' : can ? '\uD83C\uDF9F\uFE0F UNLOCK \u00b7 ' + price : 'NEED ' + (price - tix()) + ' MORE') + '</button>') + '</div>';
+    }).join('');
+    $('dlcBody').innerHTML = h;
+    Array.prototype.forEach.call(document.querySelectorAll('.dlcBuy'), function (b) { b.addEventListener('click', function () {
+      var r = D.buy(b.getAttribute('data-buy'));
+      if (r.ok) { snd('win'); toast('\uD83C\uDF81 DLC unlocked' + (r.free ? ' FREE with your starter voucher' : '') + '! Open the game to play it.', 3600); gus(r.free ? 'Free?! Who approved this. ...Fine. Stamped.' : 'Unlocked. Receipt filed. Don\u2019t lose it.'); renderShop(); }
+      else { snd('buzz'); toast(r.why === 'tickets' ? 'You need ' + r.need + ' more tickets.' : 'Already yours!'); }
+      renderShop(); refreshTix();
+    }); });
+  }
+  function renderMine() {
+    var mine = load(K_MINE, []), board = (load(K_BOARD, null) || {}).items || [];
+    var own = GA.DLC_SHOP.filter(function (it) { return D.owns(it); });
+    var h = own.length ? '<h3 class="dlcH">\uD83C\uDF81 DLC you own</h3>' + own.map(function (it) { return '<div class="sbItem mine"><div class="sbTop"><span class="sbSt done">\u2705 OWNED</span><span class="sbGameTag">' + esc((GA.findGame(it.game) || {}).name || it.game) + '</span></div><div class="sbTitle">' + esc(it.name) + '</div></div>'; }).join('') : '';
+    h += '<h3 class="dlcH">\uD83D\uDCA1 Your DLC ideas</h3>';
+    if (!mine.length) h += '<div class="sbEmpty">No DLC ideas yet. Tap <b>Invent</b> to make one!</div>';
+    h += mine.map(function (m) { var hit = board.find(function (b) { return b.name === m.name && b.game === m.game; }); var s = sizeOf(m.size);
+      return '<div class="sbItem mine"><div class="sbTop"><span class="sbSt ' + (hit ? hit.st : 'sent') + '">' + (hit ? ST[hit.st][1] + ' ' + ST[hit.st][0] : '\uD83C\uDFAB #' + esc(m.num)) + '</span><span class="sbGameTag">' + esc(m.game) + '</span><span class="sbType">' + s.icon + ' ' + esc(s.name) + '</span></div><div class="sbTitle">' + esc(m.name) + '</div><div class="sbLast">' + esc(String(m.text).slice(0, 160)) + '</div></div>'; }).join('');
+    $('dlcBody').innerHTML = h;
+  }
+  var ST = { new: ['Filed', '\uD83D\uDDC2\uFE0F'], work: ['Being built', '\uD83D\uDEE0\uFE0F'], done: ['Shipped', '\uD83C\uDF81'], wont: ['Not this time', '\uD83D\uDEAB'] };
+  D.statusOf = function (it) { var labs = (it.labels || []).map(function (l) { return String(l.name || l).toLowerCase(); }); if (labs.indexOf('shipped') >= 0) return 'done'; if (it.state === 'closed') return labs.indexOf('wontfix') >= 0 || it.state_reason === 'not_planned' ? 'wont' : 'done'; return labs.indexOf('in-progress') >= 0 ? 'work' : 'new'; };
+  D.parse = function (issues) {
+    return (issues || []).filter(function (it) { return !it.pull_request; }).map(function (it) {
+      var m = /^\s*\[([^\]]{1,40})\]\s*(?:DLC:\s*)?(.*)$/.exec(it.title || ''), body = String(it.body || ''), sm = /\*\*Size:\*\*\s*([^(\n]+)/.exec(body);
+      return { n: it.number, game: m ? m[1] : 'General', name: m ? m[2] : it.title, size: sm ? sm[1].trim() : '', st: D.statusOf(it), url: it.html_url, upd: Date.parse(it.updated_at) || 0 };
+    });
+  };
+  function fetchBoard() {
+    if (loading) return; loading = true; renderBoard('Loading the DLC Board\u2026');
+    GA.ghIssues(true)
+      .then(function (all) { store(K_BOARD, { t: Date.now(), items: D.parse(GA.ghLabeled(all, 'dlc')) }); loading = false; renderBoard(); })
+      .catch(function (e) { loading = false; var mins = e.reset ? Math.max(1, Math.ceil((e.reset * 1000 - Date.now()) / 60000)) : 0;
+        if (!load(K_BOARD, null)) { var pv = load('grokArcade.pvIssues', null); if (pv && pv.items) store(K_BOARD, { t: pv.t || 0, items: D.parse(GA.ghLabeled(pv.items, 'dlc')) }); }
+        try { renderBoard(!e.status ? '\uD83D\uDCE1 Couldn\u2019t refresh (offline or GitHub is slow). Showing the last board we saved.' : e.status === 403 || e.status === 429 ? '\u23F3 Couldn\u2019t refresh: GitHub needs a little break (too many checks this hour).' + (mins ? ' Try again in about ' + mins + ' min.' : '') + ' Showing the last saved board.' : 'Couldn\u2019t refresh the board right now (' + e.status + '). Showing the last saved one.'); } catch (er) {} });
+  }
+  D.refresh = fetchBoard;
+  function renderBoard(m) {
+    if (tab !== 'board' || !$('dlcBody')) return;
+    var c = load(K_BOARD, null), h = '<div class="sbBar"><button id="dlcRefresh" class="pzTab on" type="button">\uD83D\uDD04 Refresh</button><span class="sbWhen">' + (c ? 'Updated ' + ago(c.t) : 'Not loaded yet') + '</span></div>';
+    if (m) h += '<div class="sbMsg' + (loading ? '' : ' warn') + '" id="dlcBoardMsg">' + esc(m) + '</div>';
+    if (!c && m && !loading) h += '<div class="sbEmpty">Nothing saved yet. Tap <b>Refresh</b> in a little bit.</div>';
+    if (c && c.items) {
+      if (!c.items.length) h += '<div class="sbEmpty">No DLC ideas on the board yet. Be the first!</div>';
+      h += c.items.map(function (i) { return '<div class="sbItem dlcBoardItem" data-n="' + i.n + '"><div class="sbTop"><span class="sbSt ' + i.st + '">' + ST[i.st][1] + ' ' + ST[i.st][0] + '</span><span class="sbGameTag">' + esc(i.game) + '</span>' + (i.size ? '<span class="sbType">' + esc(i.size) + '</span>' : '') + '</div><div class="sbTitle">' + esc(i.name) + '</div><div class="sbMeta">#' + i.n + ' \u00b7 <a href="' + esc(i.url) + '" target="_blank" rel="noopener">open</a></div></div>'; }).join('');
+    }
+    $('dlcBody').innerHTML = h; $('dlcRefresh').addEventListener('click', function () { snd('click'); fetchBoard(); });
+  }
+  function setTab(t) {
+    tab = t; Array.prototype.forEach.call(document.querySelectorAll('#dlcTabs .pzTab'), function (b) { b.classList.toggle('on', b.getAttribute('data-tab') === t); });
+    if (t === 'new') renderNew(); else if (t === 'shop') renderShop(); else if (t === 'mine') renderMine(); else { renderBoard(); var c = load(K_BOARD, null); if (!c || Date.now() - c.t > 60000) fetchBoard(); }
+    $('dlcBody').scrollTop = 0;
+  }
+  D.tab = setTab;
+  function build() {
+    var d = document.createElement('div'); d.id = 'dlc'; d.className = 'pzOv hidden'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true');
+    d.innerHTML = '<div class="pzPanel dlcPanel"><div class="pzHead"><div class="pzTitle"><b>\uD83D\uDDA8\uFE0F DLC MACHINE 3000</b><span>Invent expansion packs \u00b7 unlock shipped DLC</span></div><div class="pzTix">\uD83C\uDF9F\uFE0F <b id="dlcTix">0</b></div><button id="dlcClose" class="xBtn" aria-label="Close">&#10005;</button></div>' +
+      '<div class="hlGusRow small"><div class="hlBubble" id="dlcGus">Beep boop. Feed me ideas. Gus says I\u2019m \u201Ca lot.\u201D</div></div>' +
+      '<div class="pzTabs" id="dlcTabs"><button class="pzTab on" data-tab="new">\u270F\uFE0F Invent</button><button class="pzTab" data-tab="shop">\uD83D\uDED2 DLC Shop</button><button class="pzTab" data-tab="mine">\uD83D\uDCC2 My DLC</button><button class="pzTab" data-tab="board">\uD83D\uDCCB DLC Board</button></div>' +
+      '<div class="pzScroll" id="dlcBody"></div></div>';
+    document.body.appendChild(d);
+    $('dlcClose').addEventListener('click', close); d.addEventListener('click', function (e) { if (e.target === d) close(); });
+    Array.prototype.forEach.call(d.querySelectorAll('#dlcTabs .pzTab'), function (b) { b.addEventListener('click', function () { snd('click'); setTab(b.getAttribute('data-tab')); }); });
+    window.addEventListener('keydown', function (e) { if (openNow && e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); } }, true);
+  }
+  D.open = function (which) {
+    if (!$('dlc')) build(); if (GA.UI && GA.UI.closeMenu) GA.UI.closeMenu(true);
+    openNow = true; $('dlc').classList.remove('hidden'); document.body.classList.add('pzOn'); refreshTix();
+    if (GA.Hub) { GA.Hub.setPaused(true); if (GA.Hub.clearInput) GA.Hub.clearInput(); } snd('open'); setTab(which || 'new');
+  };
+  function close() { if (!openNow) return; openNow = false; $('dlc').classList.add('hidden'); document.body.classList.remove('pzOn'); snd('menu'); if (GA.Hub) GA.Hub.setPaused(false); if (D.onClose) D.onClose(); }
+  D.close = close; D.isOpen = function () { return openNow; };
+})();
