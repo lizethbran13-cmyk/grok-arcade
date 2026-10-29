@@ -821,7 +821,18 @@ window.GROK_PREVIEW_DATA = {
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "sky-super-travel-fixes",
+      "game": "sky",
+      "issue": 80,
+      "name": "Grok Sky DLC: Super Travel Fixes",
+      "url": "previews/sky-super-travel-fixes/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "Passenger seat by class, bot Captain+FO fly (watch/skip), required departure customs, baggage claim, arrival customs on international flights, signs+arrows+minimap star"
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
