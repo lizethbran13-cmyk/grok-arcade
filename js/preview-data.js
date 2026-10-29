@@ -1,6 +1,5 @@
-/* Grok Arcade — preview.json inline mirror so the Preview Center & Schedule Board work on file:// and offline too. */
-window.GA = window.GA || {};
-GA.PREVIEW_DATA = {
+// Auto-synced mirror of preview.json so the Time Jumper works even when fetch(preview.json) is cached or blocked.
+window.GA_PREVIEW_DATA = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
   "updated": "2026-10-28",
   "items": [
@@ -97,14 +96,15 @@ GA.PREVIEW_DATA = {
     {
       "issue": 84,
       "game": "pickleballpark",
-      "name": "Pickleball Park DLC: Super Smash Expansion",
+      "name": "Pickleball Park DLC: Super Smash Expansion (live)",
       "size": "Expansion",
-      "what": "Walk-in Super Smash Arena on the west avenue of Grok Pickleball Park! 3 themed Smash Courts (🌋 Lava Island, 🚀 Moon Base, 🍭 Candy Stadium), 6 OG Super Smashers (Rocket Rita, Frosty Fran, Bolt Bo, Big Bertha, Dill Dan, Curvy Kiki) with 2-pt Smash & 3-pt Super Smash winners, 4 Specialty Power Paddles + Silent Serve Super Foam Ball, 3-Round Super Smash Cup, all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty), and Paddle Grit wear with Torty’s Free Emergency Rebuild (never stuck!). Playable now in the Time Jumper!",
-      "stage": "building",
-      "when": "Time Jumper Preview",
-      "preview": true,
-      "previewUrl": "previews/pickleball-super-smash/",
-      "key": "grokDLC.pickleballpark.super_smash_expansion"
+      "what": "Walk-in Super Smash Arena on the west avenue of Grok Pickleball Park! 3 themed Smash Courts (🌋 Lava Island, 🚀 Moon Base, 🍭 Candy Stadium), 6 OG Super Smashers (Rocket Rita, Frosty Fran, Bolt Bo, Big Bertha, Dill Dan, Curvy Kiki) with 2-pt Smash & 3-pt Super Smash winners, 4 Specialty Power Paddles + Silent Serve Super Foam Ball, 3-Round Super Smash Cup, all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty), and Paddle Grit wear with Torty’s Free Emergency Rebuild (never stuck!). 75 tickets at the DLC Machine. Live now in Grok Pickleball Park! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "key": "grokDLC.pickleballpark.super_smash_expansion",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-pickleball-park/",
+      "betaArchiveUrl": "archive/pickleball-super-smash-beta/",
+      "shippedAt": "2026-10-29T02:44:40.024Z"
     },
     {
       "issue": 83,
@@ -785,20 +785,21 @@ GA.PREVIEW_DATA = {
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "pickleball-super-smash",
       "game": "pickleballpark",
       "issue": 84,
       "name": "Pickleball Park DLC: Super Smash Expansion",
-      "url": "previews/pickleball-super-smash/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/pickleball-super-smash-beta/",
       "built": "2026-10-28",
-      "notes": "Walk-in Super Smash Arena on the west avenue! 3 themed Smash Courts (🌋 Lava Island, 🚀 Moon Base, 🍭 Candy Stadium), 6 Super Smashers (Rocket Rita, Frosty Fran, Bolt Bo, Big Bertha, Dill Dan, Curvy Kiki) with 2-pt Smash & 3-pt Super Smash winners, 4 Specialty Power Paddles + Silent Serve Super Foam Ball, 3-Round Super Smash Cup, all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty), and Paddle Grit wear with Torty's Free Emergency Rebuild (never stuck!)."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-28",
+      "notes": "Walk-in Super Smash Arena on the west avenue! 3 themed Smash Courts (🌋 Lava Island, 🚀 Moon Base, 🍭 Candy Stadium), 6 Super Smashers (Rocket Rita, Frosty Fran, Bolt Bo, Big Bertha, Dill Dan, Curvy Kiki) with 2-pt Smash & 3-pt Super Smash winners, 4 Specialty Power Paddles + Silent Serve Super Foam Ball, 3-Round Super Smash Cup, all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty), and Paddle Grit wear with Torty's Free Emergency Rebuild (never stuck!).",
+      "playable": true
+    },
     {
       "id": "online-play-update",
       "game": "arcade",
