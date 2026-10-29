@@ -1,5 +1,6 @@
-// Auto- mirrored from /preview.json for synchronous boot.
-window.GROK_PREVIEW_BOARD = {
+/* Grok Arcade - baked-in fallback copy of preview.json so Lili's board and the Time Jumper work offline or if fetch fails */
+window.GA = window.GA || {};
+GA.PREVIEW_FALLBACK = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
   "updated": "2026-10-28",
   "items": [
@@ -239,8 +240,10 @@ window.GROK_PREVIEW_BOARD = {
       "name": "Grok Grid 2",
       "size": "Sequel",
       "what": "High-speed sequel to Grok Grid with drift boost chains, custom garage tuning, and night neon circuits.",
-      "stage": "queued",
-      "when": "Queued"
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "preview": true,
+      "previewUrl": "previews/grok-grid-2/"
     },
     {
       "issue": 62,
@@ -781,6 +784,16 @@ window.GROK_PREVIEW_BOARD = {
       "playable": true,
       "built": "2026-10-28",
       "issue": 68
+    },
+    {
+      "id": "grok-grid-2",
+      "game": "grid",
+      "issue": 63,
+      "name": "Grok Grid 2",
+      "url": "previews/grok-grid-2/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "3 new circuits (Tortuga Superspeedway, Indy Brickyard GP, Tokyo Neon Drift) + 11 Super/Classic circuits, 8 cars (IndyCar Aero, Stock Thunder #42, Neon Drift GT + 5), F1/IndyCar/NASCAR/Drift series, Luna's Garage Tuning, Drift Boost Chains, Candy Pit Tow & all 5 pets"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
