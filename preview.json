@@ -90,9 +90,11 @@
       "game": "grocery",
       "name": "Grok Grocery Tycoon: Store & Delivery Fixes",
       "size": "QoL Patch",
-      "what": "Extra polish and bug fixes across Shopsville stores, stocking, checkout lanes, and delivery runs.",
-      "stage": "queued",
-      "when": "Queued"
+      "what": "Dense, tidy Main St store, Grok Van signs (Test Ride / Deliver) at the Ship Center and Main St, all 5 pets on the job (Luna, Pi-rat, Snowie, Candy, Torty), real van/freezer damage with refunds and rating drops, paid repair or Candy & Torty's 100% Free Emergency Rebuild, a walk-in Player Home with cooking, Customer Mode, and a $150,000 Halloween bonus that pays off your debt.",
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "preview": true,
+      "previewUrl": "previews/grocery-store-fixes/"
     },
     {
       "issue": 85,
@@ -832,6 +834,16 @@
       "playable": true,
       "built": "2026-10-28",
       "notes": "Ratita Airways 3-class tickets, 4 new cities, customs & passport stamps, VIP lounge, pet crew, Golden Wheel heist, airframe forge"
+    },
+    {
+      "id": "grocery-store-fixes",
+      "game": "grocery",
+      "issue": 87,
+      "name": "Grok Grocery Tycoon: Store & Delivery Fixes",
+      "url": "previews/grocery-store-fixes/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "Full #87 build: dense store, van signs, 5 pets, damage + free rebuild, home cooking, Customer Mode, $150k Halloween bonus"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

@@ -91,9 +91,11 @@ window.GROK_PREVIEW_DATA = {
       "game": "grocery",
       "name": "Grok Grocery Tycoon: Store & Delivery Fixes",
       "size": "QoL Patch",
-      "what": "Extra polish and bug fixes across Shopsville stores, stocking, checkout lanes, and delivery runs.",
-      "stage": "queued",
-      "when": "Queued"
+      "what": "Dense, tidy Main St store, Grok Van signs (Test Ride / Deliver) at the Ship Center and Main St, all 5 pets on the job (Luna, Pi-rat, Snowie, Candy, Torty), real van/freezer damage with refunds and rating drops, paid repair or Candy & Torty's 100% Free Emergency Rebuild, a walk-in Player Home with cooking, Customer Mode, and a $150,000 Halloween bonus that pays off your debt.",
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "preview": true,
+      "previewUrl": "previews/grocery-store-fixes/"
     },
     {
       "issue": 85,
