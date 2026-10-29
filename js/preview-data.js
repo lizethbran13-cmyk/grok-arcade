@@ -99,9 +99,12 @@ GA.PREVIEW_DATA = {
       "game": "pickleballpark",
       "name": "Pickleball Park DLC: Super Smash Expansion",
       "size": "Expansion",
-      "what": "Charged Super Smash shots, specialty power paddles, and an exhibition Smash Court in Grok Pickleball Park.",
-      "stage": "queued",
-      "when": "Queued"
+      "what": "Walk-in Super Smash Arena on the west avenue of Grok Pickleball Park! 3 themed Smash Courts (🌋 Lava Island, 🚀 Moon Base, 🍭 Candy Stadium), 6 OG Super Smashers (Rocket Rita, Frosty Fran, Bolt Bo, Big Bertha, Dill Dan, Curvy Kiki) with 2-pt Smash & 3-pt Super Smash winners, 4 Specialty Power Paddles + Silent Serve Super Foam Ball, 3-Round Super Smash Cup, all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty), and Paddle Grit wear with Torty’s Free Emergency Rebuild (never stuck!). Playable now in the Time Jumper!",
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "preview": true,
+      "previewUrl": "previews/pickleball-super-smash/",
+      "key": "grokDLC.pickleballpark.super_smash_expansion"
     },
     {
       "issue": 83,
@@ -782,7 +785,18 @@ GA.PREVIEW_DATA = {
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "pickleball-super-smash",
+      "game": "pickleballpark",
+      "issue": 84,
+      "name": "Pickleball Park DLC: Super Smash Expansion",
+      "url": "previews/pickleball-super-smash/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "Walk-in Super Smash Arena on the west avenue! 3 themed Smash Courts (🌋 Lava Island, 🚀 Moon Base, 🍭 Candy Stadium), 6 Super Smashers (Rocket Rita, Frosty Fran, Bolt Bo, Big Bertha, Dill Dan, Curvy Kiki) with 2-pt Smash & 3-pt Super Smash winners, 4 Specialty Power Paddles + Silent Serve Super Foam Ball, 3-Round Super Smash Cup, all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty), and Paddle Grit wear with Torty's Free Emergency Rebuild (never stuck!)."
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
