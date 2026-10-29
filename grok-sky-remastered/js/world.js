@@ -16,8 +16,12 @@ const CITIES = [
   { id: 'TYO', name: 'Tokyo', x: -36000, z: -4000, biome: 0x5c9a50, urban: 0xa7a8a8, seed: 77 },
   { id: 'LON', name: 'London', x: 54000, z: -31000, biome: 0x5f9a4c, urban: 0xa09c94, seed: 88 },
   { id: 'SBX', name: 'Starbase', x: 24000, z: 10000, biome: 0xc9b98a, urban: 0xbdb39a, seed: 99 },
+  { id: 'ZAC', name: 'Zacatecas City', x: 1500, z: 10500, biome: 0xc89664, urban: 0xc6a88b, seed: 166 },
   { id: 'UIO', name: 'Quito', x: 27000, z: 31500, biome: 0x6f9a50, urban: 0xb8ae9c, seed: 111 },
+  { id: 'AMB', name: 'Ambato', x: 21000, z: 40500, biome: 0x74a24e, urban: 0xbaaf9c, seed: 155 },
+  { id: 'CUS', name: 'Cusco', x: 33500, z: 44500, biome: 0x7ba04e, urban: 0xbaab94, seed: 177 },
   { id: 'RIO', name: 'Rio de Janeiro', x: 45500, z: 38500, biome: 0x5a9a48, urban: 0xb5ad9d, seed: 122 },
+  { id: 'CAI', name: 'Cairo', x: 70000, z: 9000, biome: 0xdcba78, urban: 0xcfb98a, seed: 188 },
   { id: 'MOON', name: 'Moon Base Artemis', x: 130000, z: -22000, biome: 0x9a9a9a, urban: 0xa9a9a9, seed: 133, space: 'moon', grav: 0.165 },
   { id: 'MARS', name: 'Mars Base Alpha', x: 130000, z: 22000, biome: 0xb0602f, urban: 0xb5653a, seed: 144, space: 'mars', grav: 0.38 },
 ];
@@ -25,7 +29,7 @@ for (const c of CITIES) { c.ax = c.x + 3200; c.az = c.z; c.rwyLen = 2400; c.rwyW
 const LAND = [
   { x: 8000, z: 2000, rx: 10500, rz: 22000 }, { x: 25000, z: -5000, rx: 20500, rz: 17000 },
   { x: 64000, z: -12000, rx: 13000, rz: 12000 }, { x: -36000, z: -4000, rx: 7500, rz: 15000 },
-  { x: 54000, z: -32000, rx: 6000, rz: 9000 }, { x: 24500, z: 10800, rx: 7000, rz: 2600 }, { x: 34000, z: 36000, rx: 14000, rz: 12000 }, // 4.0: Britain, Boca Chica, South America
+  { x: 54000, z: -32000, rx: 6000, rz: 9000 }, { x: 24500, z: 10800, rx: 7000, rz: 2600 }, { x: 33000, z: 38000, rx: 18500, rz: 13500 }, { x: 70000, z: 9000, rx: 9500, rz: 9000 }, // 4.0 + Super Travel: Britain, Boca Chica, South America (Quito/Ambato/Cusco/Rio), Cairo/Egypt
   { x: 130000, z: -22000, rx: 19000, rz: 19000 }, { x: 130000, z: 22000, rx: 19000, rz: 19000 }, // the Moon + Mars (far off the map)
 ];
 const W = SKY.World = { cities: CITIES, structs: [], debris: [], hills: [], interactables: [], waterPatches: [], landPatches: [], rivers: [], waterCircles: [], landmarks: [] };
@@ -51,7 +55,7 @@ W.heightAt = (x, z) => {
 W.nearestCity = (x, z) => { let best = null, bd = 1e18; for (const c of CITIES) { const d = (c.x - x) ** 2 + (c.z - z) ** 2; if (d < bd) { bd = d; best = c; } } return { city: best, dist: Math.sqrt(bd) }; };
 W.city = (id) => CITIES.find((c) => c.id === id);
 W.LAND = LAND;
-W.routeOrder = ['LA', 'LAS', 'MEX', 'SBX', 'UIO', 'RIO', 'NYC', 'LON', 'PAR', 'TYO'];
+W.routeOrder = ['LA', 'LAS', 'ZAC', 'MEX', 'SBX', 'UIO', 'AMB', 'CUS', 'RIO', 'NYC', 'LON', 'PAR', 'CAI', 'TYO'];
 W.spaceAt = (x, z) => (x > 100000 ? (z < 0 ? W.city('MOON') : W.city('MARS')) : null);
 // distance to a zone = min(city centre, airport)
 W.zoneDist = (c, x, z) => { let d = Math.hypot(c.x - x, c.z - z); if (c.apt) d = Math.min(d, Math.hypot(c.ax - x, c.az - z) - c.rwyLen * 0.5); return Math.max(0, d); };

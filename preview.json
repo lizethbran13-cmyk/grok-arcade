@@ -88,24 +88,26 @@
     {
       "issue": 87,
       "game": "grocery",
-      "name": "Grok Grocery Tycoon: Store & Delivery Fixes",
+      "name": "Grok Grocery Tycoon: Store & Delivery Fixes (live)",
       "size": "QoL Patch",
-      "what": "Dense, tidy Main St store, Grok Van signs (Test Ride / Deliver) at the Ship Center and Main St, all 5 pets on the job (Luna, Pi-rat, Snowie, Candy, Torty), real van/freezer damage with refunds and rating drops, paid repair or Candy & Torty's 100% Free Emergency Rebuild, a walk-in Player Home with cooking, Customer Mode, and a $150,000 Halloween bonus that pays off your debt.",
-      "stage": "building",
-      "when": "Time Jumper Preview",
-      "preview": true,
-      "previewUrl": "previews/grocery-store-fixes/"
+      "what": "Dense, tidy Main St store, Grok Van signs (Test Ride / Deliver) at the Ship Center and Main St, all 5 pets on the job (Luna, Pi-rat, Snowie, Candy, Torty), real van/freezer damage with refunds and rating drops, paid repair or Candy & Torty's 100% Free Emergency Rebuild, a walk-in Player Home with cooking, Customer Mode, and a $150,000 Halloween bonus that pays off your debt. Live now in Grok Grocery Tycoon! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-grocery-tycoon/",
+      "betaArchiveUrl": "archive/grocery-store-fixes-beta/",
+      "shippedAt": "2026-10-29T03:24:00Z"
     },
     {
       "issue": 85,
       "game": "eatsville",
-      "name": "Eatsville Tycoon: Online Order Mode DLC",
+      "name": "Eatsville Tycoon: Online Order Mode DLC (live)",
       "size": "Expansion",
-      "what": "Online Order Dispatch counter & Curbside Pickup shelf inside your restaurant with all 5 family pets (Luna, Pi-rat, Snowie, Candy & Torty)! Take Tortuga Eats / Ratita Rush app orders: prep, seal in a thermal hot bag, hand over curbside or dispatch same-day delivery on your restaurant-matched scooter or thermal cruiser. Hot food earns big tips 🤑, cold food costs rating, refunds and gear wear, and Candy & Torty's free Emergency Reboot means you're never stuck.",
-      "stage": "building",
-      "when": "Time Jumper Preview",
-      "preview": true,
-      "previewUrl": "previews/eatsville-online-orders/"
+      "what": "Online Order Dispatch counter & Curbside Pickup shelf inside your restaurant with all 5 family pets (Luna, Pi-rat, Snowie, Candy & Torty)! Take Tortuga Eats / Ratita Rush app orders: prep, seal in a thermal hot bag, hand over curbside or dispatch same-day delivery on your restaurant-matched scooter or thermal cruiser. Hot food earns big tips 🤑, cold food costs rating, refunds and gear wear, and Candy & Torty's free Emergency Reboot means you're never stuck. Live now in Grok Eatsville Tycoon! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-eatsville/",
+      "betaArchiveUrl": "archive/eatsville-online-orders-beta/",
+      "shippedAt": "2026-10-29T03:24:00Z"
     },
     {
       "issue": 84,
@@ -146,13 +148,14 @@
     {
       "issue": 80,
       "game": "sky",
-      "name": "Grok Sky DLC: Super Travel Expansion",
+      "name": "Grok Sky DLC: Super Travel Expansion (live)",
       "size": "Expansion",
-      "what": "Ratita Airways passenger travel (Economy 8 / Business 18 / First 35 coins), walk-in Super Travel terminal with customs & passport stamps, VIP lounge, weather radar and Torty's hangar, all 5 pets on duty, the Golden Wheel heist vs the Sky Marshal, airframe & gear damage with a free Never-Stuck rebuild, plus Zacatecas, Ambato, Cusco and Cairo.",
-      "stage": "building",
-      "when": "Time Jumper Preview",
-      "preview": true,
-      "previewUrl": "previews/sky-super-travel/"
+      "what": "Ratita Airways passenger travel (Economy 8 / Business 18 / First 35 coins), walk-in Super Travel terminal with customs & passport stamps, VIP lounge, weather radar and Torty's hangar, all 5 pets on duty, the Golden Wheel heist vs the Sky Marshal, airframe & gear damage with a free Never-Stuck rebuild, plus Zacatecas, Ambato, Cusco and Cairo. Live now in Grok Sky Remastered! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/grok-sky-remastered/",
+      "betaArchiveUrl": "archive/sky-super-travel-beta/",
+      "shippedAt": "2026-10-29T03:24:00Z"
     },
     {
       "issue": 78,
@@ -814,40 +817,46 @@
       "playable": true,
       "built": "2026-10-28",
       "notes": "Walk-in classroom with Lilith the Bot (on speaker with Lily the Bot), 4 subject stations, all 5 pets, Lesson Save Vault + submit your own Google Slides lesson, slideshows with Fun Facts + bonus questions, timed quizzes, Soccer goal/red-card quiz, Projector Integrity + free Candy & Torty Tutor Pass."
+    }
+  ],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
+    {
+      "id": "grocery-store-fixes",
+      "game": "grocery",
+      "issue": 87,
+      "name": "Grok Grocery Tycoon: Store & Delivery Fixes",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grocery-store-fixes-beta/",
+      "built": "2026-10-28",
+      "archived": "2026-10-28",
+      "notes": "Full #87 build: dense store, van signs, 5 pets, damage + free rebuild, home cooking, Customer Mode, $150k Halloween bonus",
+      "playable": true
     },
     {
       "id": "eatsville-online-orders",
       "game": "eatsville",
       "issue": 85,
       "name": "Eatsville Tycoon: Online Order Mode DLC",
-      "url": "previews/eatsville-online-orders/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/eatsville-online-orders-beta/",
       "built": "2026-10-28",
-      "notes": "Online Order Dispatch counter + Curbside Pickup shelf in your restaurant, Tortuga Eats / Ratita Rush app queue (prep, hot-bag sealing, curbside handoff, same-day delivery with live temp & route bars), restaurant-matched scooter or thermal cruiser, all 5 family pets, hot-drop tips vs cold-order consequences (rating, refund fee, bag/tablet wear) and Candy & Torty's free Emergency Reboot."
+      "archived": "2026-10-28",
+      "notes": "Online Order Dispatch counter + Curbside Pickup shelf in your restaurant, Tortuga Eats / Ratita Rush app queue (prep, hot-bag sealing, curbside handoff, same-day delivery with live temp & route bars), restaurant-matched scooter or thermal cruiser, all 5 family pets, hot-drop tips vs cold-order consequences (rating, refund fee, bag/tablet wear) and Candy & Torty's free Emergency Reboot.",
+      "playable": true
     },
     {
       "id": "sky-super-travel",
       "game": "sky",
       "issue": 80,
       "name": "Grok Sky: Super Travel Expansion",
-      "url": "previews/sky-super-travel/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/sky-super-travel-beta/",
       "built": "2026-10-28",
-      "notes": "Ratita Airways 3-class tickets, 4 new cities, customs & passport stamps, VIP lounge, pet crew, Golden Wheel heist, airframe forge"
+      "archived": "2026-10-28",
+      "notes": "Ratita Airways 3-class tickets, 4 new cities, customs & passport stamps, VIP lounge, pet crew, Golden Wheel heist, airframe forge",
+      "playable": true
     },
-    {
-      "id": "grocery-store-fixes",
-      "game": "grocery",
-      "issue": 87,
-      "name": "Grok Grocery Tycoon: Store & Delivery Fixes",
-      "url": "previews/grocery-store-fixes/",
-      "playable": true,
-      "built": "2026-10-28",
-      "notes": "Full #87 build: dense store, van signs, 5 pets, damage + free rebuild, home cooking, Customer Mode, $150k Halloween bonus"
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
     {
       "id": "party-fiesta-fixes",
       "game": "arcade",

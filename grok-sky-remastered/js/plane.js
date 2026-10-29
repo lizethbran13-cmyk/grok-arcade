@@ -57,8 +57,28 @@ const TYPES = {
     geo: { padX: 19, padB: 18, padTop: 8, tailExt: 5.2, tailK: 1.15, finK: 1.42, hsK: 1.5, span: 22.5, le0: -5.2, sweep: 0.55, ch0: 9.6, chTip: 2.4,
       eng: [{ x: 7.6, y: -2.3, r: 1.15, z0: -8.0, z1: -4.4 }, { x: 13.6, y: -1.5, r: 1.1, z0: -4.8, z1: -1.3 }], winglet: 'fence',
       lobe: { z0: -13.4, ramp: 2.8, z1: 99, back: 1, dy: 2.05, r: 2.35, wins: [-9.5, 9.5] }, liv: { stripe: 53, tail: 67 } } },
+  R777: { id: 'R777', name: 'Ratita Airways R-777 Tortuga Cruiser', short: 'Ratita R-777', icon: '🐀', cls: 'jet', seats: 74, blurb: 'Flagship 3-class Ratita Airways widebody! Gold & emerald livery, First/Business/Economy suites — crash-tested by Tortuga Tech (not very thoroughly).',
+    mass: 115000, I: [6.8e6, 8.5e6, 4.6e6], sv: 1.05, tk: 1.15, cd0: 0, rates: [0.58, 1.35, 0.28], resp: 0.95, fbw: true, vr: 71, vapp: 69, vclimb: 175, vcruise: 245, alt: 2200, vsMax: 24, rotPitch: 0.16,
+    rwy: 1550, eng: { mul: 1.05 }, gearH: 3.6, cam: [36, 3.6], door: { x: -2.4, z: null },
+    gear: [[0, -11.0], [-2.5, 1.2], [2.5, 1.2], [-3.8, 2.5], [3.8, 2.5]], anchor: [-2.3, 2.3, -3.3, 0.3, -2.7, 3.9], engines: [[-6.6, -1.7, -5.2], [6.6, -1.7, -5.2]], spanW: 19.2,
+    geo: { padX: 10, padB: 12, padTop: 5, tailExt: 3.2, tailK: 1.08, finK: 1.25, hsK: 1.25, span: 19.2, le0: -4.2, sweep: 0.54, ch0: 7.8, chTip: 1.9, nose: 'round',
+      eng: [{ x: 6.6, y: -2.25, r: 1.18, z0: -7.4, z1: -3.6 }], winglet: 'shark',
+      lobe: { z0: -11.2, ramp: 3.0, z1: 2.0, back: 5.0, dy: 1.45, r: 2.1, wins: [-7.5, -1.0] }, liv: { stripe: 53, tail: 64 } } },
+  CONC: { id: 'CONC', name: 'Concorde Supersonic SST', short: 'Concorde SST', icon: '⚡', cls: 'jet', seats: 74, blurb: 'Mach 2 ogival-delta supersonic passenger liner! Four underwing afterburners, blazing 285 m/s cruise, and royal First Class cabin.',
+    mass: 92000, I: [5.2e6, 6.8e6, 3.4e6], sv: 1.18, tk: 1.42, cd0: -0.006, rates: [0.68, 1.65, 0.32], resp: 1.15, vr: 82, vapp: 78, vclimb: 210, vcruise: 285, alt: 2600, vsMax: 28, rotPitch: 0.18,
+    rwy: 1700, eng: { mul: 1.25 }, gearH: 3.6, cam: [36, 3.2], door: { x: -2.4, z: null },
+    gear: [[0, -11.0], [-2.4, 1.4], [2.4, 1.4]], anchor: [-2.3, 2.3, -3.3, 0.3, -2.7, 3.9], engines: [[-5.2, -1.5, -2.5], [5.2, -1.5, -2.5], [-8.2, -1.4, 0.5], [8.2, -1.4, 0.5]], spanW: 16.5,
+    geo: { padX: 6, padB: 14, padTop: 4, tailExt: 4.0, tailK: 1.15, finK: 1.35, hsK: 0.85, span: 16.5, le0: -6.8, sweep: 0.72, ch0: 12.2, chTip: 1.6,
+      eng: [{ x: 5.2, y: -2.0, r: 0.92, z0: -4.5, z1: -0.5 }, { x: 8.2, y: -1.8, r: 0.88, z0: -1.5, z1: 2.2 }], winglet: 'fence', liv: { stripe: 60, tail: 68 } } },
+  TT900: { id: 'TT900', name: 'Tortuga Tech TT-900 Sky-Fortress', short: 'Tortuga TT-900', icon: '🐢', cls: 'jet', seats: 74, blurb: 'Heavy 4-engine STOL luxury liner engineered by Torty at Tortuga Tech. Shell-armored fuselage, short-field thrusters, and double-deck lounge.',
+    mass: 195000, I: [13.5e6, 17.0e6, 9.2e6], sv: 1.02, tk: 1.18, cd0: 0, rates: [0.52, 1.15, 0.26], resp: 0.88, fbw: true, vr: 66, vapp: 65, vclimb: 170, vcruise: 235, alt: 2200, vsMax: 22, rotPitch: 0.16,
+    rwy: 1400, eng: { mul: 0.95 }, gearH: 3.6, cam: [44, 4.5], door: { x: -2.4, z: null },
+    gear: [[0, -11.0], [-2.4, 0.9], [2.4, 0.9], [-4.1, 2.5], [4.1, 2.5]], anchor: [-2.3, 2.3, -3.3, 0.3, -2.7, 3.9], engines: [[-7.2, -1.7, -5.8], [7.2, -1.7, -5.8], [-12.8, -1.1, -2.8], [12.8, -1.1, -2.8]], spanW: 21.2,
+    geo: { padX: 15, padB: 16, padTop: 7, tailExt: 4.6, tailK: 1.12, finK: 1.35, hsK: 1.4, span: 21.2, le0: -4.8, sweep: 0.56, ch0: 9.0, chTip: 2.2,
+      eng: [{ x: 7.2, y: -2.25, r: 1.12, z0: -7.8, z1: -4.2 }, { x: 12.8, y: -1.55, r: 1.05, z0: -4.6, z1: -1.2 }], winglet: 'blend',
+      lobe: { z0: -12.6, ramp: 2.8, z1: 99, back: 1, dy: 1.95, r: 2.3, wins: [-9.0, 9.0] }, liv: { stripe: 64, tail: 53 } } },
 };
-const TYPE_ORDER = ['C172', 'BIZ', 'B737', 'A320', 'B747', 'A380'];
+const TYPE_ORDER = ['C172', 'BIZ', 'B737', 'A320', 'R777', 'CONC', 'B747', 'TT900', 'A380'];
 for (const id of TYPE_ORDER) { const T = TYPES[id]; T.qk = 150 * (T.mass / 60000) / (T.sv * T.sv); T.thrust = 250000 * (T.mass / 60000) * T.tk; T.vref = 70 * T.sv; }
 SKY.PlaneTypes = TYPES; SKY.PlaneTypeOrder = TYPE_ORDER;
 SKY.planeType = (id) => TYPES[id] || TYPES.B737;
@@ -112,7 +132,12 @@ function buildJet(T, ctx) {
         if (k <= 1 && r < 0.9) m = MAT.RADOME;
         set(i, j, k, m, k < BULK_K ? PART.COCK : PART.FUS, pressurized && shell);
       }
-      if (j === F && !shell && k >= 2 && k < REAR_BULK_K) set(i, j, k, Math.abs(x) < 0.8 && k > BULK_K ? MAT.AISLE : MAT.FLOOR, k < BULK_K ? PART.COCK : PART.FUS);
+      if (j === F && !shell && k >= 2 && k < REAR_BULK_K) {
+        let fm = MAT.FLOOR;
+        if (Math.abs(x) < 0.8 && k > BULK_K) fm = k <= ROW_K0 + 5 ? 67 : (k <= ROW_K0 + 14 ? 68 : MAT.AISLE);
+        else if (k > BULK_K && k <= ROW_K0 + 5) fm = 53;
+        set(i, j, k, fm, k < BULK_K ? PART.COCK : PART.FUS);
+      }
     }
   }
   // livery: GROK on both sides
@@ -132,10 +157,19 @@ function buildJet(T, ctx) {
   for (const [i0, x] of [[37, -0.6], [40, 0.6]]) { const i = I(i0); set(i, F + 1, 7, MAT.SEAT, PART.COCK); for (let j = F + 1; j <= F + 3; j++) set(i, j, 8, j === F + 3 ? MAT.HEAD : MAT.SEAT, PART.COCK); seats.push({ x, z: czK(7), y: 0.4, cockpit: true, captain: x < 0, occupant: null, row: -1, mask: -1 }); }
   for (let r = 0; r < ROWS; r++) {
     const k = ROW_K0 + r * 3;
+    const cabinClass = r <= 1 ? 'first' : (r <= 4 ? 'business' : 'economy');
+    const seatM = cabinClass === 'first' ? 60 : (cabinClass === 'business' ? 68 : MAT.SEAT);
+    const headM = cabinClass === 'first' ? 53 : (cabinClass === 'business' ? 29 : MAT.HEAD);
     for (const x of SEAT_X) {
-      const i = ix(x); set(i, F + 1, k, MAT.SEAT, PART.INT);
-      for (let j = F + 1; j <= F + 3; j++) set(i, j, k + 1, j === F + 3 ? MAT.HEAD : MAT.SEAT, PART.INT);
-      seats.push({ x, z: czK(k), y: 0.4, cockpit: false, occupant: null, row: r, mask: -1 });
+      // First class has wider luxury 4-abreast suite feel (inner armrest table at |x|===1.4)
+      const i = ix(x);
+      if (cabinClass === 'first' && Math.abs(Math.abs(x) - 1.4) < 0.05) {
+        set(i, F + 1, k, 53, PART.INT); set(i, F + 1, k + 1, 29, PART.INT);
+        continue;
+      }
+      set(i, F + 1, k, seatM, PART.INT);
+      for (let j = F + 1; j <= F + 3; j++) set(i, j, k + 1, j === F + 3 ? headM : seatM, PART.INT);
+      seats.push({ x, z: czK(k), y: 0.4, cockpit: false, occupant: null, row: r, cabinClass, mask: -1 });
     }
   }
   for (let k = ROW_K0 - 1; k <= ROW_K0 + ROWS * 3; k++) for (let j = F + 6; j <= F + 7; j++) for (let i = 0; i < nx; i++) { const x = cx(i); if (Math.abs(x) < 1.0) continue; const pr = profJet(czK(k), G); if (Math.hypot(x, cyJ(j) - pr[1]) < pr[0] - 0.5 && !g.get(i, j, k)) set(i, j, k, MAT.BIN, PART.INT); }
@@ -316,7 +350,7 @@ class Plane {
     if (this.gearGroup) { this.group.remove(this.gearGroup); this.gearGroup = null; }
     if (this.prop) { this.group.remove(this.prop); this.prop = null; }
     this.buildGear();
-    for (const o of [this.cdGroup, this.keypadMesh, this.ovenGlow, this.extMarker, this.drawerMarker, this.beltSign]) if (o) o.visible = !this.small;
+    for (const o of [this.cdGroup, this.keypadMesh, this.ovenGlow, this.extMarker, this.drawerMarker, this.beltSign, this.goldenWheel, this.superInterior]) if (o) o.visible = !this.small;
     for (const d of this.cabinDoors) d.mesh.visible = !this.small;
   }
   buildGear() {
@@ -369,6 +403,53 @@ class Plane {
     const ext = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.05, 0.4), new THREE.MeshLambertMaterial({ color: 0x555555 })); ext.position.set(-1.9, 1.1, czK(59)); this.interior.add(ext); this.extMarker = ext;
     const dr = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.25, 0.7), new THREE.MeshLambertMaterial({ color: 0x8090a0 })); dr.position.set(0.98, 0.55, czK(61) + 0.2); this.interior.add(dr); this.drawerMarker = dr;
     const sign = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.12, 0.04), new THREE.MeshBasicMaterial({ color: 0x223322 })); sign.position.set(0, 2.55, -9.6); this.interior.add(sign); this.beltSign = sign;
+    // ---- Super Travel Expansion: 3D Golden Pilot Wheel (in cockpit) & 3-Class Cabin Interior ----
+    const gw = new THREE.Group();
+    gw.position.set(-0.6, 0.92, czK(6) + 0.15);
+    const goldMat = new THREE.MeshLambertMaterial({ color: 0xffd700, emissive: 0x553800 });
+    const gemMat = new THREE.MeshBasicMaterial({ color: 0x00ffaa });
+    const colShaft = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.42), new THREE.MeshLambertMaterial({ color: 0x333842 }));
+    colShaft.position.set(0, -0.04, -0.18); gw.add(colShaft);
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(0.28, 0.045, 8, 20), goldMat);
+    rim.rotation.x = -0.25; gw.add(rim);
+    for (let a = 0; a < 4; a++) {
+      const sp = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.04, 0.04), goldMat);
+      sp.rotation.z = (a * Math.PI) / 4; sp.rotation.x = -0.25; gw.add(sp);
+    }
+    const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.08, 12), goldMat);
+    hub.rotation.x = Math.PI / 2 - 0.25; gw.add(hub);
+    const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.06, 0), gemMat);
+    gem.position.set(0, 0.01, 0.05); gw.add(gem);
+    this.interior.add(gw); this.goldenWheel = gw;
+
+    // 3-Class Cabin Luxury Dividers, First Class Champagne Bar & Tortuga Tech Plaque
+    const si = new THREE.Group();
+    const velvetMat = new THREE.MeshLambertMaterial({ color: 0x8b1538 });
+    const tealMat = new THREE.MeshLambertMaterial({ color: 0x0e6b7c });
+    const woodMat = new THREE.MeshLambertMaterial({ color: 0x5c3a21 });
+    // First Class crimson velvet carpet runner + gold border
+    const fcCarpet = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.02, 2.6), velvetMat);
+    fcCarpet.position.set(0, 0.01, czK(ROW_K0 + 2)); si.add(fcCarpet);
+    // Class divider curtains/arches between First -> Business (row 1/2) and Business -> Economy (row 4/5)
+    for (const [zk, matC, badgeCol] of [[ROW_K0 + 5, goldMat, 0xffd700], [ROW_K0 + 14, tealMat, 0x38bdf8]]) {
+      const zPos = czK(zk) - 0.18;
+      for (const sx of [-1, 1]) {
+        const post = new THREE.Mesh(new THREE.BoxGeometry(0.75, 1.85, 0.08), matC);
+        post.position.set(sx * 1.35, 0.95, zPos); si.add(post);
+      }
+      const header = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.22, 0.1), new THREE.MeshBasicMaterial({ color: badgeCol }));
+      header.position.set(0, 2.25, zPos); si.add(header);
+    }
+    // First Class Champagne & Caviar Mini-Bar (front right cabin at k=15)
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.95, 0.95), woodMat);
+    bar.position.set(1.42, 0.48, czK(15)); si.add(bar);
+    const barTop = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.06, 1.0), goldMat);
+    barTop.position.set(1.42, 0.98, czK(15)); si.add(barTop);
+    const bottle = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 0.32, 8), new THREE.MeshLambertMaterial({ color: 0x1f6f3e }));
+    bottle.position.set(1.38, 1.16, czK(15) - 0.15); si.add(bottle);
+    const bucket = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.08, 0.2, 10), goldMat);
+    bucket.position.set(1.45, 1.1, czK(15) + 0.15); si.add(bucket);
+    this.interior.add(si); this.superInterior = si;
   }
   // ------------------------------------------------------------------ reset / placement
   reset(opts) {
@@ -385,6 +466,9 @@ class Plane {
     this.dz = { thr: [1, 1], brake: 1, ctl: 1, pack: false, gearJam: false, flapsJam: false, asymK: 1, flame: [] }; // 4.1 disasters
     this.cockpitDoor = { hp: 100, locked: true, open: 0, target: 0, broken: false, lockout: 0, cubes: 40, autoClose: 0 };
     this.cdMesh.count = 40; this.cdGroup.visible = !this.small; this.cdGroup.rotation.y = 0;
+    this.wheelStolen = false;
+    if (this.goldenWheel) this.goldenWheel.visible = !this.small;
+    if (this.superInterior) this.superInterior.visible = !this.small;
     if (this.small) { this.cockpitDoor.broken = true; this.cockpitDoor.locked = false; this.cockpitDoor.open = 1; }
     for (const d of this.cabinDoors) { d.open = 0; d.target = 0; d.arm = 0; d.mesh.visible = !this.small; d.mesh.position.x = -2.18; d.mesh.rotation.y = 0; }
     this.code = String(SKY.randi(1000, 9999)); this.codeSpot = SKY.choose(['drawer', 'lav', 'attendant']); this.codeFound = false;
@@ -609,8 +693,15 @@ class Plane {
     const k = Math.min(1, TT.resp * 2.5 * dt * ctrl);
     const w = this.w;
     if (!this.crashed) {
-      w.x += (pitchRate - w.x) * k; w.z += (rollRate - w.z) * k; w.y += (yawRate - w.y) * k * 0.6;
-      this.groundGuard(dt, spd);
+      if (this.wheelStolen && !this.onGround) {
+        this.ap.on = false;
+        w.z += (1.15 * Math.sin(performance.now() * 0.0025) + 0.65 - w.z) * Math.min(1, dt * 2.2);
+        w.x += (-0.42 - w.x) * Math.min(1, dt * 1.8);
+        w.y += (0.35 - w.y) * Math.min(1, dt * 1.5);
+      } else {
+        w.x += (pitchRate - w.x) * k; w.z += (rollRate - w.z) * k; w.y += (yawRate - w.y) * k * 0.6;
+        this.groundGuard(dt, spd);
+      }
     }
     // aero stability: nose follows velocity
     if (spd > 10) {
