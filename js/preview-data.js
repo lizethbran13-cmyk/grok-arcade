@@ -6,13 +6,14 @@ window.GROK_PREVIEW_DATA = {
     {
       "issue": 89,
       "game": "arcade",
-      "name": "Grok Arcade: Education Center (Lilith the Bot)",
+      "name": "Grok Arcade: Education Center (Lilith the Bot) (live)",
       "size": "New Room",
-      "what": "Walk-in classroom with Lilith the Bot (made by Ratita Industries, tested by Tortuga Tech, on speakerphone with Lily the Bot), 4 subject stations, all 5 pets, Lesson Save Vault + submit-your-own Google Slides lessons, slideshows with Fun Facts + bonus questions, timed quizzes, Soccer goal/red-card quiz and Candy & Torty's free Tutor Pass.",
-      "stage": "building",
-      "when": "Building now",
-      "preview": true,
-      "previewUrl": "previews/education-center/"
+      "what": "Walk-in classroom with Lilith the Bot, 4 subject stations (Soccer, Robotics, Great Rodentia History, Weather & Flight), all 5 pets with nametags, Lesson Save Vault with Google Slides decks for every lesson, slideshows with Fun Facts + bonus questions, timed quizzes, Soccer goal/red-card quiz and Candy & Torty's free Tutor Pass. Live now in Grok Arcade! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/",
+      "betaArchiveUrl": "archive/education-center-beta/",
+      "shippedAt": "2026-10-29T03:30:00Z"
     },
     {
       "issue": 64,
@@ -808,20 +809,21 @@ window.GROK_PREVIEW_DATA = {
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "education-center",
       "game": "arcade",
       "issue": 89,
       "name": "Grok Arcade: Education Center (Lilith the Bot)",
-      "url": "previews/education-center/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/education-center-beta/",
       "built": "2026-10-28",
-      "notes": "Walk-in classroom with Lilith the Bot (on speaker with Lily the Bot), 4 subject stations, all 5 pets, Lesson Save Vault + submit your own Google Slides lesson, slideshows with Fun Facts + bonus questions, timed quizzes, Soccer goal/red-card quiz, Projector Integrity + free Candy & Torty Tutor Pass."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-28",
+      "notes": "Walk-in classroom with Lilith the Bot (on speaker with Lily the Bot), 4 subject stations, all 5 pets, Lesson Save Vault + submit your own Google Slides lesson, slideshows with Fun Facts + bonus questions, timed quizzes, Soccer goal/red-card quiz, Projector Integrity + free Candy & Torty Tutor Pass.",
+      "playable": true
+    },
     {
       "id": "grocery-store-fixes",
       "game": "grocery",
