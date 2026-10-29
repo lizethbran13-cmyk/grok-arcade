@@ -147,9 +147,11 @@ window.GROK_PREVIEW_DATA = {
       "game": "sky",
       "name": "Grok Sky DLC: Super Travel Expansion",
       "size": "Expansion",
-      "what": "Long-haul island routes, passenger terminals, and jetliners for Grok Sky.",
-      "stage": "queued",
-      "when": "Queued"
+      "what": "Ratita Airways passenger travel (Economy 8 / Business 18 / First 35 coins), walk-in Super Travel terminal with customs & passport stamps, VIP lounge, weather radar and Torty's hangar, all 5 pets on duty, the Golden Wheel heist vs the Sky Marshal, airframe & gear damage with a free Never-Stuck rebuild, plus Zacatecas, Ambato, Cusco and Cairo.",
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "preview": true,
+      "previewUrl": "previews/sky-super-travel/"
     },
     {
       "issue": 78,
@@ -821,6 +823,16 @@ window.GROK_PREVIEW_DATA = {
       "playable": true,
       "built": "2026-10-28",
       "notes": "Online Order Dispatch counter + Curbside Pickup shelf in your restaurant, Tortuga Eats / Ratita Rush app queue (prep, hot-bag sealing, curbside handoff, same-day delivery with live temp & route bars), restaurant-matched scooter or thermal cruiser, all 5 family pets, hot-drop tips vs cold-order consequences (rating, refund fee, bag/tablet wear) and Candy & Torty's free Emergency Reboot."
+    },
+    {
+      "id": "sky-super-travel",
+      "game": "sky",
+      "issue": 80,
+      "name": "Grok Sky: Super Travel Expansion",
+      "url": "previews/sky-super-travel/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "Ratita Airways 3-class tickets, 4 new cities, customs & passport stamps, VIP lounge, pet crew, Golden Wheel heist, airframe forge"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
