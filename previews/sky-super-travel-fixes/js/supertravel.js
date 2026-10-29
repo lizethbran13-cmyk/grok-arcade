@@ -260,8 +260,8 @@ ST.depart = () => {
   t.stage = 'flying'; t.left = 75; ST.flightLive = true; persist();
   toast('💺 You are a ' + CLASSES[t.cls].name + ' passenger (row ' + (seat ? seat.row + 1 : '?') + '). 🧑‍✈️ Captain Rex & First Officer Kim are flying you to ' + t.destName + '. Stand up and walk the cabin any time!', 'good');
 };
-ST.watch = () => { const P = SKY.Player, pl = SKY.Game.plane; const cap = pl.seats.find((s) => s.captain); if (!cap) return; P.leaveSeat(); const cd = pl.cockpitDoor; if (cd && !cd.broken) { cd.target = 1; cd.open = 1; cd.autoClose = 0; } P.mode = 'foot'; P.pos.set(0, 0.01, cap.z + 0.75); P.vel.set(0, 0, 0); P.yaw = 0; P.camMode = "fp"; P.pitch = -0.45; toast('👀 Watching Captain Rex & First Officer Kim fly. Tap 💺 My seat to sit back down.', 'good'); };
-ST.backToSeat = () => { const P = SKY.Player; const cd = SKY.Game.plane.cockpitDoor; if (cd && !cd.broken) cd.target = 0; if (ST.mySeat) P.sitSeat(ST.mySeat); };
+ST.watch = () => { const P = SKY.Player, pl = SKY.Game.plane; const cap = pl.seats.find((s) => s.captain); if (!cap) return; P.leaveSeat(); const cd = pl.cockpitDoor; if (cd && !cd.broken) { cd.target = 1; cd.open = 1; cd.autoClose = 0; } P.mode = 'foot'; P.pos.set(0, 0.01, cap.z + 1.6); P.vel.set(0, 0, 0); P.yaw = 0; P.camMode = "tp"; P.pitch = -0.3; toast('👀 Watching Captain Rex & First Officer Kim fly. Tap 💺 My seat to sit back down.', 'good'); };
+ST.backToSeat = () => { const P = SKY.Player; const cd = SKY.Game.plane.cockpitDoor; if (cd && !cd.broken) cd.target = 0; P.camMode = "fp"; if (ST.mySeat) P.sitSeat(ST.mySeat); };
 ST.skip = () => { const t = T(); if (t && t.stage === 'flying') t.left = 0; };
 ST.arrive = () => {
   const t = T(), G = SKY.Game, P = SKY.Player; if (!t) return; const C = CLASSES[t.cls];
