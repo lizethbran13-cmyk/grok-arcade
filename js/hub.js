@@ -466,12 +466,21 @@
         for (i = 0; i < 8; i++) { g.fillStyle = (i % 2) ? '#000' : '#fff'; g.fillRect(w * 0.18 + i * (w * 0.08), (t * 140) % 200 - 30, w * 0.08, 6); }
         break;
       }
+      case 'grid2': {
+        g.fillStyle = '#070b14'; g.fillRect(0, 0, w, h); g.fillStyle = '#1e293b'; g.fillRect(w * 0.15, 0, w * 0.7, h);
+        for (i = 0; i < 10; i++) { y = ((i * 20 + t * 180) % 200) - 20; g.fillStyle = i % 2 ? '#ff4a1c' : '#00e8ff'; g.fillRect(w * 0.15 - 6, y, 6, 11); g.fillRect(w * 0.85, y, 6, 11); g.fillStyle = '#facc15'; if (i % 2) g.fillRect(w / 2 - 2, y, 4, 12); }
+        function car2(cx, cy, col, fl) { g.fillStyle = col; g.fillRect(cx - 7, cy - 14, 14, 28); g.fillStyle = '#111'; g.fillRect(cx - 11, cy - 11, 4, 7); g.fillRect(cx + 7, cy - 11, 4, 7); g.fillRect(cx - 11, cy + 5, 4, 7); g.fillRect(cx + 7, cy + 5, 4, 7); g.fillStyle = fl; g.fillRect(cx - 5, cy + 14, 10, 6); }
+        car2(w * 0.36 + Math.sin(t * 2.0) * 12, h * 0.56, '#ff4a1c', '#00e8ff'); car2(w * 0.64 + Math.cos(t * 1.7) * 12, h * 0.64, '#00e8ff', '#facc15');
+        g.fillStyle = '#ff4a1c'; rrF(g, w * 0.08, 6, w * 0.84, 24, 6); g.font = font(13); g.textAlign = 'center'; g.fillStyle = '#fff'; g.fillText('GROK GRID 2', w / 2, 22);
+        break;
+      }
       case 'voxels': {
-        g.fillStyle = '#1e1b4b'; g.fillRect(0, 0, w, h);
-        for (i = 0; i < 14; i++) { var bx = ((i * 41 + t * 20) % (w + 30)) - 30, by = h - 20 - (i % 4) * 16; g.fillStyle = ['#a855f7', '#7c3aed', '#22d3ee', '#4c1d95'][i % 4]; g.fillRect(bx, by, 16, 16); g.fillStyle = 'rgba(255,255,255,0.2)'; g.fillRect(bx, by, 16, 3); }
-        for (i = 0; i < 3; i++) { x = w * (0.25 + i * 0.25) + Math.sin(t * 2 + i) * 14; y = h * 0.35 + Math.cos(t * 1.7 + i) * 8; g.fillStyle = '#ef4444'; g.fillRect(x - 9, y - 9, 18, 18); g.fillStyle = '#fff'; g.fillRect(x - 5, y - 4, 4, 4); g.fillRect(x + 2, y - 4, 4, 4); }
-        g.strokeStyle = '#22d3ee'; g.lineWidth = 2; x = w / 2 + Math.sin(t * 1.5) * 30; y = h * 0.4; g.beginPath(); g.arc(x, y, 12, 0, 7); g.moveTo(x - 18, y); g.lineTo(x + 18, y); g.moveTo(x, y - 18); g.lineTo(x, y + 18); g.stroke();
+        g.fillStyle = '#0f172a'; g.fillRect(0, 0, w, h);
+        for (i = 0; i < 14; i++) { var bx = ((i * 41 + t * 20) % (w + 30)) - 30, by = h - 20 - (i % 4) * 16; g.fillStyle = ['#a855f7', '#7c3aed', '#22d3ee', '#10b981'][i % 4]; g.fillRect(bx, by, 16, 16); g.fillStyle = 'rgba(255,255,255,0.28)'; g.fillRect(bx, by, 16, 3); }
+        for (i = 0; i < 3; i++) { x = w * (0.25 + i * 0.25) + Math.sin(t * 2 + i) * 14; y = h * 0.42 + Math.cos(t * 1.7 + i) * 8; g.fillStyle = '#ef4444'; g.fillRect(x - 9, y - 9, 18, 18); g.fillStyle = '#fff'; g.fillRect(x - 5, y - 4, 4, 4); g.fillRect(x + 2, y - 4, 4, 4); }
+        g.strokeStyle = '#22d3ee'; g.lineWidth = 2; x = w / 2 + Math.sin(t * 1.5) * 30; y = h * 0.45; g.beginPath(); g.arc(x, y, 12, 0, 7); g.moveTo(x - 18, y); g.lineTo(x + 18, y); g.moveTo(x, y - 18); g.lineTo(x, y + 18); g.stroke();
         if (Math.sin(t * 7) > 0.8) { g.fillStyle = '#fde047'; g.beginPath(); g.arc(w / 2, h - 8, 10, 0, 7); g.fill(); }
+        g.fillStyle = '#7c3aed'; rrF(g, w * 0.08, 6, w * 0.84, 22, 6); g.font = font(12); g.textAlign = 'center'; g.fillStyle = '#22d3ee'; g.fillText('VOXELS: RE-VOXELED', w / 2, 21);
         break;
       }
       case 'surfers': {

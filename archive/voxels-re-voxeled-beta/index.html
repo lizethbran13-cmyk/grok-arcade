@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ratita-preview-shim -->
+<meta name="robots" content="noindex,nofollow">
+<script>/* Ratita Preview shim: this page is a WORK-IN-PROGRESS preview. Its saves live under their own prefix so the real game's saves are never read or changed. */
+(function () {
+  var PFX = 'grokBeta.voxels-re-voxeled.';
+  try {
+    var SP = Storage.prototype, gI = SP.getItem, sI = SP.setItem, rI = SP.removeItem, kI = SP.key, cl = SP.clear, lenD = Object.getOwnPropertyDescriptor(SP, 'length');
+    function mine(st) { var a = [], n = lenD.get.call(st); for (var i = 0; i < n; i++) { var k = kI.call(st, i); if (k && k.indexOf(PFX) === 0) a.push(k); } return a; }
+    // archived beta: its own save prefix. The first visit copies the old preview save over, so Time Jumper progress comes along.
+    try { var OLD = 'grokPreview.voxels-re-voxeled.'; [localStorage, sessionStorage].forEach(function (st) { if (mine(st).length) return; var n = lenD.get.call(st), ks = []; for (var i = 0; i < n; i++) { var k = kI.call(st, i); if (k && k.indexOf(OLD) === 0) ks.push(k); } ks.forEach(function (k) { sI.call(st, PFX + k.slice(OLD.length), gI.call(st, k)); }); }); } catch (e) {}
+    SP.getItem = function (k) { return gI.call(this, PFX + k); };
+    SP.setItem = function (k, v) { return sI.call(this, PFX + k, v); };
+    SP.removeItem = function (k) { return rI.call(this, PFX + k); };
+    SP.key = function (i) { var a = mine(this); return i >= 0 && i < a.length ? a[i].slice(PFX.length) : null; };
+    SP.clear = function () { var st = this; mine(st).forEach(function (k) { rI.call(st, k); }); };
+    Object.defineProperty(SP, 'length', { configurable: true, get: function () { return mine(this).length; } });
+    if (window.indexedDB) { var IO = indexedDB.open.bind(indexedDB), ID = indexedDB.deleteDatabase.bind(indexedDB); indexedDB.open = function (n, v) { return v === undefined ? IO(PFX + n) : IO(PFX + n, v); }; indexedDB.deleteDatabase = function (n) { return ID(PFX + n); }; }
+  } catch (e) { if (window.console) console.warn('preview shim', e); }
+  function banner() { if (document.getElementById('ratitaWip')) return; var b = document.createElement('div'); b.id = 'ratitaWip';
+    b.setAttribute('style', 'position:fixed;left:8px;top:8px;z-index:2147483647;display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:12px;font:bold 12px Trebuchet MS,system-ui,sans-serif;color:#fff;background:repeating-linear-gradient(45deg,#0f766e 0 10px,#111827 10px 20px);box-shadow:0 2px 10px rgba(0,0,0,.5);text-shadow:0 1px 2px #000;max-width:calc(100vw - 16px)');
+    b.innerHTML = '\uD83D\uDCBE FINAL BETA \u00b7 Grok Voxels: Re-Voxeled \u00b7 from the Time Jumper Save Booth <a href="../../" style="color:#5eead4">\u23EA back to the arcade</a> <button aria-label="hide" style="background:none;border:0;color:#fff;font:bold 14px sans-serif;cursor:pointer">\u00d7</button>';
+    b.querySelector('button').onclick = function () { b.remove(); }; document.body.appendChild(b); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', banner); else banner();
+})();
+</script>
+
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>GROK VOXELS: RE-VOXELED</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 fill=%27%231ce0ff%27/%3E%3Crect x=%274%27 y=%274%27 width=%278%27 height=%278%27 fill=%27%23fff56a%27/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css?v=40" />
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <canvas id="minimap" width="168" height="168"></canvas>
+
+  <div id="hud">
+    <div id="hud-top">
+      <div id="lives" class="hud-panel">
+        <div id="hearts"></div>
+        <div id="hp-bar"><i id="hp-fill"></i></div>
+        <div id="armor-bar"><i id="armor-fill"></i><span id="armor-label">EXO 100%</span></div>
+      </div>
+      <div id="score-box" class="hud-panel">
+        <span class="label">SCORE · SALVAGE</span>
+        <span id="score">0</span>
+        <span id="scrap-chip">⚙ 25 SCRAP</span>
+      </div>
+      <div id="ammo-box" class="hud-panel">
+        <span class="label" id="ammo-label">BLASTER</span>
+        <span id="ammo">12 / 36</span>
+        <div id="ammo-pips" aria-label="Visible Weapon Rounds"></div>
+        <div id="heat-bar"><i id="heat-fill"></i><span id="heat-label">CORE COOL</span></div>
+      </div>
+    </div>
+    <div id="seed-chip" class="hud-panel">COURSE #0000</div>
+    <div id="engine-chip" class="hud-panel">⚡ RE-VOXELED 4.0 · DYN LIGHTS + SHADOWS · STREAMING</div>
+    <div id="status-banner" class="hud-panel hidden"></div>
+    <div id="hint">CLICK TO LOCK MOUSE · WASD MOVE · LMB SHOOT · B REPAIR/VENT · E PET CREW · L SHADER</div>
+  </div>
+  <div id="wbar" class="solo"></div>
+  <button type="button" id="cam-btn" aria-label="Switch camera (V)" title="Switch camera (V)">1ST</button>
+  <button type="button" id="engine-btn" aria-label="Switch Re-Voxeled Shader Mode (L)" title="Switch Re-Voxeled Shader Mode (L)">⚡ ULTRA</button>
+  <button type="button" id="repair-btn" aria-label="Field Repair Armor & Unjam Weapon (B)" title="Field Repair Armor & Unjam Weapon (B)">🔧 REPAIR (10⚙)</button>
+  <button type="button" id="respawn-btn" aria-label="Respawn & reset stuck joystick (K)" title="Respawn & reset stuck joystick (K)">↻ RESPAWN</button>
+  <div id="gad-chip" class="hidden" role="button" aria-label="Gadget (tap to switch)"></div>
+  <div id="shield-fx"></div>
+  <div id="boss-bar"><b>THE OVERSEER</b><i><u></u></i></div>
+
+  <div id="crosshair">
+    <i class="ch h"></i><i class="ch v"></i><i class="ch d"></i>
+  </div>
+  <div id="muzzle"></div>
+  <div id="hurt"></div>
+  <div id="dmg-dir"><i></i></div>
+  <div id="toast"></div>
+  <div id="mp-tags"></div>
+  <div id="pet-tags"></div>
+  <div id="mp-side"><button type="button" id="mp-menu-btn" aria-label="Co-op menu">MENU</button><div id="mp-party"></div></div>
+  <div id="mp-status"><span></span><i><u></u></i></div>
+  <div id="mp-notice"></div>
+  <div id="gun-kick"></div>
+
+  <div id="touch-ui" aria-hidden="true">
+    <div id="joy-zone">
+      <div id="joy-base">
+        <div id="joy-stick"></div>
+      </div>
+    </div>
+    <div id="look-zone"></div>
+    <div id="touch-btns">
+      <button type="button" id="btn-swap" class="hidden">SWAP</button>
+      <button type="button" id="btn-reload">RELOAD</button>
+      <button type="button" id="btn-jump">JUMP</button>
+      <button type="button" id="btn-fire">FIRE</button>
+      <button type="button" id="btn-gadget" class="hidden">GADGET</button>
+    </div>
+    <button type="button" id="btn-revive" class="hidden">HOLD<br>REVIVE</button>
+  </div>
+
+  <div id="overlay" class="show">
+    <div class="card" id="title-card">
+      <div class="logo-cubes" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <h1>GROK VOXELS <span class="ver">RE-VOXELED</span></h1>
+      <p class="tag">TORTUGA REMASTER WORKS · DYNAMIC SHADOWS &amp; LIGHT · VISIBLE 3D AMMO ENGINE</p>
+      <p class="blurb"><b>Re-Voxeled 4.0 Remaster:</b> Sleek futuristic voxel engine with <b>multi-point dynamic lighting, directional voxel shadows, ambient occlusion &amp; smooth chunk streaming</b>. Watch <b>live 3D ammo rounds, buckshot pellets, rockets, and spinning brass casings</b> fly out of your weapons with on-gun 3D ammo counters! Visit <b>Torty (Martina), Luna, Pi-rat, Snowie &amp; Candy</b> at the Tortuga Forward Base, explore the new <b>Bio-Dome</b> &amp; <b>Solar Citadel</b> biomes, and use <b>Salvage Scrap (B)</b> to weld cracked Exo-Armor or unjam overheated barrels!</p>
+      <div class="diff-row" id="diff-row">
+        <button type="button" data-d="0">EASY</button><button type="button" data-d="1">NORMAL</button><button type="button" data-d="2">HARD</button>
+      </div>
+      <p class="diff-desc" id="diff-desc"></p>
+      <div class="lvl-row" id="lvl-row"></div>
+      <p class="lvl-desc" id="lvl-desc"></p>
+      <div class="opt-row" id="opt-row">
+        <button type="button" id="cam-opt">🎥 CAMERA: 1ST PERSON</button>
+        <button type="button" id="assist-opt">🛟 ASSIST MODE: OFF</button>
+        <button type="button" id="shader-opt">⚡ ENGINE: RE-VOXELED ULTRA</button>
+      </div>
+      <p class="opt-desc" id="opt-desc"></p>
+      <div id="rat-panel" class="rat-panel"></div>
+      <ul class="controls">
+        <li><kbd>W A S D</kbd> move · <kbd>Space</kbd> jump · <kbd>Shift</kbd> sprint</li>
+        <li><kbd>Mouse</kbd> look · <kbd>LMB</kbd> shoot (physical 3D ammo + casings!)</li>
+        <li><kbd>R</kbd> reload · <kbd>Q</kbd>/<kbd>1-8</kbd>/<kbd>wheel</kbd> switch gun</li>
+        <li><kbd>B</kbd> field repair armor &amp; vent weapon jam · <kbd>E</kbd> interact with Pet Crew</li>
+        <li><kbd>V</kbd> 1st / 3rd person · <kbd>L</kbd> shader mode · <kbd>F</kbd> gadget · <kbd>T</kbd> switch gadget</li>
+        <li class="touch-note"><kbd>Joystick</kbd> left side to move · <kbd>Swipe</kbd> right side to look · <kbd>🔧 REPAIR</kbd> fix armor/jam</li>
+      </ul>
+      <button id="play-btn" class="btn primary">LAUNCH RE-VOXELED</button>
+      <p class="best-line" id="title-best"></p>
+    </div>
+
+    <div class="card hidden" id="mp-card">
+      <p class="tag" id="mp-kicker">CO-OP</p>
+      <h2 id="mp-title">CO-OP</h2>
+      <p class="result" id="mp-msg"></p>
+      <div id="mp-roster"></div>
+      <div id="mp-btns"></div>
+    </div>
+
+    <div class="card hidden" id="dead-card">
+      <h2>WIPED OUT</h2>
+      <p class="result" id="dead-msg">The bots got you.</p>
+      <p class="stats" id="dead-stats"></p>
+      <button id="retry-btn" class="btn primary">RETRY</button>
+      <button id="dead-menu-btn" class="btn ghost">TITLE</button>
+    </div>
+
+    <div class="card hidden" id="win-card">
+      <h2>EXTRACTED</h2>
+      <p class="result">You made it to the pad.</p>
+      <p class="stats" id="win-stats"></p>
+      <button id="again-btn" class="btn primary">PLAY AGAIN · NEW COURSE</button>
+      <button id="win-menu-btn" class="btn ghost">TITLE</button>
+    </div>
+  </div>
+
+  <script src="grok-net.js?v=3"></script>
+  <script src="game.js?v=40"></script>
+</body>
+</html>

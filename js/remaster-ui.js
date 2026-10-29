@@ -15,6 +15,8 @@
   ];
   /* the shelf: shipped remasters + sequels (add new ones here when they ship) */
   GA.REMASTER_SHELF = GA.REMASTER_SHELF || [
+    { name: 'Grok Voxels: Re-Voxeled', kind: 'Remaster', game: 'voxels', issue: 68, shipped: '2026-10-28', desc: 'Grok Voxels rebuilt on the Re-Voxeled 4.0 engine: 8 dynamic point lights, directional sun shadows + voxel AO, 3 shader modes (Ultra, Neon Overdrive, Classic), physical 3D ammo & casings, Tortuga Bio-Dome & Solar Citadel biomes, Exo-Armor & Thermal Jam with Field Repair, and all 5 family pets.' },
+    { name: 'Grok Grid 2', kind: 'Sequel', game: 'grid2', issue: 63, shipped: '2026-10-28', desc: 'High-speed sequel to Grok Grid: 14 circuits including Tortuga Superspeedway, Indy Brickyard GP & Tokyo Neon Drift, 4 racing series (Formula, IndyCar, Stock Car, Drift), 8 cars, Drift Boost Chains (x1-x5 Overdrive), Luna\u2019s Garage Tuning, Candy\u2019s Pit Tow, and all 5 family pets.' },
     { name: 'Grok Sports: Re-Commanded', kind: 'Remaster', game: 'sports', issue: 83, shipped: '2026-10-28', desc: 'Grok Sports rebuilt on the Tempest engine: crisp 3D courts & rinks, 5-save Slot Picker, live Arcade Coin Shop, Practice Drills, Custom Match Builder, and Tempest Stadium.' },
     { name: 'Grok FC 2', kind: 'Sequel', game: 'fc2', issue: 74, shipped: '2026-10-28', desc: 'The full 3D soccer sequel: 5 save slots, 3D Tempest Stadium with Jumbotron & floodlights, Career Mode, Custom Club Creator, Penalty Shootout, Skills Challenge, and pack opener.' },
     { name: 'Grok Sky Remastered', kind: 'Remaster', game: 'sky', issue: 62, shipped: '2026-10-28', desc: 'Grok Sky rebuilt on the Tempest engine: 5-save Slot Picker, dynamic weather & time-of-day, Remaster Flight HUD, Hangar Paint Shop, Ring Trials, and Cargo Runs.' },

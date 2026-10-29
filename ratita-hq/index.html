@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#ff4fa0">
+<title>Grok Ratita Industries HQ</title>
+<link rel="stylesheet" href="style.css?v=66s">
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.min.js", "three/addons/": "./lib/addons/" } }
+</script>
+<script src="lib/peerjs.min.js"></script>
+<script src="lib/grok-net.js"></script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud" class="hidden">
+  <div id="hTL"><div id="hArea" class="chip">🏢 Grand Atrium</div><div id="hGoal"></div><div id="hPlayers"></div></div>
+  <div id="hTR"><div class="chip">⚙️ <b id="hGears">0/0</b></div><div id="hShell" class="chip ttChip" title="Open Tortuga Tech Lab">🐢 Shell 100% · 🔩 60</div><div id="hKeys"></div></div>
+  <button id="hPause" aria-label="pause">II</button>
+  <div id="hTimer" class="hidden"></div>
+</div>
+<div id="touch" class="hidden">
+  <div id="touchZone"></div><div id="stickRing"></div><div id="stickKnob"></div>
+  <button class="tb" id="tJump" data-b="jump">JUMP</button>
+  <button class="tb" id="tSpin" data-b="spin">🌀<small>SPIN</small></button>
+  <button class="tb" id="tBlast" data-b="blast">🧀<small>BLAST</small></button>
+  <button class="tb hidden" id="tHook" data-b="hook">🪝</button>
+  <button class="hidden" id="tAct" data-b="act"></button>
+</div>
+<div id="dlg"></div>
+<div id="fade"></div>
+<div id="ui"></div>
+<div id="toast"></div>
+<div id="loading"><div class="lg">GROK RATITA<br><span>INDUSTRIES HQ</span></div><div class="bar"><i id="loadBar"></i></div><p id="loadTxt">Loading…</p></div>
+<script type="module" src="js/main.js?v=66s"></script>
+</body>
+</html>

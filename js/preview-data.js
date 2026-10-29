@@ -218,35 +218,36 @@ GA.PREVIEW_FALLBACK = {
     {
       "issue": 68,
       "game": "voxels",
-      "name": "Grok Voxels: Re-Voxeled",
+      "name": "Grok Voxels: Re-Voxeled (live)",
       "size": "Remaster",
-      "what": "Tortuga Remaster Works Re-Voxeled 4.0 engine upgrade! Features up to 8 real-time dynamic point lights, directional sun shadows + per-vertex voxel ambient occlusion, 3 live shader modes (Re-Voxeled Ultra, Neon Overdrive, Classic), physical 3D ammo flying out of weapons + spinning ejected casings + 3D on-gun ammo racks, 2 new biomes (Tortuga Bio-Dome & Solar Citadel), smoother chunk streaming, Exo-Armor & Weapon Core Thermal Jam consequences with Field Repair, and all 5 family pets (Torty, Luna, Pi-rat, Snowie & Candy) in the Tortuga Forward Base. Playable now in the Time Jumper!",
-      "stage": "building",
-      "when": "In the Jumper now",
-      "preview": true,
-      "previewUrl": "previews/voxels-re-voxeled/"
+      "what": "SHIPPED! Live on the Grok Voxels: Re-Voxeled cabinet in the Action wing: Tortuga Remaster Works Re-Voxeled 4.0 engine upgrade with up to 8 real-time dynamic point lights, directional sun shadows + per-vertex voxel ambient occlusion, 3 live shader modes (Re-Voxeled Ultra, Neon Overdrive, Classic), physical 3D ammo & ejected casings, 2 new biomes (Tortuga Bio-Dome & Solar Citadel), Exo-Armor & Weapon Core Thermal Jam with Field Repair, and all 5 family pets. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "built": "2026-10-28",
+      "shippedAt": "2026-10-28T23:55:00Z"
     },
     {
       "issue": 66,
       "game": "ratitahq",
-      "name": "Ratita HQ DLC: Tortuga Tech Expansion",
+      "name": "Ratita HQ DLC: Tortuga Tech Expansion (live)",
       "size": "Expansion",
-      "what": "Martina “Torty” opens a Tortuga Tech Inc. wing inside Ratita Industries HQ with shell-tough test chambers and crossover gadgets.",
-      "stage": "building",
-      "when": "In the Jumper now",
-      "preview": true,
-      "previewUrl": "previews/ratitahq-tortuga-tech/"
+      "what": "SHIPPED! Live in Grok Ratita Industries HQ (and at Gary’s DLC Machine for 80 tickets): Martina “Torty” opens the Tortuga Tech Inc. Wing off the East Atrium with 4 sub-rooms (Bioluminescence Lab, Shell-Armor Forge, Hydro-Propulsion Bay & Torty’s Corner Office), 6 NPCs, 4 Tortuga gadgets, the Reef Obstacle Course, and The Missing Blueprints quest! Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "built": "2026-10-28",
+      "shippedAt": "2026-10-28T23:55:00Z",
+      "key": "grokDLC.ratitahq.tortuga_tech_expansion"
     },
     {
       "issue": 63,
-      "game": "grid",
-      "name": "Grok Grid 2",
+      "game": "grid2",
+      "name": "Grok Grid 2 (live)",
       "size": "Sequel",
-      "what": "High-speed sequel to Grok Grid with drift boost chains, custom garage tuning, and night neon circuits.",
-      "stage": "building",
-      "when": "Time Jumper Preview",
-      "preview": true,
-      "previewUrl": "previews/grok-grid-2/"
+      "what": "SHIPPED! New cabinet in the Racing wing: high-speed sequel to Grok Grid with 14 circuits (including Tortuga Superspeedway, Indy Brickyard GP & Tokyo Neon Drift), 8 cars, F1/IndyCar/NASCAR/Drift series, Luna’s Garage Tuning, 3-tier Drift Boost Chains, Candy Pit Tow, and all 5 family pets. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Oct 28",
+      "built": "2026-10-28",
+      "shippedAt": "2026-10-28T23:55:00Z"
     },
     {
       "issue": 62,
@@ -780,25 +781,6 @@ GA.PREVIEW_FALLBACK = {
   ],
   "previews": [
     {
-      "id": "voxels-re-voxeled",
-      "game": "voxels",
-      "name": "Grok Voxels: Re-Voxeled",
-      "url": "previews/voxels-re-voxeled/",
-      "playable": true,
-      "built": "2026-10-28",
-      "issue": 68
-    },
-    {
-      "id": "grok-grid-2",
-      "game": "grid",
-      "issue": 63,
-      "name": "Grok Grid 2",
-      "url": "previews/grok-grid-2/",
-      "playable": true,
-      "built": "2026-10-28",
-      "notes": "3 new circuits (Tortuga Superspeedway, Indy Brickyard GP, Tokyo Neon Drift) + 11 Super/Classic circuits, 8 cars (IndyCar Aero, Stock Thunder #42, Neon Drift GT + 5), F1/IndyCar/NASCAR/Drift series, Luna's Garage Tuning, Drift Boost Chains, Candy Pit Tow & all 5 pets"
-    },
-    {
       "id": "heist-crew-remastered",
       "game": "heist",
       "issue": 78,
@@ -811,6 +793,42 @@ GA.PREVIEW_FALLBACK = {
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "voxels-re-voxeled",
+      "game": "voxels",
+      "issue": 68,
+      "name": "Grok Voxels: Re-Voxeled",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/voxels-re-voxeled-beta/",
+      "built": "2026-10-28",
+      "archived": "2026-10-28",
+      "notes": "Re-Voxeled 4.0 engine: 8 dynamic point lights, directional sun shadows + voxel AO, 3 shader modes, physical 3D ammo, Tortuga Bio-Dome & Solar Citadel biomes, Field Repair & all 5 pets",
+      "playable": true
+    },
+    {
+      "id": "ratitahq-tortuga-tech",
+      "game": "ratitahq",
+      "issue": 66,
+      "name": "Ratita HQ DLC: Tortuga Tech Expansion",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/ratitahq-tortuga-tech-beta/",
+      "built": "2026-10-28",
+      "archived": "2026-10-28",
+      "notes": "Walk-in Tortuga Tech Wing off the East Atrium, 4 sub-rooms, 6 NPCs (Torty, Shelly, Barnaby, Coral, Kelvin & Snap), 4 Tortuga gadgets, Reef Obstacle Course & The Missing Blueprints quest",
+      "playable": true
+    },
+    {
+      "id": "grok-grid-2",
+      "game": "grid2",
+      "issue": 63,
+      "name": "Grok Grid 2",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/grok-grid-2-beta/",
+      "built": "2026-10-28",
+      "archived": "2026-10-28",
+      "notes": "3 new circuits (Tortuga Superspeedway, Indy Brickyard GP, Tokyo Neon Drift) + 11 Super/Classic circuits, 8 cars (IndyCar Aero, Stock Thunder #42, Neon Drift GT + 5), F1/IndyCar/NASCAR/Drift series, Luna's Garage Tuning, Drift Boost Chains, Candy Pit Tow & all 5 pets",
+      "playable": true
+    },
     {
       "id": "sports-recommanded",
       "game": "sports",
