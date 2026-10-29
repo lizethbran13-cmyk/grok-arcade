@@ -135,14 +135,15 @@ GA.PREVIEW_FALLBACK = {
     {
       "issue": 78,
       "game": "heist",
-      "name": "Grok Heist Crew Remastered",
+      "name": "Grok Heist Crew Remastered (live)",
       "size": "Remaster",
-      "what": "Tortuga Remaster Works upgrade for Grok Heist Crew on the Shadow-Light Engine! Volumetric light shafts, stealth shadow pools (-58% detection), dedicated Jumper button (🦘 JUMP / Space) & Sprint, ⚡ Shadow EMP gadget, 6th Shadow Vault heist, Suit Integrity + Bail/Repair consequences, and all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty). Playable now in the Time Jumper!",
-      "stage": "building",
-      "when": "Time Jumper Preview",
-      "preview": true,
-      "previewUrl": "previews/heist-crew-remastered/",
-      "built": "2026-10-28"
+      "what": "SHIPPED! Live on the Grok Heist Crew Remastered cabinet in the Adventure wing: Tortuga Remaster Works upgrade on the Shadow-Light Engine with volumetric light shafts, Stealth Shadow Pools (-58% detection), dedicated Jumper button (🦘 JUMP / Space) & Sprint, ⚡ Shadow EMP gadget, Kevlar Weave suit armor, 6th Shadow Vault heist, Suit Integrity + Bail/Repair consequences, and all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty). Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "built": "2026-10-28",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/heist-crew-remastered/",
+      "betaArchiveUrl": "archive/heist-crew-remastered-beta/",
+      "shippedAt": "2026-10-29T01:15:00Z"
     },
     {
       "issue": 75,
@@ -779,20 +780,21 @@ GA.PREVIEW_FALLBACK = {
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "heist-crew-remastered",
       "game": "heist",
       "issue": 78,
       "name": "Grok Heist Crew Remastered",
-      "url": "previews/heist-crew-remastered/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/heist-crew-remastered-beta/",
       "built": "2026-10-28",
-      "notes": "Shadow-Light Engine remaster with volumetric light shafts, stealth shadow pools, dedicated Jumper button (🦘 JUMP / Space) & Sprint, Shadow EMP gadget, 6th Shadow Vault heist, Suit Integrity + Bail/Repair consequences, and cameos of all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty)."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-28",
+      "notes": "Shadow-Light Engine remaster with volumetric light shafts, stealth shadow pools, dedicated Jumper button (🦘 JUMP / Space) & Sprint, Shadow EMP gadget, 6th Shadow Vault heist, Suit Integrity + Bail/Repair consequences, and cameos of all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty).",
+      "playable": true
+    },
     {
       "id": "voxels-re-voxeled",
       "game": "voxels",

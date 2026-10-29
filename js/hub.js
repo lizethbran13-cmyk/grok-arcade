@@ -763,7 +763,7 @@
         var hx5 = 22 + ((t * 18) % (w * 0.42)), bob5 = Math.abs(Math.sin(t * 6)) * 3;
         g.fillStyle = '#7c3aed'; rrF(g, hx5 - 9, h - 58 - bob5, 18, 24, 7); g.beginPath(); g.arc(hx5, h - 62 - bob5, 10, 0, 7); g.fill(); g.fillStyle = '#ffd7b0'; g.beginPath(); g.arc(hx5 + 2, h - 61 - bob5, 6, 0, 7); g.fill();
         g.fillStyle = '#16101f'; g.fillRect(hx5 - 6, h - 35, 5, 6); g.fillRect(hx5 + 2, h - 35, 5, 6); g.fillStyle = '#3ff0ff'; g.fillRect(hx5 + 7, h - 64 - bob5, 4, 3);
-        g.font = font(19); g.textAlign = 'center'; g.fillStyle = '#ffd23f'; g.fillText('HEIST CREW', w / 2, 22);
+        g.fillStyle = '#7c3aed'; rrF(g, w * 0.08, 6, w * 0.84, 22, 6); g.font = font(13); g.textAlign = 'center'; g.fillStyle = '#ffd23f'; g.fillText('HEIST: REMASTERED', w / 2, 21);
         break;
       }
       case 'pickle': {

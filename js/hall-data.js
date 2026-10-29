@@ -1337,9 +1337,24 @@ GA.HALL_DATA = {
         "ver": "1.4",
         "title": "Greenlit!",
         "text": "David greenlit it, so Grok Heist Crew went live in the Arcade."
+      },
+      {
+        "date": "Oct 28",
+        "ver": "2.0",
+        "title": "Grok Heist Crew Remastered",
+        "text": "Remastered on the Shadow-Light Engine (#78): volumetric window light shafts, Stealth Shadow Pools (-58% detection), dedicated Jumper button (🦘 JUMP) & Sprint, ⚡ Shadow EMP gadget, Kevlar Weave suit armor, 6th Shadow Vault heist, Suit Integrity + Bail/Repair consequences, and all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty)."
       }
     ],
-    "versions": [],
+    "versions": [
+      {
+        "label": "original",
+        "ver": "1.4",
+        "title": "The original Grok Heist Crew (before Remastered)",
+        "commit": "live",
+        "url": "https://lizethbran13-cmyk.github.io/grok-heist/",
+        "thumb": "assets/hall/heist/cover.webp"
+      }
+    ],
     "pics": [
       {
         "src": "assets/hall/heist/1.webp",
@@ -1392,7 +1407,7 @@ GA.HALL_DATA = {
     ],
     "cover": "assets/hall/heist/cover.webp",
     "quip": "Thieves. In MY museum. I’m counting the diamonds every night now.",
-    "noOld": "Grok Heist Crew snuck in fully polished. No old versions. I checked the vault. Twice."
+    "noOld": ""
   },
   "pickle": {
     "repo": "grok-pickleball",
