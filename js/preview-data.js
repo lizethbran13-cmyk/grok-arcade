@@ -1,5 +1,5 @@
-// Auto-synced mirror of preview.json so the Time Jumper works even when fetch(preview.json) is cached or blocked.
-window.GA_PREVIEW_DATA = {
+/* Auto-synced from preview.json — offline fallback for Lili's Board & Time Jumper */
+window.GROK_PREVIEW_DATA = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
   "updated": "2026-10-28",
   "items": [
@@ -122,9 +122,11 @@ window.GA_PREVIEW_DATA = {
       "game": "party",
       "name": "Grok Land Party: Fiesta Expansion DLC Fixes",
       "size": "Bug Fix",
-      "what": "Fixes and polish for the Fiesta Fits Mini Pack cosmetics, party horn, confetti cannon, and board events in Grok Land Party.",
-      "stage": "queued",
-      "when": "Queued"
+      "what": "Massive Fiesta World Overhaul! Added the grand 5th town Gran Pueblo Viejo (🏛️) with a Cathedral Clocktower, cobblestone avenues & fountain, 14 interactive carved-stone merchant shops across all 5 towns (28 items & buffs), 32 bustling 3D villagers & shopkeepers, all 5 family pets in 3D (Luna, Pi-rat, Snowie, Candy & Torty), patrolling Chili Cart & Beach Crab hazards with Stamina/coin consequences, and Candy & Torty's Free Emergency Bailout (0 🪙, never stuck!).",
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "preview": true,
+      "previewUrl": "previews/party-fiesta-fixes/"
     },
     {
       "issue": 80,
@@ -785,7 +787,18 @@ window.GA_PREVIEW_DATA = {
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "party-fiesta-fixes",
+      "game": "party",
+      "issue": 82,
+      "name": "Grok Land Party: Fiesta Expansion DLC Fixes",
+      "url": "previews/party-fiesta-fixes/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "Massive Fiesta World Overhaul! Added the grand 5th town Gran Pueblo Viejo (🏛️) with a Cathedral Clocktower, cobblestone avenues & fountain, 14 interactive carved-stone merchant shops across all 5 towns (28 items & buffs), 32 bustling 3D villagers & shopkeepers, all 5 family pets in 3D (Luna, Pi-rat, Snowie, Candy & Torty), patrolling Chili Cart & Beach Crab hazards with Stamina/coin consequences, and Candy & Torty's Free Emergency Bailout (0 🪙, never stuck!)."
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
