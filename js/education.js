@@ -5,7 +5,7 @@
   'use strict';
   var T = THREE, EC = GA.EduCenter = {}, H, A, add, bx, cy, sp, to, cvs, texPlane, mats = {};
   var B = EC.B = { name: 'edu', minX: -74, maxX: -50, minZ: 150, maxZ: 172, maxY: 6, H: 4.8, spawn: { x: -52.4, z: 161 } };
-  var DOOR = { x: -18, z: -6.4 }, live = false, ANIM = [], WANT = /[?&]area=edu\b/.test(location.search) || /^#edu/.test(location.hash);
+  var DOOR = { x: 18.4, z: -5.0 }, live = false, ANIM = [], WANT = /[?&]area=edu\b/.test(location.search) || /^#edu/.test(location.hash);
   function ph(c, s, e) { var k = 'p' + c + (s || 30) + (e || ''); return mats[k] || (mats[k] = new T.MeshPhongMaterial({ color: c, shininess: s || 30, specular: '#444444', emissive: e ? new T.Color(e) : new T.Color(0) })); }
   function gl(c) { var k = 'g' + c; return mats[k] || (mats[k] = new T.MeshBasicMaterial({ color: c })); }
   function R() { return H.R.edu; }
@@ -156,10 +156,10 @@
     // ---- exit door (east wall) ----
     var ed = H.prop('edu', 'Classroom door', B.maxX - 0.1, cz + 3.6, -Math.PI / 2); add(ed, bx(1.6, 2.7, 0.12), ph('#7c3aed', 50), 0, 1.35, 0); add(ed, bx(1.3, 2.4, 0.04), ph('#ddd6fe', 50), 0, 1.3, 0.07);
     H.inter({ id: 'at_edu_exit', kind: 'at_edu_exit', root: 'edu', name: 'Back to the arcade', col: '#5eead4', x: B.maxX - 1.3, z: cz + 3.6, dir: [-1, 0], r: 1.0 });
-    // ---- the door on the ARCADE FLOOR (west wall, next to Mimi's Time Lab door) ----
+    // ---- the door in the Bonus Zone EAST WING (wing's west wall, just south of the arch, facing Grandma Mrs's desk) ----
     H.mkRoot('edu_door'); var md = H.prop('edu_door', 'Education Center door', DOOR.x + 0.08, DOOR.z, Math.PI / 2);
     add(md, bx(1.5, 2.9, 0.14), ph('#4c1d95', 50), 0, 1.45, 0); add(md, bx(1.1, 2.5, 0.05), ph('#fde68a', 50, '#3a2400'), 0, 1.3, 0.08);
-    sign(md, 1.7, 0.36, function (c, w, hh) { c.fillStyle = '#4c1d95'; c.fillRect(0, 0, w, hh); txt(c, '\uD83C\uDF93 EDUCATION CENTER', w / 2, hh / 2 + 2, '#fde68a', 42); }, 0, 3.15, 0.1, 0);
+    sign(md, 2.0, 0.4, function (c, w, hh) { c.fillStyle = '#4c1d95'; c.fillRect(0, 0, w, hh); txt(c, '\uD83C\uDF93 EDUCATION CENTER', w / 2, hh / 2 + 2, '#fde68a', 30); }, 0, 3.15, 0.1, 0);
     H.inter({ id: 'at_edu_door', kind: 'at_edu_door', root: 'edu_door', name: 'Education Center', col: '#a78bfa', x: DOOR.x + 1.3, z: DOOR.z, dir: [1, 0], r: 1.0 });
     r.visible = false;
     var ct0 = GA.Hub.camTune; GA.Hub.camTune = function (a) { return a === 'edu' ? { pitch: 0.5, dist: 7.2, ahead: 2.2, fov: 10 } : (ct0 ? ct0(a) : null); };
