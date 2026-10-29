@@ -126,7 +126,7 @@
   }
   function renderGames() {
     var wrap = $('mpGames'), cur = (room.meta() || {}).game || 'brawl';
-    if (!wrap.children.length) {
+    if (wrap.children.length !== GA.mpGames().length) { wrap.innerHTML = '';
       GA.mpGames().forEach(function (g) {
         var b = document.createElement('button'); b.className = 'mpG'; b.style.setProperty('--c', g.color); b.setAttribute('data-game', g.id);
         b.innerHTML = '<b></b><small></small>'; b.querySelector('b').textContent = g.name; b.querySelector('small').textContent = g.desc;
@@ -235,5 +235,6 @@
     $('mp').addEventListener('keydown', function (e) { e.stopPropagation(); if (e.key === 'Escape') MP.close(); });
     window.addEventListener('pageshow', function (e) { if (e.persisted) { going = false; $('fade').classList.remove('on'); } });
   };
+  MP.attachMockRoom = function (r) { if (room && room !== r) { try { room.leave(); } catch (e) {} } room = r; wireRoom(r); };
   MP._debug = function () { return { screen: screen, open: openFlag, code: room && room.code, isHost: room && room.isHost, players: room ? room.players().map(function (p) { return { name: p.name, slot: p.slot, ready: p.host || p.ready, host: p.host }; }) : [], meta: room && room.meta(), opened: !!(room && room.opened) }; };
 })();

@@ -105,7 +105,7 @@
       $('prompt').classList.add('together'); $('playBtn').classList.add('togBtn');
       $('pTag').textContent = tm === 'launch' ? 'PLAY TOGETHER' : tm === 'suggest' ? 'ASK THE HOST' : 'SOLO ONLY';
       $('pName').textContent = cab.game.name;
-      $('pDesc').textContent = tm === 'launch' ? 'Takes everyone in your room into ' + cab.game.name + ' online.' : tm === 'suggest' ? (host ? host.name : 'The host') + ' picks the game. Suggest this one and they can say yes!' : 'This one has no online mode. Leave the room to play it solo.';
+      $('pDesc').textContent = tm === 'launch' ? 'Takes everyone in your room into ' + cab.game.name + ' online.' : tm === 'suggest' ? (host ? host.name : 'The host') + ' picks the game. Suggest this one and they can say yes!' : (cab.id === 'surfers' ? 'Grok Surfers is Solo-Only per Lizeth\u2019s Rule (unless Lizeth toggles "Say Otherwise" in the Online Policy tab!).' : 'This one has no online mode. Leave the room to play it solo.');
       $('playBtn').innerHTML = tm === 'launch' ? (isTouch ? 'PLAY<br>ALL' : '&#9654; PLAY TOGETHER') : tm === 'suggest' ? 'SUGGEST' : (isTouch ? 'SOLO<br>ONLY' : 'SOLO ONLY');
       $('pKey').innerHTML = 'Press <kbd>E</kbd> or <kbd>Enter</kbd> to ' + (tm === 'launch' ? 'start it for everyone' : tm === 'suggest' ? 'suggest it' : 'see why');
       $('prompt').classList.remove('hidden'); $('playBtn').classList.remove('hidden'); $('playBtn').setAttribute('data-game', cab.id); $('playBtn').removeAttribute('data-href');
@@ -135,8 +135,14 @@
   /* ---------- quick menu ---------- */
   function card(g, bonus) {
     var d = document.createElement('div'); d.className = 'card'; d.style.setProperty('--c', g.color); d.setAttribute('data-game', g.id);
-    d.innerHTML = '<div class="cName"></div><div class="cDesc"></div>' + (bonus ? '<div class="cBest"></div>' : '') +
-      '<div class="cBtns"><button class="bPlay">&#9654; PLAY</button><button class="bGo">GO TO</button></div>';
+    var mpBadge = '';
+    if (!bonus) {
+      if (g.newlyOnline73 && g.mp) mpBadge = '<div class="cMpBadge new73">\u2728 NEW ONLINE (#73) \u00b7 ' + (g.mpMode || '2-3P Co-Op') + '</div>';
+      else if (g.mp) mpBadge = '<div class="cMpBadge online">\ud83d\udfe2 ONLINE MULTIPLAYER \u00b7 ' + (g.mpMode || '2-3P Online') + '</div>';
+      else mpBadge = '<div class="cMpBadge soloRule">\ud83c\udfc4 SOLO ONLY \u00b7 Lizeth\u2019s Rule</div>';
+    }
+    d.innerHTML = '<div class="cName"></div>' + mpBadge + '<div class="cDesc"></div>' + (bonus ? '<div class="cBest"></div>' : '') +
+      '<div class="cBtns"><button class="bPlay">&#9654; PLAY</button>' + (!bonus && g.mp ? '<button class="bOnline" title="Open Online Rooms for this game">\ud83c\udf10 ONLINE</button>' : '') + '<button class="bGo">GO TO</button></div>';
     d.querySelector('.cName').textContent = g.name;
     d.querySelector('.cDesc').textContent = g.desc;
     var play = d.querySelector('.bPlay'), go = d.querySelector('.bGo');
@@ -146,12 +152,13 @@
       GA.Audio.unlock();
       if (bonus) GA.openBonus(g.id); else { closeMenu(true); GA.launchMain(g); }
     });
+    var bon = d.querySelector('.bOnline'); if (bon) bon.addEventListener('click', function () { GA.Audio.unlock(); closeMenu(true); if (GA.OnlinePlay && GA.OnlinePlay.openForGame) GA.OnlinePlay.openForGame(g.id); else GA.MP.open(); });
     go.addEventListener('click', function () { GA.Hub.teleport(g.id); closeMenu(); GA.Audio.play('near'); });
     return d;
   }
   function mpCard() {
     var d = document.createElement('div'); d.className = 'card mpCard'; d.style.setProperty('--c', '#3ff0ff'); d.setAttribute('data-game', 'mp');
-    d.innerHTML = '<div class="cName">Multiplayer Antenna</div><div class="cDesc">Host or join a room and play Brawl, Grid, Land, Voxels or Sky with friends on their own phones (2-3 players).</div>' +
+    d.innerHTML = '<div class="cName">Multiplayer Antenna \u00b7 Online HQ (#73)</div><div class="cDesc">Arcade-Wide Online Room Browser & Quick-Join Party Codes across all 40 Online Grok Games (all except Grok Surfers per Lizeth\u2019s rule + Future Auto-Online!).</div>' +
       '<div class="cBtns"><button class="bPlay bMp" id="menuMpOpen">&#9654; OPEN LOBBY</button><button class="bGo" id="menuMpGo">GO TO</button></div>';
     d.querySelector('.bPlay').addEventListener('click', function () { GA.Audio.unlock(); closeMenu(true); GA.MP.open(); });
     d.querySelector('.bGo').addEventListener('click', function () { GA.Hub.teleport('mp'); closeMenu(); GA.Audio.play('near'); });
@@ -248,6 +255,7 @@
   function init() {
     GA.MG.init();
     GA.MP.init();
+    if (GA.OnlinePlay && GA.OnlinePlay.init) GA.OnlinePlay.init();
     GA.onMpClose = function () { showPrompt(GA.Hub.near()); };
     if (GA.PZ) GA.PZ.onClose = function () { setTickets(GA.getTickets()); showPrompt(GA.Hub.near()); };
     if (GA.Claw) GA.Claw.onClose = function () { setTickets(GA.getTickets()); showPrompt(GA.Hub.near()); };

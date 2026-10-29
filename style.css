@@ -925,3 +925,104 @@ body.touch .tmChip{top:calc(max(12px,env(safe-area-inset-top)) + 248px);bottom:a
 .gbMsTxt{flex:1}
 .gbBarTrack{height:7px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden;margin-top:6px}
 .gbBarFill{height:100%;background:linear-gradient(90deg,#14b8a6,#fbbf24,#ec4899);border-radius:99px}
+
+/* ---------- Issue #73: Online Play Update (Room Browser, Lizeth Policy, Pet Relay & Shield) ---------- */
+.cMpBadge{display:inline-block;font-size:11px;font-weight:800;padding:3px 8px;border-radius:99px;margin:2px 0 6px;letter-spacing:.3px}
+.cMpBadge.online{background:rgba(34,197,94,.18);color:#86efac;border:1px solid rgba(74,222,128,.45)}
+.cMpBadge.new73{background:linear-gradient(135deg,rgba(63,240,255,.22),rgba(255,79,216,.22));color:#fde047;border:1px solid #3ff0ff;box-shadow:0 0 8px rgba(63,240,255,.25)}
+.cMpBadge.soloRule{background:rgba(251,146,60,.18);color:#fdba74;border:1px solid rgba(251,146,60,.45)}
+.card .cBtns .bOnline{background:linear-gradient(180deg,#0ea5e9,#0369a1);color:#fff;border:2px solid #7dd3fc;border-radius:12px;padding:7px 10px;font:800 12px "Trebuchet MS",system-ui,sans-serif;cursor:pointer}
+.card .cBtns .bOnline:hover{filter:brightness(1.1)}
+
+#mp .mpPanel{max-width:760px;width:min(760px,96vw)}
+.opTopWrap{padding:8px 16px 10px;background:rgba(12,8,34,.85);border-bottom:1.5px solid rgba(63,240,255,.28)}
+.opHudBar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;align-items:center}
+.opChip{font-size:12px;padding:4px 9px;border-radius:99px;background:rgba(30,41,59,.85);color:#e2e8f0;border:1px solid rgba(148,163,184,.35)}
+.opChip b{color:#fff}
+.opChip.ok{background:rgba(6,78,59,.75);border-color:#34d399;color:#a7f3d0}
+.opChip.warn{background:rgba(120,53,15,.8);border-color:#fbbf24;color:#fde68a}
+.opChip.bad{background:rgba(127,29,29,.85);border-color:#f87171;color:#fecaca}
+.opChip.info{background:rgba(15,23,42,.8);border-color:rgba(63,240,255,.4);color:#bae6fd}
+.opChip.tix{background:rgba(88,28,135,.65);border-color:#f472b6;color:#fbcfe8}
+
+.opTabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+@media (max-width:560px){.opTabs{grid-template-columns:repeat(2,1fr)}}
+.opTab{background:rgba(24,16,54,.9);color:#cbd5e1;border:1.5px solid rgba(148,163,184,.35);border-radius:10px;padding:8px 8px;font:800 12px "Trebuchet MS",system-ui,sans-serif;cursor:pointer;text-align:center;transition:all .15s}
+.opTab.on{background:linear-gradient(135deg,#0284c7,#7c3aed);color:#fff;border-color:#3ff0ff;box-shadow:0 0 12px rgba(63,240,255,.4)}
+
+.opQuickCrewBox{margin-top:12px;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(14,165,233,.16),rgba(236,72,153,.16));border:1.5px solid rgba(63,240,255,.45);display:flex;flex-direction:column;gap:8px}
+.opQcText{font-size:13px;color:#e2e8f0;line-height:1.35}
+.opQcText b{color:#fde047}
+.opQcBtns{display:flex;flex-wrap:wrap;gap:8px}
+
+.opBtn{border-radius:10px;padding:8px 12px;font:800 12px "Trebuchet MS",system-ui,sans-serif;cursor:pointer;border:1.5px solid rgba(255,255,255,.4);color:#fff;background:rgba(51,65,85,.9)}
+.opBtn.primary{background:linear-gradient(135deg,#0ea5e9,#6366f1);border-color:#7dd3fc}
+.opBtn.alt{background:rgba(30,41,59,.9);border-color:rgba(148,163,184,.45);color:#e2e8f0}
+.opBtn.warn{background:linear-gradient(135deg,#b45309,#be123c);border-color:#fda4af}
+.opBtn.emergency{background:linear-gradient(135deg,#10b981,#f59e0b);color:#0f172a;border:2px solid #fef08a;font-weight:900;box-shadow:0 0 14px rgba(250,204,21,.45)}
+.opBtn.small{padding:6px 10px;font-size:11px}
+.opBtn:disabled{opacity:.45;cursor:not-allowed}
+
+.opBrowserControls{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:10px}
+.opFilters{display:flex;gap:6px;flex-wrap:wrap}
+.opFilt{background:rgba(30,41,59,.85);color:#cbd5e1;border:1px solid rgba(148,163,184,.35);border-radius:99px;padding:6px 11px;font:700 12px "Trebuchet MS",system-ui,sans-serif;cursor:pointer}
+.opFilt.on{background:#0284c7;color:#fff;border-color:#3ff0ff}
+.opSearch{flex:1 1 180px;background:rgba(15,23,42,.9);color:#fff;border:1.5px solid rgba(63,240,255,.4);border-radius:10px;padding:7px 11px;font:600 13px "Trebuchet MS",system-ui,sans-serif}
+
+.opRoomGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:9px;max-height:360px;overflow-y:auto;padding-right:4px}
+.opRoomCard{background:rgba(15,23,42,.86);border:1.5px solid rgba(148,163,184,.3);border-left:4px solid var(--c,#3ff0ff);border-radius:12px;padding:10px 11px;display:flex;flex-direction:column;gap:5px}
+.opRoomCard.focused{border-color:#fde047;box-shadow:0 0 14px rgba(253,224,71,.35)}
+.opRcTop{display:flex;justify-content:space-between;align-items:center;gap:4px;font-size:10px}
+.opRcBadge{padding:2px 6px;border-radius:99px;font-weight:800}
+.opRcBadge.new73{background:rgba(250,204,21,.2);color:#fde047;border:1px solid rgba(250,204,21,.45)}
+.opRcBadge.live{background:rgba(34,197,94,.18);color:#86efac}
+.opRcCode{color:#94a3b8}
+.opRcCode b{color:#3ff0ff;letter-spacing:.6px}
+.opRcName{font-size:14px;font-weight:800;color:#fff}
+.opRcMode{font-size:11px;color:#cbd5e1;line-height:1.3}
+.opRcBtns{display:flex;gap:6px;margin-top:4px}
+.opRcBtns .opBtn{flex:1;padding:6px 6px;font-size:11px}
+
+.opLockAlert{background:rgba(127,29,29,.88);border:2px solid #f87171;border-radius:12px;padding:10px 12px;margin-bottom:10px;color:#fecaca;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+
+.opPolicyBox{background:rgba(15,23,42,.82);border:1.5px solid rgba(63,240,255,.32);border-radius:14px;padding:12px 14px;margin-bottom:12px}
+.opPolTag{display:inline-block;font-size:10px;font-weight:900;color:#fde047;background:rgba(250,204,21,.15);border:1px solid rgba(250,204,21,.4);padding:2px 7px;border-radius:99px;margin-bottom:4px;letter-spacing:.5px}
+.opPolHeader h3{margin:2px 0 6px;font-size:15px;color:#fff}
+.opPolDesc{margin:0 0 10px;font-size:12px;color:#cbd5e1;line-height:1.4}
+.opSurfersCard{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(251,146,60,.14);border:1.5px solid #fb923c}
+.opSurfersCard.overrideOn{background:rgba(34,197,94,.16);border-color:#4ade80}
+.opSurfTitle{font-size:14px;font-weight:800;color:#fff;margin-bottom:2px}
+.opSurfSub{font-size:12px;color:#e2e8f0}
+.opPolMasterRow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;padding:8px 10px;background:rgba(30,41,59,.7);border-radius:10px;font-size:12px}
+.opBadgeOk{color:#4ade80;font-weight:800}
+.opFutureGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:8px}
+.opFutCard{background:rgba(30,41,59,.78);border:1.5px solid rgba(74,222,128,.4);border-radius:11px;padding:9px 10px;display:flex;flex-direction:column;gap:4px}
+.opFutCard.futOff{border-color:rgba(251,146,60,.45);opacity:.88}
+.opFutTop{display:flex;justify-content:space-between;font-size:10px;font-weight:800}
+.opFutIssue{color:#38bdf8}
+.opFutState.on{color:#4ade80}
+.opFutState.off{color:#fb923c}
+.opFutName{font-size:13px;font-weight:800;color:#fff}
+.opFutMode{font-size:11px;color:#cbd5e1;margin-bottom:4px}
+
+.opConseqBox{background:rgba(15,23,42,.86);border:1.5px solid rgba(244,114,182,.4);border-radius:14px;padding:12px 14px;margin-bottom:12px}
+.opConseqTop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.opConseqTop h3{margin:2px 0 0;font-size:15px;color:#fff}
+.opStandTxt.ok{color:#4ade80}
+.opStandTxt.warn{color:#fbbf24}
+.opStandTxt.bad{color:#f87171}
+.opStrikesBadge{font-size:12px;color:#e2e8f0;background:rgba(30,41,59,.85);padding:5px 10px;border-radius:99px;border:1px solid rgba(148,163,184,.35)}
+.opMeterBar{height:11px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden;margin-bottom:8px}
+.opMeterFill{height:100%;transition:width .25s ease}
+.opMeterFill.ok{background:linear-gradient(90deg,#10b981,#3ff0ff)}
+.opMeterFill.warn{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.opMeterFill.bad{background:linear-gradient(90deg,#ef4444,#f97316)}
+.opEventBanner{font-size:12px;color:#fde68a;background:rgba(30,41,59,.85);border:1px solid rgba(250,204,21,.35);border-radius:9px;padding:7px 10px;margin-bottom:9px}
+.opConseqActions{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:7px}
+.opPetGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:9px}
+.opPetCard{background:rgba(15,23,42,.85);border:1.5px solid rgba(148,163,184,.32);border-top:3px solid var(--c,#f472b6);border-radius:12px;padding:10px 11px;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
+.opPetHead{display:flex;align-items:center;gap:8px}
+.opPetIcon{font-size:24px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.07);border-radius:10px}
+.opPetName{font-size:14px;font-weight:800;color:#fff}
+.opPetTitle{font-size:11px;color:#fde047}
+.opPetRole{margin:0;font-size:11px;color:#cbd5e1;line-height:1.35}

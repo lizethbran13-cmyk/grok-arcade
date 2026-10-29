@@ -1,6 +1,6 @@
-/* Grok Arcade - baked-in fallback copy of preview.json so Lili's board and the Time Jumper work offline or if fetch fails */
+/* Grok Arcade — preview.json inline mirror so the Preview Center & Schedule Board work on file:// and offline too. */
 window.GA = window.GA || {};
-GA.PREVIEW_FALLBACK = {
+GA.PREVIEW_DATA = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
   "updated": "2026-10-28",
   "items": [
@@ -782,20 +782,21 @@ GA.PREVIEW_FALLBACK = {
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "online-play-update",
       "game": "arcade",
       "issue": 73,
       "name": "Grok Arcade: Online Play Update",
-      "url": "previews/online-play-update/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/online-play-update-beta/",
       "built": "2026-10-28",
-      "notes": "Online Play HQ at the Multiplayer Antenna — 40 of 41 Main Games online (all except Grok Surfers per Lizeth's rule, with a 'Lizeth Says Otherwise' override toggle!), Auto-Online Policy for all future games unless marked 'No Need', Arcade-Wide Room Browser & 1-Click Pet Crew Party Codes, all 5 pets (Luna, Pi-rat, Snowie, Candy, Torty) in 3D & Relay Crew, real disconnect/foul consequences, and Candy & Torty's Free Emergency Signal Rebuild (never stuck!)."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-10-28",
+      "notes": "Online Play HQ at the Multiplayer Antenna — 40 of 41 Main Games online (all except Grok Surfers per Lizeth's rule, with a 'Lizeth Says Otherwise' override toggle!), Auto-Online Policy for all future games unless marked 'No Need', Arcade-Wide Room Browser & 1-Click Pet Crew Party Codes, all 5 pets (Luna, Pi-rat, Snowie, Candy, Torty) in 3D & Relay Crew, real disconnect/foul consequences, and Candy & Torty's Free Emergency Signal Rebuild (never stuck!).",
+      "playable": true
+    },
     {
       "id": "heist-crew-remastered",
       "game": "heist",

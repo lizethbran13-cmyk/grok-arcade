@@ -1426,11 +1426,11 @@
       var rg = mesh(new T.TorusGeometry(0.35, 0.025, 6, 40), rm, 0, 4.42, 0, grp); rg.rotation.x = Math.PI / 2; rings.push(rg);
     }
     // sign board (double sided) and a floor decal
-    var sg = sign('MULTIPLAYER\nPlay with friends online', 2.8, 0.85, cyan, { col2: yel });
+    var sg = sign('ONLINE PLAY HQ\n40 Games \u00b7 Room Browser \u00b7 Codes', 2.8, 0.85, cyan, { col2: yel });
     sg.position.set(0, 1.55, 0.68); grp.add(sg);
     var sgb = sg.clone(); sgb.rotation.y = Math.PI; sgb.position.z = 0.66; grp.add(sgb);
     mesh(box(0.06, 0.9, 0.06), lam('#c7b8ff'), -1.2, 0.9, 0.67, grp); mesh(box(0.06, 0.9, 0.06), lam('#c7b8ff'), 1.2, 0.9, 0.67, grp);
-    var dec = decal('ONLINE', 2.6, 0.9, cyan, 0, 0, 0, '2-3 players \u00b7 own phones'); scene.remove(dec); dec.position.set(0, 0.02, 1.75); grp.add(dec); noAud(dec);
+    var dec = decal('ONLINE', 2.6, 0.9, cyan, 0, 0, 0, '40 games \u00b7 room browser \u00b7 party codes'); scene.remove(dec); dec.position.set(0, 0.02, 1.75); grp.add(dec); noAud(dec);
     var gm = new T.MeshBasicMaterial({ map: glowTex, color: cyan, transparent: true, opacity: 0.35, depthWrite: false, blending: T.AdditiveBlending });
     var glow = mesh(plane(3.6, 3.6), gm, 0, 0.03, 0, grp); glow.rotation.x = -Math.PI / 2; glow.renderOrder = 2; noAud(glow);
     ANT.p = { grp: grp, orb: orb, halo: halo, rings: rings, blinks: blinks, dish: dish, lat: lat, lat2: lat2 };
@@ -1445,7 +1445,7 @@
     addSolid(ANT.x - 1.0, ANT.x + 1.0, ANT.z - 1.0, ANT.z + 1.0, 'Multiplayer Antenna');
     grp.updateMatrixWorld(true); regItem('Multiplayer Antenna', 'booth', grp); regItem('decal:ONLINE', 'decal', dec);
     var dir = new T.Vector3(Math.sin(grp.rotation.y), 0, Math.cos(grp.rotation.y));
-    var cab = { game: { id: 'mp', name: 'Multiplayer Antenna', desc: 'Host or join a room and play with friends on their own phones (2-3 players).', color: cyan },
+    var cab = { game: { id: 'mp', name: 'Multiplayer Antenna \u00b7 Online Play HQ', desc: 'Arcade-Wide Room Browser & Quick-Join Party Codes across all 40 Online Grok Games (all except Grok Surfers per Lizeth\u2019s rule, plus auto-online for future games!). Staffed by Luna, Pi-rat, Snowie, Candy & Torty.', color: cyan },
       kind: 'mp', id: 'mp', group: grp, x: ANT.x, z: ANT.z, rot: grp.rotation.y, front: { x: ANT.x, z: ANT.z }, dir: dir, glow: gm, nextDraw: Infinity, r: 2.25, noStand: true };
     cabinets.push(cab);
   }
@@ -2090,6 +2090,7 @@
     if (GA.Remaster && GA.Remaster.build) { try { GA.Remaster.build(api()); } catch (e) { if (window.console) console.warn('Tortuga Remaster Works failed to build', e); } }
     if (GA.Account3D && GA.Account3D.build) { try { GA.Account3D.build(api()); } catch (e) { if (window.console) console.warn('Bob\u2019s Account Desk failed to build', e); } }
     if (GA.Gift3D && GA.Gift3D.build) { try { GA.Gift3D.build(api()); } catch (e) { if (window.console) console.warn('Carrie\u2019s Gift Booth failed to build', e); } }
+    if (GA.Online3D && GA.Online3D.build) { try { GA.Online3D.build(api(), ANT); } catch (e) { if (window.console) console.warn('Online Play Command Plaza failed to build', e); } }
     buildGary(); buildPlayer(); setupInput();
     // restore position when coming back from a main game
     var saved = null; try { saved = JSON.parse(sessionStorage.getItem('grokArcade.pos') || 'null'); } catch (e) {}

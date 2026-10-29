@@ -39,7 +39,7 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-arcade/grok-grid-2/', color: '#ff4a1c', color2: '#00e8ff' },
   { id: 'voxels', mp: true, name: 'Grok Voxels: Re-Voxeled', desc: 'REMASTERED on the Re-Voxeled 4.0 engine! Up to 8 real-time dynamic point lights, directional sun shadows + voxel ambient occlusion, 3 live shader modes (Re-Voxeled Ultra, Neon Overdrive, Classic), physical 3D ammo & ejected casings, 7 courses including Tortuga Bio-Dome & Solar Citadel, Exo-Armor & Thermal Jam with Field Repair, and all 5 family pets in the Tortuga Forward Base. Co-op online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-arcade/voxels-re-voxeled/', color: '#a855f7', color2: '#22d3ee' },
-  { id: 'surfers', name: 'Grok Surfers', desc: 'An endless runner. Dodge, jump and grab coins.',
+  { id: 'surfers', mp: false, soloOnlyRule: true, mpMode: 'Solo Runner (Lizeth\u2019s Rule)', name: 'Grok Surfers', desc: 'An endless runner. Dodge, jump and grab coins. (Solo-only by Lizeth\u2019s rule \u2014 unless she says otherwise!)',
     url: 'https://lizethbran13-cmyk.github.io/grok-surfers/', color: '#fb923c', color2: '#facc15' },
   { id: 'fc', mp: true, name: 'Grok FC', desc: '3D soccer, 5 stadiums, Dream Team. 1 v 1 or co-op online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-fc/', color: '#22c55e', color2: '#ffffff' },
@@ -95,19 +95,19 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-north-pole/', color: '#ef4444', color2: '#22c55e' },
   { id: 'pumpkinhollow', mp: true, name: 'Grok Pumpkin Hollow', desc: 'A moonlit cartoon 3D Halloween town of friendly ghosts and pumpkinheads! Ride the Ghost Train, explore Pumpkin Square, Spooky Street, the Abandoned Village, Haunted Hill, the Pumpkin Patch and the Bat Caves, catch a scary movie at the Scream-o-Vision Picture House, then walk down Boo Row: the Haunted Costume Shop, Witch\u2019s Potion Shoppe, Ghost Post Office, Skeleton Dance Hall, Candy Corn Factory, Monster Bakery, Fortune Teller, Mummy Spa, Carving Studio and Haunted Hotel, each with its own activity. Solve Who swiped the Moon Lantern? with visitors Torty, Candy, Luna, Pi-rat and Snowie. Co-op for 3 online.',
     url: 'https://lizethbran13-cmyk.github.io/grok-pumpkin-hollow/', color: '#f97316', color2: '#7c3aed' },
-  { id: 'ruffsources', name: 'Grok Ruffsources HQ', desc: 'A cartoon 3D walk-in HR office run by dogs! Explore Ruffsources HQ: the lobby with Biscuit the corgi receptionist, the mail room, the break room, the filing archive, the interview room and Candy\u2019s office. Sort the mail, file the paperwork, interview new hires (HIRE or PASS?) and solve the mystery of Candy\u2019s missing squeaky toy. Find all 26 golden bones, then head out to the plaza, the dog park and the Bark & Brew caf\u00e9. Save your progress and keep playing any time.',
+  { id: 'ruffsources', mp: true, newlyOnline73: true, mpMode: 'Co-Op HR Office (2-3P)', name: 'Grok Ruffsources HQ', desc: 'A cartoon 3D walk-in HR office run by dogs! Explore Ruffsources HQ: the lobby with Biscuit the corgi receptionist, the mail room, the break room, the filing archive, the interview room and Candy\u2019s office. Sort the mail, file the paperwork, interview new hires (HIRE or PASS?) and solve the mystery of Candy\u2019s missing squeaky toy. Find all 26 golden bones, then head out to the plaza, the dog park and the Bark & Brew caf\u00e9. Save your progress and keep playing any time. Explore and run Ruffsources HQ with up to 3 friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-ruffsources/', color: '#ff8a3d', color2: '#14b8a6' },
-  { id: 'skytours', name: 'Grok Snowie Sky Tours', desc: 'Fly Snowie\u2019s tour copter over a big open cartoon 3D world inspired by Pup Town, Torty Town and North Pole Village! Fly tour stops, rescue stranded pets, race the ring courses and collect passport stamps. Crashes are harmless: the friendly tow-drone carries you home. Land on any pad and walk into 9 packed buildings and 14 cottages, each with its own mini-game or chore: Ticket Rush, Sky Ace, Gift Wrap Rush, Marshmallow Catch and more. Save your progress and keep flying any time.',
+  { id: 'skytours', mp: true, newlyOnline73: true, mpMode: 'Squad Air Tour (2-3P)', name: 'Grok Snowie Sky Tours', desc: 'Fly Snowie\u2019s tour copter over a big open cartoon 3D world inspired by Pup Town, Torty Town and North Pole Village! Fly tour stops, rescue stranded pets, race the ring courses and collect passport stamps. Crashes are harmless: the friendly tow-drone carries you home. Land on any pad and walk into 9 packed buildings and 14 cottages, each with its own mini-game or chore: Ticket Rush, Sky Ace, Gift Wrap Rush, Marshmallow Catch and more. Save your progress and keep flying any time. Fly formation tours and rescue pets with up to 3 friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-sky-tours/', color: '#38bdf8', color2: '#ff4fa0' },
-  { id: 'grocery', name: 'Grok Grocery Tycoon', desc: 'Run a store in the cartoon 3D town of Shopsville! Start as a courtesy clerk (bag groceries, push carts, stock shelves, mop spills) and get promoted all the way to owner, or start as the boss and build an empire of 11 store types: supermarkets, supercenters, markets, toy, shoe, electronics, pet, clothing, home goods, pharmacies and convenience stores. Walk into every store and all 9 rival shops, switch to first-person, run deliveries from your own distribution center and hire Luna, Pi-rat, Snowie, Candy and Torty. Save your progress and keep playing any time.',
+  { id: 'grocery', mp: true, newlyOnline73: true, mpMode: 'Shopsville Co-Op (2-3P)', name: 'Grok Grocery Tycoon', desc: 'Run a store in the cartoon 3D town of Shopsville! Start as a courtesy clerk (bag groceries, push carts, stock shelves, mop spills) and get promoted all the way to owner, or start as the boss and build an empire of 11 store types: supermarkets, supercenters, markets, toy, shoe, electronics, pet, clothing, home goods, pharmacies and convenience stores. Walk into every store and all 9 rival shops, switch to first-person, run deliveries from your own distribution center and hire Luna, Pi-rat, Snowie, Candy and Torty. Save your progress and keep playing any time. Team up to run stores and deliveries with up to 3 friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-grocery-tycoon/', color: '#16a34a', color2: '#f97316' },
-  { id: 'pickleballpark', name: 'Grok Pickleball Park', desc: 'A giant cartoon 3D sports park built around real pickleball! Serve, dink, drop, drive, lob and smash with easy touch controls (real kitchen and two-bounce rules), play singles or doubles with Coach Kai, Luna, Snowie or Rally Rita, climb the 10-rung Park Ladder to Pickle King and win 4 tournaments for coins. Play on the Stadium Court with Umpire Pi-rat, 8 open courts and the Night Lights Court, shop for MaxGrit paddles and Silent Serve balls in Torty\u2019s Pro Shop, and visit the Clubhouse, the Snack Shack and the Training Center. Save your progress and keep playing any time.',
+  { id: 'pickleballpark', mp: true, newlyOnline73: true, mpMode: 'Online Doubles & Ladder (2-4P)', name: 'Grok Pickleball Park', desc: 'A giant cartoon 3D sports park built around real pickleball! Serve, dink, drop, drive, lob and smash with easy touch controls (real kitchen and two-bounce rules), play singles or doubles with Coach Kai, Luna, Snowie or Rally Rita, climb the 10-rung Park Ladder to Pickle King and win 4 tournaments for coins. Play on the Stadium Court with Umpire Pi-rat, 8 open courts and the Night Lights Court, shop for MaxGrit paddles and Silent Serve balls in Torty\u2019s Pro Shop, and visit the Clubhouse, the Snack Shack and the Training Center. Save your progress and keep playing any time. Play online singles, doubles and Park Tournaments with friends!',
     url: 'https://lizethbran13-cmyk.github.io/grok-pickleball-park/', color: '#16a34a', color2: '#e6ff3b' },
-  { id: 'drvic', name: 'Grok Dr. Vic: The Lost Lab', desc: 'A spooky Halloween exploration game on the brand-new Shadowlight engine! Dr. Victor\u2019s inventions keep flopping (Ratita Goo was a total disaster), so he becomes an urban explorer who needs to go viral. Sneak down abandoned Old Town Street, find the hidden Ratita Industries lab behind the bushes and explore its 2 floors and 11 underground levels with your flashlight: the Goo Factory, the Robot Workshop, the brick sewer and the Goo Core. Film anomalies for followers and uncover what Luna, Pi-rat and Snowie\u2019s great-great-great-grandparents really did. Save your progress and keep exploring any time.',
+  { id: 'drvic', mp: true, newlyOnline73: true, mpMode: 'Shadowlight Lab Co-Op (2-3P)', name: 'Grok Dr. Vic: The Lost Lab', desc: 'A spooky Halloween exploration game on the brand-new Shadowlight engine! Dr. Victor\u2019s inventions keep flopping (Ratita Goo was a total disaster), so he becomes an urban explorer who needs to go viral. Sneak down abandoned Old Town Street, find the hidden Ratita Industries lab behind the bushes and explore its 2 floors and 11 underground levels with your flashlight: the Goo Factory, the Robot Workshop, the brick sewer and the Goo Core. Film anomalies for followers and uncover what Luna, Pi-rat and Snowie\u2019s great-great-great-grandparents really did. Save your progress and keep exploring any time. Explore the Lost Lab and film anomalies with up to 3 friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-dr-vic/', color: '#4ade80', color2: '#7c3aed' },
-  { id: 'petparty', name: 'Grok Pet Party', desc: 'A party game show live on the Tortuga TV Network, sponsored by Ratita Industries and Tortuga Tech! Play with up to 4 friends using a room code, or solo against bots. Hosts Rico and Martina \u201cTorty\u201d run 7 mini-games in random order (Cheese Dash, Shell Slide, Candy\u2019s Catch, Goo Floor, Pickleball Smash, Pi-rat\u2019s Treasure Dig and Bumper Shells), then the Crown Chase finale crowns the Party Champ. Between rounds, Candy from Ruffsources brings out celebrity guests!',
+  { id: 'petparty', mp: true, newlyOnline73: true, mpMode: 'Tortuga TV Party Show (2-4P)', name: 'Grok Pet Party', desc: 'A party game show live on the Tortuga TV Network, sponsored by Ratita Industries and Tortuga Tech! Play with up to 4 friends using a room code, or solo against bots. Hosts Rico and Martina \u201cTorty\u201d run 7 mini-games in random order (Cheese Dash, Shell Slide, Candy\u2019s Catch, Goo Floor, Pickleball Smash, Pi-rat\u2019s Treasure Dig and Bumper Shells), then the Crown Chase finale crowns the Party Champ. Between rounds, Candy from Ruffsources brings out celebrity guests! Wired into the Arcade-Wide Online Room Browser & Quick-Join Party Codes!',
     url: 'https://lizethbran13-cmyk.github.io/grok-pet-party/', color: '#ff4fd8', color2: '#38bdf8' },
-  { id: 'rodentia', name: 'Grok Great Rodentia', desc: 'A shadow-light mystery in Year 000 1! Luna, Pi-rat and Snowie were framed by their evil twin clones and locked in National Ratita Prison, and Torty got arrested too. Play Brie the detective, explore 4 districts of the USM crimson capital and 8 walk-in buildings with your flashlight, find 12 conspiracy clues and Golden Gouda Wedges, free Candy from the seized RuffSources HQ and break the real sisters out. Or switch to Evil Twin Mode and play as Evil Luna, Evil Pi-rat or Evil Snowie. 4 endings, and your progress saves.',
+  { id: 'rodentia', mp: true, newlyOnline73: true, mpMode: 'Crimson Capital Co-Op (2-3P)', name: 'Grok Great Rodentia', desc: 'A shadow-light mystery in Year 000 1! Luna, Pi-rat and Snowie were framed by their evil twin clones and locked in National Ratita Prison, and Torty got arrested too. Play Brie the detective, explore 4 districts of the USM crimson capital and 8 walk-in buildings with your flashlight, find 12 conspiracy clues and Golden Gouda Wedges, free Candy from the seized RuffSources HQ and break the real sisters out. Or switch to Evil Twin Mode and play as Evil Luna, Evil Pi-rat or Evil Snowie. 4 endings, and your progress saves. Team up as Brie & Pet Crew detectives with up to 3 friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-arcade/great-rodentia/', color: '#dc2626', color2: '#facc15' }
 ];
 GA.BONUS_GAMES = [
@@ -177,7 +177,53 @@ GA.BONUS_GAMES = [
 /* bonus games that have a cabinet on the Bonus Zone wall (1983 retro games live in the old arcade instead) */
 GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era && !g.room; }); };
 /* games that support online multiplayer through the Multiplayer Antenna */
-GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { return g.mp; }); };
+
+/* Issue #73: Lizeth’s Arcade-Wide Online Play Policy
+   1) All Main Games have online play EXCEPT Grok Surfers (unless Lizeth says otherwise).
+   2) All future games automatically get online multiplayer (mp: true) unless marked "no need" (noNeedMp: true). */
+GA.ONLINE_POLICY = {
+  version: 73,
+  surfersOverride: false,
+  autoFutureOnline: true,
+  noNeedIds: {}
+};
+GA.applyOnlinePolicy = function (game) {
+  if (!game) return game;
+  if (game.id === 'surfers') {
+    game.mp = !!GA.ONLINE_POLICY.surfersOverride;
+    game.soloOnlyRule = !GA.ONLINE_POLICY.surfersOverride;
+    return game;
+  }
+  if (game.noNeedMp || (GA.ONLINE_POLICY.noNeedIds && GA.ONLINE_POLICY.noNeedIds[game.id])) {
+    game.mp = false;
+    return game;
+  }
+  if (GA.ONLINE_POLICY.autoFutureOnline !== false) {
+    game.mp = true;
+  }
+  return game;
+};
+GA.registerFutureGame = function (game) {
+  if (!game || !game.id) return null;
+  GA.applyOnlinePolicy(game);
+  game.futureAutoMp = !!game.mp;
+  if (!GA.MAIN_GAMES.some(function (g) { return g.id === game.id; })) {
+    GA.MAIN_GAMES.push(game);
+  }
+  return game;
+};
+GA.FUTURE_GAMES = [
+  { id: 'skytravel', issue: 80, name: 'Grok Sky DLC: Super Travel', mpMode: 'Global Co-Op Flight Crew (2-4P)', mp: true, futureAutoMp: true, color: '#38bdf8', color2: '#fde047', desc: 'Upcoming world tour & supersonic expansion \u2014 auto-enabled for Online Multiplayer per Issue #73 policy!' },
+  { id: 'partyfiesta', issue: 82, name: 'Grok Land Party: Fiesta DLC', mpMode: '4P Online Fiesta Board', mp: true, futureAutoMp: true, color: '#ff6bd6', color2: '#ffe14d', desc: 'Upcoming Fiesta board party expansion \u2014 auto-enabled for Online Multiplayer per Issue #73 policy!' },
+  { id: 'picklesmash', issue: 84, name: 'Pickleball Park: Super Smash DLC', mpMode: '2v2 Ranked Smash Doubles', mp: true, futureAutoMp: true, color: '#16a34a', color2: '#e6ff3b', desc: 'Upcoming championship stadium expansion \u2014 auto-enabled for Online Multiplayer per Issue #73 policy!' },
+  { id: 'riders', issue: 70, name: 'Grok Riders', mpMode: 'Hoverboard Crew Race (2-4P)', mp: true, futureAutoMp: true, color: '#22d3ee', color2: '#ff4fd8', desc: 'Upcoming extreme gear racer \u2014 auto-enabled for Online Multiplayer per Issue #73 policy!' },
+  { id: 'cafe', issue: 71, name: 'Grok Cafe', mpMode: 'Co-Op Pet Barista (2-3P)', mp: true, futureAutoMp: true, color: '#fb923c', color2: '#fde047', desc: 'Upcoming cozy pet bakery & espresso sim \u2014 auto-enabled for Online Multiplayer per Issue #73 policy!' },
+  { id: 'odontia', issue: 74, name: 'Grok Odontia', mpMode: 'Co-Op Smile Clinic (2-3P)', mp: true, futureAutoMp: true, color: '#38bdf8', color2: '#4ade80', desc: 'Upcoming pet dental adventure \u2014 auto-enabled for Online Multiplayer per Issue #73 policy!' },
+  { id: 'builder', issue: 86, name: 'Grok Builder', mpMode: 'Co-Op Town Build (2-4P)', mp: true, futureAutoMp: true, color: '#f59e0b', color2: '#38bdf8', desc: 'Upcoming sandbox construction game \u2014 auto-enabled for Online Multiplayer per Issue #73 policy!' },
+  { id: 'petresort', issue: 88, name: 'Grok Pet Resort', mpMode: 'Island Co-Op Spa & Cabins (2-4P)', mp: true, futureAutoMp: true, color: '#ec4899', color2: '#2dd4bf', desc: 'Upcoming tropical pet vacation sim \u2014 auto-enabled for Online Multiplayer per Issue #73 policy!' }
+];
+
+GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { GA.applyOnlinePolicy(g); return !!g.mp; }); };
 /* dev/test only: localStorage 'grokArcade.devUrls' = {"brawl":"http://127.0.0.1:8821/"} points games at local servers */
 GA.gameUrl = function (g) { try { var o = JSON.parse(localStorage.getItem('grokArcade.devUrls') || 'null'); if (o && o[g.id]) return o[g.id]; } catch (e) {} return g.url; };
 GA.allGames = function () { return GA.MAIN_GAMES.concat(GA.BONUS_GAMES); };
