@@ -1,7 +1,7 @@
 // Auto- mirrored from /preview.json for synchronous boot.
 window.GROK_PREVIEW_BOARD = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
-  "updated": "2026-10-28T23:53:56.645Z",
+  "updated": "2026-10-28",
   "items": [
     {
       "issue": 64,
@@ -216,9 +216,11 @@ window.GROK_PREVIEW_BOARD = {
       "game": "voxels",
       "name": "Grok Voxels: Re-Voxeled",
       "size": "Remaster",
-      "what": "Tortuga Remaster Works voxel engine upgrade with dynamic lighting, new biomes, and smoother chunk streaming.",
-      "stage": "queued",
-      "when": "Queued"
+      "what": "Tortuga Remaster Works Re-Voxeled 4.0 engine upgrade! Features up to 8 real-time dynamic point lights, directional sun shadows + per-vertex voxel ambient occlusion, 3 live shader modes (Re-Voxeled Ultra, Neon Overdrive, Classic), physical 3D ammo flying out of weapons + spinning ejected casings + 3D on-gun ammo racks, 2 new biomes (Tortuga Bio-Dome & Solar Citadel), smoother chunk streaming, Exo-Armor & Weapon Core Thermal Jam consequences with Field Repair, and all 5 family pets (Torty, Luna, Pi-rat, Snowie & Candy) in the Tortuga Forward Base. Playable now in the Time Jumper!",
+      "stage": "building",
+      "when": "In the Jumper now",
+      "preview": true,
+      "previewUrl": "previews/voxels-re-voxeled/"
     },
     {
       "issue": 66,
@@ -770,7 +772,17 @@ window.GROK_PREVIEW_BOARD = {
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "voxels-re-voxeled",
+      "game": "voxels",
+      "name": "Grok Voxels: Re-Voxeled",
+      "url": "previews/voxels-re-voxeled/",
+      "playable": true,
+      "built": "2026-10-28",
+      "issue": 68
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
