@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ratita-preview-shim -->
+<meta name="robots" content="noindex,nofollow">
+<script>/* Ratita Preview shim: this page is a WORK-IN-PROGRESS preview. Its saves live under their own prefix so the real game's saves are never read or changed. */
+(function () {
+  var PFX = 'grokPreview.edu-door-move.';
+  try {
+    var SP = Storage.prototype, gI = SP.getItem, sI = SP.setItem, rI = SP.removeItem, kI = SP.key, cl = SP.clear, lenD = Object.getOwnPropertyDescriptor(SP, 'length');
+    function mine(st) { var a = [], n = lenD.get.call(st); for (var i = 0; i < n; i++) { var k = kI.call(st, i); if (k && k.indexOf(PFX) === 0) a.push(k); } return a; }
+    SP.getItem = function (k) { return gI.call(this, PFX + k); };
+    SP.setItem = function (k, v) { return sI.call(this, PFX + k, v); };
+    SP.removeItem = function (k) { return rI.call(this, PFX + k); };
+    SP.key = function (i) { var a = mine(this); return i >= 0 && i < a.length ? a[i].slice(PFX.length) : null; };
+    SP.clear = function () { var st = this; mine(st).forEach(function (k) { rI.call(st, k); }); };
+    Object.defineProperty(SP, 'length', { configurable: true, get: function () { return mine(this).length; } });
+    if (window.indexedDB) { var IO = indexedDB.open.bind(indexedDB), ID = indexedDB.deleteDatabase.bind(indexedDB); indexedDB.open = function (n, v) { return v === undefined ? IO(PFX + n) : IO(PFX + n, v); }; indexedDB.deleteDatabase = function (n) { return ID(PFX + n); }; }
+  } catch (e) { if (window.console) console.warn('preview shim', e); }
+  function banner() { if (document.getElementById('ratitaWip')) return; var b = document.createElement('div'); b.id = 'ratitaWip';
+    b.setAttribute('style', 'position:fixed;left:8px;top:8px;z-index:2147483647;display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:12px;font:bold 12px Trebuchet MS,system-ui,sans-serif;color:#fff;background:repeating-linear-gradient(45deg,#b45309 0 10px,#111827 10px 20px);box-shadow:0 2px 10px rgba(0,0,0,.5);text-shadow:0 1px 2px #000;max-width:calc(100vw - 16px)');
+    b.innerHTML = '\uD83E\uDDEA WORK IN PROGRESS \u00b7 Education Center Door Move \u00b7 may be buggy <a href="../../../" style="color:#5eead4">\u23EA back to the arcade</a> <button aria-label="hide" style="background:none;border:0;color:#fff;font:bold 14px sans-serif;cursor:pointer">\u00d7</button>';
+    b.querySelector('button').onclick = function () { b.remove(); }; document.body.appendChild(b); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', banner); else banner();
+})();
+</script>
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>GROK FC 2 · HD Shadow-Light Engine</title>
+<link rel="stylesheet" href="style.css?v=74s">
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <!-- TITLE -->
+  <section id="sTitle" class="scr">
+    <div class="logo"><span class="g">GROK</span><span class="f">FC 2</span><small>HD SHADOW-LIGHT ENGINE</small></div>
+    <div class="modes">
+      <button class="mode" data-go="quick"><b>⚡ Quick Match</b><i>Regular Mode · any club or nation</i></button>
+      <button class="mode" data-go="leagues"><b>🏆 Bootleg Leagues</b><i>6 leagues · tables · top scorers · cards</i></button>
+      <button class="mode" data-go="wtc"><b>🌍 World Tour Cup</b><i>National teams knockout</i></button>
+      <button class="mode" data-go="cwc"><b>🏟️ Grok Club World Cup</b><i>Qualify via league standings</i></button>
+      <button class="mode hot" data-go="dream"><b>⭐ Dream Team Mode</b><i>Pre-made route or build your own · Transfer Market</i></button>
+    </div>
+    <button class="btn ghost" id="tFP" style="margin-top:12px">👁 First-Person Mode: OFF</button>
+    <div class="petbar" id="petbar"></div>
+    <p class="foot"><a href="../">← Grok Arcade</a> · Grok FC 2 (Issues #74 &amp; #75)</p>
+  </section>
+  <!-- TEAM SELECT -->
+  <section id="sTeams" class="scr hidden">
+    <header><button class="back" data-go="title">←</button><h2 id="tTitle">Choose your team</h2></header>
+    <div class="tabs" id="lgTabs"></div>
+    <div class="split"><div class="list" id="teamList"></div><div class="detail" id="teamDetail"></div></div>
+  </section>
+  <!-- DREAM -->
+  <section id="sDream" class="scr hidden">
+    <header><button class="back" data-go="title">←</button><h2>⭐ Dream Team Mode</h2></header>
+    <div id="dreamBody"></div>
+  </section>
+  <!-- LEAGUE HUB -->
+  <section id="sLeague" class="scr hidden">
+    <header><button class="back" data-go="title">←</button><h2 id="lgTitle">League</h2><button class="btn" id="lgPlay">▶ Play next match</button><button class="btn ghost" id="lgSim">⏩ Sim matchday</button></header>
+    <div class="tabs" id="statTabs"></div>
+    <div id="lgBody" class="panel"></div>
+  </section>
+  <!-- CUP -->
+  <section id="sCup" class="scr hidden">
+    <header><button class="back" data-go="title">←</button><h2 id="cupTitle">Cup</h2><button class="btn" id="cupPlay">▶ Play next round</button></header>
+    <div id="cupBody" class="panel"></div>
+  </section>
+  <!-- MATCH HUD -->
+  <section id="sMatch" class="hidden">
+    <div id="score"><span id="hN">HOME</span><b id="hS">0</b><em id="clock">0'</em><b id="aS">0</b><span id="aN">AWAY</span></div>
+    <div id="wx"><button data-w="sun">☀️ Sunny Day</button><button data-w="night">🌙 Floodlight Night</button><button data-w="rain">🌧️ Rainy Pitch</button><button data-w="snow">❄️ Snowy Pitch</button></div>
+    <div id="comm"></div>
+    <div id="pads"><div id="stick"><div id="knob"></div></div>
+      <div id="btns"><button id="bPass">PASS</button><button id="bShoot">SHOOT</button><button id="bSim">⏩ SIM</button></div><button id="bFP">👁 1ST PERSON</button></div>
+  </section>
+  <!-- MOTM -->
+  <section id="sMotm" class="hidden">
+    <div class="motm"><small>HD MAN OF THE MATCH</small><h1 id="mName">-</h1><p id="mLine"></p><p id="mPets" class="pets"></p>
+      <button class="btn" id="mDone">Continue ▶</button></div>
+  </section>
+  <div id="toast"></div>
+</div>
+<script src="three.min.js"></script>
+<script src="data.js?v=74s"></script>
+<script src="hd3d.js?v=74s"></script>
+<script src="game.js?v=74s"></script>
+</body>
+</html>

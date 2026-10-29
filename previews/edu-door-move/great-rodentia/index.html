@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ratita-preview-shim -->
+<meta name="robots" content="noindex,nofollow">
+<script>/* Ratita Preview shim: this page is a WORK-IN-PROGRESS preview. Its saves live under their own prefix so the real game's saves are never read or changed. */
+(function () {
+  var PFX = 'grokPreview.edu-door-move.';
+  try {
+    var SP = Storage.prototype, gI = SP.getItem, sI = SP.setItem, rI = SP.removeItem, kI = SP.key, cl = SP.clear, lenD = Object.getOwnPropertyDescriptor(SP, 'length');
+    function mine(st) { var a = [], n = lenD.get.call(st); for (var i = 0; i < n; i++) { var k = kI.call(st, i); if (k && k.indexOf(PFX) === 0) a.push(k); } return a; }
+    SP.getItem = function (k) { return gI.call(this, PFX + k); };
+    SP.setItem = function (k, v) { return sI.call(this, PFX + k, v); };
+    SP.removeItem = function (k) { return rI.call(this, PFX + k); };
+    SP.key = function (i) { var a = mine(this); return i >= 0 && i < a.length ? a[i].slice(PFX.length) : null; };
+    SP.clear = function () { var st = this; mine(st).forEach(function (k) { rI.call(st, k); }); };
+    Object.defineProperty(SP, 'length', { configurable: true, get: function () { return mine(this).length; } });
+    if (window.indexedDB) { var IO = indexedDB.open.bind(indexedDB), ID = indexedDB.deleteDatabase.bind(indexedDB); indexedDB.open = function (n, v) { return v === undefined ? IO(PFX + n) : IO(PFX + n, v); }; indexedDB.deleteDatabase = function (n) { return ID(PFX + n); }; }
+  } catch (e) { if (window.console) console.warn('preview shim', e); }
+  function banner() { if (document.getElementById('ratitaWip')) return; var b = document.createElement('div'); b.id = 'ratitaWip';
+    b.setAttribute('style', 'position:fixed;left:8px;top:8px;z-index:2147483647;display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:12px;font:bold 12px Trebuchet MS,system-ui,sans-serif;color:#fff;background:repeating-linear-gradient(45deg,#b45309 0 10px,#111827 10px 20px);box-shadow:0 2px 10px rgba(0,0,0,.5);text-shadow:0 1px 2px #000;max-width:calc(100vw - 16px)');
+    b.innerHTML = '\uD83E\uDDEA WORK IN PROGRESS \u00b7 Education Center Door Move \u00b7 may be buggy <a href="../../../" style="color:#5eead4">\u23EA back to the arcade</a> <button aria-label="hide" style="background:none;border:0;color:#fff;font:bold 14px sans-serif;cursor:pointer">\u00d7</button>';
+    b.querySelector('button').onclick = function () { b.remove(); }; document.body.appendChild(b); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', banner); else banner();
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Grok Great Rodentia — Year 000 1</title>
+<link rel="stylesheet" href="./style.css?v=grlive">
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.min.js", "three/addons/": "./lib/addons/" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="touchZone"></div>
+<div id="stickRing"></div><div id="stickKnob"></div>
+<div id="hudTop">
+  <div class="hud-left">
+    <div class="hud-row"><span id="hudMode" class="hud-pill good">🕵️‍♀️ BRIE — GOOD MODE (CANON)</span><span id="hudLoc" class="hud-pill">🌆 Great Rodentia</span></div>
+    <div class="hud-row"><span id="hudHp" class="hud-pill">❤️❤️❤️</span><span id="hudCheese" class="hud-pill">🧀 0</span><span id="hudClues" class="hud-pill">🔎 0/12</span><span id="hudStatus" class="hud-pill">🔓 Allies Freed: 0/4</span></div>
+    <div id="hudObj" class="hud-obj"></div>
+  </div>
+  <div class="hud-right">
+    <div class="hud-row">
+      <button id="btnBoard" class="hud-btn accent">🧶 Board</button>
+      <button id="btnMap" class="hud-btn">🗺️ Districts</button>
+      <button id="btnMode" class="hud-btn">😈 Mode</button>
+      <button id="btnFlash" class="hud-btn">🔦</button>
+      <button id="btnMute" class="hud-btn">🔊</button>
+    </div>
+    <div id="twinSwitchBar">
+      <button class="twin-btn" data-twin="evil_luna">Evil Luna</button>
+      <button class="twin-btn" data-twin="evil_pirat">Evil Pi-rat</button>
+      <button class="twin-btn" data-twin="evil_snowie">Evil Snowie</button>
+    </div>
+  </div>
+</div>
+<div id="titleScreen"><div class="title-card">
+  <div class="title-kicker">Year 000 1 · 301 Post-Departure · USM</div>
+  <h1>🧀 Grok Great Rodentia</h1>
+  <p class="title-sub">A shadow-light mystery across 4 districts of the crimson capital. Decode Grandma Nana Gouda's board, free the allies, find the Golden Gouda truth.</p>
+  <div class="title-modes">
+    <button id="pickGood" class="mode-card good"><b>🕵️‍♀️ Brie — Good Mode</b><span>Canon story. Find 12 Shadow Clues, free Luna, Pi-rat, Snowie &amp; Torty.</span></button>
+    <button id="pickEvil" class="mode-card evil"><b>😈 Evil Twin Mode</b><span>Non-canon chaos. Play Evil Luna, Evil Pi-rat or Evil Snowie and spread flyers.</span></button>
+  </div>
+  <div class="title-help">WASD / stick to move · Space jump · E act · Tab board · M mode · L flashlight</div>
+</div></div>
+<button id="actBtn">[E]</button>
+<div id="toast"></div>
+<div id="dlgBox"><div id="dlgSpeaker"></div><div id="dlgText"></div><div class="dlg-foot"><div id="dlgChoices"></div><button id="dlgNextBtn">Next ▸</button></div></div>
+<div id="touch"><button data-b="jump">JUMP</button><button data-b="spin">SPIN</button><button data-b="act">ACT</button></div>
+
+<div id="boardModal" class="modal"><div class="modal-card">
+  <div class="modal-head"><h2>🧶 Grandma Nana Gouda's Conspiracy Board</h2><button class="close-btn" data-close="boardModal">✕</button></div>
+  <div class="lore-banner" id="boardCount"></div>
+  <div class="clue-grid" id="clueGrid"></div>
+</div></div>
+<div id="mapModal" class="modal"><div class="modal-card">
+  <div class="modal-head"><h2>🗺️ Districts of Great Rodentia</h2><button class="close-btn" data-close="mapModal">✕</button></div>
+  <div class="dist-list" id="districtList"></div>
+</div></div>
+<div id="endingModal" class="modal"><div class="modal-card">
+  <div class="lore-banner" id="endBadge"></div>
+  <h2 id="endTitle" style="color:#fde047;margin-bottom:4px"></h2>
+  <div id="endSub" style="color:#fbbf24;font-size:13px;margin-bottom:10px"></div>
+  <div id="endBody" style="font-size:13.5px;line-height:1.5;display:flex;flex-direction:column;gap:8px"></div>
+  <div id="endStats" style="margin:12px 0;color:#cbd5e1;font-size:12px"></div>
+  <div class="hud-row"><button id="btnEndRetry" class="primary-btn">↻ Retry District</button><button id="btnEndSwitch" class="primary-btn">⇄ Switch Mode</button></div>
+</div></div>
+<script type="module" src="./js/main.js?v=grlive"></script>
+</body>
+</html>

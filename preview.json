@@ -808,7 +808,18 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "edu-door-move",
+      "game": "arcade",
+      "issue": 89,
+      "name": "Education Center Door Move",
+      "url": "previews/edu-door-move/",
+      "playable": true,
+      "built": "2026-10-28",
+      "notes": "Door moved to the Bonus Zone East Wing by Grandma Mrs; top banner now says EDUCATION CENTER inside"
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {

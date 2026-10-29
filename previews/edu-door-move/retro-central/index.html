@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- ratita-preview-shim -->
+<meta name="robots" content="noindex,nofollow">
+<script>/* Ratita Preview shim: this page is a WORK-IN-PROGRESS preview. Its saves live under their own prefix so the real game's saves are never read or changed. */
+(function () {
+  var PFX = 'grokPreview.edu-door-move.';
+  try {
+    var SP = Storage.prototype, gI = SP.getItem, sI = SP.setItem, rI = SP.removeItem, kI = SP.key, cl = SP.clear, lenD = Object.getOwnPropertyDescriptor(SP, 'length');
+    function mine(st) { var a = [], n = lenD.get.call(st); for (var i = 0; i < n; i++) { var k = kI.call(st, i); if (k && k.indexOf(PFX) === 0) a.push(k); } return a; }
+    SP.getItem = function (k) { return gI.call(this, PFX + k); };
+    SP.setItem = function (k, v) { return sI.call(this, PFX + k, v); };
+    SP.removeItem = function (k) { return rI.call(this, PFX + k); };
+    SP.key = function (i) { var a = mine(this); return i >= 0 && i < a.length ? a[i].slice(PFX.length) : null; };
+    SP.clear = function () { var st = this; mine(st).forEach(function (k) { rI.call(st, k); }); };
+    Object.defineProperty(SP, 'length', { configurable: true, get: function () { return mine(this).length; } });
+    if (window.indexedDB) { var IO = indexedDB.open.bind(indexedDB), ID = indexedDB.deleteDatabase.bind(indexedDB); indexedDB.open = function (n, v) { return v === undefined ? IO(PFX + n) : IO(PFX + n, v); }; indexedDB.deleteDatabase = function (n) { return ID(PFX + n); }; }
+  } catch (e) { if (window.console) console.warn('preview shim', e); }
+  function banner() { if (document.getElementById('ratitaWip')) return; var b = document.createElement('div'); b.id = 'ratitaWip';
+    b.setAttribute('style', 'position:fixed;left:8px;top:8px;z-index:2147483647;display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:12px;font:bold 12px Trebuchet MS,system-ui,sans-serif;color:#fff;background:repeating-linear-gradient(45deg,#b45309 0 10px,#111827 10px 20px);box-shadow:0 2px 10px rgba(0,0,0,.5);text-shadow:0 1px 2px #000;max-width:calc(100vw - 16px)');
+    b.innerHTML = '\uD83E\uDDEA WORK IN PROGRESS \u00b7 Education Center Door Move \u00b7 may be buggy <a href="../../../" style="color:#5eead4">\u23EA back to the arcade</a> <button aria-label="hide" style="background:none;border:0;color:#fff;font:bold 14px sans-serif;cursor:pointer">\u00d7</button>';
+    b.querySelector('button').onclick = function () { b.remove(); }; document.body.appendChild(b); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', banner); else banner();
+})();
+</script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>Grok Arcade — Retro Central (1995)</title>
+  <link rel="stylesheet" href="style.css?v=20261028mlabdoor">
+</head>
+<body>
+  <!-- 3D WebGL Viewport -->
+  <canvas id="viewport3d"></canvas>
+
+  <!-- 3D Floating World Labels -->
+  <div id="labelsLayer"></div>
+
+  <!-- Top 1995 Neon HUD -->
+  <header id="topHud"><div id="topHudRow">
+    <div class="hud-cluster">
+      <div class="brand-pill">
+        <span class="brand-year">OCT 1995</span>
+        <div>
+          <div class="brand-title">🕹️ RETRO CENTRAL '95</div>
+          <div class="brand-sub">1983–1995 Copycat &amp; Made-Up Consoles · Walk-In '95 Home</div>
+        </div>
+      </div>
+      <div class="stat-pill gold" title="1995 Arcade Tickets">
+        🎟️ <span id="hudTickets">450</span> TIX
+      </div>
+      <div class="stat-pill emerald" title="Consoles Delivered to Your 1995 Retro Home">
+        📺 HOME CONSOLES: <span id="hudOwnedConsoles">3 / 6</span>
+      </div>
+      <div class="stat-pill" title="Super Torty 64 Power Stars">
+        ★ TORTY 64 STARS: <span id="hudStars64">0</span>/5
+      </div>
+    </div>
+
+    <div class="hud-cluster">
+      <button id="btnOpenStand" class="hud-btn gold">🏪 Gary's '95 Console Stand</button>
+      <button id="btnPlayTorty64" class="hud-btn primary">🐢 Play Super Torty 64</button>
+      <button id="btnPlaySpeedRat" class="hud-btn cyan">⚡ Play Speed Rat '91</button>
+    </div>
+  </div><nav id="zoneBar" aria-label="1995 Zones">
+    <button id="btnWarpPlaza" class="zone-chip active">🕹️ '95 Mall Plaza &amp; Kiosks</button>
+    <button id="btnWarpStand" class="zone-chip">🏪 Gary's Console Stand (1983–1995)</button>
+    <button id="btnWarpHome" class="zone-chip">🏠 Walk-In 1995 Retro Home &amp; CRT TV</button>
+    <button id="btnWarpPets" class="zone-chip">🐾 5 Family Pets ('95 Outfits)</button>
+  </nav></header>
+
+  <!-- Proximity Interact Prompt -->
+  <div id="interactPrompt">
+    <span class="key-badge">E / TAP</span>
+    <span id="interactPromptText">Interact</span>
+  </div>
+
+  <!-- NPC & Pet Dialog Box -->
+  <section id="dialogBox" aria-live="polite">
+    <div class="dlg-header">
+      <div>
+        <div id="dlgName" class="dlg-name">1995 Gary</div>
+        <div id="dlgRole" class="dlg-role">Console Stand Manager</div>
+      </div>
+      <button id="btnDlgClose" class="hud-btn">✕</button>
+    </div>
+    <div id="dlgBody" class="dlg-body">Welcome to Retro Central 1995!</div>
+    <div class="dlg-actions">
+      <button id="btnDlgNext" class="hud-btn primary">Next ▶</button>
+    </div>
+  </section>
+
+  <!-- Gary's 1995 Console Emporium Modal (1983–1995 Copycat & Made-Up Consoles) -->
+  <div id="standModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">🏪 GARY'S 1995 CONSOLE EMPORIUM (1983–1995)</div>
+          <div class="modal-sub">
+            Buy copycat &amp; made-up consoles from 1983 to 1995! Every console is delivered to the Entertainment Center around your 32" CRT Tube TV in your walk-in 1995 Retro Home!
+          </div>
+        </div>
+        <div class="hud-cluster">
+          <span class="stat-pill gold">🎟️ <span id="standTicketCount">450</span> TIX</span>
+          <span class="stat-pill emerald">📺 OWNED: <span id="standOwnedCount">3 / 6</span></span>
+          <button id="btnGrantTickets" class="hud-btn gold">+200 '95 Promo Tix</button>
+          <button id="btnUnlockAllConsoles" class="hud-btn cyan">✨ Unlock All 6 Consoles</button>
+          <button id="btnStandGoHome" class="hud-btn primary">🏠 Visit 1995 Retro Home</button>
+          <button id="btnCloseStand" class="hud-btn">✕ Close</button>
+        </div>
+      </div>
+      <div id="consoleStandGrid" class="console-grid"></div>
+    </div>
+  </div>
+
+  <!-- 1995 CRT Tube TV Game Emulator Overlay -->
+  <div id="crtOverlay">
+    <div class="crt-cabinet">
+      <div class="crt-top-bar">
+        <div>
+          <div id="crtTitle" style="font-weight:900;font-size:17px;color:#facc15">SUPER TORTY 64 (1995)</div>
+          <div id="crtSub" style="font-size:12px;color:#67e8f9;font-weight:700">Nintortuga 64 · Playing on Your 1995 Home 32" CRT Tube TV</div>
+        </div>
+        <div class="hud-cluster">
+          <button id="btnToggleScanlines" class="hud-btn">📺 CRT Scanlines</button>
+          <button id="btnCloseCrt" class="hud-btn primary">✕ Power Off CRT</button>
+        </div>
+      </div>
+
+      <!-- Switch between all 6 1983–1995 consoles right from the CRT TV! -->
+      <div id="crtSwitcherBar" class="crt-console-switcher"></div>
+
+      <div class="crt-screen-wrap">
+        <canvas id="crtCanvas" width="768" height="432"></canvas>
+        <div id="crtScanlines" class="crt-scanlines"></div>
+      </div>
+
+      <div class="crt-footer-bar">
+        <div id="crtControlsHint">WASD / Arrows: Move · SPACE: Jump / Triple Jump · X: Spin / Spin-Dash</div>
+      </div>
+
+      <div class="crt-touch-pad">
+        <div class="touch-cluster">
+          <button id="padLeft" class="pad-btn">◀</button>
+          <button id="padUp" class="pad-btn">▲</button>
+          <button id="padDown" class="pad-btn">▼</button>
+          <button id="padRight" class="pad-btn">▶</button>
+        </div>
+        <div class="touch-cluster">
+          <button id="padJump" class="pad-btn act-a">A · JUMP / STAR</button>
+          <button id="padAct" class="pad-btn act-b">B · SPIN DASH / ATTACK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Walk D-Pad -->
+  <div id="mobileWalkPad" aria-label="Walk Controls">
+    <div class="walk-row">
+      <button id="walkUp" class="walk-btn">▲</button>
+    </div>
+    <div class="walk-row">
+      <button id="walkLeft" class="walk-btn">◀</button>
+      <button id="walkDown" class="walk-btn">▼</button>
+      <button id="walkRight" class="walk-btn">▶</button>
+    </div>
+  </div>
+
+  <script src="three.min.js?v=20261028mlabdoor"></script>
+  <script src="retro-data.js?v=20261028mlabdoor"></script>
+  <script src="retro-games.js?v=20261028mlabdoor"></script>
+  <script src="retro-3d.js?v=20261028mlabdoor"></script>
+  <script src="retro-ui.js?v=20261028mlabdoor"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      if (window.RC95) {
+        window.RC95.initUI();
+        window.RC95.init3D();
+      }
+    });
+  </script>
+<a id="rcBackArcade" href="../#mimilab" style="position:fixed;left:8px;bottom:8px;z-index:2147483646;padding:6px 10px;border-radius:12px;font:bold 12px Trebuchet MS,system-ui,sans-serif;color:#5eead4;background:rgba(17,24,39,.85);text-decoration:none">⏪ Back to Mimi’s Time Lab</a>
+</body>
+</html>

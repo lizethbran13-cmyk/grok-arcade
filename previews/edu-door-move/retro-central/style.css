@@ -1,0 +1,630 @@
+/* Grok Arcade — RETRO CENTRAL (1995) Stylesheet (Issue #88) */
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #090418;
+  color: #f8fafc;
+  font-family: 'Trebuchet MS', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+#viewport3d {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+}
+
+/* ---------- Top 1995 Neon HUD Bar ---------- */
+#topHud {
+  position: fixed;
+  top: 40px;
+  left: 12px;
+  right: 12px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  pointer-events: none;
+}
+#topHudRow {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.hud-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.brand-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(17, 7, 46, 0.92), rgba(49, 16, 92, 0.92));
+  border: 2px solid #f43f5e;
+  box-shadow: 0 0 18px rgba(244, 63, 94, 0.45), inset 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+.brand-year {
+  background: linear-gradient(180deg, #facc15, #f97316);
+  color: #111827;
+  font-weight: 900;
+  font-size: 13px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+}
+
+.brand-title {
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: 0.6px;
+  color: #fff;
+  text-shadow: 0 0 8px #ec4899, 0 1px 2px #000;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: #67e8f9;
+  font-weight: 700;
+}
+
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1.5px solid #38bdf8;
+  font-weight: 800;
+  font-size: 13px;
+  color: #f8fafc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.stat-pill.gold {
+  border-color: #facc15;
+  color: #fef08a;
+}
+
+.stat-pill.emerald {
+  border-color: #34d399;
+  color: #a7f3d0;
+}
+
+.hud-btn {
+  cursor: pointer;
+  padding: 7px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #a855f7;
+  background: linear-gradient(180deg, #2e1065, #1e1b4b);
+  color: #f8fafc;
+  font-weight: 800;
+  font-size: 12.5px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.hud-btn:hover {
+  transform: translateY(-1px);
+  border-color: #facc15;
+  box-shadow: 0 0 14px rgba(250, 204, 21, 0.45);
+}
+
+.hud-btn.primary {
+  background: linear-gradient(180deg, #ec4899, #be185d);
+  border-color: #fbcfe8;
+}
+
+.hud-btn.cyan {
+  background: linear-gradient(180deg, #0284c7, #0369a1);
+  border-color: #7dd3fc;
+}
+
+.hud-btn.gold {
+  background: linear-gradient(180deg, #d97706, #b45309);
+  border-color: #fde047;
+}
+
+/* ---------- Quick Warp / Zone Bar ---------- */
+#zoneBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.zone-chip {
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.86);
+  border: 1px solid rgba(168, 85, 247, 0.65);
+  color: #e2e8f0;
+  font-size: 11.5px;
+  font-weight: 800;
+  transition: all 0.12s ease;
+}
+
+.zone-chip:hover, .zone-chip.active {
+  background: linear-gradient(90deg, #7c3aed, #db2777);
+  border-color: #facc15;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(219, 39, 119, 0.55);
+}
+
+/* ---------- 3D Floating Labels Layer ---------- */
+#labelsLayer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.world-label {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: rgba(10, 6, 26, 0.86);
+  border: 1px solid rgba(56, 189, 248, 0.7);
+  color: #f8fafc;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.world-label.pet {
+  border-color: #facc15;
+  background: rgba(30, 12, 54, 0.9);
+  color: #fef08a;
+}
+
+.world-label.console {
+  border-color: #f43f5e;
+  background: rgba(45, 10, 40, 0.92);
+  color: #fda4af;
+}
+
+.world-label.home {
+  border-color: #34d399;
+  background: rgba(6, 48, 38, 0.92);
+  color: #a7f3d0;
+}
+
+/* ---------- Context Action Prompt ---------- */
+#interactPrompt {
+  position: fixed;
+  bottom: 92px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 22;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(59, 7, 100, 0.95));
+  border: 2px solid #facc15;
+  box-shadow: 0 0 22px rgba(250, 204, 21, 0.5);
+  color: #fff;
+  font-weight: 900;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#interactPrompt .key-badge {
+  background: #facc15;
+  color: #111827;
+  padding: 3px 8px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+/* ---------- NPC & Pet Speech Dialog Toast ---------- */
+#dialogBox {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(620px, calc(100vw - 28px));
+  z-index: 26;
+  display: none;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(15, 10, 38, 0.96), rgba(38, 14, 72, 0.96));
+  border: 2px solid #38bdf8;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.35);
+}
+
+.dlg-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.dlg-name {
+  font-weight: 900;
+  font-size: 15px;
+  color: #facc15;
+}
+
+.dlg-role {
+  font-size: 11.5px;
+  color: #67e8f9;
+  font-weight: 700;
+}
+
+.dlg-body {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #f1f5f9;
+  margin-bottom: 10px;
+}
+
+.dlg-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ---------- Modal Overlay (Gary's Console Stand & Home Console Switcher) ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(5, 2, 16, 0.82);
+  backdrop-filter: blur(5px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-card {
+  width: min(980px, 96vw);
+  max-height: 88vh;
+  overflow-y: auto;
+  border-radius: 20px;
+  background: linear-gradient(160deg, #13092b 0%, #0f172a 60%, #1e1b4b 100%);
+  border: 2px solid #f43f5e;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(244, 63, 94, 0.35);
+  padding: 18px 20px;
+}
+
+.modal-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+  margin-bottom: 14px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 10px #ec4899;
+}
+
+.modal-sub {
+  font-size: 12.5px;
+  color: #93c5fd;
+  margin-top: 2px;
+}
+
+.console-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.console-card {
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1.5px solid rgba(148, 163, 184, 0.3);
+  padding: 13px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.console-card.owned {
+  border-color: #34d399;
+  box-shadow: inset 0 0 14px rgba(52, 211, 153, 0.12);
+}
+
+.console-card.active-tv {
+  border-color: #facc15;
+  box-shadow: 0 0 16px rgba(250, 204, 21, 0.35);
+}
+
+.console-badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.era-tag {
+  font-size: 10.5px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(56, 189, 248, 0.16);
+  color: #7dd3fc;
+}
+
+.own-tag {
+  font-size: 10.5px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(52, 211, 153, 0.2);
+  color: #6ee7b7;
+}
+
+.own-tag.price {
+  background: rgba(250, 204, 21, 0.2);
+  color: #fde047;
+}
+
+.console-name {
+  font-size: 15px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.console-maker {
+  font-size: 11.5px;
+  color: #cbd5e1;
+  font-weight: 700;
+}
+
+.console-desc {
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.console-game-box {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(30, 27, 75, 0.75);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+}
+
+.console-game-title {
+  font-size: 12.5px;
+  font-weight: 900;
+  color: #fef08a;
+}
+
+.console-game-sub {
+  font-size: 11px;
+  color: #c4b5fd;
+}
+
+.console-card-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* ---------- 1995 CRT Tube TV Game Emulator Overlay ---------- */
+#crtOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: radial-gradient(circle at center, rgba(22, 12, 48, 0.94), rgba(4, 2, 12, 0.98));
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.crt-cabinet {
+  width: min(920px, 96vw);
+  background: linear-gradient(180deg, #27272a 0%, #18181b 65%, #09090b 100%);
+  border: 4px solid #3f3f46;
+  border-radius: 26px;
+  padding: 14px 16px;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.9), 0 0 36px rgba(56, 189, 248, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.crt-top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.crt-console-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.crt-switch-btn {
+  cursor: pointer;
+  padding: 5px 9px;
+  border-radius: 8px;
+  border: 1px solid #52525b;
+  background: #27272a;
+  color: #d4d4d8;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.crt-switch-btn.active {
+  background: linear-gradient(180deg, #ec4899, #9d174d);
+  border-color: #facc15;
+  color: #fff;
+}
+
+.crt-screen-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 60vh;
+  background: #000;
+  border-radius: 18px;
+  border: 6px solid #18181b;
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#crtCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.crt-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0px,
+    rgba(255, 255, 255, 0) 2px,
+    rgba(0, 0, 0, 0.22) 3px,
+    rgba(0, 0, 0, 0.22) 4px
+  );
+  mix-blend-mode: multiply;
+}
+
+.crt-footer-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.crt-touch-pad {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.touch-cluster {
+  display: flex;
+  gap: 6px;
+}
+
+.pad-btn {
+  cursor: pointer;
+  min-width: 48px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 2px solid #71717a;
+  background: #27272a;
+  color: #fff;
+  font-weight: 900;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  active: scale(0.95);
+}
+
+.pad-btn.act-a {
+  background: #2563eb;
+  border-color: #93c5fd;
+}
+
+.pad-btn.act-b {
+  background: #dc2626;
+  border-color: #fca5a5;
+}
+
+/* ---------- Mobile Walk Joystick / D-Pad ---------- */
+#mobileWalkPad {
+  position: fixed;
+  bottom: 18px;
+  left: 18px;
+  z-index: 18;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.walk-row {
+  display: flex;
+  gap: 4px;
+}
+
+.walk-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(56, 189, 248, 0.65);
+  background: rgba(15, 23, 42, 0.82);
+  color: #f8fafc;
+  font-weight: 900;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.walk-btn:active {
+  background: #0284c7;
+}
+
+@media (max-width: 720px) {
+  #topHud { top: 42px; }
+  #zoneBar { top: 128px; }
+  .brand-sub { display: none; }
+}
