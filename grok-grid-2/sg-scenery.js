@@ -637,7 +637,7 @@
       const body = new T.Mesh(new T.SphereGeometry(0.62, 14, 10), coat);
       body.scale.set(0.88, 1.08, 1.25);
       body.position.y = 0.72;
-      const hoodM = mode === 'pirat' ? std(0x6b5e52, 0.6, 0.05) : coat;
+      const hoodM = mode === 'pirat' ? std(0x8a7868, 0.6, 0.05) : coat;
       const head = new T.Mesh(new T.SphereGeometry(0.46, 14, 10), hoodM);
       head.scale.set(0.92, 0.9, 1.18);
       head.position.set(0, 1.38, 0.35);
@@ -648,6 +648,7 @@
       const nose = new T.Mesh(new T.SphereGeometry(0.09, 8, 6), pink);
       nose.position.set(0, 1.34, 1.1);
       r.add(body, head, snout, nose);
+      if (mode === 'pirat') { const bl = new T.Mesh(new T.SphereGeometry(0.08, 10, 8), std(0xffffff, 0.6, 0.05)); bl.scale.set(1, 2.6, 0.6); bl.position.set(0, 1.55, 0.82); r.add(bl); } // white forehead blaze
       for (const s of [-1, 1]) {
         const ear = new T.Mesh(new T.SphereGeometry(0.24, 10, 8), pink);
         ear.scale.set(0.35, 1, 0.85);

@@ -166,9 +166,10 @@
     vest.position.y = 0.46;
     g.add(vest);
 
-    var isPirat = hatType === 'skate95'; var head = new THREE.Mesh(new THREE.SphereGeometry(0.36, 16, 14), mat(isPirat ? 0x6b5e52 : colorBody));
+    var isPirat = hatType === 'skate95'; var head = new THREE.Mesh(new THREE.SphereGeometry(0.36, 16, 14), mat(isPirat ? 0x8a7868 : colorBody));
     head.position.set(0, 0.96, 0.12);
     g.add(head);
+    if (isPirat) { var bl = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 8), mat(0xffffff)); bl.scale.set(1, 2.5, 0.6); bl.position.set(0, 1.06, 0.44); g.add(bl); } // white forehead blaze
 
     // Pink ears
     var earMat = mat(0xfda4af);

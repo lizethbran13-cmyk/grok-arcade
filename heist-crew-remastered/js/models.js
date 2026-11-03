@@ -415,7 +415,7 @@
     } else {
       // Fancy rats: Luna (grey), Pi-rat (white hooded rat: dark hood + eyepatch + pirate hat), Snowie (pure white + cyan scarf)
       const fur = id === 'luna' ? '#94a3b8' : id === 'pirat' ? '#f8f6f2' : '#f8fafc';
-      const hood = id === 'pirat' ? '#6b5e52' : fur;
+      const hood = id === 'pirat' ? '#8a7868' : fur;
       const belly = id === 'luna' ? '#cbd5e1' : id === 'pirat' ? '#ffffff' : '#ffffff';
       const ear = '#fda4af';
       b.sph(0.25, fur, 0, 0.38, -0.02, 0.92, 1.08, 1.05);
@@ -424,6 +424,7 @@
       if (id === 'pirat') b.sph(0.21, hood, 0, 0.58, 0.06, 1.05, 0.7, 0.9);
       b.sph(0.2, hood, 0, 0.72, 0.08, 0.95, 0.92, 1.12);
       b.cone(0.13, 0.24, hood, 0, 0.7, 0.28, Math.PI / 2, 0, 0);
+      if (id === 'pirat') { b.sph(0.035, '#ffffff', 0, 0.79, 0.27, 1, 2.6, 1); b.sph(0.06, '#ffffff', 0, 0.69, 0.35, 1, 1, 1); } // white blaze + muzzle
       b.sph(0.04, '#fb7185', 0, 0.7, 0.41, 1, 1, 1, 0, 0, 0, 'gloss');
       // big round fancy-rat ears
       [-1, 1].forEach((s) => {

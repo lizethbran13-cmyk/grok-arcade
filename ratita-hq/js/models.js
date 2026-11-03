@@ -17,7 +17,7 @@ function eyes(b, y, z, sep, r, opt = {}) {
   });
 }
 // ---------------------------------------------------------------- rats
-export const RAT_COL = { luna: { fur: 0xa9afbd, dark: 0x7d8394, belly: 0xeceef3, eye: 0x1b1b24, name: 'Luna' }, pirat: { fur: 0xf8f6f2, dark: 0xe9b8bf, belly: 0xffffff, hood: 0x6b5e52, eye: 0x1b1b24, name: 'Pi-rat' }, snowie: { fur: 0xfbfbff, dark: 0xe3e1ee, belly: 0xffffff, eye: 0xd0315a, name: 'Snowie' },
+export const RAT_COL = { luna: { fur: 0xa9afbd, dark: 0x7d8394, belly: 0xeceef3, eye: 0x1b1b24, name: 'Luna' }, pirat: { fur: 0xf8f6f2, dark: 0xe9b8bf, belly: 0xffffff, hood: 0x8a7868, eye: 0x1b1b24, name: 'Pi-rat' }, snowie: { fur: 0xfbfbff, dark: 0xe3e1ee, belly: 0xffffff, eye: 0xd0315a, name: 'Snowie' },
   brownie: { fur: 0x9a6a45, dark: 0x6f4a2e, belly: 0xf1dcc4, eye: 0x1b1b24 }, ash: { fur: 0x5b5f6b, dark: 0x3f424c, belly: 0xd8dae0, eye: 0x1b1b24 }, ginger: { fur: 0xe08a3c, dark: 0xb0652a, belly: 0xffe7c8, eye: 0x1b1b24 },
   cocoa: { fur: 0x6b4a3a, dark: 0x4a3226, belly: 0xe9d3c0, eye: 0x1b1b24 }, cream: { fur: 0xf1ddb0, dark: 0xd4b985, belly: 0xfff6e2, eye: 0x1b1b24 }, black: { fur: 0x2e2f36, dark: 0x1e1f24, belly: 0x9ea2ad, eye: 0x101014 },
   blue: { fur: 0x8a9bb8, dark: 0x66779a, belly: 0xe8eef8, eye: 0x1b1b24 }, rose: { fur: 0xd9a0a8, dark: 0xb57d86, belly: 0xfbe9ec, eye: 0x1b1b24 }, gold: { fur: 0xffcf3a, dark: 0xd4a017, belly: 0xfff1a8, eye: 0x1b1b24 } };

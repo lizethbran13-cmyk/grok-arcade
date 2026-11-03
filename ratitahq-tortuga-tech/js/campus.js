@@ -567,7 +567,7 @@ function dcr(w) {
 function penthouse(w) {
   const Y = 20.4, up = (x, z, s) => K.scaled(w, x, Y, z, s);
   PR.rug(K.scaled(w, 0, Y, -35.5, 0.25), 0, 0, 0, 48, 32, 0xff4fa0, 0xffe4ef);
-  [['LUNA', -7, -41, 0x94a3b8], ['PI-RAT', 0, -41.5, 0x6b5e52], ['SNOWIE', 7, -41, 0xf8fafc]].forEach(([n, x, z, c]) => { K.desk(up(x, z, 1), 0, 0, 0, { L: 3, D: 1.3, top: 0x7c4a1e, plant: true }); sign3d(w, n, x, Y + 0.38, z + 0.7, 0, 0.17, 0xffd23f, 0x1f2937); });
+  [['LUNA', -7, -41, 0x94a3b8], ['PI-RAT', 0, -41.5, 0x8a7868], ['SNOWIE', 7, -41, 0xf8fafc]].forEach(([n, x, z, c]) => { K.desk(up(x, z, 1), 0, 0, 0, { L: 3, D: 1.3, top: 0x7c4a1e, plant: true }); sign3d(w, n, x, Y + 0.38, z + 0.7, 0, 0.17, 0xffd23f, 0x1f2937); });
   // conference table + chairs
   { const T = w.tf(0, Y, -34.8, 0); T.slab('g', 0xffffff, 0, 0.75, 0, 6, 0.1, 2.2, 0.08); [-2.4, 0, 2.4].forEach((x) => T.box('x', 0x94a3b8, x, 0, 0, 0.2, 0.75, 0.2, 0.05)); }
   for (let i = 0; i < 6; i++) [-1, 1].forEach((s) => K.chair(w, -2.5 + i, Y, -34.8 + s * 1.5, s > 0 ? PI : 0, 0xff4fa0));
