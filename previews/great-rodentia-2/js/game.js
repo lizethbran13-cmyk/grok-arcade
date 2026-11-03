@@ -137,7 +137,23 @@ class PrisonGame {
     this.syncHud(); save();
   }
   followers() { const f = ['luna', 'pirat', 'snowie'].filter((c) => c !== S.char); if (S.tortyFreed) f.push('torty'); return f; }
-  resetTrail() { this.trail = []; for (let i = 0; i < 40; i++) this.trail.push([this.me.x, this.me.z]); for (const id in this.pets) { const p = this.pets[id]; p.x = this.me.x - 0.5; p.z = this.me.z; } }
+  resetTrail() { // lay the trail out behind the player (pulled in by walls) so the party never spawns stacked
+    const me = this.me, bx = -Math.sin(me.yaw || 0), bz = -Math.cos(me.yaw || 0); this.trail = [];
+    let lim = 12; if (this.world) { const o = { x: me.x, y: 0.5, z: me.z }, d = { x: bx, y: 0, z: bz }; try { const h = this.world.ray(new THREE.Vector3(me.x, 0.5, me.z), new THREE.Vector3(bx, 0, bz), 12, (q) => !q.floor && !q.off); if (h < lim) lim = Math.max(0.3, h - 0.5); } catch (e) {} }
+    for (let i = 0; i < 60; i++) { const L = Math.min(lim, i * 0.25), side = i * 0.25 > lim ? ((i % 2) ? 1 : -1) * Math.min(1.6, (i * 0.25 - lim) * 0.5) : 0; this.trail.push([me.x + bx * L + bz * side, me.z + bz * L - bx * side]); }
+    const F = this.followers(); for (const id in this.pets) { const p = this.pets[id], k = F.indexOf(id); const tp = this.trail[Math.min(59, 6 + Math.max(0, k) * 6)]; p.x = tp[0]; p.z = tp[1]; p.yaw = me.yaw || 0; this.pushOut(p, 0.4); } this.separate(1); }
+  camOpts() { const b = this.inB; return b ? { dist: 6.8, box: [b.x0, b.z0, b.x1, b.z1] } : { dist: 8.2 }; }
+  pushOut(o, R) { const near = this._near || (this._near = []); near.length = 0; if (!this.world || !this.world.near) return; this.world.near(o.x - R - 0.1, o.z - R - 0.1, o.x + R + 0.1, o.z + R + 0.1, near);
+    for (const s of near) { if (s.Trigger || s.off || s.floor || s.max[1] < 0.3 || s.min[1] > 0.8) continue; const cx = Math.max(s.min[0], Math.min(o.x, s.max[0])), cz = Math.max(s.min[2], Math.min(o.z, s.max[2])); let dx = o.x - cx, dz = o.z - cz, d2 = dx * dx + dz * dz; if (d2 >= R * R) continue;
+      if (d2 < 1e-6) { const dl = o.x - s.min[0], dr = s.max[0] - o.x, db = o.z - s.min[2], df = s.max[2] - o.z, m = Math.min(dl, dr, db, df); if (m === dl) o.x = s.min[0] - R; else if (m === dr) o.x = s.max[0] + R; else if (m === db) o.z = s.min[2] - R; else o.z = s.max[2] + R; }
+      else { const d = Math.sqrt(d2); o.x += dx / d * (R - d); o.z += dz / d * (R - d); } } }
+  separate(iter = 2) { // keep party rats, Torty, guards and the player from overlapping
+    const F = this.followers(), mov = F.map((id) => this.pets[id]); const fixed = [this.me, ...this.guards.map((g) => g.p || g), ...this.npcs.map((n) => n.p || n)].filter((q) => q && typeof q.x === 'number');
+    const rad = (q) => (q.id === 'torty' ? 0.62 : 0.46);
+    for (let it = 0; it < iter; it++) { for (let i = 0; i < mov.length; i++) { const a = mov[i];
+      for (let j = i + 1; j < mov.length; j++) { const b = mov[j]; let dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz), m = rad(a) + rad(b); if (d < m) { if (d < 1e-4) { dx = Math.cos(i + j); dz = Math.sin(i + j); d = 1; } const k = (m - d) / 2 / d; a.x -= dx * k; a.z -= dz * k; b.x += dx * k; b.z += dz * k; } }
+      for (const f of fixed) { let dx = a.x - f.x, dz = a.z - f.z, d = Math.hypot(dx, dz), m = rad(a) + 0.5; if (d < m) { if (d < 1e-4) { dx = Math.cos(i * 2.1); dz = Math.sin(i * 2.1); d = 1; } a.x += dx / d * (m - d); a.z += dz / d * (m - d); } }
+      this.pushOut(a, 0.4); } } }
   teleport(x, z, yaw = 0) { this.me.place([x, 0.1, z], yaw); this.cam.yaw = yaw + PI; this.cam.snap = true; this.resetTrail(); this.setVis(true); }
 
   // ----- cast -----
@@ -395,7 +411,7 @@ class PrisonGame {
     if (this.snow) { const p = this.snow.geometry.attributes.position, a = p.array; for (let i = 0; i < a.length; i += 3) { a[i + 1] -= dt * 1.4; a[i] += Math.sin(this.T + i) * dt * 0.2; if (a[i + 1] < 0) a[i + 1] = 18; } p.needsUpdate = true; this.snow.position.set(me.x, 0, me.z); this.snow.visible = !this.inB; }
     for (const k in this.pickups) { const p = this.pickups[k]; if (p.visible) { p.position.y = p.userData.base + Math.sin(this.T * 2.5 + p.position.x) * 0.08; p.children[1].rotation.z += dt; } }
     this.updateSearchlights(dt);
-    if (this.mode !== 'play' || this.busy) { this.animIdle(dt); this.cam.update(dt, me, this.inB ? null : this.world, { dist: this.inB ? 6.8 : 8.2 }); followShadow(me.x, me.y, me.z); updateShadowlight(dt, me, E.camera, {}); clearEdges(); return; }
+    if (this.mode !== 'play' || this.busy) { this.animIdle(dt); this.cam.update(dt, me, this.inB ? null : this.world, this.camOpts()); followShadow(me.x, me.y, me.z); updateShadowlight(dt, me, E.camera, {}); clearEdges(); return; }
     if (edge('pause') || edge('board')) this.openPlan();
     if (isTalking()) { if (edge('act') || edge('jump')) stepDialogue(); clearEdges(); this.animIdle(dt); followShadow(me.x, me.y, me.z); updateShadowlight(dt, me, E.camera, {}); return; }
     if (this.lockdown > 0) { this.lockdown -= dt; if (this.lockdown <= 0) { this.doors.cell.set(true); toast('🔔 Cell doors open. Back to holiday free time!'); sfx('check'); } if (((this.lockdown * 4) | 0) % 4 === 0) this.syncHud(); }
@@ -405,17 +421,18 @@ class PrisonGame {
     me.step(dt, this.world, this.cam.moveYaw, this.fx);
     this.setVis(false);
     const inside = !!this.inB;
-    this.cam.update(dt, me, inside ? null : this.world, inside ? { dist: 6.8 } : { dist: 8.2 });
+    this.cam.update(dt, me, inside ? null : this.world, this.camOpts());
     if (inside) this.cam.pitch = Math.max(this.cam.pitch, 0.56);
     this.fades();
     // trail + followers
     const t0 = this.trail[0]; if (Math.hypot(me.x - t0[0], me.z - t0[1]) > 0.25) { this.trail.unshift([me.x, me.z]); if (this.trail.length > 60) this.trail.pop(); }
     const F = this.followers();
     for (const id in this.pets) { const p = this.pets[id]; const idx = F.indexOf(id); p.root.visible = idx >= 0; if (idx < 0) continue;
-      const tp = this.trail[Math.min(this.trail.length - 1, 5 + idx * 5)]; const dx = tp[0] - p.x, dz = tp[1] - p.z, d = Math.hypot(dx, dz);
+      const tp = this.trail[Math.min(this.trail.length - 1, 6 + idx * 6)]; const dx = tp[0] - p.x, dz = tp[1] - p.z, d = Math.hypot(dx, dz);
       if (d > 8) { p.x = tp[0]; p.z = tp[1]; } const k = Math.min(1, dt * 6); p.x += dx * k; p.z += dz * k; p.speed = d > 0.05 ? Math.min(7, d * 6) : 0;
       if (d > 0.05) { const want = Math.atan2(dx, dz); let dy = want - p.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); p.yaw += dy * Math.min(1, dt * 10); }
-      p.root.visible = !this.inB || buildingAt(p.x, p.z) === this.inB || true; animPet(p, dt, me); }
+      p.root.visible = true; }
+    this.separate(2); for (const id of F) animPet(this.pets[id], dt, me);
     this.animIdle(dt, true);
     // hold actions
     if (this.hold) { const h = this.hold; h.t += dt; $('holdBar').classList.add('on'); $('holdLbl').textContent = h.label; $('holdFill').style.width = (100 * h.t / h.dur) + '%';
@@ -465,20 +482,20 @@ class PrisonGame {
       if (g.alert > 0) { g.alert -= dt; g.speed = 0; const want = Math.atan2(me.x - g.x, me.z - g.z); let dy = want - g.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); g.yaw += dy * Math.min(1, dt * 5); }
       else if (g.wait > 0) { g.wait -= dt; g.speed = 0; g.yaw += Math.sin(this.T * 1.6 + g.x) * dt * 1.2; }
       else if (d < 0.2) { g.i = (g.i + 1) % g.path.length; g.wait = 1.4; }
-      else { const sp = 2.4; g.x += dx / d * Math.min(d, sp * dt); g.z += dz / d * Math.min(d, sp * dt); g.speed = sp; const want = Math.atan2(dx, dz); let dy = want - g.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); g.yaw += dy * Math.min(1, dt * 6); }
+      else { const sp = 2.0; g.x += dx / d * Math.min(d, sp * dt); g.z += dz / d * Math.min(d, sp * dt); g.speed = sp; const want = Math.atan2(dx, dz); let dy = want - g.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); g.yaw += dy * Math.min(1, dt * 6); }
       g.rig.root.position.set(g.x, 0, g.z); g.rig.root.rotation.y = g.yaw; if (g.rig.root.visible) animRat(g.rig, dt, { speed: g.speed });
-      const range = disguised ? 2.4 : 7.5 * (S.sneak ? 0.62 : 1); g.cone.scale.setScalar(range);
+      const range = disguised ? 2.2 : 6.2 * (S.sneak ? 0.6 : 1); g.cone.scale.setScalar(range);
       g.cone.material.color.setHex(g.alert > 0 ? 0xef4444 : 0xfde047);
       g.mark.visible = g.alert > 0;
       if (!zone || this.hold && false) continue;
       const pd = Math.hypot(me.x - g.x, me.z - g.z);
-      const close = pd < (S.sneak ? 0.9 : 1.6);
-      if ((pd < range && this.inCone(g, me.x, me.z, 0.62) || close) && this.los(g, me.x, me.z, range + 0.5)) { const r = (zone === 'Dead Zone' ? 1.4 : 1.0) * (1.6 - pd / range) * (disguised ? 0.6 : 1); if (r > rate) { rate = r; seer = g; } }
+      const close = pd < (S.sneak ? 0.8 : 1.3);
+      if ((pd < range && this.inCone(g, me.x, me.z, 0.55) || close) && this.los(g, me.x, me.z, range + 0.5)) { const r = (zone === 'Dead Zone' ? 1.4 : 1.0) * (1.6 - pd / range) * (disguised ? 0.6 : 1); if (r > rate) { rate = r; seer = g; } }
     }
     if (this.lit && zone === 'Dead Zone') { rate = Math.max(rate, 2.2); seer = seer || { name: 'The searchlight tower' }; }
     if (this.noDetect) seer = null;
-    if (seer) { this.sus = Math.min(1, this.sus + rate * dt * 0.9); if (seer.alert !== undefined || seer.path) seer.alert = 0.6; if (!this._seenT || this.T - this._seenT > 1.2) { sfx('miss'); this._seenT = this.T; } }
-    else this.sus = Math.max(0, this.sus - dt * 0.35);
+    if (seer) { this.sus = Math.min(1, this.sus + Math.min(rate, 1.3) * dt * 0.5); if (seer.alert !== undefined || seer.path) seer.alert = 0.6; if (!this._seenT || this.T - this._seenT > 1.2) { sfx('miss'); this._seenT = this.T; } }
+    else this.sus = Math.max(0, this.sus - dt * 0.5);
     if (this.sus >= 1) this.caught(seer ? seer.name : 'A guard');
   }
 }
@@ -566,12 +583,12 @@ function boot() {
   $('btnNew').onclick = () => start(true); $('btnContinue').onclick = () => start(false);
   showTitle();
   window.__gr2 = { game: () => game, S: () => S, start, teleport: (x, z, y) => game.teleport(x, z, y || 0), give: (k) => game.take(k), marks: () => game.M, escape: (k) => game.escape(k), caught: () => game.caught('Test Guard'), swap: (c) => game.swapTo(c), plan: () => game.openPlan(), setCam: (yaw, pitch) => { game.cam.yaw = yaw; if (pitch !== undefined) game.cam.pitch = pitch; game.cam.snap = true; } };
-  let last = performance.now();
+  let last = performance.now(), skipN = 0; // __skipRender: test-only render throttle for slow CI GPUs
   function frame(now) { if (window.__pauseRaf) { setTimeout(() => requestAnimationFrame(frame), 250); return; }
     const dt = clamp((now - last) / 1000, 0.001, 0.05); last = now; trackFps(dt, now);
     // intro dialogue runs through the same talking path
     if (game.mode === 'intro') { if (isTalking() && (edge('act') || edge('jump'))) stepDialogue(); clearEdges(); }
-    game.step(dt); render(dt); requestAnimationFrame(frame);
+    game.step(dt); if (!window.__skipRender || (++skipN % window.__skipRender) === 0) render(dt); requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 }

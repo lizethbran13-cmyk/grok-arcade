@@ -208,7 +208,7 @@ export function buildPrison(w) {
   // arcade cabinet in the rec corner (bonus game)
   { const T = w.tf(31.8, 0, -31.5, -PI / 2); T.slab('m', 0x1e1b4b, 0, 0, 0, 1.0, 1.9, 0.8, 0.06); T.box('l', 0x22d3ee, 0, 1.15, 0.41, 0.8, 0.55, 0.02, 0.02, 0.6); T.box('m', 0x312e81, 0, 0.95, 0.35, 0.95, 0.12, 0.35, 0.03); T.box('l', 0xfde047, 0, 1.8, 0.38, 0.9, 0.18, 0.04, 0.02, 0.8); }
   txt(w, 'SEARCHLIGHT SNEAK', 31.35, 2.1, -31.5, -PI / 2, 0.14, 0xfde047, 'l', 0.5); marks.cabinet = { x: 30.6, z: -31.5 };
-  K.vending(w, 32.3, -26.5, -PI / 2, 0x15803d); K.vending(w, 32.3, -35, -PI / 2, 0xb91c1c);
+  K.vending(w, 32.3, -26.5, -PI / 2, 0x15803d); K.vending(w, 32.3, -31.5 + 2.6, -PI / 2, 0xb91c1c); // kept clear of the kitchen gap (x 31-32.7, z -37..-34)
   garland(w, 'x', -17.25, 11.5, 32.5, 4.3, -1); garland(w, 'z', 32.75, -40.5, -17.5, 4.3, -1);
   for (const [x, z] of [[16, -30], [25, -30], [20.5, -24]]) { pendant(w, x, z, 0xfde68a, 4.6); L(x, 4.2, z, 0xffe7c2, 18, 13); }
 
@@ -227,7 +227,7 @@ export function buildPrison(w) {
   marks.candyTalk = { x: -6.0, z: -32.8 }; marks.brieTalk = { x: -2.7, z: -32.8 };
   K.potPlant(w, -8.2, 0, -28, 1.0); K.potPlant(w, 8.2, 0, -28, 1.0); xmasTree(w, -7.8, -39.8, 0.6);
   garland(w, 'x', -40.6, -8.6, 8.6, 3.9, 1);
-  pendant(w, -2, -36.5, 0xfde68a, 4.2); pendant(w, -2, -31, 0xfde68a, 4.2); L(-2, 3.9, -31, 0xffe7c2, 16, 10); L(-2, 3.9, -37, 0xffe7c2, 16, 10);
+  pendant(w, -2, -36.5, 0xfde68a, 4.2); pendant(w, 7.2, -24, 0xfde68a, 4.2); L(-2, 3.9, -31, 0xffe7c2, 16, 10); L(-2, 3.9, -37, 0xffe7c2, 16, 10); // player-side lamp moved off the visit camera line
   w.region = 'out';
   marks.gate = { x: 3.4, z: -42.6 };
   w.slab('x', 0x1f2937, 4.6, 0, -42.7, 0.6, 1.3, 0.5, 0.04); w.add('l', rbox(0.4, 0.3, 0.02, 0.01), 0x22c55e, 4.6, 1.15, -42.44, 0, 0, 0, 1, 1, 1, 0.8);
