@@ -313,8 +313,8 @@
       "name": "Great Rodentia 2: Escape from National Ratita Prison",
       "size": "Sequel",
       "what": "The sequel to Great Rodentia: plan and pull off a breakout from National Ratita Prison.",
-      "stage": "queued",
-      "when": "Queued · after Thanksgiving (est. early Dec)"
+      "stage": "building",
+      "when": "Holiday special · releases Nov 15"
     },
     {
       "key": "candy-ruffsources-rescue",
@@ -948,6 +948,15 @@
       "playable": true,
       "built": "2026-11-02",
       "notes": "4 mission types, rescue van + tools, cozy shelter upgrades, bonus cabinet #49 Pup Drop Catch (preview only)"
+    },
+    {
+      "id": "great-rodentia-2",
+      "game": "rodentia",
+      "name": "Great Rodentia 2: Escape from National Ratita Prison",
+      "url": "previews/great-rodentia-2/",
+      "playable": true,
+      "built": "2026-11-02",
+      "notes": "Holiday special, releases Nov 15 after David's OK. Full prison break: 4 endings, 3 playable rats, bonus #50 Searchlight Sneak (preview-only)"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
