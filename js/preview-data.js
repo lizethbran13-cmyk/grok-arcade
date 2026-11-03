@@ -13,6 +13,15 @@ window.GROK_PREVIEW_DATA = {
       "previewUrl": "previews/ratita-mail-tycoon-remake/"
     },
     {
+      "game": "airporttycoon",
+      "name": "Grok Sky: Airport Tycoon Remake (Tempest)",
+      "size": "Remake",
+      "what": "A full Tempest-engine remake for David: walk your whole airport in third person (terminals, gates, apron, tower, hangar), direct takeoffs, landings and taxiing from Luna's ATC tower (near-misses and delays cost money and stars, free recovery), buy planes and ride along or fly them yourself through gold rings, build a food court, shops, lounge and duty-free, run Torty's Tortuga Customs in the big International Terminal, and book it all on the Ratita Airways phone app. Snowie's sky tours (sometimes a soft sand landing!), Pi-rat's hangar and Candy at security. Baggage Belt Rush cabinet #47 stays as is. Try it in the Time Jumper!",
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "previewUrl": "previews/airport-tycoon-remake/"
+    },
+    {
       "issue": 91,
       "game": "arcade",
       "name": "Ratita Mail Tycoon (live)",
@@ -935,6 +944,15 @@ window.GROK_PREVIEW_DATA = {
       "playable": true,
       "built": "2026-11-02",
       "notes": "Turbo engine remake: walk Pi-rat, hand-sort, repair, drive, branches, Guinea Pig Gang"
+    },
+    {
+      "id": "airport-tycoon-remake",
+      "game": "airporttycoon",
+      "name": "Grok Sky: Airport Tycoon Remake (Tempest)",
+      "url": "previews/airport-tycoon-remake/",
+      "playable": true,
+      "built": "2026-11-02",
+      "notes": "Tempest remake: walk your airport, Luna's ATC tower, fly your planes, Snowie sky tours, Torty's Tortuga Customs, Ratita Airways app"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

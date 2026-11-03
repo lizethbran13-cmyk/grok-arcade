@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head>
+<!-- ratita-preview-shim -->
+<meta name="robots" content="noindex,nofollow">
+<script>/* Ratita Preview shim: this page is a WORK-IN-PROGRESS preview. Its saves live under their own prefix so the real game's saves are never read or changed. */
+(function () {
+  var PFX = 'grokPreview.airport-tycoon-remake.';
+  try {
+    var SP = Storage.prototype, gI = SP.getItem, sI = SP.setItem, rI = SP.removeItem, kI = SP.key, cl = SP.clear, lenD = Object.getOwnPropertyDescriptor(SP, 'length');
+    function mine(st) { var a = [], n = lenD.get.call(st); for (var i = 0; i < n; i++) { var k = kI.call(st, i); if (k && k.indexOf(PFX) === 0) a.push(k); } return a; }
+    SP.getItem = function (k) { return gI.call(this, PFX + k); };
+    SP.setItem = function (k, v) { return sI.call(this, PFX + k, v); };
+    SP.removeItem = function (k) { return rI.call(this, PFX + k); };
+    SP.key = function (i) { var a = mine(this); return i >= 0 && i < a.length ? a[i].slice(PFX.length) : null; };
+    SP.clear = function () { var st = this; mine(st).forEach(function (k) { rI.call(st, k); }); };
+    Object.defineProperty(SP, 'length', { configurable: true, get: function () { return mine(this).length; } });
+    if (window.indexedDB) { var IO = indexedDB.open.bind(indexedDB), ID = indexedDB.deleteDatabase.bind(indexedDB); indexedDB.open = function (n, v) { return v === undefined ? IO(PFX + n) : IO(PFX + n, v); }; indexedDB.deleteDatabase = function (n) { return ID(PFX + n); }; }
+  } catch (e) { if (window.console) console.warn('preview shim', e); }
+  function banner() { if (document.getElementById('ratitaWip')) return; var b = document.createElement('div'); b.id = 'ratitaWip';
+    b.setAttribute('style', 'position:fixed;left:8px;top:8px;z-index:2147483647;display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:12px;font:bold 12px Trebuchet MS,system-ui,sans-serif;color:#fff;background:repeating-linear-gradient(45deg,#b45309 0 10px,#111827 10px 20px);box-shadow:0 2px 10px rgba(0,0,0,.5);text-shadow:0 1px 2px #000;max-width:calc(100vw - 16px)');
+    b.innerHTML = '\uD83E\uDDEA WORK IN PROGRESS \u00b7 Grok Sky: Airport Tycoon Remake (Tempest) \u00b7 may be buggy <a href="../../" style="color:#5eead4">\u23EA back to the arcade</a> <button aria-label="hide" style="background:none;border:0;color:#fff;font:bold 14px sans-serif;cursor:pointer">\u00d7</button>';
+    b.querySelector('button').onclick = function () { b.remove(); }; document.body.appendChild(b); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', banner); else banner();
+})();
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Grok Sky: Airport Tycoon (Remake Preview)</title><link rel="stylesheet" href="style.css"></head>
+<body data-mode="title">
+<canvas id="c"></canvas>
+<div id="labels"></div>
+<div id="flash"></div>
+<div id="hud" class="noTouch"><div class="pill">💰 <b id="money">$0</b></div><div class="pill">⭐ <b id="rep"></b></div></div>
+<button id="phonebtn" class="hudbtn">📱 Ratita</button>
+<button id="exitbtn" class="hudbtn">⬅ Back</button>
+<button id="actbtn" class="hudbtn"></button>
+<div id="toast"></div>
+<div id="joy"><div></div></div>
+<div id="atc" class="panel"><div class="ah">🗼 TOWER · Luna on duty <small>drag to look around</small></div><div id="atclist"></div></div>
+<div id="flyui" class="noTouch"><div id="flyhud"></div><button id="flyexit" class="hudbtn">🛬 Return to hangar</button></div>
+<div id="phone" class="panel"><div class="pbar"><b>🐀 Ratita Airways</b><button data-close>✕</button></div>
+  <div id="ptabs"><button data-tab="flights">✈️<br>Flights</button><button data-tab="book">🎫<br>Book</button><button data-tab="bank">💳<br>Bank</button><button data-tab="build">🏗️<br>Build</button><button data-tab="fleet">🛩️<br>Fleet</button></div>
+  <div id="pbody"></div></div>
+<div id="modal" class="panel"><div class="mh"><b id="mtitle"></b><button data-close>✕</button></div><div id="mbody"></div></div>
+<div id="title" class="panel"><div class="tc">
+  <div class="kicker">TIME JUMPER PREVIEW · REMAKE</div>
+  <h1>Grok Sky<br><span>Airport Tycoon</span></h1>
+  <p>Run <b>Grok Sky International</b> for Ratita Airways! Walk your terminals, direct planes from Luna's tower, fly your own planes, build food courts and lounges, and help Torty at Tortuga Customs.</p>
+  <ul><li>🕹️ Phone: left thumb walks, right side drags the camera</li><li>⌨️ Desktop: WASD / arrows walk, mouse drag looks, E to use</li></ul>
+  <button id="start" class="big">✈️ Open the airport</button></div></div>
+<script src="game.js"></script>
+</body></html>
