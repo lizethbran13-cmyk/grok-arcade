@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ratita-preview-shim -->
+<meta name="robots" content="noindex,nofollow">
+<script>/* Ratita Preview shim: this page is a WORK-IN-PROGRESS preview. Its saves live under their own prefix so the real game's saves are never read or changed. */
+(function () {
+  var PFX = 'grokPreview.ratita-mail-tycoon-remake.';
+  try {
+    var SP = Storage.prototype, gI = SP.getItem, sI = SP.setItem, rI = SP.removeItem, kI = SP.key, cl = SP.clear, lenD = Object.getOwnPropertyDescriptor(SP, 'length');
+    function mine(st) { var a = [], n = lenD.get.call(st); for (var i = 0; i < n; i++) { var k = kI.call(st, i); if (k && k.indexOf(PFX) === 0) a.push(k); } return a; }
+    SP.getItem = function (k) { return gI.call(this, PFX + k); };
+    SP.setItem = function (k, v) { return sI.call(this, PFX + k, v); };
+    SP.removeItem = function (k) { return rI.call(this, PFX + k); };
+    SP.key = function (i) { var a = mine(this); return i >= 0 && i < a.length ? a[i].slice(PFX.length) : null; };
+    SP.clear = function () { var st = this; mine(st).forEach(function (k) { rI.call(st, k); }); };
+    Object.defineProperty(SP, 'length', { configurable: true, get: function () { return mine(this).length; } });
+    if (window.indexedDB) { var IO = indexedDB.open.bind(indexedDB), ID = indexedDB.deleteDatabase.bind(indexedDB); indexedDB.open = function (n, v) { return v === undefined ? IO(PFX + n) : IO(PFX + n, v); }; indexedDB.deleteDatabase = function (n) { return ID(PFX + n); }; }
+  } catch (e) { if (window.console) console.warn('preview shim', e); }
+  function banner() { if (document.getElementById('ratitaWip')) return; var b = document.createElement('div'); b.id = 'ratitaWip';
+    b.setAttribute('style', 'position:fixed;left:8px;top:8px;z-index:2147483647;display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:12px;font:bold 12px Trebuchet MS,system-ui,sans-serif;color:#fff;background:repeating-linear-gradient(45deg,#b45309 0 10px,#111827 10px 20px);box-shadow:0 2px 10px rgba(0,0,0,.5);text-shadow:0 1px 2px #000;max-width:calc(100vw - 16px)');
+    b.innerHTML = '\uD83E\uDDEA WORK IN PROGRESS \u00b7 Ratita Mail Tycoon Remake (Turbo) \u00b7 may be buggy <a href="../../" style="color:#5eead4">\u23EA back to the arcade</a> <button aria-label="hide" style="background:none;border:0;color:#fff;font:bold 14px sans-serif;cursor:pointer">\u00d7</button>';
+    b.querySelector('button').onclick = function () { b.remove(); }; document.body.appendChild(b); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', banner); else banner();
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Ratita Mail Tycoon — Remake (Turbo)</title>
+<link rel="stylesheet" href="./style.css?v=mr1">
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.min.js", "three/addons/": "./lib/addons/" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="touchZone"></div>
+<div id="stickRing"></div><div id="stickKnob"></div>
+<div id="hud">
+  <div class="hrow"><span class="pill" id="hMoney">💰 0</span><span class="pill" id="hRep">⭐ 50</span><span class="pill" id="hReady">📬 0</span><span class="pill" id="hTruck">🚚 100%</span></div>
+  <div id="hObj" class="obj"></div>
+  <div id="hAlert" class="alert"></div>
+</div>
+<div id="hudR"><button class="hbtn" id="bMap">🗺️</button><button class="hbtn" id="bMenu">📱</button></div>
+<div id="gps"><span id="gpsArrow">➤</span><span id="gpsTxt"></span></div>
+<button id="actBtn">ACT</button>
+<div id="touch"><button data-b="act" id="tAct">E</button></div>
+<div id="drive"><button id="dBrake">BRAKE</button></div>
+<div id="toast"></div>
+<div id="talk"><b id="talkWho"></b><span id="talkTxt"></span></div>
+
+<div id="title" class="modal on"><div class="card big">
+  <div class="kick">Ratita Industries presents · Turbo engine remake</div>
+  <h1>📮 Ratita Mail Tycoon</h1>
+  <p class="sub">You are <b>Postmaster Pi-rat</b>. Walk your post office, sort the mail by hand, fix the machines, drive the truck around Mailville and grow a mail empire, before the Guinea Pig Gang does.</p>
+  <div class="modes">
+    <button id="mScratch" class="mode"><b>🌱 Start from Scratch</b><span>$150, one post office, a little van. Build it all yourself.</span></button>
+    <button id="mEmpire" class="mode"><b>🏙️ Built Empire</b><span>$2,500, all 4 branches open, Big Mail Truck. Keep it running.</span></button>
+  </div>
+  <button id="mContinue" class="primary">▶ Continue</button>
+  <div class="help">WASD / arrows or left thumb-stick to move · drag to look · E / ACT to use · M map</div>
+</div></div>
+
+<div id="sortUI" class="modal"><div class="card">
+  <div class="mhead"><h2>📬 Sorting Belt <span id="sBelt"></span></h2><span id="sCount"></span></div>
+  <div id="sItem"><div id="sIcon">✉️</div><div id="sTag">SAME-DAY</div><div id="sAddr"></div></div>
+  <div id="sTimer"><i></i></div>
+  <div id="sBins">
+    <button data-bin="0" class="bin r">🔴<b>Same-Day</b><small>1</small></button>
+    <button data-bin="1" class="bin b">🔵<b>2-Day</b><small>2</small></button>
+    <button data-bin="2" class="bin y">🟡<b>Letters &amp; Media</b><small>3</small></button>
+    <button data-bin="3" class="bin g">🟢<b>Big Parcels</b><small>4</small></button>
+  </div>
+  <div class="note" id="sNote">Match the sticker colour to the bin. Mix-ups cost ⭐ reputation!</div>
+</div></div>
+
+<div id="fixUI" class="modal"><div class="card">
+  <div class="mhead"><h2>🔧 Fix: <span id="fName"></span></h2><span id="fHits"></span></div>
+  <div id="fBar"><div id="fZone"></div><div id="fNeedle"></div></div>
+  <div class="hrow c"><button id="fBtn" class="primary">🔧 TIGHTEN!</button></div>
+  <div class="note" id="fNote">Tap when the needle is in the green. A miss costs $3 in parts.</div>
+  <div class="hrow c"><button id="fCall" class="ghost">📞 Call Ratita Tech (free, 25 s)</button><button id="fClose" class="ghost">Leave</button></div>
+</div></div>
+
+<div id="shopUI" class="modal"><div class="card">
+  <div class="mhead"><h2>🛒 Ratita Post Supply Shop</h2><button class="x" data-close="shopUI">✕</button></div>
+  <div id="shopList"></div>
+</div></div>
+
+<div id="mapUI" class="modal"><div class="card">
+  <div class="mhead"><h2>🗺️ Mailville · Your Empire</h2><button class="x" data-close="mapUI">✕</button></div>
+  <canvas id="mapCv" width="560" height="500"></canvas>
+  <div id="brList"></div>
+</div></div>
+
+<div id="menuUI" class="modal"><div class="card">
+  <div class="mhead"><h2>📱 Ratita Post App</h2><button class="x" data-close="menuUI">✕</button></div>
+  <div id="menuStats"></div>
+  <div class="hrow c"><button id="uUnstuck" class="ghost">⛑️ Unstuck (back to HQ)</button><button id="uTow" class="ghost">🛻 Free tow truck to HQ</button><button id="uSound" class="ghost">🔊 Sound</button></div>
+  <div class="hrow c"><button id="uHelp" class="ghost">❓ How to play</button><button id="uNew" class="ghost danger">↺ New game</button></div>
+  <div id="helpTxt" class="note"></div>
+</div></div>
+
+<div id="msgUI" class="modal"><div class="card">
+  <h2 id="msgT"></h2><p id="msgB"></p><div class="hrow c" id="msgBtns"></div>
+</div></div>
+<script type="module" src="./js/main.js?v=mr1"></script>
+</body>
+</html>

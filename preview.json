@@ -1,7 +1,16 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
-  "updated": "2026-11-03T02:00:00Z",
+  "updated": "2026-11-02",
   "items": [
+    {
+      "game": "arcade",
+      "name": "Ratita Mail Tycoon Remake (Turbo)",
+      "size": "Remake",
+      "what": "A full Turbo-engine remake for David: play as one-eyed brown Pi-rat in third person, hand-sort mail on the belts (mix-ups cost reputation), fix broken machines in a repair mini-game, shop for upgrades/trucks/decor, drive the mail truck (crashes and late mail cost money, free tow), open branches you can drive to and walk into, and stop the Guinea Pig Gang. Luna, Snowie, Candy and Torty cameo. Try it in the Time Jumper!",
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "previewUrl": "previews/ratita-mail-tycoon-remake/"
+    },
     {
       "issue": 91,
       "game": "arcade",
@@ -916,7 +925,17 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "ratita-mail-tycoon-remake",
+      "game": "arcade",
+      "name": "Ratita Mail Tycoon Remake (Turbo)",
+      "url": "previews/ratita-mail-tycoon-remake/",
+      "playable": true,
+      "built": "2026-11-02",
+      "notes": "Turbo engine remake: walk Pi-rat, hand-sort, repair, drive, branches, Guinea Pig Gang"
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
