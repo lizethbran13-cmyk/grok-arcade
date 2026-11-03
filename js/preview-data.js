@@ -1,8 +1,53 @@
-/* Auto-synced from preview.json — offline fallback for Lili's Board & Time Jumper */
+/* Auto-synced from preview.json — offline fallback for Lili's Board & Time Jumper (the loader is js/preview-loader.js) */
 window.GROK_PREVIEW_DATA = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
   "updated": "2026-11-02",
   "items": [
+    {
+      "issue": 91,
+      "game": "arcade",
+      "name": "Ratita Mail Tycoon",
+      "size": "New Game",
+      "what": "Build a mail empire across Mailville: main mail shop, same-day and 2-day centers, a pricey small-package spot, mailboxes everywhere. Pi-rat is postmaster; rivals are the Guinea Pig Gang.",
+      "stage": "building",
+      "when": "In the lab now"
+    },
+    {
+      "issue": 90,
+      "game": "arcade",
+      "name": "Ratita Teaser Room",
+      "size": "New Room",
+      "what": "A new Arcade room with posters showing estimated release times for upcoming games, DLCs, remasters and sequels, linked to the Preview Center.",
+      "stage": "building",
+      "when": "In the lab now"
+    },
+    {
+      "key": "airport-tycoon",
+      "game": "sky",
+      "name": "Grok Sky: Airport Tycoon",
+      "size": "Expansion",
+      "what": "Run the airport: grumpy Karen customers, storms, outages, runway closures, lost bags and delays.",
+      "stage": "building",
+      "when": "Time Jumper Preview"
+    },
+    {
+      "key": "pickleball-world-tour",
+      "game": "pickleballpark",
+      "name": "Pickleball Park DLC: World Tour",
+      "size": "Expansion",
+      "what": "4 city courts (Paris, Tokyo, New York, Rio), a 4-leg tour live on Tortuga TV Network.",
+      "stage": "building",
+      "when": "Time Jumper Preview"
+    },
+    {
+      "key": "sky-super-travel-fixes",
+      "game": "sky",
+      "name": "Grok Sky DLC: Super Travel Fixes (#80)",
+      "size": "Fix",
+      "what": "Passenger seat view, bot Captain + FO you can watch fly, customs, baggage claim and signs. In the Time Jumper, waiting for a greenlight.",
+      "stage": "building",
+      "when": "Time Jumper Preview"
+    },
     {
       "issue": 89,
       "game": "arcade",
