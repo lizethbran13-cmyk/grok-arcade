@@ -1027,6 +1027,24 @@
         g.font = font(15); g.fillStyle = '#1e3a8a'; g.fillText('MAIL TYCOON', w / 2, 22);
         break;
       }
+      case 'candyrescue': {
+        var gcr = g.createLinearGradient(0, 0, 0, h); gcr.addColorStop(0, '#7dd3fc'); gcr.addColorStop(1, '#ccfbf1'); g.fillStyle = gcr; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#4ade80'; g.fillRect(0, h * 0.72, w, h * 0.28); g.fillStyle = '#fff'; rrF(g, w * 0.1, h * 0.38, w * 0.5, h * 0.34, 4); g.fillStyle = '#be185d'; g.fillRect(w * 0.08, h * 0.34, w * 0.54, h * 0.07);
+        g.fillStyle = '#7dd3fc'; g.fillRect(w * 0.16, h * 0.46, w * 0.12, h * 0.1); g.fillRect(w * 0.4, h * 0.46, w * 0.12, h * 0.1);
+        g.fillStyle = '#7c4a1e'; g.fillRect(w * 0.76, h * 0.42, w * 0.06, h * 0.32); g.fillStyle = '#16a34a'; g.beginPath(); g.arc(w * 0.79, h * 0.38, w * 0.13, 0, 7); g.fill();
+        var crx = ((t * 35) % (w + 60)) - 30; g.fillStyle = '#9ca3af'; rrF(g, crx, h * 0.78, 34, 14, 6); g.fillStyle = '#e5e7eb'; g.beginPath(); g.arc(crx + 34, h * 0.78, 8, 0, 7); g.fill(); g.fillStyle = '#f472b6'; g.fillRect(crx + 26, h * 0.78 + 5, 8, 3);
+        g.font = '18px sans-serif'; g.textAlign = 'center'; g.fillText('\uD83D\uDC36', w * 0.79, h * 0.3 + Math.sin(t * 3) * 3);
+        g.font = font(15); g.fillStyle = '#0f766e'; g.fillText('CANDY RESCUE', w / 2, 22);
+        break;
+      }
+      case 'pupdrop': {
+        var gpd = g.createLinearGradient(0, 0, 0, h); gpd.addColorStop(0, '#38bdf8'); gpd.addColorStop(1, '#bae6fd'); g.fillStyle = gpd; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#475569'; g.fillRect(0, 30, w, 14); g.fillStyle = '#4ade80'; g.fillRect(0, h - 18, w, 18);
+        for (i = 0; i < 3; i++) { var pdx = w * (0.2 + i * 0.3), pdy = 50 + ((t * 30 + i * 47) % (h - 110)); g.fillStyle = i === 1 ? '#facc15' : '#f472b6'; g.beginPath(); g.arc(pdx, pdy, 12, Math.PI, 0); g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 1; g.beginPath(); g.moveTo(pdx - 12, pdy); g.lineTo(pdx, pdy + 16); g.lineTo(pdx + 12, pdy); g.stroke(); g.fillStyle = '#c08552'; g.beginPath(); g.arc(pdx, pdy + 18, 6, 0, 7); g.fill(); }
+        var ncx = w * (0.5 + 0.3 * Math.sin(t * 1.6)); g.strokeStyle = '#f472b6'; g.lineWidth = 3; g.beginPath(); g.ellipse(ncx, h - 40, 18, 6, 0, 0, 7); g.stroke(); g.fillStyle = '#9ca3af'; g.beginPath(); g.arc(ncx, h - 28, 10, 0, 7); g.fill();
+        g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#be185d'; g.fillText('PUP DROP CATCH', w / 2, 22);
+        break;
+      }
       case 'mailsort': {
         var gms = g.createLinearGradient(0, 0, 0, h); gms.addColorStop(0, '#1e3a8a'); gms.addColorStop(1, '#0f172a'); g.fillStyle = gms; g.fillRect(0, 0, w, h);
         g.fillStyle = '#374151'; g.fillRect(w * 0.35, 30, w * 0.3, h - 60); var my = 30 + ((t * 40) % (h - 80));

@@ -319,12 +319,14 @@
     {
       "key": "candy-ruffsources-rescue",
       "game": "arcade",
-      "name": "Candy's RuffSources Rescue",
+      "name": "Candy's RuffSources Rescue (live)",
       "size": "New Game",
-      "what": "Building now (Turbo engine): play Candy the miniature schnauzer in third person around Pawsville. Rescue pups stuck in trees (ladder climb timing), lost pups (sniff the trail), pups caught by haywire Ratita gadgets (hit the OFF switch) and pups stuck in fences. Drive the RuffSources rescue van, buy tools, and bring pups home to the cozy shelter: dog beds, bone table, treat machine and the Employee of the Month: Candy sign. Missed timers cost reputation, with Torty’s free shuttle to recover. Luna, Pi-rat, Snowie and Torty cameo. New bonus cabinet #49 Pup Drop Catch.",
-      "stage": "building",
-      "when": "Time Jumper Preview",
-      "previewUrl": "previews/candy-ruffsources-rescue/"
+      "what": "SHIPPED! Free new game on the Turbo engine: play Candy the miniature schnauzer around cartoon 3D Pawsville. Rescue pups stuck in trees, lost pups (sniff the scent trail), pups caught by haywire Ratita gadgets and pups stuck in fences, drive the RuffSources rescue van, buy tools and fill the cozy shelter. New cabinet in the Game Gallery (MORE GAMES) plus bonus cabinet #49 Pup Drop Catch on the Bonus Zone wall. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/candy-ruffsources-rescue/",
+      "betaArchiveUrl": "archive/candy-ruffsources-rescue-beta/",
+      "shippedAt": "2026-11-03T04:05:00Z"
     },
     {
       "key": "edu-field-trips",
@@ -941,15 +943,6 @@
   ],
   "previews": [
     {
-      "id": "candy-ruffsources-rescue",
-      "game": "arcade",
-      "name": "Candy's RuffSources Rescue",
-      "url": "previews/candy-ruffsources-rescue/",
-      "playable": true,
-      "built": "2026-11-02",
-      "notes": "Polish pass: schnauzer silhouette, bark + visible tree pups, scent trail search zone, tidier lobby signs, richer Pup Drop Catch cabinet #49 (preview only) Polish round 2: lobby camera no longer hides behind signs (occluders fade), mission rings swapped for soft glow + sparkles, Candy rebuilt softer with a fluffy tail and fur skirt, phone HUD/cabinet no longer covered by the WIP banner."
-    },
-    {
       "id": "great-rodentia-2",
       "game": "rodentia",
       "name": "Great Rodentia 2: Escape from National Ratita Prison",
@@ -961,6 +954,17 @@
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "candy-ruffsources-rescue",
+      "game": "arcade",
+      "name": "Candy's RuffSources Rescue",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/candy-ruffsources-rescue-beta/",
+      "built": "2026-11-02",
+      "archived": "2026-11-02",
+      "notes": "Polish pass: schnauzer silhouette, bark + visible tree pups, scent trail search zone, tidier lobby signs, richer Pup Drop Catch cabinet #49 (preview only) Polish round 2: lobby camera no longer hides behind signs (occluders fade), mission rings swapped for soft glow + sparkles, Candy rebuilt softer with a fluffy tail and fur skirt, phone HUD/cabinet no longer covered by the WIP banner.",
+      "playable": true
+    },
     {
       "id": "airport-tycoon-remake",
       "game": "airporttycoon",
