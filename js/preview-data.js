@@ -263,6 +263,42 @@ window.GROK_PREVIEW_DATA = {
       "previewUrl": "previews/online-play-update/"
     },
     {
+      "key": "big-thanksgiving-game",
+      "game": "arcade",
+      "name": "The Big Thanksgiving Game",
+      "size": "New Game",
+      "what": "Torty's Harvest Feast + The Great Turkey Chase + Ratita Parade Builder in one: Gobbles escaped from the Tortuga Tech float, crazy turkeys everywhere, and Chef Mimo's haywire Ratita Industries kitchen.",
+      "stage": "queued",
+      "when": "Starts building Nov 3"
+    },
+    {
+      "key": "rodentia-2",
+      "game": "rodentia",
+      "name": "Great Rodentia 2: Escape from National Ratita Prison",
+      "size": "Sequel",
+      "what": "The sequel to Great Rodentia: plan and pull off a breakout from National Ratita Prison.",
+      "stage": "queued",
+      "when": "Queued · after Thanksgiving (est. early Dec)"
+    },
+    {
+      "key": "candy-ruffsources-rescue",
+      "game": "arcade",
+      "name": "Candy's RuffSources Rescue",
+      "size": "New Game",
+      "what": "Candy leads rescues for the pups of RuffSources.",
+      "stage": "queued",
+      "when": "Queued · est. December"
+    },
+    {
+      "key": "edu-field-trips",
+      "game": "arcade",
+      "name": "Education Center DLC: Field Trips",
+      "size": "DLC",
+      "what": "Lilith the Bot takes the Education Center on field trips.",
+      "stage": "queued",
+      "when": "Queued · est. December"
+    },
+    {
       "issue": 72,
       "game": "rodentia",
       "name": "Grok Great Rodentia — Part 4 (live)",
