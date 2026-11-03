@@ -450,7 +450,7 @@ const G = SKY.Game = {
     $('toolbar').innerHTML = tb + (P.held ? `<span class="sel">✋ ${P.held.person ? P.held.person.name : P.held.meal ? 'Meal: ' + P.held.meal.emoji + ' ' + P.held.meal.q : P.held.kind}</span>` : '') + (pl.codeFound ? `<span class="code">🔑 ${pl.code}</span>` : '');
     // prompt
     const pr = $('prompt');
-    if (P.target && P.mode !== 'pilot' && !this.ui && !(SKY.Places && (SKY.Places.scope || SKY.Places.trans))) { pr.textContent = (SKY.isTouch ? '👆 ' : '[F] ') + P.target.label; pr.style.display = 'block'; pr.classList.toggle('enter', /^(🚪|🛗|🍽|🪂|🚗|🔓|🩺)/u.test(P.target.label)); }
+    if (P.target && P.mode !== 'pilot' && !this.ui && !(SKY.SuperTravel && SKY.SuperTravel.watching) && !(SKY.Places && (SKY.Places.scope || SKY.Places.trans))) { pr.textContent = (SKY.isTouch ? '👆 ' : '[F] ') + P.target.label; pr.style.display = 'block'; pr.classList.toggle('enter', /^(🚪|🛗|🍽|🪂|🚗|🔓|🩺)/u.test(P.target.label)); }
     else if (P.mode === 'pilot') { pr.textContent = SKY.isTouch ? (pl.small ? 'USE (hand) = get out (when stopped)' : 'USE (hand) = leave seat') : '[F] leave seat  [V] camera  [T] autopilot  [G] gear (taxi to gate on the ground)  [Z] flaps  [B] brake'; pr.style.display = this.time % 20 < 6 ? 'block' : 'none'; }
     else pr.style.display = 'none';
     // alerts

@@ -262,7 +262,7 @@ ST.cabinProps = (pl) => {
     const bin = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.36, L), M(0xe5e7eb)); bin.position.set(sx * 1.75, 1.85, zc); g.add(bin);
     const lip = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.05, L), M(0x94a3b8)); lip.position.set(sx * 1.47, 1.7, zc); g.add(lip);
   }
-  const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.02, L), (MC.lamp || (MC.lamp = new THREE.MeshBasicMaterial({ color: 0xfff7d6 })))); lamp.position.set(0, 2.2, zc); g.add(lamp);
+  const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.015, L), (MC.lamp || (MC.lamp = new THREE.MeshLambertMaterial({ color: 0xf3efe2, emissive: 0x3a3520 })))); lamp.position.set(0, 2.28, zc); g.add(lamp);
   const zOf = (c, f) => { const zs = cab.filter((s) => s.cabinClass === c).map((s) => s.z); return zs.length ? f(...zs) : null; };
   for (const [a, b, col] of [['first', 'business', 0x9f1239], ['business', 'economy', 0x1e3a8a]]) { const za = zOf(a, Math.max), zb = zOf(b, Math.min); if (za == null || zb == null) continue; for (const sx of [-1, 1]) { const c = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.6, 0.04), M(col)); c.position.set(sx * 1.55, 0.95, (za + zb) / 2); g.add(c); } }
   const cart = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.95, 0.6), M(0x9ca3af)); cart.position.set(0, 0.48, z1 + 1.4); g.add(cart);
@@ -277,12 +277,12 @@ ST.depart = () => {
   const cab = pl.seats.filter((s) => !s.cockpit);
   let seat = cab.find((s) => s.cabinClass === want && !s.occupant) || cab.find((s) => s.cabinClass === want) || cab.find((s) => !s.occupant) || cab[0];
   if (seat && seat.occupant && seat.occupant !== P && seat.occupant.leaveSeat) seat.occupant.leaveSeat();
-  if (seat) P.sitSeat(seat); ST.mySeat = seat;
+  if (seat) P.sitSeat(seat); ST.mySeat = seat; ST.seatLook(seat);
   t.stage = 'flying'; t.left = 75; ST.flightLive = true; persist();
   toast('💺 You are a ' + CLASSES[t.cls].name + ' passenger (row ' + (seat ? seat.row + 1 : '?') + '). 🧑‍✈️ Captain Rex & First Officer Kim are flying you to ' + t.destName + '. Stand up and walk the cabin any time!', 'good');
 };
 ST.watch = () => { const P = SKY.Player, pl = SKY.Game.plane; const cap = pl.seats.find((s) => s.captain); if (!cap) return; P.leaveSeat(); const cd = pl.cockpitDoor; if (cd && !cd.broken) { cd.target = 1; cd.open = 1; cd.autoClose = 0; } P.mode = 'foot'; P.pos.set(0, 0.01, cap.z + 0.9); P.vel.set(0, 0, 0); P.yaw = 0; P.camMode = "tp"; P.pitch = -0.3; ST.watching = true; toast('👀 Watching Captain Rex & First Officer Kim fly. Tap 💺 My seat to sit back down.', 'good'); };
-ST.backToSeat = () => { const P = SKY.Player; const cd = SKY.Game.plane.cockpitDoor; if (cd && !cd.broken) cd.target = 0; P.camMode = "fp"; ST.watching = false; if (ST.mySeat) P.sitSeat(ST.mySeat); };
+ST.backToSeat = () => { const P = SKY.Player; const cd = SKY.Game.plane.cockpitDoor; if (cd && !cd.broken) cd.target = 0; P.camMode = "fp"; ST.watching = false; if (ST.mySeat) { P.sitSeat(ST.mySeat); ST.seatLook(ST.mySeat); } };
 ST.skip = () => { const t = T(); if (t && t.stage === 'flying') t.left = 0; };
 ST.arrive = () => {
   const t = T(), G = SKY.Game, P = SKY.Player; if (!t) return; const C = CLASSES[t.cls];
@@ -435,6 +435,8 @@ SKY.stCamApply = function () {};
 SKY.stCamHook = function () {}; // cockpit view uses G.camOverride (game.js updateCamera)
 SKY.stCamTick = function () { const G = SKY.Game, ST = SKY.SuperTravel, pl = G && G.plane; if (!G) return;
   if (ST && ST.watching && pl && pl.cockpitDoor && !pl.cockpitDoor.broken) { pl.cockpitDoor.target = 1; pl.cockpitDoor.autoClose = 0; }
-  const L = ST && pl ? (ST.watching ? [0, 2.3, -12.4, 0, 1.3, -13.7, 105] : ST.camLocal) : null;
+  const L = ST && pl ? (ST.watching ? [0, 1.95, -14.3, 0, 1.3, -13.2, 120] : ST.camLocal) : null;
   if (L) { const a = pl.toWorld(new THREE.Vector3(L[0], L[1], L[2])), b = pl.toWorld(new THREE.Vector3(L[3], L[4], L[5])), u = new THREE.Vector3(0, 1, 0).applyQuaternion(pl.quat); G.camOverride = [a.x, a.y, a.z, b.x, b.y, b.z, u.x, u.y, u.z, L[6]]; G._stCO = true; }
   else if (G._stCO) { G.camOverride = null; G._stCO = false; } };
+
+SKY.SuperTravel.seatLook = function (s) { const P = SKY.Player; if (!s) return; const sx = s.x < 0 ? -1 : 1; P.yaw = Math.atan2(sx, -0.45); P.pitch = -0.05; };
