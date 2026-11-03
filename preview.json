@@ -3,6 +3,14 @@
   "updated": "2026-11-02",
   "items": [
     {
+      "game": "thanksgiving-feast",
+      "name": "Torty's Harvest Feast (Thanksgiving)",
+      "size": "Big",
+      "what": "A walk-in Thanksgiving town on the Turbo engine with live events by the real date: parade prep and leaf raking before Nov 26, the BIG FEAST and an all-day live parade on Thanksgiving, leftovers after. Chef Mimo's haywire Ratita kitchen, the Great Turkey Chase, the Ratita Parade Builder, a corn maze, a pie contest and cabinet #51.",
+      "stage": "building",
+      "when": "Preview in the Time Jumper"
+    },
+    {
       "game": "arcade",
       "name": "Ratita Mail Tycoon Remake (live)",
       "size": "Remake",
@@ -950,6 +958,16 @@
       "playable": true,
       "built": "2026-11-02",
       "notes": "Holiday special, releases Nov 15 after David's OK. Polish pass: all 4 routes played by real input, party spacing, see-through visitation glass, camera, kid-fair guards, Pi-rat new look"
+    },
+    {
+      "id": "thanksgiving-feast",
+      "game": "thanksgiving-feast",
+      "name": "Torty's Harvest Feast",
+      "url": "previews/thanksgiving-feast/",
+      "playable": true,
+      "built": "2026-11-02",
+      "notes": "Thanksgiving hub on Turbo: live events by LA date (prep / Nov 26 big feast + live parade / leftovers), Chef Mimo kitchen chaos, Gobbles chase, Ratita Parade Builder, corn maze, pie contest, cabinet #51",
+      "stage": "building"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
