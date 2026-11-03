@@ -69,7 +69,7 @@
     sign(p, 1.5, 2.1, posterArt(it), 0, 2.05, 0.045, 0);
     var spot = add(p, cy(0.05, 0.09, 0.14, 10), ph('#111', 60), 0, 3.4, 0.35); spot.rotation.x = -0.9; add(p, sp(0.05, 8), gl('#fffbeb'), 0, 3.35, 0.4);
     if (it.slug) { var bd = add(p, bx(0.5, 0.18, 0.04), gl('#14b8a6'), 0.55, 3.06, 0.05); bd.rotation.z = -0.2; }
-    H.inter({ id: 'tz_p' + i, kind: 'tz_poster', root: 'teaser', name: it.name, col: it.col, x: x + nx * 1.25, z: z + nz * 1.25, dir: [nx, nz], r: 0.9, gw: 1.3, gh: 0.9, data: { i: i } });
+    H.inter({ id: 'tz_p' + i, kind: 'at_tz_poster', root: 'teaser', name: it.name, col: it.col, x: x + nx * 1.25, z: z + nz * 1.25, dir: [nx, nz], r: 0.9, gw: 1.3, gh: 0.9, data: { i: i } });
   }
 
   function build() {
@@ -109,7 +109,7 @@
     var kk = H.prop('teaser', 'Release Calendar kiosk', cx + 3.2, cz + 2.2, -Math.PI / 2); add(kk, bx(1.0, 1.2, 0.6), ph('#dc2626', 50), 0, 0.6, 0); var scr = add(kk, bx(0.9, 0.7, 0.06), gl('#0f172a'), 0, 1.6, 0.05); scr.rotation.x = -0.25;
     sign(kk, 0.82, 0.6, function (c, w, hh) { c.fillStyle = '#0f172a'; c.fillRect(0, 0, w, hh); txt(c, '\uD83D\uDCC5 RELEASE', w / 2, 34, '#fde047', 26); txt(c, 'CALENDAR', w / 2, 66, '#fde047', 26); txt(c, 'TAP \u25B6 TIME JUMPER', w / 2, 100, '#5eead4', 15); }, 0, 1.6, 0.09, 0).tex; 
     kk.children[kk.children.length - 1].rotation.x = -0.25; H.solidOf(kk, 0.05);
-    H.inter({ id: 'tz_cal', kind: 'tz_cal', root: 'teaser', name: 'Release Calendar', col: '#fde047', x: cx + 1.9, z: cz + 2.2, dir: [-1, 0], r: 1.1 });
+    H.inter({ id: 'tz_cal', kind: 'at_tz_cal', root: 'teaser', name: 'Release Calendar', col: '#fde047', x: cx + 1.9, z: cz + 2.2, dir: [-1, 0], r: 1.1 });
     // ---- theater benches + velvet ropes + snacks ----
     [[cx - 3.5, cz - 2.2], [cx + 1.5, cz - 2.2]].forEach(function (q, i) { var bn = H.prop('teaser', 'Theater bench ' + i, q[0], q[1], Math.PI); add(bn, bx(2.6, 0.12, 0.7), ph('#991b1b', 20), 0, 0.48, 0); add(bn, bx(2.6, 0.7, 0.12), ph('#991b1b', 20), 0, 0.85, 0.32); [-1.15, 1.15].forEach(function (x) { add(bn, bx(0.12, 0.48, 0.66), ph('#fbbf24', 60), x, 0.24, 0); }); H.solidOf(bn, 0.05); });
     for (var ri = 0; ri < 6; ri++) { var rp = H.prop('teaser', 'Rope post ' + ri, B.minX + 2.2, B.minZ + 2.2 + ri * 2.6, 0); add(rp, cy(0.18, 0.22, 0.06, 12), ph('#fbbf24', 80), 0, 0.03, 0); add(rp, cy(0.04, 0.04, 0.9, 8), ph('#fbbf24', 80), 0, 0.48, 0); add(rp, sp(0.07, 8), ph('#fbbf24', 80), 0, 0.96, 0); if (ri < 5) { var rope = add(rp, cy(0.03, 0.03, 2.6, 6), ph('#b91c1c', 10), 0, 0.82, 1.3); rope.rotation.x = Math.PI / 2; } }
@@ -125,30 +125,30 @@
     // ---- door back to the Preview Center (east wall) ----
     var ed = H.prop('teaser', 'Teaser Room door', B.maxX - 0.1, cz, -Math.PI / 2); add(ed, bx(1.6, 2.7, 0.12), ph('#7f1d1d', 50), 0, 1.35, 0); add(ed, bx(1.3, 2.4, 0.04), ph('#fca5a5', 50), 0, 1.3, 0.07);
     sign(ed, 1.6, 0.3, function (c, w, hh) { c.fillStyle = '#111827'; c.fillRect(0, 0, w, hh); txt(c, '\u23EA PREVIEW CENTER', w / 2, hh / 2, '#5eead4', 30); }, 0, 2.95, 0.08, 0);
-    H.inter({ id: 'tz_exit', kind: 'tz_exit', root: 'teaser', name: 'Back to the Preview Center', col: '#5eead4', x: B.maxX - 1.3, z: cz, dir: [-1, 0], r: 1.0 });
+    H.inter({ id: 'tz_exit', kind: 'at_tz_exit', root: 'teaser', name: 'Back to the Preview Center', col: '#5eead4', x: B.maxX - 1.3, z: cz, dir: [-1, 0], r: 1.0 });
     // ---- the door in the Ratita Preview Center (west wall, south of the poster row) ----
     H.mkRoot('teaser_door'); var md = H.prop('teaser_door', 'Ratita Teaser Room door', DOOR.x + 0.08, DOOR.z, Math.PI / 2);
     add(md, bx(1.4, 2.8, 0.14), ph('#7f1d1d', 50), 0, 1.4, 0); add(md, bx(1.05, 2.45, 0.05), ph('#fde047', 50, '#3a2400'), 0, 1.28, 0.08);
     sign(md, 1.6, 0.36, function (c, w, hh) { c.fillStyle = '#111827'; c.fillRect(0, 0, w, hh); c.strokeStyle = '#dc2626'; c.lineWidth = 6; c.strokeRect(3, 3, w - 6, hh - 6); txt(c, '\uD83C\uDF9F\uFE0F TEASER ROOM', w / 2, hh / 2 + 2, '#fde047', 34, w - 16); }, 0, 3.1, 0.1, 0);
-    H.inter({ id: 'tz_door', kind: 'tz_door', root: 'teaser_door', name: 'Ratita Teaser Room', col: '#fde047', x: DOOR.x + 1.3, z: DOOR.z, dir: [1, 0], r: 0.9 });
+    H.inter({ id: 'tz_door', kind: 'at_tz_door', root: 'teaser_door', name: 'Ratita Teaser Room', col: '#fde047', x: DOOR.x + 1.3, z: DOOR.z, dir: [1, 0], r: 0.9 });
     r.visible = false;
     var ct0 = GA.Hub.camTune; GA.Hub.camTune = function (a) { return a === 'teaser' ? { pitch: 0.5, dist: 7.2, ahead: 2.2, fov: 10 } : (ct0 ? ct0(a) : null); };
     if (GA.Areas) { if (GA.Areas.FOGS) GA.Areas.FOGS.teaser = ['#1e1037', 20, 50]; if (GA.Areas.ARRIVE) { var go = GA.Areas.goTo; GA.Areas.ARRIVE.teaser = function () { go(B.spawn.x, B.spawn.z, -1, 0); }; GA.Areas.ARRIVE.teaser_out = function () { go(DOOR.x + 1.6, DOOR.z, 1, 0); }; GA.Areas.ARRIVE.teaser_jumper = function () { go(-9.5, 32.2, 0, 1); }; } }
-    if (GA.Mimi) { var h0 = GA.Mimi.handles, p0 = GA.Mimi.prompt, o0 = GA.Mimi.open; GA.Mimi.handles = function (k) { return /^tz_/.test(k) || h0(k); }; GA.Mimi.prompt = function (cab) { return /^tz_/.test(cab.kind) ? prompt(cab) : p0.apply(this, arguments); }; GA.Mimi.open = function (cab) { return /^tz_/.test(cab.kind) ? open(cab) : o0.apply(this, arguments); };
+    if (GA.Mimi) { var h0 = GA.Mimi.handles, p0 = GA.Mimi.prompt, o0 = GA.Mimi.open; GA.Mimi.handles = function (k) { return /^at_tz_/.test(k) || h0(k); }; GA.Mimi.prompt = function (cab) { return /^at_tz_/.test(cab.kind) ? prompt(cab) : p0.apply(this, arguments); }; GA.Mimi.open = function (cab) { return /^at_tz_/.test(cab.kind) ? open(cab) : o0.apply(this, arguments); };
       if (GA.Mimi.DEST && !GA.Mimi.DEST.some(function (d) { return d[2] === 'tz_door'; })) GA.Mimi.DEST.push(['\uD83C\uDF9F\uFE0F', 'Ratita Teaser Room', 'tz_door']); }
     if (GA.AtticUI) { var m0 = GA.AtticUI.map; GA.AtticUI.map = function (a) { return a === 'teaser' ? { minX: B.minX - 1, maxX: B.maxX + 1, minZ: B.minZ - 1, maxZ: B.maxZ + 1, rooms: [['TEASER ROOM', B.minX, B.maxX, B.minZ, B.maxZ, '#fde047']], marks: function () { return [['\uD83D\uDCC5', cx + 3.2, cz + 2.2], ['\uD83D\uDC00', cx - 1, cz + 0.5], ['\uD83D\uDEAA', B.maxX - 0.6, cz]]; } } : (m0 ? m0(a) : null); }; }
     TZ.built = true;
   }
   function prompt(cab) { var k = cab.kind;
-    if (k === 'tz_door') return { tag: 'COMING SOON', name: 'Ratita Teaser Room', desc: 'Posters for every upcoming game, DLC, remaster and sequel, with estimated release dates.', btn: 'ENTER', key: 'enter', cls: 'npc' };
-    if (k === 'tz_exit') return { tag: 'TEASER ROOM', name: 'Back to the Preview Center', desc: 'Out to Lili\u2019s Preview Center and the Time Jumper.', btn: 'EXIT', key: 'exit', cls: 'npc' };
-    if (k === 'tz_cal') return { tag: 'RATITA INDUSTRIES', name: 'Release Calendar', desc: 'Every upcoming release in order, with links to the Time Jumper.', btn: 'OPEN', key: 'open', cls: 'npc' };
+    if (k === 'at_tz_door') return { tag: 'COMING SOON', name: 'Ratita Teaser Room', desc: 'Posters for every upcoming game, DLC, remaster and sequel, with estimated release dates.', btn: 'ENTER', key: 'enter', cls: 'npc' };
+    if (k === 'at_tz_exit') return { tag: 'TEASER ROOM', name: 'Back to the Preview Center', desc: 'Out to Lili\u2019s Preview Center and the Time Jumper.', btn: 'EXIT', key: 'exit', cls: 'npc' };
+    if (k === 'at_tz_cal') return { tag: 'RATITA INDUSTRIES', name: 'Release Calendar', desc: 'Every upcoming release in order, with links to the Time Jumper.', btn: 'OPEN', key: 'open', cls: 'npc' };
     var it = ITEMS[cab.data.i]; return { tag: it.kind.toUpperCase() + ' \u00b7 EST. ' + it.est.toUpperCase(), name: it.name, desc: it.when + '. ' + it.pet + '.', btn: it.slug ? '\u25B6 PREVIEW' : 'LOOK', key: 'look', cls: 'npc' };
   }
   function open(cab) { var k = cab.kind;
-    if (k === 'tz_door') return GA.Areas.travel('teaser');
-    if (k === 'tz_exit') return GA.Areas.travel('teaser_out');
-    if (k === 'tz_cal') return UI.show();
+    if (k === 'at_tz_door') return GA.Areas.travel('teaser');
+    if (k === 'at_tz_exit') return GA.Areas.travel('teaser_out');
+    if (k === 'at_tz_cal') return UI.show();
     UI.item(cab.data.i);
   }
   // ================= DOM UI =================
