@@ -28,7 +28,7 @@ const PH = { pre: { badge: `🍂 Parade prep · ${daysTo} day${daysTo === 1 ? ''
 
 const canvas = $('c'); initEngine(canvas, new URLSearchParams(location.search).get('q') === 'low' ? 'low' : 'high'); initInput();
 const DTMAX = Math.min(0.15, +(new URLSearchParams(location.search).get('dtmax')) || 0.05); // headless test harness only: lets slow software-GL frames keep real time
-const scene = E.scene; const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0; if (isTouch) document.body.classList.add('touch');
+const scene = E.scene; const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || (window.matchMedia && matchMedia('(pointer: coarse)').matches); const TT = (k, t) => isTouch ? t : k; /* keyboard vs touch hint wording */ if (isTouch) document.body.classList.add('touch');
 setEnvironment(PHASE === 'off' ? { skyTop: 0x6d86a8, skyMid: 0xc9d3dc, skyBot: 0xe6ebef, sunDir: [0.4, 0.45, 0.5], sunColor: 0xe8eef5, sunI: 2.0, hemiSky: 0xdfe8f0, hemiGround: 0x6b6f66, hemiI: 1.0, exposure: 0.85, fog: 0xd8dee4, fogD: 0.006, envI: 0.6, bloomT: 1.0, bloomS: 0.2 } : PHASE === 'day' ? { skyTop: 0x3b78c9, skyMid: 0xf4c28a, skyBot: 0xffe0b0, sunDir: [0.5, 0.62, 0.4], sunColor: 0xffd9a0, sunI: 2.7, hemiSky: 0xffe6c4, hemiGround: 0x7a5a2a, hemiI: 0.95, exposure: 0.9, fog: 0xf3cf9e, fogD: 0.004, envI: 0.7, bloomT: 1.0, bloomS: 0.28 }
   : { skyTop: 0x4a7fbf, skyMid: 0xbcd3e6, skyBot: 0xeadfca, sunDir: [0.4, 0.55, 0.45], sunColor: 0xffe8c4, sunI: 2.3, hemiSky: 0xdfe8f2, hemiGround: 0x6a5a3a, hemiI: 0.9, exposure: 0.86, fog: 0xd9d2c2, fogD: 0.0048, envI: 0.65, bloomT: 1.05, bloomS: 0.2 });
 initMats(); buildWorld(scene, PHASE);
@@ -188,7 +188,7 @@ function judgePie() { const q = pieEv.q - (pieEv.shoo ? 0 : 1); pieEv = null; co
 // ---------------- turkey chase ----------------
 let CH = null; const pumps = [];
 const pumpGeo = new THREE.SphereGeometry(0.5, 14, 10); pumpGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(pumpGeo.attributes.position.count * 3).map((_, j) => [0.94, 0.48, 0.12][j % 3]), 3));
-function startChase() { if (P.mode === 'cook') leaveCook(); CH = { t: 70, stunT: 0, pT: 3, dir: 1, flipT: 0, peckT: 7 }; { const cp = SP.chasePath, k = Math.min(3, cp.length - 1); gob.x = cp[k][0]; gob.z = cp[k][1]; gob.i = (k + 1) % cp.length; } P.mode = 'chase'; talk('Torty', 'Gobbles escaped my Tortuga Tech float! Catch him! Jump the hay bales (Space / ⤒) and dodge rolling pumpkins!'); big('🦃 CATCH GOBBLES!'); sfx('whoosh'); }
+function startChase() { if (P.mode === 'cook') leaveCook(); CH = { t: 70, stunT: 0, pT: 3, dir: 1, flipT: 0, peckT: 7 }; { const cp = SP.chasePath, k = Math.min(3, cp.length - 1); gob.x = cp[k][0]; gob.z = cp[k][1]; gob.i = (k + 1) % cp.length; } P.mode = 'chase'; talk('Torty', 'Gobbles escaped my Tortuga Tech float! Catch him! Jump the hay bales (' + TT('Space', 'tap ⤒') + ') and dodge rolling pumpkins!'); big('🦃 CATCH GOBBLES!'); sfx('whoosh'); }
 function endChase(win) { P.mode = 'walk'; for (const p of pumps) scene.remove(p.m); pumps.length = 0; gob.x = SP.chase.x; gob.z = SP.chase.z; gob.yaw = PI;
   if (win) { S.coins += 35; if (!S.medals.includes('gobble')) S.medals.push('gobble'); S.mood = clamp(S.mood + 5, 0, 100); msg('🦃 Gotcha, Gobbles!', 'You caught Gobbles and walked him back to the Tortuga Tech float. Torty pays you <b>35 🪙</b> and the Gobble Medal!'); sfx('cheer'); }
   else { const fee = Math.min(S.coins, 10); S.coins -= fee; S.mood = clamp(S.mood - 3, 0, 100); msg('💨 Gobbles got away!', `Gobbles knocked over the town's pumpkin display on his way out. Cleanup cost <b>${fee} 🪙</b>.<br>Torty brought him back with a snack. Try again, it's free!`, [['Try again', startChase], ['Later', null, 'ghost']]); sfx('lose'); } }
@@ -231,7 +231,7 @@ function stepParade(dt) { const mv = readMove(); PA.v = clamp(PA.v + mv.y * dt *
     else { PA.hits++; S.float.hp = Math.max(0, S.float.hp - 25); toast(`💥 The balloon hit the arch banner! Float ${S.float.hp}%`, true); sfx('splat'); if (S.float.hp <= 0) return endParade(true); } }
   if (PA.x < SP.paradeEnd) return endParade(false);
   for (const f of folk) if (f.job === 'watch') f.rig.body.position.y = PA.cheer > 0 ? Math.abs(Math.sin(performance.now() / 120 + f.x)) * 0.25 : 0; PA.cheer -= dt;
-  const nx = PA.arches[PA.next]; $('hObj').textContent = `🎈 ${PH.live ? 'LIVE' : 'Practice'} · steer A/D so the balloon fits the banner GAP · W faster / S slower · float ${S.float.hp}%` + (nx ? ` · next arch ${Math.round(PA.x - nx.x)} m` : '');
+  const nx = PA.arches[PA.next]; $('hObj').textContent = `🎈 ${PH.live ? 'LIVE' : 'Practice'} · ${TT('steer A/D so the balloon fits the banner GAP · W faster / S slower', 'drag the thumb-stick left/right to fit the banner GAP · push up faster / down slower')} · float ${S.float.hp}%` + (nx ? ` · next arch ${Math.round(PA.x - nx.x)} m` : '');
   cam.update(dt, { x: PA.x, y: 3.5, z: PA.z, yaw: PI / 2, speed: 0 }, null, { dist: 15, noAuto: true }); }
 function endParade(burst) { P.mode = 'walk'; floatG.visible = false; me.root.visible = true; P.x = SP.workshop.x - 2; P.z = SP.workshop.z; cam.snap = true;
   const tv = PA.cleared * (PH.live ? 12 : 0); if (!burst && PH.live) { S.coins += 15; S.mood = clamp(S.mood + 6, 0, 100); }
@@ -239,7 +239,7 @@ function endParade(burst) { P.mode = 'walk'; floatG.visible = false; me.root.vis
 
 // ---------------- corn maze ----------------
 let MZ = null;
-function startMaze() { if (P.mode === 'cook') leaveCook(); MZ = { t: 120 }; for (const g of gold) { g.got = false; g.m.visible = true; } P.x = SP.mazeIn.x; P.z = SP.mazeIn.z; cam.snap = true; P.mode = 'maze'; big('🌽 Find 3 golden corn, then the exit!'); }
+function startMaze() { if (P.mode === 'cook') leaveCook(); MZ = { t: 120 }; for (const g of gold) { g.got = false; g.m.visible = true; } P.x = SP.mazeIn.x; P.z = SP.mazeIn.z; cam.snap = true; P.mode = 'maze'; big('🌽 Find 3 golden corn, then the exit!' + TT('', ' (thumb-stick to move)')); }
 function stepMaze(dt) { MZ.t -= dt; for (const g of gold) { g.m.rotation.y += dt * 2; if (!g.got && Math.hypot(P.x - g.x, P.z - g.z) < 1.2) { g.got = true; g.m.visible = false; sfx('coin'); toast('🌽 Golden corn!'); } }
   for (const t of mazeT) if (Math.hypot(P.x - t.x, P.z - t.z) < 1 && P.stun <= 0) { P.stun = 0.8; const g = gold.find((q) => q.got); if (g) { g.got = false; g.m.visible = true; toast('A crazy turkey bumped you! You dropped a golden corn back where you found it.', true); } sfx('hurt'); }
   const n = gold.filter((g) => g.got).length; $('hObj').textContent = `🌽 Golden corn ${n}/3 · ⏱ ${Math.ceil(MZ.t)}s`;

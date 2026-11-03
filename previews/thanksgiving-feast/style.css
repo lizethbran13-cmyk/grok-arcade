@@ -61,3 +61,7 @@ body.wip #hud,body.wip #hudR{top:var(--wip,40px)}body.wip #gps{top:calc(150px + 
 /* toast sits below the HUD quest/LIVE box so they never overlap */
 #toast{top:calc(132px + env(safe-area-inset-top))}
 @media (max-width:640px){#toast{top:calc(172px + env(safe-area-inset-top));max-width:92vw}}
+
+/* touch vs keyboard hint wording */
+.tch{display:none}body.touch .tch{display:revert}body.touch .kbd{display:none}
+#cabCv{touch-action:none}
