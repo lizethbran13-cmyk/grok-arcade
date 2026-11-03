@@ -289,7 +289,7 @@ let last = performance.now(), saveT = 0, cropT = 0;
 function step(dt) {
   if (P.mode === 'cook') stepCook(dt); else if (P.mode === 'parade') stepParade(dt); else if (P.mode === 'cab') stepCab(dt);
   else if (!anyModal()) { stepWalk(dt); if (P.mode === 'chase') stepChase(dt); else if (P.mode === 'maze') stepMaze(dt); }
-  stepFlyers(dt); if (RM) RM.step(dt);
+  stepFlyers(dt); if (RM) { RM.step(dt); const ci = RM.inside(); luna.root.visible = !(ci && ci.npcs.some((p) => p.pid === 'luna')); snowie.root.visible = !(ci && ci.npcs.some((p) => p.pid === 'snowie')); candy.root.visible = !(ci && ci.npcs.some((p) => p.pid === 'candy')); } pickTick(dt);
   me.x = P.x; me.z = P.z; me.y = P.y; me.yaw = P.yaw; me.speed = P.speed; me.noTurn = true; animPet(me, dt, null); if (P.stun > 0) me.root.rotation.y += Math.sin(performance.now() / 40) * 0.3;
   // crops regrow (free recovery)
   cropT += dt; if (cropT > 0.5) { for (const c of SP.crops) if (!c.ready) { c.t -= cropT; if (c.t <= 0) { c.ready = true; c.m.visible = true; } } cropT = 0; }
@@ -341,34 +341,98 @@ S = fresh(); hud();
 requestAnimationFrame(loop);
 
 // ---------------- Open House interiors (rooms.js) ----------------
-var RM = null;
-function bakeStart() { if (S.bag.pumpkin < 1 && !S.quests.freeDough) { msg('🥧 Bake-Off', 'Baker Cream needs <b>1 🎃 pumpkin</b> for your pie. Pick one in Torty\'s field (they regrow).'); return; }
-  const free = S.bag.pumpkin < 1; if (free) S.quests.freeDough = 0; else S.bag.pumpkin--; BK = { step: 0, hits: [], x: 0, dir: 1, sp: 1.1, free }; drawBake(); open('bakeUI'); }
-let BK = null; const BSTEP = [['🥣 Roll the crust', 'Stop when the pin is in the gold zone'], ['🎃 Pour the filling', 'Stop right at the fill line'], ['🔥 Bake it', 'Pull it out when it is golden, not burnt']];
-function drawBake() { const st = BSTEP[Math.min(2, BK.step)]; $('bkStep').textContent = `Step ${BK.step + 1}/3: ${st[0]}`; $('bkTip').textContent = st[1]; $('bkHits').textContent = BK.hits.map((h) => h >= 2 ? '⭐' : h ? '👍' : '💥').join(' '); }
-function bakeTick() { requestAnimationFrame(bakeTick); if (!BK || BK.done) return; BK.x += BK.dir * BK.sp * 0.016 * (1 + BK.step * 0.35); if (BK.x > 1) { BK.x = 1; BK.dir = -1; } if (BK.x < 0) { BK.x = 0; BK.dir = 1; } $('bkMark').style.left = (BK.x * 100) + '%'; }
+var RM = null; const Q = () => S.quests || (S.quests = {}); const addMood = (n) => { S.mood = clamp(S.mood + n, 0, 100); };
+// generic timing bar (Bake-Off, apple bobbing, balloon pump)
+let BK = null;
+function timing(title, steps, done, sp = 1.1) { BK = { steps, done, step: 0, hits: [], x: 0, dir: 1, sp }; $('bkTitle').textContent = title; drawBake(); open('bakeUI'); }
+function drawBake() { const st = BK.steps[Math.min(BK.steps.length - 1, BK.step)]; $('bkStep').textContent = `Step ${Math.min(BK.step + 1, BK.steps.length)}/${BK.steps.length}: ${st[0]}`; $('bkTip').textContent = st[1]; $('bkHits').textContent = BK.hits.map((h) => h >= 2 ? '⭐' : h ? '👍' : '💥').join(' '); }
+function bakeTick() { requestAnimationFrame(bakeTick); if (!BK || BK.fin) return; BK.x += BK.dir * BK.sp * 0.016 * (1 + BK.step * 0.35); if (BK.x > 1) { BK.x = 1; BK.dir = -1; } if (BK.x < 0) { BK.x = 0; BK.dir = 1; } $('bkMark').style.left = (BK.x * 100) + '%'; }
 requestAnimationFrame(bakeTick);
-function bakeHit() { if (!BK || BK.done) return; const d = Math.abs(BK.x - 0.5); const h = d < 0.06 ? 2 : d < 0.16 ? 1 : 0; BK.hits.push(h); sfx(h ? 'coin' : 'whoosh'); BK.step++;
-  if (BK.step < 3) { drawBake(); return; } BK.done = true; drawBake(); const sc = BK.hits.reduce((a, b) => a + b, 0);
-  const rib = sc >= 5 ? ['🥇 BLUE RIBBON', 25] : sc >= 3 ? ['🥈 Red ribbon', 12] : sc >= 2 ? ['🥉 White ribbon', 5] : null;
-  setTimeout(() => { close('bakeUI'); if (rib) { S.ribbons++; S.coins += rib[1]; S.dishes.push('pie'); S.mood = Math.min(100, S.mood + 5); sfx('cheer'); msg('🥧 Bake-Off result', `${rib[0]}! +${rib[1]} 🪙 and your pie goes in your feast basket 🍽️. Ribbons won: <b>${S.ribbons}</b>`); talk('Baker Cream', sc >= 5 ? 'Squeak! That crust is flaky perfection!' : sc >= 3 ? 'Lovely pie! A touch more gold next time.' : 'It held together! Practice makes perfect.'); }
-    else { S.quests.freeDough = 1; S.mood = Math.max(0, S.mood - 5); msg('💥 Pie flop!', 'The pie burned and the pumpkin is gone (−5 😊). Baker Cream gives you <b>one free practice dough</b>, so your next try costs no pumpkin.'); }
-    save(); BK = null; }, 900); }
+function bakeHit() { if (!BK || BK.fin) return; const d = Math.abs(BK.x - 0.5); const h = d < 0.06 ? 2 : d < 0.16 ? 1 : 0; BK.hits.push(h); sfx(h ? 'coin' : 'whoosh'); BK.step++; drawBake();
+  if (BK.step < BK.steps.length) return; BK.fin = true; const k = BK; setTimeout(() => { close('bakeUI'); BK = null; k.done(k.hits.reduce((a, b) => a + b, 0), k.hits); save(); }, 900); }
 $('bkGo').onclick = bakeHit; addEventListener('keydown', (e) => { if (BK && (e.code === 'Space' || e.code === 'Enter')) { e.preventDefault(); bakeHit(); } });
+// generic quick-pick game (sorting belt, diner orders)
+let PK = null;
+function pickGame(title, rounds, per, done) { PK = { rounds, per, done, i: 0, score: 0, t: per }; $('pkTitle').textContent = title; drawPick(); open('pickUI'); }
+function drawPick() { const r = PK.rounds[PK.i]; $('pkShow').textContent = r.show; $('pkPrompt').textContent = r.prompt; $('pkScore').textContent = `${PK.i + 1}/${PK.rounds.length} · ✅ ${PK.score}`;
+  const w = $('pkOpts'); w.innerHTML = ''; r.opts.forEach((o, j) => { const e = document.createElement('button'); e.className = 'primary'; e.textContent = o; e.onclick = () => pickAns(j); w.appendChild(e); }); PK.t = PK.per; }
+function pickAns(j) { if (!PK) return; const ok = j === PK.rounds[PK.i].ans; if (ok) { PK.score++; sfx('coin'); } else sfx('whoosh'); PK.i++; if (PK.i < PK.rounds.length) { drawPick(); return; }
+  const k = PK; PK = null; close('pickUI'); k.done(k.score, k.rounds.length); save(); }
+function pickTick(dt) { if (!PK) return; if (!$('pickUI').classList.contains('on')) { PK = null; return; } PK.t -= dt; $('pkBar').style.width = Math.max(0, PK.t / PK.per * 100) + '%'; if (PK.t <= 0) pickAns(-1); }
+// --- Bakery
+function bakeStart() { if (S.bag.pumpkin < 1 && !Q().freeDough) { msg('🥧 Bake-Off', 'Baker Cream needs <b>1 🎃 pumpkin</b> for your pie. Pick one in Torty\'s field (they regrow).'); return; }
+  if (S.bag.pumpkin < 1) Q().freeDough = 0; else S.bag.pumpkin--;
+  timing('🥧 Hollow Bake-Off', [['🥣 Roll the crust', 'Stop when the pin is in the gold zone'], ['🎃 Pour the filling', 'Stop right at the fill line'], ['🔥 Bake it', 'Pull it out when it is golden, not burnt']], (sc) => {
+    const rib = sc >= 5 ? ['🥇 BLUE RIBBON', 25] : sc >= 3 ? ['🥈 Red ribbon', 12] : sc >= 2 ? ['🥉 White ribbon', 5] : null;
+    if (rib) { S.ribbons = (S.ribbons || 0) + 1; S.coins += rib[1]; S.dishes.push('pie'); addMood(5); sfx('cheer'); msg('🥧 Bake-Off result', `${rib[0]}! +${rib[1]} 🪙 and your pie goes in your feast basket 🍽️. Ribbons won: <b>${S.ribbons}</b>`); talk('Baker Cream', sc >= 5 ? 'Squeak! That crust is flaky perfection!' : sc >= 3 ? 'Lovely pie! A touch more gold next time.' : 'It held together! Practice makes perfect.'); RM.refresh(); }
+    else { Q().freeDough = 1; addMood(-5); msg('💥 Pie flop!', 'The pie burned and the pumpkin is gone (−5 😊). Baker Cream gives you <b>one free practice dough</b>, so your next try costs no pumpkin.'); } }); }
+// --- Barn
 function toolShop() { const it = [['rake', '🪮 Golden Rake', 30, 'Clears any leaf pile in one swipe'], ['basket', '🧺 Big Basket', 25, 'Every crop you pick counts double']];
   msg("🛠️ Torty's Tools", it.map(([k, n, c, d]) => `<b>${n}</b> ${S.tools[k] ? '✅ owned' : c + ' 🪙'}<br><small>${d}</small>`).join('<br><br>') + `<br><br>You have ${S.coins} 🪙`,
     it.filter(([k]) => !S.tools[k]).map(([k, n, c]) => [`Buy ${n.split(' ').slice(1).join(' ')} (${c})`, () => { if (S.coins < c) { toast('Not enough 🪙. Rake leaves or win the Bake-Off!'); return; } S.coins -= c; S.tools[k] = 1; sfx('coin'); save(); toast(n + ' is yours!'); }]).concat([['Close', null, 'ghost']])); }
-function jamQuest() { const q = S.quests; if (q.jam === 2) { talk('Farmhand Brownie', "Torty's cranberry jam is bubbling away. Thank you, neighbour!"); return; }
+function jamQuest() { const q = Q(); if (q.jam === 2) { talk('Farmhand Brownie', "Torty's cranberry jam is bubbling away. Thank you, neighbour!"); return; }
   if (!q.jam) { q.jam = 1; save(); talk('Farmhand Brownie', "Torty wants to make cranberry jam for the feast. Can you bring 5 🍒 cranberries? Cranberry Co. and the field have them.", 6); return; }
-  if (S.bag.cranberry >= 5) { S.bag.cranberry -= 5; q.jam = 2; S.coins += 20; S.mood = Math.min(100, S.mood + 8); S.dishes.push('sauce'); sfx('cheer'); save(); msg('🍒 Quest complete!', "Torty's jam is done! +20 🪙, +8 😊, and a jar of 🍒 cranberry sauce for your feast."); }
+  if (S.bag.cranberry >= 5) { S.bag.cranberry -= 5; q.jam = 2; S.coins += 20; addMood(8); S.dishes.push('sauce'); sfx('cheer'); save(); msg('🍒 Quest complete!', "Torty's jam is done! +20 🪙, +8 😊, and a jar of 🍒 cranberry sauce for your feast."); }
   else talk('Farmhand Brownie', `Still need ${5 - S.bag.cranberry} more 🍒. They regrow in the field!`); }
+// --- Pumpkin shop
+function sellCrops() { const PR = { pumpkin: 3, corn: 2, potato: 2, cranberry: 1 }; const tot = Object.keys(PR).reduce((a, k) => a + S.bag[k] * PR[k], 0);
+  msg('🧺 Sell crops to Rose', Object.keys(PR).map((k) => `${ICON[k]} ${k}: ${S.bag[k]} × ${PR[k]} 🪙`).join('<br>') + '<br><br><small>Keep what you need for cooking! Crops regrow in the field.</small>',
+    Object.keys(PR).filter((k) => S.bag[k] > 0).map((k) => [`Sell 1 ${ICON[k]} (+${PR[k]})`, () => { S.bag[k]--; S.coins += PR[k]; sfx('coin'); save(); sellCrops(); }]).concat(tot ? [] : []).concat([['Done', null, 'ghost']])); }
+function carve() { if (S.bag.pumpkin < 1) { talk('Shopkeeper Rose', 'You need a 🎃 pumpkin to carve. Torty\'s field always has some!'); return; }
+  const EY = ['▲ ▲ triangle eyes', '● ● round eyes', '✦ ✦ star eyes'], MO = ['😁 big grin', '〰️ zig-zag', '😮 spooky O'];
+  msg('🔪 Carve: pick the eyes', 'Rose holds the pumpkin steady…', EY.map((e, i) => [e, () => msg('🔪 Carve: pick the mouth', 'Almost done!', MO.map((m, j) => [m, () => {
+    S.bag.pumpkin--; S.lantern = EY[i].split(' ')[0] + MO[j].split(' ')[0]; S.coins += 6; addMood(4); sfx('cheer'); save(); msg('🎃 Jack-o’-lantern!', `You carved ${EY[i]} with a ${MO[j]}! +6 🪙 +4 😊<br>It now glows on the toy chest in <b>Pi-rat's Home</b>.`); }]))])); }
+// --- Cranberry Co.
+function sortBelt() { const bad = ['🍂', '🪨', '🐛', '🟤']; const rounds = Array.from({ length: 12 }, () => { const good = R() < 0.6; return { show: good ? '🍒' : bad[(R() * 4) | 0], prompt: good ? 'A berry rolls by…' : 'Something rolls by…', opts: ['✅ Keep', '🗑️ Toss'], ans: good ? 0 : 1 }; });
+  pickGame('🍒 Sorting Belt', rounds, 1.8, (sc, n) => { if (sc >= 10) { S.bag.cranberry += 4; S.coins += 8; Q().sort = 2; sfx('cheer'); msg('🍒 Great sorting!', `${sc}/${n} right! Foreman Blue pays you <b>4 🍒 + 8 🪙</b>.`); }
+    else if (sc >= 7) { S.bag.cranberry += 2; S.coins += 3; Q().sort = Q().sort || 1; msg('🍒 Not bad!', `${sc}/${n} right. You get 2 🍒 + 3 🪙. Hit 10 for the full bonus.`); }
+    else { addMood(-3); S.bag.cranberry += 1; msg('💥 Belt jam!', `Only ${sc}/${n}. The belt jammed (−3 😊). Foreman Blue still hands you 1 🍒 for trying. Have another go any time!`); } }); }
+// --- Cider barn
+function bobApples() { timing('🍎 Apple Bobbing', [['🍎 Dunk 1', 'Dive when the apple floats into the gold zone'], ['🍏 Dunk 2', 'Faster now!'], ['🍎 Dunk 3', 'Last one, it is slippery!']], (sc, hits) => { const ap = hits.filter((h) => h).length;
+    if (ap) { S.coins += ap * 4; addMood(ap * 2); Q().bob = Math.max(Q().bob || 0, ap); sfx('cheer'); msg('🍎 Apple Bobbing', `You caught <b>${ap}</b> apple${ap > 1 ? 's' : ''}! +${ap * 4} 🪙 +${ap * 2} 😊`); }
+    else { addMood(-4); Q().towel = 1; msg('💦 Soaked!', 'No apples, just a very wet face (−4 😊). Cider Brie hands you a towel and a <b>free mug of hot cider</b>.'); } }, 1.3); }
+function buyCider() { const free = Q().towel; if (!free && S.coins < 3) { toast('Need 3 🪙'); return; } if (free) Q().towel = 0; else S.coins -= 3; addMood(5); sfx('pop'); toast(free ? '☕ Free hot cider! +5 😊' : '☕ Warm spiced cider! +5 😊'); }
+// --- Diner
+function serveDiner() { const D2 = [['🥧', 'pumpkin pie'], ['🥔', 'mashed potatoes'], ['🌽', 'cornbread'], ['🍒', 'cranberry sauce']]; const who = ['Snowie', 'Mrs. Rose', 'Old Ash', 'Little Brie', 'Mayor Gold'];
+  const rounds = Array.from({ length: 3 }, (_, i) => { const a = (R() * 4) | 0; return { show: '🐀💬', prompt: `${who[(i + ((R() * 5) | 0)) % 5]}: "One ${D2[a][1]}, please!"`, opts: D2.map((d) => d[0]), ans: a }; });
+  pickGame('🍽️ Lunch Rush', rounds, 4, (sc) => { if (sc === 3) { S.coins += 15; addMood(4); Q().diner = 2; sfx('cheer'); msg('🍽️ Perfect service!', 'All 3 orders right! +15 🪙 in tips.'); }
+    else if (sc === 2) { S.coins += 8; Q().diner = Q().diner || 1; msg('🍽️ Good shift', '2 of 3 orders right. +8 🪙 in tips.'); }
+    else { addMood(-5); msg('😤 Grumpy customers', `Only ${sc}/3 right and they left without tipping (−5 😊). Cook Ash gives you a <b>free staff meal</b> (+3 😊). Try the next rush!`, [['Thanks, Ash', () => addMood(3)]]); } }); }
+// --- Town Hall
+function questBoard() { const q = Q(); const L = [['🍒 Torty\'s jam (Barn)', q.jam === 2], ['🥇 Win a Bake-Off ribbon', (S.ribbons || 0) > 0], ['🍒 Sort 10 berries (Cranberry Co.)', q.sort === 2], ['🍎 Bob 3 apples (Cider Barn)', (q.bob || 0) >= 3], ['🍽️ Perfect lunch rush (Diner)', q.diner === 2], ['📜 Luna\'s lost recipe', q.recipe === 2], ['🎃 Carve a jack-o\'-lantern', !!S.lantern], [`🌰 Golden acorns ${(S.acorns || []).length}/20`, (S.acorns || []).length >= 20], [`🛂 Open House stamps ${(S.stamps || []).length}/10`, (S.stamps || []).length >= 10]];
+  msg('📋 Quest Board', L.map(([t, d]) => `${d ? '✅' : '⬜'} ${t}`).join('<br>')); }
+function mayor() { const st = (S.stamps || []).length; if (st >= 10 && !S.medals.includes('openhouse')) { S.medals.push('openhouse'); S.coins += 30; addMood(10); sfx('cheer'); save(); RM.refresh(); msg('🏅 Open House Medal!', 'You visited every building in Harvest Hollow! Mayor Gold pins the <b>Open House Medal</b> on you. +30 🪙 +10 😊'); }
+  else talk('Mayor Gold', S.medals.includes('openhouse') ? 'Our most neighbourly visitor! Your medal is in the case.' : `Welcome to the Open House! Get a stamp in every building: ${st}/10 so far. Bring me all 10 for a medal.`, 5); }
+// --- Workshop
+function balloonPump() { const f = S.float; if (f.hp >= 100) { talk('Mechanic Black', 'Your balloon is full and the float is shiny. Go practice the parade!'); return; }
+  timing('🎈 Balloon Pump', [['💨 Pump 1', 'Pump in the gold zone, not too hard'], ['💨 Pump 2', 'Keep the rhythm'], ['💨 Pump 3', 'Careful, do not pop it!']], (sc) => { if (sc >= 3) { f.hp = 100; S.coins += 4; sfx('cheer'); msg('🎈 Fully inflated!', 'Float fixed up to 100% for free, plus +4 🪙 from Mechanic Black.'); }
+    else if (sc >= 1) { f.hp = Math.min(100, f.hp + 25); msg('🎈 Half pumped', `Float patched +25% (now ${f.hp}%). Try again for the rest.`); } else { f.hp = Math.max(10, f.hp - 10); addMood(-3); msg('💥 POP!', 'The balloon popped (−10% float, −3 😊). Mechanic Black has a spare, so you can pump again right away.'); } }); }
+// --- Luna's home: lost recipe
+function lunaRecipe() { const q = Q(), n = (S.pages || []).length; if (q.recipe === 2) { talk('Luna', 'My Harvest Cornbread recipe is safe again, thanks to you!'); return; }
+  if (!q.recipe) { q.recipe = 1; S.pages = []; save(); RM.refresh(); talk('Luna', 'Oh no, the wind blew my grandma\'s cornbread recipe away! 3 pages landed in the Town Hall, the Diner and the Cider Barn. Could you find them?', 7); return; }
+  if (n >= 3) { q.recipe = 2; S.coins += 20; addMood(8); S.dishes.push('bread'); sfx('cheer'); save(); msg('📜 Recipe found!', 'Luna bakes her grandma\'s <b>Harvest Cornbread</b> and gives you a loaf for the feast 🌽. +20 🪙 +8 😊'); }
+  else talk('Luna', `${n}/3 pages so far. Try the Town Hall, the Diner and the Cider Barn.`); }
+// --- Pi-rat's home
+function decorShop() { const it = [['garland', '🍂 Leaf garland', 8], ['quilt', '🧶 Harvest quilt', 10], ['lights', '✨ Fairy lights', 12], ['wreath', '🌾 Door wreath', 6]]; const dc = S.decor || (S.decor = {});
+  msg('🏠 Decorate your home', it.map(([k, n, c]) => `${dc[k] ? '✅' : '⬜'} ${n} ${dc[k] ? '' : c + ' 🪙'}`).join('<br>') + (S.lantern ? '<br>✅ 🎃 Your jack-o\'-lantern' : '<br>⬜ 🎃 Carve one at the Pumpkin Patch Shop') + `<br><br>You have ${S.coins} 🪙`,
+    it.filter(([k]) => !dc[k]).map(([k, n, c]) => [`${n.split(' ')[0]} ${c}`, () => { if (S.coins < c) { toast('Not enough 🪙'); return; } S.coins -= c; dc[k] = 1; addMood(3); sfx('cheer'); save(); RM.refresh(); toast(n + ' put up! +3 😊'); }]).concat([['Done', null, 'ghost']])); }
+let napT = 0; function nap() { const now = performance.now(); if (now - napT < 60000) { talk('Pi-rat', 'Not sleepy yet… maybe later.'); return; } napT = now; addMood(10); sfx('pop'); big('💤 Cozy nap… +10 😊'); }
 RM = initRooms({ scene: E.scene, P, cam, S: new Proxy({}, { get: (_, k) => S[k], set: (_, k, v) => { S[k] = v; return true; } }), sfx, toast, talk, msg, makePet, animPet,
+  onEnter: (id) => { S.stamps = S.stamps || []; if (!S.stamps.includes(id)) { S.stamps.push(id); S.coins += 2; save(); setTimeout(() => toast(`🛂 Open House stamp ${S.stamps.length}/10! +2 🪙`), 900); } },
   roomSpots: (c) => { const o = []; const at = (x, z, r, label, f) => o.push({ x: c.ox + x, z: c.oz + z, r, label, f });
-    if (c.id === 'barn') { at(4, -3.0, 1.6, "🛠️ Torty's Tools shop", toolShop); at(3.8, -2.4, 1.0, S.quests.jam === 1 ? '🍒 Give cranberries to Brownie' : '🐀 Talk to Farmhand Brownie', jamQuest);
-      at(-5.8, 3.6, 1.5, '🌽 Feed the barn goats (1 corn)', () => { if (S.bag.corn < 1) { talk('Luna', 'The goats want corn. There is plenty growing in the field!'); return; } S.bag.corn--; S.coins += 3; S.mood = Math.min(100, S.mood + 2); sfx('pop'); toast('🐐 Munch munch! +3 🪙 +2 😊'); });
-      at(-3.2, 1.2, 1.4, '🐀 Talk to Luna', () => talk('Luna', S.acorns.length ? `You've found ${S.acorns.length}/20 golden acorns! One more is tucked up in this barn somewhere.` : 'Psst… golden acorns are hidden all over Harvest Hollow. Try the hay bales!')); }
+    if (c.id === 'barn') { at(4, -3.0, 1.6, "🛠️ Torty's Tools shop", toolShop); at(3.8, -2.4, 1.0, Q().jam === 1 ? '🍒 Give cranberries to Brownie' : '🐀 Talk to Farmhand Brownie', jamQuest);
+      at(-5.8, 3.6, 1.5, '🌽 Feed the barn goats (1 corn)', () => { if (S.bag.corn < 1) { talk('Luna', 'The goats want corn. There is plenty growing in the field!'); return; } S.bag.corn--; S.coins += 3; addMood(2); sfx('pop'); toast('🐐 Munch munch! +3 🪙 +2 😊'); });
+      at(-3.2, 1.2, 1.4, '🐀 Talk to Luna', () => talk('Luna', (S.acorns || []).length ? `You've found ${S.acorns.length}/20 golden acorns! Every building hides one.` : 'Psst… golden acorns are hidden all over Harvest Hollow. Try the hay bales!')); }
     if (c.id === 'bakery') { at(0.2, -1.4, 1.5, '🥧 Bake-Off with Baker Cream', bakeStart);
-      at(3.2, -0.5, 1.4, '🍰 Buy a pie slice (4 🪙)', () => { if (S.coins < 4) { toast('Need 4 🪙'); return; } S.coins -= 4; S.mood = Math.min(100, S.mood + 6); sfx('pop'); toast('🍰 Yum! +6 😊'); });
+      at(3.2, -0.5, 1.4, '🍰 Buy a pie slice (4 🪙)', () => { if (S.coins < 4) { toast('Need 4 🪙'); return; } S.coins -= 4; addMood(6); sfx('pop'); toast('🍰 Yum! +6 😊'); });
       at(-2.6, 3.0, 1.3, '🐀 Talk to Snowie', () => talk('Snowie', S.ribbons ? `Ooh, ${S.ribbons} ribbon${S.ribbons > 1 ? 's' : ''}! Your pies are the talk of the Hollow.` : 'I come here every morning for the crumbs. Win a ribbon at the Bake-Off!')); }
+    if (c.id === 'pumpkin') { at(3.6, -2.6, 1.6, '🧺 Sell crops to Rose', sellCrops); at(-1.2, -2.3, 1.6, '🔪 Carve a jack-o\'-lantern (1 🎃)', carve); }
+    if (c.id === 'cranberry') { at(-1, -2.2, 1.8, '🍒 Work the sorting belt', sortBelt); at(4.2, -1.2, 1.2, '🐀 Talk to Foreman Blue', () => talk('Foreman Blue', 'Keep the berries, toss the leaves and bugs. Ten right earns the bonus!')); }
+    if (c.id === 'cider') { at(-0.4, 0.3, 1.6, '🍎 Bob for apples', bobApples); at(2.6, 1.4, 1.3, Q().towel ? '☕ Free hot cider' : '☕ Buy hot cider (3 🪙)', buyCider); }
+    if (c.id === 'hall') { at(-5.8, -0.5, 1.6, '📋 Read the quest board', questBoard); at(0, -2.4, 1.4, '🐀 Talk to Mayor Gold', mayor); at(-4.2, 3.4, 1.5, '🐶 Pet Candy', () => { addMood(1); sfx('pop'); talk('Candy', 'Ruff! *happy schnauzer wiggle*'); }); }
+    if (c.id === 'diner') { at(-1, -1.6, 1.6, '🍽️ Serve the lunch rush', serveDiner); at(4.4, 1.4, 1.3, '🐀 Talk to Snowie', () => talk('Snowie', 'Same booth every day! The cranberry sauce here is the best in town.')); }
+    if (c.id === 'workshop') { at(4.6, -3.0, 1.6, '🎨 Parade Builder bench', openDesign); at(4.0, 1.5, 1.4, '🎈 Pump up the balloon', balloonPump); }
+    if (c.id === 'luna') { at(-0.2, 1.2, 1.5, Q().recipe === 1 && (S.pages || []).length >= 3 ? '📜 Give Luna the recipe pages' : '🐀 Talk to Luna', lunaRecipe); }
+    if (c.id === 'pirat') { at(2.0, -3.4, 1.6, '🏠 Decorate your home', decorShop); at(-5.4, -1.3, 1.5, '💤 Take a cozy nap', nap); }
     return o; } });
-window.__oh = { RM, P, cam, E, get S() { return S; }, get near() { return near; }, bakeHit };
+window.__oh = { RM, P, cam, E, get S() { return S; }, get near() { return near; }, bakeHit, pickAns, get PK() { return PK; } };

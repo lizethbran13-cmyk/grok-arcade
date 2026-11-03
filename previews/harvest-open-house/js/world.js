@@ -116,7 +116,8 @@ export function buildWorld(scene, phase) {
     cart(b, -6.5, 22, 0, 'apples'); cart(b, 6.5, 22, PI, 'hay'); }
   // ---- street of houses around square
   const hc = [0xe9d3b0, 0xc2703d, 0xf1e4c8, 0x9c6b45, 0xd9b38c];
-  [[-22, -14, 0], [-22, 14, PI], [22, -14, 0], [22, 14, PI], [-12, -22, 0], [12, -22, 0]].forEach(([x, z, ry], i) => house(b, scene, x, z, 7, 6, i === 4 ? 0xf5d0a9 : hc[i % 5], 0x7c2d12, ry, i === 4 ? 'HOLLOW BAKERY' : undefined));
+  [[-22, -14, 0], [-22, 14, PI], [22, -14, 0], [22, 14, PI], [-12, -22, 0], [12, -22, 0]].forEach(([x, z, ry], i) => house(b, scene, x, z, 7, 6, [0xf4a25a, 0xc7d2fe, 0xfbe4e4, 0xfce7f3, 0xf5d0a9, 0xe7e5e4][i], 0x7c2d12, ry, ['PUMPKIN SHOP', "LUNA'S HOME", 'CRANBERRY CO.', "PI-RAT'S HOME", 'HOLLOW BAKERY', 'TOWN HALL'][i]));
+  house(b, scene, 40, -9, 8, 6, 0x9a3412, 0x3f1d0b, 0, 'CIDER BARN'); house(b, scene, 54, -9, 8, 6, 0xfef3c7, 0xdc2626, 0, 'HOLLOW DINER');
   // ---- Chef Mimo's Ratita Kitchen (north)
   { const kx = 0, kz = -42, w = 16, d = 12; b.box('m', 0xf1e4c8, kx, 0, kz - d / 2, w, 5, 0.4); b.box('m', 0xf1e4c8, kx - w / 2, 0, kz, 0.4, 5, d); b.box('m', 0xf1e4c8, kx + w / 2, 0, kz, 0.4, 5, d);
     b.box('m', 0xf1e4c8, kx - 5, 0, kz + d / 2, 6, 5, 0.4); b.box('m', 0xf1e4c8, kx + 5, 0, kz + d / 2, 6, 5, 0.4); b.box('m', 0xf1e4c8, kx, 3.2, kz + d / 2, 4, 1.8, 0.4);
