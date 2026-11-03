@@ -321,9 +321,10 @@
       "game": "arcade",
       "name": "Candy's RuffSources Rescue",
       "size": "New Game",
-      "what": "Candy leads rescues for the pups of RuffSources.",
-      "stage": "queued",
-      "when": "Queued · est. December"
+      "what": "Building now (Turbo engine): play Candy the miniature schnauzer in third person around Pawsville. Rescue pups stuck in trees (ladder climb timing), lost pups (sniff the trail), pups caught by haywire Ratita gadgets (hit the OFF switch) and pups stuck in fences. Drive the RuffSources rescue van, buy tools, and bring pups home to the cozy shelter: dog beds, bone table, treat machine and the Employee of the Month: Candy sign. Missed timers cost reputation, with Torty’s free shuttle to recover. Luna, Pi-rat, Snowie and Torty cameo. New bonus cabinet #49 Pup Drop Catch.",
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "previewUrl": "previews/candy-ruffsources-rescue/"
     },
     {
       "key": "edu-field-trips",
@@ -938,7 +939,17 @@
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [],
+  "previews": [
+    {
+      "id": "candy-ruffsources-rescue",
+      "game": "arcade",
+      "name": "Candy's RuffSources Rescue",
+      "url": "previews/candy-ruffsources-rescue/",
+      "playable": true,
+      "built": "2026-11-02",
+      "notes": "4 mission types, rescue van + tools, cozy shelter upgrades, bonus cabinet #49 Pup Drop Catch (preview only)"
+    }
+  ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
     {
