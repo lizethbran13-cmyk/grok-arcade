@@ -288,7 +288,7 @@
   // the Ratita Post crew lives at Mailville Center; cameos at the other stations
   function buildCrew() {
     var r = W[0].root, c = new THREE.Group(); r.add(c); W[0].crew = c;
-    rat(c, 0, -2.6, 0, '#8b5a2b', true, true); sign(2.2, 0.5, function (g, w, h) { g.fillStyle = '#1d4ed8'; g.fillRect(0, 0, w, h); txt(g, 'POSTMASTER PI-RAT', w / 2, h / 2, '#fff', 26, w - 10); }, c, 0, 1.5, -2.6, 0);
+    W[0].pirat = rat(c, 0, -2.6, 0, '#8b5a2b', true, true); W[0].piratSign = sign(2.2, 0.5, function (g, w, h) { g.fillStyle = '#1d4ed8'; g.fillRect(0, 0, w, h); txt(g, 'POSTMASTER PI-RAT', w / 2, h / 2, '#fff', 26, w - 10); }, c, 0, 1.5, -2.6, 0);
     rat(c, -6.5, -1.6, 0.4, '#6b7280'); sign(1.6, 0.4, function (g, w, h) { g.fillStyle = '#111827'; g.fillRect(0, 0, w, h); txt(g, 'LUNA \u00b7 sorting', w / 2, h / 2, '#e5e7eb', 26, w - 10); }, c, -6.5, 1.3, -1.6, 0);
     rat(c, 6.5, -2.2, -0.5, '#f8fafc'); sign(1.6, 0.4, function (g, w, h) { g.fillStyle = '#111827'; g.fillRect(0, 0, w, h); txt(g, 'SNOWIE \u00b7 same-day', w / 2, h / 2, '#fff', 26, w - 10); }, c, 6.5, 1.3, -2.2, 0);
     schnauzer(c, -5, 7.2, 0.3); sign(1.6, 0.4, function (g, w, h) { g.fillStyle = '#111827'; g.fillRect(0, 0, w, h); txt(g, 'CANDY \u00b7 2-day', w / 2, h / 2, '#fff', 26, w - 10); }, c, -5, 1.8, 7.2, 0);
@@ -301,7 +301,7 @@
   }
   // camera: drag to orbit, wheel/pinch to zoom, glides to the selected station
   var yaw = 0.5, pitch = 0.78, dist = 46, tgt = new THREE.Vector3(0, 0, 0), want = new THREE.Vector3(0, 0, 0);
-  function focus(i) { var L = LOT[ORDER[i]]; want.set(L[0], 0, L[1]); dist = 42; }
+  function focus(i) { var L = LOT[ORDER[i]]; if (walk) return; want.set(L[0], 0, L[1]); dist = 42; }
   var drag = null, pts = {};
   cv.addEventListener('pointerdown', function (e) { pts[e.pointerId] = [e.clientX, e.clientY]; drag = { x: e.clientX, y: e.clientY, moved: 0 }; });
   addEventListener('pointermove', function (e) { if (!drag || !pts[e.pointerId]) return; var ids = Object.keys(pts);
@@ -309,6 +309,40 @@
     var dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY; drag.moved += Math.abs(dx) + Math.abs(dy); yaw -= dx * 0.006; pitch = Math.max(0.35, Math.min(1.35, pitch + dy * 0.004)); pts[e.pointerId] = [e.clientX, e.clientY]; });
   addEventListener('pointerup', function (e) { delete pts[e.pointerId]; if (drag && drag.moved < 6 && S && e.target === cv) pick(e); if (!Object.keys(pts).length) drag = null; });
   cv.addEventListener('wheel', function (e) { dist = Math.max(18, Math.min(110, dist * (e.deltaY > 0 ? 1.1 : 0.9))); e.preventDefault(); }, { passive: false });
+  // ---- WALK MODE: play as Postmaster Pi-rat (WASD/arrows or on-screen joystick) ----
+  var walk = false, me = null, keys = {}, joy = { id: null, x: 0, y: 0, cx: 0, cy: 0 };
+  function setWalk(on) { walk = on; var b = $('walkB'); if (b) b.textContent = on ? '\uD83D\uDDFA Map View' : '\uD83D\uDC00 Walk Around';
+    if (!me) { me = rat(scene, 0, 0, 0, '#8b5a2b', true, true); me.scale.set(1.6, 1.6, 1.6); var L0 = LOT[ORDER[S ? S.sel : 0]]; me.position.set(L0[0], 0, L0[1] + 4); }
+    me.visible = on; if (W[0].pirat) W[0].pirat.visible = !on; if (W[0].piratSign) W[0].piratSign.visible = !on;
+    $('joy').style.display = on && ('ontouchstart' in window || navigator.maxTouchPoints > 0) ? 'block' : 'none';
+    $('hint').textContent = on ? 'WASD / arrows (or joystick) to walk \u00b7 drag to turn \u00b7 walk into a station to open it' : 'Drag to look around \u00b7 tap a station on the map or in the list';
+    var tch = 'ontouchstart' in window || navigator.maxTouchPoints > 0; $('log').style.display = on && tch ? 'none' : ''; if (tch && on) $('hint').textContent = 'Joystick to walk · drag to turn';
+    if (on) { dist = 24; pitch = 0.8; } else { dist = 42; pitch = 0.78; } }
+  addEventListener('keydown', function (e) { var k = e.key.toLowerCase(); if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'].indexOf(k) < 0) return;
+    if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return; keys[k] = 1; if (S && !walk && $('ov').style.display === 'none') setWalk(true); if (walk) e.preventDefault(); });
+  addEventListener('keyup', function (e) { delete keys[e.key.toLowerCase()]; });
+  addEventListener('blur', function () { keys = {}; });
+  (function () { var j = document.createElement('div'); j.id = 'joy'; j.innerHTML = '<div id="joyK"></div>'; document.body.appendChild(j);
+    var b = document.createElement('button'); b.id = 'walkB'; b.className = 'btn y'; b.textContent = '\uD83D\uDC00 Walk Around'; document.body.appendChild(b);
+    b.addEventListener('click', function () { if (S) setWalk(!walk); });
+    j.addEventListener('pointerdown', function (e) { e.stopPropagation(); joy.id = e.pointerId; var r = j.getBoundingClientRect(); joy.cx = r.left + r.width / 2; joy.cy = r.top + r.height / 2; try { j.setPointerCapture(e.pointerId); } catch (x) {} jm(e); });
+    function jm(e) { if (e.pointerId !== joy.id) return; var dx = e.clientX - joy.cx, dy = e.clientY - joy.cy, m = Math.hypot(dx, dy), R = 45; if (m > R) { dx *= R / m; dy *= R / m; } joy.x = dx / R; joy.y = dy / R; $('joyK').style.transform = 'translate(' + dx + 'px,' + dy + 'px)'; }
+    j.addEventListener('pointermove', function (e) { e.stopPropagation(); jm(e); });
+    function je(e) { if (e.pointerId !== joy.id) return; joy.id = null; joy.x = joy.y = 0; $('joyK').style.transform = ''; }
+    j.addEventListener('pointerup', je); j.addEventListener('pointercancel', je); })();
+  function solid(x, z) { for (var i = 0; i < 5; i++) { var L = LOT[ORDER[i]], st = S && S.st[i]; if (!st || st.own === 'none') continue;
+      for (var k in SLOTS) { var q = SLOTS[k]; if (!st.b[k]) continue; if (Math.abs(x - L[0] - q[0]) < q[2] / 2 + 0.5 && Math.abs(z - L[1] - q[1]) < q[4] / 2 + 0.5) return true; } }
+    var h = Math.abs(x - 58) < 5 && Math.abs(z - 38) < 4; return h; }
+  var lastSt = -1;
+  function walkStep(dt) { if (!walk || !me) return;
+    var f = (keys.w || keys.arrowup ? 1 : 0) - (keys.s || keys.arrowdown ? 1 : 0) - joy.y, r = (keys.d || keys.arrowright ? 1 : 0) - (keys.a || keys.arrowleft ? 1 : 0) + joy.x, m = Math.hypot(f, r);
+    if (m > 0.05) { if (m > 1) { f /= m; r /= m; } var sp = 11 * dt, fx = -Math.sin(yaw), fz = -Math.cos(yaw), rx = Math.cos(yaw), rz = -Math.sin(yaw);
+      var vx = (fx * f + rx * r) * sp, vz = (fz * f + rz * r) * sp, nx = Math.max(-90, Math.min(90, me.position.x + vx)), nz = Math.max(-90, Math.min(90, me.position.z + vz));
+      if (!solid(nx, me.position.z)) me.position.x = nx; if (!solid(me.position.x, nz)) me.position.z = nz;
+      me.rotation.y = Math.atan2(vx, vz); me.position.y = Math.abs(Math.sin(T * 14)) * 0.15; } else me.position.y = 0;
+    want.set(me.position.x, 0, me.position.z); tgt.copy(want);
+    var cur = -1; for (var i = 0; i < 5; i++) { var L = LOT[ORDER[i]]; if (Math.abs(me.position.x - L[0]) < 14 && Math.abs(me.position.z - L[1] + 1) < 11) cur = i; }
+    if (cur >= 0 && cur !== lastSt && S && S.sel !== cur) act('sel', cur); lastSt = cur; }
   var ray = new THREE.Raycaster(), v2 = new THREE.Vector2(), plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), hit = new THREE.Vector3();
   function pick(e) { v2.set(e.clientX / innerWidth * 2 - 1, -e.clientY / innerHeight * 2 + 1); ray.setFromCamera(v2, cam); if (!ray.ray.intersectPlane(plane, hit)) return;
     for (var i = 0; i < 5; i++) { var L = LOT[ORDER[i]]; if (Math.abs(hit.x - L[0]) < 15 && Math.abs(hit.z - L[1] + 1) < 12) { act('sel', i); return; } } }
@@ -317,7 +351,7 @@
   var last = performance.now(), acc = 0, T = 0;
   function loop(now) { requestAnimationFrame(loop); var dt = Math.min(0.1, (now - last) / 1000); last = now; T += dt;
     if (S && !paused) { acc += dt; if (acc > 1.2) { acc = 0; tick(); } }
-    tgt.lerp(want, Math.min(1, dt * 3));
+    walkStep(dt); if (!walk) tgt.lerp(want, Math.min(1, dt * 3));
     cam.position.set(tgt.x + Math.sin(yaw) * Math.cos(pitch) * dist, Math.sin(pitch) * dist, tgt.z + Math.cos(yaw) * Math.cos(pitch) * dist); cam.lookAt(tgt);
     W.forEach(function (o) { o.trucks.forEach(function (t) { var u = (T * 0.05 + t.userData.ph) % 1, per = 2 * (28 + 22), d = u * per, px, pz, ry;
       if (d < 28) { px = -14 + d; pz = 11.5; ry = Math.PI / 2; } else if (d < 50) { px = 14; pz = 11.5 - (d - 28); ry = Math.PI; } else if (d < 78) { px = 14 - (d - 50); pz = -10.5; ry = -Math.PI / 2; } else { px = -14; pz = -10.5 + (d - 78); ry = 0; }
@@ -326,5 +360,5 @@
   for (var i = 0; i < 5; i++) buildStation(i);
   buildCrew();
   S = null; menu(); requestAnimationFrame(loop);
-  window.MT = { state: function () { return S; }, act: act, tick: tick, newDay: newDay, raid: raid, start: function (m) { start(blank(m)); }, focus: focus, cam: function (y, p, d) { yaw = y; pitch = p; dist = d; } };
+  window.MT = { state: function () { return S; }, act: act, tick: tick, newDay: newDay, raid: raid, start: function (m) { start(blank(m)); }, focus: focus, walk: setWalk, me: function () { return me; }, cam: function (y, p, d) { yaw = y; pitch = p; dist = d; } };
 })();
