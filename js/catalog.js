@@ -114,7 +114,9 @@ GA.MAIN_GAMES = [
   { id: 'mailtycoon', mp: false, name: 'Ratita Mail Tycoon', desc: 'Be Postmaster Pi-rat in a brand-new Turbo 3D Mailville! Walk your post office, sort mail by hand, fix broken machines, drive the mail truck, open branches and stop the Guinea Pig Gang.',
     url: 'https://lizethbran13-cmyk.github.io/grok-arcade/ratita-mail-tycoon/', color: '#dc2626', color2: '#fbbf24' },
   { id: 'candyrescue', mp: false, name: 'Candy\u2019s RuffSources Rescue', desc: 'Be Candy the schnauzer, top rescuer at RuffSources HQ! Explore cartoon 3D Pawsville on the Turbo engine, pick rescues at the Mission Board, climb trees, sniff out lost pups, switch off haywire Ratita gadgets, drive the rescue van and fill your shelter with happy pups. A free game.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/candy-ruffsources-rescue/', color: '#0d9488', color2: '#fda4af' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/candy-ruffsources-rescue/', color: '#0d9488', color2: '#fda4af' },
+  { id: 'harvestfeast', mp: false, name: 'Torty\u2019s Harvest Feast', desc: 'A walk-in Thanksgiving town on the Turbo engine! Live events follow the real date: parade prep before Nov 26, the BIG FEAST and an all-day live parade on Thanksgiving, then leftovers. Calm Chef Mimo\u2019s haywire Ratita kitchen, win the Great Turkey Chase, build a parade float, solve the corn maze and win the pie contest. Luna, Pi-rat, Snowie, Candy and Torty are all there. A free game.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/thanksgiving-feast/', color: '#ea580c', color2: '#facc15' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -184,7 +186,9 @@ GA.BONUS_GAMES = [
   /* #48: Mail Sort Rush (Ratita Mail Tycoon, #91), on the Bonus Zone wall */
   { id: 'mailsort', name: 'Mail Sort Rush', desc: 'Postmaster Pi-rat\u2019s sorting belt in Mailville! TAP the bin that matches each parcel\u2019s stamp (red SAME-DAY, blue 2-DAY, yellow LETTERS) while it is in the SORT ZONE. Shiny Guinea Pig Gang bling boxes: let them pass! A Ratita Mail Tycoon game.', color: '#dc2626', color2: '#fbbf24' },
   /* #49: Pup Drop Catch (Candy's RuffSources Rescue), on the Bonus Zone wall */
-  { id: 'pupdrop', name: 'Pup Drop Catch', desc: 'Haywire Ratita gadgets are flinging puppies out of the Gadget Works! Slide Candy and her rescue net to catch the parachuting pups. Golden pups are worth 3; a dropped pup or a falling gadget bolt costs a heart! A Candy\u2019s RuffSources Rescue game.', color: '#0d9488', color2: '#fda4af' },
+  { id: 'pupdrop', name: 'Pup Drop Catch', desc: 'Haywire Ratita gadgets are flinging puppies out of the Gadget Works! Slide Candy and her rescue net to catch the parachuting pups. Golden pups are worth 3; a dropped pup or a falling gadget bolt costs a heart! A Candy\u2019s RuffSources Rescue game.', color: '#0d9488', color2: '#fda4af' },,
+  /* #51: Pie Plate Catch (Torty's Harvest Feast), on the Bonus Zone wall */
+  { id: 'pieplate', name: 'Pie Plate Catch', desc: 'Chef Mimo\u2019s haywire Ratita kitchen is flinging food! Slide the pie plate to catch pies (+2) and corn (+1). Burnt toast costs a heart! A Torty\u2019s Harvest Feast game.', color: '#ea580c', color2: '#facc15' }
 ];
 /* bonus games that have a cabinet on the Bonus Zone wall (1983 retro games live in the old arcade instead) */
 GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era && !g.room; }); };

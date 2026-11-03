@@ -15,13 +15,13 @@
     { id: 'edu', issue: 89, name: 'Education Center Updates', kind: 'Room Update', est: 'Nov 7', when: 'Building now', col: '#a78bfa', c2: '#fde68a', icon: '\uD83C\uDF93', pet: 'Lilith the Bot' },
     { id: 'airport', name: 'Grok Sky: Airport Tycoon', kind: 'DLC', est: 'Nov 9', when: 'In the Time Jumper now', col: '#0ea5e9', c2: '#f97316', icon: '\uD83D\uDEEB', slug: 'airport-tycoon', pet: 'Candy at the gate' },
     { id: 'mail', issue: 91, name: 'Ratita Mail Tycoon', kind: 'New Game', est: 'Nov 12', when: 'In the Time Jumper now', col: '#dc2626', c2: '#fbbf24', icon: '\uD83D\uDCEE', slug: 'ratita-mail-tycoon', pet: 'Postmaster Pi-rat' },
-    { id: 'thanks', name: 'The Big Thanksgiving Game', kind: 'New Game', est: 'Nov 20', when: 'Starts building Nov 3', col: '#ea580c', c2: '#facc15', icon: '\uD83E\uDD83', pet: 'Gobbles the turkey' },
+    { id: 'thanks', name: 'The Big Thanksgiving Game', kind: 'New Game', est: 'Nov 20', when: 'Starts building Nov 3', col: '#ea580c', c2: '#facc15', icon: '\uD83E\uDD83', slug: 'thanksgiving-feast', pet: 'Gobbles the turkey' },
     { id: 'rodentia2', name: 'Great Rodentia 2: Escape from National Ratita Prison', kind: 'Sequel', est: 'Early Dec', when: 'Queued', col: '#475569', c2: '#fb923c', icon: '\u26D3\uFE0F', pet: 'Luna plans the escape' },
     { id: 'ruff', name: 'Candy\u2019s RuffSources Rescue', kind: 'New Game', est: 'Mid Dec', when: 'Queued', col: '#0d9488', c2: '#fda4af', icon: '\uD83D\uDC36', slug: 'candy-ruffsources-rescue', pet: 'Candy to the rescue' },
     { id: 'trips', name: 'Education Center DLC: Field Trips', kind: 'DLC', est: 'Late Dec', when: 'Queued', col: '#7c3aed', c2: '#4ade80', icon: '\uD83D\uDE8C', pet: 'Torty rides the bus' }
   ];
   // live status: a poster whose preview has been archived as a Final Beta (and is no longer in the Time Jumper) has shipped
-  (function liveSync() { var D = window.GROK_PREVIEW_DATA || {}, pv = (D.previews || []).map(function (x) { return x.id; }), ar = (D.archive || []).map(function (x) { return x.url || ''; }), LIVE = { mail: 'ratita-mail-tycoon/', airport: 'airport-tycoon/', ruff: 'candy-ruffsources-rescue/' };
+  (function liveSync() { var D = window.GROK_PREVIEW_DATA || {}, pv = (D.previews || []).map(function (x) { return x.id; }), ar = (D.archive || []).map(function (x) { return x.url || ''; }), LIVE = { mail: 'ratita-mail-tycoon/', airport: 'airport-tycoon/', ruff: 'candy-ruffsources-rescue/', thanks: 'thanksgiving-feast/' };
     ITEMS.forEach(function (it) { if (!it.slug || pv.indexOf(it.slug) >= 0) return; if (ar.some(function (u) { return u.indexOf(it.slug + '-beta') >= 0; })) { it.when = 'Live Now'; it.liveUrl = LIVE[it.id] || null; it.slug = null; } }); })();
   function ph(c, s, e) { var k = 'p' + c + (s || 30) + (e || ''); return mats[k] || (mats[k] = new T.MeshPhongMaterial({ color: c, shininess: s || 30, specular: '#444444', emissive: e ? new T.Color(e) : new T.Color(0) })); }
   function gl(c) { var k = 'g' + c; return mats[k] || (mats[k] = new T.MeshBasicMaterial({ color: c })); }

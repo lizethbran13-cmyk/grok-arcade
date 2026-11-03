@@ -1,14 +1,17 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
-  "updated": "2026-11-02",
+  "updated": "2026-11-03",
   "items": [
     {
       "game": "thanksgiving-feast",
-      "name": "Torty's Harvest Feast (Thanksgiving)",
+      "name": "Torty's Harvest Feast (live)",
       "size": "Big",
-      "what": "A walk-in Thanksgiving town on the Turbo engine with live events by the real date: parade prep and leaf raking before Nov 26, the BIG FEAST and an all-day live parade on Thanksgiving, leftovers after. Chef Mimo's haywire Ratita kitchen, the Great Turkey Chase, the Ratita Parade Builder, a corn maze, a pie contest and cabinet #51.",
-      "stage": "building",
-      "when": "Preview in the Time Jumper"
+      "what": "SHIPPED! A walk-in Thanksgiving town on the Turbo engine with live events by the real date: parade prep and leaf raking before Nov 26, the BIG FEAST and an all-day live parade on Thanksgiving, leftovers after. Chef Mimo's haywire Ratita kitchen, the Great Turkey Chase, the Ratita Parade Builder, a corn maze, a pie contest and cabinet #51. Now live in the arcade (MORE GAMES wall) with bonus cabinet #51 Pie Plate Catch on the Bonus Zone wall. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/thanksgiving-feast/",
+      "betaArchiveUrl": "archive/thanksgiving-feast-beta/",
+      "shippedAt": "2026-11-03T10:45:00Z"
     },
     {
       "game": "arcade",
@@ -305,15 +308,6 @@
       "when": "Time Jumper Preview",
       "preview": true,
       "previewUrl": "previews/online-play-update/"
-    },
-    {
-      "key": "big-thanksgiving-game",
-      "game": "arcade",
-      "name": "The Big Thanksgiving Game",
-      "size": "New Game",
-      "what": "Torty's Harvest Feast + The Great Turkey Chase + Ratita Parade Builder in one: Gobbles escaped from the Tortuga Tech float, crazy turkeys everywhere, and Chef Mimo's haywire Ratita Industries kitchen.",
-      "stage": "queued",
-      "when": "Starts building Nov 3"
     },
     {
       "key": "rodentia-2",
@@ -958,20 +952,21 @@
       "playable": true,
       "built": "2026-11-02",
       "notes": "Holiday special, releases Nov 15 after David's OK. Polish pass: all 4 routes played by real input, party spacing, see-through visitation glass, camera, kid-fair guards, Pi-rat new look"
-    },
-    {
-      "id": "thanksgiving-feast",
-      "game": "thanksgiving-feast",
-      "name": "Torty's Harvest Feast",
-      "url": "previews/thanksgiving-feast/",
-      "playable": true,
-      "built": "2026-11-02",
-      "notes": "Thanksgiving hub on Turbo: dense Harvest Hollow (market stalls, pumpkin stands, carts, fenced gardens, crowds + crazy turkeys), live events by LA date (prep / Nov 26 big feast + live parade / leftovers / off-season from Dec 8), Chef Mimo (Chef Gio's brother) kitchen chaos, Gobbles chase, Ratita Parade Builder, corn maze, pie contest, cabinet #51",
-      "stage": "building"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "thanksgiving-feast",
+      "game": "thanksgiving-feast",
+      "name": "Torty's Harvest Feast",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/thanksgiving-feast-beta/",
+      "built": "2026-11-02",
+      "archived": "2026-11-03",
+      "notes": "Thanksgiving hub on Turbo: dense Harvest Hollow (market stalls, pumpkin stands, carts, fenced gardens, crowds + crazy turkeys), live events by LA date (prep / Nov 26 big feast + live parade / leftovers / off-season from Dec 8), Chef Mimo (Chef Gio's brother) kitchen chaos, Gobbles chase, Ratita Parade Builder, corn maze, pie contest, cabinet #51",
+      "playable": true
+    },
     {
       "id": "candy-ruffsources-rescue",
       "game": "arcade",

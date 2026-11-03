@@ -1037,6 +1037,22 @@
         g.font = font(15); g.fillStyle = '#0f766e'; g.fillText('CANDY RESCUE', w / 2, 22);
         break;
       }
+      case 'harvestfeast': {
+        var ghf = g.createLinearGradient(0, 0, 0, h); ghf.addColorStop(0, '#fb923c'); ghf.addColorStop(1, '#fde68a'); g.fillStyle = ghf; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#a16207'; g.fillRect(0, h * 0.72, w, h * 0.28); g.fillStyle = '#7c2d12'; rrF(g, w * 0.12, h * 0.6, w * 0.76, h * 0.1, 3);
+        g.font = '22px sans-serif'; g.textAlign = 'center'; g.fillText('\uD83E\uDD67', w * 0.3, h * 0.58); g.fillText('\uD83C\uDF3D', w * 0.5, h * 0.58); g.fillText('\uD83C\uDF83', w * 0.7, h * 0.58);
+        g.fillText('\uD83E\uDD83', ((t * 30) % (w + 40)) - 20, h * 0.86); g.fillText('\uD83D\uDC22', w * 0.8, h * 0.86);
+        g.font = font(14); g.fillStyle = '#7c2d12'; g.fillText('HARVEST FEAST', w / 2, 22);
+        break;
+      }
+      case 'pieplate': {
+        var gpp = g.createLinearGradient(0, 0, 0, h); gpp.addColorStop(0, '#7c2d12'); gpp.addColorStop(1, '#fde68a'); g.fillStyle = gpp; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#475569'; g.fillRect(0, 30, w, 14); g.fillStyle = '#92400e'; g.fillRect(0, h - 18, w, 18);
+        g.font = '20px sans-serif'; g.textAlign = 'center'; for (i = 0; i < 3; i++) g.fillText(['\uD83E\uDD67', '\uD83C\uDF3D', '\uD83D\uDD25'][i], w * (0.2 + i * 0.3), 60 + ((t * 30 + i * 47) % (h - 110)));
+        var ppx = w * (0.5 + 0.3 * Math.sin(t * 1.6)); g.fillStyle = '#f8fafc'; g.beginPath(); g.ellipse(ppx, h - 34, 20, 5, 0, 0, 7); g.fill();
+        g.font = font(15); g.fillStyle = '#fde047'; g.fillText('PIE PLATE CATCH', w / 2, 22);
+        break;
+      }
       case 'pupdrop': {
         var gpd = g.createLinearGradient(0, 0, 0, h); gpd.addColorStop(0, '#38bdf8'); gpd.addColorStop(1, '#bae6fd'); g.fillStyle = gpd; g.fillRect(0, 0, w, h);
         g.fillStyle = '#475569'; g.fillRect(0, 30, w, 14); g.fillStyle = '#4ade80'; g.fillRect(0, h - 18, w, 18);
