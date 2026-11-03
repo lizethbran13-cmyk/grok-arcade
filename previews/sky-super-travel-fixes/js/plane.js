@@ -421,6 +421,11 @@ class Plane {
     const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.06, 0), gemMat);
     gem.position.set(0, 0.01, 0.05); gw.add(gem);
     this.interior.add(gw); this.goldenWheel = gw;
+    { const dk = new THREE.MeshLambertMaterial({ color: 0x2b2f38 }), yz = gw.position.z; this.yokeZ = yz;
+      const fo = new THREE.Group(); fo.position.set(0.6, 0.92, yz); const sh = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.42), dk); sh.position.z = -0.18; fo.add(sh);
+      const hb = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.07, 0.07), dk); hb.rotation.x = -0.25; fo.add(hb); for (const x of [-0.24, 0.24]) { const h = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.2, 0.07), dk); h.position.set(x, 0.07, 0); fo.add(h); }
+      this.interior.add(fo); const tq = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.22, 0.4), dk); tq.position.set(0, 0.78, yz - 0.05); this.interior.add(tq);
+      for (const x of [-0.06, 0.06]) { const lv = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.16, 0.05), new THREE.MeshLambertMaterial({ color: 0xd4d4d8 })); lv.position.set(x, 0.96, yz - 0.02); this.interior.add(lv); } }
 
     // 3-Class Cabin Luxury Dividers, First Class Champagne Bar & Tortuga Tech Plaque
     const si = new THREE.Group();
