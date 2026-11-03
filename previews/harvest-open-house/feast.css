@@ -1,0 +1,17 @@
+#touch{display:none;gap:10px}body.touch #touch{display:flex}
+.pill.ev{background:rgba(124,45,18,.85);border-color:#fbbf24}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.chips button{padding:7px 10px;border-radius:12px;border:2px solid #cbd5e1;background:#fff;font-weight:800;cursor:pointer}.chips button.sel{border-color:#ea580c;background:#ffedd5}
+#cookUI{position:fixed;left:50%;bottom:calc(8px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:20;display:none;width:min(980px,97vw);background:rgba(255,251,235,.95);border:3px solid #ea580c;border-radius:18px;padding:8px;color:#1c1917}
+#cookUI.on{display:block}.ckhead{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:6px}
+#ckApps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.app{background:#fff;border:2px solid #fdba74;border-radius:12px;padding:6px;font-size:13px;min-height:118px}.app.fire{border-color:#dc2626;background:#fee2e2;animation:shk .2s infinite}.app.broken{background:#e5e7eb;border-color:#6b7280}
+.app b{display:block}.app .bar{position:relative;height:12px;background:#e7e5e4;border-radius:6px;margin:5px 0;overflow:hidden}.app .bar i{position:absolute;top:0;bottom:0;background:#22c55e66}.app .bar u{position:absolute;top:0;bottom:0;left:0;background:#f97316}
+.app button{margin:2px 2px 0 0;padding:5px 8px;border-radius:9px;border:0;background:#2563eb;color:#fff;font-weight:800;font-size:12px;cursor:pointer}.app button.r{background:#dc2626}.app button.g{background:#16a34a}.app button.y{background:#ca8a04}
+.app .say{font-style:italic;color:#9d174d;min-height:16px}
+@keyframes shk{0%{transform:translateX(-1px)}50%{transform:translateX(1px)}}
+@media (max-width:640px){#ckApps{grid-template-columns:repeat(2,1fr)}.app{min-height:96px;font-size:11px}}
+#bigMsg{position:fixed;left:50%;top:30%;transform:translateX(-50%);z-index:30;font:900 34px system-ui;color:#fff;text-shadow:0 3px 0 #7c2d12,0 0 20px #000;display:none;text-align:center;pointer-events:none}
+#cabCv{width:min(360px,80vw);aspect-ratio:9/10;height:auto;background:#1e1b4b;border-radius:12px;touch-action:none;display:block;margin:0 auto}
+#mapCv{width:min(520px,86vw);aspect-ratio:520/440;height:auto;display:block;margin:0 auto;border-radius:12px}
+
+body.cooking #talk{bottom:auto;top:120px}

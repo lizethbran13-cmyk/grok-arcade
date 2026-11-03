@@ -953,6 +953,16 @@ window.GROK_PREVIEW_DATA = {
       "playable": true,
       "built": "2026-11-02",
       "notes": "Holiday special, releases Nov 15 after David's OK. Polish pass: all 4 routes played by real input, party spacing, see-through visitation glass, camera, kid-fair guards, Pi-rat new look"
+    },
+    {
+      "id": "harvest-open-house",
+      "game": "thanksgiving-feast",
+      "name": "Harvest Hollow Open House",
+      "url": "previews/harvest-open-house/",
+      "playable": true,
+      "built": "2026-11-03",
+      "stage": "building",
+      "notes": "Enterable buildings + more to do. Step 1: room system, Torty's Barn, Hollow Bakery."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
