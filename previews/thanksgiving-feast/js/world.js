@@ -120,7 +120,7 @@ export function buildWorld(scene, phase) {
   // ---- Chef Mimo's Ratita Kitchen (north)
   { const kx = 0, kz = -42, w = 16, d = 12; b.box('m', 0xf1e4c8, kx, 0, kz - d / 2, w, 5, 0.4); b.box('m', 0xf1e4c8, kx - w / 2, 0, kz, 0.4, 5, d); b.box('m', 0xf1e4c8, kx + w / 2, 0, kz, 0.4, 5, d);
     b.box('m', 0xf1e4c8, kx - 5, 0, kz + d / 2, 6, 5, 0.4); b.box('m', 0xf1e4c8, kx + 5, 0, kz + d / 2, 6, 5, 0.4); b.box('m', 0xf1e4c8, kx, 3.2, kz + d / 2, 4, 1.8, 0.4);
-    b.box('m', 0xd7c4a3, kx, 0.01, kz, w, 0.03, d); for (let i = -7; i < 8; i += 2) for (let j = -5; j < 6; j += 2) b.box('m', 0xb8432a, kx + i + 0.5, 0.02, kz + j + 0.5, 1, 0.02, 1);
+    b.box('m', 0xd7c4a3, kx, 0.01, kz, w, 0.03, d); for (let i = -7; i < 8; i += 2) for (let j = -5; j < 6; j += 2) b.box('m', 0xb8432a, kx + i + 0.5, 0.045, kz + j + 0.5, 1, 0.012, 1);
     b.box('m', 0x7c2d12, kx, 5, kz, w + 0.6, 0.3, d + 0.6);
     solid(kx - w / 2 - 0.2, kz - d / 2 - 0.2, kx + w / 2 + 0.2, kz - d / 2 + 0.2); solid(kx - w / 2 - 0.2, kz - d / 2, kx - w / 2 + 0.2, kz + d / 2); solid(kx + w / 2 - 0.2, kz - d / 2, kx + w / 2 + 0.2, kz + d / 2);
     solid(kx - 8, kz + d / 2 - 0.2, kx - 2, kz + d / 2 + 0.2); solid(kx + 2, kz + d / 2 - 0.2, kx + 8, kz + d / 2 + 0.2);

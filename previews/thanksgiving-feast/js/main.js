@@ -51,7 +51,7 @@ const candy = put(makePet('candy', { s: 2.1 }), SP.pieTable.x + 2.5, SP.pieTable
 const luna = put(makePet('luna', { s: 1.3, extras: ['glasses'] }), 1.5, 11.6, PI);
 const snowie = put(makePet('snowie', { s: 1.25 }), -1.6, 11.6, PI);
 const pirat2 = null;
-const mimo = (() => { const m = makeChefMimo(); m.root.scale.setScalar(1.1); m.root.position.set(SP.kcenter.x + 2.8, 0, SP.kcenter.z + 1.6); m.root.rotation.y = PI * 0.9; scene.add(m.root); return m; })();
+const mimo = (() => { const m = makeChefMimo(); m.root.scale.setScalar(1.6); m.root.position.set(SP.kcenter.x + 2.8, 0, SP.kcenter.z + 1.6); m.root.rotation.y = PI * 0.9; scene.add(m.root); return m; })();
 [-4.5, 0, 4.5].forEach((dx) => { const L = new THREE.PointLight(0xfff7ec, 14, 13, 1); L.position.set(SP.kcenter.x + dx, 4.2, SP.kcenter.z); scene.add(L); });
 // sneaky snack rats
 const sneaks = ['ginger', 'cocoa'].map((id, i) => { const p = put(makePet(id, { s: 1.15 }), SP.pie.x + (i ? 9 : -9), SP.pie.z + 6, PI); p.st = 'hide'; p.t2 = 4 + i * 5; p.hx = p.x; p.hz = p.z; return p; });

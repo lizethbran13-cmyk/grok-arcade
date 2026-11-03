@@ -53,8 +53,8 @@ export function makeRat(id, outfit, opts = {}) {
   const head = new THREE.Group(); head.position.set(0, 0.48, 0.36); body.add(head);
   const h = MB();
   h.f.add(P.sphere, C.hood || C.fur, 0, 0, 0, 0, 0, 0, 0.27, 0.25, 0.27);
-  h.f.add(P.sphere, C.hood || C.fur, 0, -0.05, 0.2, 0.25, 0, 0, 0.17, 0.15, 0.22);
-  if (C.hood) { h.f.add(P.sphere, 0xffffff, 0, 0.12, 0.2, -0.5, 0, 0, 0.045, 0.16, 0.06); h.f.add(P.sphere, 0xffffff, 0, -0.06, 0.36, 0.25, 0, 0, 0.09, 0.08, 0.08); } // forehead blaze + white muzzle tip
+  h.f.add(P.sphere, C.hood ? C.fur : C.fur, 0, -0.05, 0.2, 0.25, 0, 0, 0.17, 0.15, 0.22);
+  if (C.hood) { h.f.add(P.sphere, 0xffffff, 0, 0.13, 0.2, -0.5, 0, 0, 0.075, 0.19, 0.08); h.f.add(P.sphere, 0xffffff, 0, -0.06, 0.36, 0.25, 0, 0, 0.09, 0.08, 0.08); } // forehead blaze + white muzzle tip
   h.f.add(P.sphere, C.belly, 0, -0.1, 0.25, 0.25, 0, 0, 0.12, 0.08, 0.15);
   h.g.add(P.sphere, 0xff8fb0, 0, -0.03, 0.42, 0, 0, 0, 0.055, 0.045, 0.045);
   [-1, 1].forEach((sd) => { h.f.add(P.sphere, C.dark, sd * 0.2, 0.2, -0.04, 0, sd * 0.3, sd * -0.35, 0.15, 0.15, 0.04); h.g.add(P.sphere, 0xffb3c8, sd * 0.2, 0.2, -0.015, 0, sd * 0.3, sd * -0.35, 0.1, 0.1, 0.02);
@@ -63,7 +63,7 @@ export function makeRat(id, outfit, opts = {}) {
   eyes(h, 0.05, 0.19, 0.11, 0.072, { iris: C.eye, closed: (id === 'pirat' || id === 'evil_pirat') ? 1 : 0, brow: id.startsWith('evil_') ? 0x991b1b : null, angry: id.startsWith('evil_') });
   h.g.add(P.sphere, 0xffffff, -0.025, -0.13, 0.34, 0, 0, 0, 0.025, 0.035, 0.012); h.g.add(P.sphere, 0xffffff, 0.025, -0.13, 0.34, 0, 0, 0, 0.025, 0.035, 0.012); // teeth
   if (X.includes('glasses')) { [-1, 1].forEach((sd) => h.x.add(P.torus, opts.glass || 0x1f2937, sd * 0.11, 0.05, 0.255, 0, 0, 0, 0.085, 0.085, 0.12)); h.x.add(P.cyl, opts.glass || 0x1f2937, 0, 0.06, 0.265, 0, 0, PI / 2, 0.012, 0.06, 0.012); }
-  if (X.includes('patch')) { h.g.add(P.sphere, 0x111111, 0.11, 0.05, 0.25, 0, 0, 0, 0.08, 0.075, 0.03); h.g.add(P.torus, 0x111111, 0, 0.09, 0.02, 0.35, 0, 0.35, 0.255, 0.24, 0.022); }
+  if (X.includes('patch')) { h.g.add(P.sphere, 0x111111, 0.11, 0.05, 0.25, 0, 0, 0, 0.08, 0.075, 0.03); }
   if (X.includes('headset')) { h.g.add(P.torus, 0x334155, 0, 0.05, 0, 0, PI / 2, 0, 0.28, 0.27, 0.1); h.g.add(P.sphere, 0x334155, -0.27, 0.0, 0.02, 0, 0, 0, 0.06, 0.07, 0.07); h.g.add(P.cyl, 0x334155, -0.18, -0.08, 0.18, 0.2, 0.9, 0, 0.012, 0.25, 0.012); h.l.add(P.sphere, 0x3ff0ff, -0.08, -0.1, 0.3, 0, 0, 0, 0.025, 0.025, 0.025, 0.5); }
   head.add(toGroup(h));
   // feet
