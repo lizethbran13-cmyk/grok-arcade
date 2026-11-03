@@ -27,7 +27,7 @@ vec3 slNrm(){ vec3 p = vSLw * uScale * 0.5; vec3 b = slW(); vec3 nx = texture2D(
   mat.customProgramCacheKey = () => 'sl-' + key; mat.needsUpdate = true; }
 export function initShadowlight() { for (const k of ['m', 'w', 'x', 'g', 'f']) if (MATS[k] && !U[k]) inject(k, MATS[k]);
   // flashlight: soft shadow-casting spot that follows the player's view
-  const f = SL.flash = new THREE.SpotLight(0xfff2d6, 0, 26, 0.52, 0.55, 1.4); f.castShadow = true; f.shadow.mapSize.set(1024, 1024); f.shadow.radius = 6; f.shadow.blurSamples = 16; f.shadow.bias = -0.0006; f.shadow.normalBias = 0.03; f.shadow.camera.near = 0.3; f.shadow.camera.far = 26; E.scene.add(f, f.target);
+  const f = SL.flash = new THREE.SpotLight(0xfff2d6, 0, 26, 0.52, 0.9, 1.4); f.castShadow = true; f.shadow.mapSize.set(1024, 1024); f.shadow.radius = 6; f.shadow.blurSamples = 16; f.shadow.bias = -0.0006; f.shadow.normalBias = 0.03; f.shadow.camera.near = 0.3; f.shadow.camera.far = 26; E.scene.add(f, f.target);
   // hero light: the nearest flickering lamp also casts (moving) shadows
   const h = SL.hero = new THREE.PointLight(0xffe2b0, 0, 16, 1.5); h.castShadow = true; h.shadow.mapSize.set(512, 512); h.shadow.radius = 5; h.shadow.bias = -0.002; h.shadow.camera.near = 0.2; h.shadow.camera.far = 16; E.scene.add(h);
   for (let i = 0; i < 5; i++) { const p = new THREE.PointLight(0xffffff, 0, 16, 1.6); E.scene.add(p); SL.lights.push(p); }
@@ -51,7 +51,7 @@ export function updateShadowlight(dt, me, cam, o = {}) { SL.t += dt; const t = S
   const hs = SL.heroSpot; if (hs) { SL.hero.position.set(hs.x, hs.y, hs.z); SL.hero.color.setHex(hs.c); SL.hero.distance = (hs.d || 16) * 1.1; SL.hero.intensity = (hs.i || 20) * 0.7 * (hs.flick ? flick(t, 99 + hs.x) : 1); }
   for (const m of SL.shafts) { const s = SL.spots.find((q) => q.x === m.position.x && q.z === m.position.z); m.material.uniforms.a.value = 0.12; }
   // flashlight from just above the shoulder toward where the camera looks
-  const f = SL.flash; if (SL.flashOn) { cam.getWorldDirection(_v); f.position.set(me.x + _v.x * 0.2, me.y + 1.7, me.z + _v.z * 0.2); f.target.position.set(me.x + _v.x * 10, me.y + 1.2 + _v.y * 10, me.z + _v.z * 10); f.target.updateMatrixWorld(); f.intensity = (o.fpv ? 60 : 45) * (o.lowBat ? 0.4 + 0.3 * flick(t, 5) : 1); } else f.intensity = 0;
+  const f = SL.flash; if (SL.flashOn) { cam.getWorldDirection(_v); f.position.set(me.x + _v.x * 0.2, me.y + 1.7, me.z + _v.z * 0.2); f.target.position.set(me.x + _v.x * 10, me.y + 1.2 + _v.y * 10, me.z + _v.z * 10); f.target.updateMatrixWorld(); f.intensity = (o.fpv ? 60 : 45) * (o.flashK ?? 1) * (o.lowBat ? 0.4 + 0.3 * flick(t, 5) : 1); } else f.intensity = 0;
   // dust: keep motes in a 16 m box around the camera, drifting
   const P = SL.dust.geometry.attributes.position, a = P.array, cx = cam.position.x, cy = cam.position.y, cz = cam.position.z; for (let i = 0; i < a.length; i += 3) { a[i] += Math.sin(t * 0.3 + i) * dt * 0.08; a[i + 1] -= dt * 0.03; a[i + 2] += Math.cos(t * 0.27 + i) * dt * 0.08;
     let dx = a[i] - cx, dy = a[i + 1] - cy, dz = a[i + 2] - cz; if (dx > 8) a[i] -= 16; else if (dx < -8) a[i] += 16; if (dy > 6) a[i + 1] -= 12; else if (dy < -6) a[i + 1] += 12; if (dz > 8) a[i + 2] -= 16; else if (dz < -8) a[i + 2] += 16; } P.needsUpdate = true; SL.dust.material.opacity = o.dust ?? 0.5; }

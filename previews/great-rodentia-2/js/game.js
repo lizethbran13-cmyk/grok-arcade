@@ -126,6 +126,7 @@ class PrisonGame {
     const D = this.doors;
     D.cell.set(this.lockdown <= 0 && S.started); D.torty.set(S.tortyFreed); D.warden.set(S.wardenOpen); D.staff.set(S.staffOpen); D.fence.set(S.fenceCut);
     for (const k in this.pickups) this.pickups[k].visible = !has(k) && !(k === 'keycard' && S.keycardUsedUp);
+    if (this.tortyIn && S.tortyFreed) this.tortyIn.root.visible = false;
     this.setChar(S.char, true);
     if (first) { this.me.place([this.M.myCell.x, 0.1, this.M.myCell.z], PI / 2); this.resetTrail(); }
     this.syncHud();
@@ -141,7 +142,14 @@ class PrisonGame {
     const me = this.me, bx = -Math.sin(me.yaw || 0), bz = -Math.cos(me.yaw || 0); this.trail = [];
     let lim = 12; if (this.world) { const o = { x: me.x, y: 0.5, z: me.z }, d = { x: bx, y: 0, z: bz }; try { const h = this.world.ray(new THREE.Vector3(me.x, 0.5, me.z), new THREE.Vector3(bx, 0, bz), 12, (q) => !q.floor && !q.off); if (h < lim) lim = Math.max(0.3, h - 0.5); } catch (e) {} }
     for (let i = 0; i < 60; i++) { const L = Math.min(lim, i * 0.25), side = i * 0.25 > lim ? ((i % 2) ? 1 : -1) * Math.min(1.6, (i * 0.25 - lim) * 0.5) : 0; this.trail.push([me.x + bx * L + bz * side, me.z + bz * L - bx * side]); }
-    const F = this.followers(); for (const id in this.pets) { const p = this.pets[id], k = F.indexOf(id); const tp = this.trail[Math.min(59, 6 + Math.max(0, k) * 6)]; p.x = tp[0]; p.z = tp[1]; p.yaw = me.yaw || 0; this.pushOut(p, 0.4); } this.separate(1); }
+    const F = this.followers(), placed = [[me.x, me.z]];
+    for (const id in this.pets) { const p = this.pets[id], k = F.indexOf(id); const tp = this.trail[Math.min(59, this.slot(id, Math.max(0, k)))]; p.x = tp[0]; p.z = tp[1]; p.yaw = me.yaw || 0; this.pushOut(p, 0.4);
+      if (k < 0) continue; const ok = (x, z) => placed.every(([a, b], i) => Math.hypot(x - a, z - b) >= (i === 0 ? 1.7 : 1.9));
+      if (!ok(p.x, p.z)) { // trail squeezed by a wall: try a ring of spots around the player, back side first, that are clear of walls
+        let found = false; for (const R of [2.0, 2.6, 3.2, 3.8, 4.6]) { for (let j = 0; j < 16 && !found; j++) { const a = (me.yaw || 0) + PI + ((j % 2) ? 1 : -1) * Math.ceil(j / 2) * (PI / 8), x = me.x + Math.sin(a) * R, z = me.z + Math.cos(a) * R; const q = { x, z }; this.pushOut(q, 0.4);
+          if (Math.hypot(q.x - x, q.z - z) < 0.02 && ok(x, z) && (!this.world || this.world.ray(new THREE.Vector3(me.x, 0.5, me.z), new THREE.Vector3(Math.sin(a), 0, Math.cos(a)), R, (h) => !h.floor && !h.off) >= R - 0.05)) { p.x = x; p.z = z; found = true; } } if (found) break; } }
+      placed.push([p.x, p.z]); } this.separate(4); }
+  slot(id, k) { return 8 + k * 8 + (id === 'torty' ? 3 : 0); }
   camOpts() { const b = this.inB; return b ? { dist: 6.8, box: [b.x0, b.z0, b.x1, b.z1] } : { dist: 8.2 }; }
   pushOut(o, R) { const near = this._near || (this._near = []); near.length = 0; if (!this.world || !this.world.near) return; this.world.near(o.x - R - 0.1, o.z - R - 0.1, o.x + R + 0.1, o.z + R + 0.1, near);
     for (const s of near) { if (s.Trigger || s.off || s.floor || s.max[1] < 0.3 || s.min[1] > 0.8) continue; const cx = Math.max(s.min[0], Math.min(o.x, s.max[0])), cz = Math.max(s.min[2], Math.min(o.z, s.max[2])); let dx = o.x - cx, dz = o.z - cz, d2 = dx * dx + dz * dz; if (d2 >= R * R) continue;
@@ -149,7 +157,7 @@ class PrisonGame {
       else { const d = Math.sqrt(d2); o.x += dx / d * (R - d); o.z += dz / d * (R - d); } } }
   separate(iter = 2) { // keep party rats, Torty, guards and the player from overlapping
     const F = this.followers(), mov = F.map((id) => this.pets[id]); const fixed = [this.me, ...this.guards.map((g) => g.p || g), ...this.npcs.map((n) => n.p || n)].filter((q) => q && typeof q.x === 'number');
-    const rad = (q) => (q.id === 'torty' ? 0.62 : 0.46);
+    const rad = (q) => (q.id === 'torty' ? 0.85 : 0.7);
     for (let it = 0; it < iter; it++) { for (let i = 0; i < mov.length; i++) { const a = mov[i];
       for (let j = i + 1; j < mov.length; j++) { const b = mov[j]; let dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz), m = rad(a) + rad(b); if (d < m) { if (d < 1e-4) { dx = Math.cos(i + j); dz = Math.sin(i + j); d = 1; } const k = (m - d) / 2 / d; a.x -= dx * k; a.z -= dz * k; b.x += dx * k; b.z += dz * k; } }
       for (const f of fixed) { let dx = a.x - f.x, dz = a.z - f.z, d = Math.hypot(dx, dz), m = rad(a) + 0.5; if (d < m) { if (d < 1e-4) { dx = Math.cos(i * 2.1); dz = Math.sin(i * 2.1); d = 1; } a.x += dx / d * (m - d); a.z += dz / d * (m - d); } }
@@ -385,13 +393,16 @@ class PrisonGame {
     if (S.tortyFreed) { const d = document.createElement('span'); d.className = 'inv-chip ally'; d.innerHTML = '<span>🐢</span>Torty'; inv.appendChild(d); }
     $('hudObj').textContent = this.objective();
   }
+  route() { // the route the player is on: last route item picked up, true ending layered on top
+    let r = null; for (const k of S.items) { if (k === 'spoon' || k === 'map') r = 'tunnel'; else if (k === 'uniform' || k === 'keycard') r = 'disguise'; else if (k === 'cutters' || k === 'lights') r = 'wall'; }
+    if (S.fenceCut) r = 'wall'; if (S.digs > 0) r = 'tunnel'; return r; }
   objective() {
     if (this.lockdown > 0) return `🔒 Lockdown: ${Math.ceil(this.lockdown)}s`;
-    if (!has('spoon') && !has('cutters') && !has('uniform')) return '🎯 Explore. Visit Candy & Brie in Visitation, read the Plan (📋)';
-    if (S.digs > 0 && S.digs < (S.tortyFreed ? 1 : 3)) return '🎯 Keep digging behind the poster in cell A-3';
-    if (has('cutters') && !S.fenceCut) return '🎯 Cut the fence at the east blind spot';
-    if (has('uniform') && !has('keycard')) return '🎯 Find the Warden\'s keycard (safe in his office)';
-    return '🎯 Pick an escape route. Check the Plan (📋)';
+    const r = this.route(), need = S.tortyFreed ? 1 : 3, gold = (S.tortyFreed || has('ledger')) ? ((!S.tortyFreed ? ' · 🎄 Free Torty too' : !has('ledger') ? ' · 🎄 Grab the ledger too' : ' · 🎄 Miracle ready')) : '';
+    if (!r) return '🎯 Explore. Visit Candy & Brie in Visitation, read the Plan (📋)' + gold;
+    if (r === 'tunnel') { if (!has('spoon')) return '🕳️ Tunnel: sneak a spoon from the kitchen' + gold; if (S.digs < need) return `🕳️ Tunnel: dig behind the poster in A-3 (${S.digs}/${need})` + gold; if (!has('map')) return '🕳️ Tunnel: take the sewer map from the workshop' + gold; return '🕳️ Tunnel: crawl into the tunnel in A-3' + gold; }
+    if (r === 'disguise') { if (!has('uniform')) return '👮 Disguise: swipe a uniform from laundry' + gold; if (!S.knowCode) return '👮 Disguise: find the safe code (holiday card, cafeteria)' + gold; if (!has('keycard')) return '👮 Disguise: Luna cracks the Warden\'s safe' + gold; if (!S.wearing) return '👮 Disguise: wear the uniform (tap it)' + gold; return '👮 Disguise: staff door in Visitation, then the gate' + gold; }
+    if (!has('cutters')) return '🧗 Wall: Pi-rat picks the workshop cabinet' + gold; if (!has('lights')) return '🧗 Wall: Snowie climbs the cafeteria tree for lights' + gold; if (!S.fenceCut) return '🧗 Wall: cut the fence at the east blind spot' + gold; return '🧗 Wall: dodge the searchlights, climb the weak wall' + gold;
   }
   openPlan() {
     const ck = (b, t) => `<li class="${b ? 'done' : ''}">${b ? '✅' : '⬜'} ${t}</li>`;
@@ -428,7 +439,7 @@ class PrisonGame {
     const t0 = this.trail[0]; if (Math.hypot(me.x - t0[0], me.z - t0[1]) > 0.25) { this.trail.unshift([me.x, me.z]); if (this.trail.length > 60) this.trail.pop(); }
     const F = this.followers();
     for (const id in this.pets) { const p = this.pets[id]; const idx = F.indexOf(id); p.root.visible = idx >= 0; if (idx < 0) continue;
-      const tp = this.trail[Math.min(this.trail.length - 1, 6 + idx * 6)]; const dx = tp[0] - p.x, dz = tp[1] - p.z, d = Math.hypot(dx, dz);
+      const tp = this.trail[Math.min(this.trail.length - 1, this.slot(id, idx))]; const dx = tp[0] - p.x, dz = tp[1] - p.z, d = Math.hypot(dx, dz);
       if (d > 8) { p.x = tp[0]; p.z = tp[1]; } const k = Math.min(1, dt * 6); p.x += dx * k; p.z += dz * k; p.speed = d > 0.05 ? Math.min(7, d * 6) : 0;
       if (d > 0.05) { const want = Math.atan2(dx, dz); let dy = want - p.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); p.yaw += dy * Math.min(1, dt * 10); }
       p.root.visible = true; }
@@ -451,7 +462,7 @@ class PrisonGame {
     if (IN.keys.KeyC && !this._cDown) { S.sneak = !S.sneak; save(); this.syncHud(); } this._cDown = IN.keys.KeyC;
     this.fx.update(dt);
     followShadow(me.x, me.y, me.z);
-    updateShadowlight(dt, me, E.camera, { hurt: this.sus > 0.6 ? (this.sus - 0.6) : 0 });
+    updateShadowlight(dt, me, E.camera, { flashK: this.inB ? 0.1 : 0.3, hurt: this.sus > 0.6 ? (this.sus - 0.6) : 0 });
     $('susFill').style.width = (this.sus * 100) + '%'; $('sus').classList.toggle('hot', this.sus > 0.5); $('sus').classList.toggle('on', this.sus > 0.01);
     if (((this.T * 4) | 0) !== this._hudTick) { this._hudTick = (this.T * 4) | 0; $('hudLoc').textContent = (this.inB ? this.inB.name : '❄️ Prison Yard') + (this.restricted() ? ' · ⛔ ' + this.restricted() : ''); $('hudLoc').classList.toggle('bad', !!this.restricted()); }
   }
@@ -494,7 +505,7 @@ class PrisonGame {
     }
     if (this.lit && zone === 'Dead Zone') { rate = Math.max(rate, 2.2); seer = seer || { name: 'The searchlight tower' }; }
     if (this.noDetect) seer = null;
-    if (seer) { this.sus = Math.min(1, this.sus + Math.min(rate, 1.3) * dt * 0.5); if (seer.alert !== undefined || seer.path) seer.alert = 0.6; if (!this._seenT || this.T - this._seenT > 1.2) { sfx('miss'); this._seenT = this.T; } }
+    if (seer) { this.sus = Math.min(1, this.sus + Math.min(rate, 1.3) * dt * 0.4); if (seer.alert !== undefined || seer.path) seer.alert = 0.6; if (!this._seenT || this.T - this._seenT > 1.2) { sfx('miss'); this._seenT = this.T; } }
     else this.sus = Math.max(0, this.sus - dt * 0.5);
     if (this.sus >= 1) this.caught(seer ? seer.name : 'A guard');
   }
