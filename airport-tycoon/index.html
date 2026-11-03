@@ -1,39 +1,27 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
+<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0ea5e9">
-<title>Grok Sky: Airport Tycoon</title>
-<link rel="stylesheet" href="style.css?v=atlive">
-<script type="importmap">
-{ "imports": { "three": "./lib/three.module.min.js" } }
-</script>
-</head>
-<body>
-<div id="app"></div>
-<div id="hud">
-  <div class="pill" id="hMoney">💰 0</div>
-  <div class="pill" id="hStars">⭐ 3.0</div>
-  <div class="pill" id="hDay">☀️ Day 1</div>
-  <div class="pill" id="hFlights">✈️ 0</div>
-  <button class="pill btn" id="hPause">⏸</button>
-</div>
-<div id="alerts"></div>
-<div id="cards"></div>
-<div id="feed"></div>
-<div id="build"></div>
+<title>Grok Sky: Airport Tycoon (Remake Preview)</title><link rel="stylesheet" href="style.css"></head>
+<body data-mode="title">
+<canvas id="c"></canvas>
+<div id="labels"></div>
+<div id="flash"></div>
+<div id="hud" class="noTouch"><div class="pill">💰 <b id="money">$0</b></div><div class="pill">⭐ <b id="rep"></b></div></div>
+<button id="phonebtn" class="hudbtn">📱 Ratita</button>
+<button id="exitbtn" class="hudbtn">⬅ Back</button>
+<button id="actbtn" class="hudbtn"></button>
 <div id="toast"></div>
-<div id="title">
-  <div class="tbox">
-    <h1>✈️ Grok Sky<br><span>Airport Tycoon</span></h1>
-    <p>Build and run <b>Torty's Airport</b>! Add gates, customs booths, shops, baggage belts and runways. Keep flights on time, calm grumpy customers, and survive storms, power outages and lost-baggage pileups.</p>
-    <p class="small">🐢 Torty is the airport manager · 🐶 Candy sniffs bags at customs · 🐭 Luna, Pi-rat & Snowie run the shops</p>
-    <button class="go" id="tPlay">▶ PLAY</button>
-    <button class="go alt" id="tNew">↺ New airport</button>
-  </div>
-</div>
-<script type="module" src="js/main.js?v=at1"></script>
-</body>
-</html>
+<div id="joy"><div></div></div>
+<div id="atc" class="panel"><div class="ah">🗼 TOWER · Luna on duty <small>drag to look around</small></div><div id="atclist"></div></div>
+<div id="flyui" class="noTouch"><div id="flyhud"></div><button id="flyexit" class="hudbtn">🛬 Return to hangar</button></div>
+<div id="phone" class="panel"><div class="pbar"><b>🐀 Ratita Airways</b><button data-close>✕</button></div>
+  <div id="ptabs"><button data-tab="flights">✈️<br>Flights</button><button data-tab="book">🎫<br>Book</button><button data-tab="bank">💳<br>Bank</button><button data-tab="build">🏗️<br>Build</button><button data-tab="fleet">🛩️<br>Fleet</button></div>
+  <div id="pbody"></div></div>
+<div id="modal" class="panel"><div class="mh"><b id="mtitle"></b><button data-close>✕</button></div><div id="mbody"></div></div>
+<div id="title" class="panel"><div class="tc">
+  <div class="kicker">TIME JUMPER PREVIEW · REMAKE</div>
+  <h1>Grok Sky<br><span>Airport Tycoon</span></h1>
+  <p>Run <b>Grok Sky International</b> for Ratita Airways! Walk your terminals, direct planes from Luna's tower, fly your own planes, build food courts and lounges, and help Torty at Tortuga Customs.</p>
+  <ul><li>🕹️ Phone: left thumb walks, right side drags the camera</li><li>⌨️ Desktop: WASD / arrows walk, mouse drag looks, E to use</li></ul>
+  <button id="start" class="big">✈️ Open the airport</button></div></div>
+<script src="game.js"></script>
+</body></html>
