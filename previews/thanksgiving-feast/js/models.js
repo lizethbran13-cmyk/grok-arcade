@@ -39,7 +39,7 @@ export function makeRat(id, outfit, opts = {}) {
   t.f.add(P.sphere, C.fur, 0, 0.38, -0.36, 0, 0, 0, 0.33, 0.29, 0.32);
   t.f.add(P.sphere, C.belly, 0, 0.27, 0.06, 0, 0, 0, 0.27, 0.2, 0.38);
   if (id === 'luna') t.f.add(P.sphere, C.dark, 0, 0.55, -0.15, 0, 0, 0, 0.26, 0.12, 0.42); // darker saddle
-  if (id === 'pirat') { t.f.add(P.sphere, C.hood, 0, 0.42, 0.2, 0, 0, 0, 0.3, 0.26, 0.2); } // hooded rat: dark hood over head & shoulders
+  // Pi-rat: taupe hood on the head only (body stays white)
   // Ratita Industries backpack
   const X = opts.extras || [];
   if (opts.pack !== false) { const pc = opts.pack || 0xff4fa0; t.g.add(P.rbox, pc, 0, 0.66, -0.2, 0, 0, 0, 0.36, 0.22, 0.34); t.g.add(P.rboxS, 0xffd23f, 0, 0.78, -0.2, 0, 0, 0, 0.3, 0.06, 0.28);
