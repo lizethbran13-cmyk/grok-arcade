@@ -1,48 +1,86 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Ratita Mail Tycoon</title>
-<style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#0b1530;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff;touch-action:none}
-#cv{position:fixed;inset:0;width:100%;height:100%;display:block}
-.hud{position:fixed;left:0;right:0;top:0;display:flex;gap:8px;align-items:center;padding:8px 10px;background:linear-gradient(#0b1530ee,#0b153000);pointer-events:none;flex-wrap:wrap}
-.pill{pointer-events:auto;background:#111c3dcc;border:2px solid #fbbf24;border-radius:999px;padding:5px 12px;font-weight:800;font-size:14px;white-space:nowrap}
-.pill.r{border-color:#ef4444}.pill.b{border-color:#60a5fa}.pill.g{border-color:#4ade80}
-button{font:inherit;cursor:pointer}
-.btn{background:#dc2626;color:#fff;border:0;border-radius:12px;padding:9px 14px;font-weight:800;box-shadow:0 3px 0 #7f1d1d}
-.btn.y{background:#facc15;color:#1f2937;box-shadow:0 3px 0 #a16207}.btn.b{background:#2563eb;box-shadow:0 3px 0 #1e3a8a}.btn.g{background:#16a34a;box-shadow:0 3px 0 #14532d}.btn.k{background:#374151;box-shadow:0 3px 0 #111827}
-.btn:disabled{opacity:.45;cursor:default}
-#panel{position:fixed;right:10px;top:58px;bottom:10px;width:min(360px,46vw);background:#0f1b3dee;border:3px solid #fbbf24;border-radius:16px;padding:12px;overflow:auto;font-size:14px}
-#panel h2{margin:0 0 4px;font-size:19px;color:#fde047}#panel h3{margin:10px 0 4px;font-size:15px;color:#93c5fd}
-.row{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#ffffff10;border-radius:10px;padding:7px 9px;margin:5px 0}
-.row small{display:block;color:#cbd5e1;font-size:12px}
-.tabs{display:flex;gap:5px;flex-wrap:wrap;margin:6px 0}
-.tab{background:#1e293b;border:2px solid #334155;color:#fff;border-radius:10px;padding:5px 9px;font-weight:700;font-size:13px}
-.tab.on{border-color:#fde047;background:#3b2f0b}
-#log{position:fixed;left:10px;bottom:46px;width:min(440px,48vw);max-height:30vh;overflow:hidden;font-size:13px;display:flex;flex-direction:column-reverse;gap:3px;pointer-events:none}
-#log div{background:#0f1b3dd0;border-left:4px solid #fbbf24;border-radius:6px;padding:4px 8px}
-#log .bad{border-color:#ef4444}#log .good{border-color:#4ade80}#log .gang{border-color:#a855f7}
-.ov{position:fixed;inset:0;background:#050b1fd9;display:flex;align-items:center;justify-content:center;z-index:9;padding:14px}
-.card{background:#13224a;border:4px solid #fbbf24;border-radius:20px;padding:18px;max-width:640px;width:100%;max-height:94vh;overflow:auto;text-align:center}
-.card h1{margin:4px 0;color:#fde047;font-size:30px}.card p{color:#dbeafe}
-.modes{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:12px}
-.mode{flex:1 1 230px;background:#0b1530;border:3px solid #60a5fa;border-radius:16px;padding:12px;text-align:left}
-.mode b{font-size:18px;color:#fde047}
-.bins{display:flex;gap:8px;justify-content:center;margin-top:10px}
-.bins .btn{flex:1}
-#hint{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;font-size:12px;color:#cbd5e1;background:#0f1b3dc0;padding:4px 10px;border-radius:999px;pointer-events:none}
-@media (max-width:700px){#panel{width:56vw;font-size:12px}#log{width:42vw}}
-@media (max-width:700px){#hint{display:none}}
-#joy{display:none;position:fixed;left:24px;bottom:60px;width:120px;height:120px;border-radius:50%;background:#ffffff22;border:3px solid #fde047;z-index:8;touch-action:none}#joyK{position:absolute;left:35px;top:35px;width:44px;height:44px;border-radius:50%;background:#fde047cc}
-#walkB{position:fixed;left:50%;transform:translateX(-50%);bottom:40px;z-index:8}
-</style></head><body>
-<canvas id="cv"></canvas>
-<div class="hud" id="hud"></div>
-<div id="panel"></div>
-<div id="log"></div>
-<a id="backArc" href="../" style="position:fixed;left:8px;bottom:8px;z-index:60;background:#1e3a8a;color:#fde047;font:bold 13px Trebuchet MS,sans-serif;padding:6px 10px;border-radius:10px;text-decoration:none;border:2px solid #fde047">◀ Arcade</a>
-<div id="hint">Drag to look around · tap a station on the map or in the list</div>
-<div class="ov" id="ov"></div>
-<script src="three.min.js"></script>
-<script src="game.js"></script>
-</body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Ratita Mail Tycoon — Remake (Turbo)</title>
+<link rel="stylesheet" href="./style.css?v=mr1p">
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.min.js", "three/addons/": "./lib/addons/" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="touchZone"></div>
+<div id="stickRing"></div><div id="stickKnob"></div>
+<div id="hud">
+  <div class="hrow"><span class="pill" id="hMoney">💰 0</span><span class="pill" id="hRep">⭐ 50</span><span class="pill" id="hReady">📬 0</span><span class="pill" id="hTruck">🚚 100%</span></div>
+  <div id="hObj" class="obj"></div>
+  <div id="hAlert" class="alert"></div>
+</div>
+<div id="hudR"><button class="hbtn" id="bMap">🗺️</button><button class="hbtn" id="bMenu">📱</button></div>
+<div id="gps"><span id="gpsArrow">➤</span><span id="gpsTxt"></span></div>
+<button id="actBtn">ACT</button>
+<div id="touch"><button data-b="act" id="tAct">E</button></div>
+<div id="drive"><button id="dBrake">BRAKE</button></div>
+<div id="toast"></div>
+<div id="talk"><b id="talkWho"></b><span id="talkTxt"></span></div>
+
+<div id="title" class="modal on"><div class="card big">
+  <div class="kick">Ratita Industries presents · Turbo engine remake</div>
+  <h1>📮 Ratita Mail Tycoon</h1>
+  <p class="sub">You are <b>Postmaster Pi-rat</b>. Walk your post office, sort the mail by hand, fix the machines, drive the truck around Mailville and grow a mail empire, before the Guinea Pig Gang does.</p>
+  <div class="modes">
+    <button id="mScratch" class="mode"><b>🌱 Start from Scratch</b><span>$150, one post office, a little van. Build it all yourself.</span></button>
+    <button id="mEmpire" class="mode"><b>🏙️ Built Empire</b><span>$2,500, all 4 branches open, Big Mail Truck. Keep it running.</span></button>
+  </div>
+  <button id="mContinue" class="primary">▶ Continue</button>
+  <div class="help">WASD / arrows or left thumb-stick to move · drag to look · E / ACT to use · M map</div>
+</div></div>
+
+<div id="sortUI" class="modal"><div class="card">
+  <div class="mhead"><h2>📬 Sorting Belt <span id="sBelt"></span></h2><span id="sCount"></span></div>
+  <div id="sItem"><div id="sIcon">✉️</div><div id="sTag">SAME-DAY</div><div id="sAddr"></div></div>
+  <div id="sTimer"><i></i></div>
+  <div id="sBins">
+    <button data-bin="0" class="bin r">🔴<b>Same-Day</b><small>1</small></button>
+    <button data-bin="1" class="bin b">🔵<b>2-Day</b><small>2</small></button>
+    <button data-bin="2" class="bin y">🟡<b>Letters &amp; Media</b><small>3</small></button>
+    <button data-bin="3" class="bin g">🟢<b>Big Parcels</b><small>4</small></button>
+  </div>
+  <div class="note" id="sNote">Match the sticker colour to the bin. Mix-ups cost ⭐ reputation!</div>
+</div></div>
+
+<div id="fixUI" class="modal"><div class="card">
+  <div class="mhead"><h2>🔧 Fix: <span id="fName"></span></h2><span id="fHits"></span></div>
+  <div id="fBar"><div id="fZone"></div><div id="fNeedle"></div></div>
+  <div class="hrow c"><button id="fBtn" class="primary">🔧 TIGHTEN!</button></div>
+  <div class="note" id="fNote">Tap when the needle is in the green. A miss costs $3 in parts.</div>
+  <div class="hrow c"><button id="fCall" class="ghost">📞 Call Ratita Tech (free, 25 s)</button><button id="fClose" class="ghost">Leave</button></div>
+</div></div>
+
+<div id="shopUI" class="modal"><div class="card">
+  <div class="mhead"><h2>🛒 Ratita Post Supply Shop</h2><button class="x" data-close="shopUI">✕</button></div>
+  <div id="shopList"></div>
+</div></div>
+
+<div id="mapUI" class="modal"><div class="card">
+  <div class="mhead"><h2>🗺️ Mailville · Your Empire</h2><button class="x" data-close="mapUI">✕</button></div>
+  <canvas id="mapCv" width="560" height="500"></canvas>
+  <div id="brList"></div>
+</div></div>
+
+<div id="menuUI" class="modal"><div class="card">
+  <div class="mhead"><h2>📱 Ratita Post App</h2><button class="x" data-close="menuUI">✕</button></div>
+  <div id="menuStats"></div>
+  <div class="hrow c"><button id="uUnstuck" class="ghost">⛑️ Unstuck (back to HQ)</button><button id="uTow" class="ghost">🛻 Free tow truck to HQ</button><button id="uSound" class="ghost">🔊 Sound</button></div>
+  <div class="hrow c"><button id="uHelp" class="ghost">❓ How to play</button><button id="uNew" class="ghost danger">↺ New game</button></div>
+  <div id="helpTxt" class="note"></div>
+</div></div>
+
+<div id="msgUI" class="modal"><div class="card">
+  <h2 id="msgT"></h2><p id="msgB"></p><div class="hrow c" id="msgBtns"></div>
+</div></div>
+<script type="module" src="./js/main.js?v=mr2"></script>
+</body>
+</html>

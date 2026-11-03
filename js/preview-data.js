@@ -5,12 +5,14 @@ window.GROK_PREVIEW_DATA = {
   "items": [
     {
       "game": "arcade",
-      "name": "Ratita Mail Tycoon Remake (Turbo)",
+      "name": "Ratita Mail Tycoon Remake (live)",
       "size": "Remake",
-      "what": "A full Turbo-engine remake for David: play as one-eyed brown Pi-rat in third person, hand-sort mail on the belts (mix-ups cost reputation), fix broken machines in a repair mini-game, shop for upgrades/trucks/decor, drive the mail truck (crashes and late mail cost money, free tow), open branches you can drive to and walk into, and stop the Guinea Pig Gang. Luna, Snowie, Candy and Torty cameo. Try it in the Time Jumper!",
-      "stage": "building",
-      "when": "Time Jumper Preview",
-      "previewUrl": "previews/ratita-mail-tycoon-remake/"
+      "what": "SHIPPED! A full Turbo-engine remake for David: play as one-eyed brown Pi-rat in third person, hand-sort mail on the belts (mix-ups cost reputation), fix broken machines in a repair mini-game, shop for upgrades/trucks/decor, drive the mail truck (crashes and late mail cost money, free tow), open branches you can drive to and walk into, and stop the Guinea Pig Gang. Luna, Snowie, Candy and Torty cameo. Now the live Ratita Mail Tycoon. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/ratita-mail-tycoon/",
+      "betaArchiveUrl": "archive/ratita-mail-tycoon-remake-beta/",
+      "shippedAt": "2026-11-03T03:00:00Z"
     },
     {
       "game": "airporttycoon",
@@ -937,15 +939,6 @@ window.GROK_PREVIEW_DATA = {
   ],
   "previews": [
     {
-      "id": "ratita-mail-tycoon-remake",
-      "game": "arcade",
-      "name": "Ratita Mail Tycoon Remake (Turbo)",
-      "url": "previews/ratita-mail-tycoon-remake/",
-      "playable": true,
-      "built": "2026-11-02",
-      "notes": "Turbo engine remake: walk Pi-rat, hand-sort, repair, drive, branches, Guinea Pig Gang"
-    },
-    {
       "id": "airport-tycoon-remake",
       "game": "airporttycoon",
       "name": "Grok Sky: Airport Tycoon Remake (Tempest)",
@@ -957,6 +950,17 @@ window.GROK_PREVIEW_DATA = {
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "ratita-mail-tycoon-remake",
+      "game": "arcade",
+      "name": "Ratita Mail Tycoon Remake (Turbo)",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/ratita-mail-tycoon-remake-beta/",
+      "built": "2026-11-02",
+      "archived": "2026-11-02",
+      "notes": "Turbo engine remake: walk Pi-rat, hand-sort, repair, drive, branches, Guinea Pig Gang",
+      "playable": true
+    },
     {
       "id": "ratita-mail-tycoon",
       "game": "mailtycoon",

@@ -111,7 +111,7 @@ GA.MAIN_GAMES = [
     url: 'https://lizethbran13-cmyk.github.io/grok-arcade/great-rodentia/', color: '#dc2626', color2: '#facc15' },
   { id: 'airporttycoon', mp: false, name: 'Grok Sky: Airport Tycoon', desc: 'Build and run Torty\u2019s Airport! Place gates, customs desks, shops, baggage belts and runways, keep passengers happy (some demand the MANAGER!), and survive storms, power outages, runway closures and baggage pileups. Luna, Pi-rat, Snowie, Candy and Torty all help out around the terminal, and Torty\u2019s free Rescue Fund has your back if you go broke.',
     url: 'https://lizethbran13-cmyk.github.io/grok-arcade/airport-tycoon/', color: '#38bdf8', color2: '#facc15' },
-  { id: 'mailtycoon', mp: false, name: 'Ratita Mail Tycoon', desc: 'Run Postmaster Pi-rat\u2019s mail empire in cartoon 3D Mailville! Five stations, each with a Main Mail Shop, Sorting Facility, Same-Day and 2-Day Places and a big Letters & Media store. Upgrade, hire, buy mailboxes and trucks, and keep deliveries right or pay refunds (the free Emergency Stamp Fund always bails you out). Watch out for the Guinea Pig Gang: they steal stations, and you win them back in a Mail Race! Start from scratch or with a built empire.',
+  { id: 'mailtycoon', mp: false, name: 'Ratita Mail Tycoon', desc: 'Be Postmaster Pi-rat in a brand-new Turbo 3D Mailville! Walk your post office, sort mail by hand, fix broken machines, drive the mail truck, open branches and stop the Guinea Pig Gang.',
     url: 'https://lizethbran13-cmyk.github.io/grok-arcade/ratita-mail-tycoon/', color: '#dc2626', color2: '#fbbf24' }
 ];
 GA.BONUS_GAMES = [
