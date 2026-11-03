@@ -1062,7 +1062,7 @@
      ====================================================================== */
   var CC_PETS = [
     { id: 'luna', name: 'Luna', color: '#fbbf24', ear: '#92400e', tx: 4, ty: 3, line: 'Luna: "Hero! The Time Gate at the clock tower is leaking Cheese Paradoxes!"' },
-    { id: 'pirat', name: 'Pi-rat', color: '#9ca3af', ear: '#f9a8d4', tx: 10, ty: 2, line: 'Pi-rat: "Arr! I calculated it: 3.14159 Time Slimes ahead. Join ye with Cheese Beam!"' },
+    { id: 'pirat', name: 'Pi-rat', color: '#f8f6f2', ear: '#f9a8d4', tx: 10, ty: 2, line: 'Pi-rat: "Arr! I calculated it: 3.14159 Time Slimes ahead. Join ye with Cheese Beam!"' },
     { id: 'snowie', name: 'Snowie', color: '#f8fafc', ear: '#fda4af', tx: 15, ty: 5, line: 'Snowie: "I\'ll cast Frost Squeak in battle! Press X for a Dual Tech!"' },
     { id: 'candy', name: 'Candy', color: '#f472b6', ear: '#be185d', tx: 4, ty: 6, line: 'Candy: "Sweet! I heal with Candy Tonic when the ATB bar fills!"' },
     { id: 'torty', name: 'Torty', color: '#22c55e', ear: '#14532d', tx: 12, ty: 6, line: 'Torty: "Slow and steady... the year 1000 AD Cheese Fair is to the east!"' }

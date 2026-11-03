@@ -7,7 +7,7 @@ window.GROK_PREVIEW_DATA = {
       "game": "arcade",
       "name": "Ratita Mail Tycoon Remake (live)",
       "size": "Remake",
-      "what": "SHIPPED! A full Turbo-engine remake for David: play as one-eyed brown Pi-rat in third person, hand-sort mail on the belts (mix-ups cost reputation), fix broken machines in a repair mini-game, shop for upgrades/trucks/decor, drive the mail truck (crashes and late mail cost money, free tow), open branches you can drive to and walk into, and stop the Guinea Pig Gang. Luna, Snowie, Candy and Torty cameo. Now the live Ratita Mail Tycoon. Its Time Jumper beta lives on in the Save Vault.",
+      "what": "SHIPPED! A full Turbo-engine remake for David: play as one-eyed Pi-rat (white with a dark hood) in third person, hand-sort mail on the belts (mix-ups cost reputation), fix broken machines in a repair mini-game, shop for upgrades/trucks/decor, drive the mail truck (crashes and late mail cost money, free tow), open branches you can drive to and walk into, and stop the Guinea Pig Gang. Luna, Snowie, Candy and Torty cameo. Now the live Ratita Mail Tycoon. Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Live Now",
       "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/ratita-mail-tycoon/",

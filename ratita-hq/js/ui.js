@@ -8,7 +8,7 @@ import { REGIONS } from './campus.js';
 import { drawFace } from './models2.js';
 import { SKINS, HAIRS, HAIR_COLS, SHIRTS, PANTS, cleanLook } from './humans.js';
 const hex = (c) => '#' + c.toString(16).padStart(6, '0');
-const RATS = [{ id: 'luna', n: 'Luna', d: 'Gray & speedy', col: '#a9afbd' }, { id: 'pirat', n: 'Pi-rat', d: 'Cream, one-eyed explorer', col: '#c99a6b' }, { id: 'snowie', n: 'Snowie', d: 'Snow white & bouncy', col: '#fbfbff' }];
+const RATS = [{ id: 'luna', n: 'Luna', d: 'Gray & speedy', col: '#a9afbd' }, { id: 'pirat', n: 'Pi-rat', d: 'White with a dark hood, one-eyed explorer', col: '#f8f6f2' }, { id: 'snowie', n: 'Snowie', d: 'Snow white & bouncy', col: '#fbfbff' }];
 export { RATS };
 export function panel(html, mount, cls = '') { const ui = $('ui'); ui.innerHTML = `<div class="panel ${cls}">${html}</div>`; ui.classList.add('open'); if (mount) mount(ui.firstChild); return ui.firstChild; }
 export function closePanel() { const ui = $('ui'); ui.innerHTML = ''; ui.classList.remove('open'); }

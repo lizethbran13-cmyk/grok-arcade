@@ -4412,9 +4412,9 @@ function drawPets(vp) {
       const wag = Math.sin(G.time * 9) * 0.06;
       b(-0.05 + wag, 0.64, 0.24, 0.10, 0.22, 0.10, coat, 0);
     } else {
-      // FANCY RATS: Luna (grey), Pi-rat (brown one-eyed pirate w/ eye patch), Snowie (pure white)
+      // FANCY RATS: Luna (grey), Pi-rat (white hooded one-eyed pirate w/ eye patch), Snowie (pure white)
       const isLuna = p.id === "luna", isPirat = p.id === "pirat";
-      const fur = isLuna ? [0.64, 0.63, 0.72] : isPirat ? [0.55, 0.44, 0.36] : [0.97, 0.98, 1.0];
+      const fur = isLuna ? [0.64, 0.63, 0.72] : isPirat ? [0.17, 0.15, 0.19] : [0.97, 0.98, 1.0]; // Pi-rat: head/ears = dark hood
       const coat = isLuna ? [0.95, 0.95, 1.0] : isPirat ? [0.16, 0.14, 0.19] : [0.58, 0.88, 1.0];
       const trim = isLuna ? [0.68, 0.40, 1.0] : isPirat ? [0.92, 0.16, 0.20] : [1.0, 1.0, 1.0];
       const pink = [1.0, 0.64, 0.74];

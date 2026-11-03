@@ -459,7 +459,7 @@
       G.add(lunaSign);
 
       // 2. PI-RAT (one-eyed fancy rat Stunt & Drift Marshal at the Stunt Park)
-      const pirat = makeHubRat(0x8a5a3c, 0xf29aa8, 'pirat');
+      const pirat = makeHubRat(0xf8f6f2, 0xf29aa8, 'pirat');
       pirat.position.set(58, 0, -8);
       pirat.rotation.y = -Math.PI / 2;
       G.add(pirat);

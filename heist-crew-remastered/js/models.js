@@ -413,19 +413,21 @@
         b.cyl(0.08, 0.09, 0.18, skin, s * 0.34, 0.1, -0.3);
       });
     } else {
-      // Fancy rats: Luna (grey), Pi-rat (brown + eyepatch + pirate hat), Snowie (pure white + cyan scarf)
-      const fur = id === 'luna' ? '#94a3b8' : id === 'pirat' ? '#8b5a2b' : '#f8fafc';
-      const belly = id === 'luna' ? '#cbd5e1' : id === 'pirat' ? '#d6b48a' : '#ffffff';
+      // Fancy rats: Luna (grey), Pi-rat (white hooded rat: dark hood + eyepatch + pirate hat), Snowie (pure white + cyan scarf)
+      const fur = id === 'luna' ? '#94a3b8' : id === 'pirat' ? '#f8f6f2' : '#f8fafc';
+      const hood = id === 'pirat' ? '#2b2730' : fur;
+      const belly = id === 'luna' ? '#cbd5e1' : id === 'pirat' ? '#ffffff' : '#ffffff';
       const ear = '#fda4af';
       b.sph(0.25, fur, 0, 0.38, -0.02, 0.92, 1.08, 1.05);
       b.sph(0.19, belly, 0, 0.36, 0.08, 0.78, 0.95, 0.85);
       // head & snout
-      b.sph(0.2, fur, 0, 0.72, 0.08, 0.95, 0.92, 1.12);
-      b.cone(0.13, 0.24, fur, 0, 0.7, 0.28, Math.PI / 2, 0, 0);
+      if (id === 'pirat') b.sph(0.21, hood, 0, 0.58, 0.06, 1.05, 0.7, 0.9);
+      b.sph(0.2, hood, 0, 0.72, 0.08, 0.95, 0.92, 1.12);
+      b.cone(0.13, 0.24, hood, 0, 0.7, 0.28, Math.PI / 2, 0, 0);
       b.sph(0.04, '#fb7185', 0, 0.7, 0.41, 1, 1, 1, 0, 0, 0, 'gloss');
       // big round fancy-rat ears
       [-1, 1].forEach((s) => {
-        b.cyl(0.11, 0.11, 0.03, fur, s * 0.18, 0.88, 0.02, Math.PI / 2, 0, s * 0.35);
+        b.cyl(0.11, 0.11, 0.03, hood, s * 0.18, 0.88, 0.02, Math.PI / 2, 0, s * 0.35);
         b.cyl(0.08, 0.08, 0.035, ear, s * 0.18, 0.88, 0.03, Math.PI / 2, 0, s * 0.35);
         b.cyl(0.055, 0.05, 0.18, ear, s * 0.11, 0.09, 0.04);
       });

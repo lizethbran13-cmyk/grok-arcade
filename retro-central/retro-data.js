@@ -297,7 +297,7 @@
       role: 'Family Pet Cameo #2 · By the Speed Rat \'91 Kiosk',
       sound: 'Squeak!',
       quotes: [
-        'Squeak! (Pi-rat kickflips his 1995 neon skateboard and salutes with his eyepatch! He loves Speed Rat 1991\'s loop-de-loops and golden rings!)',
+        'Squeak! (Pi-rat kickflips her 1995 neon skateboard and salutes with her eyepatch! She loves Speed Rat 1991\'s loop-de-loops and golden rings!)',
         'Squeak! (He whispers that holding X or Down+Space in Speed Rat 2 charges a supersonic Spin Dash!)'
       ]
     },

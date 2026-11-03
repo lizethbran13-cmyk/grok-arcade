@@ -362,7 +362,7 @@
   /* ------------------------------------------------------------------ */
   var RATS = {
     luna: { name: 'Luna', fur: '#a7adbb', dark: '#7d8394', belly: '#e6e8ee', eye: '#1b1b24' },
-    pirat: { name: 'Pi-rat', fur: '#c99a6b', dark: '#9c7148', belly: '#f6e7d4', eye: '#1b1b24' },
+    pirat: { name: 'Pi-rat', fur: '#f8f6f2', dark: '#2b2730', belly: '#ffffff', eye: '#1b1b24' },
     snowie: { name: 'Snowie', fur: '#fbfbff', dark: '#e3e1ee', belly: '#ffffff', eye: '#d0315a' }
   };
   function drawRat(c, type, x, y, sz, happy, t) {

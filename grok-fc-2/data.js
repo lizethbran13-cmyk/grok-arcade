@@ -99,7 +99,7 @@
   // family pet legends: signable in the Transfer Market, sideline mascots, commentators
   D.PETS = [
     { id: 'luna', n: 'Luna', kind: 'fancy rat', icon: '🐀', col: '#b08968', role: 'Sideline Mascot & Legend Winger', pos: 'MF', s: { PAC: 96, SHO: 80, PAS: 88, DRI: 95, DEF: 50, PHY: 55 }, line: 'Luna twirls her tail — the crowd goes wild!' },
-    { id: 'pirat', n: 'Pi-rat', kind: 'one-eyed fancy rat', icon: '🏴‍☠️', col: '#6b5b4b', role: 'Co-Commentator & Legend Striker', pos: 'FW', s: { PAC: 90, SHO: 94, PAS: 78, DRI: 88, DEF: 40, PHY: 60 }, line: 'Pi-rat in the booth: "Arr, that be a screamer!"' },
+    { id: 'pirat', n: 'Pi-rat', kind: 'one-eyed hooded fancy rat', icon: '🏴‍☠️', col: '#2b2730', role: 'Co-Commentator & Legend Striker', pos: 'FW', s: { PAC: 90, SHO: 94, PAS: 78, DRI: 88, DEF: 40, PHY: 60 }, line: 'Pi-rat in the booth: "Arr, that be a screamer!"' },
     { id: 'snowie', n: 'Snowie', kind: 'white fancy rat', icon: '❄️', col: '#f8fafc', role: 'Legend Playmaker', pos: 'MF', s: { PAC: 84, SHO: 78, PAS: 97, DRI: 90, DEF: 62, PHY: 52 }, line: 'Snowie threads a pass through the eye of a needle!' },
     { id: 'candy', n: 'Candy', kind: 'miniature schnauzer', icon: '🐕', col: '#9ca3af', role: 'Head Mascot & Legend Defender', pos: 'DF', s: { PAC: 88, SHO: 60, PAS: 74, DRI: 70, DEF: 95, PHY: 90 }, line: 'Candy on the touchline: "Woof! Woof!"' },
     { id: 'torty', n: 'Torty (Martina)', kind: 'desert tortoise', icon: '🐢', col: '#65a30d', role: 'Lead Commentator & Legend Keeper', pos: 'GK', s: { PAC: 30, SHO: 40, PAS: 80, DRI: 40, DEF: 99, PHY: 99 }, line: 'Torty (Martina): "Slow and steady wins the league, folks."' }

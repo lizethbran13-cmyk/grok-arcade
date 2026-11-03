@@ -95,7 +95,7 @@
   }
 
   /* ---------- the rats: Luna, Pi-rat (one eye), Snowie ---------- */
-  var RATS = { luna: { fur: '#a7adbb', dark: '#7d8394', belly: '#e6e8ee', eye: '#1b1b24' }, pirat: { fur: '#c99a6b', dark: '#9c7148', belly: '#f6e7d4', eye: '#1b1b24' }, snowie: { fur: '#fbfbff', dark: '#e3e1ee', belly: '#ffffff', eye: '#d0315a' } };
+  var RATS = { luna: { fur: '#a7adbb', dark: '#7d8394', belly: '#e6e8ee', eye: '#1b1b24' }, pirat: { fur: '#f8f6f2', dark: '#2b2730', belly: '#ffffff', eye: '#1b1b24' }, snowie: { fur: '#fbfbff', dark: '#e3e1ee', belly: '#ffffff', eye: '#d0315a' } };
   function rat(type) {
     var R = RATS[type], g = new T.Group(), fur = lam(R.fur), pink = lam('#ffb3c8');
     add(g, sph(0.3, 22), fur, 0, 0.3, -0.04, 1, 0.95, 1.15);
@@ -939,7 +939,7 @@
   function rrGoggles() { var g = new T.Group(); add(g, tor(0.2, 0.025, Math.PI, 8, 28), lam('#7c2d6b'), 0, 0.12, -0.02);
     [-1, 1].forEach(function (s) { add(g, cyl(0.085, 0.085, 0.06, 24), shiny('#4b5563', 80), s * 0.1, 0.12, 0.05).rotation.x = Math.PI / 2; add(g, cyl(0.065, 0.065, 0.02, 24), glow('#3ff0ff'), s * 0.1, 0.12, 0.085).rotation.x = Math.PI / 2; });
     var gr = add(g, cyl(0.04, 0.04, 0.02, 8), shiny('#ffd23f', 70), 0.22, 0.17, 0.02); gr.rotation.z = Math.PI / 2; g.userData.hat = { y: -0.02, s: 0.85 }; g.userData.tick = function (t) { gr.rotation.x = t * 2; }; return g; }
-  function piratPlush() { var g = new T.Group(), b = grp(g, 0, 0, 0), F = lam('#c99a6b'), Fl = lam('#e2bf96'), Pk = lam('#f9a8d4');
+  function piratPlush() { var g = new T.Group(), b = grp(g, 0, 0, 0), F = lam('#f8f6f2'), Fl = lam('#ffffff'), Pk = lam('#f9a8d4');
     add(b, sph(0.17, 24), F, 0, 0.18, 0, 1, 0.9, 1.15); add(b, sph(0.11, 18), Fl, 0, 0.16, 0.1, 1, 0.9, 0.6);
     var hd = grp(b, 0, 0.36, 0.08); add(hd, sph(0.12, 22), F, 0, 0, 0, 1, 0.95, 1.05); add(hd, cone(0.07, 0.12, 16), F, 0, -0.02, 0.12).rotation.x = Math.PI / 2; add(hd, sph(0.025, 10), Pk, 0, -0.02, 0.19);
     [-1, 1].forEach(function (s) { add(hd, sph(0.06, 14), Pk, s * 0.09, 0.1, -0.02, 1, 1, 0.35); });

@@ -628,7 +628,7 @@
       }
     }
 
-    // Helper for fancy rat models (Luna = grey, Pi-rat = brown + eyepatch + pirate hat, Snowie = pure white)
+    // Helper for fancy rat models (Luna = grey, Pi-rat = white w/ dark hood + eyepatch + pirate hat, Snowie = pure white)
     function makeFancyRat(coatHex, earHex, mode) {
       const r = new T.Group();
       const coat = std(coatHex, 0.55, 0.05);
@@ -637,10 +637,12 @@
       const body = new T.Mesh(new T.SphereGeometry(0.62, 14, 10), coat);
       body.scale.set(0.88, 1.08, 1.25);
       body.position.y = 0.72;
-      const head = new T.Mesh(new T.SphereGeometry(0.46, 14, 10), coat);
+      const hoodM = mode === 'pirat' ? std(0x2b2730, 0.6, 0.05) : coat;
+      const head = new T.Mesh(new T.SphereGeometry(0.46, 14, 10), hoodM);
       head.scale.set(0.92, 0.9, 1.18);
       head.position.set(0, 1.38, 0.35);
-      const snout = new T.Mesh(new T.ConeGeometry(0.24, 0.45, 12), coat);
+      if (mode === 'pirat') { const sh = new T.Mesh(new T.SphereGeometry(0.5, 14, 10), hoodM); sh.scale.set(0.95, 0.55, 0.7); sh.position.set(0, 1.12, 0.3); r.add(sh); }
+      const snout = new T.Mesh(new T.ConeGeometry(0.24, 0.45, 12), hoodM);
       snout.rotation.x = Math.PI / 2;
       snout.position.set(0, 1.32, 0.88);
       const nose = new T.Mesh(new T.SphereGeometry(0.09, 8, 6), pink);
@@ -693,8 +695,8 @@
     luna.rotation.y = -Math.PI / 2;
     grp.add(luna);
 
-    // 2. PI-RAT (one-eyed brown fancy rat with eyepatch)
-    const pirat = makeFancyRat(0x8a5a3c, 0xf29aa8, 'pirat');
+    // 2. PI-RAT (one-eyed white hooded fancy rat with eyepatch)
+    const pirat = makeFancyRat(0xf8f6f2, 0xf29aa8, 'pirat');
     pirat.position.set(-0.6, 0.24, -2.5);
     pirat.rotation.y = -Math.PI / 2;
     grp.add(pirat);

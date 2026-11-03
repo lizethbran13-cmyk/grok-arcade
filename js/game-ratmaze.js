@@ -13,7 +13,7 @@
   ];
   var RATS = [
     { id: 'luna', name: 'Luna', tag: 'Silver sweetheart', col: '#c3c8d6' },
-    { id: 'pirat', name: 'Pi-rat', tag: 'One eye, big heart', col: '#e0b080' },
+    { id: 'pirat', name: 'Pi-rat', tag: 'One eye, big heart', col: '#f1efe9' },
     { id: 'snowie', name: 'Snowie', tag: 'Snow-white speedster', col: '#ffffff' }
   ];
   var CATS = [

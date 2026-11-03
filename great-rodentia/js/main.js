@@ -184,7 +184,7 @@ export class RodentiaGame {
     const real = name.startsWith('Real ');
     const rig = makeRat(id, undefined, real && id === 'pirat' ? { extras: ['patch'] } : {}); if (rig.blaster) rig.blaster.visible = false; setOutfit(rig, outfit);
     if (real) { // keep the real sisters readable under the red prison lights: grey Luna, tan one-eyed Pi-rat, snow-white Snowie
-      const glow = { luna: 0x8a90a0, pirat: 0x8a5a30, snowie: 0xffffff }[id] || 0; const amt = id === 'snowie' ? 0.55 : 0.3;
+      const glow = { luna: 0x8a90a0, pirat: 0xd8d4cc, snowie: 0xffffff }[id] || 0; const amt = id === 'snowie' ? 0.55 : 0.3;
       rig.root.traverse((o) => { if (o.isMesh && o.material && o.material.emissive) { o.material = o.material.clone(); o.material.emissive.setHex(glow); o.material.emissiveIntensity = amt; } });
     }
     rig.root.position.set(x, 0, z);

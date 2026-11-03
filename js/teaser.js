@@ -119,7 +119,7 @@
     [[B.minX + 0.7, B.maxZ - 0.7], [B.maxX - 0.7, B.maxZ - 0.7], [B.minX + 0.7, B.minZ + 0.7]].forEach(function (q, i) { var pt = H.prop('teaser', 'Plant ' + i, q[0], q[1], 0); add(pt, cy(0.28, 0.22, 0.5, 14), ph('#b45309', 20), 0, 0.25, 0); for (var l = 0; l < 7; l++) { var lf = add(pt, sp(0.2, 8), ph('#16a34a', 15), Math.cos(l) * 0.18, 0.7 + (l % 3) * 0.15, Math.sin(l) * 0.18); lf.scale.set(0.6, 1.3, 0.6); } H.solidOf(pt, 0.05); });
     // ---- pet cameos: rats on the front bench, Candy guarding the popcorn, Torty by the calendar ----
     var pr = H.prop('teaser', 'Pet crew', cx - 3.5, cz - 2.2, 0);
-    rat(pr, -0.8, 0, 0, '#6b7280', 'LUNA \u00b7 grey fancy rat'); rat(pr, 0, 0, 0, '#8b5a2b', 'PI-RAT \u00b7 one-eyed rat', true); rat(pr, 0.8, 0, 0, '#f8fafc', 'SNOWIE \u00b7 white fancy rat');
+    rat(pr, -0.8, 0, 0, '#6b7280', 'LUNA \u00b7 grey fancy rat'); rat(pr, 0, 0, 0, '#f1efe9', 'PI-RAT \u00b7 one-eyed hooded rat', true); rat(pr, 0.8, 0, 0, '#f8fafc', 'SNOWIE \u00b7 white fancy rat');
     pr.children.forEach(function (g) { g.position.y = 0.55; });
     schnauzer(R(), B.maxX - 2.2, B.minZ + 1.6, -0.6); tortoise(R(), cx + 3.2, cz + 3.6, -Math.PI / 2);
     // ---- door back to the Preview Center (east wall) ----

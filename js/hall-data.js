@@ -2237,7 +2237,7 @@ GA.HALL_DATA = {
       }
     ],
     "cover": "assets/hall/drvic/cover.webp",
-    "quip": "Pi-rat says his great-great-great-grandpa was “just a janitor.” Pi-rat is not making eye contact.",
+    "quip": "Pi-rat says her great-great-great-grandpa was “just a janitor.” Pi-rat is not making eye contact.",
     "noOld": "Grok Dr. Vic: The Lost Lab just opened. Its Time Jumper beta is in the Save Vault (Final Beta). Bring a flashlight!"
   },
   "pickleballpark": {
@@ -2302,7 +2302,7 @@ GA.HALL_DATA = {
       }
     ],
     "cover": "assets/hall/pickleballpark/cover.webp",
-    "quip": "Pi-rat calls every ball out when he’s losing. He is also the umpire.",
+    "quip": "Pi-rat calls every ball out when she’s losing. She is also the umpire.",
     "noOld": "Grok Pickleball Park just opened its gates. Its Time Jumper beta is in the Save Vault (Final Beta). Let’s dink!"
   },
   "grocery": {
@@ -2367,7 +2367,7 @@ GA.HALL_DATA = {
       }
     ],
     "cover": "assets/hall/grocery/cover.webp",
-    "quip": "Pi-rat insists the free cheese samples are for staff training. He has done a lot of training.",
+    "quip": "Pi-rat insists the free cheese samples are for staff training. She has done a lot of training.",
     "noOld": "Grok Grocery Tycoon just opened in Shopsville. Its Time Jumper beta is in the Save Vault (Final Beta). Clean-up on aisle 3!"
   },
   "pumpkinhollow": {

@@ -177,11 +177,11 @@
       const head = new T.Mesh(G('thead', () => new T.SphereGeometry(0.13, 12, 10)), skinT); head.scale.z = 1.3; head.position.set(0, 0.25, 0.62); g.add(head);
       [-0.06, 0.06].forEach((x) => { const e = new T.Mesh(G('teye', () => new T.SphereGeometry(0.022, 8, 6)), M('#111', { roughness: 0.2 })); e.position.set(x, 0.3, 0.74); g.add(e); });
       [[-0.3, 0.35], [0.3, 0.35], [-0.3, -0.35], [0.3, -0.35]].forEach(([x, z]) => { const l = new T.Mesh(G('tleg', () => new T.CylinderGeometry(0.08, 0.09, 0.2, 8)), skinT); l.position.set(x, 0.1, z); g.add(l); });
-    } else { // fancy rats: luna (agouti/brown), pirat (one eye, darker), snowie (white)
-      const col = id === 'snowie' ? '#f8fafc' : id === 'pirat' ? '#6b5b4b' : '#b08968', fur = M(col, { roughness: 0.9 }), pink = M('#f9a8d4', { roughness: 0.6 });
+    } else { // fancy rats: luna (agouti/brown), pirat (white w/ dark hood, one eye), snowie (white)
+      const col = id === 'snowie' ? '#f8fafc' : id === 'pirat' ? '#f8f6f2' : '#b08968', fur = M(col, { roughness: 0.9 }), hoodM = id === 'pirat' ? M('#2b2730', { roughness: 0.9 }) : fur, pink = M('#f9a8d4', { roughness: 0.6 });
       const body = new T.Mesh(G('rbody', () => new T.SphereGeometry(0.3, 16, 12)), fur); body.scale.set(0.85, 0.75, 1.3); body.position.y = 0.3; g.add(body);
       if (id === 'luna') { const belly = new T.Mesh(G('rbelly', () => new T.SphereGeometry(0.26, 14, 10)), M('#f5e6d3')); belly.scale.set(0.8, 0.7, 1.2); belly.position.set(0, 0.26, 0.04); g.add(belly); }
-      const head = new T.Mesh(G('rhead', () => new T.ConeGeometry(0.17, 0.4, 14)), fur); head.rotation.x = Math.PI / 2; head.position.set(0, 0.4, 0.5); g.add(head);
+      const head = new T.Mesh(G('rhead', () => new T.ConeGeometry(0.17, 0.4, 14)), hoodM); if (id === 'pirat') { const hd = new T.Mesh(G('rhood', () => new T.SphereGeometry(0.2, 14, 10)), hoodM); hd.scale.set(1, 0.85, 1); hd.position.set(0, 0.42, 0.36); g.add(hd); } head.rotation.x = Math.PI / 2; head.position.set(0, 0.4, 0.5); g.add(head);
       const nose = new T.Mesh(G('rnose', () => new T.SphereGeometry(0.035, 8, 6)), pink); nose.position.set(0, 0.4, 0.71); g.add(nose);
       [-0.1, 0.1].forEach((x, i) => { const ear = new T.Mesh(G('rear', () => new T.SphereGeometry(0.09, 10, 8)), pink); ear.scale.z = 0.3; ear.position.set(x * 1.3, 0.56, 0.38); g.add(ear);
         if (id === 'pirat' && i === 0) { const patch = new T.Mesh(G('patch', () => new T.CylinderGeometry(0.045, 0.045, 0.02, 10)), M('#111')); patch.rotation.x = Math.PI / 2; patch.rotation.z = 0.3; patch.position.set(x * 0.7, 0.47, 0.55); g.add(patch); const strap = new T.Mesh(G('strap', () => new T.TorusGeometry(0.15, 0.01, 4, 20)), M('#111')); strap.position.set(0, 0.47, 0.45); strap.rotation.y = 0.5; g.add(strap); }

@@ -510,8 +510,8 @@
       cssClass: 'pet'
     });
 
-    // Pi-rat on his 1995 Skateboard by Speed Rat '91 Kiosk
-    var pirat = buildPetRat(0xd6d3d1, 0x38bdf8, 'skate95');
+    // Pi-rat on her 1995 Skateboard by Speed Rat '91 Kiosk
+    var pirat = buildPetRat(0xf8f6f2, 0x38bdf8, 'skate95');
     pirat.position.set(-9.1, 0, 2.8);
     pirat.rotation.y = 0.5;
     scene.add(pirat);

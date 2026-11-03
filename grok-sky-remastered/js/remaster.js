@@ -130,7 +130,7 @@ function buildStation(sc) {
   box(g, 0.12, 6, 0.12, 0xcbd5e1, 3, 3, 2); const vane = box(g, 1.6, 0.1, 0.1, 0xef4444, 3, 6, 2); R.vane = vane; box(g, 0.6, 0.6, 0.6, 0xf8fafc, 3, 6.4, 2);
   const sock = box(g, 0.5, 0.5, 1.6, 0xf97316, 3.3, 5, 2.9); sock.rotation.y = 0.6; box(g, 1.8, 1.1, 0.12, 0x0f172a, 1, 1.2, -2.8); box(g, 1.6, 0.9, 0.05, 0x22c55e, 1, 1.2, -2.87); box(g, 0.1, 0.8, 0.1, 0x334155, 1, 0.4, -2.8);
   box(g, 2, 0.6, 1, 0x7c2d12, -2, 0.45, -2.3); box(g, 0.5, 0.4, 0.5, 0xfde047, -2.5, 0.95, -2.3);
-  const pets = [['Luna', rat(0x9ca3af), -4.2, -2.2, 2.4], ['Pi-rat', rat(0x8b5a2b, true), -1.4, -2.6, 3.4], ['Snowie', rat(0xffffff), 1.4, -2.2, 2.4], ['Candy', dog(), 3.8, -0.6, 3.4], ['Torty', tortoise(), 4.6, -3.6, 2.2]];
+  const pets = [['Luna', rat(0x9ca3af), -4.2, -2.2, 2.4], ['Pi-rat', rat(0xf8f6f2, true), -1.4, -2.6, 3.4], ['Snowie', rat(0xffffff), 1.4, -2.2, 2.4], ['Candy', dog(), 3.8, -0.6, 3.4], ['Torty', tortoise(), 4.6, -3.6, 2.2]];
   R.pets = pets.map(([n, m, px, pz, ty], i) => { m.position.set(px, 0.3, pz); m.rotation.y = 0.25 - i * 0.12; m.scale.multiplyScalar(n === 'Torty' ? 0.9 : 1.4); g.add(m); const t = tag(n, 160); t.position.set(px, ty + 0.6, pz); g.add(t); return m; });
   const t = tag('☁ Pet Crew Weather Station', 512); t.scale.multiplyScalar(1.1); t.position.set(-2, 6.4, 1.5); g.add(t);
   g.visible = false; sc.add(g);

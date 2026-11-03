@@ -18,7 +18,7 @@ function eyes(b, y, z, sep, r, opt = {}) {
   });
 }
 // ---------------------------------------------------------------- rats
-export const RAT_COL = { luna: { fur: 0xa9afbd, dark: 0x7d8394, belly: 0xeceef3, eye: 0x1b1b24, name: 'Luna' }, pirat: { fur: 0xc99a6b, dark: 0x9c7148, belly: 0xf6e7d4, eye: 0x1b1b24, name: 'Pi-rat' }, snowie: { fur: 0xfbfbff, dark: 0xe3e1ee, belly: 0xffffff, eye: 0xd0315a, name: 'Snowie' },
+export const RAT_COL = { luna: { fur: 0xa9afbd, dark: 0x7d8394, belly: 0xeceef3, eye: 0x1b1b24, name: 'Luna' }, pirat: { fur: 0xf8f6f2, dark: 0x26222a, belly: 0xffffff, hood: 0x3a2f2b, eye: 0x1b1b24, name: 'Pi-rat' }, snowie: { fur: 0xfbfbff, dark: 0xe3e1ee, belly: 0xffffff, eye: 0xd0315a, name: 'Snowie' },
   brownie: { fur: 0x9a6a45, dark: 0x6f4a2e, belly: 0xf1dcc4, eye: 0x1b1b24 }, ash: { fur: 0x5b5f6b, dark: 0x3f424c, belly: 0xd8dae0, eye: 0x1b1b24 }, ginger: { fur: 0xe08a3c, dark: 0xb0652a, belly: 0xffe7c8, eye: 0x1b1b24 },
   cocoa: { fur: 0x6b4a3a, dark: 0x4a3226, belly: 0xe9d3c0, eye: 0x1b1b24 }, cream: { fur: 0xf1ddb0, dark: 0xd4b985, belly: 0xfff6e2, eye: 0x1b1b24 }, black: { fur: 0x2e2f36, dark: 0x1e1f24, belly: 0x9ea2ad, eye: 0x101014 },
   blue: { fur: 0x8a9bb8, dark: 0x66779a, belly: 0xe8eef8, eye: 0x1b1b24 }, rose: { fur: 0xd9a0a8, dark: 0xb57d86, belly: 0xfbe9ec, eye: 0x1b1b24 }, gold: { fur: 0xffcf3a, dark: 0xd4a017, belly: 0xfff1a8, eye: 0x1b1b24 },
@@ -29,7 +29,7 @@ export const RAT_COL = { luna: { fur: 0xa9afbd, dark: 0x7d8394, belly: 0xeceef3,
   mom: { fur: 0xe6a88a, dark: 0xb8785a, belly: 0xfff0e6, eye: 0x1b1b24, name: "Mom Camembert" },
   dad: { fur: 0x7c5844, dark: 0x543828, belly: 0xe8d4c4, eye: 0x1b1b24, name: "Dad Roquefort" },
   evil_luna: { fur: 0x4a4e69, dark: 0x22223b, belly: 0x9a8c98, eye: 0xff1e42, name: "Evil Twin Luna" },
-  evil_pirat: { fur: 0x6b3e26, dark: 0x3b1f10, belly: 0xc29576, eye: 0xff1e42, name: "Evil Twin Pi-rat" },
+  evil_pirat: { fur: 0xf8f6f2, dark: 0x26222a, belly: 0xffffff, hood: 0x3a2f2b, eye: 0xff1e42, name: "Evil Twin Pi-rat" },
   evil_snowie: { fur: 0xd8e2dc, dark: 0x8d99ae, belly: 0xf8f9fa, eye: 0xff0055, name: "Evil Twin Snowie" } };
 // opts: { pack: colour or false, extras: ['coat','tie','glasses','headset','patch','bow','clip'] }
 export function makeRat(id, outfit, opts = {}) {
@@ -39,7 +39,7 @@ export function makeRat(id, outfit, opts = {}) {
   t.f.add(P.sphere, C.fur, 0, 0.38, -0.36, 0, 0, 0, 0.33, 0.29, 0.32);
   t.f.add(P.sphere, C.belly, 0, 0.27, 0.06, 0, 0, 0, 0.27, 0.2, 0.38);
   if (id === 'luna') t.f.add(P.sphere, C.dark, 0, 0.55, -0.15, 0, 0, 0, 0.26, 0.12, 0.42); // darker saddle
-  if (id === 'pirat') { t.f.add(P.sphere, 0xffffff, 0, 0.5, 0.18, 0, 0, 0, 0.24, 0.16, 0.2); }
+  if (id === 'pirat') { t.f.add(P.sphere, C.hood, 0, 0.42, 0.2, 0, 0, 0, 0.3, 0.26, 0.2); } // hooded rat: dark hood over head & shoulders
   // Ratita Industries backpack
   const X = opts.extras || [];
   if (opts.pack !== false) { const pc = opts.pack || 0xff4fa0; t.g.add(P.rbox, pc, 0, 0.66, -0.2, 0, 0, 0, 0.36, 0.22, 0.34); t.g.add(P.rboxS, 0xffd23f, 0, 0.78, -0.2, 0, 0, 0, 0.3, 0.06, 0.28);
@@ -52,9 +52,9 @@ export function makeRat(id, outfit, opts = {}) {
   // head
   const head = new THREE.Group(); head.position.set(0, 0.48, 0.36); body.add(head);
   const h = MB();
-  h.f.add(P.sphere, C.fur, 0, 0, 0, 0, 0, 0, 0.27, 0.25, 0.27);
-  h.f.add(P.sphere, C.fur, 0, -0.05, 0.2, 0.25, 0, 0, 0.17, 0.15, 0.22);
-  h.f.add(P.sphere, C.belly, 0, -0.1, 0.25, 0.25, 0, 0, 0.12, 0.08, 0.15);
+  h.f.add(P.sphere, C.hood || C.fur, 0, 0, 0, 0, 0, 0, 0.27, 0.25, 0.27);
+  h.f.add(P.sphere, C.hood || C.fur, 0, -0.05, 0.2, 0.25, 0, 0, 0.17, 0.15, 0.22);
+  h.f.add(P.sphere, C.hood ? 0x3a3540 : C.belly, 0, -0.1, 0.25, 0.25, 0, 0, 0.12, 0.08, 0.15);
   h.g.add(P.sphere, 0xff8fb0, 0, -0.03, 0.42, 0, 0, 0, 0.055, 0.045, 0.045);
   [-1, 1].forEach((sd) => { h.f.add(P.sphere, C.dark, sd * 0.2, 0.2, -0.04, 0, sd * 0.3, sd * -0.35, 0.15, 0.15, 0.04); h.g.add(P.sphere, 0xffb3c8, sd * 0.2, 0.2, -0.015, 0, sd * 0.3, sd * -0.35, 0.1, 0.1, 0.02);
     for (let i = -1; i <= 1; i++) h.m.add(P.cyl, 0x5a4a5a, sd * 0.2, -0.06 + i * 0.03, 0.32, 0, sd * 0.25, PI / 2 + sd * i * 0.2, 0.006, 0.3, 0.006);
