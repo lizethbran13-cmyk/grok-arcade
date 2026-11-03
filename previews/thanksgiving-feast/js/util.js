@@ -33,7 +33,7 @@ export function noiseFill(g, size, base, vary, count, rad, r) {
   }
 }
 export function toast(msg, bad) {
-  const t = $('toast'); if (!t) return;
+  const t = $('toast'); if (!t) return; { const h = document.getElementById('hud'); if (h) { let b = 0; for (const e of h.children) { const r = e.getBoundingClientRect(); if (r.height && getComputedStyle(e).display !== 'none') b = Math.max(b, r.bottom); } if (b) t.style.top = (b + 8) + 'px'; } } // never overlap HUD/LIVE box
   const d = document.createElement('div'); d.className = 'tst' + (bad ? ' bad' : ''); d.textContent = msg; t.appendChild(d);
   setTimeout(() => d.classList.add('out'), 2400); setTimeout(() => d.remove(), 2900);
 }

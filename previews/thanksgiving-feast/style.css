@@ -58,3 +58,6 @@ h1{font-size:34px;color:#fde047;margin:6px 0}h2{font-size:19px;color:#fde047}
 
 body:not(.playing) #hud,body:not(.playing) #hudR,body:not(.playing) #gps,body:not(.playing) #actBtn,body:not(.playing) #touch{display:none!important}
 body.wip #hud,body.wip #hudR{top:var(--wip,40px)}body.wip #gps{top:calc(150px + env(safe-area-inset-top))}
+/* toast sits below the HUD quest/LIVE box so they never overlap */
+#toast{top:calc(132px + env(safe-area-inset-top))}
+@media (max-width:640px){#toast{top:calc(172px + env(safe-area-inset-top));max-width:92vw}}
