@@ -26,13 +26,14 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Bonus #49: Pup Drop Catch (preview cabinet)</title>
 <style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none}html,body{height:100%;overflow:hidden;background:#1e1b4b;color:#fff;font-family:system-ui,sans-serif}
-#bar{position:fixed;top:0;left:0;right:0;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:#831843;border-bottom:2px solid #fde047;z-index:2;font-weight:800}
-#bar a{color:#fde047;text-decoration:none}#cv{position:fixed;top:46px;left:0;width:100%;height:calc(100% - 46px);touch-action:none;display:block}
-#ov{position:fixed;inset:46px 0 0 0;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.6);z-index:3}#ov.off{display:none}
+#bar{position:fixed;top:var(--wt,0px);left:0;right:0;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:#831843;border-bottom:2px solid #fde047;z-index:2;font-weight:800}
+#bar a{color:#fde047;text-decoration:none}#cv{position:fixed;top:calc(46px + var(--wt,0px));left:0;width:100%;height:calc(100% - 46px - var(--wt,0px));touch-action:none;display:block}
+#ov{position:fixed;inset:calc(46px + var(--wt,0px)) 0 0 0;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.6);z-index:3}#ov.off{display:none}
 .card{background:#1e293b;border:2px solid #f472b6;border-radius:18px;padding:18px;max-width:440px;margin:12px;text-align:center}.card h1{color:#fbcfe8;font-size:26px;margin-bottom:8px}.card p{color:#cbd5e1;font-size:14px;line-height:1.45;margin-bottom:12px}
 button{background:linear-gradient(135deg,#db2777,#7c3aed);border:2px solid #fde047;color:#fff;font-weight:900;font-size:18px;padding:10px 26px;border-radius:999px;cursor:pointer}</style></head>
 <body><div id="bar"><a href="./index.html">◀ Back</a><span>🕹️ #49 Pup Drop Catch · <span id="sc">0</span> · best <span id="bs">0</span></span></div>
 <canvas id="cv"></canvas><div id="ov"><div class="card"><h1 id="oh">🐾 Pup Drop Catch</h1><p id="op"></p><button id="go">▶ Play</button></div></div>
+<script>/* keep the cabinet HUD below the preview WIP banner (if one is shown) */(function(){var lw=-1;setInterval(function(){var b=document.getElementById('ratitaWip');var h=b&&b.getBoundingClientRect().height>0?Math.ceil(b.getBoundingClientRect().bottom)+4:0;if(h!==lw){lw=h;document.documentElement.style.setProperty('--wt',h+'px');window.dispatchEvent(new Event('resize'));}},300);})();</script>
 <script>/* Standalone cabinet harness: a tiny GA.MG stand-in so the bonus game can be played inside the preview before it's wired into the arcade. */
 window.GA = {}; (function () { var defs = {}, cur, inst, state = 'idle', score = 0, W = 0, H = 0, dpr = 1, last = 0; var cv = document.getElementById('cv'), c = cv.getContext('2d');
   var AC; function tone(f, d) { try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); var o = AC.createOscillator(), g = AC.createGain(); o.frequency.value = f; g.gain.value = 0.06; g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + d); o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime + d); } catch (e) {} }
@@ -56,6 +57,6 @@ window.GA = {}; (function () { var defs = {}, cur, inst, state = 'idle', score =
   window.addEventListener('keydown', function (e) { if (inst) inst.onKey(e.key, true); if ((e.key === ' ' || e.key === 'Enter') && state !== 'play') GA.MG.start(); });
   window.addEventListener('keyup', function (e) { if (inst) inst.onKey(e.key, false); });
 })();</script>
-<script src="./js/game-pupdrop.js?v=cr2"></script>
+<script src="./js/game-pupdrop.js?v=cr3"></script>
 <script>GA.MG.boot(); document.getElementById('go').onclick = function () { GA.MG.start(); };</script>
 </body></html>

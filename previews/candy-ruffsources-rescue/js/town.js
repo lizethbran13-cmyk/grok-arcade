@@ -91,6 +91,7 @@ export function postOffice(B, scene, o) {
   if (hq) { wallX(-d / 2, -w / 2, 8); wallX(-d / 2, 14, w / 2); } else wallX(-d / 2, -w / 2, w / 2);
   wallZ(-w / 2, -d / 2, d / 2); wallZ(w / 2, -d / 2, d / 2);
   // lintel over doors
+  S(-door / 2, d / 2 - 0.2, door / 2, d / 2 + 0.2, 1.7, h + 0.5); // camera-only (y0 above walking height): keeps the camera from slipping out over/through the door
   B.box('m', cream, X(0), 3.2, Z(d / 2), door + 0.1, h - 3.2, 0.4); if (hq) { B.box('m', cream, X(11), 3.8, Z(-d / 2), 6.1, h - 3.8, 0.4); B.box('x', 0x94a3b8, X(11), 3.0, Z(-d / 2), 6, 0.8, 0.5); for (let i = 0; i < 5; i++) B.box('x', 0x64748b, X(11), 3.05 + i * 0.15, Z(-d / 2 - 0.28), 6, 0.04, 0.04); }
   // glass door frames
   for (const s of [-1, 1]) { B.box('x', 0x334155, X(s * door / 2), 0.16, Z(d / 2), 0.16, 3.04, 0.5); B.box('e', 0xbfe9ff, X(s * (door / 2 + 0.55)), 0.16, Z(d / 2 + 0.3), 1.0, 2.9, 0.06); }
@@ -132,12 +133,12 @@ function shelterInterior(B, scene, H) {
   B.cyl('x', 0x111827, X(-4), 1.26, Z(5.4), 0.05, 0.5); B.sph('x', 0x6b7280, X(-4), 1.8, Z(5.4), 0.12); // Pet Party mic
   bone(B, X(-9.6), 1.32, Z(5.7), 0.8, 0.4); B.cyl('g', 0x60a5fa, X(-2.4), 1.26, Z(5.6), 0.22, 0.25);
   B.box('x', 0x334155, X(-8.2), 1.2, Z(5.0), 0.08, 1.3, 0.08); B.box('x', 0x334155, X(-3.8), 1.2, Z(5.0), 0.08, 1.3, 0.08);
-  addSign(scene, 'RECEPTION · 📺 PET PARTY BOOKINGS', 4.6, 0.5, X(-6), 2.55, Z(5.0), fr, { bg: '#9d174d' });
+  S(-8.4, 4.85, -3.6, 5.15, 2.1, 2.9); addSign(scene, 'RECEPTION · 📺 PET PARTY BOOKINGS', 4.6, 0.5, X(-6), 2.55, Z(5.0), fr, { bg: '#9d174d' });
   I.push({ x: X(-6), z: Z(7.2), r: 1.9, label: '📺 Book a Grok Pet Party guest', kind: 'party' });
   T.spots.snowie = { x: X(-6), z: Z(4.1), yaw: fr };
   // waiting benches, plants, leash hooks
   for (const lx of [-12, -8]) { B.rbox('m', 0xb07a45, X(lx), 0.55, Z(12.2), 2.6, 0.14, 0.7); for (const s of [-1, 1]) B.box('x', 0x334155, X(lx + s * 1.1), 0.16, Z(12.2), 0.1, 0.4, 0.6); B.rbox('m', 0xb07a45, X(lx), 0.7, Z(12.6), 2.6, 0.6, 0.12); S(lx - 1.3, 11.8, lx + 1.3, 12.8, 0, 1); }
-  for (const [lx, lz] of [[-15.8, 12.2], [15.8, 12.2], [7.6, 12.3], [2.8, 12.3], [-15.8, -12.2]]) { B.cyl('g', 0xf8fafc, X(lx), 0.16, Z(lz), 0.38, 0.7); B.add('m', G.ico, 0x3f8f3a, X(lx), 1.25, Z(lz), 0, 0, 0, 0.6, 0.75, 0.6); S(lx - 0.4, lz - 0.4, lx + 0.4, lz + 0.4, 0, 1.6); }
+  for (const [lx, lz] of [[-15.8, 12.2], [15.8, 12.2], [7.6, 12.3], [2.8, 12.3], [-15.8, -12.2]]) { B.cyl('g', 0xf8fafc, X(lx), 0.16, Z(lz), 0.38, 0.7); B.add('m', G.ico, 0x3f8f3a, X(lx), 1.25, Z(lz), 0, 0, 0, 0.6, 0.75, 0.6); S(lx - 0.4, lz - 0.4, lx + 0.4, lz + 0.4, 0, 2.6); }
   B.rbox('m', 0xf1f5f9, X(5.2), 0.16, Z(12.3), 2.6, 2.2, 0.5); for (let r = 0; r < 4; r++) for (let c = 0; c < 5; c++) B.cyl('g', [0xef4444, 0x3b82f6, 0x22c55e, 0xfacc15, 0xa855f7][(r + c) % 5], X(4.3 + c * 0.45), 0.55 + r * 0.45, Z(12.05), 0.05, 0.3); S(3.9, 12, 6.5, 12.6, 0, 2.4);
   addSign(scene, 'LEASHES', 2.2, 0.5, X(5.2), 2.7, Z(12.0), fr + PI, { bg: '#be185d' });
   // --- Torty's adoption desk (left lobby) ---
@@ -169,7 +170,7 @@ function shelterInterior(B, scene, H) {
   for (const [a, b] of [[-16.8, -2.2], [2.2, 3.2]]) { const m = (a + b) / 2; B.box('m', 0xf5e6d3, X(m), 0.16, Z(3.2), b - a, 0.9, 0.16); B.box('g', 0xec4899, X(m), 1.06, Z(3.2), b - a, 0.08, 0.22); S(a, 3.1, b, 3.3, 0, 1.1); }
   for (const lx of [-2.2, 2.2]) { B.cyl('g', 0xec4899, X(lx), 0.16, Z(3.2), 0.12, 1.4); B.sph('g', 0xfde047, X(lx), 1.6, Z(3.2), 0.16); }
   B.box('g', 0xec4899, X(0), 2.75, Z(3.2), 4.6, 0.14, 0.14); for (const lx of [-2.2, 2.2]) B.cyl('g', 0xec4899, X(lx), 1.4, Z(3.2), 0.08, 1.4);
-  addSign(scene, '🐾 SHELTER · NAP ZONE', 3.0, 0.48, X(0), 3.15, Z(3.2), fr, { bg: '#be185d' });
+  S(-2.4, 3.0, 2.4, 3.4, 2.1, 3.5); addSign(scene, '🐾 SHELTER · NAP ZONE', 3.0, 0.48, X(0), 3.15, Z(3.2), fr, { bg: '#be185d' });
   // --- dog beds: 12 slots (4 base + 2 upgrades of 4) ---
   const BED_COL = [0x60a5fa, 0xf472b6, 0xfacc15, 0x34d399];
   const slots = []; for (const lz of [0.6, -3.4, -7.4]) for (const lx of [-14.5, -11, -7.5, -4]) slots.push([lx, lz]);

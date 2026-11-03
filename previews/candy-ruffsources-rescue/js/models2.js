@@ -123,16 +123,19 @@ export function makeDog(breed = 'schnauzer') { const root = new THREE.Group(), b
   const { fur, dark, light, legH, len } = B, by = legH + 0.22;
   const t = MB(); if (breed !== 'schnauzer') t.f.add(P.sphere, breed === 'beagle' ? light : fur, 0, by, 0, 0, 0, 0, 0.3, 0.27, len); t.f.add(P.sphere, light, 0, by - 0.06, len * 0.55, 0, 0, 0, 0.24, 0.24, 0.24);
   if (breed === 'beagle') t.f.add(P.sphere, dark, 0, by + 0.08, -0.04, 0, 0, 0, 0.27, 0.2, len * 0.9); else { t.f.add(P.sphere, light, 0, by - 0.1, 0.05, 0, 0, 0, 0.25, 0.18, len * 0.8); if (breed !== "schnauzer") t.f.add(P.sphere, fur, 0, by + 0.02, -len * 0.8, 0, 0, 0, 0.28, 0.25, 0.22); }
-  if (breed === 'schnauzer') { // square, sturdy silhouette: boxy torso, dark saddle, silver skirt, chest + neck so the head sits up
-    t.f.add(P.rbox, fur, 0, by, 0, 0, 0, 0, 0.5, 0.42, len * 1.75); t.f.add(P.rbox, dark, 0, by + 0.17, -0.02, 0, 0, 0, 0.44, 0.12, len * 1.6);
-    [-1, 1].forEach((s) => { t.f.add(P.rbox, light, s * 0.2, by - 0.2, 0, 0, 0, 0, 0.1, 0.16, len * 1.5); for (let i = -2; i <= 2; i++) t.f.add(P.cone, light, s * 0.22, by - 0.3, i * 0.17, PI, 0, 0, 0.05, 0.1, 0.05); }); // skirt fringe
-    t.f.add(P.capsule, fur, 0, by + 0.22, len * 0.78, -0.5, 0, 0, 0.17, 0.2, 0.17); t.f.add(P.rboxS, fur, 0, by - 0.02, -len * 0.84, 0, 0, 0, 0.5, 0.4, 0.12); t.f.add(P.rboxS, dark, 0, by + 0.14, -len * 0.86, 0, 0, 0, 0.36, 0.12, 0.12); t.f.add(P.rboxS, light, 0, by - 0.16, -len * 0.9, 0, 0, 0, 0.16, 0.12, 0.06); [-1, 1].forEach((s) => { t.f.add(P.rboxS, fur, s * 0.17, by - 0.12, -len * 0.7, 0, 0, 0, 0.16, 0.3, 0.26); for (let i = 0; i < 3; i++) t.f.add(P.cone, light, s * 0.17 + (i - 1) * 0.05, by - 0.3, -len * 0.82, PI, 0, 0, 0.04, 0.12, 0.04); }); }
+  if (breed === 'schnauzer') { // soft, sturdy schnauzer: rounded loaf torso, dark saddle, fluffy silver skirt, rounded rump, chest + neck so the head sits up
+    t.f.add(P.sphere, fur, 0, by, 0, 0, 0, 0, 0.27, 0.24, len * 0.95); t.f.add(P.rbox, fur, 0, by - 0.01, 0, 0, 0, 0, 0.44, 0.38, len * 1.45);
+    t.f.add(P.sphere, dark, 0, by + 0.13, -0.03, 0, 0, 0, 0.21, 0.11, len * 0.86); // saddle
+    [-1, 1].forEach((s) => { for (let i = 0; i < 7; i++) { const z = -len * 0.75 + i * len * 0.25; t.f.add(P.sphere, light, s * 0.19, by - 0.2 - (i % 2) * 0.03, z, 0, 0, 0, 0.09, 0.12, 0.1); } }); // fluffy skirt tufts
+    t.f.add(P.capsule, fur, 0, by + 0.22, len * 0.78, -0.5, 0, 0, 0.17, 0.2, 0.17);
+    t.f.add(P.sphere, fur, 0, by + 0.0, -len * 0.74, 0, 0, 0, 0.24, 0.22, 0.17); t.f.add(P.sphere, dark, 0, by + 0.13, -len * 0.74, 0, 0, 0, 0.17, 0.09, 0.13); // rounded rump
+    [-1, 1].forEach((s) => { t.f.add(P.sphere, fur, s * 0.14, by - 0.1, -len * 0.7, 0, 0, 0, 0.13, 0.18, 0.15); t.f.add(P.sphere, light, s * 0.15, by - 0.24, -len * 0.74, 0, 0, 0, 0.11, 0.12, 0.11); }); } // furry hip 'pants'
   t.g.add(P.torus, 0xff4fa0, 0, by + 0.18, len * 0.78, PI / 2 - 0.5, 0, 0, 0.17, 0.17, 0.22); t.x.add(rcyl(0.06, 0.02, 0.008, 18), 0xffd23f, 0, by + 0.04, len * 0.92, PI / 2 - 0.3, 0, 0);
   body.add(toGroup(t));
   const legs = [[-0.15, len * 0.62], [0.15, len * 0.62], [-0.15, -len * 0.62], [0.15, -len * 0.62]].map(([x, z]) => { const g = new THREE.Group(); g.position.set(x, legH + 0.06, z); const b = MB();
     b.f.add(P.capsule, breed === 'schnauzer' ? fur : light, 0, -legH * 0.3, 0, 0, 0, 0, 0.1, legH * 0.4, 0.1); b.f.add(P.capsule, light, 0, -legH * 0.65, 0, 0, 0, 0, breed === 'schnauzer' ? 0.15 : 0.13, legH * 0.42, breed === 'schnauzer' ? 0.15 : 0.13); b.f.add(P.sphere, light, 0, -legH - 0.02, 0.04, 0, 0, 0, 0.085, 0.055, 0.11); g.add(toGroup(b)); body.add(g); return g; });
   const tail = new THREE.Group(); tail.position.set(0, by + 0.15, -len * 0.92); body.add(tail); { const b = MB();
-    if (breed === 'schnauzer') { b.f.add(P.capsule, dark, 0, 0.16, -0.05, -0.45, 0, 0, 0.07, 0.22, 0.07); } // perky upright docked tail else if (breed === 'beagle') { b.f.add(P.capsule, dark, 0, 0.14, -0.03, -0.3, 0, 0, 0.07, 0.17, 0.07); b.f.add(P.sphere, light, 0, 0.3, -0.08, 0, 0, 0, 0.055); } else b.f.add(P.sphere, light, 0, -0.02, -0.02, 0, 0, 0, 0.11);
+    if (breed === 'schnauzer') { b.f.add(P.capsule, fur, 0, 0.1, -0.02, -0.3, 0, 0, 0.1, 0.14, 0.1); b.f.add(P.sphere, fur, 0, 0.2, -0.05, 0, 0, 0, 0.085, 0.09, 0.085); b.f.add(P.sphere, light, 0, 0.26, -0.06, 0, 0, 0, 0.06); } // fluffy docked tail // perky upright docked tail else if (breed === 'beagle') { b.f.add(P.capsule, dark, 0, 0.14, -0.03, -0.3, 0, 0, 0.07, 0.17, 0.07); b.f.add(P.sphere, light, 0, 0.3, -0.08, 0, 0, 0, 0.055); } else b.f.add(P.sphere, light, 0, -0.02, -0.02, 0, 0, 0, 0.11);
     tail.add(toGroup(b)); }
   const head = new THREE.Group(); head.position.set(0, B.hy, len * 0.88); body.add(head); const h = MB();
   const eye = (x, y, z) => { h.g.add(P.sphere, 0x15151b, x, y, z, 0, 0, 0, 0.045, 0.05, 0.035); h.l.add(P.sphere, 0xffffff, x + 0.012, y + 0.016, z + 0.025, 0, 0, 0, 0.012, 0.012, 0.008, 0.7); };

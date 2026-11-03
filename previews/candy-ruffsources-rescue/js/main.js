@@ -71,6 +71,13 @@ const LINES = {
 };
 // rescue mission props
 const markGeo = new THREE.TorusGeometry(2.4, 0.16, 8, 36), markMat = new THREE.MeshStandardMaterial({ color: 0xf472b6, emissive: 0xf472b6, emissiveIntensity: 1.5 });
+const dotTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 32; const x = c.getContext('2d'); const gr = x.createRadialGradient(16, 16, 0, 16, 16, 16); gr.addColorStop(0, '#fff'); gr.addColorStop(0.45, 'rgba(255,255,255,.6)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = gr; x.fillRect(0, 0, 32, 32); return new THREE.CanvasTexture(c); })();
+const glowTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'); const gr = x.createRadialGradient(64, 64, 20, 64, 64, 64); gr.addColorStop(0, 'rgba(255,190,225,0)'); gr.addColorStop(0.7, 'rgba(255,190,225,.35)'); gr.addColorStop(0.85, 'rgba(255,230,245,.5)'); gr.addColorStop(1, 'rgba(255,190,225,0)'); x.fillStyle = gr; x.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c); })();
+function sparkRing() { // subtle mission-spot marker: faint glow halo on the ground + twinkling sparkles (no solid ring)
+  const g = new THREE.Group(); const halo = new THREE.Mesh(new THREE.PlaneGeometry(5.4, 5.4), new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, depthWrite: false, opacity: 0.55, blending: THREE.AdditiveBlending })); halo.rotation.x = -PI / 2; halo.renderOrder = 2; g.add(halo);
+  const n = 36, pos = []; for (let i = 0; i < n; i++) { const a = i / n * PI * 2, r = 2.2 + Math.random() * 0.4; pos.push(Math.cos(a) * r, 0.1 + Math.random() * 0.6, Math.sin(a) * r); }
+  const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); const sp = new THREE.Points(sg, new THREE.PointsMaterial({ color: 0xffd1ea, size: 0.22, map: dotTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  g.add(sp); g.userData.spark = sp; g.userData.halo = halo; return g; }
 const pinGeo = new THREE.OctahedronGeometry(0.55), pinMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xfacc15, emissiveIntensity: 1.2 });
 const zoneMat = new THREE.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide });
 const arrow = new THREE.Group(); { const m = new THREE.MeshStandardMaterial({ color: 0xf472b6, emissive: 0xdb2777, emissiveIntensity: 1.2 }); const c = new THREE.Mesh(new THREE.ConeGeometry(0.4, 0.9, 16), m); c.rotation.x = PI / 2; c.position.z = 0.45; const s = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.18, 0.8), m); s.position.z = -0.25; arrow.add(c, s); } scene.add(arrow); arrow.visible = false;
@@ -128,8 +135,8 @@ function startMission(i) {
   const g = new THREE.Group(); scene.add(g); const B = new Batch(); const cols = [];
   const pup = makePet('pup', { breed: o.pup.breed, s: 0.95, collar: o.pup.col, seed: o.pup.seed }); scene.add(pup.root); pup.mode = 'sit';
   M = { ...o, g, cols, pupR: pup, stage: 'go', t: 0, tries: 0, bubble: helpBubble('HELP!') };
-  const ring = new THREE.Mesh(markGeo, markMat); ring.rotation.x = PI / 2; ring.position.set(o.x, 0.25, o.z); g.add(ring); M.ring = ring;
-  const pin = new THREE.Mesh(pinGeo, pinMat); pin.position.set(o.x, 6, o.z); g.add(pin); M.pin = pin;
+  const ring = sparkRing(); ring.position.set(o.x, 0.22, o.z); g.add(ring); M.ring = ring;
+  const pin = new THREE.Mesh(pinGeo, pinMat); pin.visible = false; pin.position.set(o.x, 6, o.z); g.add(pin); M.pin = pin; // floating marker removed (HUD arrow + sparkles guide instead)
   pup.x = o.x; pup.z = o.z; pup.y = 0.05; pup.yaw = Math.random() * 6;
   if (o.type === 'tree') { // big climbable oak with the pup out on a long, clear branch (canopy kept above + behind it)
     const BK = 0x6b4628, BD = 0x4a2f1a; B.cyl('m', BK, o.x, 0, o.z, 0.5, 4.6, 0, 0, 0, true);
@@ -317,7 +324,7 @@ function step(dt) {
     c.v += ((blocked ? 0 : 10) - c.v) * Math.min(1, dt * (blocked ? 6 : 1.5)); c.s += c.v * dt; const p2 = loopPos(c.L, c.s, {}); c.root.position.set(p2.x, 0.04, p2.z); let d = p2.yaw - c.root.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d)); c.root.rotation.y += d * Math.min(1, dt * 8); }
   // ---- mission ----
   if (M) { M.t += dt; const p = M.pupR;
-    M.pin.position.y += Math.sin(S.time * 3) * 0.01; M.pin.rotation.y += dt * 2; M.bubble.position.set(p.x, p.y + 1.5 + Math.sin(S.time * 5) * 0.08, p.z);
+    M.pin.position.y += Math.sin(S.time * 3) * 0.01; M.pin.rotation.y += dt * 2; if (M.ring.userData.spark) { M.ring.rotation.y += dt * 0.25; M.ring.userData.spark.material.opacity = 0.65 + Math.sin(S.time * 4) * 0.3; M.ring.userData.spark.position.y = Math.sin(S.time * 1.5) * 0.08; } M.bubble.position.set(p.x, p.y + 1.5 + Math.sin(S.time * 5) * 0.08, p.z);
     if (M.stage === 'go') { p.mode = M.type === 'stuck' ? 'idle' : 'sit'; p.rig.root.rotation.z = Math.sin(S.time * 18) * 0.04; // trembling
       if (M.type === 'gadget' && !M.botOff) { M.ba += dt * (S.tools.remote ? 1.0 : 1.5); const bx = M.x + Math.cos(M.ba) * M.br, bz = M.z + Math.sin(M.ba) * M.br; M.bot.root.position.set(bx, 0.05, bz); M.bot.root.rotation.y = -M.ba; animSweepy(M.bot, dt, 2, false);
         M.sparks.forEach((s, k) => { const a = S.time * 9 + k * 0.63, h = (S.time * 2 + k * 0.1) % 1; s.position.set(bx + Math.cos(a) * 0.9 * h, 0.6 + h * 1.2, bz + Math.sin(a) * 0.9 * h); });
@@ -348,16 +355,23 @@ function step(dt) {
   // ---- GPS arrow ----
   const tg = tgt(); const ax = P.mode === 'drive' ? TK.x : P.x, az = P.mode === 'drive' ? TK.z : P.z; const gp = $('gps');
   if (tg) { const dx = tg.x - ax, dz = tg.z - az, d = Math.hypot(dx, dz); arrow.visible = d > 5 && !(M && M.stage === 'follow' && inHQ(P.x, P.z)); arrow.position.set(ax, (P.mode === 'drive' ? spec.hgt + 1.6 : 2.2) + Math.sin(S.time * 4) * 0.12, az); arrow.rotation.y = Math.atan2(dx, dz);
-    gp.classList.add('on'); const rel = Math.atan2(dx, dz) - (cam.moveYaw); $('gpsArrow').style.transform = `rotate(${-rel * 180 / PI - 90}deg)`; $('gpsTxt').textContent = `${tg.name} · ${Math.round(d)} m`; }
+    gp.classList.add('on'); { const ob = $('hObj').getBoundingClientRect(); if (ob.height) gp.style.top = Math.round(ob.bottom + 8) + 'px'; } const rel = Math.atan2(dx, dz) - (cam.moveYaw); $('gpsArrow').style.transform = `rotate(${-rel * 180 / PI - 90}deg)`; $('gpsTxt').textContent = `${tg.name} · ${Math.round(d)} m`; }
   else { arrow.visible = false; gp.classList.remove('on'); }
   $('drive').classList.toggle('on', P.mode === 'drive' && isTouch);
   // ---- camera ----
   const f = P.mode === 'drive' ? { x: TK.x, y: 0.5, z: TK.z, yaw: TK.yaw, speed: Math.abs(TK.v) } : { x: P.x, y: me.y, z: P.z, yaw: P.yaw, speed: P.speed };
   { const ins = P.mode === 'walk' && inHQ(P.x, P.z); E.renderer.toneMappingExposure += ((ins ? 0.76 : 0.88) - E.renderer.toneMappingExposure) * Math.min(1, dt * 3); E.bloom && (E.bloom.strength = ins ? 0.12 : 0.22); }
-  cam.driving = P.mode === 'drive'; cam.update(dt, f, world); followShadow(f.x, 0, f.z);
+  cam.driving = P.mode === 'drive'; cam.update(dt, f, world); followShadow(f.x, 0, f.z); fadeOccluders();
   hud();
   saveT += dt; if (saveT > 5) { saveT = 0; save(); }
 }
+const _oc = new THREE.Raycaster(), _ov = new THREE.Vector3(), _ot = new THREE.Vector3(); let _faded = [];
+function fadeOccluders() { // signs/banners between Candy and the camera fade out so nothing blocks the view
+  const c = E.camera; _ot.set(cam.tx, cam.ty, cam.tz); _ov.copy(_ot).sub(c.position); const L = _ov.length(); if (L < 0.01) return; _oc.set(c.position, _ov.normalize()); _oc.far = L + 0.3;
+  const hl = _oc.intersectObjects(T.signs, true); _oc.set(_ot, _ov.clone().negate()); hl.push(..._oc.intersectObjects(T.signs, true)); const hits = new Set(hl.map((h) => { let o = h.object; while (o.parent && !T.signs.includes(o)) o = o.parent; return o; }));
+  // also fade any sign the camera is within 1.2m of (behind/inside)
+  for (const sg of T.signs) { if (!sg.visible) continue; sg.getWorldPosition(_ov); if (_ov.distanceTo(c.position) < 1.6) hits.add(sg); }
+  for (const sg of T.signs) { const on = hits.has(sg); sg.traverse((m) => { if (!m.material) return; const mt = m.material; if (on && !mt.userData.fadeOwn) { m.material = mt.clone(); m.material.userData.fadeOwn = true; m.material.userData.orig = mt; } const cur = m.material; if (cur.userData.fadeOwn) { cur.transparent = true; cur.opacity += ((on ? 0.12 : 1) - cur.opacity) * 0.25; cur.depthWrite = cur.opacity > 0.95; } }); } }
 let wipT = 0; function loop(now) { requestAnimationFrame(loop); if (now - wipT > 500) { wipT = now; const wb = document.getElementById('ratitaWip'); document.body.classList.toggle('wip', !!wb); if (wb) document.body.style.setProperty('--wip', (wb.getBoundingClientRect().bottom + 6) + 'px'); } const dt = Math.min(0.05, (now - last) / 1000); last = now; if (started) step(dt); else { cam.yaw += dt * 0.08; cam.update(dt, { x: 0, y: 0, z: 4, yaw: 0, speed: 0 }, null, { dist: 34 }); } trackFps(dt, now); render(dt); }
 { const b = $('dBrake'); const on = (e) => { e.preventDefault(); IN.held.brake = true; }, off = (e) => { e.preventDefault(); IN.held.brake = false; }; b.addEventListener('touchstart', on, { passive: false }); b.addEventListener('touchend', off); b.addEventListener('mousedown', on); b.addEventListener('mouseup', off); }
 // ---------------- title ----------------
@@ -367,5 +381,5 @@ const old = load(); $('mContinue').style.display = old ? '' : 'none';
 $('mContinue').addEventListener('click', () => start(load())); $('mScratch').addEventListener('click', () => start(fresh('scratch'))); $('mEmpire').addEventListener('click', () => start(fresh('empire')));
 window.addEventListener('beforeunload', save); document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
 S = old || fresh('scratch'); applyWorld(); parkTruck(); S = null;
-window.__candy = { get S() { return S; }, get M() { return M; }, P, TK, T, SITES, start, fresh, doAct, startMission, renderBoard, makeOffers, freePup, rescued, failMission, openModal, closeModals, E, cam, get shuttle() { return shuttle; } };
+window.__candy = { THREE, get S() { return S; }, get M() { return M; }, P, TK, T, SITES, start, fresh, doAct, startMission, renderBoard, makeOffers, freePup, rescued, failMission, openModal, closeModals, E, cam, get shuttle() { return shuttle; } };
 requestAnimationFrame(loop);
