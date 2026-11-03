@@ -362,7 +362,7 @@
   /* ------------------------------------------------------------------ */
   var RATS = {
     luna: { name: 'Luna', fur: '#a7adbb', dark: '#7d8394', belly: '#e6e8ee', eye: '#1b1b24' },
-    pirat: { name: 'Pi-rat', fur: '#f8f6f2', dark: '#2b2730', belly: '#ffffff', eye: '#1b1b24' },
+    pirat: { name: 'Pi-rat', fur: '#f8f6f2', dark: '#3a2f2b', hood: '#3a2f2b', belly: '#ffffff', eye: '#1b1b24' },
     snowie: { name: 'Snowie', fur: '#fbfbff', dark: '#e3e1ee', belly: '#ffffff', eye: '#d0315a' }
   };
   function drawRat(c, type, x, y, sz, happy, t) {
@@ -376,8 +376,9 @@
       c.fillStyle = R.dark; c.beginPath(); c.arc(sd * 34, -28, 22, 0, 7); c.fill();
       c.fillStyle = '#ffb3c8'; c.beginPath(); c.arc(sd * 34, -28, 13, 0, 7); c.fill();
     });
-    // head
-    c.fillStyle = R.fur; c.beginPath(); c.ellipse(0, 0, 40, 36, 0, 0, 7); c.fill();
+    // head (Pi-rat: dark hood over head & shoulders)
+    if (R.hood) { c.fillStyle = R.hood; c.beginPath(); c.ellipse(0, 14, 44, 22, 0, 0, 7); c.fill(); }
+    c.fillStyle = R.hood || R.fur; c.beginPath(); c.ellipse(0, 0, 40, 36, 0, 0, 7); c.fill();
     // snout
     c.fillStyle = R.belly; c.beginPath(); c.ellipse(0, 16, 20, 15, 0, 0, 7); c.fill();
     c.fillStyle = '#ff7fa6'; c.beginPath(); c.ellipse(0, 9, 7, 5, 0, 0, 7); c.fill();
