@@ -1,7 +1,7 @@
 /* Auto-synced from preview.json — offline fallback for Lili's Board & Time Jumper */
 window.GROK_PREVIEW_DATA = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
-  "updated": "2026-10-28",
+  "updated": "2026-11-02",
   "items": [
     {
       "issue": 89,
@@ -840,6 +840,15 @@ window.GROK_PREVIEW_DATA = {
       "playable": true,
       "built": "2026-11-02",
       "notes": "Tortuga Air gate + World Tour Boulevard, 4 city courts (Paris, Tokyo, New York, Rio) with landmarks, 4-leg tour live on Tortuga TV Network (TTN), Torty TTN anchor + Candy, MaxGrit Tour paddle + Silent Serve Tour balls, ticket fee + paddle wear on losses, free standby seat when broke. Locked until bought (DLC shop wiring ready)"
+    },
+    {
+      "id": "airport-tycoon",
+      "game": "sky",
+      "name": "Grok Sky: Airport Tycoon",
+      "url": "previews/airport-tycoon/",
+      "playable": true,
+      "built": "2026-11-02",
+      "notes": "Build & run Torty's Airport: gates, customs, shops, belts, runways. Grumpy manager-demanding customers, storms, outages, runway closures, baggage pileups, free Rescue Fund."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
