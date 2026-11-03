@@ -6,11 +6,33 @@ import { MATS } from './mats.js';
 const W = 14, D = 10, H = 4.6;
 const DDEF = [ // [id, name, house x, z, ry, depth]
   ['barn', "Torty's Barn", -60, -14, PI / 2, 7], ['bakery', 'Hollow Bakery', -12, -22, 0, 6], ['pumpkin', 'Pumpkin Patch Shop', -22, -14, 0, 6], ['cranberry', 'Cranberry Co.', 22, -14, 0, 6],
-  ['cider', 'Apple Cider Barn', 40, -9, 0, 6], ['hall', 'Town Hall', 12, -22, 0, 6], ['diner', 'Hollow Diner', 54, -9, 0, 6], ['workshop', 'Float Workshop', 76, 26, -PI / 2, 8],
+  ['cider', 'Apple Cider Barn', 42, -13, 0, 6], ['hall', 'Town Hall', 12, -22, 0, 6], ['diner', 'Hollow Diner', 56, -13, 0, 6], ['workshop', 'Float Workshop', 76, 26, -PI / 2, 8],
   ['luna', "Luna's Home", -22, 14, PI, 6], ['pirat', "Pi-rat's Home", 22, 14, PI, 6]];
 export const DOORS = DDEF.map(([id, name, hx, hz, ry, d]) => { const fx = Math.sin(ry), fz = Math.cos(ry), at = (k) => [hx + fx * k, hz + fz * k];
   const [dx, dz] = at(d / 2), [x, z] = at(d / 2 + 1.2), [ox2, oz2] = at(d / 2 + 1.6); return { id, name, dx, dz, ry, x, z, out: [ox2, oz2, ry] }; });
 export const ACORNS = { barn: [[-5.6, -3.6], [5.4, 2.4]], bakery: [[5.8, -3.6]], pumpkin: [[-6.2, 3.8]], cranberry: [[-3.6, 3.8]], cider: [[5.6, 3.8]], hall: [[-6.0, -4.2]], diner: [[6.2, 3.9]], workshop: [[-6.2, 3.8]], luna: [[5.8, -4.2]], pirat: [[-6.2, 4.0]] }; // 11 inside, 9 outdoors (step 4)
+const AUT = [0xf97316, 0xb91c1c, 0xfacc15, 0x92400e, 0x16a34a];
+function DRESS_FN() { const R = (n) => [n, 0]; return {
+  barn: (k, b, ox, oz, add, info) => { k.frame('L', 0.4, 2.4, 1.4, 1.0, 0xfde68a, 0xdc2626); k.frame('R', 0.2, 2.4, 1.2, 0.9, 0xbfe3ff, 0x16a34a); k.hay(-6.1, 0.3, 0xf97316); k.hay(-6.1, -0.6); k.crate2(6.2, -2.0, 0xdc2626); k.shock(6.2, 4.2); k.rug(0, -1.2, 3, 2, 0x92400e, 0x5b2a1a); k.bunting('B', 3.9, AUT); info.npcs.push(['grandpa', -3.6, -1.6, PI * 0.75, 'Grandpa Cheddar']); },
+  bakery: (k, b, ox, oz, add, info) => { k.frame('L', 3.2, 2.2, 1.2, 0.9, 0xfef3c7, 0xd97706); k.frame('B', 5.6, 3.0, 1.2, 0.8, 0x111827, 0xfacc15); k.plant(-6.2, 4.3); k.plant(6.2, 4.3); k.rug(0, 3.4, 2.4, 1.4, 0xf97316, 0x7c2d12); k.bunting('B', 4.1, AUT); k.clock('R', 3.6, 2.6); info.npcs.push(['grandma', 2.5, 2.0, -PI / 2, 'Grandma Gouda']); },
+  pumpkin: (k, b, ox, oz, add, info) => { k.shock(6.3, -4.3); k.shock(-4.9, 4.3); k.hay(6.1, 4.2, 0xf97316); k.hay(-6.2, 1.6, 0xfacc15); k.crate2(-6.2, 0.4, 0x16a34a); k.plant(-1.9, -4.3, 0.9); k.frame('L', -3.2, 2.4, 1.4, 0.9, 0xfef3c7, 0xf97316); k.frame('R', 2.6, 2.4, 1.4, 0.9, 0xfde68a, 0x16a34a); k.rug(0, 3.0, 2.6, 1.6, 0x92400e, 0xf97316); k.bunting('B', 4.0, AUT); k.bunting('L', 4.0, AUT); k.bunting('R', 4.0, AUT);
+    for (let i = 0; i < 5; i++) b.sph('g', [0xf97316, 0xfacc15, 0xfef3c7][i % 3], ox - 6.3 + (i % 2) * 0.1, 0.22, oz - 2.4 - i * 0.45 + 0.0, 0.22, 0.18, 0.22); info.npcs.push(['mom', -3.4, 1.2, PI * 0.6, 'Mom Camembert']); },
+  cranberry: (k, b, ox, oz, add, info) => { k.frame('R', -3.8, 2.4, 1.4, 0.9, 0xfacc15, 0x111827); k.frame('B', 4.6, 2.9, 1.4, 0.9, 0xfecaca, 0xb91c1c); k.plant(-6.2, 4.3); k.plant(6.2, 4.3); k.shelf('L', 2.6, 1.8, 2.0, [0xfacc15, 0xf97316, 0xfacc15]); k.rug(0, 3.2, 2.4, 1.4, 0xb91c1c, 0x7f1d1d); k.clock('B', 2.8, 3.0); info.npcs.push(['brother', 3.4, -2.2, -PI / 2, 'Bram the Inspector']); },
+  cider: (k, b, ox, oz, add, info) => { k.frame('L', -3.4, 2.4, 1.3, 0.9, 0xfef3c7, 0xdc2626); k.frame('R', -2.8, 2.4, 1.3, 0.9, 0xbbf7d0, 0x16a34a); k.plant(-6.2, 4.3); k.crate2(-1.6, 4.2, 0xdc2626); k.rug(0, 0.2, 2.4, 1.6, 0x9a3412, 0x5b2a1a); k.bunting('B', 4.1, [0xdc2626, 0x16a34a, 0xfacc15]); for (let i = 0; i < 9; i++) b.sph('g', i % 2 ? 0xdc2626 : 0x65a30d, ox - 4 + i, 3.55 - Math.sin(i / 8 * PI) * 0.3, oz + 1.5, 0.12, 0.12, 0.12); info.npcs.push(['dad', 3.3, 3.6, PI, 'Dad Roquefort']); },
+  hall: (k, b, ox, oz, add, info) => { k.frame('B', -5.3, 2.6, 1.0, 1.3, 0xbfdbfe, 0x8a7868); k.frame('B', 5.3, 2.6, 1.0, 1.3, 0xfde68a, 0x6b7280); k.frame('L', 3.4, 2.4, 1.4, 1.0, 0xfef3c7, 0x16a34a); k.frame('R', -3.6, 2.5, 1.2, 0.9, 0xfecaca, 0x1e3a8a);
+    k.plant(-6.2, 4.3); k.plant(6.2, 4.3); k.plant(6.2, -4.2); k.shock(-4.6, -4.3); k.shock(4.6, -4.3); k.clock('B', -5.3, 3.75); k.bunting('L', 4.05, AUT); k.bunting('R', 4.05, AUT); k.rug(-3.8, 3.6, 2.0, 1.2, 0x1e3a8a, 0xfacc15); k.rug(3.8, 3.6, 2.0, 1.2, 0x1e3a8a, 0xfacc15);
+    for (const sx of [-1, 1]) b.sph('g', 0xf97316, ox + sx * 3.1, 0.62, oz - 3.2, 0.28, 0.22, 0.28); k.hay(-6.2, 2.5, 0xfacc15); k.shelf('R', 3.6, 1.6, 1.6, [0xfacc15, 0xd1d5db, 0xb45309]);
+    info.npcs.push(['mom', -2.1, -2.0, PI * 0.9, 'Mom Camembert'], ['dad', 2.1, -2.1, -PI * 0.9, 'Dad Roquefort'], ['grandma', -5.9, 1.3, PI * 0.7, 'Grandma Gouda']); },
+  diner: (k, b, ox, oz, add, info) => { k.frame('B', 5.0, 2.6, 1.4, 1.0, 0x111827, 0xfacc15); k.frame('L', 3.0, 2.4, 1.2, 0.9, 0xfef3c7, 0xdc2626); k.clock('R', 2.2, 2.9); k.plant(6.2, -4.3); k.rug(0, 3.6, 2.4, 1.2, 0xdc2626, 0x111827); b.box('e', 0xff3b6b, ox + 5.0, 3.5, oz - 4.78, 1.0, 0.3, 0.03, 0, 1.2);
+    for (const sx of [-1, 1]) { b.box('x', 0xd1d5db, ox + sx * 4.9 + 0.5, 0.82, oz + 2.3, 0.14, 0.18, 0.1); b.cyl('m', 0xdc2626, ox + sx * 4.9 + 0.7, 0.82, oz + 2.3, 0.05, 0.16); } info.npcs.push(['grandpa', -3.1, -1.3, PI, 'Grandpa Cheddar']); },
+  workshop: (k, b, ox, oz, add, info) => { b.box('m', 0xd6b88a, ox - 6.82, 1.2, oz + 1.2, 0.05, 1.4, 2.4); for (let i = 0; i < 6; i++) b.box('x', [0x6b7280, 0xdc2626, 0x2563eb][i % 3], ox - 6.76, 1.5 + (i % 2) * 0.55, oz + 0.4 + (i >> 1) * 0.75, 0.05, 0.45, 0.1);
+    k.frame('B', -4.4, 2.8, 1.4, 1.0, 0xfef3c7, 0xf97316); k.frame('R', 3.6, 2.6, 1.0, 1.2, 0xbfdbfe, 0x8a7868); k.crate2(6.2, 4.2, 0xfacc15); k.crate2(-1.6, 4.2); for (let i = 0; i < 3; i++) b.cyl('m', 0x111827, ox + 6.1, i * 0.25, oz - 1.6, 0.4, 0.22); k.blk(6.1, -1.6, 0.85, 0.85, 0.8);
+    k.plant(6.2, 0.4, 0.9); k.bunting('B', 4.1, [0xf97316, 0x2563eb, 0xfacc15]); info.npcs.push(['brother', -3.8, 0.4, PI * 0.8, 'Bram the Painter']); },
+  luna: (k, b, ox, oz, add, info) => { k.frame('B', -2.2, 3.3, 0.9, 0.7, 0xa9afbd, 0x6d28d9); k.frame('B', 2.2, 3.3, 0.9, 0.7, 0xe0e7ff, 0x8a7868); k.frame('L', 3.2, 2.4, 1.2, 0.9, 0xbbf7d0, 0x3730a3); k.plant(-6.2, -0.4); k.plant(6.2, 4.3); k.plant(-3.2, 4.3, 0.9); k.clock('R', -0.6, 2.8); k.shelf('R', 3.4, 2.4, 1.6, [0xfacc15, 0xdc2626, 0x2563eb]);
+    for (let i = 0; i < 5; i++) b.sph('g', AUT[i], ox - 1.2 + i * 0.6, 2.62, oz - 4.3, 0.14, 0.12, 0.14); info.npcs.push(['grandma', 1.9, -1.8, -PI * 0.7, 'Grandma Gouda']); },
+  pirat: (k, b, ox, oz, add, info) => { k.frame('B', 4.6, 2.6, 1.4, 1.0, 0x111827, 0xffffff); k.frame('L', 3.0, 2.4, 1.2, 0.9, 0xbfe3ff, 0xc08552); k.frame('R', 2.6, 2.6, 1.0, 0.8, 0xfce7f3, 0x8a7868); k.plant(6.2, 4.3); k.plant(-3.6, -4.3, 0.85); k.shelf('L', -0.6, 2.1, 1.6, [0x5ef2ff, 0xfacc15, 0xf472b6]);
+    k.rug(-2.4, 2.8, 2.0, 1.4, 0xdb2777, 0xfde68a); k.clock('B', -0.2, 3.2); }
+}; }
 export function initRooms(ctx) {
   const { scene, P, cam, S, sfx, toast, talk, msg, makePet, animPet } = ctx;
   let cur = null; // { id, ox, oz, grp, boxes, lights, npcs, acorns, door }
@@ -168,7 +190,7 @@ export function initRooms(ctx) {
       add(sign('HOLLOW DINER', 2.8, 0.6, { bg: '#dc2626', border: '#fde68a' }), ox - 1, 3.6, oz - 4.8);
       add(sign('ORDERS UP!', 1.6, 0.4, { bg: '#111827', border: '#facc15' }), ox - 1, 2.0, oz - 4.25);
       const pg = k.page('diner'); if (pg) add(pg, ox + 4.9, 0.8, oz + 2.3);
-      return { npcs: [['ash', -1, -3.8, 0, 'Cook Ash'], ['snowie', 4.4, 2.3, -PI / 2, 'Snowie']], light: 0xfff1d6 };
+      return { npcs: [['ash', -5.9, -2.2, PI / 4, 'Cook Ash'], ['snowie', 4.4, 2.3, -PI / 2, 'Snowie']], light: 0xfff1d6 };
     },
     workshop(b, ox, oz, bx, add, k) { shell(b, ox, oz, 0xe5e7eb, 0x6b7280, 0x0f766e);
       // float on stand (center), paint cans, balloon pump, workbench
@@ -223,6 +245,8 @@ export function initRooms(ctx) {
     }
   };
   const ROOMI = Object.fromEntries(DOORS.map((d, i) => [d.id, i]));
+  // ---- density pass: tidy themed props for every room (room-local coords, all batched into the same few meshes) ----
+  const DRESS = DRESS_FN();
   function acornMesh() { const g = new THREE.Group(); const b = new Batch(); b.sph('l', 0xfacc15, 0, 0.45, 0, 0.22, 0.28, 0.22, 0.9); b.sph('m', 0x7c4a1e, 0, 0.66, 0, 0.24, 0.1, 0.24); b.cyl('m', 0x5b3a24, 0, 0.72, 0, 0.03, 0.12); b.finish(g, false); return g; }
   function enter(id, keep) { const d = DOORS.find((q) => q.id === id), ox = 300 + ROOMI[id] * 60, oz = 0; const grp = new THREE.Group(), b = new Batch(), bx = [];
     const add = (o, x, y, z, ry = 0) => { o.position.set(x, y, z); o.rotation.y = ry; grp.add(o); };
@@ -233,10 +257,23 @@ export function initRooms(ctx) {
       lamps: (b, x0, z0, col) => { for (const x of [-3, 0, 3]) { b.cyl('x', 0x2f3437, x0 + x, H - 0.6, z0, 0.02, 0.6); b.sph('l', col, x0 + x, H - 0.75, z0, 0.2, 0.18, 0.2, 1); } },
       window: (b, x, z, side) => { const sx = side === 'L' ? 1 : -1; b.box('m', 0xffffff, x + sx * 0.02, 1.0, z, 0.06, 1.5, 1.4); b.box('l', 0xbfe3ff, x + sx * 0.05, 1.08, z, 0.02, 1.34, 1.24, 0, 0.3); b.box('m', 0xffffff, x + sx * 0.06, 1.72, z, 0.02, 0.06, 1.24); },
       page: (pid) => { if (S.quests && S.quests.recipe === 1 && !(S.pages || []).includes(pid)) { const g = new THREE.Group(), pb = new Batch(); pb.box('l', 0xfff7d6, 0, 0.5, 0, 0.45, 0.02, 0.6, 0.3, 0.5); pb.box('m', 0x7c2d12, 0, 0.52, 0, 0.3, 0.005, 0.04, 0.3); pb.finish(g, false); pages.push({ pid, m: g }); return g; } return null; } };
-    const info = BUILD[id](b, ox, oz, bx, add, k); bx.push(...walls(ox, oz)); b.finish(grp);
+    Object.assign(k, {
+      plant: (x, z, s = 1) => { b.cyl('m', 0xb45309, ox + x, 0, oz + z, 0.28 * s, 0.5 * s); b.sph('g', 0x15803d, ox + x, 0.75 * s, oz + z, 0.42 * s, 0.5 * s, 0.42 * s); b.sph('g', 0x22c55e, ox + x + 0.15, 1.05 * s, oz + z - 0.1, 0.25 * s, 0.3 * s, 0.25 * s); bx.push(k.blk(x, z, 0.7 * s, 0.7 * s, 1.2 * s)); },
+      frame: (face, a, y, w, h, c1, c2) => { const [x, z, ry] = face === 'B' ? [a, -4.82, 0] : face === 'L' ? [-6.82, a, 1] : [6.82, a, 1]; const fw = ry ? 0.05 : w, fd = ry ? w : 0.05;
+        b.box('m', 0x5b3a24, ox + x, y - h / 2, oz + z, fw + (ry ? 0 : 0.12), h + 0.12, fd + (ry ? 0.12 : 0)); const ix = face === 'L' ? 0.03 : face === 'R' ? -0.03 : 0, iz = face === 'B' ? 0.03 : 0;
+        b.box('m', c1, ox + x + ix, y - h / 2 + 0.06, oz + z + iz, ry ? 0.02 : w - 0.05, h - 0.05, ry ? w - 0.05 : 0.02); b.sph('m', c2, ox + x + ix * 1.5, y, oz + z + iz * 1.5, ry ? 0.02 : w * 0.25, h * 0.25, ry ? w * 0.25 : 0.02); },
+      rug: (x, z, w, d, c1, c2) => { b.box('m', c2, ox + x, 0.045, oz + z, w, 0.012, d); b.box('m', c1, ox + x, 0.05, oz + z, w - 0.3, 0.012, d - 0.3); },
+      shelf: (face, a, y, len, cols) => { const [x, z, ry] = face === 'B' ? [a, -4.7, 0] : face === 'L' ? [-6.68, a, 1] : [6.68, a, 1]; b.box('m', 0x7c4a1e, ox + x, y, oz + z, ry ? 0.3 : len, 0.06, ry ? len : 0.3);
+        const n = Math.round(len / 0.4); for (let i = 0; i < n; i++) { const o = -len / 2 + 0.2 + i * 0.4; b.cyl('m', cols[i % cols.length], ox + x + (ry ? 0 : o), y + 0.06, oz + z + (ry ? o : 0), 0.12, 0.28); } },
+      bunting: (face, y, c) => { for (let i = 0; i < 12; i++) { const o = -5.5 + i, sag = Math.sin(i / 11 * PI) * 0.25; if (face === 'B') b.box('m', c[i % c.length], ox + o, y - sag, oz - 4.8, 0.42, 0.32, 0.03); else b.box('m', c[i % c.length], ox + (face === 'L' ? -6.8 : 6.8), y - sag, oz + o * 0.75, 0.03, 0.32, 0.42); } },
+      shock: (x, z) => { for (let i = 0; i < 7; i++) { const a = i / 7 * PI * 2; b.cyl('m', i % 2 ? 0xd4b26a : 0xc49a4a, ox + x + Math.cos(a) * 0.12, 0, oz + z + Math.sin(a) * 0.12, 0.07, 1.7); } b.cyl('m', 0x9a3412, ox + x, 0.7, oz + z, 0.24, 0.08); b.sph('g', 0xf97316, ox + x + 0.35, 0.2, oz + z + 0.25, 0.25, 0.2, 0.25); bx.push(k.blk(x, z, 0.8, 0.8, 1.7)); },
+      hay: (x, z, top) => { b.rbox('m', 0xe3c062, ox + x, 0, oz + z, 1.1, 0.6, 0.7); if (top) b.sph('g', top, ox + x, 0.78, oz + z, 0.26, 0.2, 0.26); bx.push(k.blk(x, z, 1.15, 0.75, 0.9)); },
+      crate2: (x, z, fill) => { k.crate(b, ox + x, oz + z); if (fill) for (let i = 0; i < 4; i++) b.sph('g', fill, ox + x - 0.18 + (i % 2) * 0.36, 0.72, oz + z - 0.18 + (i >> 1) * 0.36, 0.16, 0.14, 0.16); bx.push(k.blk(x, z, 0.85, 0.85, 0.9)); },
+      clock: (face, a, y) => { const [x, z] = face === 'B' ? [a, -4.8] : [face === 'L' ? -6.8 : 6.8, a]; b.cyl('m', 0x5b3a24, ox + x, y, oz + z, 0.32, 0.05, face === 'B' ? PI / 2 : 0, face === 'B' ? 0 : PI / 2); b.cyl('m', 0xfffbeb, ox + x + (face === 'L' ? 0.03 : face === 'R' ? -0.03 : 0), y, oz + z + (face === 'B' ? 0.03 : 0), 0.26, 0.04, face === 'B' ? PI / 2 : 0, face === 'B' ? 0 : PI / 2); } });
+    const info = BUILD[id](b, ox, oz, bx, add, k); if (DRESS[id]) DRESS[id](k, b, ox, oz, add, info); bx.push(...walls(ox, oz)); b.finish(grp);
     const cb = new Batch(); cb.box('m', 0x5b3a24, ox, H, oz, W + 0.6, 0.25, D + 0.6); cb.finish(grp, false);
     const lights = [-3.5, 3.5].map((dx) => { const L = new THREE.PointLight(info.light, 16, 14, 1); L.position.set(ox + dx, H - 0.6, oz); grp.add(L); return L; });
-    const npcs = info.npcs.map(([pid, x, z, yaw, who]) => { const p = makePet(pid, { s: pid === 'candy' ? 2.1 : pid === 'luna' || pid === 'snowie' ? 1.3 : 1.25, extras: pid === 'luna' ? ['glasses'] : undefined }); p.x = ox + x; p.z = oz + z; p.yaw = yaw; p.who = who; p.pid = pid; grp.add(p.root); return p; });
+    const npcs = info.npcs.map(([pid, x, z, yaw, who]) => { const p = makePet(pid, { s: pid === 'candy' ? 2.1 : pid === 'luna' || pid === 'snowie' ? 1.3 : 1.25, outfit: pid === 'ash' ? 'chef' : undefined, extras: pid === 'luna' ? ['glasses'] : undefined }); p.x = ox + x; p.z = oz + z; p.yaw = yaw; p.who = who; p.pid = pid; grp.add(p.root); return p; });
     S.acorns = S.acorns || []; const acorns = (ACORNS[id] || []).map(([x, z], i) => { const key = id + i; if (S.acorns.includes(key)) return null; const m = acornMesh(); m.position.set(ox + x, 0, oz + z); grp.add(m); return { key, m, x: ox + x, z: oz + z }; }).filter(Boolean);
     scene.add(grp); cur = { id, d, ox, oz, grp, boxes: bx, npcs, acorns, pages };
     if (keep) return; P.x = ox; P.z = oz + D / 2 - 3.2; P.yaw = PI; cam.yaw = 0; cam.snap = true; sfx('door'); toast('🚪 ' + d.name);
@@ -254,5 +291,5 @@ export function initRooms(ctx) {
   function step(dt) { if (!cur) return; const t = performance.now() / 1000; for (const p of cur.npcs) { p.speed = 0; p.noTurn = true; animPet(p, dt, P); }
     for (const pg of cur.pages) if (!pg.got) pg.m.position.y = (pg.y0 ??= pg.m.position.y) + Math.sin(t * 2.5) * 0.06;
     for (const a of cur.acorns) if (!a.got) { a.m.rotation.y = t * 2; a.m.position.y = Math.sin(t * 3) * 0.08; } }
-  return { enter, leave, refresh, spots, step, inside: () => cur, DOORS };
+  return { enter, leave, refresh, spots, step, inside: () => cur, DOORS, acornMesh };
 }

@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { E, initEngine, setEnvironment, followShadow, render, trackFps } from './engine.js';
 import { IN, initInput, readMove, edge, held } from './input.js';
 import { FollowCam } from './cam.js';
-import { collide, ray, PI, sign } from './kit.js';
+import { collide, ray, PI, sign, COL, Batch, solid, solidC } from './kit.js';
 import { initMats, MATS } from './mats.js';
 import { makePet, animPet } from './pets.js';
 import { makeChefMimo } from './mimo.js';
@@ -78,7 +78,7 @@ for (let i = 0; i < PH.crowd; i++) { const p = put(makePet(FOLK[i % FOLK.length]
   else if (i % 3 === 1 && SP.stalls[(i / 3 | 0) % SP.stalls.length]) { const [sx, sz, sr] = SP.stalls[(i / 3 | 0) % SP.stalls.length]; p.job = 'shop'; p.x = sx + Math.sin(sr) * 1.5 + (R() - 0.5) * 0.8; p.z = sz + Math.cos(sr) * 1.5; p.yaw = sr + PI; }
   else { p.job = 'walk'; const an = ANCH[i % ANCH.length]; p.ax = an[0]; p.az = an[1]; p.ar = an[2]; p.x = an[0] + (R() - 0.5) * an[2]; p.z = an[1] + (R() - 0.5) * an[2]; p.wx = p.x; p.wz = p.z; }
   if (p.job === 'rake' || p.job === 'clean') { const rk = makeRake(); rk.position.set(0.22, 0.15, 0.35); rk.rotation.x = 1.05; rk.scale.setScalar(0.8); p.root.add(rk); p.rake = rk; }
-  folk.push(p); }
+  p.pid = FOLK[i % FOLK.length]; folk.push(p); }
 // crazy turkeys
 const turkeys = []; const tProto = makeTurkey(false); for (let i = 0; i < (PHASE === 'day' ? 24 : 16); i++) { const g = tProto.clone(); g.scale.setScalar(1.1); scene.add(g); const a = R() * PI * 2; turkeys.push({ g, x: Math.cos(a) * (14 + R() * 20), z: Math.sin(a) * (14 + R() * 16), yaw: a, sp: 0, t: R() * 5, zone: null }); }
 const mazeT = [0, 1].map((i) => { const g = makeTurkey(false); scene.add(g); return { g, x: SP.mazeCorn[i].x, z: SP.mazeCorn[i].z, yaw: 0, sp: 0, t: i, zone: SP.mazeBox }; }); turkeys.push(...mazeT);
@@ -120,7 +120,7 @@ const spots = () => [
   { ...SP.torty, r: 3, label: '🐢 Talk to Torty', f: () => { if (!Object.values(S.bag).some((v) => v) && S.coins < 5) { for (const k in S.bag) S.bag[k] += 2; talk('Torty', "Here's a free basket from my pantry. Nobody goes hungry at Harvest Hollow!"); } else talk('Torty', PHASE === 'pre' ? 'Pick anything glowing in my field. It all regrows. The big feast is on Thanksgiving Day!' : PHASE === 'day' ? 'Happy Thanksgiving! The parade is LIVE on Tortuga TV all day. Go join it!' : 'Leftovers for everyone! The field is regrowing for next year.'); } },
 ];
 let near = null;
-function nearest() { let best = null, bd = 1e9; for (const s of (RM && RM.inside() ? RM.spots() : spots().concat(RM ? RM.spots() : []))) { const d = Math.hypot(P.x - s.x, P.z - s.z); if (d < s.r && d < bd) { bd = d; best = s; } }
+function nearest() { if (!(RM && RM.inside()) && P.mode === 'walk') for (const s of step4Spots()) if (Math.hypot(P.x - s.x, P.z - s.z) < s.r) return s; let best = null, bd = 1e9; for (const s of (RM && RM.inside() ? RM.spots() : spots().concat(RM ? RM.spots().concat(step4Spots()) : []))) { const d0 = Math.hypot(P.x - s.x, P.z - s.z), d = d0 - (s.pri || 0); if (d0 < s.r && d < bd) { bd = d; best = s; } }
   for (const c of SP.crops) if (c.ready && Math.hypot(P.x - c.x, P.z - c.z) < 1.4) return { label: ICON[c.kind] + ' Pick ' + c.kind, f: () => { c.ready = false; c.t = 30; c.m.visible = false; S.bag[c.kind] += S.tools && S.tools.basket ? 2 : 1; sfx('pop'); } };
   for (const l of leafM) if (l.amt > 0.05 && Math.hypot(P.x - l.x, P.z - l.z) < 1.8) return { label: '🍂 Rake leaves', f: () => { l.amt = Math.max(0, l.amt - (S.tools && S.tools.rake ? 1 : 0.5)); if (l.amt <= 0.05) { bagUp(l); S.coins += 2; S.raked++; toast('Leaf pile cleaned up! +2 🪙'); sfx('coin'); } else sfx('whoosh'); } };
   for (const s of sneaks) if (s.st === 'sneak' && Math.hypot(P.x - s.x, P.z - s.z) < 2.2) return { label: '🐀 Shoo the snack thief!', f: () => { s.st = 'flee'; S.coins += 3; talk('Candy', 'Ruff! Thanks for the backup!'); sfx('cheer'); } };
@@ -271,7 +271,7 @@ function drawMap() { const g = $('mapCv').getContext('2d'), W = 520, H = 440, s 
   $('mapList').innerHTML = [SP.kitchen, SP.feast, SP.pie, SP.chase, SP.workshop, SP.maze, SP.cab, SP.torty].map((p, i) => `<button data-i="${i}">${p.name}</button>`).join(''); }
 let gpsT = null; $('mapList').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; gpsT = [SP.kitchen, SP.feast, SP.pie, SP.chase, SP.workshop, SP.maze, SP.cab, SP.torty][+b.dataset.i]; close('mapUI'); };
 $('bMap').onclick = () => { drawMap(); open('mapUI'); };
-function drawMenu() { $('menuStats').innerHTML = `📅 ${DATE} (America/Los_Angeles${qd ? ', <b>test override</b>' : ''}) · ${PH.badge}<br>🪙 ${S.coins} · 😊 mood ${S.mood} · 🥧 pie wins ${S.pieWins} · 🍽️ feasts ${S.feasts} · 🍂 leaf piles raked ${S.raked} · 🕹️ #51 best ${S.cabBest}` + (S.medals.includes('gobble') ? ' · 🏅 Gobble Medal' : '');
+function drawMenu() { $('menuStats').innerHTML = `📅 ${DATE} (America/Los_Angeles${qd ? ', <b>test override</b>' : ''}) · ${PH.badge}<br>${EVS.map((e) => e.n).join(' · ')}<br>🪙 ${S.coins} · 😊 mood ${S.mood} · 🥧 pie wins ${S.pieWins} · 🍽️ feasts ${S.feasts} · 🍂 leaf piles raked ${S.raked} · 🕹️ #51 best ${S.cabBest}` + (S.medals.includes('gobble') ? ' · 🏅 Gobble Medal' : '');
   const opts = [['', '📡 Live date'], [`${Y}-11-10`, '🍂 Pre (Nov 10)'], [`${Y}-11-${TG}`, '🦃 Thanksgiving'], [`${Y}-11-${TG + 2}`, '🥪 After'], [`${Y}-12-12`, '❄️ Off-season']]; $('dateChips').innerHTML = opts.map(([d, n]) => `<button data-d="${d}" class="${(qd || '') === d ? 'sel' : ''}">${n}</button>`).join(''); }
 $('dateChips').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; save(); const u = new URL(location.href); if (b.dataset.d) u.searchParams.set('date', b.dataset.d); else u.searchParams.delete('date'); location.href = u.toString(); };
 $('bMenu').onclick = () => { drawMenu(); open('menuUI'); };
@@ -287,9 +287,9 @@ function stepWalk(dt) { const mv = readMove(); P.stun -= dt; let sp = 0;
   collide(P, 0.45, P.y + 0.1); P.speed = sp; }
 let last = performance.now(), saveT = 0, cropT = 0;
 function step(dt) {
-  if (P.mode === 'cook') stepCook(dt); else if (P.mode === 'parade') stepParade(dt); else if (P.mode === 'cab') stepCab(dt);
+  if (P.mode === 'cook') stepCook(dt); else if (P.mode === 'parade') stepParade(dt); else if (P.mode === 'cab') stepCab(dt); else if (P.mode === 'hay') { if (!anyModal()) stepHay(dt); }
   else if (!anyModal()) { stepWalk(dt); if (P.mode === 'chase') stepChase(dt); else if (P.mode === 'maze') stepMaze(dt); }
-  stepFlyers(dt); if (RM) { RM.step(dt); const ci = RM.inside(); luna.root.visible = !(ci && ci.npcs.some((p) => p.pid === 'luna')); snowie.root.visible = !(ci && ci.npcs.some((p) => p.pid === 'snowie')); candy.root.visible = !(ci && ci.npcs.some((p) => p.pid === 'candy')); } pickTick(dt);
+  stepFlyers(dt); if (RM) { RM.step(dt); const ci = RM.inside(); luna.root.visible = !(ci && ci.npcs.some((p) => p.pid === 'luna')); snowie.root.visible = !(ci && ci.npcs.some((p) => p.pid === 'snowie')); candy.root.visible = !(ci && ci.npcs.some((p) => p.pid === 'candy')); } pickTick(dt); if (RM) step4Tick(dt);
   me.x = P.x; me.z = P.z; me.y = P.y; me.yaw = P.yaw; me.speed = P.speed; me.noTurn = true; animPet(me, dt, null); if (P.stun > 0) me.root.rotation.y += Math.sin(performance.now() / 40) * 0.3;
   // crops regrow (free recovery)
   cropT += dt; if (cropT > 0.5) { for (const c of SP.crops) if (!c.ready) { c.t -= cropT; if (c.t <= 0) { c.ready = true; c.m.visible = true; } } cropT = 0; }
@@ -307,7 +307,7 @@ function step(dt) {
   for (const s of sneaks) { s.t2 -= dt; if (s.st === 'hide' && s.t2 <= 0 && !pieEv) { s.st = 'sneak'; } const tx = s.st === 'sneak' ? SP.pieTable.x + (s === sneaks[0] ? 1.5 : -1.5) : s.hx, tz = s.st === 'sneak' ? SP.pieTable.z + 0.9 : s.hz;
     const dx = tx - s.x, dz = tz - s.z, d = Math.hypot(dx, dz); const v = s.st === 'flee' ? 6 : 1.6; if (d > 0.3) { s.x += dx / d * v * dt; s.z += dz / d * v * dt; s.yaw = Math.atan2(dx, dz); s.speed = v; } else { s.speed = 0; if (s.st === 'flee') { s.st = 'hide'; s.t2 = 8 + R() * 8; } else if (s.st === 'sneak' && !pieEv && Math.hypot(candy.x - s.x, candy.z - s.z) < 2) { s.st = 'flee'; } }
     s.noTurn = true; animPet(s, dt, null); }
-  { const th = sneaks.find((s) => s.st === 'sneak'); const tx = th ? th.x + 0.8 : candy.home.x, tz = th ? th.z + 0.6 : candy.home.z; const dx = tx - candy.x, dz = tz - candy.z, d = Math.hypot(dx, dz); const v = th ? 1.3 : 2;
+  { const th = PG ? null : sneaks.find((s) => s.st === 'sneak'); const tx = th ? th.x + 0.8 : candy.home.x, tz = th ? th.z + 0.6 : candy.home.z; const dx = tx - candy.x, dz = tz - candy.z, d = Math.hypot(dx, dz); const v = th ? 1.3 : 2;
     if (d > 0.4) { candy.x += dx / d * v * dt; candy.z += dz / d * v * dt; candy.yaw = Math.atan2(dx, dz); candy.speed = v; candy.mode = 'walk'; } else { candy.speed = 0; candy.mode = 'idle'; } candy.noTurn = !!th || d > 0.4; animPet(candy, dt, P); }
   if (pieEv) { pieEv.t -= dt; const s = sneaks[0]; if (s.st === 'flee') pieEv.shoo = true; if (pieEv.t <= 0) judgePie(); }
   // crazy turkeys
@@ -316,9 +316,9 @@ function step(dt) {
     if (collide(t, 0.4)) t.yaw += PI * 0.6; t.g.position.set(t.x, Math.abs(Math.sin(performance.now() / 90 + t.x)) * 0.12, t.z); t.g.rotation.y = t.yaw; }
   gob.g.position.set(gob.x, gob.y || 0, gob.z); gob.g.rotation.y = gob.yaw;
   // interact
-  near = ['walk', 'chase', 'maze'].includes(P.mode) && !anyModal() ? (P.mode === 'walk' ? nearest() : null) : null; const ab = $('actBtn'); ab.classList.toggle('on', !!near); if (near) ab.textContent = near.label;
+  near = ['walk', 'chase', 'maze', 'hay'].includes(P.mode) && !anyModal() ? (P.mode === 'walk' ? nearest() : P.mode === 'hay' && HR ? HR.btn : null) : null; const ab = $('actBtn'); ab.classList.toggle('on', !!near); if (near) ab.textContent = near.label;
   if (edge('act') && near) near.f();
-  if (P.mode === 'walk') { const tip = PHASE === 'pre' ? '🍂 Rake leaf piles, gather crops, practice your parade float' : PHASE === 'day' ? '🦃 The BIG FEAST is on! The parade is LIVE all day at the Float Workshop' : PHASE === 'off' ? '❄️ Quiet season: grow crops, cook cozy suppers, practice floats, beat the maze' : '🥪 Leftovers week: help clean up and enjoy the leftovers'; $('hObj').textContent = gpsT ? `➤ ${gpsT.name}` : tip; }
+  if (P.mode === 'walk') { const tip = PHASE === 'pre' ? '🍂 Rake leaf piles, gather crops, practice your parade float' : PHASE === 'day' ? '🦃 The BIG FEAST is on! The parade is LIVE all day at the Float Workshop' : PHASE === 'off' ? '❄️ Quiet season: grow crops, cook cozy suppers, practice floats, beat the maze' : '🥪 Leftovers week: help clean up and enjoy the leftovers'; $('hObj').textContent = gpsT ? `➤ ${gpsT.name}` : (RM && evTip()) || tip; }
   // gps
   const gp = $('gps'); if (gpsT && P.mode === 'walk') { const dx = gpsT.x - P.x, dz = gpsT.z - P.z, d = Math.hypot(dx, dz); gp.classList.add('on'); const rel = Math.atan2(dx, dz) - cam.moveYaw; $('gpsArrow').style.transform = `rotate(${-rel * 180 / PI - 90}deg)`; $('gpsTxt').textContent = `${gpsT.name} · ${Math.round(d)} m`; if (d < 4) gpsT = null; } else gp.classList.remove('on');
   if (talkT > 0) { talkT -= dt; if (talkT <= 0) $('talk').style.display = 'none'; } if (bigT > 0) { bigT -= dt; if (bigT <= 0) $('bigMsg').style.display = 'none'; }
@@ -330,7 +330,7 @@ let selfie = false; $('bPhoto').onclick = () => { selfie = !selfie; if (selfie) 
 let started = false, wipT = 0;
 function loop(now) { requestAnimationFrame(loop); if (now - wipT > 500) { wipT = now; const wb = document.getElementById('ratitaWip'); document.body.classList.toggle('wip', !!wb); if (wb) document.body.style.setProperty('--wip', (wb.getBoundingClientRect().bottom + 6) + 'px'); }
   const dt = Math.min(DTMAX, (now - last) / 1000); last = now; if (started) step(dt); else { cam.yaw += dt * 0.08; cam.update(dt, { x: 0, y: 0, z: 4, yaw: 0, speed: 0 }, null, { dist: 34 }); } trackFps(dt, now); if (!(started && P.mode === 'cab')) render(dt); }
-function start(s) { S = s; P.x = 0; P.z = 16; P.yaw = PI; P.mode = 'walk'; cam.yaw = 0; cam.pitch = 0.35; cam.snap = true; close('title'); document.body.classList.add('playing'); started = true; initAudio(); save();
+function start(s) { S = s; if (typeof syncAcorns === 'function') syncAcorns(); setTimeout(() => toast('📅 ' + EVS.map((e) => e.n).join(' · ')), 2500); P.x = 0; P.z = 16; P.yaw = PI; P.mode = 'walk'; cam.yaw = 0; cam.pitch = 0.35; cam.snap = true; close('title'); document.body.classList.add('playing'); started = true; initAudio(); save();
   if (!S.tut) { S.tut = 1; talk('Luna', PHASE === 'day' ? "Happy Thanksgiving, Pi-rat! The BIG FEAST starts now and the parade is LIVE all day!" : PHASE === 'post' ? "Thanksgiving's over, but there are leftovers! Help the cleanup crews." : PHASE === 'off' ? `It's the quiet season in Harvest Hollow. ${daysTo} days until the next Thanksgiving!` : 'Welcome to Harvest Hollow, Pi-rat! Thanksgiving is coming. Gather crops at Torty\'s farm, then cook at Chef Mimo\'s.', 6); }
   else talk('Luna', PH.badge, 3); }
 $('tPhase').innerHTML = `📅 Live event: <b>${PH.badge}</b>${qd ? ' (test date ' + DATE + ')' : ''}`;
@@ -375,7 +375,7 @@ function jamQuest() { const q = Q(); if (q.jam === 2) { talk('Farmhand Brownie',
   if (S.bag.cranberry >= 5) { S.bag.cranberry -= 5; q.jam = 2; S.coins += 20; addMood(8); S.dishes.push('sauce'); sfx('cheer'); save(); msg('🍒 Quest complete!', "Torty's jam is done! +20 🪙, +8 😊, and a jar of 🍒 cranberry sauce for your feast."); }
   else talk('Farmhand Brownie', `Still need ${5 - S.bag.cranberry} more 🍒. They regrow in the field!`); }
 // --- Pumpkin shop
-function sellCrops() { const PR = { pumpkin: 3, corn: 2, potato: 2, cranberry: 1 }; const tot = Object.keys(PR).reduce((a, k) => a + S.bag[k] * PR[k], 0);
+function sellCrops() { const mk = EV('mkt') ? 1 : 0; const PR = { pumpkin: 3 + mk, corn: 2 + mk, potato: 2 + mk, cranberry: 1 + mk }; const tot = Object.keys(PR).reduce((a, k) => a + S.bag[k] * PR[k], 0);
   msg('🧺 Sell crops to Rose', Object.keys(PR).map((k) => `${ICON[k]} ${k}: ${S.bag[k]} × ${PR[k]} 🪙`).join('<br>') + '<br><br><small>Keep what you need for cooking! Crops regrow in the field.</small>',
     Object.keys(PR).filter((k) => S.bag[k] > 0).map((k) => [`Sell 1 ${ICON[k]} (+${PR[k]})`, () => { S.bag[k]--; S.coins += PR[k]; sfx('coin'); save(); sellCrops(); }]).concat(tot ? [] : []).concat([['Done', null, 'ghost']])); }
 function carve() { if (S.bag.pumpkin < 1) { talk('Shopkeeper Rose', 'You need a 🎃 pumpkin to carve. Torty\'s field always has some!'); return; }
@@ -400,7 +400,8 @@ function serveDiner() { const D2 = [['🥧', 'pumpkin pie'], ['🥔', 'mashed po
     else { addMood(-5); msg('😤 Grumpy customers', `Only ${sc}/3 right and they left without tipping (−5 😊). Cook Ash gives you a <b>free staff meal</b> (+3 😊). Try the next rush!`, [['Thanks, Ash', () => addMood(3)]]); } }); }
 // --- Town Hall
 function questBoard() { const q = Q(); const L = [['🍒 Torty\'s jam (Barn)', q.jam === 2], ['🥇 Win a Bake-Off ribbon', (S.ribbons || 0) > 0], ['🍒 Sort 10 berries (Cranberry Co.)', q.sort === 2], ['🍎 Bob 3 apples (Cider Barn)', (q.bob || 0) >= 3], ['🍽️ Perfect lunch rush (Diner)', q.diner === 2], ['📜 Luna\'s lost recipe', q.recipe === 2], ['🎃 Carve a jack-o\'-lantern', !!S.lantern], [`🌰 Golden acorns ${(S.acorns || []).length}/20`, (S.acorns || []).length >= 20], [`🛂 Open House stamps ${(S.stamps || []).length}/10`, (S.stamps || []).length >= 10]];
-  msg('📋 Quest Board', L.map(([t, d]) => `${d ? '✅' : '⬜'} ${t}`).join('<br>')); }
+  L.push(['🎃 Win the scarecrow contest', S.medals.includes('scarecrow')], ["🐷 Bring all of Candy's piglets home", S.medals.includes('piglets')]);
+  msg('📋 Quest Board', L.map(([t, d]) => `${d ? '✅' : '⬜'} ${t}`).join('<br>') + `<br><br><b>📅 Today</b>: ${EVS.map((e) => e.n).join(' · ')}<br><b>📦 Requests</b><br>${reqText()}`); }
 function mayor() { const st = (S.stamps || []).length; if (st >= 10 && !S.medals.includes('openhouse')) { S.medals.push('openhouse'); S.coins += 30; addMood(10); sfx('cheer'); save(); RM.refresh(); msg('🏅 Open House Medal!', 'You visited every building in Harvest Hollow! Mayor Gold pins the <b>Open House Medal</b> on you. +30 🪙 +10 😊'); }
   else talk('Mayor Gold', S.medals.includes('openhouse') ? 'Our most neighbourly visitor! Your medal is in the case.' : `Welcome to the Open House! Get a stamp in every building: ${st}/10 so far. Bring me all 10 for a medal.`, 5); }
 // --- Workshop
@@ -418,8 +419,9 @@ function decorShop() { const it = [['garland', '🍂 Leaf garland', 8], ['quilt'
     it.filter(([k]) => !dc[k]).map(([k, n, c]) => [`${n.split(' ')[0]} ${c}`, () => { if (S.coins < c) { toast('Not enough 🪙'); return; } S.coins -= c; dc[k] = 1; addMood(3); sfx('cheer'); save(); RM.refresh(); toast(n + ' put up! +3 😊'); }]).concat([['Done', null, 'ghost']])); }
 let napT = 0; function nap() { const now = performance.now(); if (now - napT < 60000) { talk('Pi-rat', 'Not sleepy yet… maybe later.'); return; } napT = now; addMood(10); sfx('pop'); big('💤 Cozy nap… +10 😊'); }
 RM = initRooms({ scene: E.scene, P, cam, S: new Proxy({}, { get: (_, k) => S[k], set: (_, k, v) => { S[k] = v; return true; } }), sfx, toast, talk, msg, makePet, animPet,
+  onAcorn: (n) => acornDone(n),
   onEnter: (id) => { S.stamps = S.stamps || []; if (!S.stamps.includes(id)) { S.stamps.push(id); S.coins += 2; save(); setTimeout(() => toast(`🛂 Open House stamp ${S.stamps.length}/10! +2 🪙`), 900); } },
-  roomSpots: (c) => { const o = []; const at = (x, z, r, label, f) => o.push({ x: c.ox + x, z: c.oz + z, r, label, f });
+  roomSpots: (c) => { const o = reqSpots(c); const at = (x, z, r, label, f) => o.push({ x: c.ox + x, z: c.oz + z, r, label, f });
     if (c.id === 'barn') { at(4, -3.0, 1.6, "🛠️ Torty's Tools shop", toolShop); at(3.8, -2.4, 1.0, Q().jam === 1 ? '🍒 Give cranberries to Brownie' : '🐀 Talk to Farmhand Brownie', jamQuest);
       at(-5.8, 3.6, 1.5, '🌽 Feed the barn goats (1 corn)', () => { if (S.bag.corn < 1) { talk('Luna', 'The goats want corn. There is plenty growing in the field!'); return; } S.bag.corn--; S.coins += 3; addMood(2); sfx('pop'); toast('🐐 Munch munch! +3 🪙 +2 😊'); });
       at(-3.2, 1.2, 1.4, '🐀 Talk to Luna', () => talk('Luna', (S.acorns || []).length ? `You've found ${S.acorns.length}/20 golden acorns! Every building hides one.` : 'Psst… golden acorns are hidden all over Harvest Hollow. Try the hay bales!')); }
@@ -435,4 +437,147 @@ RM = initRooms({ scene: E.scene, P, cam, S: new Proxy({}, { get: (_, k) => S[k],
     if (c.id === 'luna') { at(-0.2, 1.2, 1.5, Q().recipe === 1 && (S.pages || []).length >= 3 ? '📜 Give Luna the recipe pages' : '🐀 Talk to Luna', lunaRecipe); }
     if (c.id === 'pirat') { at(2.0, -3.4, 1.6, '🏠 Decorate your home', decorShop); at(-5.4, -1.3, 1.5, '💤 Take a cozy nap', nap); }
     return o; } });
-window.__oh = { RM, P, cam, E, get S() { return S; }, get near() { return near; }, bakeHit, pickAns, get PK() { return PK; } };
+window.__oh = { RM, P, cam, E, COL, SP, get S() { return S; }, get near() { return near; }, bakeHit, pickAns, get PK() { return PK; } };
+
+// ================= Step 4: outdoor fun (date events, golden acorns, scarecrow contest, hayride, neighbour requests, Candy's piglets) =================
+// --- date events (America/Los_Angeles date, ?date= for tests)
+const DOW = new Date(Date.UTC(Y, Mo - 1, D)).getUTCDay();
+const EVS = [];
+if (Mo === 11 && D <= 10) EVS.push({ k: 'scare', n: '🎃 Scarecrow Week: contest prizes ×2' });
+if (DOW === 5) EVS.push({ k: 'hay', n: '🌙 Lantern Hayride Friday: waves pay double' });
+if (DOW === 3) EVS.push({ k: 'pig', n: '🐷 Piglet Wednesday: piglet reward +50%' });
+if (DOW === 0 || DOW === 6) EVS.push({ k: 'mkt', n: '🧺 Weekend Market: crops sell for +1 🪙' });
+if (!EVS.length) EVS.push({ k: 'req', n: '📦 Neighbour Day: requests pay +2 🪙' });
+const EV = (k) => EVS.some((e) => e.k === k);
+function evTip() { if (PG) return `🐷 Piglets home ${PG.home}/${PG.pigs.length} · ${Math.ceil(PG.t)}s · walk near a piglet, lead it into the pen`; if ((performance.now() / 6000 | 0) % 2) return '📅 Today: ' + EVS.map((e) => e.n).join(' · '); return null; }
+// --- golden acorns: 9 outdoors (11 are inside buildings) = 20
+function freeSpot(x, z, r = 0.8) { for (let k = 0; k < 40; k++) { const a = k * 2.4, rr = k * 0.35, o = { x: x + Math.cos(a) * rr, z: z + Math.sin(a) * rr }; const t = { ...o }; if (!collide(t, r) && !SP.crops.some((c) => Math.hypot(c.x - o.x, c.z - o.z) < 1.2)) return o; } return { x, z }; }
+const OUTA = [[-61, 14, 'by the scarecrow contest'], [-37, 14.5, "by Candy's piglet pen"], [SP.maze.x + 3, SP.maze.z - 2, 'at the corn maze gate'], [SP.cab.x + 2.4, SP.cab.z, 'next to the arcade cabinet'], [SP.workshop.x, SP.workshop.z + 4, 'outside the Float Workshop'], [SP.kitchen.x + 4, SP.kitchen.z + 2, "near Chef Mimo's kitchen"], [16, -17, 'by the Town Hall steps'], [49, -9, 'behind the pie tent'], [-28, 9, "in Luna's front garden"]];
+const outAcorns = OUTA.map(([x, z, where], i) => { const p = freeSpot(x, z), m = RM.acornMesh(); m.position.set(p.x, 0, p.z); scene.add(m); const key = 'out' + i; const got = (S.acorns || []).includes(key); m.visible = !got; return { key, m, x: p.x, z: p.z, where, got }; });
+function syncAcorns() { for (const a of outAcorns) { a.got = (S.acorns || []).includes(a.key); a.m.visible = !a.got; } }
+function acornDone(n) { if (n >= 20 && !S.medals.includes('acorns')) { S.medals.push('acorns'); S.coins += 25; save(); setTimeout(() => { sfx('cheer'); big('🌰 ALL 20 GOLDEN ACORNS! +25 🪙 and the Acorn medal'); }, 600); } }
+// --- tiny model helpers
+function grp(build) { const g = new THREE.Group(), b = new Batch(); build(b); b.finish(g, true); return g; }
+// --- scarecrow contest (west meadow, south of Torty's field)
+const SC = { x: -55, z: 10 }; const AUTC = [0xf97316, 0xb91c1c, 0xfacc15, 0x92400e, 0x16a34a];
+const HATS = { straw: '👒 Straw hat', witch: '🧙 Witch hat', top: '🎩 Top hat' }, SHIRTS = { plaid: '🟥 Red plaid', denim: '🟦 Denim', moss: '🟩 Moss green' }, FACES = { happy: '😊 Happy', spooky: '👻 Spooky', silly: '🤪 Silly' };
+const SHC = { plaid: 0xb91c1c, denim: 0x2563eb, moss: 0x4d7c0f };
+function scarecrow(hat, shirt, face) { return grp((b) => { b.cyl('m', 0x6b4a2e, 0, 0, 0, 0.08, 2.3); b.box('m', 0x6b4a2e, 0, 1.55, 0, 1.9, 0.1, 0.1);
+  b.box('m', SHC[shirt], 0, 0.95, 0, 0.75, 0.75, 0.38); b.box('m', SHC[shirt], 0, 1.4, 0, 1.6, 0.26, 0.3); if (shirt === 'plaid') for (const y of [1.1, 1.35]) b.box('m', 0xfacc15, 0, y, 0.2, 0.77, 0.04, 0.01); if (shirt === 'denim') b.box('m', 0x1e3a8a, 0, 0.95, 0.2, 0.5, 0.5, 0.01);
+  for (const sx of [-0.85, 0.85]) b.sph('m', 0xe3c062, sx, 1.45, 0, 0.12, 0.16, 0.12); b.box('m', 0x8a6a45, 0, 0.45, 0, 0.6, 0.5, 0.3);
+  b.sph('m', 0xd6b88a, 0, 2.0, 0, 0.32, 0.34, 0.3); const ez = 0.27;
+  if (face === 'happy') { for (const sx of [-0.11, 0.11]) b.sph('m', 0x111827, sx, 2.07, ez, 0.045); for (let i = 0; i < 5; i++) b.sph('m', 0x7c2d12, -0.12 + i * 0.06, 1.9 - Math.sin(i / 4 * PI) * 0.04, ez, 0.025); }
+  if (face === 'spooky') { for (const sx of [-0.11, 0.11]) b.box('l', 0xff7a1a, sx, 2.02, ez, 0.09, 0.09, 0.02, 0.6, 1); b.box('m', 0x111827, 0, 1.86, ez, 0.22, 0.05, 0.02); }
+  if (face === 'silly') { b.sph('m', 0x111827, -0.11, 2.07, ez, 0.06); b.sph('m', 0x111827, 0.11, 2.05, ez, 0.035); b.sph('m', 0xf472b6, 0.04, 1.86, ez, 0.07, 0.05, 0.03); }
+  b.sph('m', 0xf97316, 0, 1.96, ez + 0.02, 0.035);
+  if (hat === 'straw') { b.cyl('m', 0xe3c062, 0, 2.22, 0, 0.5, 0.04); b.cyl('m', 0xd4a84a, 0, 2.24, 0, 0.24, 0.22); b.cyl('m', 0xb91c1c, 0, 2.26, 0, 0.245, 0.05); }
+  if (hat === 'witch') { b.cyl('m', 0x1f1b2e, 0, 2.22, 0, 0.45, 0.04); for (let i = 0; i < 5; i++) b.cyl('m', 0x1f1b2e, 0.02 * i, 2.26 + i * 0.13, 0, 0.24 - i * 0.045, 0.14); b.cyl('m', 0x7c3aed, 0, 2.26, 0, 0.25, 0.05); }
+  if (hat === 'top') { b.cyl('m', 0x111827, 0, 2.22, 0, 0.36, 0.04); b.cyl('m', 0x111827, 0, 2.24, 0, 0.22, 0.42); b.cyl('m', 0xf97316, 0, 2.28, 0, 0.225, 0.07); } }); }
+{ const g = grp((b) => { for (const x of [-4.4, 4.4]) b.box('m', 0x6b4a2e, SC.x + x, 0, SC.z - 0.6, 0.16, 3.4, 0.16); b.box('m', 0x7c2d12, SC.x, 3.0, SC.z - 0.6, 9, 0.12, 0.14);
+    for (let i = 0; i < 9; i++) b.box('m', AUTC[i % 5], SC.x - 4 + i, 2.65 - Math.sin(i / 8 * PI) * 0.25, SC.z - 0.6, 0.4, 0.3, 0.03);
+    for (const x of [-3, 0, 3]) { b.rbox('m', 0xe3c062, SC.x + x, 0, SC.z + 0.9, 1.1, 0.4, 0.6); } for (const x of [-4.6, 4.6]) { b.rbox('m', 0xe3c062, SC.x + x, 0, SC.z + 1.2, 1.1, 0.6, 0.7); b.sph('g', 0xf97316, SC.x + x, 0.8, SC.z + 1.2, 0.28, 0.22, 0.28); }
+    b.box('m', 0x8a5a33, SC.x + 6.2, 0, SC.z + 1.6, 1.4, 0.9, 0.7); b.box('m', 0xfef3c7, SC.x + 6.2, 0.9, SC.z + 1.6, 1.5, 0.05, 0.8); for (let i = 0; i < 3; i++) b.cyl('l', [0xfacc15, 0xd1d5db, 0xb45309][i], SC.x + 5.8 + i * 0.4, 0.95, SC.z + 1.6, 0.12, 0.03, PI / 2, 0, 0.5); });
+  scene.add(g); const s = sign('SCARECROW CONTEST', 4, 0.7, { bg: '#7c2d12', border: '#fbbf24' }); s.position.set(SC.x, 3.55, SC.z - 0.55); s.rotation.y = 0; scene.add(s);
+  for (const x of [-4.4, 4.4]) solidC(SC.x + x, SC.z - 0.6, 0.3, 0.3, 3.4); solidC(SC.x + 6.2, SC.z + 1.6, 1.5, 0.8, 1); for (const x of [-4.6, 4.6]) solidC(SC.x + x, SC.z + 1.2, 1.2, 0.8, 1); }
+const rivals = [['straw', 'plaid', 'happy', -3], ['witch', 'moss', 'spooky', 3]].map(([h, s2, f, x]) => { const g = scarecrow(h, s2, f); g.position.set(SC.x + x, 0, SC.z); scene.add(g); solidC(SC.x + x, SC.z, 0.5, 0.5, 2.3); return g; });
+let myScare = null; solidC(SC.x, SC.z, 0.5, 0.5, 2.3);
+function setMyScare(h, s2, f) { if (myScare) { scene.remove(myScare); myScare.traverse((o) => o.geometry && o.geometry.dispose()); } myScare = h ? scarecrow(h, s2, f) : grp((b) => { b.cyl('m', 0x6b4a2e, 0, 0, 0, 0.08, 2.3); b.box('m', 0x6b4a2e, 0, 1.55, 0, 1.9, 0.1, 0.1); }); myScare.position.set(SC.x, 0, SC.z); scene.add(myScare); }
+function scareTheme() { const k = (a) => Object.keys(a); const h = k(HATS)[(D * 7 + Mo) % 3], s2 = k(SHIRTS)[(D * 5 + 1) % 3], f = k(FACES)[(D * 3 + 2) % 3]; return { h, s: s2, f }; }
+function scareContest() { const q = Q(); S.scare = S.scare && S.scare.d === DATE ? S.scare : { d: DATE, best: 0 }; const th = scareTheme();
+  if (S.scare.best === 1) { talk('Judge Torty', "You already won today's 🥇! Come back tomorrow for a brand-new theme."); return; }
+  const free = q.straw === 1; if (!free && S.bag.corn < 1) { talk('Judge Torty', 'Every scarecrow needs stuffing: bring <b>1 🌽 corn</b> (my field always has some).'.replace(/<\/?b>/g, '')); return; }
+  const pick = {}; const ask = (title, set, key, hint, next) => msg('🎃 Scarecrow Contest · ' + title, `Judge Torty's hint: <b>${hint}</b><br><small>Entry: ${free ? 'free straw from Torty' : '1 🌽 for stuffing'}. Match the judge's taste: 3/3 🥇 +${EV('scare') ? 40 : 20} 🪙, 2/3 🥈, 1/3 🥉. 0/3 and the crows knock it over (−3 😊).</small>`,
+    Object.keys(set).map((k) => [set[k], () => { pick[key] = k; setMyScare(pick.h || 'straw', pick.s || 'plaid', pick.f || 'happy'); next(); }, 'ghost']));
+  const hint = { h: { straw: 'old-fashioned farm hats', witch: 'pointy hats', top: 'fancy tall hats' }[th.h], f: { happy: 'cheerful faces', spooky: 'glowing spooky eyes', silly: 'goofy faces' }[th.f] };
+  ask('1/3 Hat', HATS, 'h', `I love ${hint.h}.`, () => ask('2/3 Shirt', SHIRTS, 's', 'The shirt colour is my secret… pick your favourite!', () => ask('3/3 Face', FACES, 'f', `My heart melts for ${hint.f}.`, judge)));
+  function judge() { if (free) q.straw = 0; else S.bag.corn--; const m = (pick.h === th.h) + (pick.s === th.s) + (pick.f === th.f); const mul = EV('scare') ? 2 : 1;
+    const place = m === 3 ? 1 : m === 2 ? 2 : m === 1 ? 3 : 0, prize = [0, 20, 8, 3][place] * mul;
+    if (place) { S.coins += prize; addMood(4); S.ribbons = (S.ribbons || 0) + (place === 1 ? 1 : 0); if (place === 1) { S.scare.best = 1; if (!S.medals.includes('scarecrow')) S.medals.push('scarecrow'); } sfx('cheer'); }
+    else { addMood(-3); q.straw = 1; sfx('whoosh'); myScare.rotation.z = 1.2; myScare.position.y = 0.3; }
+    save(); msg('🎃 Scarecrow Contest Results', (place ? `Judge Torty awards you <b>${['', '🥇 1st', '🥈 2nd', '🥉 3rd'][place]} place</b>! (${m}/3 matched) +${prize} 🪙${mul > 1 ? ' (Scarecrow Week ×2)' : ''}` : `0/3 matched… a gust of wind and three crows knock your scarecrow flat. −3 😊`) + `<br><small>Today's theme was ${HATS[th.h]} · ${SHIRTS[th.s]} · ${FACES[th.f]}.${place ? '' : ' Torty gives you free straw: your next entry costs nothing.'}</small>`, [['OK', null]]); } }
+setMyScare(null);
+// --- Candy's piglets (pen east of the contest)
+const PEN = { x: -43, z: 10, w: 6, d: 5 };
+function makePig() { const g = grp((b) => { b.sph('m', 0xf9a8d4, 0, 0.32, 0, 0.3, 0.24, 0.38); b.sph('m', 0xfbcfe8, 0, 0.42, 0.34, 0.2, 0.18, 0.18); b.cyl('m', 0xf472b6, 0, 0.4, 0.5, 0.08, 0.06, PI / 2); for (const sx of [-0.03, 0.03]) b.sph('m', 0x9d174d, sx, 0.4, 0.535, 0.015);
+  for (const sx of [-0.08, 0.08]) { b.sph('m', 0x111827, sx, 0.5, 0.48, 0.025); b.sph('m', 0xf472b6, sx * 1.6, 0.6, 0.3, 0.07, 0.09, 0.03); } for (const sx of [-0.15, 0.15]) for (const sz of [-0.2, 0.2]) b.cyl('m', 0xf9a8d4, sx, 0, sz, 0.055, 0.14);
+  for (let i = 0; i < 4; i++) b.sph('m', 0xf472b6, Math.sin(i * 1.7) * 0.05, 0.4 + i * 0.025, -0.38 - i * 0.025, 0.03); }); return g; }
+{ const g = grp((b) => { const { x, z, w, d } = PEN; b.box('m', 0x6b4a2e, x, 0.03, z, w, 0.02, d); b.sph('m', 0x5b3a24, x - 1, 0.04, z - 0.6, 1.2, 0.02, 0.9);
+    for (let i = 0; i <= 6; i++) for (const sz of [-1, 1]) b.box('m', 0x8a5a33, x - w / 2 + i * w / 6, 0, z + sz * d / 2, 0.12, 0.9, 0.12);
+    for (let i = 0; i <= 5; i++) { b.box('m', 0x8a5a33, x - w / 2, 0, z - d / 2 + i * d / 5, 0.12, 0.9, 0.12); if (i <= 1 || i >= 4) b.box('m', 0x8a5a33, x + w / 2, 0, z - d / 2 + i * d / 5, 0.12, 0.9, 0.12); }
+    for (const y of [0.35, 0.75]) { for (const sz of [-1, 1]) b.box('m', 0xa0703f, x, y, z + sz * d / 2, w, 0.1, 0.06); b.box('m', 0xa0703f, x - w / 2, y, z, 0.06, 0.1, d); for (const sz of [-1, 1]) b.box('m', 0xa0703f, x + w / 2, y, z + sz * (d / 2 - 0.75), 0.06, 0.1, 1.5); }
+    b.box('m', 0x7c4a1e, x + 1.4, 0, z - 1.8, 1.6, 0.35, 0.5); b.box('m', 0x93c5fd, x + 1.4, 0.3, z - 1.8, 1.4, 0.04, 0.35); b.box('m', 0xb45309, x - 2.2, 0, z + 1.6, 1.0, 1.0, 0.8); b.box('m', 0x7c2d12, x - 2.2, 1.0, z + 1.6, 1.2, 0.1, 1.0); });
+  scene.add(g); const s = sign("CANDY'S PIGLETS", 2.6, 0.5, { bg: '#db2777', border: '#fde68a' }); s.position.set(PEN.x + PEN.w / 2 + 0.1, 1.5, PEN.z - 1.9); s.rotation.y = PI / 2; scene.add(s);
+  const { x, z, w, d } = PEN; solid(x - w / 2 - 0.1, z - d / 2 - 0.1, x + w / 2 + 0.1, z - d / 2 + 0.1, 0, 1); solid(x - w / 2 - 0.1, z + d / 2 - 0.1, x + w / 2 + 0.1, z + d / 2 + 0.1, 0, 1); solid(x - w / 2 - 0.1, z - d / 2, x - w / 2 + 0.1, z + d / 2, 0, 1);
+  solid(x + w / 2 - 0.1, z - d / 2, x + w / 2 + 0.1, z - 1, 0, 1); solid(x + w / 2 - 0.1, z + 1, x + w / 2 + 0.1, z + d / 2, 0, 1); }
+const pigs = Array.from({ length: 5 }, (_, i) => { const m = makePig(); scene.add(m); return { m, x: PEN.x - 2 + (i % 3) * 1.2, z: PEN.z - 0.8 + (i >> 1) * 0.9, yaw: i, st: 'pen', wt: 0, t: i }; });
+const inPen = (x, z) => Math.abs(x - PEN.x) < PEN.w / 2 - 0.3 && Math.abs(z - PEN.z) < PEN.d / 2 - 0.3;
+let PG = null;
+function pigStart() { if (PG) return; const pen = { x: PEN.x, z: PEN.z }; PG = { t: 90, home: 0, pigs, trail: [], helpT: 18, oldHome: candy.home };
+  pigs.forEach((p, i) => { const a = i / 5 * PI * 2 + 0.4, r = 9 + (i % 3) * 5; const o = freeSpot(pen.x + Math.cos(a) * r, pen.z + Math.sin(a) * r * 0.8, 0.5); p.st = 'loose'; p.tx = o.x; p.tz = o.z; p.x = PEN.x + PEN.w / 2 + 0.5; p.z = PEN.z; p.wt = 0; });
+  candy.x = PEN.x + PEN.w / 2 + 2; candy.z = PEN.z + 1.5; candy.home = { x: candy.x, z: candy.z }; sfx('whoosh'); talk('Candy', "RUFF! The gate was open and my 5 piglets ran off! Walk up to each one and lead it back into the pen. I'll help!", 5); }
+function pigEnd() { const n = PG.home, all = n === pigs.length, mul = EV('pig') ? 1.5 : 1; let txt;
+  if (all) { const c = Math.round(15 * mul); S.coins += c; addMood(4); if (!S.medals.includes('piglets')) S.medals.push('piglets'); sfx('cheer'); txt = `All 5 piglets are home safe! Candy gives you a big schnauzer hug. +${c} 🪙 +4 😊${mul > 1 ? ' (Piglet Wednesday)' : ''}`; }
+  else { S.coins += n * 2; addMood(-3); sfx('whoosh'); txt = `Time's up: only ${n}/5 piglets made it home. The farm stays noisy and muddy (−3 😊${n ? `, +${n * 2} 🪙 for the ones you saved` : ''}). Don't worry: Candy rounds up the rest for free. Try again any time!`; }
+  for (const p of pigs) { p.st = 'pen'; p.x = PEN.x - 2 + Math.random() * 4; p.z = PEN.z - 1.2 + Math.random() * 2.4; } candy.home = PG.oldHome; candy.x = candy.home.x; candy.z = candy.home.z; PG = null; save(); msg("🐷 Candy's Piglets", txt, [['OK', null]]); }
+function stepPigs(dt) { const t = performance.now() / 1000;
+  if (PG) { PG.t -= dt; PG.trail.unshift([P.x, P.z]); if (PG.trail.length > 120) PG.trail.length = 120; PG.helpT -= dt;
+    if (PG.helpT <= 0) { PG.helpT = 22; const l = pigs.find((p) => p.st === 'loose'); if (l) { l.st = 'home'; l.x = PEN.x - 1 + Math.random() * 2; l.z = PEN.z; PG.home++; talk('Candy', 'Woof! I herded one home!', 2.5); sfx('pop'); } } }
+  let fi = 0; for (const p of pigs) { let sp = 0;
+    if (p.st === 'pen' || p.st === 'home') { p.wt -= dt; if (p.wt <= 0) { p.wt = 1 + Math.random() * 2.5; p.tx = PEN.x + (Math.random() - 0.5) * (PEN.w - 1.4); p.tz = PEN.z + (Math.random() - 0.5) * (PEN.d - 1.4); } }
+    else if (p.st === 'loose') { if (Math.hypot(p.tx - p.x, p.tz - p.z) < 0.3) { p.wt -= dt; if (p.wt <= 0) { p.wt = 1.5 + Math.random() * 2; const o = freeSpot(p.x + (Math.random() - 0.5) * 6, p.z + (Math.random() - 0.5) * 6, 0.4); p.tx = o.x; p.tz = o.z; } }
+      if (Math.hypot(P.x - p.x, P.z - p.z) < 1.9 && P.mode === 'walk') { p.st = 'follow'; sfx('pop'); toast('🐷 Oink! A piglet is following you'); } }
+    if (p.st === 'follow') { fi++; const tr = PG.trail[Math.min(PG.trail.length - 1, 14 * fi)] || [P.x, P.z]; p.tx = tr[0]; p.tz = tr[1]; if (inPen(p.x, p.z) || (inPen(P.x, P.z) && Math.hypot(p.x - P.x, p.z - P.z) < 9)) { p.st = 'home'; PG.home++; sfx('coin'); toast(`🐷 Piglet home! ${PG.home}/5`); } }
+    const dx = p.tx - p.x, dz = p.tz - p.z, d = Math.hypot(dx, dz); const v = p.st === 'follow' ? Math.min(7, d * 3) : p.st === 'loose' ? 2.6 : 0.8;
+    if (d > 0.15) { const s2 = Math.min(d, v * dt); p.x += dx / d * s2; p.z += dz / d * s2; p.yaw = Math.atan2(dx, dz); sp = v; if (p.st === 'loose') collide(p, 0.35); }
+    if (p.st === 'pen' || p.st === 'home') { p.x = clamp(p.x, PEN.x - PEN.w / 2 + 0.5, PEN.x + PEN.w / 2 - 0.5); p.z = clamp(p.z, PEN.z - PEN.d / 2 + 0.5, PEN.z + PEN.d / 2 - 0.5); }
+    p.m.position.set(p.x, sp > 0.2 ? Math.abs(Math.sin(t * 14 + p.t)) * 0.08 : 0, p.z); p.m.rotation.y = p.yaw; }
+  if (PG && (PG.home >= pigs.length || PG.t <= 0)) pigEnd(); }
+// --- hayride (tractor + hay wagon loop round the whole town)
+const HAYR = [[-8, 18], [-18, 24], [-36, 18], [-38, -2], [-30, -18], [-6, -18], [6, -16], [16, -16], [30, -18], [37, -17.5], [37, -8], [37, 4], [40, 10], [30, 18], [-8, 18]];
+const HL = [0]; for (let i = 1; i < HAYR.length; i++) HL.push(HL[i - 1] + Math.hypot(HAYR[i][0] - HAYR[i - 1][0], HAYR[i][1] - HAYR[i - 1][1]));
+function hayAt(s) { s = ((s % HL.at(-1)) + HL.at(-1)) % HL.at(-1); let i = 1; while (HL[i] < s) i++; const a = HAYR[i - 1], b2 = HAYR[i], f = (s - HL[i - 1]) / (HL[i] - HL[i - 1]); return [a[0] + (b2[0] - a[0]) * f, a[1] + (b2[1] - a[1]) * f, Math.atan2(b2[0] - a[0], b2[1] - a[1])]; }
+const tractor = grp((b) => { b.box('m', 0x16a34a, 0, 0.55, 0.3, 1.2, 0.7, 2.0); b.box('m', 0x15803d, 0, 1.25, -0.4, 1.1, 1.0, 0.9); b.box('l', 0xbfe3ff, 0, 1.45, 0.06, 0.9, 0.6, 0.02, 0, 0.3); b.box('m', 0xfacc15, 0, 2.25, -0.4, 1.3, 0.08, 1.1);
+  for (const sx of [-0.7, 0.7]) { b.cyl('m', 0x111827, sx, 0.65, -0.5, 0.65, 0.35, 0, PI / 2); b.cyl('m', 0xfacc15, sx * 1.02, 0.65, -0.5, 0.3, 0.37, 0, PI / 2); b.cyl('m', 0x111827, sx * 0.85, 0.35, 1.0, 0.35, 0.25, 0, PI / 2); }
+  b.cyl('x', 0x374151, 0.35, 1.25, 0.9, 0.06, 0.9); b.box('l', 0xfff1b0, 0, 0.8, 1.31, 0.8, 0.2, 0.02, 0, 1); });
+const wagon = grp((b) => { b.box('m', 0x8a5a33, 0, 0.55, 0, 1.8, 0.2, 3.2); for (const sx of [-0.9, 0.9]) b.box('m', 0x6b4a2e, sx, 0.75, 0, 0.08, 0.45, 3.2); b.box('m', 0x6b4a2e, 0, 0.75, -1.6, 1.8, 0.45, 0.08); b.box('m', 0x5b3a24, 0, 0.5, 2.0, 0.15, 0.12, 1.0);
+  for (const sx of [-0.95, 0.95]) for (const sz of [-1.1, 1.1]) b.cyl('m', 0x111827, sx, 0.4, sz, 0.4, 0.2, 0, PI / 2);
+  for (const [x, z] of [[-0.45, -1.0], [0.45, -1.0], [-0.45, 0.9]]) b.rbox('m', 0xe3c062, x, 0.75, z, 0.8, 0.5, 1.0);
+  for (const sz of [-1.5, 1.5]) { b.cyl('x', 0x374151, 0.85, 0.75, sz, 0.02, 1.1); b.sph('l', 0xffc35a, 0.85, 1.95, sz, 0.12, 0.15, 0.12, 1.2); } b.sph('g', 0xf97316, -0.5, 1.45, -1.0, 0.25, 0.2, 0.25); });
+scene.add(tractor, wagon);
+const wavers = [['grandma', 'Grandma Gouda'], ['grandpa', 'Grandpa Cheddar'], ['mom', 'Mom Camembert'], ['dad', 'Dad Roquefort'], ['brother', 'Bram']].map(([id, who], i) => { const s = HL.at(-1) * (0.1 + i * 0.18); const [x, z, h] = hayAt(s); const side = i % 2 ? 1 : -1; const o = freeSpot(x + Math.cos(h) * 3.2 * side, z - Math.sin(h) * 3.2 * side, 0.5);
+  const p = put(makePet(id, { s: 1.15 }), o.x, o.z, 0); p.who = who; p.s = s; p.root.visible = false; return p; });
+let HR = null; function parkHay() { place(0); function place(s) { const [x, z, h] = hayAt(s), [wx, wz, wh] = hayAt(s - 4.4); tractor.position.set(x, 0, z); tractor.rotation.y = h; wagon.position.set(wx, 0, wz); wagon.rotation.y = wh; } }
+parkHay(); solidC(-8, 18, 0.1, 0.1, 0.1);
+const HSTOP = { x: hayAt(-2.2)[0] + 2.2, z: hayAt(-2.2)[1] + 1.8 };
+function hayStart() { const q = Q(); const free = q.hayFree === 1; if (!free && S.coins < 2) { toast('Need 2 🪙 for a hayride ticket'); return; } if (free) q.hayFree = 0; else S.coins -= 2;
+  HR = { s: 0, v: 0, waved: 0, missed: 0, oops: 0 }; for (const w of wavers) { w.root.visible = true; w.done = false; w.miss = false; } P.mode = 'hay'; cam.snap = true; sfx('pop');
+  talk('Farmer Torty', `All aboard! ${free ? 'This ride is on me.' : ''} Wave 👋 at the neighbours as we pass (+${EV('hay') ? 4 : 2} 🪙 each). Don't wave at fence posts!`, 5); }
+function hayWave() { if (!HR) return; const w = wavers.find((p) => !p.done && !p.miss && Math.hypot(p.x - P.x, p.z - P.z) < 7.5); if (w) { w.done = true; HR.waved++; const c = EV('hay') ? 4 : 2; S.coins += c; sfx('coin'); toast(`👋 ${w.who} waves back! +${c} 🪙`); w.hop = 0.6; } else { HR.oops++; addMood(-1); sfx('whoosh'); toast('👋 …you waved at a fence post. −1 😊'); } }
+function stepHay(dt) { HR.v = Math.min(6.5, HR.v + dt * 2.5); if (HR.s > HL.at(-1) - 12) HR.v = Math.max(1.2, HR.v - dt * 5); HR.s += HR.v * dt;
+  const [x, z, h] = hayAt(HR.s), [wx, wz, wh] = hayAt(HR.s - 4.4); tractor.position.set(x, 0, z); tractor.rotation.y = h; wagon.position.set(wx, 0, wz); wagon.rotation.y = wh;
+  P.x = wx - Math.sin(wh) * 0.2; P.z = wz - Math.cos(wh) * 0.2; P.y = 0.65; P.yaw = wh; P.speed = 0;
+  for (const w of wavers) { const d = Math.hypot(w.x - P.x, w.z - P.z); if (!w.done && !w.miss && w.near && d > 9) { w.miss = true; HR.missed++; } w.near = d < 7.5; if (w.hop > 0) { w.hop -= dt; w.y = Math.abs(Math.sin(w.hop * 10)) * 0.4; } else w.y = 0; w.yaw = Math.atan2(P.x - w.x, P.z - w.z); w.noTurn = true; w.speed = 0; animPet(w, dt, null); }
+  HR.btn = { label: wavers.some((p) => !p.done && !p.miss && p.near) ? '👋 Wave at ' + wavers.find((p) => !p.done && !p.miss && p.near).who + '!' : '👋 Wave', f: hayWave };
+  if (HR.s >= HL.at(-1)) { const w = HR.waved; P.mode = 'walk'; P.y = 0; P.x = HSTOP.x; P.z = HSTOP.z; cam.snap = true; for (const p of wavers) p.root.visible = false; parkHay(); let txt;
+    if (w >= 3) { addMood(5); txt = `What a ride! You waved at ${w}/5 neighbours. +5 😊`; sfx('cheer'); } else { addMood(-2); Q().hayFree = 1; txt = `You only waved at ${w}/5 neighbours and they felt ignored. −2 😊<br><small>Farmer Torty gives you a free ticket so you can make it up to them.</small>`; sfx('whoosh'); }
+    HR = null; save(); msg('🚜 Hayride', txt, [['OK', null]]); } }
+// --- neighbour requests (3 a day, from the date; deliver inside their building before midnight PST)
+const REQP = [['Cook Ash', 'diner', 'potato', 2, 8, -4.6, -1.4], ['Baker Cream', 'bakery', 'pumpkin', 2, 9, 1.8, -1.6], ['Cider Brie', 'cider', 'cranberry', 2, 6, 3.6, 0.6], ['Shopkeeper Rose', 'pumpkin', 'corn', 3, 8, 3.6, -1.2], ['Foreman Blue', 'cranberry', 'cranberry', 3, 8, 4.2, -0.2],
+  ['Mechanic Black', 'workshop', 'corn', 2, 7, 2.8, -2.4], ['Luna', 'luna', 'pumpkin', 1, 6, 1.4, 1.6], ['Mayor Gold', 'hall', 'potato', 1, 5, 1.2, -1.6], ['Farmhand Brownie', 'barn', 'corn', 2, 6, 2.2, -2.2]];
+function reqs() { if (!S.req || S.req.d !== DATE) { const r = rng(Y * 400 + Mo * 31 + D), pool = REQP.slice(), l = []; while (l.length < 3) l.push(pool.splice(Math.floor(r() * pool.length), 1)[0]); S.req = { d: DATE, done: [], l: l.map((x) => x[0]) }; } return S.req.l.map((w) => REQP.find((x) => x[0] === w)); }
+const ROOMN = Object.fromEntries(RM.DOORS.map((d) => [d.id, d.name]));
+function reqText() { return reqs().map(([who, room, item, n, pay]) => `${S.req.done.includes(who) ? '✅' : '⬜'} <b>${who}</b> (${ROOMN[room]}) needs ${n} ${ICON[item]} · +${pay + (EV('req') ? 2 : 0)} 🪙`).join('<br>'); }
+function reqBoard() { msg('📦 Neighbour Requests · ' + DATE, reqText() + '<br><br><small>Bring the crops to them inside their building. New requests every day at midnight PST; unfinished ones expire.</small>', [['OK', null]]); }
+function reqSpots(c) { const o = []; for (const [who, room, item, n, pay, x, z] of reqs()) if (room === c.id && !S.req.done.includes(who)) o.push({ x: c.ox + x, z: c.oz + z, r: 1.3, label: `📦 Give ${who} ${n} ${ICON[item]} (+${pay + (EV('req') ? 2 : 0)} 🪙)`, f: () => {
+  if (S.bag[item] < n) { talk(who, `I need ${n} ${ICON[item]} ${item}${n > 1 ? 's' : ''} and you have ${S.bag[item]}. Torty's field has plenty!`); return; } S.bag[item] -= n; const p = pay + (EV('req') ? 2 : 0); S.coins += p; addMood(3); S.req.done.push(who); sfx('cheer'); save(); talk(who, `Thank you, neighbour! +${p} 🪙 +3 😊`); if (S.req.done.length === 3) setTimeout(() => toast('📦 All 3 requests done today! +5 🪙 bonus'), 700), S.coins += 5; } }); return o; }
+const RQB = freeSpot(4.5, 13.5, 1.0); { const g = grp((b) => { for (const sx of [-0.9, 0.9]) b.box('m', 0x6b4a2e, RQB.x + sx, 0, RQB.z, 0.14, 2.2, 0.14); b.box('m', 0x8a5a33, RQB.x, 1.0, RQB.z, 2.0, 1.1, 0.1); for (let i = 0; i < 3; i++) b.box('m', 0xfef3c7, RQB.x - 0.6 + i * 0.6, 1.15, RQB.z + 0.06, 0.45, 0.6, 0.02, (i - 1) * 0.08); });
+  scene.add(g); const s = sign('REQUESTS', 1.6, 0.36, { bg: '#7c2d12', border: '#fbbf24' }); s.position.set(RQB.x, 2.35, RQB.z + 0.08); scene.add(s); solidC(RQB.x, RQB.z, 2.0, 0.3, 2.2); }
+// --- outdoor spot list + hooks
+function step4Spots() { const o = [{ x: SC.x, z: SC.z + 2.6, r: 2.2, pri: 1, label: Q().straw === 1 ? '🎃 Scarecrow contest (free straw)' : '🎃 Enter the scarecrow contest (1 🌽)', f: scareContest },
+  { x: HSTOP.x, z: HSTOP.z, r: 2.4, pri: 1, label: Q().hayFree === 1 ? '🚜 Hayride (free ticket)' : '🚜 Hayride round town (2 🪙)', f: hayStart }, { x: RQB.x, z: RQB.z + 1.0, r: 1.8, label: '📦 Read the neighbour requests', f: reqBoard }];
+  if (!PG) o.push({ x: PEN.x + PEN.w / 2 + 1.4, z: PEN.z, r: 2.0, label: "🐷 Help Candy with her piglets", f: pigStart });
+  for (const a of outAcorns) if (!a.got) o.push({ x: a.x, z: a.z, r: 1.3, label: '🌰 Grab the golden acorn!', f: () => { a.got = true; a.m.visible = false; S.acorns = S.acorns || []; S.acorns.push(a.key); S.coins += 5; sfx('cheer'); toast(`🌰 Golden acorn ${S.acorns.length}/20! +5 🪙`); acornDone(S.acorns.length); save(); } });
+  return o; }
+function step4Tick(dt) { const t = performance.now() / 1000; for (const a of outAcorns) if (!a.got) { a.m.rotation.y = t * 2; a.m.position.y = Math.sin(t * 3) * 0.08; } stepPigs(dt);
+  const ci = RM.inside(); if (ci) { const ids = new Set(ci.npcs.map((p) => p.pid)); for (const p of folk) p.root.visible = !ids.has(p.pid); } else for (const p of folk) p.root.visible = true; }
+window.__oh.S4 = { EVS, outAcorns, pigs, get PG() { return PG; }, get HR() { return HR; }, HL, HSTOP, SC, PEN, RQB, wavers, reqs, scareTheme, syncAcorns, hayAt, tractor };
