@@ -22,7 +22,7 @@
   function load(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
   function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   function today() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
-  function M() { return GA.PVD ? GA.PVD.model() : { building: [], queued: [], shipped: [], posters: [], previews: [] }; }
+  function M() { var E = { building: [], queued: [], shipped: [], posters: [], previews: [], archive: [], pending: [] }; try { return (GA.PVD && GA.PVD.model()) || E; } catch (e) { return E; } }
   var K_QA = 'grokArcade.pvQA', K_J = 'grokArcade.pvJumps', K_DAY = 'grokArcade.pvDay';
   function qa() { var q = load(K_QA, null); if (!q || typeof q !== 'object') q = {}; q.posters = q.posters || {}; return q; }
   function saveQA(q) { store(K_QA, q); }
