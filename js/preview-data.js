@@ -1,7 +1,7 @@
 /* Auto-synced from preview.json — offline fallback for Lili's Board & Time Jumper (the loader is js/preview-loader.js) */
 window.GROK_PREVIEW_DATA = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
-  "updated": "2026-11-02",
+  "updated": "2026-11-03T01:30:00Z",
   "items": [
     {
       "issue": 91,
@@ -24,29 +24,38 @@ window.GROK_PREVIEW_DATA = {
     {
       "key": "airport-tycoon",
       "game": "sky",
-      "name": "Grok Sky: Airport Tycoon",
-      "size": "Expansion",
-      "what": "Run the airport: grumpy Karen customers, storms, outages, runway closures, lost bags and delays.",
-      "stage": "building",
-      "when": "Time Jumper Preview"
+      "name": "Grok Sky: Airport Tycoon (live)",
+      "size": "New Game",
+      "what": "SHIPPED! Build and run Torty's Airport: gates, customs, shops, belts and runways, grumpy manager-demanding customers, storms, outages, runway closures, baggage pileups and a free Rescue Fund. New cabinet (NEW! spotlight) plus bonus game Baggage Belt Rush. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/airport-tycoon/",
+      "betaArchiveUrl": "archive/airport-tycoon-beta/",
+      "shippedAt": "2026-11-03T01:30:00Z"
     },
     {
       "key": "pickleball-world-tour",
       "game": "pickleballpark",
-      "name": "Pickleball Park DLC: World Tour",
+      "name": "Pickleball Park DLC: World Tour (live)",
       "size": "Expansion",
-      "what": "4 city courts (Paris, Tokyo, New York, Rio), a 4-leg tour live on Tortuga TV Network.",
-      "stage": "building",
-      "when": "Time Jumper Preview"
+      "what": "SHIPPED! Paid DLC (75 tickets at Gary's DLC Machine, locked until bought): 4 dense city courts (Paris, Tokyo, New York, Rio) and a 4-leg tour live on Tortuga TV Network. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-pickleball-park/",
+      "betaArchiveUrl": "archive/pickleball-world-tour-beta/",
+      "shippedAt": "2026-11-03T01:30:00Z"
     },
     {
       "key": "sky-super-travel-fixes",
       "game": "sky",
-      "name": "Grok Sky DLC: Super Travel Fixes (#80)",
+      "name": "Grok Sky DLC: Super Travel Fixes (#80, live)",
       "size": "Fix",
-      "what": "Passenger seat view, bot Captain + FO you can watch fly, customs, baggage claim and signs. In the Time Jumper, waiting for a greenlight.",
-      "stage": "building",
-      "when": "Time Jumper Preview"
+      "what": "SHIPPED into live Grok Sky Remastered (part of the paid Super Travel Expansion DLC, locked until bought): passenger seat by class, bot Captain + FO you can watch fly (pilot faces, hats, headsets, hands on the yokes), departure + arrival customs, baggage claim, signs, arrows and a minimap star. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/grok-sky-remastered/",
+      "betaArchiveUrl": "archive/sky-super-travel-fixes-beta/",
+      "shippedAt": "2026-11-03T01:30:00Z"
     },
     {
       "issue": 89,
@@ -904,33 +913,6 @@ window.GROK_PREVIEW_DATA = {
   ],
   "previews": [
     {
-      "id": "sky-super-travel-fixes",
-      "game": "sky",
-      "issue": 80,
-      "name": "Grok Sky DLC: Super Travel Fixes",
-      "url": "previews/sky-super-travel-fixes/",
-      "playable": true,
-      "built": "2026-10-28",
-      "notes": "Passenger seat by class, bot Captain+FO fly (watch/skip), required departure customs, baggage claim, arrival customs on international flights, signs+arrows+minimap star"
-    },
-    {
-      "id": "airport-tycoon",
-      "game": "sky",
-      "name": "Grok Sky: Airport Tycoon",
-      "url": "previews/airport-tycoon/",
-      "playable": true,
-      "built": "2026-11-02",
-      "notes": "Build & run Torty's Airport: gates, customs, shops, belts, runways. Grumpy manager-demanding customers, storms, outages, runway closures, baggage pileups, free Rescue Fund."
-    },
-    {
-      "id": "pickleball-world-tour",
-      "game": "pickleballpark",
-      "name": "Pickleball Park DLC: World Tour",
-      "url": "previews/pickleball-world-tour/",
-      "playable": true,
-      "built": "2026-11-02"
-    },
-    {
       "id": "ratita-teaser-room",
       "game": "arcade",
       "issue": 90,
@@ -953,6 +935,39 @@ window.GROK_PREVIEW_DATA = {
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "pickleball-world-tour",
+      "game": "pickleballpark",
+      "name": "Pickleball Park DLC: World Tour",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/pickleball-world-tour-beta/",
+      "built": "2026-11-02",
+      "archived": "2026-11-02",
+      "playable": true
+    },
+    {
+      "id": "airport-tycoon",
+      "game": "sky",
+      "name": "Grok Sky: Airport Tycoon",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/airport-tycoon-beta/",
+      "built": "2026-11-02",
+      "archived": "2026-11-02",
+      "notes": "Build & run Torty's Airport: gates, customs, shops, belts, runways. Grumpy manager-demanding customers, storms, outages, runway closures, baggage pileups, free Rescue Fund.",
+      "playable": true
+    },
+    {
+      "id": "sky-super-travel-fixes",
+      "game": "sky",
+      "issue": 80,
+      "name": "Grok Sky DLC: Super Travel Fixes",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/sky-super-travel-fixes-beta/",
+      "built": "2026-10-28",
+      "archived": "2026-11-02",
+      "notes": "Passenger seat by class, bot Captain+FO fly (watch/skip), required departure customs, baggage claim, arrival customs on international flights, signs+arrows+minimap star",
+      "playable": true
+    },
     {
       "id": "edu-door-move",
       "game": "arcade",

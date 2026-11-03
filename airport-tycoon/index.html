@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0ea5e9">
+<title>Grok Sky: Airport Tycoon</title>
+<link rel="stylesheet" href="style.css?v=atlive">
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.min.js" } }
+</script>
+</head>
+<body>
+<div id="app"></div>
+<div id="hud">
+  <div class="pill" id="hMoney">💰 0</div>
+  <div class="pill" id="hStars">⭐ 3.0</div>
+  <div class="pill" id="hDay">☀️ Day 1</div>
+  <div class="pill" id="hFlights">✈️ 0</div>
+  <button class="pill btn" id="hPause">⏸</button>
+</div>
+<div id="alerts"></div>
+<div id="cards"></div>
+<div id="feed"></div>
+<div id="build"></div>
+<div id="toast"></div>
+<div id="title">
+  <div class="tbox">
+    <h1>✈️ Grok Sky<br><span>Airport Tycoon</span></h1>
+    <p>Build and run <b>Torty's Airport</b>! Add gates, customs booths, shops, baggage belts and runways. Keep flights on time, calm grumpy customers, and survive storms, power outages and lost-baggage pileups.</p>
+    <p class="small">🐢 Torty is the airport manager · 🐶 Candy sniffs bags at customs · 🐭 Luna, Pi-rat & Snowie run the shops</p>
+    <button class="go" id="tPlay">▶ PLAY</button>
+    <button class="go alt" id="tNew">↺ New airport</button>
+  </div>
+</div>
+<script type="module" src="js/main.js?v=at1"></script>
+</body>
+</html>

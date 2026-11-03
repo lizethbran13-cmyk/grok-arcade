@@ -1008,6 +1008,25 @@
         g.font = font(17); g.textAlign = 'center'; g.fillStyle = '#4ade80'; g.fillText('GOO CAM', w / 2, 22);
         break;
       }
+      case 'airporttycoon': {
+        var gat = g.createLinearGradient(0, 0, 0, h); gat.addColorStop(0, '#38bdf8'); gat.addColorStop(1, '#bae6fd'); g.fillStyle = gat; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#64748b'; g.fillRect(0, h * 0.78, w, h * 0.22); g.fillStyle = '#f8fafc'; for (i = 0; i < 6; i++) g.fillRect(i * w / 6 + 6, h * 0.88, w / 12, 3);
+        g.fillStyle = '#e2e8f0'; rrF(g, w * 0.1, h * 0.5, w * 0.62, h * 0.28, 4); g.fillStyle = '#0ea5e9'; for (i = 0; i < 5; i++) g.fillRect(w * 0.14 + i * w * 0.11, h * 0.56, w * 0.07, h * 0.08);
+        g.fillStyle = '#cbd5e1'; g.fillRect(w * 0.76, h * 0.3, w * 0.07, h * 0.48); g.fillStyle = '#0f172a'; rrF(g, w * 0.71, h * 0.24, w * 0.17, h * 0.09, 3); g.fillStyle = '#facc15'; g.fillRect(w * 0.73, h * 0.26, w * 0.13, h * 0.04);
+        var apx = ((t * 40) % (w + 80)) - 40; g.save(); g.translate(apx, h * 0.3 - Math.sin(t) * 6); g.fillStyle = '#fff'; rrF(g, -22, -5, 44, 10, 5); g.fillStyle = '#ef4444'; g.beginPath(); g.moveTo(-4, 0); g.lineTo(-14, -14); g.lineTo(4, 0); g.fill(); g.beginPath(); g.moveTo(-18, -2); g.lineTo(-24, -12); g.lineTo(-14, -2); g.fill(); g.restore();
+        g.font = '18px sans-serif'; g.textAlign = 'center'; g.fillText('\uD83D\uDC22', w * 0.3, h * 0.86); g.fillText('\uD83D\uDC36', w * 0.55, h * 0.86);
+        g.font = font(15); g.fillStyle = '#0c4a6e'; g.fillText('AIRPORT TYCOON', w / 2, 22);
+        break;
+      }
+      case 'bagbelt': {
+        var gbb = g.createLinearGradient(0, 0, 0, h); gbb.addColorStop(0, '#0c4a6e'); gbb.addColorStop(1, '#0f172a'); g.fillStyle = gbb; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#374151'; g.fillRect(w * 0.3, h * 0.12, w * 0.4, h * 0.6); g.fillStyle = '#facc15'; for (i = 0; i < 8; i++) g.fillRect(w * 0.27, h * 0.12 + i * h * 0.075, w * 0.03, h * 0.035);
+        var bcol = ['#38bdf8', '#f472b6', '#facc15'], boff = (t * 30) % (h * 0.2);
+        for (i = 0; i < 3; i++) { var bby = h * 0.14 + i * h * 0.2 + boff; if (bby < h * 0.66) { g.fillStyle = ['#7c2d12', '#1e3a8a', '#ca8a04'][i]; rrF(g, w * 0.36, bby, w * 0.28, h * 0.1, 4); g.fillStyle = bcol[i]; g.fillRect(w * 0.44, bby + h * 0.04, w * 0.12, h * 0.035); } }
+        for (i = 0; i < 3; i++) { g.fillStyle = '#1e293b'; rrF(g, w * (0.05 + i * 0.32), h * 0.76, w * 0.26, h * 0.18, 5); g.strokeStyle = bcol[i]; g.lineWidth = 2; g.strokeRect(w * (0.05 + i * 0.32), h * 0.76, w * 0.26, h * 0.18); }
+        g.font = font(15); g.textAlign = 'center'; g.fillStyle = '#38bdf8'; g.fillText('BAG BELT RUSH', w / 2, 22);
+        break;
+      }
       case 'buzzer': {
         var gbz = g.createLinearGradient(0, 0, 0, h); gbz.addColorStop(0, '#1e0b3a'); gbz.addColorStop(1, '#0b1030'); g.fillStyle = gbz; g.fillRect(0, 0, w, h);
         var blit = Math.floor(t * 1.5) % 4;

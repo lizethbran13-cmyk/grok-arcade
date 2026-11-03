@@ -111,7 +111,7 @@ const G = SKY.Game = {
     let gate = null;
     if (mode === 'gate' && A && city.apt) gate = A.placeAtGate(city); else pl.place(city, mode === 'gate' ? 'runway' : mode);
     if (P.frame === 'world') { P.board(); }
-    if (P.mode !== 'pilot' && !SKY.Crowd.pilots().length) P.sitPilot(pl.seats.find((s) => s.captain && !s.occupant) || pl.seats.find((s) => s.cockpit && !s.occupant) || pl.seats[0]);
+    if (P.mode !== 'pilot' && !SKY.Crowd.pilots().length && !(SKY.SuperTravel && SKY.SuperTravel.inTrip && SKY.SuperTravel.inTrip())) P.sitPilot(pl.seats.find((s) => s.captain && !s.occupant) || pl.seats.find((s) => s.cockpit && !s.occupant) || pl.seats[0]);
     if (mode === 'approach' && P.mode !== 'pilot') { pl.ap.on = true; pl.ap.by = 'pilots'; pl.ap.alt = 600; pl.ap.dest = city; pl.ap.mode = 'cruise'; }
     if (mode === 'runway') { pl.ap.mode = 'takeoff'; pl.ap.rwyX = city.ax; pl.ap.hdg = 0; pl.ap.on = P.mode !== 'pilot'; pl.ap.dest = this.nextCity(city); pl.ap.alt = pl.T.alt; }
     if (mode === 'gate') { pl.ap.on = false; pl.ap.mode = 'hold'; pl.ap.dest = this.nextCity(city); }
@@ -230,6 +230,7 @@ const G = SKY.Game = {
     if (SKY.Starship) SKY.Starship.update(dt); // 4.0 Starship rides
     this.fx.update(dt, new THREE.Vector3(0, -SKY.GRAV, 0), (x, y, z) => SKY.World.heightAt(x, z) + 0.05);
     this.events(dt);
+    if (SKY.stCamTick) SKY.stCamTick();
     this.updateCamera(dt);
     this.updateAudio(dt);
   },
@@ -273,7 +274,7 @@ const G = SKY.Game = {
     const cam = this.camera, pl = this.plane, P = SKY.Player;
     const q = new THREE.Quaternion(), e = new THREE.Euler(0, 0, 0, 'YXZ');
     if (!this.camOverride && SKY.Starship && SKY.Starship.camera(cam, dt)) { this.camPos.copy(cam.position); return; }
-    if (this.camOverride) { const o = this.camOverride; cam.position.set(o[0], o[1], o[2]); cam.up.set(0, 1, 0); cam.lookAt(o[3], o[4], o[5]); this.camPos.copy(cam.position); return; } // test/photo hook
+    if (this.camOverride) { const o = this.camOverride; cam.position.set(o[0], o[1], o[2]); if (o.length > 6) cam.up.set(o[6], o[7], o[8]); else cam.up.set(0, 1, 0); { const fv = o[9] || 75; if (cam.fov !== fv) { cam.fov = fv; cam.updateProjectionMatrix(); } } cam.lookAt(o[3], o[4], o[5]); this.camPos.copy(cam.position); return; } // test/photo hook
     if (P.mode === 'drive' && SKY.Cars && SKY.Cars.cur) { SKY.Cars.camera(cam, dt, this.camOrbit); }
     else if (P.dead && P.frame === 'world') { const t = this.time * 0.2; cam.position.set(P.pos.x + Math.cos(t) * 12, P.pos.y + 6, P.pos.z + Math.sin(t) * 12); cam.lookAt(P.pos); }
     else if ((P.mode === 'pilot' || (P.mode === 'seat' && P.rideCam)) && P.pilotCam === 'chase' && P.frame === 'plane') {
@@ -319,7 +320,7 @@ const G = SKY.Game = {
   renderPlayerBody(wp, ww) {
     const P = SKY.Player; const showTP = P.camMode === 'tp' || ((P.mode === 'pilot' || (P.mode === 'seat' && P.rideCam)) && P.pilotCam === 'chase');
     if (SKY.Net && SKY.Net.renderRiders) SKY.Net.renderRiders(wp, ww); // 4.0: friends riding in the same plane
-    if (!showTP || P.dead || P.mode === 'drive' || P.mode === 'ride') return;
+    if (!showTP || (SKY.SuperTravel && SKY.SuperTravel.watching) || P.dead || P.mode === 'drive' || P.mode === 'ride') return;
     const b = P.body; b.frame = P.frame; b.pos.copy(P.pos); b.yaw = P.yaw;
     b.state = P.mode === 'seat' || P.mode === 'pilot' ? 'sit' : (P.frame === 'world' && P.chute ? 'para' : (Math.hypot(P.vel.x, P.vel.z) > 0.5 ? 'walk' : 'idle'));
     b.masked = P.masked; b.woozy = P.woozy; b.carry = !!P.held; b.panic = 0;
@@ -449,7 +450,7 @@ const G = SKY.Game = {
     $('toolbar').innerHTML = tb + (P.held ? `<span class="sel">✋ ${P.held.person ? P.held.person.name : P.held.meal ? 'Meal: ' + P.held.meal.emoji + ' ' + P.held.meal.q : P.held.kind}</span>` : '') + (pl.codeFound ? `<span class="code">🔑 ${pl.code}</span>` : '');
     // prompt
     const pr = $('prompt');
-    if (P.target && P.mode !== 'pilot' && !this.ui && !(SKY.Places && (SKY.Places.scope || SKY.Places.trans))) { pr.textContent = (SKY.isTouch ? '👆 ' : '[F] ') + P.target.label; pr.style.display = 'block'; pr.classList.toggle('enter', /^(🚪|🛗|🍽|🪂|🚗|🔓|🩺)/u.test(P.target.label)); }
+    if (P.target && P.mode !== 'pilot' && !this.ui && !(SKY.SuperTravel && SKY.SuperTravel.watching) && !(SKY.Places && (SKY.Places.scope || SKY.Places.trans))) { pr.textContent = (SKY.isTouch ? '👆 ' : '[F] ') + P.target.label; pr.style.display = 'block'; pr.classList.toggle('enter', /^(🚪|🛗|🍽|🪂|🚗|🔓|🩺)/u.test(P.target.label)); }
     else if (P.mode === 'pilot') { pr.textContent = SKY.isTouch ? (pl.small ? 'USE (hand) = get out (when stopped)' : 'USE (hand) = leave seat') : '[F] leave seat  [V] camera  [T] autopilot  [G] gear (taxi to gate on the ground)  [Z] flaps  [B] brake'; pr.style.display = this.time % 20 < 6 ? 'block' : 'none'; }
     else pr.style.display = 'none';
     // alerts

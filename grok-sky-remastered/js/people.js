@@ -154,13 +154,31 @@ class Person {
     if (this.masked) { _d.copy(P[HEAD].p).addScaledVector(hb, -0.15); w.box(_d, side, _e, hb, 0.16, 0.13, 0.1, 0xffd400); }
     else { _d.copy(P[HEAD].p).addScaledVector(_e, 0.15).addScaledVector(hb, 0.02); w.box(_d, side, _e, hb, this.role === 'captain' || this.role === 'fo' ? 0.31 : 0.29, 0.07, 0.3, this.hair); }
     // limbs
+    const plt = this.role === 'captain' || this.role === 'fo', fwd = _f.copy(hb).negate();
+    if (plt && !this.masked && !this.ko) { // blocky face, hat/headset, epaulettes
+      const H = P[HEAD].p, fc = (u, s2, sx, sy, sz, c) => { _d.copy(H).addScaledVector(fwd, 0.14).addScaledVector(_e, u).addScaledVector(side, s2); w.box(_d, side, _e, hb, sx, sy, sz, c); };
+      if (this.role === 'fo') { fc(0.03, 0, 0.26, 0.06, 0.02, 0x111111); } else { fc(0.03, -0.065, 0.05, 0.05, 0.02, 0x1b1b1b); fc(0.03, 0.065, 0.05, 0.05, 0.02, 0x1b1b1b); fc(0.09, -0.065, 0.07, 0.02, 0.02, 0x3b2a1a); fc(0.09, 0.065, 0.07, 0.02, 0.02, 0x3b2a1a); }
+      fc(-0.075, 0, 0.11, 0.025, 0.02, 0x7a2e2e);
+      if (this.role === 'captain') { _d.copy(H).addScaledVector(_e, 0.2); w.box(_d, side, _e, hb, 0.33, 0.12, 0.33, 0x14213d); fc(0.13, 0, 0.3, 0.025, 0.12, 0x0b1020); fc(0.21, 0, 0.08, 0.06, 0.03, 0xffd400); }
+      else { _d.copy(H).addScaledVector(_e, 0.17); w.box(_d, side, _e, hb, 0.3, 0.04, 0.06, 0x222222); for (const sg of [-1, 1]) { _d.copy(H).addScaledVector(side, sg * 0.15); w.box(_d, side, _e, hb, 0.04, 0.1, 0.1, 0x222222); } fc(-0.06, 0.1, 0.03, 0.03, 0.08, 0x222222); }
+      for (const sg of [-1, 1]) { _d.copy(P[NECK].p).addScaledVector(side, sg * 0.17).addScaledVector(up, 0.02); w.box(_d, side, up, back, 0.12, 0.03, 0.18, 0x111827); _d.addScaledVector(up, 0.02); w.box(_d, side, up, back, 0.1, 0.012, 0.15, 0xffd400); }
+    }
+    const pz = plt && this.state === 'sit' && this.seat && this.seat.cockpit && SKY.Game.plane && SKY.Game.plane.yokeZ;
+    if (pz) { const t = performance.now() / 1000, sx = this.seat.x < 0 ? -1 : 1, wob = Math.sin(t * 1.3 + sx) * 0.03;
+      _g.set(sx * 0.6 - 0.2, 0.96 + wob, pz); _h.set(sx * 0.6 + 0.2, 0.96 - wob, pz);
+      if (this.role === 'captain' && Math.sin(t * 0.4) > 0.3) _h.set(0, 1.0 + Math.sin(t * 2) * 0.02, pz - 0.02 + Math.sin(t * 2) * 0.03);
+      if (this.role === 'fo' && Math.sin(t * 0.5 + 2) > 0.4) _g.set(0.06, 1.0, pz - 0.02);
+      limb(w, P[NECK].p, _g, side, 0.11, this.shirt, -0.21); limb(w, P[NECK].p, _h, side, 0.11, this.shirt, 0.21);
+      w.box(_g, side, up, back, 0.09, 0.09, 0.09, this.skin); w.box(_h, side, up, back, 0.09, 0.09, 0.09, this.skin);
+    } else {
     limb(w, P[NECK].p, P[HL].p, side, 0.11, this.shirt, -0.21);
-    limb(w, P[NECK].p, P[HR].p, side, 0.11, this.shirt, 0.21);
+    limb(w, P[NECK].p, P[HR].p, side, 0.11, this.shirt, 0.21); }
     limb(w, P[PELV].p, P[FL].p, side, 0.15, this.pants, -0.11);
     limb(w, P[PELV].p, P[FR].p, side, 0.15, this.pants, 0.11);
   }
 }
 function lerpCol(a, b, t) { const c1 = new THREE.Color(a), c2 = new THREE.Color(b); return c1.lerp(c2, t).getHex(); }
+const _f = new THREE.Vector3(), _g = new THREE.Vector3(), _h = new THREE.Vector3();
 const _l1 = new THREE.Vector3(), _l2 = new THREE.Vector3(), _l3 = new THREE.Vector3(), _l4 = new THREE.Vector3();
 function limb(w, a, b, side, th, col, off) {
   _l4.copy(a).addScaledVector(side, off);

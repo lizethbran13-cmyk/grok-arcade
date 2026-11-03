@@ -8,7 +8,7 @@
 const WB = SKY.WB, W = SKY.World, D = SKY.CityDefs, PL = SKY.Places;
 const { signBoard, onHill, curveStruct } = SKY._cityHelpers;
 const hyp = Math.hypot, $ = (id) => document.getElementById(id);
-const ST = SKY.SuperTravel = { KEY: 'grokDLC.sky.super_travel_expansion', ARCADE: 'https://lizethbran13-cmyk.github.io/grok-arcade/', PRICE: 175, pets: [] };
+const ST = SKY.SuperTravel = { KEY: 'grokDLC.sky.super_travel_expansion', ARCADE: 'https://lizethbran13-cmyk.github.io/grok-arcade/', PRICE: 175, pets: [], wings: {}, AIRLINER: 'R777' };
 const SAVE = 'grokSkySuperTravel';
 const S = { airframe: 100, gear: 100, stamps: [], souv: [], flights: 0, cls: 'economy', heists: 0, caught: 0, cargo: 'clear', log: [] };
 try { Object.assign(S, JSON.parse(localStorage.getItem(SAVE) || '{}') || {}); } catch (e) { }
@@ -133,7 +133,7 @@ PD.CAI = (PD.CAI || []).concat([
 
 // =============================================================================== TERMINAL WING: 3D PETS + STATIONS
 const mat = {}; const L = (c) => mat[c] || (mat[c] = new THREE.MeshLambertMaterial({ color: c }));
-function bx(g, w, h, d, c, x, y, z) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), L(c)); m.position.set(x, y, z); g.add(m); return m; }
+const BG = {}; function bx(g, w, h, d, c, x, y, z) { const k = w + ',' + h + ',' + d; const m = new THREE.Mesh(BG[k] || (BG[k] = new THREE.BoxGeometry(w, h, d)), L(c)); m.position.set(x, y, z); g.add(m); return m; }
 function mouse(col, patch, hat) { const g = new THREE.Group(); bx(g, 0.5, 0.4, 0.9, col, 0, 0.3, 0); bx(g, 0.38, 0.34, 0.4, col, 0, 0.45, -0.58); bx(g, 0.14, 0.14, 0.04, 0xf9a8d4, -0.14, 0.68, -0.6); bx(g, 0.14, 0.14, 0.04, 0xf9a8d4, 0.14, 0.68, -0.6); bx(g, 0.08, 0.08, 0.06, 0xfb7185, 0, 0.42, -0.8); bx(g, 0.06, 0.06, 0.04, 0x111111, 0.1, 0.52, -0.78); bx(g, patch ? 0.14 : 0.06, patch ? 0.12 : 0.06, 0.04, 0x111111, -0.1, 0.52, -0.79); const t = bx(g, 0.06, 0.06, 0.9, 0xf0b4c0, 0, 0.3, 0.85); t.rotation.x = 0.3; if (hat) bx(g, 0.42, 0.12, 0.42, hat, 0, 0.68, -0.55); return g; }
 function dog() { const g = new THREE.Group(), c = 0xc98a4a; bx(g, 0.6, 0.5, 1.1, c, 0, 0.7, 0); [[-0.2, -0.4], [0.2, -0.4], [-0.2, 0.4], [0.2, 0.4]].forEach((p) => bx(g, 0.15, 0.45, 0.15, 0x8a5a2a, p[0], 0.23, p[1])); bx(g, 0.45, 0.45, 0.45, c, 0, 1.05, -0.62); bx(g, 0.3, 0.2, 0.3, 0xf2e0c8, 0, 0.85, -0.85); bx(g, 0.1, 0.1, 0.05, 0x111111, 0, 0.98, -1.0); bx(g, 0.12, 0.2, 0.08, 0x8a5a2a, -0.17, 1.35, -0.6); bx(g, 0.12, 0.2, 0.08, 0x8a5a2a, 0.17, 1.35, -0.6); bx(g, 0.62, 0.12, 0.3, 0x1d4ed8, 0, 0.98, -0.1); return g; }
 function turtle() { const g = new THREE.Group(); bx(g, 1.1, 0.5, 1.3, 0x2e7d32, 0, 0.45, 0); bx(g, 0.8, 0.25, 1.0, 0x4caf50, 0, 0.8, 0); bx(g, 0.36, 0.3, 0.4, 0x9a8a5a, 0, 0.4, -0.85); bx(g, 0.06, 0.06, 0.04, 0x111111, 0.1, 0.48, -1.05); bx(g, 0.06, 0.06, 0.04, 0x111111, -0.1, 0.48, -1.05); bx(g, 0.5, 0.12, 0.5, 0xffd23a, 0, 1.0, 0); [[-0.45, -0.45], [0.45, -0.45], [-0.45, 0.45], [0.45, 0.45]].forEach((p) => bx(g, 0.25, 0.3, 0.25, 0x9a8a5a, p[0], 0.15, p[1])); return g; }
@@ -164,6 +164,17 @@ ST.buildAirport = (apt) => {
   const dish = new THREE.Mesh(new THREE.SphereGeometry(1.4, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2.5), new THREE.MeshLambertMaterial({ color: 0xffffff, side: THREE.DoubleSide })); dish.position.set(-13, 5, 8); dish.rotation.x = -1.0; wing.add(dish); bx(wing, 0.3, 4.4, 0.3, 0xcbd5e1, -13, 2.2, 8); ST.dish = dish;
   bx(wing, 6, 0.4, 4, 0x475569, -2, 0.3, 10); bx(wing, 1.2, 1.6, 1.2, 0x2e7d32, -4, 1.1, 10); bx(wing, 0.9, 0.9, 0.9, 0x111111, 0, 0.75, 10);
   const cam = c.group; void cam;
+  // #80 fixes: clear DEPARTURES / ARRIVALS signposting, arrivals customs booth + baggage carousel, floor arrows
+  bx(wing, 6, 0.3, 2.4, 0x334155, 3, 0.3, 1); bx(wing, 6.4, 0.12, 2.8, 0x94a3b8, 3, 0.5, 1); for (let i = 0; i < 4; i++) bx(wing, 0.8, 0.5, 0.5, [0x6a1b9a, 0xc62828, 0x2e7d32, 0xf59e0b][i], 0.9 + i * 1.4, 0.8, 1);
+  bx(wing, 3, 1.2, 1, 0x0f766e, -7, 0.7, 1); bx(wing, 3, 0.12, 1.1, 0xd4af37, -7, 1.35, 1); bx(wing, 0.4, 3, 0.4, 0x94a3b8, -8.8, 1.5, 1); bx(wing, 0.4, 3, 0.4, 0x94a3b8, -5.2, 1.5, 1); bx(wing, 4, 0.5, 0.4, 0x0f766e, -7, 3.2, 1);
+  const bigSign = (txt, x, y, z) => { const t = tag(txt, 640); t.position.set(x, y, z); t.scale.multiplyScalar(1.1); wing.add(t); return t; };
+  bigSign('🛃 DEPARTURES · SECURITY & CUSTOMS ⬇', -1, 5.2, -9); bigSign('🛃 ARRIVALS CUSTOMS ⬇', -7, 5.2, 1); bigSign('🧳 BAGGAGE CLAIM ⬇', 3, 5.2, 1); bigSign('🚪 GATES · BOARDING ⬇', 13, 5.2, -8); bigSign('🎫 TICKETS ⬇', -12, 5.6, -9);
+  const arrow = (x, z, rot, col) => { const a = new THREE.Group(); bx(a, 0.5, 0.06, 1.6, col, 0, 0.24, 0.3); const h = bx(a, 1.1, 0.06, 1.1, col, 0, 0.24, -0.6); h.rotation.y = Math.PI / 4; a.position.set(x, 0, z); a.rotation.y = rot; wing.add(a); };
+  for (const [x, z] of [[-12, -4], [-8, -5], [-4, -6]]) arrow(x, z, -Math.PI / 2 + 0.4, 0xfacc15);
+  for (const [x, z] of [[4, -6], [8, -7]]) arrow(x, z, -Math.PI / 2, 0xfacc15);
+  for (const [x, z] of [[13, -4], [12, -1], [9, 0.5]]) arrow(x, z, Math.PI / 2 - 0.3, 0x22d3ee);
+  for (const [x, z] of [[-1, 1.2], [-4, 1.2]]) arrow(x, z, Math.PI / 2, 0x22d3ee);
+  ST.wings[apt.code] = { wing, apt, city: c };
   // pets with name tags
   const spots = { dispatch: [-12, -7], customs: [-1, -7], radar: [-11, 8], lounge: [8, 2.5], forge: [-2, 7.5] };
   const pets = [];
@@ -176,7 +187,9 @@ ST.buildAirport = (apt) => {
   it(8, 3, 6, () => '🥂 VIP First-Class Lounge (Candy K9 security)', () => ST.lounge());
   it(-11, 7.5, 5, () => '📡 Snowie\'s polar & weather radar dispatch', () => ST.radar());
   it(-2, 8, 5, () => '🐢 Torty\'s hangar forge — airframe ' + Math.round(S.airframe) + '% · gear ' + Math.round(S.gear) + '%', () => ST.open('forge'));
-  it(13, -8, 5, () => '🚪 Gate boarding — Super Travel HQ', () => ST.open('tickets'));
+  it(13, -8, 5, () => (T() && T().stage === 'board' ? '🚪 BOARD NOW — Ratita Airways to ' + T().destName : '🚪 Gate boarding (book at 🎫 Luna, then clear 🛃 departures)'), () => ST.gate(apt));
+  it(-7, 1.5, 4.5, () => '🛃 Arrivals customs (Pi-rat) — passport check', () => ST.arrCustoms(apt));
+  it(3, 1.5, 4.5, () => '🧳 Baggage claim carousel', () => ST.baggage(apt));
 };
 
 // =============================================================================== GAMEPLAY
@@ -187,28 +200,131 @@ const CLASSES = {
 };
 ST.CLASSES = CLASSES;
 const stamp = (code) => { if (!S.stamps.includes(code)) { S.stamps.push(code); persist(); toast('🛂 Passport stamped: ' + code + ' (' + S.stamps.length + ' stamps)', 'good'); return true; } return false; };
+// ---- #80 fixes: real passenger trips. Ticket (Luna) → 🛃 departures security & customs (required) → gate → you ride in YOUR
+// cabin seat while bot Captain Rex + First Officer Kim fly → arrive in the destination's Super Travel terminal → 🧳 baggage
+// claim (always) → 🛃 arrivals customs (international flights only). Saved in S.trip so a reload never strands you.
+const T = () => (S.trip && S.trip.stage ? S.trip : null);
+ST.inTrip = () => !!T();
+const tripCode = (id) => { const c = W.city(id); return c && c.apt ? c.apt.code : id; };
+ST.wingPos = (code, lx, lz) => { const w = ST.wings[code]; if (!w || !w.wing.parent) return null; w.wing.updateWorldMatrix(true, false); return w.wing.localToWorld(new THREE.Vector3(lx, 0.25, lz)); };
+ST.putInTerminal = (code, lx, lz) => {
+  const v = ST.wingPos(code, lx, lz); if (!v) return false; const P = SKY.Player;
+  if (P.frame === 'plane') { P.leaveSeat(); P.mode = 'foot'; P.toWorld(); }
+  P.leaveSeat(); P.mode = 'foot'; P.pos.copy(v); P.vel.set(0, 0, 0); P.pitch = 0; return true;
+};
+const playerXZ = () => { const P = SKY.Player, pl = SKY.Game.plane; return P.frame === 'world' ? P.pos : pl.pos; };
+const check = (where, code) => { // shared customs check: real consequence (fine + gear wear), never stuck (no coins = warning only)
+  stamp(code);
+  if (S.cargo === 'overweight' || Math.random() < 0.2) { const fee = 6; S.cargo = 'clear'; S.gear = Math.max(0, S.gear - 8); persist(); if (coins() >= fee) { PL.spend(fee); toast('🏴‍☠️ Pi-rat (' + where + '): Arrr! Overweight uninspected cargo! Fine ' + fee + ' 🪙 and the gear took a beating (-8%).', 'warn'); } else toast('🏴‍☠️ Pi-rat (' + where + '): Overweight bag! No coins? Then a stern warning and -8% gear. Off ye go.', 'warn'); }
+  else toast('🛃 ' + where + ': Pi-rat & Candy K9 scanned your bags — all clear! 🐶 *happy sniff*', 'good');
+  ST.checkStuck();
+};
 ST.book = (cls, dest) => {
   const C = CLASSES[cls]; const G = SKY.Game; const city = W.city(dest); if (!C || !city) return false;
+  const here = playerXZ(); let origin = W.nearestCity(here.x, here.z).city; if (!origin.apt) origin = W.cities.find((c) => c.apt) || origin;
+  if (origin.id === city.id) { toast('🐭 Luna: You are already at ' + city.name + '! Pick another destination.', 'warn'); return false; }
   if (!PL.spend(C.price)) { ST.render(); return false; }
-  S.cls = cls; S.flights++; persist();
-  const pl = G.plane, P = SKY.Player; const crashRoll = Math.random();
-  logEv(C.e + ' ' + C.name + ' → ' + city.name);
+  S.cls = cls; S.flights++;
+  S.trip = { cls, dest: city.id, destName: city.name, origin: origin.id, originName: origin.name, stage: 'depcust', intl: Math.random() < 0.5, crash: Math.random() < 0.12 };
+  persist(); logEv(C.e + ' ' + C.name + ' ' + origin.name + ' → ' + city.name);
   ST.close();
-  if (G.state !== 'play') G.start(dest, 'passenger');
-  else G.fastTravel(dest, 'gate');
-  P.hp = Math.min(100, P.hp + C.heal);
-  stamp(city.apt ? city.apt.code : city.id);
-  if (crashRoll < 0.12) { // Tortuga Tech crash-test chaos (cartoon) → real consequence: airframe damage + repair fee
-    S.airframe = Math.max(0, S.airframe - 22); S.gear = Math.max(0, S.gear - 18); persist();
-    toast('🐢💥 Tortuga Tech "crash-tested" landing! Bumpy arrival at ' + city.name + ' — airframe -22%, gear -18%. Visit Torty\'s forge.', 'warn');
-  } else toast(C.e + ' ' + C.name + ' with Ratita Airways → ' + city.name + '! ' + C.perk + ' (+' + C.heal + ' HP)', 'good');
-  ST.checkStuck(); return true;
+  const code = tripCode(origin.id); const v = ST.wingPos(code, -12, -5);
+  if (!v || SKY.Player.frame !== 'world' || hyp(v.x - here.x, v.z - here.z) > 80) { G.fastTravel(origin.id, 'gate'); }
+  ST.putInTerminal(code, -12, -5);
+  toast('🎫 ' + C.e + ' ' + C.name + ' ticket ' + origin.name + ' → ' + city.name + '! NEXT: 🛃 Departures security & customs — follow the YELLOW floor arrows (★ on the minimap).', 'good');
+  return true;
 };
-ST.customs = (apt) => {
-  const r = Math.random(); stamp(apt.code);
-  if (S.cargo === 'overweight' || r < 0.2) { const fee = 6; S.cargo = 'clear'; S.gear = Math.max(0, S.gear - 8); persist(); if (coins() >= fee) PL.spend(fee); toast('🏴‍☠️ Pi-rat: Arrr! Overweight uninspected cargo! Fine ' + fee + ' 🪙 and the gear took a beating (-8%).', 'warn'); }
-  else { toast('🛃 Pi-rat & Candy K9 scanned your bags — all clear! 🐶 *happy sniff*', 'good'); }
-  ST.checkStuck();
+ST.customs = (apt) => { // the departures X-ray arch
+  const t = T();
+  if (t && t.stage === 'depcust') { if (apt.code !== tripCode(t.origin)) { toast('🛃 Your flight leaves from ' + t.originName + '. Clear customs there.', 'warn'); return; } check('Departures customs', apt.code); t.stage = 'board'; persist(); toast('✅ Departure customs cleared! NEXT: 🚪 Gate boarding (follow the arrows ➜)', 'good'); return; }
+  if (t && (t.stage === 'arrcust' || t.stage === 'bags')) { ST.arrCustoms(apt); return; }
+  check('Customs', apt.code);
+};
+ST.gate = (apt) => {
+  const t = T();
+  if (!t) { toast('🎫 Book a ticket with Luna first (ticket counter, left side).', 'warn'); ST.open('tickets'); return; }
+  if (t.stage === 'depcust') { toast('🛑 Gate agent: No boarding without 🛃 DEPARTURES security & customs! Follow the yellow arrows back to Pi-rat.', 'bad'); return; }
+  if (t.stage === 'board') { if (apt.code !== tripCode(t.origin)) { toast('🚪 Your flight boards at ' + t.originName + '.', 'warn'); return; } ST.depart(); return; }
+  toast('🧳 Finish arriving first: baggage claim' + (t.intl ? ' + arrivals customs' : '') + '.', 'warn');
+};
+ST.cabinProps = (pl) => {
+  if (!pl || pl.small || !pl.group) return; if (pl._stProps) { pl.group.remove(pl._stProps); pl._stProps.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); pl._stProps = null; }
+  const g = new THREE.Group(), cab = pl.seats.filter((s) => !s.cockpit); if (!cab.length) return;
+  const MC = ST._mats || (ST._mats = {}); const M = (c) => MC[c] || (MC[c] = new THREE.MeshLambertMaterial({ color: c }));
+  const scr = new THREE.InstancedMesh(new THREE.BoxGeometry(0.26, 0.17, 0.03), M(0x0f172a), cab.length);
+  const glow = new THREE.InstancedMesh(new THREE.BoxGeometry(0.22, 0.13, 0.01), (MC.glow || (MC.glow = new THREE.MeshBasicMaterial({ color: 0x38bdf8 }))), cab.length);
+  const m = new THREE.Matrix4();
+  cab.forEach((s, i) => { m.makeTranslation(s.x, s.y + 0.55, s.z + 0.36); scr.setMatrixAt(i, m); m.makeTranslation(s.x, s.y + 0.55, s.z + 0.38); glow.setMatrixAt(i, m); });
+  g.add(scr, glow);
+  let z0 = Infinity, z1 = -Infinity; for (const s of cab) { z0 = Math.min(z0, s.z); z1 = Math.max(z1, s.z); }
+  const L = z1 - z0 + 1.2, zc = (z0 + z1) / 2;
+  for (const sx of [-1, 1]) {
+    const bin = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.36, L), M(0xe5e7eb)); bin.position.set(sx * 1.75, 1.85, zc); g.add(bin);
+    const lip = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.05, L), M(0x94a3b8)); lip.position.set(sx * 1.47, 1.7, zc); g.add(lip);
+  }
+  const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.015, L), (MC.lamp || (MC.lamp = new THREE.MeshLambertMaterial({ color: 0xf3efe2, emissive: 0x3a3520 })))); lamp.position.set(0, 2.28, zc); g.add(lamp);
+  const zOf = (c, f) => { const zs = cab.filter((s) => s.cabinClass === c).map((s) => s.z); return zs.length ? f(...zs) : null; };
+  for (const [a, b, col] of [['first', 'business', 0x9f1239], ['business', 'economy', 0x1e3a8a]]) { const za = zOf(a, Math.max), zb = zOf(b, Math.min); if (za == null || zb == null) continue; for (const sx of [-1, 1]) { const c = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.6, 0.04), M(col)); c.position.set(sx * 1.55, 0.95, (za + zb) / 2); g.add(c); } }
+  const cart = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.95, 0.6), M(0x9ca3af)); cart.position.set(0, 0.48, z1 + 1.4); g.add(cart);
+  pl.group.add(g); pl._stProps = g;
+};
+ST.depart = () => {
+  const t = T(), G = SKY.Game, P = SKY.Player; if (!t) return;
+  if (ST._prevType == null) ST._prevType = G.planeType; G.planeType = ST.AIRLINER;
+  G.start(t.origin, 'passenger');
+  const pl = G.plane; ST.cabinProps(pl); pl.ap.dest = W.city(t.dest); pl.ap.on = true; pl.ap.by = 'pilots';
+  const want = t.cls === 'first' ? 'first' : t.cls === 'business' ? 'business' : 'economy';
+  const cab = pl.seats.filter((s) => !s.cockpit);
+  let seat = cab.find((s) => s.cabinClass === want && !s.occupant) || cab.find((s) => s.cabinClass === want) || cab.find((s) => !s.occupant) || cab[0];
+  if (seat && seat.occupant && seat.occupant !== P && seat.occupant.leaveSeat) seat.occupant.leaveSeat();
+  if (seat) P.sitSeat(seat); ST.mySeat = seat; ST.seatLook(seat);
+  t.stage = 'flying'; t.left = 75; ST.flightLive = true; persist();
+  toast('💺 You are a ' + CLASSES[t.cls].name + ' passenger (row ' + (seat ? seat.row + 1 : '?') + '). 🧑‍✈️ Captain Rex & First Officer Kim are flying you to ' + t.destName + '. Stand up and walk the cabin any time!', 'good');
+};
+ST.watch = () => { const P = SKY.Player, pl = SKY.Game.plane; const cap = pl.seats.find((s) => s.captain); if (!cap) return; P.leaveSeat(); const cd = pl.cockpitDoor; if (cd && !cd.broken) { cd.target = 1; cd.open = 1; cd.autoClose = 0; } P.mode = 'foot'; P.pos.set(0, 0.01, cap.z + 0.9); P.vel.set(0, 0, 0); P.yaw = 0; P.camMode = "tp"; P.pitch = -0.3; ST.watching = true; toast('👀 Watching Captain Rex & First Officer Kim fly. Tap 💺 My seat to sit back down.', 'good'); };
+ST.backToSeat = () => { const P = SKY.Player; const cd = SKY.Game.plane.cockpitDoor; if (cd && !cd.broken) cd.target = 0; P.camMode = "fp"; ST.watching = false; if (ST.mySeat) { P.sitSeat(ST.mySeat); ST.seatLook(ST.mySeat); } };
+ST.skip = () => { const t = T(); if (t && t.stage === 'flying') t.left = 0; };
+ST.arrive = () => {
+  const t = T(), G = SKY.Game, P = SKY.Player; if (!t) return; const C = CLASSES[t.cls];
+  ST.flightLive = false; ST.watching = false; if (G.plane && G.plane._stProps) { G.plane.group.remove(G.plane._stProps); G.plane._stProps.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); G.plane._stProps = null; } if (ST._prevType != null) { G.planeType = ST._prevType; ST._prevType = null; } G.fastTravel(t.dest, 'gate');
+  P.hp = Math.min(100, P.hp + C.heal);
+  const ok = ST.putInTerminal(tripCode(t.dest), 13, -4);
+  t.stage = 'bags'; persist();
+  if (t.crash) { S.airframe = Math.max(0, S.airframe - 22); S.gear = Math.max(0, S.gear - 18); persist(); toast('🐢💥 Tortuga Tech "crash-tested" landing at ' + t.destName + '! Airframe -22%, gear -18%. Torty\'s forge can fix it (free emergency rebuild if needed).', 'warn'); }
+  toast('🛬 Welcome to ' + t.destName + '! ' + (ok ? 'You deplaned into the Super Travel terminal. ' : 'Walk off the jet bridge into the terminal. ') + 'NEXT: 🧳 Baggage claim' + (t.intl ? ' then 🛃 ARRIVALS CUSTOMS (international flight)' : ' (domestic flight — no arrival customs)') + ' — follow the BLUE arrows.', 'good');
+};
+ST.baggage = (apt) => {
+  const t = T();
+  if (!t || t.stage !== 'bags' || apt.code !== tripCode(t.dest)) { toast('🧳 The carousel is empty — your bags come out here after you land.', 'warn'); return; }
+  if (t.intl) { t.stage = 'arrcust'; persist(); toast('🧳 Got your bags! NEXT: 🛃 Arrivals customs (Pi-rat) — international arrivals must clear it.', 'good'); }
+  else { stamp(apt.code); S.trip = null; persist(); toast('🧳 Got your bags! Domestic flight — you are free to explore ' + apt.name + '! ✅', 'good'); }
+};
+ST.arrCustoms = (apt) => {
+  const t = T();
+  if (t && t.stage === 'bags') { toast('🛃 Pi-rat: Grab yer 🧳 bags from the carousel first, matey!', 'warn'); return; }
+  if (!t || t.stage !== 'arrcust' || apt.code !== tripCode(t.dest)) { toast('🛃 Arrivals customs is for passengers landing on international flights.', 'warn'); return; }
+  check('Arrivals customs', apt.code); S.trip = null; persist(); toast('✅ Welcome to ' + apt.name + '! Trip complete — explore the city!', 'good');
+};
+const TARGET = { depcust: [-1, -7, '🛃 Departures customs'], board: [13, -8, '🚪 Gate'], bags: [3, 1, '🧳 Baggage claim'], arrcust: [-7, 1, '🛃 Arrivals customs'] };
+ST.target = () => { const t = T(); if (!t || !TARGET[t.stage]) return null; const g = TARGET[t.stage]; const code = tripCode(t.stage === 'depcust' || t.stage === 'board' ? t.origin : t.dest); const v = ST.wingPos(code, g[0], g[1]); return v ? { v, name: g[2] } : null; };
+let pullT = 0;
+ST.tripUpdate = (dt) => {
+  const t = T(), G = SKY.Game, P = SKY.Player, fl = $('stFlight'), gd = $('stGuide');
+  if (fl) fl.style.display = t && t.stage === 'flying' && ST.flightLive ? 'flex' : 'none';
+  if (!t) { if (gd) gd.style.display = 'none'; return; }
+  if (t.stage === 'flying') {
+    if (!ST.flightLive) { t.stage = 'board'; persist(); toast('🚪 Your Ratita Airways flight to ' + t.destName + ' is waiting at the gate in ' + t.originName + '.', 'good'); return; }
+    if (G.plane.crashed || P.dead) { ST.flightLive = false; t.stage = 'board'; persist(); toast('🚨 Flight interrupted! Your ticket still works — board again at ' + t.originName + ' (Never Stuck).', 'warn'); return; }
+    t.left -= dt; const el = $('stFlightTxt'); if (el) el.textContent = '🧑‍✈️ Captain Rex & FO Kim → ' + t.destName + ' · landing in ' + Math.max(0, Math.ceil(t.left)) + 's';
+    if (gd) gd.style.display = 'none'; if (t.left <= 0) ST.arrive(); return;
+  }
+  const tg = ST.target(); if (gd) { gd.style.display = 'block'; gd.textContent = 'NEXT ➜ ' + (tg ? tg.name + (P.frame === 'world' ? ' · ' + Math.round(hyp(tg.v.x - P.pos.x, tg.v.z - P.pos.z)) + ' m' : '') : TARGET[t.stage][2]) + '  (★ on minimap)'; }
+  pullT -= dt;
+  if ((t.stage === 'bags' || t.stage === 'arrcust') && tg && P.frame === 'world' && hyp(tg.v.x - P.pos.x, tg.v.z - P.pos.z) > 90 && pullT <= 0) {
+    pullT = 5; ST.putInTerminal(tripCode(t.dest), t.stage === 'bags' ? 3 : -7, 3.5);
+    if (t.stage === 'arrcust' && coins() >= 3) { PL.spend(3); toast('🚔 Sky Marshal Rex: You skipped ARRIVALS CUSTOMS! 3 🪙 fine — back to Pi-rat you go.', 'bad'); }
+    else toast('🚔 Sky Marshal Rex: Not so fast! Arriving passengers finish ' + (t.stage === 'bags' ? '🧳 baggage claim' : '🛃 arrivals customs') + ' first.', 'warn');
+  }
 };
 ST.lounge = () => { const P = SKY.Player; P.hp = 100; toast('🥂 VIP Lounge: champagne-flute of sparkling cider, caviar crackers and a nap — full HP! Candy guards the door. 🐶', 'good'); SKY.Audio.play('ok'); };
 ST.radar = () => { const R = SKY.Remaster; const n = R && R.fronts ? R.fronts.filter((f) => f.kind === 'thunder').length : 0; toast('📡 Snowie: ' + n + ' thunder cells on radar. Weather strikes cost 15% airframe — fly around them!', 'good'); };
@@ -232,13 +348,16 @@ ST.returnWheel = () => { const pl = SKY.Game.plane; if (!pl || !pl.wheelStolen) 
 // watch landings and weather → real consequences
 let lastGround = true, lastVy = 0;
 ST.update = (dt) => {
-  const G = SKY.Game, pl = G.plane; if (!pl || G.state !== 'play' || !ST.owned()) return;
+  { const ins = document.getElementById('instr'), P = SKY.Player; if (ins) ins.style.display = (ST.inTrip && ST.inTrip() && P.mode !== 'pilot') ? 'none' : ''; if (ST.watching && P.mode !== 'foot') ST.watching = false; }
+  const G = SKY.Game, pl = G.plane; if (!pl || G.state !== 'play') return;
+  if (!ST.owned()) { const f = $('stFlight'), g = $('stGuide'); if (f) f.style.display = 'none'; if (g) g.style.display = 'none'; return; }
   if (pl.onGround && !lastGround && !pl.crashed) { const vy = -lastVy; if (vy > 4.5) ST.damage('Hard landing (' + Math.round(vy * 196.85) + ' fpm)', Math.round(vy * 2), Math.round(vy * 3)); }
   lastGround = pl.onGround; lastVy = pl.vel.y;
   const R = SKY.Remaster; if (R && R.inFront && R.inFront.kind === 'thunder' && !pl.onGround) { ST.zapT = (ST.zapT || 0) - dt; if (ST.zapT <= 0) { ST.zapT = 30; ST.damage('Weather strike ⚡', 15, 0); } }
   if ((S.airframe < 30 || S.gear < 30) && !pl.onGround) pl.vel.multiplyScalar(1 - dt * 0.01);
   const t = G.time; for (const w of ST.pets) for (const q of w.pets) q.m.position.y = q.base + Math.abs(Math.sin(t * 3 + q.m.position.x)) * 0.12;
   if (ST.dish) ST.dish.rotation.z += dt * 0.8;
+  ST.tripUpdate(dt);
 };
 
 // =============================================================================== HQ MODAL + HUD BUTTON
@@ -286,7 +405,11 @@ ST.render = () => {
 function injectDom() {
   if ($('stPanel')) return;
   const css = document.createElement('style'); css.textContent = '#stPanel{max-width:760px;width:94vw;max-height:86vh;overflow:auto;background:linear-gradient(160deg,#0b1a3a,#1e3a8a);color:#f8fafc;border:2px solid #d4af37}#stPanel h2{color:#ffd23a;margin:0 0 6px}.stTabs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.stTabs button{padding:6px 10px;border-radius:10px;border:1px solid #d4af37;background:#0f172a;color:#fde68a}.stTabs button.on{background:#d4af37;color:#111}.stCoins{margin:6px 0;font-size:14px}.stClasses{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stCls{text-align:left;padding:8px;border-radius:12px;border:1px solid #64748b;background:#0f172acc;color:#fff}.stCls.on{border:2px solid #ffd23a;background:#3b2f0b}.stCls small{display:block;opacity:.85}.stCls em{color:#ffd23a;font-style:normal}.stDest{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.stDest button{padding:6px 9px;border-radius:9px;border:1px solid #93c5fd;background:#1d4ed8;color:#fff}.stStamps span{display:inline-block;margin:3px;padding:4px 8px;border:2px dashed #fca5a5;border-radius:8px;color:#fecaca;transform:rotate(-4deg)}.stBars{display:grid;grid-template-columns:120px 1fr;gap:6px;align-items:center;margin:8px 0}.stBars div{height:14px;background:#334155;border-radius:7px;overflow:hidden}.stBars i{display:block;height:100%;background:linear-gradient(90deg,#ef4444,#facc15,#22c55e)}#stPanel .go.free{background:#16a34a}#stPanel .go.dim{opacity:.6}#stPanel .go.bad{background:#b91c1c}.stCrew{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}.stCrew div{background:#0f172acc;border:1px solid #d4af37;border-radius:12px;padding:8px}.stCrew small,.stCrew i{display:block;font-size:12px;opacity:.9}#stBtn{position:fixed;right:8px;top:36%;z-index:30;padding:7px 10px;border-radius:12px;border:2px solid #d4af37;background:#1e3a8aee;color:#ffd23a;font:bold 12px system-ui;display:none}body.playing #stBtn{display:block}.stLock{text-align:center}';
+  css.textContent += '#stFlight{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 8px);z-index:31;display:none;flex-wrap:wrap;gap:4px;align-items:center;justify-content:center;width:max-content;max-width:52vw;padding:5px 7px;border-radius:12px;border:2px solid #d4af37;background:#0f172aee;color:#ffd23a;font:bold 11px system-ui}#stFlight span{width:100%;text-align:center}#stFlight button{padding:5px 7px;border-radius:9px;border:1px solid #93c5fd;background:#1d4ed8;color:#fff;font:bold 11px system-ui}#stGuide{position:fixed;left:50%;transform:translateX(-50%);top:54px;z-index:31;display:none;max-width:92vw;padding:6px 12px;border-radius:12px;border:2px solid #22d3ee;background:#0f172aee;color:#a5f3fc;font:bold 13px system-ui;text-align:center;pointer-events:none}';
   document.head.appendChild(css);
+  const fl = document.createElement('div'); fl.id = 'stFlight'; fl.innerHTML = '<span id="stFlightTxt">✈</span><button data-f="watch">👀 Watch cockpit</button><button data-f="seat">💺 My seat</button><button data-f="skip">⏩ Skip to landing</button>'; document.body.appendChild(fl);
+  fl.querySelectorAll('button').forEach((q) => q.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); const f = q.dataset.f; if (f === 'watch') ST.watch(); else if (f === 'seat') ST.backToSeat(); else ST.skip(); }));
+  const gd = document.createElement('div'); gd.id = 'stGuide'; document.body.appendChild(gd);
   const p = document.createElement('div'); p.id = 'stPanel'; p.className = 'panel'; p.innerHTML = '<div class="pp-head"><h2>✈️ Ratita Airways · Super Travel HQ</h2><button id="st-x">✕</button></div><div id="stBody"></div>'; document.body.appendChild(p);
   $('st-x').onclick = () => ST.close();
   const b = document.createElement('button'); b.id = 'stBtn'; b.type = 'button'; b.textContent = '✈️ SUPER TRAVEL'; b.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); if (ST.isOpen()) ST.close(); else ST.open(); }); document.body.appendChild(b);
@@ -298,5 +421,22 @@ addEventListener('storage', (e) => { if (e.key === ST.KEY) { const a = $('stBadg
 // hooks
 const G = SKY.Game;
 const oClose = G.closeUI; G.closeUI = function () { const p = $('stPanel'); if (p) p.classList.remove('show'); return oClose.apply(this, arguments); };
+const oMini = G.drawMinimap; G.drawMinimap = function () { const r = oMini.apply(this, arguments); try { const tg = ST.owned() && ST.target(); const P = SKY.Player; if (tg && P.frame === 'world') { const cv = $('minimap'), x = cv.getContext('2d'), Sz = cv.width, sc = Sz / 2 / 700, hdg = -P.yaw; const dx = (tg.v.x - P.pos.x) * sc, dz = (tg.v.z - P.pos.z) * sc; const rx = dx * Math.cos(-hdg) - dz * Math.sin(-hdg), rz = dx * Math.sin(-hdg) + dz * Math.cos(-hdg); const m = Math.hypot(rx, rz), lim = Sz / 2 - 10; const k = m > lim ? lim / m : 1; x.save(); x.font = 'bold 16px sans-serif'; x.textAlign = 'center'; x.lineWidth = 3; x.strokeStyle = '#000'; x.strokeText('★', Sz / 2 + rx * k, Sz / 2 + rz * k + 6); x.fillStyle = '#facc15'; x.fillText('★', Sz / 2 + rx * k, Sz / 2 + rz * k + 6); x.restore(); } } catch (e) { } return r; };
 const oUpd = G.update; G.update = function (dt) { const r = oUpd.apply(this, arguments); try { ST.update(dt); } catch (e) { if (!ST.err) { ST.err = 1; console.warn('supertravel', e); } } return r; };
 })();
+
+// Watch-cockpit camera: above & behind the bot pilots, looking down over the seat backs (applied after the game camera).
+SKY.stCamWrap = function () { const G = SKY.Game; if (!G || G.updateCamera._st) return; G._stCamWrap = true; const o = G.updateCamera; const e = new THREE.Euler(0, 0, 0, 'YXZ'), q = new THREE.Quaternion(), v = new THREE.Vector3();
+  G.updateCamera = function (dt) { o.call(this, dt); const cam = this.camera, pl = this.plane;
+    if (SKY.SuperTravel && SKY.SuperTravel.watching && pl && SKY.Player.frame === 'plane') { { v.set(0, 2.1, -12.75); cam.position.copy(pl.toWorld(v)); e.set(-1.1, 0, 0); q.setFromEuler(e); cam.quaternion.copy(pl.quat).multiply(q); if (cam._stFov == null) { cam._stFov = cam.fov; cam.fov = 100; cam.updateProjectionMatrix(); } } }
+    else if (cam._stFov != null) { cam.fov = cam._stFov; cam._stFov = null; cam.updateProjectionMatrix(); } }; G.updateCamera._st = true; };
+
+SKY.stCamApply = function () {};
+SKY.stCamHook = function () {}; // cockpit view uses G.camOverride (game.js updateCamera)
+SKY.stCamTick = function () { const G = SKY.Game, ST = SKY.SuperTravel, pl = G && G.plane; if (!G) return;
+  if (ST && ST.watching && pl && pl.cockpitDoor && !pl.cockpitDoor.broken) { pl.cockpitDoor.target = 1; pl.cockpitDoor.autoClose = 0; }
+  const L = ST && pl ? (ST.watching ? [0, 1.95, -14.3, 0, 1.3, -13.2, 120] : ST.camLocal) : null;
+  if (L) { const a = pl.toWorld(new THREE.Vector3(L[0], L[1], L[2])), b = pl.toWorld(new THREE.Vector3(L[3], L[4], L[5])), u = new THREE.Vector3(0, 1, 0).applyQuaternion(pl.quat); G.camOverride = [a.x, a.y, a.z, b.x, b.y, b.z, u.x, u.y, u.z, L[6]]; G._stCO = true; }
+  else if (G._stCO) { G.camOverride = null; G._stCO = false; } };
+
+SKY.SuperTravel.seatLook = function (s) { const P = SKY.Player; if (!s) return; const sx = s.x < 0 ? -1 : 1; P.yaw = Math.atan2(sx, -0.45); P.pitch = -0.05; };
