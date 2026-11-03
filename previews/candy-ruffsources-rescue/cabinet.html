@@ -56,6 +56,6 @@ window.GA = {}; (function () { var defs = {}, cur, inst, state = 'idle', score =
   window.addEventListener('keydown', function (e) { if (inst) inst.onKey(e.key, true); if ((e.key === ' ' || e.key === 'Enter') && state !== 'play') GA.MG.start(); });
   window.addEventListener('keyup', function (e) { if (inst) inst.onKey(e.key, false); });
 })();</script>
-<script src="./js/game-pupdrop.js?v=cr1"></script>
+<script src="./js/game-pupdrop.js?v=cr2"></script>
 <script>GA.MG.boot(); document.getElementById('go').onclick = function () { GA.MG.start(); };</script>
 </body></html>

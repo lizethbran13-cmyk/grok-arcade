@@ -39,6 +39,8 @@ const load = () => { try { const s = JSON.parse(localStorage.getItem(KEY) || 'nu
 const bedsMax = () => 4 + (S.decor.beds2 ? 4 : 0) + (S.decor.beds3 ? 4 : 0);
 
 // ---------------- mission sites (computed from the built town: clear, reachable spots by the sidewalks + in the park) ----------------
+const _roadD = (x, z) => Math.min(...ROADS.xs.map((rx) => Math.abs(x - rx)), ...ROADS.zs.map((rz) => Math.abs(z - rz)));
+const onGrass = (x, z, r = 0.7) => { if (_roadD(x, z) < 6.6 || (Math.abs(x) < 26 && Math.abs(z) < 19)) return false; for (const b of COL.boxes) { if (b.y1 < 0.35 || b.g) continue; if (x > b.x0 - r && x < b.x1 + r && z > b.z0 - r && z < b.z1 + r) return false; } return true; };
 const SITES = []; {
   const clear = (x, z, r) => { for (const b of COL.boxes) { if (b.y1 < 0.35 || b.g) continue; if (x > b.x0 - r && x < b.x1 + r && z > b.z0 - r && z < b.z1 + r) return false; } return true; };
   const roadD = (x, z) => Math.min(...ROADS.xs.map((rx) => Math.abs(x - rx)), ...ROADS.zs.map((rz) => Math.abs(z - rz)));
@@ -129,16 +131,22 @@ function startMission(i) {
   const ring = new THREE.Mesh(markGeo, markMat); ring.rotation.x = PI / 2; ring.position.set(o.x, 0.25, o.z); g.add(ring); M.ring = ring;
   const pin = new THREE.Mesh(pinGeo, pinMat); pin.position.set(o.x, 6, o.z); g.add(pin); M.pin = pin;
   pup.x = o.x; pup.z = o.z; pup.y = 0.05; pup.yaw = Math.random() * 6;
-  if (o.type === 'tree') { // big climbable oak with the pup on a branch
-    B.cyl('m', 0x7a5332, o.x, 0, o.z, 0.45, 4.4, 0, 0, 0, true); B.cyl('m', 0x7a5332, o.x + 0.9, 3.2, o.z, 0.16, 1.9, 0, PI / 2 - 0.25); B.box('m', 0x7a5332, o.x + 1.6, 3.35, o.z, 1.2, 0.18, 0.7);
-    for (const [dx, dy, dz, s] of [[0, 5.2, 0, 2.3], [1.2, 4.6, 0.8, 1.5], [-1.1, 4.8, -0.6, 1.6], [0.4, 6.2, -0.4, 1.5]]) B.add('m', G.ico, 0x3f8f3a, o.x + dx, dy, o.z + dz, 0, dx, 0, s, s * 0.85, s);
-    cols.push(addCol(o.x - 0.5, o.z - 0.5, o.x + 0.5, o.z + 0.5, 6)); pup.x = o.x + 1.7; pup.y = 3.55; pin.position.y = 7.6;
-    M.ladder = new THREE.Group(); const LB = new Batch(); for (const s of [-1, 1]) LB.box('x', 0xcbd5e1, s * 0.28, 0, 0, 0.07, 3.6, 0.07); for (let k = 0; k < 9; k++) LB.box('x', 0x94a3b8, 0, 0.3 + k * 0.38, 0, 0.56, 0.05, 0.05); LB.finish(M.ladder); M.ladder.position.set(o.x + 1.6, 0, o.z + 0.9); M.ladder.rotation.x = -0.25; M.ladder.visible = false; g.add(M.ladder);
+  if (o.type === 'tree') { // big climbable oak with the pup out on a long, clear branch (canopy kept above + behind it)
+    const BK = 0x6b4628, BD = 0x4a2f1a; B.cyl('m', BK, o.x, 0, o.z, 0.5, 4.6, 0, 0, 0, true);
+    for (let k = 0; k < 10; k++) { const a = k * 0.63; B.box('m', k % 2 ? BD : 0x5a3a20, o.x + Math.cos(a) * 0.47, 0.2 + (k % 3) * 0.35, o.z + Math.sin(a) * 0.47, 0.09, 3.4 - (k % 3) * 0.6, 0.09, -a); } // bark ridges
+    for (const [dy, a] of [[1.4, 0.4], [2.6, 2.6], [3.6, 4.4]]) B.add('m', G.ico, BD, o.x + Math.cos(a) * 0.47, dy, o.z + Math.sin(a) * 0.47, 0, a, 0, 0.16, 0.2, 0.12); // knots
+    for (let k = 0; k < 4; k++) { const a = k * 1.57 + 0.4; B.box('m', BK, o.x + Math.cos(a) * 0.7, 0.12, o.z + Math.sin(a) * 0.7, 0.7, 0.24, 0.26, -a); } // roots
+    B.cyl('m', BK, o.x + 1.25, 3.05, o.z, 0.17, 2.6, 0, PI / 2 - 0.12); B.box('m', BK, o.x + 2.3, 3.22, o.z, 1.2, 0.2, 0.8);
+    for (const [dx, dy, dz, s] of [[-0.3, 5.6, -0.2, 2.4], [-1.4, 4.9, -0.8, 1.6], [0.6, 6.3, -0.9, 1.6], [-0.6, 6.6, 0.8, 1.4]]) B.add('m', G.ico, 0x3f8f3a, o.x + dx, dy, o.z + dz, 0, dx, 0, s, s * 0.8, s);
+    cols.push(addCol(o.x - 0.55, o.z - 0.55, o.x + 0.55, o.z + 0.55, 6)); pup.x = o.x + 2.3; pup.y = 3.34; pin.position.y = 7.8; pup.root.scale.multiplyScalar(1.3); pup.yaw = PI / 2;
+    M.ladder = new THREE.Group(); const LB = new Batch(); for (const s of [-1, 1]) LB.box('x', 0xcbd5e1, s * 0.28, 0, 0, 0.07, 3.6, 0.07); for (let k = 0; k < 9; k++) LB.box('x', 0x94a3b8, 0, 0.3 + k * 0.38, 0, 0.56, 0.05, 0.05); LB.finish(M.ladder); M.ladder.position.set(o.x + 2.3, 0, o.z + 0.9); M.ladder.rotation.x = -0.25; M.ladder.visible = false; g.add(M.ladder);
   } else if (o.type === 'lost') { // hidden in a bush somewhere inside a big search zone
     const ang = Math.random() * 6.28, off = 4 + Math.random() * 5; M.zx = o.x + Math.cos(ang) * off; M.zz = o.z + Math.sin(ang) * off; M.zr = 12;
-    const zone = new THREE.Mesh(new THREE.CircleGeometry(M.zr, 40), zoneMat); zone.rotation.x = -PI / 2; zone.position.set(M.zx, 0.22, M.zz); g.add(zone); ring.visible = false; pin.position.set(M.zx, 7, M.zz);
+    { const N = 90, pos = []; M.scentBase = []; for (let k = 0; k < 600 && M.scentBase.length < N; k++) { const a = Math.random() * 6.28, r = Math.sqrt(Math.random()) * M.zr, x = M.zx + Math.cos(a) * r, z = M.zz + Math.sin(a) * r; if (!onGrass(x, z, 0.4) && Math.hypot(x - o.x, z - o.z) > 2.5) continue; M.scentBase.push([x, z, Math.random() * 6]); pos.push(x, 0.3, z); }
+      const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); M.scent = new THREE.Points(sg, new THREE.PointsMaterial({ color: 0xff8cc6, size: 0.3, map: (() => { const c = document.createElement('canvas'); c.width = c.height = 32; const x = c.getContext('2d'); const g = x.createRadialGradient(16, 16, 0, 16, 16, 16); g.addColorStop(0, '#fff'); g.addColorStop(0.5, 'rgba(255,255,255,.7)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, 32, 32); return new THREE.CanvasTexture(c); })(), alphaTest: 0.02, transparent: true, opacity: 0.9, depthWrite: false })); g.add(M.scent); }
+    ring.visible = false; pin.position.set(M.zx, 7, M.zz);
     for (const [dx, dz, s] of [[0, 0, 1.25], [0.9, 0.4, 0.9], [-0.8, 0.5, 0.95]]) B.add('m', G.ico, 0x4fa045, o.x + dx, 0.55 * s, o.z + dz, 0, dx * 3, 0, 0.95 * s, 0.75 * s, 0.95 * s);
-    for (let k = 0; k < 3; k++) { const a = k * 2.1 + 0.6; B.add('m', G.ico, 0x3f8f3a, M.zx + Math.cos(a) * 7, 0.5, M.zz + Math.sin(a) * 7, 0, a, 0, 1.0, 0.75, 1.0); } // decoy bushes
+    for (let k = 0, n = 0; k < 12 && n < 3; k++) { const a = k * 2.1 + 0.6, bx = M.zx + Math.cos(a) * (7 - (k >> 2)), bz = M.zz + Math.sin(a) * (7 - (k >> 2)); if (!onGrass(bx, bz, 1.2)) continue; n++; B.add('m', G.ico, 0x3f8f3a, bx, 0.5, bz, 0, a, 0, 1.0, 0.75, 1.0); } // decoy bushes
     pup.root.visible = false; M.pawG = new THREE.Group(); g.add(M.pawG);
   } else if (o.type === 'gadget') { // Ratita Robo-Sweeper spinning circles around the pup, sparks flying
     M.bot = makeSweepy(); M.bot.root.scale.setScalar(1.2); g.add(M.bot.root); M.ba = 0; M.br = 3.4; M.sparks = []; const sg = new THREE.SphereGeometry(0.06, 6, 4), sm = new THREE.MeshBasicMaterial({ color: 0xfde047 }); for (let k = 0; k < 10; k++) { const s = new THREE.Mesh(sg, sm); g.add(s); M.sparks.push(s); }
@@ -314,6 +322,7 @@ function step(dt) {
       if (M.type === 'gadget' && !M.botOff) { M.ba += dt * (S.tools.remote ? 1.0 : 1.5); const bx = M.x + Math.cos(M.ba) * M.br, bz = M.z + Math.sin(M.ba) * M.br; M.bot.root.position.set(bx, 0.05, bz); M.bot.root.rotation.y = -M.ba; animSweepy(M.bot, dt, 2, false);
         M.sparks.forEach((s, k) => { const a = S.time * 9 + k * 0.63, h = (S.time * 2 + k * 0.1) % 1; s.position.set(bx + Math.cos(a) * 0.9 * h, 0.6 + h * 1.2, bz + Math.sin(a) * 0.9 * h); });
         const d = Math.hypot(bx - P.x, bz - P.z); if (d < 1.15 && P.mode === 'walk' && !modal) { P.x += (P.x - bx) / (d || 1) * 1.6; P.z += (P.z - bz) / (d || 1) * 1.6; M.t += 4; sfx('miss'); toast('⚡ Zap! The Robo-Sweeper bumped you (−4 s). Grab it from the side!', true); } }
+      if (M.scent) { const a = M.scent.geometry.attributes.position; M.scentBase.forEach(([x, z, ph], k) => { const h = (S.time * 0.35 + ph) % 1; a.setXYZ(k, x + Math.sin(S.time + ph) * 0.15, 0.15 + h * 1.1, z); }); a.needsUpdate = true; M.scent.material.opacity = 0.6 + Math.sin(S.time * 2) * 0.2; }
       if (M.type === 'lost') { const d = Math.hypot(M.x - P.x, M.z - P.z); if (d < 4) M.bubble.visible = Math.sin(S.time * 8) > 0; else M.bubble.visible = false; } }
     if (M.botOff && M.bot) { animSweepy(M.bot, dt, 0, true); M.sparks.forEach((s) => s.visible = false); }
     if (M.stage === 'follow') { p.rig.root.rotation.z = 0;

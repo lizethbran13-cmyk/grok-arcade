@@ -948,7 +948,7 @@ window.GROK_PREVIEW_DATA = {
       "url": "previews/candy-ruffsources-rescue/",
       "playable": true,
       "built": "2026-11-02",
-      "notes": "4 mission types, rescue van + tools, cozy shelter upgrades, bonus cabinet #49 Pup Drop Catch (preview only)"
+      "notes": "Polish pass: schnauzer silhouette, bark + visible tree pups, scent trail search zone, tidier lobby signs, richer Pup Drop Catch cabinet #49 (preview only)"
     },
     {
       "id": "great-rodentia-2",
