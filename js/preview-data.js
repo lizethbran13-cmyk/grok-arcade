@@ -929,6 +929,26 @@ window.GROK_PREVIEW_DATA = {
       "url": "previews/pickleball-world-tour/",
       "playable": true,
       "built": "2026-11-02"
+    },
+    {
+      "id": "ratita-teaser-room",
+      "game": "arcade",
+      "issue": 90,
+      "name": "Ratita Teaser Room + Mail Sort Rush cabinet",
+      "url": "previews/ratita-teaser-room/",
+      "playable": true,
+      "built": "2026-11-02",
+      "notes": "Walk-in Ratita Industries Teaser Room through a new door in the Preview Center (west wall). COMING SOON marquee, 10 posters with estimated release dates, Release Calendar kiosk with Time Jumper links, Luna/Pi-rat/Snowie on the bench, Candy by the popcorn, Torty by the calendar. Also the new Mail Sort Rush bonus cabinet (#91). PREVIEW only."
+    },
+    {
+      "id": "ratita-mail-tycoon",
+      "game": "mailtycoon",
+      "issue": 91,
+      "name": "Ratita Mail Tycoon",
+      "url": "previews/ratita-mail-tycoon/",
+      "playable": true,
+      "built": "2026-11-02",
+      "notes": "Postmaster Pi-rat's Mailville mail empire: 5 stations, each with Main Mail Shop, Sorting Facility, Same-Day, 2-Day and an expensive Letters & Media store you can downsize. Mailboxes, trucks, bad-delivery refunds, free Emergency Stamp Fund, Guinea Pig Gang (Liz, Squeak, Storm, Meemee, Lizardo) steals stations - win them back in a Mail Race. Start from Scratch or Built Empire. PREVIEW only."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

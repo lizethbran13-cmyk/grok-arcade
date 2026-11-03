@@ -1,0 +1,69 @@
+rules_version = '2';
+// Grok Arcade - Bob's Account Desk LIVE SYNC (issue #49). Paste this whole file into
+// Firebase console > Firestore Database > Rules, then press Publish.
+// Only the Live Sync collections are open; everything else in the database is locked.
+//   /{grokSync|grokSyncBeta}/{6-digit id}            public "friend card": name, device count, share switch, stats
+//   /{...}/{id}/req/{requestId}                         "let me link" requests from a new device (answered encrypted)
+//   /{...}/{id}/vault/{secret key}                      the save itself; only devices that know the 43-char key can read it
+// grokSync = the live arcade, grokSyncBeta = the Time Jumper preview + tests.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isColl(c) { return c == 'grokSync' || c == 'grokSyncBeta'; }
+    function isId(id) { return id.matches('^[1-9][0-9]{5}$'); }
+    function isInt(x, lo, hi) { return x is int && x >= lo && x <= hi; }
+    function isStr(x, lo, hi) { return x is string && x.size() >= lo && x.size() <= hi; }
+    function cardOk(d) {
+      return d.keys().hasAll(['v', 'name', 'devs', 'share', 't', 'n', 'wh'])
+        && d.keys().hasOnly(['v', 'name', 'devs', 'share', 'stats', 't', 'n', 'wh', 'w'])
+        && d.v == 1 && isStr(d.name, 1, 16) && isInt(d.devs, 0, 3) && d.share is bool
+        && d.t is int && d.n is int && d.wh.matches('^[0-9a-f]{64}$')
+        && (!('stats' in d) || d.stats == null || (d.stats is map && d.stats.size() <= 8));
+    }
+
+    match /{coll}/{id} {
+      // friends can look up a card by its ID; nobody can list all cards
+      allow get: if isColl(coll) && isId(id);
+      allow list, delete: if false;
+      // claim a free ID
+      allow create: if isColl(coll) && isId(id) && cardOk(request.resource.data)
+        && request.resource.data.n == 0 && !('w' in request.resource.data);
+      // only a linked device can change a card: it must reveal the secret that hashes to the card's current lock (wh),
+      // and set a new lock (hash chain derived from the vault key, so revealed secrets are useless afterwards)
+      allow update: if isColl(coll) && cardOk(request.resource.data)
+        && request.resource.data.n == resource.data.n + 1
+        && request.resource.data.w is string && request.resource.data.w.matches('^[0-9a-f]{64}$')
+        && hashing.sha256(request.resource.data.w).toHexString().lower() == resource.data.wh;
+
+      match /req/{rid} {
+        allow get: if isColl(coll) && isId(id);
+        allow list: if isColl(coll) && isId(id) && request.query.limit <= 10;
+        allow create: if isColl(coll) && rid.matches('^[A-Za-z0-9]{16,40}$')
+          && exists(/databases/$(database)/documents/$(coll)/$(id))
+          && request.resource.data.keys().hasAll(['name', 'dev', 'pub', 't'])
+          && request.resource.data.keys().hasOnly(['name', 'dev', 'pub', 't'])
+          && isStr(request.resource.data.name, 1, 40) && isStr(request.resource.data.dev, 4, 40)
+          && isStr(request.resource.data.pub, 40, 400)
+          && request.resource.data.t is int;
+        // a linked device answers once (the answer is encrypted for the asking device only)
+        allow update: if isColl(coll) && !('ans' in resource.data)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ans'])
+          && isStr(request.resource.data.ans, 2, 2000);
+        allow delete: if isColl(coll);
+      }
+
+      match /vault/{k} {
+        // reading needs the exact secret key (43 chars); listing is never allowed, so keys can't be discovered
+        allow get, delete: if isColl(coll) && isId(id) && k.matches('^[A-Za-z0-9_-]{32,64}$');
+        allow list: if false;
+        allow create, update: if isColl(coll) && isId(id) && k.matches('^[A-Za-z0-9_-]{32,64}$')
+          && request.resource.data.keys().hasAll(['v', 'devices', 'blob', 'rev', 't'])
+          && request.resource.data.keys().hasOnly(['v', 'devices', 'blob', 'rev', 't', 'by'])
+          && request.resource.data.v == 1
+          && request.resource.data.devices is list && request.resource.data.devices.size() <= 3
+          && isStr(request.resource.data.blob, 0, 1000000)
+          && request.resource.data.rev is int && request.resource.data.t is int;
+      }
+    }
+  }
+}
