@@ -967,7 +967,7 @@ window.GROK_PREVIEW_DATA = {
       "url": "previews/thanksgiving-feast/",
       "playable": true,
       "built": "2026-11-02",
-      "notes": "Thanksgiving hub on Turbo: live events by LA date (prep / Nov 26 big feast + live parade / leftovers), Chef Mimo kitchen chaos, Gobbles chase, Ratita Parade Builder, corn maze, pie contest, cabinet #51",
+      "notes": "Thanksgiving hub on Turbo: dense Harvest Hollow (market stalls, pumpkin stands, carts, fenced gardens, crowds + crazy turkeys), live events by LA date (prep / Nov 26 big feast + live parade / leftovers / off-season from Dec 8), Chef Mimo (Chef Gio's brother) kitchen chaos, Gobbles chase, Ratita Parade Builder, corn maze, pie contest, cabinet #51",
       "stage": "building"
     }
   ],

@@ -29,6 +29,49 @@ export function makeTurkey(gold) { const b = new Batch(); const body = gold ? 0x
   [-1, 1].forEach((s) => { b.sph('g', 0xffffff, s * 0.08, 1.1, 0.42, 0.045); b.sph('g', 0x111111, s * 0.08, 1.1, 0.46, 0.025); b.cyl('x', 0xffb02e, s * 0.15, 0, 0, 0.03, 0.3); });
   if (gold) { b.cyl('x', 0x2563eb, 0, 1.22, 0.3, 0.14, 0.12); b.sph('l', 0x5ef2ff, 0, 1.36, 0.3, 0.05, 0.05, 0.05, 1); }
   const g = new THREE.Group(); b.finish(g); return g; }
+function stall(b, scene, x, z, ry, aw, goods, label) { // market stall, counter faces local +z
+  const c = Math.cos(ry), sn = Math.sin(ry); const P = (lx, lz) => [x + lx * c + lz * sn, z - lx * sn + lz * c];
+  b.add('m', G.box, 0x8a5a33, x, 0.45, z, 0, ry, 0, 3, 0.9, 1.1); b.add('m', G.box, 0xd9b38c, x, 0.92, z, 0, ry, 0, 3.1, 0.06, 1.2);
+  for (const [lx, lz] of [[-1.45, -0.5], [1.45, -0.5], [-1.45, 0.5], [1.45, 0.5]]) { const [px, pz] = P(lx, lz); b.cyl('x', 0x5b3a24, px, 0, pz, 0.05, 2.5); }
+  for (let i = 0; i < 6; i++) { const [px, pz] = P(-1.25 + i * 0.5, 0); b.add('f', G.box, i % 2 ? 0xfff7ed : aw, px, 2.55, pz, 0.25, ry, 0, 0.5, 0.06, 1.5); }
+  goods.forEach((g, i) => { const [px, pz] = P(-1 + i, 0.15); b.rbox('m', 0xa8743f, px, 0.95, pz, 0.8, 0.22, 0.6, ry); for (let k = 0; k < 4; k++) { const [qx, qz] = P(-1.2 + i + (k % 2) * 0.35, 0.02 + (k >> 1) * 0.26); b.sph('g', g, qx, 1.22, qz, 0.13); } });
+  { const [cx, cz] = P(1.9, 0.2); b.rbox('m', 0xa8743f, cx, 0, cz, 0.7, 0.55, 0.6, ry); b.sph('g', goods[0], cx, 0.66, cz, 0.16); b.sph('g', goods[0], cx + 0.2, 0.66, cz, 0.15); }
+  if (label) { const sg = sign(label, 2.2, 0.45, { bg: '#7c2d12', border: '#fbbf24' }); const [lx2, lz2] = P(0, 0.78); sg.position.set(lx2, 2.2, lz2); sg.rotation.y = ry; scene.add(sg); }
+  solidC(x, z, Math.abs(3.2 * c) + Math.abs(1.2 * sn), Math.abs(3.2 * sn) + Math.abs(1.2 * c), 2.6); }
+function haystack(b, x, z, ry, n) { hay(b, x, z, ry); if (n > 1) hay(b, x + Math.cos(ry) * 1.7, z - Math.sin(ry) * 1.7, ry); if (n > 2) { const tx = x + Math.cos(ry) * 0.85, tz = z - Math.sin(ry) * 0.85; b.rbox('m', 0xe3c062, tx, 0.85, tz, 1.6, 0.85, 0.9, ry + 0.05); b.box('m', 0xb98d3a, tx, 1.05, tz, 1.62, 0.06, 0.92, ry + 0.05); b.box('m', 0xb98d3a, tx, 1.45, tz, 1.62, 0.06, 0.92, ry + 0.05); } solidC(x + Math.cos(ry) * 0.85, z - Math.sin(ry) * 0.85, n > 1 ? 3.4 : 1.7, 1, 0.9); }
+function shock(b, x, z) { for (let i = 0; i < 7; i++) { const a = i / 7 * PI * 2; b.add('f', G.cone, 0xc9b25a, x + Math.cos(a) * 0.15, 0, z + Math.sin(a) * 0.15, Math.sin(a) * 0.12, 0, -Math.cos(a) * 0.12, 0.22, 2.1, 0.22); } b.cyl('m', 0x8a5a33, x, 0.9, z, 0.33, 0.1); }
+function fenceRun(b, x0, z0, x1, z1) { const L = Math.hypot(x1 - x0, z1 - z0), ry = -Math.atan2(z1 - z0, x1 - x0), n = Math.max(1, Math.round(L / 1.6));
+  for (let i = 0; i <= n; i++) { const t = i / n; b.box('m', 0xf3ead8, x0 + (x1 - x0) * t, 0, z0 + (z1 - z0) * t, 0.12, 0.9, 0.12); }
+  for (const y of [0.35, 0.7]) b.add('m', G.box, 0xf3ead8, (x0 + x1) / 2, y, (z0 + z1) / 2, 0, ry, 0, L, 0.08, 0.05); }
+function cart(b, x, z, ry, load) { const c = Math.cos(ry), sn = Math.sin(ry); const P = (lx, lz) => [x + lx * c + lz * sn, z - lx * sn + lz * c];
+  b.add('m', G.box, 0x9c5a2e, x, 0.75, z, 0, ry, 0, 2.2, 0.5, 1.2); for (const [lx, lz] of [[-0.7, 0.66], [0.7, 0.66], [-0.7, -0.66], [0.7, -0.66]]) { const [px, pz] = P(lx, lz); b.add('x', G.cyl, 0x3f2a1a, px, 0.42, pz, PI / 2, ry, 0, 0.4, 0.1, 0.4); }
+  { const [hx, hz] = P(1.7, 0); b.add('m', G.box, 0x6b3f22, hx, 0.6, hz, 0, ry, 0, 1.4, 0.08, 0.08); }
+  if (load === 'hay') { b.add('m', G.box, 0xe3c062, x, 1.25, z, 0, ry, 0, 2, 0.6, 1.0); } else for (let i = 0; i < 6; i++) { const [px, pz] = P(-0.7 + (i % 3) * 0.7, -0.3 + (i / 3 | 0) * 0.6); b.sph('g', load === 'apples' ? 0xc0262d : 0xf07b1f, px, 1.15, pz, load === 'apples' ? 0.18 : 0.3, load === 'apples' ? 0.18 : 0.24, load === 'apples' ? 0.18 : 0.3); }
+  solidC(x, z, Math.abs(2.4 * c) + Math.abs(1.3 * sn), Math.abs(2.4 * sn) + Math.abs(1.3 * c), 1.4); }
+function pumpkinStand(b, x, z, ry) { const c = Math.cos(ry), sn = Math.sin(ry); const P = (lx, lz) => [x + lx * c + lz * sn, z - lx * sn + lz * c];
+  for (let t = 0; t < 3; t++) { const [px, pz] = P(0, -0.5 + t * 0.5); b.add('m', G.box, 0x8a5a33, px, 0.25 + (2 - t) * 0.3, pz, 0, ry, 0, 2.6, 0.08, 0.45); for (let k = 0; k < 4; k++) { const [qx, qz] = P(-0.95 + k * 0.63, -0.5 + t * 0.5); b.sph('g', [0xf07b1f, 0xe8a33d, 0xf4f4f5, 0xd9622b][(k + t) % 4], qx, 0.48 + (2 - t) * 0.3, qz, 0.2, 0.16, 0.2); } }
+  solidC(x, z, Math.abs(2.8 * c) + Math.abs(1.6 * sn), Math.abs(2.8 * sn) + Math.abs(1.6 * c), 1.2); }
+// fill every empty lot between the attractions so the town reads dense; keep roads, chase route and zone entrances clear
+function fillTown(b, scene, r, phase) {
+  const zones = [[-18, -18, 18, 18], [-12, -51, 12, -31], [-73, -23, -33, 9], [35, -13, 59, 5], [-65, 15, -29, 51], [-82, 25, 82, 47], [63, 17, 86, 37], [18, 19, 30, 29], [-3.5, -34, 3.5, -17], [-3.5, 17, 3.5, 30]];
+  const roads = [[0, -17, 0, -36], [17, 0, 47, 0], [-17, 0, -48, 0], [0, 17, 0, 29], [-17, 12, -58, 14], [30, 18, 66, 30]];
+  const cp = SP.chasePath; for (let i = 0; i + 1 < cp.length; i++) roads.push([cp[i][0], cp[i][1], cp[i + 1][0], cp[i + 1][1]]);
+  const segD = (x, z, [ax, az, bx2, bz]) => { const vx = bx2 - ax, vz = bz - az, L = vx * vx + vz * vz || 1, t = Math.max(0, Math.min(1, ((x - ax) * vx + (z - az) * vz) / L)); return Math.hypot(x - ax - vx * t, z - az - vz * t); };
+  let mg = 3.2; const free = (x, z, rad) => !zones.some(([a, c, d, e]) => x > a - rad && x < d + rad && z > c - rad && z < e + rad) && !roads.some((s) => segD(x, z, s) < rad + mg);
+  const hc = [0xe9d3b0, 0xc2703d, 0xf1e4c8, 0x9c6b45, 0xd9b38c, 0xb45309, 0xfde68a], rc = [0x7c2d12, 0x3f2a1a, 0x14532d, 0x7f1d1d];
+  let n = 0; const face = (x, z) => { let best = 0, bd = 1e9; for (const s of roads) { const d = segD(x, z, s); if (d < bd) { bd = d; best = s; } } const [ax, az, bx2, bz] = best, vx = bx2 - ax, vz = bz - az, L = vx * vx + vz * vz || 1, t = Math.max(0, Math.min(1, ((x - ax) * vx + (z - az) * vz) / L)); return Math.atan2(ax + vx * t - x, az + vz * t - z); };
+  for (let z = -58; z <= 22; z += 9) for (let x = -78; x <= 78; x += 9) { const jx = x + (r() - 0.5) * 1.5, jz = z + (r() - 0.5) * 1.5; const k = r();
+    if (k < 0.55 && free(jx, jz, 4)) { const ry = Math.round(face(jx, jz) / (PI / 2)) * (PI / 2); house(b, scene, jx, jz, 6.5, 5.5, hc[n % 7], rc[n % 4], ry); const fr = ry; const P = (lx, lz) => [jx + lx * Math.cos(fr) + lz * Math.sin(fr), jz - lx * Math.sin(fr) + lz * Math.cos(fr)];
+      const [ax, az] = P(-3.2, 3.9), [bx2, bz] = P(-0.9, 3.9), [cx, cz] = P(0.9, 3.9), [dx, dz] = P(3.2, 3.9); fenceRun(b, ax, az, bx2, bz); fenceRun(b, cx, cz, dx, dz);
+      if (n % 3 === 0) { const [hx, hz] = P(2.6, 3.0); hay(b, hx, hz, fr); } if (n % 4 === 1) { const [tx, tz] = P(-4.2, -1); tree(b, tx, tz, r, 0.8); } n++; }
+    else if (k < 0.7 && free(jx, jz, 2.5)) { const [ax, az] = [jx - 3, jz - 2.5]; fenceRun(b, ax, az, ax + 6, az); fenceRun(b, ax, az + 5, ax + 6, az + 5); fenceRun(b, ax, az, ax, az + 5); fenceRun(b, ax + 6, az, ax + 6, az + 5); b.box('m', 0x6b4a2e, jx, 0.01, jz, 5.6, 0.06, 4.6); for (let i = 0; i < 9; i++) pumpkin(b, ax + 1 + (i % 3) * 2, az + 1 + (i / 3 | 0) * 1.5, 0.28 + r() * 0.15); solidC(jx, jz, 6.2, 5.2, 1); }
+    else if (k < 0.82 && free(jx, jz, 2)) { cart(b, jx, jz, face(jx, jz) + PI / 2, ['hay', 'pumpkins', 'apples'][n++ % 3]); pumpkin(b, jx + 1.8, jz + 1.2, 0.3); }
+    else if (k < 0.92 && free(jx, jz, 2)) { pumpkinStand(b, jx, jz, face(jx, jz)); shock(b, jx + 2, jz - 1); }
+    else if (free(jx, jz, 1.5)) { haystack(b, jx, jz, r() * 0.4, 2); shock(b, jx - 1.6, jz + 1.4); } }
+  // second, finer pass close to the square: small market props on the lawns
+  mg = 1.8; for (let z = -40; z <= 26; z += 5) for (let x = -42; x <= 42; x += 5) { const jx = x + (r() - 0.5), jz = z + (r() - 0.5), k = r(); if (!free(jx, jz, 1.6)) continue;
+    if (k < 0.3) pumpkinStand(b, jx, jz, face(jx, jz)); else if (k < 0.55) { haystack(b, jx, jz, r() * 0.3, 2); pumpkin(b, jx + 0.4, jz + 0.9, 0.32); } else if (k < 0.75) cart(b, jx, jz, face(jx, jz) + PI / 2, ['hay', 'pumpkins', 'apples'][(k * 30 | 0) % 3]); else if (k < 0.9) { shock(b, jx, jz); shock(b, jx + 1.2, jz + 0.3); pumpkin(b, jx + 0.6, jz + 0.9, 0.3); } else tree(b, jx, jz, r, 0.85); }
+}
 export function buildWorld(scene, phase) {
   const r = rng(1126); const b = new Batch(24);
   // ground + roads
@@ -45,7 +88,7 @@ export function buildWorld(scene, phase) {
   for (const [x, z] of [[-13, -13], [13, -13], [-13, 13], [13, 13], [-13, 0], [13, 0]]) lamp(b, x, z);
   bench(b, -6, -10, 0); bench(b, 6, -10, 0); bench(b, -10, 6, PI / 2); bench(b, 10, -6, PI / 2);
   // feast table (size by phase)
-  const fl = phase === 'day' ? 16 : phase === 'post' ? 10 : 6; SP.feast = { x: 0, z: 9.5, name: 'Feast Table' };
+  const fl = phase === 'day' ? 16 : phase === 'post' ? 10 : phase === 'off' ? 4 : 6; SP.feast = { x: 0, z: 9.5, name: 'Feast Table' };
   b.box('m', 0x8a5a33, 0, 0.8, 9.5, fl, 0.12, 1.8); b.box('f', 0xb8432a, 0, 0.9, 9.5, fl + 0.2, 0.02, 1.9); for (let i = 0; i < fl / 2; i++) b.box('m', 0x5b3a24, -fl / 2 + 1 + i * 2, 0, 9.5, 0.12, 0.8, 1.6);
   solidC(0, 9.5, fl, 1.8, 1);
   for (let i = 0; i < fl; i += 1.6) { const x = -fl / 2 + 0.8 + i; if (phase === 'post') { b.cyl('x', 0xf4f4f5, x, 0.92, 9.5, 0.28, 0.04); b.sph('g', 0xb8432a, x, 0.98, 9.5, 0.08); } else { b.cyl('x', 0xf4f4f5, x, 0.92, 9.5, 0.3, 0.04); b.sph('g', [0xf07b1f, 0xe8a33d, 0xb8432a, 0xf2c14e][Math.floor(i) % 4], x, 1.05, 9.5, 0.22, 0.14, 0.22); } }
@@ -53,6 +96,24 @@ export function buildWorld(scene, phase) {
   b.rbox('m', 0x312e81, 10, 0, 6, 1.2, 2.1, 0.9); b.box('l', 0x5ef2ff, 10, 1.1, 6.46, 0.9, 0.7, 0.02, 0, 0.8); SP.cab = { x: 10, z: 7.2, name: 'Cabinet #51' }; solidC(10, 6, 1.2, 0.9, 2);
   { const s = sign('#51 PIE PLATE CATCH', 1.6, 0.4, { bg: '#312e81', border: '#5ef2ff' }); s.position.set(10, 2.35, 6.47); scene.add(s); }
   { const s = sign('HARVEST HOLLOW', 6, 1.2, { bg: '#7c2d12', border: '#fbbf24' }); s.position.set(0, 4.8, -0.2); s.rotation.y = 0; scene.add(s); const s2 = s.clone(); s2.rotation.y = PI; s2.position.z = 0.2 - 0.4; scene.add(s2); b.box('x', 0x2f3437, -3.2, 0, -0.3, 0.2, 5.4, 0.2); b.box('x', 0x2f3437, 3.2, 0, -0.3, 0.2, 5.4, 0.2); }
+  // ---- harvest market + tidy hub dressing (every phase)
+  stall(b, scene, -8, -13.6, 0, 0xb8432a, [0xf07b1f, 0xe8a33d, 0x4d7a2a], 'PUMPKIN PATCH');
+  stall(b, scene, 8, -13.6, 0, 0x7c3aed, [0xb8432a, 0xdc2626, 0x9c3d1f], 'CRANBERRY CO.');
+  stall(b, scene, -13.4, -4.5, PI / 2, 0xd9622b, [0xf2c14e, 0xf2c14e, 0xc9a27a], 'CORN & BREAD');
+  stall(b, scene, 13.4, -2.5, -PI / 2, 0x15803d, [0xc9a27a, 0x9c6b45, 0xf4f4f5], 'APPLE CIDER');
+  haystack(b, -12.2, 10.8, 0, 3); haystack(b, 10.6, 10.8, 0, 2); haystack(b, -4.6, -12.2, 0, 1); haystack(b, 3.2, -12.2, 0, 1);
+  for (const [x, z] of [[-12.2, -12.2], [12.2, -12.2], [-12.6, 13.4], [12.6, 13.4], [-3.4, 3.6], [3.4, 3.6]]) shock(b, x, z);
+  for (const [x, z, s] of [[-11.2, 9.6, 0.45], [-10.6, 10.1, 0.32], [11.8, 9.8, 0.4], [-3.8, -12.2, 0.35], [4.2, -12.3, 0.3], [-14.2, -7, 0.35], [14.2, 0.2, 0.38], [-4.2, 3.9, 0.3], [4.1, 3.9, 0.32]]) pumpkin(b, x, z, s);
+  for (let z = 17; z <= 29; z += 2.4) { pumpkin(b, -3.6, z, 0.3 + ((z * 7) % 3) * 0.04); pumpkin(b, 3.6, z + 1.2, 0.3 + ((z * 5) % 3) * 0.04); }
+  for (const x of [-9, 9]) { b.cyl('x', 0x3f3f46, x, 0, -10.6, 0.3, 0.9); b.cyl('x', 0x15803d, x, 0.9, -10.6, 0.32, 0.05); solidC(x, -10.6, 0.6, 0.6, 1); } // bins by the benches
+  // ---- Main Street market lining the road to the kitchen, pumpkin stands on the south lane
+  SP.stalls = [[-8, -13.6, 0], [8, -13.6, 0], [-13.4, -4.5, PI / 2], [13.4, -2.5, -PI / 2]];
+  { const G2 = [[0xf07b1f, 0xe8a33d, 0x4d7a2a], [0xc0262d, 0xdc2626, 0x9c3d1f], [0xf2c14e, 0xc9a27a, 0xf2c14e], [0x9c6b45, 0xc9a27a, 0xf4f4f5], [0x7c3aed, 0x4d7a2a, 0xb8432a]], AW = [0xb8432a, 0x0f766e, 0xd9622b, 0x7c3aed, 0x15803d];
+    const lbl = ['PIES & TARTS', null, 'HONEY', null, 'GOURDS', null]; let i = 0;
+    for (let z = -20; z >= -30; z -= 4.5) { for (const sd of [-1, 1]) { stall(b, scene, sd * 5.2, z, sd < 0 ? PI / 2 : -PI / 2, AW[i % 5], G2[i % 5], lbl[i] || null); SP.stalls.push([sd * 5.2, z, sd < 0 ? PI / 2 : -PI / 2]); i++; } }
+    for (const z of [-22.2, -26.7]) for (const sd of [-1, 1]) lamp(b, sd * 3.6, z);
+    for (const z of [19, 25]) { pumpkinStand(b, -6.4, z, PI / 2); pumpkinStand(b, 6.4, z, -PI / 2); }
+    cart(b, -6.5, 22, 0, 'apples'); cart(b, 6.5, 22, PI, 'hay'); }
   // ---- street of houses around square
   const hc = [0xe9d3b0, 0xc2703d, 0xf1e4c8, 0x9c6b45, 0xd9b38c];
   [[-22, -14, 0], [-22, 14, PI], [22, -14, 0], [22, 14, PI], [-12, -22, 0], [12, -22, 0]].forEach(([x, z, ry], i) => house(b, scene, x, z, 7, 6, hc[i % 5], 0x7c2d12, ry));
@@ -142,17 +203,20 @@ export function buildWorld(scene, phase) {
   SP.hurdles = [[16, 0], [35, -14], [40, 0], [10, 18], [-28, 21], [-38, 8], [-18, -18]];
   for (const [x, z] of SP.hurdles) { b.rbox('m', 0xe3c062, x, 0, z, 2.4, 0.55, 0.7, Math.abs(x) === 40 || x === 16 || x === -38 ? PI / 2 : 0); }
   // ring of autumn trees around the town edge, tidy rows
-  for (let a = 0; a < 40; a++) { const t = a / 40 * PI * 2, R = 92 + r() * 6; tree(b, Math.cos(t) * R, Math.sin(t) * R, r, 1.2 + r() * 0.4); }
+  for (let a = 0; a < 56; a++) { const t = a / 56 * PI * 2, R = 88 + r() * 4; tree(b, Math.cos(t) * R, Math.sin(t) * R, r, 1.2 + r() * 0.4); }
   for (const [x, z] of [[-18, -6], [18, 6], [-17, 26], [17, -28], [-30, -26], [32, 20], [-6, 26], [40, 22]]) tree(b, x, z, r);
   // ---- live-event decor
   SP.leaves = [];
-  if (phase === 'pre') { for (let i = 0; i < 40; i++) { const x = (r() - 0.5) * 80, z = (r() - 0.5) * 60; if (Math.abs(x) < 4 && Math.abs(z) < 4) continue; if (Math.abs(z - 34) < 6) continue; SP.leaves.push({ x, z }); } }
+  if (phase === 'pre') { for (let i = 0; i < 40; i++) { const x = (r() - 0.5) * 80, z = (r() - 0.5) * 60; if (Math.abs(x) < 4 && Math.abs(z) < 4) continue; if (Math.abs(z - 34) < 6 || (Math.abs(x) < 16 && Math.abs(z) < 16)) continue; SP.leaves.push({ x, z }); } for (const [x, z] of [[-16, 9], [17, 8], [-17, -9], [17, -10], [-8, 17], [8, 21], [-16, 24]]) SP.leaves.push({ x, z }); }
   if (phase === 'post') { for (let i = 0; i < 18; i++) { const x = (r() - 0.5) * 40, z = 30 + (r() - 0.5) * 6; b.box('f', AUT[i % 5], x, 0.02, z, 0.3, 0.02, 0.2, r() * 3); } for (const x of [-30, -8, 14, 36]) { b.cyl('x', 0x15803d, x, 0, 29.4, 0.4, 1.1); } }
-  if (phase !== 'pre') { // bunting across the square + avenue
+  if (phase === 'day' || phase === 'post') { // bunting across the square + avenue
     for (let i = -14; i <= 14; i += 1.4) { b.add('f', G.cone, AUT[(i * 5 | 0) & 3], i, 4.2 - Math.cos(i / 14 * PI / 2) * 0.6, -13, PI, 0, 0, 0.3, 0.5, 0.05); b.add('f', G.cone, AUT[(i * 3 | 0) & 3], i, 4.2 - Math.cos(i / 14 * PI / 2) * 0.6, 13, PI, 0, 0, 0.3, 0.5, 0.05); }
     for (const [x, z] of [[-14, -14], [14, -14], [-14, 14], [14, 14]]) { pumpkin(b, x + 1, z, 0.5); hay(b, x + 1.2, z + (z > 0 ? -1.4 : 1.4)); }
   }
   if (phase === 'day') { for (let x = -60; x <= 60; x += 5) b.add('g', G.sph, AUT[(x / 5 + 20) % 5 | 0], x, 8.2, 34 + ((x / 5) % 2 ? 4.4 : -4.4), 0, 0, 0, 0.5, 0.6, 0.5); }
+  for (const [x, z, ry] of [[-8, -4, PI / 2], [8, 3, -PI / 2]]) pumpkinStand(b, x, z, ry);
+  cart(b, -7, 3.5, 0, 'pumpkins'); cart(b, 7, -5, PI, 'apples'); haystack(b, -9.5, -9, 0, 3);
+  fillTown(b, scene, r, phase);
   b.finish(scene);
   return SP;
 }
