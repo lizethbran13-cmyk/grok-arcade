@@ -31,7 +31,7 @@ const shade = (c, k) => { const C = new THREE.Color(c); C.multiplyScalar(k); ret
 // deterministic pseudo random per dog so spots don't change between reloads
 function rng(seed) { let s = seed * 9301 + 49297; return () => (s = (s * 9301 + 49297) % 233280) / 233280; }
 export function makePup(breed = 'corgi', o = {}) {
-  if (breed === 'schnauzer') { const r = makeDog('schnauzer'); accessorize(r, o, { hy: 0.98, hr: 0.2, by: 0.64, len: 0.5, legH: 0.42 }); return r; }
+  if (breed === 'schnauzer') { const r = makeDog('schnauzer'); accessorize(r, o, { hy: 1.12, hr: 0.2, by: 0.68, len: 0.5, legH: 0.46 }); return r; }
   const B = Object.assign({}, BREEDS[breed] || BREEDS.corgi, o.tint || {}); const { fur, dark, light, legH, len } = B; const g = B.g, by = legH + 0.22 * g;
   const root = new THREE.Group(), body = new THREE.Group(); root.add(body); const rnd = rng(o.seed || breed.length * 7 + 3);
   const fx = B.shaggy || B.fluffy ? 'f' : 'f';
