@@ -434,5 +434,7 @@ SKY.stCamWrap = function () { const G = SKY.Game; if (!G || G.updateCamera._st) 
 SKY.stCamApply = function () {};
 SKY.stCamHook = function () {}; // cockpit view uses G.camOverride (game.js updateCamera)
 SKY.stCamTick = function () { const G = SKY.Game, ST = SKY.SuperTravel, pl = G && G.plane; if (!G) return;
-  if (ST && ST.watching && pl) { const a = pl.toWorld(new THREE.Vector3(0, 2.45, -12.35)), b = pl.toWorld(new THREE.Vector3(0, 1.2, -13.7)), u = new THREE.Vector3(0, 1, 0).applyQuaternion(pl.quat); G.camOverride = [a.x, a.y, a.z, b.x, b.y, b.z, u.x, u.y, u.z, 105]; G._stCO = true; }
+  if (ST && ST.watching && pl && pl.cockpitDoor && !pl.cockpitDoor.broken) { pl.cockpitDoor.target = 1; pl.cockpitDoor.autoClose = 0; }
+  const L = ST && pl ? (ST.watching ? [0, 2.3, -12.4, 0, 1.3, -13.7, 105] : ST.camLocal) : null;
+  if (L) { const a = pl.toWorld(new THREE.Vector3(L[0], L[1], L[2])), b = pl.toWorld(new THREE.Vector3(L[3], L[4], L[5])), u = new THREE.Vector3(0, 1, 0).applyQuaternion(pl.quat); G.camOverride = [a.x, a.y, a.z, b.x, b.y, b.z, u.x, u.y, u.z, L[6]]; G._stCO = true; }
   else if (G._stCO) { G.camOverride = null; G._stCO = false; } };
