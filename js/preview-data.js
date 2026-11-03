@@ -1,25 +1,31 @@
 /* Auto-synced from preview.json — offline fallback for Lili's Board & Time Jumper (the loader is js/preview-loader.js) */
 window.GROK_PREVIEW_DATA = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
-  "updated": "2026-11-03T01:30:00Z",
+  "updated": "2026-11-03T02:00:00Z",
   "items": [
     {
       "issue": 91,
       "game": "arcade",
-      "name": "Ratita Mail Tycoon",
+      "name": "Ratita Mail Tycoon (live)",
       "size": "New Game",
-      "what": "Build a mail empire across Mailville: main mail shop, same-day and 2-day centers, a pricey small-package spot, mailboxes everywhere. Pi-rat is postmaster; rivals are the Guinea Pig Gang.",
-      "stage": "building",
-      "when": "In the lab now"
+      "what": "SHIPPED! Free new game: run Postmaster Pi-rat's mail empire across cartoon 3D Mailville. 5 stations with Main Mail Shop, Sorting Facility, Same-Day, 2-Day and a pricey Letters & Media store, mailboxes, trucks, bad-delivery refunds, a free Emergency Stamp Fund, and the Guinea Pig Gang stealing stations (win them back in a Mail Race). New cabinet in the Game Gallery (MORE GAMES). Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/ratita-mail-tycoon/",
+      "betaArchiveUrl": "archive/ratita-mail-tycoon-beta/",
+      "shippedAt": "2026-11-03T02:00:00Z"
     },
     {
       "issue": 90,
       "game": "arcade",
-      "name": "Ratita Teaser Room",
+      "name": "Ratita Teaser Room (live)",
       "size": "New Room",
-      "what": "A new Arcade room with posters showing estimated release times for upcoming games, DLCs, remasters and sequels, linked to the Preview Center.",
-      "stage": "building",
-      "when": "In the lab now"
+      "what": "SHIPPED! A new Arcade room behind its door in the Preview Center: posters with estimated release times for upcoming games, DLCs, remasters and sequels (shipped ones say Live Now), a Release Calendar, pet bench, and the new Mail Sort Rush bonus cabinet on the Bonus Zone wall. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/",
+      "betaArchiveUrl": "archive/ratita-teaser-room-beta/",
+      "shippedAt": "2026-11-03T02:00:00Z"
     },
     {
       "key": "airport-tycoon",
@@ -911,30 +917,33 @@ window.GROK_PREVIEW_DATA = {
       "what": "Grok Sports Command: when a match ends you get the results screen and PLAZA takes you back with the normal camera. No more stuck sky camera."
     }
   ],
-  "previews": [
-    {
-      "id": "ratita-teaser-room",
-      "game": "arcade",
-      "issue": 90,
-      "name": "Ratita Teaser Room + Mail Sort Rush cabinet",
-      "url": "previews/ratita-teaser-room/",
-      "playable": true,
-      "built": "2026-11-02",
-      "notes": "Walk-in Ratita Industries Teaser Room through a new door in the Preview Center (west wall). COMING SOON marquee, 10 posters with estimated release dates, Release Calendar kiosk with Time Jumper links, Luna/Pi-rat/Snowie on the bench, Candy by the popcorn, Torty by the calendar. Also the new Mail Sort Rush bonus cabinet (#91). PREVIEW only."
-    },
+  "previews": [],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "ratita-mail-tycoon",
       "game": "mailtycoon",
       "issue": 91,
       "name": "Ratita Mail Tycoon",
-      "url": "previews/ratita-mail-tycoon/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/ratita-mail-tycoon-beta/",
       "built": "2026-11-02",
-      "notes": "Postmaster Pi-rat's Mailville mail empire: 5 stations, each with Main Mail Shop, Sorting Facility, Same-Day, 2-Day and an expensive Letters & Media store you can downsize. Mailboxes, trucks, bad-delivery refunds, free Emergency Stamp Fund, Guinea Pig Gang (Liz, Squeak, Storm, Meemee, Lizardo) steals stations - win them back in a Mail Race. Start from Scratch or Built Empire. PREVIEW only."
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-11-02",
+      "notes": "Postmaster Pi-rat's Mailville mail empire: 5 stations, each with Main Mail Shop, Sorting Facility, Same-Day, 2-Day and an expensive Letters & Media store you can downsize. Mailboxes, trucks, bad-delivery refunds, free Emergency Stamp Fund, Guinea Pig Gang (Liz, Squeak, Storm, Meemee, Lizardo) steals stations - win them back in a Mail Race. Start from Scratch or Built Empire. Shipped Nov 2; this is the final beta.",
+      "playable": true
+    },
+    {
+      "id": "ratita-teaser-room",
+      "game": "arcade",
+      "issue": 90,
+      "name": "Ratita Teaser Room + Mail Sort Rush cabinet",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/ratita-teaser-room-beta/",
+      "built": "2026-11-02",
+      "archived": "2026-11-02",
+      "notes": "Walk-in Ratita Industries Teaser Room through a new door in the Preview Center (west wall). COMING SOON marquee, 10 posters with estimated release dates, Release Calendar kiosk with Time Jumper links, Luna/Pi-rat/Snowie on the bench, Candy by the popcorn, Torty by the calendar. Also the new Mail Sort Rush bonus cabinet (#48). Shipped Nov 2; this is the final beta.",
+      "playable": true
+    },
     {
       "id": "pickleball-world-tour",
       "game": "pickleballpark",

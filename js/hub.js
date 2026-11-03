@@ -1018,6 +1018,23 @@
         g.font = font(15); g.fillStyle = '#0c4a6e'; g.fillText('AIRPORT TYCOON', w / 2, 22);
         break;
       }
+      case 'mailtycoon': {
+        var gmt = g.createLinearGradient(0, 0, 0, h); gmt.addColorStop(0, '#7dd3fc'); gmt.addColorStop(1, '#bbf7d0'); g.fillStyle = gmt; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#6b7280'; g.fillRect(0, h * 0.82, w, h * 0.18); g.fillStyle = '#fff'; for (i = 0; i < 6; i++) g.fillRect(i * w / 6 + 8, h * 0.9, w / 12, 3);
+        [['#ef4444', 0.06], ['#3b82f6', 0.38], ['#facc15', 0.7]].forEach(function (q) { g.fillStyle = '#fef9c3'; g.fillRect(w * q[1], h * 0.45, w * 0.26, h * 0.37); g.fillStyle = q[0]; g.fillRect(w * q[1] - 3, h * 0.4, w * 0.26 + 6, h * 0.08); g.fillStyle = '#1f2937'; g.fillRect(w * (q[1] + 0.09), h * 0.64, w * 0.08, h * 0.18); });
+        var tkx = ((t * 45) % (w + 70)) - 50; g.fillStyle = '#dc2626'; rrF(g, tkx, h * 0.76, 46, 18, 3); g.fillStyle = '#fde047'; g.fillRect(tkx + 36, h * 0.77, 10, 8);
+        g.font = '18px sans-serif'; g.textAlign = 'center'; g.fillText('\uD83D\uDCEE', w * 0.5, h * 0.35);
+        g.font = font(15); g.fillStyle = '#1e3a8a'; g.fillText('MAIL TYCOON', w / 2, 22);
+        break;
+      }
+      case 'mailsort': {
+        var gms = g.createLinearGradient(0, 0, 0, h); gms.addColorStop(0, '#1e3a8a'); gms.addColorStop(1, '#0f172a'); g.fillStyle = gms; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#374151'; g.fillRect(w * 0.35, 30, w * 0.3, h - 60); var my = 30 + ((t * 40) % (h - 80));
+        g.fillStyle = '#d6a46c'; g.fillRect(w * 0.4, my, w * 0.2, 18); g.fillStyle = '#ef4444'; g.fillRect(w * 0.53, my + 2, 6, 6);
+        ['#ef4444', '#3b82f6', '#facc15'].forEach(function (c0, k) { g.fillStyle = c0; g.fillRect(w * (0.08 + k * 0.31), h - 26, w * 0.24, 18); });
+        g.font = font(17); g.textAlign = 'center'; g.fillStyle = '#fbbf24'; g.fillText('MAIL SORT RUSH', w / 2, 22);
+        break;
+      }
       case 'bagbelt': {
         var gbb = g.createLinearGradient(0, 0, 0, h); gbb.addColorStop(0, '#0c4a6e'); gbb.addColorStop(1, '#0f172a'); g.fillStyle = gbb; g.fillRect(0, 0, w, h);
         g.fillStyle = '#374151'; g.fillRect(w * 0.3, h * 0.12, w * 0.4, h * 0.6); g.fillStyle = '#facc15'; for (i = 0; i < 8; i++) g.fillRect(w * 0.27, h * 0.12 + i * h * 0.075, w * 0.03, h * 0.035);

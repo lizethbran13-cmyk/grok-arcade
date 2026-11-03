@@ -100,6 +100,7 @@
     targetdrill: [30, 'Drill Champ', 'Score 30 in Target Drill', '\uD83C\uDFAF'],
     goocam: [30, 'Viral Vlogger', 'Score 30 in Goo Cam', '\uD83D\uDCF9'],
     buzzer: [30, 'Party Buzzer', 'Score 30 in Buzzer Blitz', '\uD83D\uDD14'],
+    mailsort: [30, 'Sorting Star', 'Score 30 in Mail Sort Rush', '\uD83D\uDCEE'],
     wash: [35, 'Shine Master', 'Score 35 in Sparkle Car Wash', '\uD83E\uDEE7'],
     flip: [35, 'Grill Master', 'Score 35 in Patty Panic', '\uD83C\uDF54'],
     boulder: [40, 'Boulder Dodger', 'Score 40 in Boulder Run', '\uD83E\uDEA8'],

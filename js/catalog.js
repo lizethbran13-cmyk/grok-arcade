@@ -110,7 +110,9 @@ GA.MAIN_GAMES = [
   { id: 'rodentia', mp: true, newlyOnline73: true, mpMode: 'Crimson Capital Co-Op (2-3P)', name: 'Grok Great Rodentia', desc: 'A shadow-light mystery in Year 000 1! Luna, Pi-rat and Snowie were framed by their evil twin clones and locked in National Ratita Prison, and Torty got arrested too. Play Brie the detective, explore 4 districts of the USM crimson capital and 8 walk-in buildings with your flashlight, find 12 conspiracy clues and Golden Gouda Wedges, free Candy from the seized RuffSources HQ and break the real sisters out. Or switch to Evil Twin Mode and play as Evil Luna, Evil Pi-rat or Evil Snowie. 4 endings, and your progress saves. Team up as Brie & Pet Crew detectives with up to 3 friends online!',
     url: 'https://lizethbran13-cmyk.github.io/grok-arcade/great-rodentia/', color: '#dc2626', color2: '#facc15' },
   { id: 'airporttycoon', mp: false, name: 'Grok Sky: Airport Tycoon', desc: 'Build and run Torty\u2019s Airport! Place gates, customs desks, shops, baggage belts and runways, keep passengers happy (some demand the MANAGER!), and survive storms, power outages, runway closures and baggage pileups. Luna, Pi-rat, Snowie, Candy and Torty all help out around the terminal, and Torty\u2019s free Rescue Fund has your back if you go broke.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/airport-tycoon/', color: '#38bdf8', color2: '#facc15' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/airport-tycoon/', color: '#38bdf8', color2: '#facc15' },
+  { id: 'mailtycoon', mp: false, name: 'Ratita Mail Tycoon', desc: 'Run Postmaster Pi-rat\u2019s mail empire in cartoon 3D Mailville! Five stations, each with a Main Mail Shop, Sorting Facility, Same-Day and 2-Day Places and a big Letters & Media store. Upgrade, hire, buy mailboxes and trucks, and keep deliveries right or pay refunds (the free Emergency Stamp Fund always bails you out). Watch out for the Guinea Pig Gang: they steal stations, and you win them back in a Mail Race! Start from scratch or with a built empire.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/ratita-mail-tycoon/', color: '#dc2626', color2: '#fbbf24' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -177,6 +179,8 @@ GA.BONUS_GAMES = [
   { id: 'buzzer', name: 'Buzzer Blitz', desc: 'Be the fastest pet on the Tortuga TV Network! Rico calls out a pet and its podium lights up: TAP that buzzer before the timer runs out. Fast buzzes score extra and gold STAR rounds are worth 3, but when Dr. Vic\u2019s GOO card shows up, keep your paws OFF the buzzers! A Grok Pet Party game.', color: '#ff4fd8', color2: '#facc15' },
   /* #47: Baggage Belt Rush (Grok Sky: Airport Tycoon), on the Bonus Zone wall */
   { id: 'bagbelt', name: 'Baggage Belt Rush', desc: 'Torty\u2019s Airport baggage hall is swamped! Tagged bags ride the belt to the sorter: TAP the PARIS, TOKYO or RIO cart that matches the front bag\u2019s tag. Gold VIP bags are worth 3, but a wrong cart or a bag falling off the belt costs a heart! A Grok Sky: Airport Tycoon game.', color: '#38bdf8', color2: '#facc15' },
+  /* #48: Mail Sort Rush (Ratita Mail Tycoon, #91), on the Bonus Zone wall */
+  { id: 'mailsort', name: 'Mail Sort Rush', desc: 'Postmaster Pi-rat\u2019s sorting belt in Mailville! TAP the bin that matches each parcel\u2019s stamp (red SAME-DAY, blue 2-DAY, yellow LETTERS) while it is in the SORT ZONE. Shiny Guinea Pig Gang bling boxes: let them pass! A Ratita Mail Tycoon game.', color: '#dc2626', color2: '#fbbf24' },
 ];
 /* bonus games that have a cabinet on the Bonus Zone wall (1983 retro games live in the old arcade instead) */
 GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era && !g.room; }); };
