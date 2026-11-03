@@ -42,7 +42,7 @@
         else { c.fillStyle = '#fff'; U.rr(c, -w / 2 + 8, -h / 2 + 10, 48, 50, 6); c.fill(); c.strokeStyle = e.c; c.lineWidth = 4; c.stroke(); U.text(c, e.ic, -w / 2 + 32, 2, 28, '#000'); if (p.gold) U.text(c, '\uD83E\uDDC0', 26, 0, 28, '#000'); else U.text(c, 'RI', 26, 0, 20, '#fff'); }
         c.restore();
       }
-      function piRat(c, x, y, r) { c.save(); c.translate(x, y); c.fillStyle = '#2b2730'; c.beginPath(); c.arc(-r * 0.75, -r * 0.7, r * 0.5, 0, 7); c.arc(r * 0.75, -r * 0.7, r * 0.5, 0, 7); c.fill(); c.beginPath(); c.arc(0, 0, r, 0, 7); c.fill();
+      function piRat(c, x, y, r) { c.save(); c.translate(x, y); c.fillStyle = '#6b5e52'; c.beginPath(); c.arc(-r * 0.75, -r * 0.7, r * 0.5, 0, 7); c.arc(r * 0.75, -r * 0.7, r * 0.5, 0, 7); c.fill(); c.beginPath(); c.arc(0, 0, r, 0, 7); c.fill();
         c.fillStyle = '#fbcfe8'; c.beginPath(); c.arc(-r * 0.75, -r * 0.7, r * 0.28, 0, 7); c.arc(r * 0.75, -r * 0.7, r * 0.28, 0, 7); c.fill(); c.fillStyle = '#111'; c.beginPath(); c.arc(-r * 0.35, -r * 0.1, r * 0.13, 0, 7); c.fill(); c.fillRect(r * 0.15, -r * 0.3, r * 0.45, r * 0.3); c.fillStyle = '#f472b6'; c.beginPath(); c.arc(0, r * 0.25, r * 0.14, 0, 7); c.fill();
         c.fillStyle = '#111827'; c.beginPath(); c.moveTo(-r * 0.9, -r * 0.55); c.quadraticCurveTo(0, -r * 1.6, r * 0.9, -r * 0.55); c.closePath(); c.fill(); U.text(c, '\u2620', 0, -r * 0.85, r * 0.45, '#fff'); c.restore(); }
       return {

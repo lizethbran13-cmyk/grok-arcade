@@ -16,7 +16,7 @@
 
   // ---------- pets (real species) ----------
   function rat(par, x, z, col, name, patch, back, sy) { var g = new T.Group(); g.position.set(x, 0, z); par.add(g);
-    var b = add(g, sp(0.17, 14), ph(col, 20), 0, 0.16, 0); b.scale.set(1, 0.8, 1.45); add(g, sp(0.1, 12), ph(patch ? '#3a2f2b' : col, 20), 0, 0.22, 0.24); if (patch) { var hd0 = add(g, sp(0.13, 12), ph('#3a2f2b', 20), 0, 0.2, 0.12); hd0.scale.set(1, 0.7, 0.8); } if (back) { var bk2 = add(g, sp(0.15, 12), ph(back, 20), 0, 0.22, -0.04); bk2.scale.set(0.9, 0.55, 1.4); }
+    var b = add(g, sp(0.17, 14), ph(col, 20), 0, 0.16, 0); b.scale.set(1, 0.8, 1.45); add(g, sp(0.1, 12), ph(patch ? '#6b5e52' : col, 20), 0, 0.22, 0.24); if (patch) { var hd0 = add(g, sp(0.13, 12), ph('#6b5e52', 20), 0, 0.2, 0.12); hd0.scale.set(1, 0.7, 0.8); } if (back) { var bk2 = add(g, sp(0.15, 12), ph(back, 20), 0, 0.22, -0.04); bk2.scale.set(0.9, 0.55, 1.4); }
     add(g, sp(0.03, 8), ph('#f9a8d4', 20), 0, 0.21, 0.34);
     [-1, 1].forEach(function (sd) { add(g, sp(0.055, 8), ph('#fbcfe8', 20), sd * 0.075, 0.33, 0.2); if (!(patch && sd < 0)) add(g, sp(0.02, 6), gl('#111'), sd * 0.045, 0.26, 0.31); });
     if (patch) { add(g, cy(0.035, 0.035, 0.01, 10), gl('#000'), -0.045, 0.26, 0.315).rotation.x = Math.PI / 2; var st = add(g, to(0.1, 0.006, 4, 16), gl('#000'), 0, 0.27, 0.24); st.rotation.y = 0.3; }

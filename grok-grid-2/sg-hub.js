@@ -397,7 +397,7 @@
         const body = new T.Mesh(new T.SphereGeometry(0.95, 16, 12), coat);
         body.scale.set(0.9, 1.15, 0.88);
         body.position.y = 1.45;
-        const hoodM = mode === 'pirat' ? new T.MeshStandardMaterial({ color: 0x3a2f2b, roughness: 0.6 }) : coat;
+        const hoodM = mode === 'pirat' ? new T.MeshStandardMaterial({ color: 0x6b5e52, roughness: 0.6 }) : coat;
         const head = new T.Mesh(new T.SphereGeometry(0.72, 16, 12), hoodM);
         head.position.set(0, 2.75, 0.25);
         const snout = new T.Mesh(new T.SphereGeometry(0.38, 12, 10), hoodM);

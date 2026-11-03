@@ -178,7 +178,7 @@
       [-0.06, 0.06].forEach((x) => { const e = new T.Mesh(G('teye', () => new T.SphereGeometry(0.022, 8, 6)), M('#111', { roughness: 0.2 })); e.position.set(x, 0.3, 0.74); g.add(e); });
       [[-0.3, 0.35], [0.3, 0.35], [-0.3, -0.35], [0.3, -0.35]].forEach(([x, z]) => { const l = new T.Mesh(G('tleg', () => new T.CylinderGeometry(0.08, 0.09, 0.2, 8)), skinT); l.position.set(x, 0.1, z); g.add(l); });
     } else { // fancy rats: luna (agouti/brown), pirat (white w/ dark hood, one eye), snowie (white)
-      const col = id === 'snowie' ? '#f8fafc' : id === 'pirat' ? '#f8f6f2' : '#b08968', fur = M(col, { roughness: 0.9 }), hoodM = id === 'pirat' ? M('#2b2730', { roughness: 0.9 }) : fur, pink = M('#f9a8d4', { roughness: 0.6 });
+      const col = id === 'snowie' ? '#f8fafc' : id === 'pirat' ? '#f8f6f2' : '#b08968', fur = M(col, { roughness: 0.9 }), hoodM = id === 'pirat' ? M('#6b5e52', { roughness: 0.9 }) : fur, pink = M('#f9a8d4', { roughness: 0.6 });
       const body = new T.Mesh(G('rbody', () => new T.SphereGeometry(0.3, 16, 12)), fur); body.scale.set(0.85, 0.75, 1.3); body.position.y = 0.3; g.add(body);
       if (id === 'luna') { const belly = new T.Mesh(G('rbelly', () => new T.SphereGeometry(0.26, 14, 10)), M('#f5e6d3')); belly.scale.set(0.8, 0.7, 1.2); belly.position.set(0, 0.26, 0.04); g.add(belly); }
       const head = new T.Mesh(G('rhead', () => new T.ConeGeometry(0.17, 0.4, 14)), hoodM); if (id === 'pirat') { const hd = new T.Mesh(G('rhood', () => new T.SphereGeometry(0.2, 14, 10)), hoodM); hd.scale.set(1, 0.85, 1); hd.position.set(0, 0.42, 0.36); g.add(hd); } head.rotation.x = Math.PI / 2; head.position.set(0, 0.4, 0.5); g.add(head);

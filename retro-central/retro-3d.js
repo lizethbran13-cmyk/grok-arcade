@@ -166,7 +166,7 @@
     vest.position.y = 0.46;
     g.add(vest);
 
-    var isPirat = hatType === 'skate95'; var head = new THREE.Mesh(new THREE.SphereGeometry(0.36, 16, 14), mat(isPirat ? 0x3a2f2b : colorBody));
+    var isPirat = hatType === 'skate95'; var head = new THREE.Mesh(new THREE.SphereGeometry(0.36, 16, 14), mat(isPirat ? 0x6b5e52 : colorBody));
     head.position.set(0, 0.96, 0.12);
     g.add(head);
 

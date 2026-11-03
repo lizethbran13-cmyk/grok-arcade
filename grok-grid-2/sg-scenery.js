@@ -637,7 +637,7 @@
       const body = new T.Mesh(new T.SphereGeometry(0.62, 14, 10), coat);
       body.scale.set(0.88, 1.08, 1.25);
       body.position.y = 0.72;
-      const hoodM = mode === 'pirat' ? std(0x2b2730, 0.6, 0.05) : coat;
+      const hoodM = mode === 'pirat' ? std(0x6b5e52, 0.6, 0.05) : coat;
       const head = new T.Mesh(new T.SphereGeometry(0.46, 14, 10), hoodM);
       head.scale.set(0.92, 0.9, 1.18);
       head.position.set(0, 1.38, 0.35);

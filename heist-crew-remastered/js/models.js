@@ -415,7 +415,7 @@
     } else {
       // Fancy rats: Luna (grey), Pi-rat (white hooded rat: dark hood + eyepatch + pirate hat), Snowie (pure white + cyan scarf)
       const fur = id === 'luna' ? '#94a3b8' : id === 'pirat' ? '#f8f6f2' : '#f8fafc';
-      const hood = id === 'pirat' ? '#2b2730' : fur;
+      const hood = id === 'pirat' ? '#6b5e52' : fur;
       const belly = id === 'luna' ? '#cbd5e1' : id === 'pirat' ? '#ffffff' : '#ffffff';
       const ear = '#fda4af';
       b.sph(0.25, fur, 0, 0.38, -0.02, 0.92, 1.08, 1.05);

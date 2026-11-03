@@ -95,7 +95,7 @@
   }
 
   /* ---------- the rats: Luna, Pi-rat (one eye), Snowie ---------- */
-  var RATS = { luna: { fur: '#a7adbb', dark: '#7d8394', belly: '#e6e8ee', eye: '#1b1b24' }, pirat: { fur: '#f8f6f2', dark: '#3a2f2b', hood: '#3a2f2b', belly: '#ffffff', eye: '#1b1b24' }, snowie: { fur: '#fbfbff', dark: '#e3e1ee', belly: '#ffffff', eye: '#d0315a' } };
+  var RATS = { luna: { fur: '#a7adbb', dark: '#7d8394', belly: '#e6e8ee', eye: '#1b1b24' }, pirat: { fur: '#f8f6f2', dark: '#6b5e52', hood: '#6b5e52', belly: '#ffffff', eye: '#1b1b24' }, snowie: { fur: '#fbfbff', dark: '#e3e1ee', belly: '#ffffff', eye: '#d0315a' } };
   function rat(type) {
     var R = RATS[type], g = new T.Group(), fur = lam(R.fur), pink = lam('#ffb3c8');
     add(g, sph(0.3, 22), fur, 0, 0.3, -0.04, 1, 0.95, 1.15);
@@ -942,7 +942,7 @@
     var gr = add(g, cyl(0.04, 0.04, 0.02, 8), shiny('#ffd23f', 70), 0.22, 0.17, 0.02); gr.rotation.z = Math.PI / 2; g.userData.hat = { y: -0.02, s: 0.85 }; g.userData.tick = function (t) { gr.rotation.x = t * 2; }; return g; }
   function piratPlush() { var g = new T.Group(), b = grp(g, 0, 0, 0), F = lam('#f8f6f2'), Fl = lam('#ffffff'), Pk = lam('#f9a8d4');
     add(b, sph(0.17, 24), F, 0, 0.18, 0, 1, 0.9, 1.15); add(b, sph(0.11, 18), Fl, 0, 0.16, 0.1, 1, 0.9, 0.6);
-    var Hd = lam('#3a2f2b'); add(b, sph(0.13, 18), Hd, 0, 0.29, 0.06, 1.05, 0.6, 0.95); var hd = grp(b, 0, 0.36, 0.08); add(hd, sph(0.12, 22), Hd, 0, 0, 0, 1, 0.95, 1.05); add(hd, cone(0.07, 0.12, 16), Hd, 0, -0.02, 0.12).rotation.x = Math.PI / 2; add(hd, sph(0.025, 10), Pk, 0, -0.02, 0.19);
+    var Hd = lam('#6b5e52'); add(b, sph(0.13, 18), Hd, 0, 0.29, 0.06, 1.05, 0.6, 0.95); var hd = grp(b, 0, 0.36, 0.08); add(hd, sph(0.12, 22), Hd, 0, 0, 0, 1, 0.95, 1.05); add(hd, cone(0.07, 0.12, 16), Hd, 0, -0.02, 0.12).rotation.x = Math.PI / 2; add(hd, sph(0.025, 10), Pk, 0, -0.02, 0.19);
     [-1, 1].forEach(function (s) { add(hd, sph(0.06, 14), Pk, s * 0.09, 0.1, -0.02, 1, 1, 0.35); });
     add(hd, sph(0.028, 10), lam('#ffffff'), 0.045, 0.03, 0.1); add(hd, sph(0.02, 10), lam('#16101f'), 0.045, 0.03, 0.112); add(hd, tor(0.022, 0.006, Math.PI, 6, 12), lam('#f9a8d4'), -0.045, 0.025, 0.105);
     add(hd, tor(0.115, 0.022, 7, 8, 26), lam('#ef4444'), 0, 0.05, 0).rotation.x = Math.PI / 2 - 0.2;
