@@ -831,6 +831,15 @@ window.GROK_PREVIEW_DATA = {
       "playable": true,
       "built": "2026-10-28",
       "notes": "Passenger seat by class, bot Captain+FO fly (watch/skip), required departure customs, baggage claim, arrival customs on international flights, signs+arrows+minimap star"
+    },
+    {
+      "id": "pickleball-world-tour",
+      "game": "pickleballpark",
+      "name": "Pickleball Park DLC: World Tour",
+      "url": "previews/pickleball-world-tour/",
+      "playable": true,
+      "built": "2026-11-02",
+      "notes": "Tortuga Air gate + World Tour Boulevard, 4 city courts (Paris, Tokyo, New York, Rio) with landmarks, 4-leg tour live on Tortuga TV Network (TTN), Torty TTN anchor + Candy, MaxGrit Tour paddle + Silent Serve Tour balls, ticket fee + paddle wear on losses, free standby seat when broke. Locked until bought (DLC shop wiring ready)"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
