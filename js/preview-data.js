@@ -1,8 +1,19 @@
 /* Auto-synced from preview.json — offline fallback for Lili's Board & Time Jumper (the loader is js/preview-loader.js) */
 window.GROK_PREVIEW_DATA = {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
-  "updated": "2026-11-03",
+  "updated": "2026-11-09",
   "items": [
+    {
+      "game": "thanksgiving-feast",
+      "name": "Harvest Hollow Open House (live)",
+      "size": "Update",
+      "what": "SHIPPED! A free update for Torty's Harvest Feast: 10 buildings you can walk into (Torty's Barn, Hollow Bakery Bake-Off, Pumpkin Shop carving, Cranberry Co. sorting belt, Cider Barn apple bobbing, Diner lunch rush, Town Hall quest board, Float Workshop, Luna's Home and Pi-rat's Home) with passport stamps, plus the hayride, Candy's piglet roundup, the daily scarecrow contest, 20 golden acorns, neighbour requests and daily events. Old Harvest Feast saves carry over. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/thanksgiving-feast/",
+      "betaArchiveUrl": "archive/harvest-open-house-beta/",
+      "shippedAt": "2026-11-09T17:27:40Z"
+    },
     {
       "game": "thanksgiving-feast",
       "name": "Torty's Harvest Feast (live)",
@@ -953,20 +964,24 @@ window.GROK_PREVIEW_DATA = {
       "playable": true,
       "built": "2026-11-02",
       "notes": "Holiday special, releases Nov 15 after David's OK. Polish pass: all 4 routes played by real input, party spacing, see-through visitation glass, camera, kid-fair guards, Pi-rat new look"
-    },
-    {
-      "id": "harvest-open-house",
-      "game": "thanksgiving-feast",
-      "name": "Harvest Hollow Open House",
-      "url": "previews/harvest-open-house/",
-      "playable": true,
-      "built": "2026-11-03",
-      "stage": "building",
-      "notes": "Enterable buildings + more to do. Step 1: room system, Torty's Barn, Hollow Bakery."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "harvest-open-house",
+      "game": "thanksgiving-feast",
+      "name": "Harvest Hollow Open House",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/harvest-open-house-beta/",
+      "built": "2026-11-03",
+      "archived": "2026-11-09",
+      "notes": "Enterable buildings + more to do: 10 interiors, hayride, piglets, scarecrow contest, acorns, requests. Shipped to the live Harvest Feast 2026-11-09.",
+      "playable": true,
+      "stage": "shipped",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/thanksgiving-feast/",
+      "shippedAt": "2026-11-09T17:27:40Z"
+    },
     {
       "id": "thanksgiving-feast",
       "game": "thanksgiving-feast",

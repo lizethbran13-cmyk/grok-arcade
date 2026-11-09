@@ -116,7 +116,10 @@ export function buildWorld(scene, phase) {
     cart(b, -6.5, 22, 0, 'apples'); cart(b, 6.5, 22, PI, 'hay'); }
   // ---- street of houses around square
   const hc = [0xe9d3b0, 0xc2703d, 0xf1e4c8, 0x9c6b45, 0xd9b38c];
-  [[-22, -14, 0], [-22, 14, PI], [22, -14, 0], [22, 14, PI], [-12, -22, 0], [12, -22, 0]].forEach(([x, z, ry], i) => house(b, scene, x, z, 7, 6, hc[i % 5], 0x7c2d12, ry));
+  [[-22, -14, 0], [-22, 14, PI], [22, -14, 0], [22, 14, PI], [-12, -22, 0], [12, -22, 0]].forEach(([x, z, ry], i) => house(b, scene, x, z, 7, 6, [0xf4a25a, 0xc7d2fe, 0xfbe4e4, 0xfce7f3, 0xf5d0a9, 0xe7e5e4][i], 0x7c2d12, ry, ['PUMPKIN SHOP', "LUNA'S HOME", 'CRANBERRY CO.', "PI-RAT'S HOME", 'HOLLOW BAKERY', 'TOWN HALL'][i]));
+  house(b, scene, 42, -13, 8, 6, 0x9a3412, 0x3f1d0b, 0, 'CIDER BARN'); house(b, scene, 56, -13, 8, 6, 0xfef3c7, 0xdc2626, 0, 'HOLLOW DINER');
+  // tall rooftop signs so the pie-tent banner can never hide them
+  for (const [x, t, bg] of [[42, 'APPLE CIDER BARN', '#9a3412'], [56, 'HOLLOW DINER', '#dc2626']]) { for (const sx of [-1.6, 1.6]) b.add('m', G.box, 0x3f1d0b, x + sx, 6.4, -11.2, 0, 0, 0, 0.15, 2.6, 0.15); const s = sign(t, 4.2, 0.9, { bg, border: '#fde68a' }); s.position.set(x, 7.7, -11.1); scene.add(s); }
   // ---- Chef Mimo's Ratita Kitchen (north)
   { const kx = 0, kz = -42, w = 16, d = 12; b.box('m', 0xf1e4c8, kx, 0, kz - d / 2, w, 5, 0.4); b.box('m', 0xf1e4c8, kx - w / 2, 0, kz, 0.4, 5, d); b.box('m', 0xf1e4c8, kx + w / 2, 0, kz, 0.4, 5, d);
     b.box('m', 0xf1e4c8, kx - 5, 0, kz + d / 2, 6, 5, 0.4); b.box('m', 0xf1e4c8, kx + 5, 0, kz + d / 2, 6, 5, 0.4); b.box('m', 0xf1e4c8, kx, 3.2, kz + d / 2, 4, 1.8, 0.4);
@@ -199,7 +202,7 @@ export function buildWorld(scene, phase) {
     b.rbox('m', 0xfbbf24, 24, 1.3, 24, 1.6, 1.6, 1.4); b.box('x', 0x111827, 23.3, 2.9, 24, 0.1, 0.8, 0.1); solidC(24, 24, 5, 2.6, 2);
     { const s = sign('TORTUGA TECH', 3, 0.6, { bg: '#0f766e', border: '#5ef2ff' }); s.position.set(24, 1.0, 25.32); scene.add(s); } SP.chase = { x: 24, z: 21, name: 'Tortuga Tech Float' }; }
   // chase course waypoints across town with hay hurdles + pumpkin lanes
-  SP.chasePath = [[24, 18], [16, 14], [16, -16], [30, -18], [40, -10], [40, 10], [30, 18], [-8, 18], [-18, 24], [-36, 18], [-38, -2], [-30, -18], [-6, -18], [6, -16], [16, 14], [24, 18]];
+  SP.chasePath = [[24, 18], [16, 14], [16, -16], [30, -18], [37, -17.5], [37, -8], [37, 4], [40, 10], [30, 18], [-8, 18], [-18, 24], [-36, 18], [-38, -2], [-30, -18], [-6, -18], [6, -16], [16, 14], [24, 18]];
   SP.hurdles = [[16, 0], [35, -14], [40, 0], [10, 18], [-28, 21], [-38, 8], [-18, -18]];
   for (const [x, z] of SP.hurdles) { b.rbox('m', 0xe3c062, x, 0, z, 2.4, 0.55, 0.7, Math.abs(x) === 40 || x === 16 || x === -38 ? PI / 2 : 0); }
   // ring of autumn trees around the town edge, tidy rows
