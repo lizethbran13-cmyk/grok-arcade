@@ -243,7 +243,7 @@ GA.mpGames = function () { return GA.MAIN_GAMES.filter(function (g) { GA.applyOn
 /* dev/test only: localStorage 'grokArcade.devUrls' = {"brawl":"http://127.0.0.1:8821/"} points games at local servers */
 GA.gameUrl = function (g) { try { var o = JSON.parse(localStorage.getItem('grokArcade.devUrls') || 'null'); if (o && o[g.id]) return o[g.id]; } catch (e) {} return g.url; };
 GA.allGames = function () { return GA.MAIN_GAMES.concat(GA.BONUS_GAMES); };
-GA.findGame = function (id) { return GA.allGames().find(function (g) { return g.id === id; }); };
+GA.findGame = function (id) { return GA.allGames().find(function (g) { return g && g.id === id; }); }; // g && : BONUS_GAMES keeps an intentional empty slot (#50)
 GA.isBonus = function (id) { return GA.BONUS_GAMES.some(function (g) { return g.id === id; }); };
 
 /* persistent storage helpers (safe if storage is blocked) */
