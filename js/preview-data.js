@@ -4,6 +4,14 @@ window.GROK_PREVIEW_DATA = {
   "updated": "2026-11-09",
   "items": [
     {
+      "game": "arcade",
+      "name": "Candy's Snow Day",
+      "size": "New Game",
+      "what": "A brand-new winter town on the Turbo engine: play as Candy the miniature schnauzer in snowy Frostpaw Falls. Pull your sled around town delivering hot cocoa (sharp turns slosh the cups!), ride the chairlift and race Luna, Snowie and Pi-rat down Sled Hill, or beat your best time. Enterable cocoa shop, lodge and hill shack, snowball fun, hidden collectibles and bonus cabinet #52 on the way.",
+      "stage": "building",
+      "when": "Preview in the Time Jumper"
+    },
+    {
       "game": "thanksgiving-feast",
       "name": "Harvest Hollow Open House (live)",
       "size": "Update",
@@ -964,6 +972,16 @@ window.GROK_PREVIEW_DATA = {
       "playable": true,
       "built": "2026-11-02",
       "notes": "Holiday special, releases Nov 15 after David's OK. Polish pass: all 4 routes played by real input, party spacing, see-through visitation glass, camera, kid-fair guards, Pi-rat new look"
+    },
+    {
+      "id": "candy-snow-day",
+      "game": "arcade",
+      "name": "Candy's Snow Day",
+      "url": "previews/candy-snow-day/",
+      "playable": true,
+      "built": "2026-11-09",
+      "notes": "First playable: snowy Frostpaw Falls town (Turbo), play as Candy pulling her sled, cocoa deliveries with a slosh meter (spills cost coins, free refill), Sled Hill race vs Luna, Snowie and Pi-rat + time trial (wipeouts dent the sled, free duct-tape patch). Interiors, side activities and bonus cabinet #52 coming next",
+      "stage": "building"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
