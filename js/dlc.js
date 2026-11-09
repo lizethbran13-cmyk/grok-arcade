@@ -54,6 +54,11 @@
     { id: 'super_travel_expansion', game: 'sky', name: 'Super Travel Expansion', size: 'mega', issue: 80, desc: 'Fly Ratita Airways passengers in Economy, Business and First Class to 4 new cities: Zacatecas City, Ambato, Cusco and Cairo. Every airport gets a walk-in Super Travel terminal wing with customs and baggage check, a VIP lounge, gate boarding and Torty\u2019s hangar forge, with all 5 family pets. Plus the Golden Pilot Wheel heist (Bad Guy Mode vs. the Sky Marshal), real consequences and a free Never-Stuck emergency rebuild.' },
     { id: 'add_a_new_online_order_mode', game: 'eatsville', name: 'Online Order Mode', size: 'exp', issue: 85, desc: 'Tortuga Eats and Ratita Rush app orders come in on your tablet: cook them, then hand them over at curbside pickup or deliver them same-day on the Ratita Rush Scooter or Tortuga Thermal Cruiser to homes around Eatsville. Keep food hot and your star rating up for tips (late or spilled orders mean refunds), with a 5-pet crew: Luna, Pi-rat, Snowie, Candy and Torty, plus a free never-stuck reboot.' }
   ];
+  /* COMING (not in the shop yet, never purchasable): built as a Time Jumper preview, joins GA.DLC_SHIPPED only when David greenlights it.
+     The Field Trips game checks localStorage 'grokDLC.edu.field_trips' and shows a lock screen without it. */
+  GA.DLC_COMING = [
+    { id: 'field_trips', game: 'edu', name: 'Education Center: Field Trips', size: 'exp', issue: 89, desc: 'Lilith the Bot (riding along on Pi-rat\u2019s tablet) takes the class on walk-in field trips from the Field Trip Depot: the Desert Nature Walk to Torty\u2019s habitat, the Ratita Industries Science Lab, the Ratita Airways airport, Harvest Hollow farm and Pup Town\u2019s community helpers. Every trip has a guide, a short lesson, its own quiz mini-game and a page in the Lesson Save Vault.' }
+  ];
   GA.DLC_SHIPPED.forEach(function (it) { if (!GA.DLC_SHOP.some(function (x) { return x.game === it.game && x.id === it.id; })) GA.DLC_SHOP.push(it); });
   var K_MINE = 'grokArcade.dlcIdeas', K_BOARD = 'grokArcade.dlcBoard', K_OWNED = 'grokArcade.dlcOwned', K_DRAFT = 'grokArcade.dlcDraft', K_FREE = 'grokArcade.dlcFreeUsed', K_PEND = 'grokArcade.dlcPending';
   var D = GA.DLC = {}, openNow = false, tab = 'new', size = 'mini', loading = false;

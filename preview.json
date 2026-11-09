@@ -355,8 +355,8 @@
       "name": "Education Center DLC: Field Trips",
       "size": "DLC",
       "what": "Lilith the Bot takes the Education Center on field trips.",
-      "stage": "queued",
-      "when": "Queued · est. December"
+      "stage": "building",
+      "when": "Building now · preview in the Time Jumper"
     },
     {
       "issue": 72,
@@ -980,6 +980,17 @@
       "playable": true,
       "built": "2026-11-09",
       "notes": "First playable: snowy Frostpaw Falls town (Turbo), play as Candy pulling her sled, cocoa deliveries with a slosh meter (spills cost coins, free refill), Sled Hill race vs Luna, Snowie and Pi-rat + time trial (wipeouts dent the sled, free duct-tape patch). Interiors, side activities and bonus cabinet #52 coming next",
+      "stage": "building"
+    },
+    {
+      "id": "edu-field-trips",
+      "game": "arcade",
+      "issue": 89,
+      "name": "Education Center DLC: Field Trips",
+      "url": "previews/edu-field-trips/",
+      "playable": true,
+      "built": "2026-11-09",
+      "notes": "First playable: Field Trip Depot hub + 2 of 5 trips (Desert Nature Walk, Ratita Science Lab) with Lilith on the tablet, themed quiz mini-games and the Lesson Save Vault. Airport, Harvest Hollow farm and Pup Town trips still to come.",
       "stage": "building"
     }
   ],
