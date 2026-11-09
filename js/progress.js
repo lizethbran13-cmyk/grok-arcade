@@ -103,6 +103,7 @@
     mailsort: [30, 'Sorting Star', 'Score 30 in Mail Sort Rush', '\uD83D\uDCEE'],
     pupdrop: [30, 'Pup Catcher', 'Score 30 in Pup Drop Catch', '\uD83D\uDC36'],
     pieplate: [30, 'Pie Plate Pro', 'Score 30 in Pie Plate Catch', '\uD83E\uDD67'],
+    sleddash: [30, 'Sled Dash Pro', 'Score 30 in Sled Dash', '\uD83D\uDEF7'],
     wash: [35, 'Shine Master', 'Score 35 in Sparkle Car Wash', '\uD83E\uDEE7'],
     flip: [35, 'Grill Master', 'Score 35 in Patty Panic', '\uD83C\uDF54'],
     boulder: [40, 'Boulder Dodger', 'Score 40 in Boulder Run', '\uD83E\uDEA8'],

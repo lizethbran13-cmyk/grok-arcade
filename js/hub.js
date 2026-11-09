@@ -1045,6 +1045,21 @@
         g.font = font(14); g.fillStyle = '#7c2d12'; g.fillText('HARVEST FEAST', w / 2, 22);
         break;
       }
+      case 'snowday': {
+        var gsd = g.createLinearGradient(0, 0, 0, h); gsd.addColorStop(0, '#7dd3fc'); gsd.addColorStop(1, '#f0f9ff'); g.fillStyle = gsd; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#ffffff'; g.beginPath(); g.moveTo(0, h * 0.62); g.lineTo(w * 0.55, h * 0.36); g.lineTo(w, h * 0.58); g.lineTo(w, h); g.lineTo(0, h); g.fill();
+        g.fillStyle = '#1f5a3a'; for (i = 0; i < 4; i++) { var tx2 = w * (0.12 + i * 0.25); g.beginPath(); g.moveTo(tx2, h * 0.5); g.lineTo(tx2 + 9, h * 0.66); g.lineTo(tx2 - 9, h * 0.66); g.fill(); }
+        g.font = '22px sans-serif'; g.textAlign = 'center'; g.fillText('\uD83D\uDEF7', ((t * 26) % (w + 40)) - 20, h * 0.8); g.fillText('\u2615', w * 0.78, h * 0.9); g.fillText('\u2744\uFE0F', w * 0.2, h * 0.3 + Math.sin(t * 2) * 4);
+        g.font = font(14); g.fillStyle = '#0c4a6e'; g.fillText('CANDY\u2019S SNOW DAY', w / 2, 22);
+        break;
+      }
+      case 'sleddash': {
+        var gsl = g.createLinearGradient(0, 0, 0, h); gsl.addColorStop(0, '#1e3a8a'); gsl.addColorStop(0.25, '#e0f2fe'); gsl.addColorStop(1, '#f8fafc'); g.fillStyle = gsl; g.fillRect(0, 0, w, h);
+        g.font = '20px sans-serif'; g.textAlign = 'center'; for (i = 0; i < 3; i++) g.fillText(['\uD83C\uDF32', '\u2615', '\u26C4'][i], w * (0.2 + i * 0.3), 50 + ((t * 40 + i * 53) % (h - 90)));
+        g.fillText('\uD83D\uDEF7', w * (0.5 + 0.3 * Math.sin(t * 1.6)), h - 26);
+        g.font = font(15); g.fillStyle = '#fde047'; g.fillText('SLED DASH', w / 2, 22);
+        break;
+      }
       case 'pieplate': {
         var gpp = g.createLinearGradient(0, 0, 0, h); gpp.addColorStop(0, '#7c2d12'); gpp.addColorStop(1, '#fde68a'); g.fillStyle = gpp; g.fillRect(0, 0, w, h);
         g.fillStyle = '#475569'; g.fillRect(0, 30, w, 14); g.fillStyle = '#92400e'; g.fillRect(0, h - 18, w, 18);

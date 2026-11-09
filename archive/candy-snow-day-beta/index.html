@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- ratita-preview-shim -->
+<meta name="robots" content="noindex,nofollow">
+<script>/* Ratita Preview shim: this page is a WORK-IN-PROGRESS preview. Its saves live under their own prefix so the real game's saves are never read or changed. */
+(function () {
+  var PFX = 'grokBeta.candy-snow-day.';
+  try {
+    var SP = Storage.prototype, gI = SP.getItem, sI = SP.setItem, rI = SP.removeItem, kI = SP.key, cl = SP.clear, lenD = Object.getOwnPropertyDescriptor(SP, 'length');
+    function mine(st) { var a = [], n = lenD.get.call(st); for (var i = 0; i < n; i++) { var k = kI.call(st, i); if (k && k.indexOf(PFX) === 0) a.push(k); } return a; }
+    // archived beta: its own save prefix. The first visit copies the old preview save over, so Time Jumper progress comes along.
+    try { var OLD = 'grokPreview.candy-snow-day.'; [localStorage, sessionStorage].forEach(function (st) { if (mine(st).length) return; var n = lenD.get.call(st), ks = []; for (var i = 0; i < n; i++) { var k = kI.call(st, i); if (k && k.indexOf(OLD) === 0) ks.push(k); } ks.forEach(function (k) { sI.call(st, PFX + k.slice(OLD.length), gI.call(st, k)); }); }); } catch (e) {}
+    SP.getItem = function (k) { return gI.call(this, PFX + k); };
+    SP.setItem = function (k, v) { return sI.call(this, PFX + k, v); };
+    SP.removeItem = function (k) { return rI.call(this, PFX + k); };
+    SP.key = function (i) { var a = mine(this); return i >= 0 && i < a.length ? a[i].slice(PFX.length) : null; };
+    SP.clear = function () { var st = this; mine(st).forEach(function (k) { rI.call(st, k); }); };
+    Object.defineProperty(SP, 'length', { configurable: true, get: function () { return mine(this).length; } });
+    if (window.indexedDB) { var IO = indexedDB.open.bind(indexedDB), ID = indexedDB.deleteDatabase.bind(indexedDB); indexedDB.open = function (n, v) { return v === undefined ? IO(PFX + n) : IO(PFX + n, v); }; indexedDB.deleteDatabase = function (n) { return ID(PFX + n); }; }
+  } catch (e) { if (window.console) console.warn('preview shim', e); }
+  function banner() { if (document.getElementById('ratitaWip')) return; var b = document.createElement('div'); b.id = 'ratitaWip';
+    b.setAttribute('style', 'position:fixed;left:8px;top:8px;z-index:2147483647;display:flex;gap:8px;align-items:center;padding:6px 10px;border-radius:12px;font:bold 12px Trebuchet MS,system-ui,sans-serif;color:#fff;background:repeating-linear-gradient(45deg,#0f766e 0 10px,#111827 10px 20px);box-shadow:0 2px 10px rgba(0,0,0,.5);text-shadow:0 1px 2px #000;max-width:calc(100vw - 16px)');
+    b.innerHTML = '\uD83D\uDCBE FINAL BETA \u00b7 Candys Snow Day \u00b7 from the Time Jumper Save Booth <a href="../../" style="color:#5eead4">\u23EA back to the arcade</a> <button aria-label="hide" style="background:none;border:0;color:#fff;font:bold 14px sans-serif;cursor:pointer">\u00d7</button>';
+    b.querySelector('button').onclick = function () { b.remove(); }; document.body.appendChild(b); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', banner); else banner();
+})();
+</script>
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Candy's Snow Day (Turbo)</title>
+<link rel="stylesheet" href="./style.css?v=snow2">
+<link rel="stylesheet" href="./snow.css?v=snow2">
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.min.js", "three/addons/": "./lib/addons/" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="touchZone"></div>
+<div id="stickRing"></div><div id="stickKnob"></div>
+<div id="hud">
+  <div class="hrow"><span class="pill" id="hMoney">🪙 0</span><span class="pill" id="hMood">😊 50</span><span class="pill" id="hSled">🛷 100%</span><span class="pill" id="hCup">☕ 0</span></div>
+  <div id="hObj" class="obj"></div>
+  <div id="slosh"><span>☕ slosh</span><div><i id="sloshBar"></i></div></div>
+</div>
+<div id="hudR"><button class="hbtn" id="bMap">🗺️</button><button class="hbtn" id="bMenu">📱</button></div>
+<div id="gps"><span id="gpsArrow">➤</span><span id="gpsTxt"></span></div>
+<button id="actBtn">ACT</button>
+<div id="touch"><button data-b="jump" id="tJump">⤒</button><button data-b="act" id="tAct">E</button></div>
+<div id="toast"></div>
+<div id="talk"><b id="talkWho"></b><span id="talkTxt"></span></div>
+<div id="bigMsg"></div>
+<div id="fade"><div id="fadeTxt"></div></div>
+
+<div id="title" class="modal on"><div class="card big">
+  <div class="kick">Ruffsources × Ratita Industries · Turbo engine</div>
+  <h1>🛷 Candy's Snow Day</h1>
+  <p class="sub">You are <b>Candy</b>, the miniature schnauzer. It snowed all night in Frostpaw Falls! Pull your sled around town delivering hot cocoa, then ride the chairlift and race Luna, Snowie and Pi-rat down Sled Hill.</p>
+  <div class="modes"><button id="mNew" class="mode"><b>❄️ New snow day</b><span>Start with 20 coins and a shiny red sled.</span></button></div>
+  <button id="mContinue" class="primary">▶ Continue</button>
+  <div class="help kbd">WASD / arrows to move · drag to look · Space to jump · E / ACT to use · on the sled: ← → steer, ↓ brake</div><div class="help tch">Thumb-stick to move · drag the right side to look · ⤒ to jump · E / ACT to use · on the sled: thumb-stick left/right to steer, pull down to brake</div>
+</div></div>
+
+<div id="mapUI" class="modal"><div class="card">
+  <div class="mhead"><h2>🗺️ Frostpaw Falls</h2><button class="x" data-close="mapUI">✕</button></div>
+  <canvas id="mapCv" width="520" height="440"></canvas>
+  <div id="mapList" class="chips"></div>
+</div></div>
+
+<div id="menuUI" class="modal"><div class="card">
+  <div class="mhead"><h2>📱 Snow Day App</h2><button class="x" data-close="menuUI">✕</button></div>
+  <div id="menuStats" class="sub"></div>
+  <div class="hrow c"><button id="uUnstuck" class="ghost">⛑️ Unstuck (back to the cocoa shop)</button><button id="uSound" class="ghost">🔊 Sound</button><button id="uNew" class="ghost danger">↺ New game</button></div>
+</div></div>
+
+<div id="msgUI" class="modal"><div class="card">
+  <h2 id="msgT"></h2><p id="msgB" class="sub"></p><div class="hrow c" id="msgBtns"></div>
+</div></div>
+
+<div id="tossUI" class="modal"><div class="card toss-wrap">
+  <div class="mhead"><h2>❄️ Snowball Toss</h2><button class="x" id="tossX">✕</button></div>
+  <canvas id="tossCv" width="360" height="440"></canvas>
+  <p id="tossNote" class="sub"></p>
+</div></div>
+
+<div id="cab" class="modal"><div class="card cab-wrap">
+  <div class="mhead"><h2>🕹️ #52 Sled Dash</h2><button class="x" id="cabClose">✕</button></div>
+  <canvas id="cabCanvas"></canvas>
+  <p id="cabInfo" class="sub"></p>
+</div></div>
+<script src="./js/cab-host.js?v=snow2"></script>
+<script type="module" src="./js/main.js?v=snow2"></script>
+</body>
+</html>

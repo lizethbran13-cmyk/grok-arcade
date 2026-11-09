@@ -1,0 +1,14 @@
+#touch{display:none;gap:10px}body.touch #touch{display:flex}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.chips button{padding:7px 10px;border-radius:12px;border:2px solid #cbd5e1;background:#fff;font-weight:800;cursor:pointer;color:#0f172a}
+#bigMsg{position:fixed;left:50%;top:30%;transform:translateX(-50%);z-index:30;font:900 40px system-ui;color:#fff;text-shadow:0 3px 0 #1e3a8a,0 0 20px #000;display:none;text-align:center;pointer-events:none}
+#mapCv{width:min(520px,86vw);aspect-ratio:520/440;height:auto;display:block;margin:0 auto;border-radius:12px}
+#slosh{display:none;align-items:center;gap:6px;background:rgba(15,23,42,.8);border-radius:8px;padding:4px 8px;font-size:12px;font-weight:800;color:#fde68a;width:180px}#slosh.on{display:flex}
+#slosh div{flex:1;height:9px;background:#334155;border-radius:5px;overflow:hidden}#slosh i{display:block;height:100%;width:0;background:#22c55e;transition:width .1s}
+#fade{position:fixed;inset:0;z-index:45;background:linear-gradient(#bcd3ee,#f1f5fb);display:none;align-items:center;justify-content:center}#fade.on{display:flex}#fadeTxt{font:900 22px system-ui;color:#1e3a8a}
+.pill{border-color:rgba(186,230,253,.6)}
+.kbd{display:block}.tch{display:none}body.touch .kbd{display:none}body.touch .tch{display:block}
+.help .tch,.help .kbd{}
+.toss-wrap,.cab-wrap{max-width:420px;text-align:center;padding:12px 14px}
+#tossCv{width:100%;aspect-ratio:360/440;max-height:66vh;object-fit:contain;touch-action:none;border-radius:12px;display:block;margin:0 auto}
+#cabCanvas{width:100%;aspect-ratio:3/4;max-height:68vh;object-fit:contain;touch-action:none;border-radius:12px;display:block;margin:0 auto;background:#0b1220}
+#tossNote,#cabInfo{margin:8px 0 0;font-size:13px}

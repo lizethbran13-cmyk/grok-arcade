@@ -116,7 +116,9 @@ GA.MAIN_GAMES = [
   { id: 'candyrescue', mp: false, name: 'Candy\u2019s RuffSources Rescue', desc: 'Be Candy the schnauzer, top rescuer at RuffSources HQ! Explore cartoon 3D Pawsville on the Turbo engine, pick rescues at the Mission Board, climb trees, sniff out lost pups, switch off haywire Ratita gadgets, drive the rescue van and fill your shelter with happy pups. A free game.',
     url: 'https://lizethbran13-cmyk.github.io/grok-arcade/candy-ruffsources-rescue/', color: '#0d9488', color2: '#fda4af' },
   { id: 'harvestfeast', mp: false, name: 'Torty\u2019s Harvest Feast', desc: 'A walk-in Thanksgiving town on the Turbo engine! Live events follow the real date: parade prep before Nov 26, the BIG FEAST and an all-day live parade on Thanksgiving, then leftovers. Calm Chef Mimo\u2019s haywire Ratita kitchen, win the Great Turkey Chase, build a parade float, solve the corn maze and win the pie contest. Luna, Pi-rat, Snowie, Candy and Torty are all there. A free game.',
-    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/thanksgiving-feast/', color: '#ea580c', color2: '#facc15' }
+    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/thanksgiving-feast/', color: '#ea580c', color2: '#facc15' },
+  { id: 'snowday', mp: false, name: 'Candy\u2019s Snow Day', desc: 'A snowy winter town on the Turbo engine! Be Candy the schnauzer in Frostpaw Falls: pull your sled delivering hot cocoa (sharp turns slosh the cups!), ride the chairlift and race Luna, Snowie and Pi-rat down Sled Hill, walk into the Cocoa Co., Snowpine Lodge, Hill Shack and Tree Lot hut, build a snow fort, play Pi-rat\u2019s Snowball Toss, find Grandma Gouda\u2019s lost things and 15 hidden golden bones. Torty is cozy in a sweater by the lodge fire. A free game.',
+    url: 'https://lizethbran13-cmyk.github.io/grok-arcade/candy-snow-day/', color: '#0ea5e9', color2: '#f8fafc' }
 ];
 GA.BONUS_GAMES = [
   { id: 'snake', name: 'Grok Snake', desc: 'Swipe to steer, eat glowing fruit, grow long.', color: '#4ade80', color2: '#ff4fd8' },
@@ -188,7 +190,9 @@ GA.BONUS_GAMES = [
   /* #49: Pup Drop Catch (Candy's RuffSources Rescue), on the Bonus Zone wall */
   { id: 'pupdrop', name: 'Pup Drop Catch', desc: 'Haywire Ratita gadgets are flinging puppies out of the Gadget Works! Slide Candy and her rescue net to catch the parachuting pups. Golden pups are worth 3; a dropped pup or a falling gadget bolt costs a heart! A Candy\u2019s RuffSources Rescue game.', color: '#0d9488', color2: '#fda4af' },,
   /* #51: Pie Plate Catch (Torty's Harvest Feast), on the Bonus Zone wall */
-  { id: 'pieplate', name: 'Pie Plate Catch', desc: 'Chef Mimo\u2019s haywire Ratita kitchen is flinging food! Slide the pie plate to catch pies (+2) and corn (+1). Burnt toast costs a heart! A Torty\u2019s Harvest Feast game.', color: '#ea580c', color2: '#facc15' }
+  { id: 'pieplate', name: 'Pie Plate Catch', desc: 'Chef Mimo\u2019s haywire Ratita kitchen is flinging food! Slide the pie plate to catch pies (+2) and corn (+1). Burnt toast costs a heart! A Torty\u2019s Harvest Feast game.', color: '#ea580c', color2: '#facc15' },
+  /* #52: Sled Dash (Candy's Snow Day), on the Bonus Zone wall */
+  { id: 'sleddash', name: 'Sled Dash', desc: 'Candy\u2019s sled is flying down Sled Hill! Drag (or \u2190 \u2192) to steer between the pine trees and rocks. Grab hot cocoa (+1) and golden bones (+3). A crash costs a heart, and it keeps getting faster! A Candy\u2019s Snow Day game.', color: '#0ea5e9', color2: '#f8fafc' }
 ];
 /* bonus games that have a cabinet on the Bonus Zone wall (1983 retro games live in the old arcade instead) */
 GA.wallBonus = function () { return GA.BONUS_GAMES.filter(function (g) { return !g.era && !g.room; }); };

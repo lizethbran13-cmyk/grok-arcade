@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Candy's Snow Day (Turbo)</title>
+<link rel="stylesheet" href="./style.css?v=snowlive1">
+<link rel="stylesheet" href="./snow.css?v=snowlive1">
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.min.js", "three/addons/": "./lib/addons/" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="touchZone"></div>
+<div id="stickRing"></div><div id="stickKnob"></div>
+<div id="hud">
+  <div class="hrow"><span class="pill" id="hMoney">🪙 0</span><span class="pill" id="hMood">😊 50</span><span class="pill" id="hSled">🛷 100%</span><span class="pill" id="hCup">☕ 0</span></div>
+  <div id="hObj" class="obj"></div>
+  <div id="slosh"><span>☕ slosh</span><div><i id="sloshBar"></i></div></div>
+</div>
+<div id="hudR"><button class="hbtn" id="bMap">🗺️</button><button class="hbtn" id="bMenu">📱</button></div>
+<div id="gps"><span id="gpsArrow">➤</span><span id="gpsTxt"></span></div>
+<button id="actBtn">ACT</button>
+<div id="touch"><button data-b="jump" id="tJump">⤒</button><button data-b="act" id="tAct">E</button></div>
+<div id="toast"></div>
+<div id="talk"><b id="talkWho"></b><span id="talkTxt"></span></div>
+<div id="bigMsg"></div>
+<div id="fade"><div id="fadeTxt"></div></div>
+
+<div id="title" class="modal on"><div class="card big">
+  <div class="kick">Ruffsources × Ratita Industries · Turbo engine</div>
+  <h1>🛷 Candy's Snow Day</h1>
+  <p class="sub">You are <b>Candy</b>, the miniature schnauzer. It snowed all night in Frostpaw Falls! Pull your sled around town delivering hot cocoa, then ride the chairlift and race Luna, Snowie and Pi-rat down Sled Hill.</p>
+  <div class="modes"><button id="mNew" class="mode"><b>❄️ New snow day</b><span>Start with 20 coins and a shiny red sled.</span></button></div>
+  <button id="mContinue" class="primary">▶ Continue</button>
+  <div class="help kbd">WASD / arrows to move · drag to look · Space to jump · E / ACT to use · on the sled: ← → steer, ↓ brake</div><div class="help tch">Thumb-stick to move · drag the right side to look · ⤒ to jump · E / ACT to use · on the sled: thumb-stick left/right to steer, pull down to brake</div>
+</div></div>
+
+<div id="mapUI" class="modal"><div class="card">
+  <div class="mhead"><h2>🗺️ Frostpaw Falls</h2><button class="x" data-close="mapUI">✕</button></div>
+  <canvas id="mapCv" width="520" height="440"></canvas>
+  <div id="mapList" class="chips"></div>
+</div></div>
+
+<div id="menuUI" class="modal"><div class="card">
+  <div class="mhead"><h2>📱 Snow Day App</h2><button class="x" data-close="menuUI">✕</button></div>
+  <div id="menuStats" class="sub"></div>
+  <div class="hrow c"><button id="uUnstuck" class="ghost">⛑️ Unstuck (back to the cocoa shop)</button><button id="uSound" class="ghost">🔊 Sound</button><button id="uNew" class="ghost danger">↺ New game</button></div>
+</div></div>
+
+<div id="msgUI" class="modal"><div class="card">
+  <h2 id="msgT"></h2><p id="msgB" class="sub"></p><div class="hrow c" id="msgBtns"></div>
+</div></div>
+
+<div id="tossUI" class="modal"><div class="card toss-wrap">
+  <div class="mhead"><h2>❄️ Snowball Toss</h2><button class="x" id="tossX">✕</button></div>
+  <canvas id="tossCv" width="360" height="440"></canvas>
+  <p id="tossNote" class="sub"></p>
+</div></div>
+
+<div id="cab" class="modal"><div class="card cab-wrap">
+  <div class="mhead"><h2>🕹️ #52 Sled Dash</h2><button class="x" id="cabClose">✕</button></div>
+  <canvas id="cabCanvas"></canvas>
+  <p id="cabInfo" class="sub"></p>
+</div></div>
+<script src="./js/cab-host.js?v=snowlive1"></script>
+<script type="module" src="./js/main.js?v=snowlive1"></script>
+</body>
+</html>

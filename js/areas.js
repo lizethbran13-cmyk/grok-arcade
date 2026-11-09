@@ -1095,8 +1095,8 @@
     { id: 'sport', name: 'SPORTS', icon: '\uD83C\uDFC6', col: '#38bdf8', ids: ['fc', 'fc2', 'pickle', 'sports', 'pickleballpark'], wall: 'E', from: -12.2, slots: 5 },
     { id: 'hubs', name: 'HUBS & WORLDS', icon: '\uD83C\uDFE2', col: '#ff8a3d', ids: ['ratitahq', 'puptown', 'torty', 'northpole', 'pumpkinhollow', 'ruffsources', 'skytours', 'grocery'], wall: 'E', from: -2.2, slots: 8 },
     { id: 'life', name: 'LIFE SIMS', icon: '\uD83C\uDFE1', col: '#facc15', ids: ['pets', 'life', 'disaster', 'eatsville', 'rodentia'], wall: 'S', from: 73.0, slots: 5 },
-    { id: 'party', name: 'PARTY', icon: '\uD83C\uDF89', col: '#ff4fd8', ids: ['party', 'brawl', 'ratita', 'petparty'], wall: 'S', from: 82.5, slots: 5 },
-    { id: 'more', name: 'MORE GAMES', icon: '\u2728', col: '#e879f9', ids: ['relics', 'drvic', 'airporttycoon', 'mailtycoon', 'candyrescue', 'harvestfeast'], wall: 'S', from: 92.0, slots: 6 }];
+    { id: 'party', name: 'PARTY', icon: '\uD83C\uDF89', col: '#ff4fd8', ids: ['party', 'brawl', 'ratita', 'petparty'], wall: 'S', from: 82.5, slots: 4 },
+    { id: 'more', name: 'MORE GAMES', icon: '\u2728', col: '#e879f9', ids: ['relics', 'drvic', 'airporttycoon', 'mailtycoon', 'candyrescue', 'harvestfeast', 'snowday'], wall: 'S', from: 90.25, slots: 7 }];
   var GSTEP = 1.75;
   function slotPos(sec, k) { var d = sec.from + k * GSTEP;
     if (sec.wall === 'N') return { x: d, z: GAL.minZ + 0.6, rot: 0 };
