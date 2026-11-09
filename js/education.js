@@ -156,6 +156,10 @@
     // ---- exit door (east wall) ----
     var ed = H.prop('edu', 'Classroom door', B.maxX - 0.1, cz + 3.6, -Math.PI / 2); add(ed, bx(1.6, 2.7, 0.12), ph('#7c3aed', 50), 0, 1.35, 0); add(ed, bx(1.3, 2.4, 0.04), ph('#ddd6fe', 50), 0, 1.3, 0.07);
     H.inter({ id: 'at_edu_exit', kind: 'at_edu_exit', root: 'edu', name: 'Back to the arcade', col: '#5eead4', x: B.maxX - 1.3, z: cz + 3.6, dir: [-1, 0], r: 1.0 });
+    // ---- Field Trips DLC bus door (east wall, north of the big sign): opens the Field Trip Depot game when the DLC is owned ----
+    var fd = H.prop('edu', 'Field Trips bus door', B.maxX - 0.1, cz - 3.6, -Math.PI / 2); add(fd, bx(1.6, 2.7, 0.12), ph('#facc15', 50), 0, 1.35, 0); add(fd, bx(1.3, 2.4, 0.04), ph('#1e293b', 50), 0, 1.3, 0.07); add(fd, bx(1.1, 0.7, 0.03), gl('#bae6fd'), 0, 1.9, 0.1);
+    sign(fd, 2.2, 0.45, function (c, w, hh) { c.fillStyle = '#facc15'; c.fillRect(0, 0, w, hh); c.strokeStyle = '#111827'; c.lineWidth = 8; c.strokeRect(4, 4, w - 8, hh - 8); txt(c, '\uD83D\uDE8C FIELD TRIPS', w / 2, hh / 2 + 2, '#111827', 46); }, 0, 3.05, 0.08, 0);
+    H.inter({ id: 'at_edu_trips', kind: 'at_edu_trips', root: 'edu', name: 'Field Trips bus', col: '#facc15', x: B.maxX - 1.3, z: cz - 3.6, dir: [-1, 0], r: 1.0 });
     // ---- the door in the Bonus Zone EAST WING (wing's west wall, just south of the arch, facing Grandma Mrs's desk) ----
     H.mkRoot('edu_door'); var md = H.prop('edu_door', 'Education Center door', DOOR.x + 0.08, DOOR.z, Math.PI / 2);
     add(md, bx(1.5, 2.9, 0.14), ph('#4c1d95', 50), 0, 1.45, 0); add(md, bx(1.1, 2.5, 0.05), ph('#fde68a', 50, '#3a2400'), 0, 1.3, 0.08);
@@ -170,8 +174,10 @@
     EC.built = true;
   }
   var LINES = ['Welcome to class! Homeschool is for winners! \uD83C\uDFC6', 'Lily says hi on speakerphone! Say hi, Lily! \uD83D\uDCF1', 'Online school is for losers. Sorry, Lily, it\u2019s true!', 'Regular school is where dreams float around. \uD83C\uDF88', 'I can\u2019t move \u2014 Tortuga Tech bolted me down for safety testing!', 'Candy & Torty hand out free Tutor Passes. Nobody gets stuck in MY class!'];
+  function tripsOwned() { try { return !!localStorage.getItem('grokDLC.edu.field_trips'); } catch (e) { return false; } }
   function prompt(cab) { var k = cab.kind;
     if (k === 'at_edu_door') return { tag: 'LEARN \u00b7 PLAY \u00b7 WIN', name: 'Education Center', desc: 'Lilith the Bot\u2019s classroom: lessons, slideshows, fun facts, quizzes and the Lesson Save Vault.', btn: 'ENTER', key: 'enter', cls: 'npc' };
+    if (k === 'at_edu_trips') { var own = tripsOwned(); return { tag: own ? 'EDUCATION CENTER DLC' : 'PAID DLC \u00b7 EXPANSION \u00b7 75 \uD83C\uDF9F\uFE0F', name: '\uD83D\uDE8C Field Trips', desc: own ? 'Board the Ratita school bus to the Field Trip Depot: 5 walk-in trips with Lilith riding along on Pi-rat\u2019s tablet.' : '\uD83D\uDD12 Locked. Unlock Education Center: Field Trips in the DLC Shop (DLC Machine 3000), then come back to board the bus.', btn: own ? 'BOARD' : 'DLC SHOP', key: 'enter', cls: 'npc' }; }
     if (k === 'at_edu_exit') return { tag: 'EDUCATION CENTER', name: 'Back to the arcade', desc: 'Out to the arcade floor.', btn: 'EXIT', key: 'exit', cls: 'npc' };
     if (k === 'at_edu_vault') return { tag: 'EDUCATION CENTER', name: 'Lesson Save Vault', desc: 'Pick a lesson, submit your own, or replay any saved lesson.', btn: 'OPEN', key: 'open', cls: 'npc' };
     return { tag: 'TEACHER \u00b7 RATITA INDUSTRIES', name: 'Lilith the Bot', desc: 'On speakerphone with Lily the Bot. Talk to her or start a lesson!', btn: 'LESSONS', key: 'talk', cls: 'npc' };
@@ -179,6 +185,7 @@
   function open(cab) { var k = cab.kind;
     if (k === 'at_edu_door') return GA.Areas.travel('edu');
     if (k === 'at_edu_exit') return GA.Areas.travel('edu_out');
+    if (k === 'at_edu_trips') { if (tripsOwned()) { location.href = 'education-field-trips/'; } else if (GA.DLC && GA.DLC.open) GA.DLC.open('shop'); return; }
     if (k === 'at_edu_lilith') { var line = LINES[(EC._li = ((EC._li || 0) + 1)) % LINES.length]; if (EC.lilith && EC.lilith.bub) EC.lilith.bub.say(line, 5); }
     UI.show();
   }

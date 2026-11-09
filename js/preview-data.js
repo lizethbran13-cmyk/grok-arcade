@@ -353,11 +353,12 @@ window.GROK_PREVIEW_DATA = {
     {
       "key": "edu-field-trips",
       "game": "arcade",
-      "name": "Education Center DLC: Field Trips",
+      "name": "Education Center DLC: Field Trips (live)",
       "size": "DLC",
-      "what": "Lilith the Bot takes the Education Center on field trips.",
-      "stage": "building",
-      "when": "Building now · preview in the Time Jumper"
+      "what": "SHIPPED! Paid DLC (Expansion, 75 tickets in the DLC Shop). Lilith the Bot rides along on Pi-rat's tablet while you lead the class from the Field Trip Depot (the Field Trips bus door in the Education Center) to 5 walk-in trips: Desert Nature Walk, Ratita Science Lab, Airport Geography, Harvest Hollow Farm and Pup Town Community Helpers. Each has a guide, 5 glowing stops, a lesson, its own quiz mini-game and Lesson Save Vault saves. Its Time Jumper beta lives on in the Save Vault.",
+      "stage": "shipped",
+      "when": "Shipped Nov 9",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/education-field-trips/"
     },
     {
       "issue": 72,
@@ -982,21 +983,25 @@ window.GROK_PREVIEW_DATA = {
       "built": "2026-11-09",
       "notes": "First playable: snowy Frostpaw Falls town (Turbo), play as Candy pulling her sled, cocoa deliveries with a slosh meter (spills cost coins, free refill), Sled Hill race vs Luna, Snowie and Pi-rat + time trial (wipeouts dent the sled, free duct-tape patch). Interiors, side activities and bonus cabinet #52 coming next",
       "stage": "building"
-    },
+    }
+  ],
+  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
+  "archive": [
     {
       "id": "edu-field-trips",
       "game": "arcade",
       "issue": 89,
       "name": "Education Center DLC: Field Trips",
-      "url": "previews/edu-field-trips/",
-      "playable": true,
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/edu-field-trips-beta/",
       "built": "2026-11-09",
-      "notes": "First playable: Field Trip Depot hub + 2 of 5 trips (Desert Nature Walk, Ratita Science Lab) with Lilith on the tablet, themed quiz mini-games and the Lesson Save Vault. Airport, Harvest Hollow farm and Pup Town trips still to come.",
-      "stage": "building"
-    }
-  ],
-  "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
-  "archive": [
+      "archived": "2026-11-09",
+      "notes": "All 5 trips: Field Trip Depot hub + Desert Nature Walk, Ratita Science Lab, Airport Geography (Ratita Airways), Harvest Hollow Farm and Pup Town Community Helpers, each with 5 stops, a lesson, its own quiz mini-game and Lesson Save Vault saves. Lilith rides along on Pi-rat's tablet. Shipped to the live arcade 2026-11-09 as a paid DLC (Expansion, 75 tickets).",
+      "playable": true,
+      "stage": "shipped",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-arcade/education-field-trips/",
+      "shippedAt": "2026-11-09T20:40:53Z"
+    },
     {
       "id": "harvest-open-house",
       "game": "thanksgiving-feast",
