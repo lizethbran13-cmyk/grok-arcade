@@ -206,6 +206,16 @@ export function buildPort(w) { K.seed(31); w.region = 'port'; const [cx, cz] = P
   for (const p of PORT_PLACES) building(w, p);
   { const T = w.tf(cx + 12, 0, cz - 40, 0); T.add('m', G.cyl(12), 0xe0f2fe, 0, 0, 0, 0, 0, 0, 2.2, 16, 2.2); T.add('e', G.cyl(12), 0x7dd3fc, 0, 16, 0, 0, 0, 0, 3.4, 3, 3.4); T.add('m', G.cyl(12), 0x0c4a6e, 0, 19, 0, 0, 0, 0, 3.8, 0.6, 3.8); T.add('l', G.sph(8), 0xef4444, 0, 20.4, 0, 0, 0, 0, 0.5, 0.5, 0.5, 1.4); T.solid(0, 0, 0, 4.4, 20, 4.4); }
   for (let i = 0; i < 3; i++) { building(w, { x: cx - 70, z: cz - 50 + i * 40, ry: E, W: 24, D: 16, H: 8, style: 'barn', col: 0x64748b, col2: 0x334155, roof: 0x1e293b, sign: 'HANGAR ' + (i + 1), noEnter: true }); K.sledge(w, cx - 52, cz - 50 + i * 40, E, [0xdc2626, 0x16a34a, 0x2563eb][i], 1.6); }
+  // arrivals side of the port: charter terminal, mail + air cargo, a welcome arch, lamps, benches, luggage, parked charter sleighs, windsock
+  building(w, { x: cx + 27, z: cz + 28, ry: W_, W: 16, D: 10, H: 5.5, style: 'timber', col: 0xe0f2fe, trim: 0x0c4a6e, roof: 0x0c4a6e, awning: [0x0ea5e9, 0xffffff], sign: 'CHARTER SLEIGH TERMINAL', feat: ['clockspire'], noEnter: true });
+  building(w, { x: cx - 27, z: cz + 28, ry: E, W: 16, D: 11, H: 6, style: 'brick', col: 0x991b1b, trim: 0xfff7ed, sign: 'NORTH POLE MAIL · AIR CARGO', feat: ['chute'], noEnter: true });
+  { const T = w.tf(cx, 0, cz + 15, 0); for (const sd of [-1, 1]) T.box('m', 0x0c4a6e, sd * 5, 0, 0, 0.6, 4.6, 0.6); T.box('m', 0x0c4a6e, 0, 4.4, 0, 10.6, 0.5, 0.6); K.sign(w, T, 'WELCOME TO THE NORTH POLE SLEIGH PORT', 0, 3.4, 0.32, 9.2, 0.8, '#0c4a6e', '#e0f2fe'); for (const sd of [-1, 1]) { const p = T.P(sd * 5, 0, 0); w.solid(p[0] - 0.3, 0, p[2] - 0.3, p[0] + 0.3, 4.6, p[2] + 0.3); } }
+  for (let z = cz + 8; z >= cz - 28; z -= 9) for (const sd of [-1, 1]) K.lamp(w, cx + sd * 5.5, z);
+  for (const sd of [-1, 1]) { K.bench(w, cx + sd * 11, cz + 37, PI); K.bench(w, cx + sd * 11, cz + 23, 0); }
+  for (let i = 0; i < 7; i++) K.crate(w, cx - 18 + (i % 4) * 1.3, cz + 20 + Math.floor(i / 4) * 1.3, 1, i * 0.3, 0); for (let i = 0; i < 6; i++) K.present(w, cx + 17 + (i % 3) * 0.9, cz + 21 + Math.floor(i / 3) * 0.9, 0.8, i);
+  for (let i = 0; i < 4; i++) K.sledge(w, cx + 24 + (i % 2) * 7, cz - 8 - Math.floor(i / 2) * 12, PI, [0x0ea5e9, 0xdc2626, 0x16a34a, 0x7c3aed][i], 1.3); K.sledge(w, cx + 40, cz - 64, PI, 0xdc2626, 2.2); K.sledge(w, cx - 40, cz + 52, 0, 0xf5c542, 2.0);
+  { const x = cx + 54, z = cz + 6; w.add('x', G.cyl(6), 0xd1d5db, x, 0, z, 0, 0, 0, 0.1, 6, 0.1); w.add('f', G.cone(10), 0xf97316, x + 1.2, 5.5, z, 0, 0, -PI / 2, 0.45, 2.2, 0.45); w.solid(x - 0.2, 0, z - 0.2, x + 0.2, 6, z + 0.2); }
+  K.bigTree(w, cx - 13, cz + 45, 0.55); K.snowman(w, cx + 14, cz + 45, 1, PI); K.snowman(w, cx - 30, cz - 8, 0.9, 0.6); for (let i = 0; i < 5; i++) K.candyCane(w, cx - 8 + i * 4, cz + 52, 2.2, 0);
   w.zones = w.zones.filter((z) => !(z.place && z.place.noEnter));
   w.add('m', G.cyl(24), 0xcbd5e1, cx, 0, cz + 30, 0, 0, 0, 9, 0.12, 9); w.add('l', G.ring(0.9, 24), 0xfacc15, cx, 0.14, cz + 30, 0, 0, 0, 8.5, 1, 8.5, 0.6);
   for (let i = 0; i < 60; i++) { const x = cx + (K.R() - 0.5) * 190, z = cz + (K.R() - 0.5) * 190; if (Math.abs(x - cx) < 85 && Math.abs(z - cz) < 92) continue; K.pine(w, x, z, 0.8 + K.R() * 0.8); }

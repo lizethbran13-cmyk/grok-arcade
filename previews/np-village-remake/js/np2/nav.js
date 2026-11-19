@@ -16,9 +16,9 @@ export class Nav {
     const H = []; const push = (k, f) => { H.push([f, k]); let i = H.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (H[p][0] <= H[i][0]) break; [H[p], H[i]] = [H[i], H[p]]; i = p; } };
     const pop = () => { const top = H[0], last = H.pop(); if (H.length) { H[0] = last; let i = 0; for (;;) { const l = i * 2 + 1, r = l + 1; let m = i; if (l < H.length && H[l][0] < H[m][0]) m = l; if (r < H.length && H[r][0] < H[m][0]) m = r; if (m === i) break; [H[m], H[i]] = [H[i], H[m]]; i = m; } } return top; };
     this.seen[si] = st; this.g[si] = 0; this.par[si] = -1; push(si, 0); let it = 0, found = false;
-    while (H.length && it++ < 40000) { const [, k] = pop(); if (k === ei) { found = true; break; } const ci = k % nx, cj = (k / nx) | 0, gk = this.g[k];
+    while (H.length && it++ < 120000) { const [, k] = pop(); if (k === ei) { found = true; break; } const ci = k % nx, cj = (k / nx) | 0, gk = this.g[k];
       for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) { if (!di && !dj) continue; const ni = ci + di, nj = cj + dj; if (!this.free(ni, nj)) continue; if (di && dj && (!this.free(ci + di, cj) || !this.free(ci, cj + dj))) continue;
-        const nk = nj * nx + ni, ng = gk + (di && dj ? 1.414 : 1); if (this.seen[nk] === st && this.g[nk] <= ng) continue; this.seen[nk] = st; this.g[nk] = ng; this.par[nk] = k; push(nk, ng + Math.hypot(ni - e[0], nj - e[1])); } }
+        const nk = nj * nx + ni, ng = gk + (di && dj ? 1.414 : 1); if (this.seen[nk] === st && this.g[nk] <= ng) continue; this.seen[nk] = st; this.g[nk] = ng; this.par[nk] = k; push(nk, ng + 1.25 * Math.hypot(ni - e[0], nj - e[1])); } }
     if (!found) return null; const pts = []; for (let k = ei; k !== -1; k = this.par[k]) pts.push([this.x0 + (k % nx + 0.5) * C, this.z0 + (((k / nx) | 0) + 0.5) * C]); pts.reverse(); pts[pts.length - 1] = this.freeAt(bx, bz) ? [bx, bz] : pts[pts.length - 1];
     // smooth: keep only turning points that are needed
     const out = [pts[0]]; let i = 0; while (i < pts.length - 1) { let j = pts.length - 1; while (j > i + 1 && !this.los(pts[i][0], pts[i][1], pts[j][0], pts[j][1])) j--; out.push(pts[j]); i = j; } return out; }
