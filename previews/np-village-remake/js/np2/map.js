@@ -3,12 +3,14 @@
 // as the hub, Santa's Workshop joined to the Wrapping Department by conveyors, Kringle Ranch (Reindeer Barn, Baby Barn,
 // Sleigh Barn + grandstand) in the meadow north of the village, the Claus family home with its barn and greenhouse, the
 // chapel on the hill, Elf Village, the North Pole River and the Polar Express station. Far away (Sleigh Bus / teleport):
-// Polar Bear Mountain in the Frosty Range with the Hall of Records cave vault, and the Sleigh Port with North Pole Flight Command.
+// Polar Bear Mountain in the Frosty Range with the Hall of Records cave vault, the Sleigh Port with North Pole Flight Command,
+// and (one at a time) the five Regional Tracking Centers from santaupdate.com.
 import * as THREE from 'three';
 import { G } from './vworld.js';
 import * as K from './kit2.js';
 import { building } from './buildings.js';
 import * as OD from '../opsdata.js?v=np11';
+import { RTC, RTC_AREA, CENTERS } from './cal.js';
 const PI = Math.PI, E = PI / 2, W_ = -PI / 2, N = PI, S = 0; // ry: front faces +x (E), -x (W_), -z (N), +z (S)
 export const MTN = [3000, 0], PORT = [-3000, 0], INT = [6000, 6000];
 const ROW = Object.fromEntries(OD.ROW.map((r) => [r[0], r]));
@@ -71,11 +73,24 @@ export const AREAS = [
   { x0: -175, x1: -105, z0: -140, z1: -50, name: '🏠 The Claus Family Home' }, { x0: 110, x1: 180, z0: -50, z1: 10, name: '⛪ Chapel Hill' },
   { x0: 70, x1: 150, z0: -110, z1: -55, name: '🍄 Elf Village' }, { x0: 140, x1: 240, z0: -200, z1: 220, name: '🏞️ North Pole River' },
   { x0: MTN[0] - 200, x1: MTN[0] + 200, z0: -300, z1: 300, name: '🐻‍❄️ Polar Bear Mountain · Frosty Range' }, { x0: PORT[0] - 200, x1: PORT[0] + 200, z0: -300, z1: 300, name: '🛷 North Pole Sleigh Port' },
+  RTC_AREA,
 ];
 export function areaName(x, z) { for (const a of AREAS) if (x >= a.x0 && x <= a.x1 && z >= a.z0 && z <= a.z1) return a.name; return '❄️ North Pole Village'; }
 // Sleigh Bus stops [id, name, x, z, yaw]
 export const STOPS = [['village', '🚌 Village Square (Main Street)', 8, 96, PI], ['workshop', '🧸 Workshop Yard', -16, -98, 0], ['ranch', '🦌 Kringle Ranch', 40, -150, PI],
   ['claus', '🏠 The Claus Home', -104, -74, -E], ['chapel', '⛪ Chapel Hill', 104, -12, -E], ['mountain', '🐻‍❄️ Polar Bear Mountain (Hall of Records)', MTN[0], MTN[1] + 60, PI], ['port', '🛷 Sleigh Port (Flight Command)', PORT[0], PORT[1] + 30, PI]];
+// Extra teleport destinations (Sleigh Bus menu). Regional Tracking Centers use the streamed RTC far slot.
+export const DESTINATIONS = STOPS.concat([
+  ['events', '🎪 North Pole Events Center', -88, 6, E], ['post', '📮 North Pole Post Office', 40, -18, PI],
+  ['station', '🚂 Polar Express Station', 18, 122, 0], ['park', '🌳 Kringle Park (big tree)', -2, 16, 0],
+  ['lodge', '🏔️ Arctic Lodge', -84, 64, E], ['elfvil', '🍄 Elf Village', 96, -80, PI],
+  ['university', '🎓 Southern North Pole University', -22, -54, PI], ['sleighbarn', '🛷 Sleigh Barn', -10, -170, PI],
+  ['understation', '🚂 Workshop Underground Station', -88, -122, E],
+  ...CENTERS.map((c) => [c.id, `📡 Sector ${c.sector} · ${c.place} (${c.country})`, RTC[0], RTC[1] + 22, PI, 'rtc']),
+]);
+export function destZone(d) { return d[5] || (d[0] === 'mountain' ? 'mtn' : d[0] === 'port' ? 'port' : 'out'); }
+// Workshop underground station: enter through the yard portal (not a surface building).
+export const UNDER = { id: 'understation', int: 'understation', name: '🚂 Workshop Underground Station' };
 export const START = [40, 82, PI];
 // ------------------------------------------------------------------ the village
 export function buildVillage(w) { K.seed(11); w.region = 'out';
@@ -122,7 +137,19 @@ export function buildVillage(w) { K.seed(11); w.region = 'out';
   // workshop yard: presents, crates, hard-hat sign, train portal to the underground station
   for (let i = 0; i < 14; i++) K.present(w, -70 + (i % 7) * 3.2, -97 - Math.floor(i / 7) * 2.6, 0.8 + (i % 3) * 0.3, i);
   { const T = w.tf(-80, 0, -102, E); K.sign(w, T, 'HARD HATS + BADGES PAST THIS POINT', 0, 2.4, 0.1, 5.5, 0.6, '#facc15', '#111827', { frame: 0x111827 }); T.box('m', 0x111827, -2.6, 0, 0, 0.15, 2.2, 0.15); T.box('m', 0x111827, 2.6, 0, 0, 0.15, 2.2, 0.15); }
-  { const T = w.tf(-94, 0, -122, E); T.box('m', 0x57534e, 0, 0, 0, 7, 4.6, 1.2); T.add('m', G.arch(10), 0x111827, 0, 0, 0.62, 0, 0, 0, 4.6, 3.8, 0.05); T.box('x', 0x94a3b8, -0.75, 0, 3, 0.12, 0.1, 6); T.box('x', 0x94a3b8, 0.75, 0, 3, 0.12, 0.1, 6); K.sign(w, T, 'WORKSHOP UNDERGROUND STATION', 0, 4.25, 0.62, 5.6, 0.55, '#1f2937', '#fef3c7'); T.solid(0, 0, 0, 7, 4.6, 1.2); }
+  path(-100, -122, -70, -100); // packed-snow walk to the underground portal
+  { const T = w.tf(-94, 0, -122, E);
+    // side walls + lintel only — the middle is an open arch you can walk through
+    T.box('m', 0x57534e, -2.6, 0, 0, 1.8, 4.6, 1.2); T.box('m', 0x57534e, 2.6, 0, 0, 1.8, 4.6, 1.2);
+    T.box('m', 0x44403c, 0, 3.1, 0, 3.8, 1.5, 1.4);
+    T.add('m', G.arch(10), 0x111827, 0, 0, 0.62, 0, 0, 0, 4.6, 3.8, 0.08);
+    T.box('x', 0x94a3b8, -0.75, 0, 3, 0.12, 0.1, 6); T.box('x', 0x94a3b8, 0.75, 0, 3, 0.12, 0.1, 6);
+    w.add('l', G.sph(8), 0xffe3a3, -93.15, 3.35, -119.7, 0, 0, 0, 0.16, 0.16, 0.16, 1.1);
+    w.add('l', G.sph(8), 0xffe3a3, -93.15, 3.35, -124.3, 0, 0, 0, 0.16, 0.16, 0.16, 1.1);
+    K.sign(w, T, 'WORKSHOP UNDERGROUND STATION', 0, 4.25, 0.72, 5.6, 0.55, '#1f2937', '#fef3c7');
+    K.sign(w, T, 'TRAINS BELOW  ·  WALK IN', 0, 2.55, 0.62, 3.4, 0.4, '#14532d', '#fef3c7');
+    T.solid(-2.6, 0, 0, 1.8, 4.6, 1.2); T.solid(2.6, 0, 0, 1.8, 4.6, 1.2); T.solid(0, 3.1, 0, 3.6, 1.5, 1.2);
+    UNDER.door = { x: -94, z: -122, ex: -88, ez: -122, yaw: E, y: 0 }; w.zone('door', -96.2, -1, -124.2, -92.2, 3.1, -119.8, { place: UNDER }); }
   // ---- Kringle Ranch: paddock beside the Reindeer Barn (the team lives together), baby pens + flight field, Sleigh Barn grandstand + runway ----
   K.fence(w, 76, -134, 108, -134); K.fence(w, 108, -134, 108, -108); K.fence(w, 76, -108, 108, -108); K.fence(w, 76, -134, 76, -124);
   for (let i = 0; i < 6; i++) { w.add('m', G.cyl(10), 0xe2c275, 82 + (i % 3) * 8, 0, -128 + Math.floor(i / 3) * 12, E, 0, 0, 0.9, 1.4, 0.9); }

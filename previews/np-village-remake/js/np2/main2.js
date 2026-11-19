@@ -6,6 +6,7 @@ import { initInput, clearEdges, edge, IN } from '../input.js?v=np11';
 import { initAudio, setSound, sfx } from '../audio.js?v=np11';
 import { S, persist } from '../save.js?v=np11';
 import { Game2 } from './game2.js';
+import { SANTA_AWAY, nice, THANKS } from './cal.js';
 import { panel, closePanel } from './panel.js';
 const $ = (id) => document.getElementById(id);
 const app = window.__pt = { state: 'boot', paused: true, game: null, ready: false, busy: false };
@@ -33,7 +34,7 @@ function title() { const ui = $('ui'); ui.classList.add('open'); ui.innerHTML = 
   <p class="tag">The real North Pole Village: Main Street, Kringle Park, Santa’s Workshop, Kringle Ranch, the Claus home, and the Hall of Records cave on Polar Bear Mountain.</p>
   <div class="tBtns"><button class="go" id="tPlay">▶ VISIT THE NORTH POLE</button><button class="mbtn2" id="tSnd">🔊 SOUND: ${S.opts.sound ? 'ON' : 'OFF'}</button></div><p class="foot">Remake preview · find Santa, ride the Sleigh Bus, explore every building</p></div>`;
   ui.querySelector('#tPlay').onclick = () => { sfx('click'); app.play(); }; ui.querySelector('#tSnd').onclick = () => { S.opts.sound = !S.opts.sound; S.opts.music = S.opts.sound; persist(); setSound(S.opts.sound, S.opts.music); title(); }; }
-app.play = () => { closePanel(); app.state = 'play'; app.paused = false; app.busy = false; showTouch(true); clearEdges(); S.stats.plays = (S.stats.plays | 0) + 1; persist(); if (!S.flags.np2how) { S.flags.np2how = 1; persist(); setTimeout(() => app.game.toastMsg('🎅 Santa is somewhere in the village. Tap the 🎅 chip to find him!'), 900); setTimeout(() => app.game.toastMsg('🚪 Walk into any door to go inside.'), 4200); } };
+app.play = () => { closePanel(); app.state = 'play'; app.paused = false; app.busy = false; showTouch(true); clearEdges(); S.stats.plays = (S.stats.plays | 0) + 1; persist(); if (!S.flags.np2how) { S.flags.np2how = 1; persist(); setTimeout(() => app.game.toastMsg(SANTA_AWAY ? '🎅 Santa is visiting Chile until Thanksgiving (' + nice(THANKS) + '). Tap the 🎅 chip to track him!' : '🎅 Santa is somewhere in the village. Tap the 🎅 chip to find him!'), 900); setTimeout(() => app.game.toastMsg('🚪 Walk into any door to go inside. The Sleigh Bus can take you farther.'), 4200); } };
 app.resume = () => { closePanel(); app.paused = false; app.busy = false; clearEdges(); };
 app.pause = () => { if (app.state !== 'play' || app.busy) return; app.paused = true; app.busy = true; panel(`<h2>⏸ PAUSED</h2><button class="go" id="pR">▶ RESUME</button><button class="mbtn2" id="pF">🔎 Find Santa & friends</button><button class="mbtn2" id="pB">🚌 Sleigh Bus / teleport</button><button class="mbtn2" id="pS">🔊 Sound: ${S.opts.sound ? 'ON' : 'OFF'}</button>`, (c) => {
   c.querySelector('#pR').onclick = () => { sfx('click'); app.resume(); }; c.querySelector('#pF').onclick = () => { sfx('click'); app.paused = false; app.game.findPanel(); }; c.querySelector('#pB').onclick = () => { sfx('click'); app.paused = false; app.game.busPanel(); };

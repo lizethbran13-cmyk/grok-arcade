@@ -3,6 +3,7 @@
 import { G } from './vworld.js';
 import * as K from './kit2.js';
 import { INT, rowFor } from './map.js';
+import { bannerText, SANTA_AWAY, santaWhere, EV, artOpen, paradeSoon, CENTERS, ONLINE, EVE_DAYS, nice, THANKS, chileCenter } from './cal.js';
 const PI = Math.PI, E = PI / 2;
 const [IX, IZ] = INT;
 // ---- room shell: floor, walls (door gap on +z), ceiling, windows, baseboards ----
@@ -114,7 +115,9 @@ const RECIPES = {
     o.npcs.push({ who: 'elf', x: IX - 6, z: r.z0 + 4.5, yaw: PI, name: 'Elf Bernard (Workshop Safety Chief)', lines: ['Hard hat ON, badge ON. Visitors need an escort from North Pole Security, no exceptions!', 'We split the crafting by material: wood, glass, plastic, steel and aluminum. Then the conveyors carry the toys to the Wrapping Department.', 'Below us there’s a whole underground train station. When the weather is bad (so, usually) it brings the elves to work.'], v: 2 });
     for (let i = 0; i < 4; i++) o.npcs.push({ who: 'elf', x: IX + (i % 2 ? 6 : -6), z: r.z0 + 3.9 + i * 4, yaw: PI, name: ['Elf Tinker', 'Elf Sprocket', 'Elf Maple', 'Elf Glaze'][i], lines: [['Sanding a rocking horse. Smooth as snow!', 'This robot needs one more bolt. Or six.', 'Wooden trains are my favourite to make.', 'Glass ornaments: gently, gently...'][i]], v: i + 3 });
     const st = [[r.x0 + 4.5, '1 · BUILD', '#2563eb'], [IX - 6.5, '2 · PAINT', '#16a34a'], [IX + 6.5, '3 · WRAP', '#dc2626']]; st.forEach(([x, lab, c], i) => { box(w, 'x', 0x374151, x - 1.2, 0, r.z1 - 3.3, 0.12, 2.9, 0.12); box(w, 'x', 0x374151, x + 1.2, 0, r.z1 - 3.3, 0.12, 2.9, 0.12); board(w, x, 2.6, r.z1 - 3.25, 0, lab, 2.6, 0.5, c, '#ffffff'); box(w, 'l', [0x60a5fa, 0x4ade80, 0xf87171][i], x, 0.02, r.z1 - 2.4, 1.6, 0.03, 1.2, 0, 0.5); o.acts.push({ x, z: r.z1 - 2.3, r: 1.6, label: ['🔨 Station 1: build the toy', '🎨 Station 2: paint it', '🎁 Station 3: wrap it'][i], kind: 'station', n: i }); });
-    o.line = { z: r.z1 - 4, x0: r.x0 + 1, x1: r.x1 - 1, gap: 3.4, y: 0.96 }; for (let i = 0; i < 6; i++) { box(w, 'm', 0x8b5a2b, r.x0 + 0.9, 0, IZ - 4 + i * 1.1, 0.8, 0.9, 0.9); K.present(w, r.x0 + 0.9, IZ - 4 + i * 1.1, 0.4, i, 0.9); } o.lights = [[IX, 6, IZ, 0xfff3c4, 30, 26]]; },
+    o.line = { z: r.z1 - 4, x0: r.x0 + 1, x1: r.x1 - 1, gap: 3.4, y: 0.96 }; for (let i = 0; i < 6; i++) { box(w, 'm', 0x8b5a2b, r.x0 + 0.9, 0, IZ - 4 + i * 1.1, 0.8, 0.9, 0.9); K.present(w, r.x0 + 0.9, IZ - 4 + i * 1.1, 0.4, i, 0.9); }
+    { const x = r.x0 + 2.0, z = IZ + 6.2; for (let i = 0; i < 5; i++) box(w, 'm', 0x6b4423, x, 0, z - i * 0.45, 2.2, 0.05, 0.5); box(w, 'm', 0x1c1917, x, -0.01, z - 1, 2.0, 0.02, 2.4); board(w, x, 2.2, z + 0.7, PI, '⬇ UNDERGROUND STATION', 2.6, 0.34, '#1f2937', '#fef3c7'); o.stairAt = [x, z + 0.4]; o.acts.push({ x, z: z + 1.1, r: 1.8, label: '⬇️ Down to the underground station', kind: 'underdown' }); }
+    o.lights = [[IX, 6, IZ, 0xfff3c4, 30, 26]]; },
   barn(w, p, o) { const r = room(w, 22, 18, 7, { wall: 0x8b5a2b, floor: 'hay', band: 0x5b3a21, ceilC: 0x6b3f1f, windows: true, curtain: 0x7c2d12 }); o.r = r; const names = ['DASHER', 'DANCER', 'PRANCER', 'VIXEN', 'COMET', 'CUPID', 'DONNER', 'BLITZEN', 'RUDOLPH'];
     for (let i = 0; i < 9; i++) { const s = i < 5 ? -1 : 1, k = i < 5 ? i : i - 5, z = r.z0 + 2 + k * 3.3; const x = IX + s * 7.5; reindeerStall(w, x, z, names[i]); o.deer.push({ x, z: z + 0.2, yaw: s < 0 ? E : -E, rudolph: i === 8 }); }
     for (let i = 0; i < 8; i++) bale(w, IX - 2 + (i % 4) * 1.3, r.z0 + 1 + Math.floor(i / 4) * 0.7, 0, Math.floor(i / 4) * 0.6); board(w, IX, 4.4, r.z0 + 0.3, 0, 'SANTA’S TEAM STAYS TOGETHER FROM THANKSGIVING ON', 7, 0.6, '#7c2d12', '#fef3c7');
@@ -183,7 +186,7 @@ const RECIPES = {
     for (const [x, t, c] of [[-4, 'NICE', 0x16a34a], [4, 'CHECKED TWICE', 0x9f1239]]) { w.add('e', G.cyl(16), 0xd9f2ff, IX + x, 0, r.z0 + 2, 0, 0, 0, 0.8, 3.4, 0.8); w.add('g', G.cyl(16), c, IX + x, 0, r.z0 + 2, 0, 0, 0, 0.7, 1.6, 0.7); board(w, IX + x, 4.0, r.z0 + 2.9, 0, t, 2, 0.4, '#fffbeb', '#9f1239'); solid(w, IX + x, r.z0 + 2, 1.6, 1.6, 3.4); }
     desk(w, IX - 2.5, IZ + 2, PI, false); desk(w, IX + 2.5, IZ + 2, PI, false); o.elfAt = [IX, IZ]; o.actAt = [IX, IZ + 3.3]; },
   logistics(w, p, o) { const r = room(w, 20, 14, 7, { wall: 0xe7e5e4, floor: 'stone', fc: 0x9ca3af, band: 0x854d0e, curtain: 0x854d0e }); o.r = r; for (let i = 0; i < 3; i++) { const z = r.z0 + 2 + i * 3.2; box(w, 'x', 0xf97316, IX - 4, 0, z, 8, 3.6, 1.0); for (let k = 0; k < 3; k++) for (let c = 0; c < 6; c++) K.crate(w, IX - 7 + c * 1.2, z, 0.9, 0, 0.1 + k * 1.15); w.solid(IX - 8, 0, z - 0.5, IX, 3.6, z + 0.5); }
-    box(w, 'm', 0x1f2937, IX + 6, 0, IZ, 4, 0.1, 10); box(w, 'x', 0x94a3b8, IX + 5.3, 0.1, IZ, 0.1, 0.08, 10); box(w, 'x', 0x94a3b8, IX + 6.7, 0.1, IZ, 0.1, 0.08, 10); board(w, IX + 6, 3.4, r.z0 + 0.3, 0, 'TRAIN TO THE WORKSHOP (UNDERGROUND)', 5, 0.5, '#854d0e', '#fef3c7'); o.elfAt = [IX + 2, r.z1 - 3]; o.actAt = [IX - 3, r.z1 - 3]; },
+    box(w, 'm', 0x1f2937, IX + 6, 0, IZ, 4, 0.1, 10); box(w, 'x', 0x94a3b8, IX + 5.3, 0.1, IZ, 0.1, 0.08, 10); box(w, 'x', 0x94a3b8, IX + 6.7, 0.1, IZ, 0.1, 0.08, 10); board(w, IX + 6, 3.4, r.z0 + 0.3, 0, 'TRAIN TO THE WORKSHOP (UNDERGROUND)', 5, 0.5, '#854d0e', '#fef3c7'); o.acts.push({ x: IX + 6, z: IZ, r: 2.2, label: '🚂 Ride the underground tram', kind: 'tramride' }); o.elfAt = [IX + 2, r.z1 - 3]; o.actAt = [IX - 3, r.z1 - 3]; },
   snowplow(w, p, o) { const r = room(w, 18, 13, 6, { wall: 0xffedd5, floor: 'stone', fc: 0x78716c, band: 0x9a3412, curtain: 0xea580c }); o.r = r; for (let i = 0; i < 2; i++) { const T = w.tf(IX - 4 + i * 8, 0, IZ - 1.5, 0); T.box('g', 0xea580c, 0, 0.4, 0, 2.4, 1.4, 3.6); T.box('e', 0xbfe3ff, 0, 1.8, -0.4, 2.2, 0.9, 1.4); T.box('g', 0xea580c, 0, 1.8, 0.6, 2.2, 0.9, 1.2); T.box('x', 0xfacc15, 0, 0.1, 2.2, 3.2, 1.0, 0.25); for (const a of [-1, 1]) for (const b of [-1, 1]) T.add('m', G.cyl(12), 0x111111, a * 1.25, 0.45, b * 1.2, 0, 0, E, 0.45, 0.3, 0.45); T.solid(0, 0, 0, 3.2, 2.4, 4.6); }
     board(w, IX, 3.6, r.z0 + 0.3, 0, 'SNOW SHIFT: ALWAYS', 4, 0.55, '#ea580c', '#fff7ed'); o.elfAt = [IX, r.z0 + 2]; o.actAt = [IX, r.z1 - 3]; },
   community(w, p, o) { const r = room(w, 14, 11, 5.5, { wall: 0xfdf2f8, floor: 'wood', fc: 0xa16207, band: 0x831843, curtain: 0xdb2777 }); o.r = r; for (let i = 0; i < 3; i++) table(w, IX - 4 + i * 4, IZ, 2, 1.2, 0x7c4a1e, [0xfbcfe8, 0xbbf7d0, 0xbfdbfe][i]); for (let i = 0; i < 9; i++) box(w, 'l', [0xff4d6d, 0xffd23f, 0x60a5fa][i % 3], IX - 6 + i * 1.5, 4.6, IZ, 0.3, 0.3, 0.3, 0, 0.6);
@@ -194,11 +197,37 @@ const RECIPES = {
     for (let i = 0; i < 16; i++) { w.add('e', G.cyl(8), 0xf8fafc, r.x1 - 1 + 0.0, 0.9, IZ - 2 + i * 0.25, 0, 0, 0, 0.08, 0.4, 0.08); w.add('m', G.cyl(8), 0xfef3c7, r.x1 - 1, 0.9, IZ - 2 + i * 0.25, 0, 0, 0, 0.07, 0.3, 0.07); } table(w, r.x1 - 1, IZ, 1.2, 4.4, 0x94a3b8); board(w, IX, 4.4, r.z0 + 0.3, 0, 'ELF EGGNOG · SECRET: NUTMEG + STIRRING', 6, 0.55, '#0369a1', '#f0f9ff'); o.elfAt = [IX + 2, r.z0 + 4.3]; o.actAt = [IX - 2, IZ + 1.5]; },
   tracking(w, p, o) { const r = room(w, 22, 16, 8, { wall: 0x0c1a2e, floor: 'carpet', fc: 0x0f172a, band: 0x0369a1, curtain: 0x1e3a8a, ceilC: 0x0b1220 }); o.r = r; o.dark = true;
     { const T = w.tf(IX, 0, r.z0 + 0.3, 0); T.box('l', 0x0b3b5e, 0, 1.4, 0, 16, 5.2, 0.1, 0, 0.35); for (let i = 0; i < 40; i++) T.add('l', G.sph(6), 0x86efac, -7 + (i * 37 % 140) / 10, 2 + (i * 17 % 40) / 10, 0.12, 0, 0, 0, 0.1, 0.1, 0.1, 1); K.sign(w, T, 'WORLD TRACKING MAP · 5 REGIONAL CENTERS', 0, 7.0, 0.1, 9, 0.7, '#0c4a6e', '#e0f2fe'); }
-    for (let rr = 0; rr < 3; rr++) for (let c = 0; c < 5; c++) desk(w, IX - 8 + c * 4, IZ - 2 + rr * 2.6, PI); o.elfAt = [IX + 6, r.z1 - 3]; o.actAt = [IX - 6, r.z1 - 3]; o.lights = [[IX, 5, IZ, 0x7dd3fc, 20, 26]]; },
+    board(w, IX, 3.2, r.z0 + 0.42, 0, SANTA_AWAY ? '🎅 SANTA NOW: CHILE  ·  BACK THANKSGIVING' : (ONLINE ? '🎅 SANTA: IN FLIGHT' : '🎅 SANTA: AT THE NORTH POLE'), 12, 0.7, '#7f1d1d', '#fef3c7');
+    // five sector desks, Chile/Sector 4 highlighted when Santa is away
+    CENTERS.forEach((c, i) => { const x = IX - 8 + i * 4; desk(w, x, IZ - 2, PI); board(w, x, 1.7, IZ - 3.2, 0, `S${c.sector} ${c.place.toUpperCase()}`, 2.6, 0.28, (SANTA_AWAY && c.sector === 4) ? '#b45309' : '#0c4a6e', '#e0f2fe'); });
+    for (let rr = 1; rr < 3; rr++) for (let c = 0; c < 5; c++) desk(w, IX - 8 + c * 4, IZ - 2 + rr * 2.6, PI);
+    o.acts.push({ x: IX, z: r.z1 - 3.4, r: 2.4, label: '📡 Fly to a Regional Tracking Center', kind: 'rtcmenu' });
+    o.npcs.push({ who: 'elf', x: IX + 6, z: r.z1 - 3, yaw: PI, name: 'Elf Orbit (Flight Command)', lines: [SANTA_AWAY ? `Santa is visiting Chile until Thanksgiving (${nice(THANKS)}). Sector 4 in ${chileCenter().place}, ${chileCenter().country} is watching his trip.` : 'Flight Command tracks Santa on the big night. Reports come in from all five Regional Tracking Centers.', 'Want to visit a center? I can send a sleigh from here.'], v: 3 });
+    o.elfAt = [IX + 6, r.z1 - 3]; o.actAt = [IX - 6, r.z1 - 3]; o.lights = [[IX, 5, IZ, 0x7dd3fc, 20, 26]]; },
   events(w, p, o) { const r = room(w, 26, 18, 8, { wall: 0xfef3c7, floor: 'wood', fc: 0x9a6a3e, band: 0x14532d, curtain: 0xb91c1c, ceilC: 0x7c4a1e }); o.r = r; box(w, 'm', 0x5b3a21, IX, 0, r.z0 + 2.5, 14, 1.0, 4.6); w.solid(IX - 7, 0, r.z0 + 0.2, IX + 7, 1.0, r.z0 + 4.8); for (const s of [-1, 1]) box(w, 'f', 0xb91c1c, IX + s * 7.5, 0, r.z0 + 0.6, 1.4, 7, 0.3); box(w, 'f', 0xb91c1c, IX, 6.3, r.z0 + 0.6, 16, 1.2, 0.3);
-    for (let rr = 0; rr < 4; rr++) for (let c = 0; c < 10; c++) chair(w, IX - 6.75 + c * 1.5, IZ - 0.5 + rr * 1.6, PI, 0xb91c1c); board(w, IX, 5.2, r.z0 + 0.4, 0, 'THANKSGIVING DAY ELF PARADE · ART CONTEST · HALLOWEEN PARTY', 11, 0.7, '#14532d', '#fef3c7');
-    { const T = w.tf(r.x1 - 3, 0, IZ + 2, -E); T.box('g', 0xdc2626, 0, 0.3, 0, 3, 1, 4.5); T.add('g', G.sph(12), 0xf5c542, 0, 2.2, 0, 0, 0, 0, 1.0); T.box('x', 0x111111, 0, 0, 0, 3.2, 0.3, 4.7); T.solid(0, 0, 0, 3.2, 2.5, 4.7); }
-    o.npcs.push({ who: 'elf', x: IX, z: r.z0 + 3, yaw: PI, name: 'Elf Winslow (Events + Elf Chat)', lines: ['The Thanksgiving Day Elf Parade marches right down Main Street. Floats are being built in the back!', 'Check the news board in Kringle Park for what’s coming up.'], v: 5 }); o.lights = [[IX, 6, r.z0 + 4, 0xffd08a, 26, 20]]; },
+    for (let rr = 0; rr < 4; rr++) for (let c = 0; c < 10; c++) chair(w, IX - 6.75 + c * 1.5, IZ - 0.5 + rr * 1.6, PI, 0xb91c1c);
+    board(w, IX, 5.2, r.z0 + 0.4, 0, bannerText(), 12.4, 0.72, '#14532d', '#fef3c7');
+    // Kringle TV screen on stage (Santa calls in from Chile before Thanksgiving)
+    box(w, 'x', 0x111827, IX - 4.2, 2.2, r.z0 + 0.55, 3.6, 2.2, 0.12); box(w, 'l', 0x0c4a6e, IX - 4.2, 2.35, r.z0 + 0.62, 3.3, 1.9, 0.04, 0, 0.6);
+    board(w, IX - 4.2, 3.85, r.z0 + 0.7, 0, SANTA_AWAY ? '📺 LIVE FROM CHILE · SANTA' : '📺 KRINGLE TV · NORTH POLE', 3.6, 0.38, '#0c4a6e', '#facc15');
+    o.screenAt = [IX - 4.2, 2.4, r.z0 + 0.7];
+    // events bulletin on the side wall
+    box(w, 'm', 0x14532d, r.x0 + 0.4, 1.2, IZ - 1, 0.12, 3.2, 3.6); board(w, r.x0 + 0.5, 4.0, IZ - 1, E, '📅 WHAT’S ON', 3.2, 0.4, '#14532d', '#fef3c7');
+    o.acts.push({ x: r.x0 + 1.6, z: IZ - 1, r: 2.0, label: '📅 Read the events bulletin', kind: 'bulletin' });
+    if (artOpen()) { for (let i = 0; i < 4; i++) { const z = r.z0 + 6 + i * 1.6; box(w, 'm', 0x5b3a21, r.x0 + 0.3, 1.4, z, 0.08, 1.3, 1.1); box(w, 'f', [0xfde68a, 0xbbf7d0, 0xbfdbfe, 0xfbcfe8][i], r.x0 + 0.36, 1.5, z, 0.04, 1.1, 0.9); } o.acts.push({ x: r.x0 + 1.6, z: r.z0 + 8.2, r: 2.0, label: '🎨 Enter the Art Contest', kind: 'art' }); }
+    { const T = w.tf(r.x1 - 3, 0, IZ + 2, -E); T.box('g', 0xdc2626, 0, 0.3, 0, 3, 1, 4.5); T.add('g', G.sph(12), 0xf5c542, 0, 2.2, 0, 0, 0, 0, 1.0); T.box('x', 0x111111, 0, 0, 0, 3.2, 0.3, 4.7); T.solid(0, 0, 0, 3.2, 2.5, 4.7); board(w, r.x1 - 3, 3.4, IZ + 0.2, -E, paradeSoon() && EV.live ? '🎈 TODAY’S PARADE FLOAT' : '🎈 THANKSGIVING PARADE FLOAT', 3.2, 0.36, '#7f1d1d', '#fef3c7'); }
+    if (paradeSoon()) o.acts.push({ x: r.x1 - 3, z: IZ + 2, r: 2.2, label: EV.live ? '🎈 March in the Elf Parade' : '🎈 Help decorate the parade float', kind: EV.live ? 'parade' : 'float' });
+    if (EV.live && EV.feat.id === 'halloween') o.acts.push({ x: IX + 4, z: IZ + 5, r: 2.2, label: '🥧 Join the Halloween food fight', kind: 'halloween' });
+    if (EV.live && EV.feat.id === 'games') o.acts.push({ x: IX, z: IZ + 5, r: 2.2, label: '🦌 Cheer at the Reindeer Games', kind: 'games' });
+    if (EV.live && EV.feat.id === 'xmas') o.acts.push({ x: IX, z: IZ + 5, r: 2.2, label: '🎄 Hand out Christmas presents', kind: 'xmas' });
+    const wLines = [];
+    if (EV.live) wLines.push(`Today is the ${EV.feat.name}! ${EV.feat.blurb}`);
+    else if (EV.feat) wLines.push(`Next up: the ${EV.feat.name} on ${nice(EV.feat.s)} — that’s ${EV.inDays} day${EV.inDays === 1 ? '' : 's'} away.`);
+    if (artOpen()) wLines.push('The North Pole Art Contest is open through December 20. Theme: “Making Christmas Merry”. Hang your picture on the wall!');
+    if (paradeSoon() && !EV.live) wLines.push('The Thanksgiving Day Elf Parade marches right down Main Street. Help decorate the float!');
+    if (SANTA_AWAY) wLines.push('Santa is visiting Chile until Thanksgiving. Mrs. Claus is running the morning briefing, and he calls in on the stage screen.');
+    if (!wLines.length) wLines.push('Check the bulletin for what’s coming up!');
+    o.npcs.push({ who: 'elf', x: IX, z: r.z0 + 3, yaw: PI, name: 'Elf Winslow (Events + Elf Chat)', lines: wLines, v: 5 }); o.lights = [[IX, 6, r.z0 + 4, 0xffd08a, 26, 20]]; },
   lodge(w, p, o) { const r = room(w, 18, 13, 7, { wall: 0xc8925a, floor: 'wood', fc: 0x7c5a3a, band: 0x3b2414, curtain: 0x1e3a8a, ceilC: 0x6b3f1f }); o.r = r; fireplace(w, IX, r.z0 + 0.6, 0, 1.2); rug(w, IX, IZ - 1, 6, 4, 0x1e3a8a, 0xfef3c7); for (const s of [-1, 1]) { const T = w.tf(IX + s * 3, 0, IZ - 1, -s * E); T.box('f', 0x7c2d12, 0, 0, 0, 2.6, 0.5, 1); T.box('f', 0x7c2d12, 0, 0.5, -0.4, 2.6, 0.8, 0.25); T.solid(0, 0, 0, 2.6, 0.9, 1); }
     for (let i = 0; i < 4; i++) { box(w, 'g', [0xdc2626, 0x2563eb, 0x16a34a, 0xf5c542][i], r.x1 - 0.3, 0.5, IZ - 2 + i * 0.7, 0.06, 2.2, 0.14); } { const x = IX, z = r.z0 + 0.4; for (const s of [-1, 1]) { w.add('m', G.cyl(5), 0xd9c3a0, x + s * 0.6, 5.2, z + 0.3, 0, 0, -s * 0.8, 0.06, 1.0, 0.06); w.add('m', G.cyl(5), 0xd9c3a0, x + s * 1.2, 5.9, z + 0.3, 0, 0, -s * 0.2, 0.05, 0.6, 0.05); } }
     table(w, r.x0 + 3, r.z1 - 3, 2, 1.2, 0x5b3a21, 0xfef3c7); o.npcs.push({ who: 'elf', x: r.x0 + 4, z: r.z1 - 4.5, yaw: 0.5, name: 'Elf Tamsin (Lodge Host)', lines: ['Skis on the wall, cocoa by the fire. The Arctic Lodge is where visiting elves warm up.'], v: 3 }); },
@@ -207,7 +236,7 @@ const RECIPES = {
     o.acts.push({ x: IX + 2.5, z: IZ + 1.5, r: 2.2, label: '🔧 Help fix the runners', kind: 'fix' }); },
   station(w, p, o) { const r = room(w, 14, 9, 5.5, { wall: 0xf0fdf4, floor: 'tile', fc: 0xf5f5f4, fc2: 0x14532d, band: 0x14532d, curtain: 0x7f1d1d }); o.r = r; counter(w, IX - 3, r.z0 + 1.2, 3.4, 0, 0x8b5a2b, 0x14532d); box(w, 'x', 0x111827, IX + 2.5, 2.2, r.z0 + 0.25, 4.4, 1.4, 0.1);
     for (let i = 0; i < 3; i++) K.sign(w, w.tf(IX + 2.5, 0, r.z0 + 0.32, 0), ['POLAR EXPRESS · 7:00', 'WORKSHOP SHUTTLE · EVERY 10', 'CHARTER SLEIGHS · ASK'][i], 0, 3.2 - i * 0.42, 0, 4.0, 0.36, '#111827', '#fbbf24', { border: false }); for (let i = 0; i < 3; i++) K.bench(w, IX - 4 + i * 4, IZ + 1.4, PI, 0x14532d);
-    o.npcs.push({ who: 'elf', x: IX - 3, z: r.z0 + 2, yaw: PI, name: 'Conductor Elf Ticketta', lines: ['No trains come up from the outside world, only flying sleighs. This line just runs around the North Pole!'], v: 4 }); },
+    o.npcs.push({ who: 'elf', x: IX - 3, z: r.z0 + 2, yaw: PI, name: 'Conductor Elf Ticketta', lines: ['No trains come up from the outside world, only flying sleighs. This line just runs around the North Pole!', 'The underground tram from here goes to the Workshop station and Operations & Logistics.'], v: 4 }); o.acts.push({ x: IX + 2.5, z: IZ + 1.2, r: 2.0, label: '🚂 Ride the underground tram', kind: 'tramride' }); },
   chapel(w, p, o) { const r = room(w, 10, 16, 7, { wall: 0xfafaf9, floor: 'wood', fc: 0x8b6a4a, band: 0x7f1d1d, curtain: 0xfafaf9 }); o.r = r; for (let i = 0; i < 6; i++) { pew(w, IX - 2.4, r.z0 + 4 + i * 1.6, 3.4); pew(w, IX + 2.4, r.z0 + 4 + i * 1.6, 3.4); } box(w, 'f', 0xb91c1c, IX, 0.01, IZ, 1.4, 0.02, 16);
     box(w, 'm', 0xf5efe0, IX, 0, r.z0 + 1.5, 3, 1.0, 1.2); for (let i = 0; i < 5; i++) { w.add('m', G.cyl(8), 0xfef3c7, IX - 1 + i * 0.5, 1.0, r.z0 + 1.5, 0, 0, 0, 0.06, 0.35, 0.06); w.add('l', G.sph(6), 0xffb347, IX - 1 + i * 0.5, 1.42, r.z0 + 1.5, 0, 0, 0, 0.05, 0.08, 0.05, 1.2); } solid(w, IX, r.z0 + 1.5, 3, 1.2, 1);
     w.add('l', G.arch(12), 0x60a5fa, IX, 2.5, r.z0 + 0.2, 0, 0, 0, 2.4, 3.6, 0.06, 0.6); tree(w, IX - 3.5, r.z0 + 1.6, 1); tree(w, IX + 3.5, r.z0 + 1.6, 1); o.acts.push({ x: IX, z: IZ + 3, r: 2, label: '🔔 Ring the chapel bell', kind: 'bell' }); },
@@ -243,6 +272,42 @@ const RECIPES = {
       board(w, cx, 3.4, r.z0 + 0.2, 0, 'MRS. CLAUS’S SEWING ROOM', 3.4, 0.42, '#7f1d1d', '#fff7e0'); o.acts.push({ x: cx - 1.5, z: cz + 2.0, r: 1.8, label: '🧵 Sew the buttons on Santa’s coat', kind: 'sew' });
       o.npcs.push({ who: 'elf', x: cx + 0.6, z: cz - 0.6, yaw: PI, name: 'Elf Thimble', lines: ['Mrs. Claus sews every one of Santa’s suits right here.', 'Four gold buttons, nice and straight. Want to try?'], v: 6 }); }
     o.lights = [[IX - 9.2, 3.6, r.z0 + 4, 0xffd9a0, 12, 12], [IX, 3.6, r.z0 + 4, 0xffe2b8, 12, 12], [IX + 9.2, 3.6, r.z0 + 4, 0xffd9a0, 12, 12]]; },
+  rtc(w, p, o) { const c = p.center || CENTERS[0]; const r = room(w, 20, 14, 7, { wall: 0x0c1a2e, floor: 'carpet', fc: 0x0f172a, band: c.col, curtain: c.col, ceilC: 0x0b1220 }); o.r = r; o.dark = true; o.center = c;
+    { const T = w.tf(IX, 0, r.z0 + 0.3, 0); T.box('l', c.col, 0, 1.2, 0, 14, 4.6, 0.1, 0, 0.4); for (let i = 0; i < 28; i++) T.add('l', G.sph(6), 0x86efac, -6 + (i * 41 % 120) / 10, 1.6 + (i * 19 % 30) / 10, 0.12, 0, 0, 0, 0.1, 0.1, 0.1, 1); K.sign(w, T, `SECTOR ${c.sector}  ·  ${c.place.toUpperCase()}  ·  ${c.country.toUpperCase()}`, 0, 6.2, 0.1, 12, 0.65, '#' + c.col.toString(16).padStart(6, '0'), '#fff7e0'); }
+    board(w, IX, 3.0, r.z0 + 0.42, 0, SANTA_AWAY ? ('🎅 SANTA NOW: CHILE' + (c.sector === 4 ? '  ·  THIS SECTOR' : '  ·  VIA SECTOR 4')) : (ONLINE ? '🟢 FULLY ONLINE · SANTA IN FLIGHT' : `🟡 PREPARING  ·  ${EVE_DAYS} DAYS TO CHRISTMAS EVE`), 12.6, 0.6, '#7f1d1d', '#fef3c7');
+    for (let i = 0; i < 4; i++) desk(w, IX - 6 + i * 4, IZ + 0.4, PI);
+    o.acts.push({ x: IX, z: IZ + 1.6, r: 2.2, label: SANTA_AWAY && c.sector === 4 ? '📡 Track Santa in Chile' : (ONLINE ? '📡 Log a Santa sighting' : '📡 Help set up the tracking desk'), kind: 'trackdesk' });
+    o.npcs.push({ who: 'elf', x: IX + 5, z: r.z0 + 3.2, yaw: PI, name: `${c.boss} (Elf Supervisor, Sector ${c.sector})`, lines: [`Hi, I’m ${c.boss}, Elf Supervisor of the Regional Tracking Center for Sector ${c.sector} in ${c.place}, ${c.country}.`, `We serve ${c.serves}.`, SANTA_AWAY ? (c.sector === 4 ? 'Santa is in Chile right now — that’s our sector! He comes home on Thanksgiving.' : `Santa is visiting Chile until Thanksgiving. Sector 4 is watching him; we stay ready.`) : (ONLINE ? 'We’re fully online! Every tracker report in this sector comes through this room.' : `We’re preparing. The center goes fully online on Christmas Eve and Christmas Day. ${EVE_DAYS} days to go!`), c.facts[0], c.facts[1] || c.facts[0]], v: 2 });
+    o.npcs.push({ who: 'elf', x: IX - 5, z: IZ + 1.6, yaw: 0, name: `Tracker Elf (${c.place})`, lines: [SANTA_AWAY && c.sector === 4 ? 'Report coming in from Chile! Santa is still on his visit. All quiet, all merry.' : (ONLINE ? 'Report coming in! Santa spotted over my sector!' : 'Testing, testing… link to Flight Command: GOOD.'), c.facts[c.facts.length - 1]], v: 4 });
+    o.lights = [[IX, 5, IZ, 0x7dd3fc, 22, 24]]; },
+  understation(w, p, o) { const r = room(w, 32, 16, 5.6, { wall: 0x3f3f46, floor: 'tile', fc: 0x44403c, fc2: 0x292524, band: 0x14532d, curtain: 0x14532d, ceilC: 0x1c1917, windows: false, doorFrame: 0x111827 }); o.r = r; o.dark = true; o.noDress = true;
+    // central track pit + rails, platforms on both sides
+    box(w, 'm', 0x1c1917, IX, -0.35, IZ, 4.2, 0.4, r.D - 0.4); box(w, 'x', 0x94a3b8, IX - 0.7, 0.02, IZ, 0.12, 0.06, r.D - 0.6); box(w, 'x', 0x94a3b8, IX + 0.7, 0.02, IZ, 0.12, 0.06, r.D - 0.6);
+    for (let z = r.z0 + 0.8; z < r.z1 - 0.4; z += 1.1) box(w, 'x', 0x44403c, IX, 0.0, z, 1.8, 0.05, 0.12);
+    w.solid(IX - 2.0, -1, r.z0, IX + 2.0, 0.35, r.z1); // don't walk on the tracks
+    // yellow safety line + benches + lamps on both platforms
+    for (const s of [-1, 1]) { box(w, 'f', 0xfacc15, IX + s * 2.35, 0.01, IZ, 0.1, 0.02, r.D - 0.8);
+      for (let i = 0; i < 4; i++) { const z = r.z0 + 2.4 + i * 3.0; chair(w, IX + s * 5.2, z, s < 0 ? E : -E, 0x14532d); chair(w, IX + s * 5.2, z + 0.8, s < 0 ? E : -E, 0x14532d);
+        w.add('x', G.cyl(6), 0x1f2937, IX + s * 7.4, 0, z, 0, 0, 0, 0.08, 3.2, 0.08); w.add('l', G.sph(8), 0xffe3a3, IX + s * 7.4, 3.3, z, 0, 0, 0, 0.2, 0.2, 0.2, 1.1); } }
+    // ticket booth near the exit
+    { const x = r.x0 + 3.4, z = r.z1 - 3.2; box(w, 'm', 0x14532d, x, 0, z, 3.4, 2.2, 2.2); box(w, 'l', 0xcfeaff, x + 0.4, 1.1, z + 1.12, 2.0, 0.9, 0.06, 0, 0.35); box(w, 'm', 0x14532d, x, 2.2, z, 3.6, 0.2, 2.4); board(w, x, 2.7, z + 1.16, 0, 'TICKETS · ELF TRAM', 2.8, 0.36, '#14532d', '#fef3c7'); solid(w, x, z, 3.4, 2.2, 2.4); o.acts.push({ x: x + 2.2, z: z + 0.2, r: 1.8, label: '🎫 Buy a tram ticket', kind: 'tramride' }); }
+    // destination boards
+    board(w, IX - 8.8, 3.6, r.z0 + 0.25, 0, 'THIS STOP: WORKSHOP', 5.2, 0.5, '#14532d', '#fef3c7');
+    board(w, IX + 8.8, 3.6, r.z0 + 0.25, 0, 'NEXT: LOGISTICS  ·  POLAR EXPRESS', 6.4, 0.5, '#1f2937', '#facc15');
+    board(w, IX, 4.6, r.z0 + 0.25, 0, 'NORTH POLE UNDERGROUND  ·  ELF TRAM', 10, 0.6, '#7f1d1d', '#fff7e0');
+    // toy crates waiting to go up to the Workshop
+    for (let i = 0; i < 8; i++) K.crate(w, r.x1 - 2.2 - (i % 4) * 1.15, r.z0 + 2.2 + Math.floor(i / 4) * 1.2, 0.9, i, 0);
+    for (let i = 0; i < 6; i++) K.present(w, r.x1 - 2.4 - (i % 3) * 0.9, r.z0 + 4.6, 0.55, i);
+    // stairs up to the Workshop
+    { const x = r.x0 + 3.2, z = r.z0 + 2.6; for (let i = 0; i < 5; i++) box(w, 'm', 0x6b4423, x, i * 0.22, z + i * 0.35, 2.2, 0.22, 0.4); board(w, x, 2.5, z - 0.2, 0, '⬆ SANTA’S WORKSHOP', 2.5, 0.32, '#7f1d1d', '#fef3c7'); o.acts.push({ x, z: z + 0.2, r: 1.8, label: '⬆️ Up to Santa’s Workshop', kind: 'underup' }); }
+    // posters and a clock
+    for (const [x, lab] of [[IX - 11, 'MIND THE GAP'], [IX + 11, 'HARD HATS UPSTAIRS']]) board(w, x, 2.4, r.z0 + 0.22, 0, lab, 3.0, 0.36, '#111827', '#facc15');
+    w.add('m', G.cyl(16), 0xf5efe0, IX + 12.2, 3.8, r.z1 - 0.3, E, 0, 0, 0.45, 0.08, 0.45); w.add('m', G.cyl(16), 0x1c1917, IX + 12.2, 3.8, r.z1 - 0.35, E, 0, 0, 0.36, 0.06, 0.36);
+    o.tram = { x: IX, z0: r.z0 + 2.2, z1: r.z1 - 2.2, y: 0.42 };
+    o.npcs.push({ who: 'elf', x: r.x0 + 5.6, z: r.z1 - 3.4, yaw: -E, name: 'Conductor Elf Tunnel', lines: ['Welcome to the Workshop Underground Station! The elf tram runs to Operations & Logistics and the Polar Express Station.', 'When the weather is bad (so, usually) this is how the day crew gets to work.', 'Mind the gap, hold the poles, and keep your hard hat off until you’re upstairs.'], v: 2 });
+    o.npcs.push({ who: 'elf', x: IX - 5.4, z: IZ - 2, yaw: E, name: 'Platform Elf Switch', lines: ['Tram’s on time. Always is. We only run around the North Pole, never to the outside world.', 'Need a ride? Talk to Conductor Tunnel or tap the ticket booth.'], v: 5 });
+    o.npcs.push({ who: 'elf', x: IX + 5.6, z: IZ + 3.2, yaw: -E, name: 'Elf Commute Pip', lines: ['Just heading up to the wood shop. The tram beat walking through the snow!'], v: 7, walk: [[IX + 5.6, IZ + 3.2], [IX + 5.6, IZ - 3]] });
+    o.lights = [[IX - 6, 3.8, IZ, 0xffe3a3, 16, 18], [IX + 6, 3.8, IZ, 0xffe3a3, 16, 18], [IX, 4.2, r.z0 + 3, 0xffe3a3, 14, 16]]; },
   shop(w, p, o) { const r = room(w, 12, 10, 5, {}); o.r = r; counter(w, IX, r.z0 + 1.5, 4); },
 };
 function D_(r) { return r.D; }

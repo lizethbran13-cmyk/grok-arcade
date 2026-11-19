@@ -7,6 +7,7 @@ import { S, persist } from '../save.js?v=np11';
 import { makeFolk } from '../folk.js?v=np11';
 import { panel, closePanel } from './panel.js';
 import { INT } from './map.js';
+import { SANTA_AWAY, santaWhere, EV, artOpen, eventBlurb, nice, THANKS, CENTERS, ONLINE, chileCenter, ongoingNow, YEAR } from './cal.js';
 const PI = Math.PI, R = Math.random, pick = (a) => a[(R() * a.length) | 0];
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 // shared geometry + materials (never disposed: a handful of tiny objects)
@@ -41,15 +42,29 @@ export const Acts = {
       add({ x: x - s * 1.2, z, r: 1.7, label: '📂 Open the glowing drawer', kind: 'drawer' }); }
     if (p.int === 'post' && info.chute) this.chute = { x: info.chute[0], z: info.chute[1], H: info.chute[2], fly: [] };
     if (p.int === 'workshop' && info.line) { const L = info.line; this.toys = []; for (let i = 0; i < 8; i++) { const t = new THREE.Group(); const c = [0xdc2626, 0x2563eb, 0xf5c542, 0x16a34a, 0xdb2777][i % 5]; const b = mesh('box', c, 0.5, 0.4, 0.4); b.position.y = 0.2; t.add(b); const h = mesh('sph', i % 2 ? 0xfef3c7 : 0x8b5a2b, 0.17); h.position.y = 0.55; t.add(h); g.add(t); this.toys.push({ m: t, u: i / 8 }); } this.line = L; }
-    if (p.int === 'clausbase' && info.train) { const T = info.train; this.train = { ...T, ph: 0, sp: 0.35, cars: [] }; for (let i = 0; i < 5; i++) { const c = new THREE.Group(); const b = mesh('box', i ? [0xdc2626, 0x16a34a, 0x2563eb, 0xf5c542][i % 4] : 0x1f2937, 0.42, 0.22, 0.2); b.position.y = 0.11; c.add(b); if (!i) { const ch = mesh('cyl', 0x1f2937, 0.06, 0.14, 0.06); ch.position.set(0.1, 0.3, 0); c.add(ch); const lamp = mesh('sph', 0xfff1a8, 0.05, 0.05, 0.05, 2); lamp.position.set(0.22, 0.14, 0); c.add(lamp); } g.add(c); this.train.cars.push(c); } }
+    if (p.int === 'clausbase' && info.train) { const T = info.train; this.train = { ...T, ph: 0, sp: 0.45, on: true, cars: [] }; this.trainRide = false;
+      for (let i = 0; i < 5; i++) { const c = new THREE.Group(); const col = i ? [0xdc2626, 0x16a34a, 0x2563eb, 0xf5c542][i % 4] : 0x1f2937; const b = mesh('box', col, 0.55, 0.28, 0.28); b.position.y = 0.2; c.add(b);
+        for (const s of [-1, 1]) for (const f of [-1, 1]) { const wh = mesh('cyl', 0x111827, 0.07, 0.05, 0.07); wh.rotation.z = Math.PI / 2; wh.position.set(f * 0.16, 0.07, s * 0.16); c.add(wh); }
+        if (!i) { const cab = mesh('box', 0x111827, 0.28, 0.28, 0.28); cab.position.set(-0.12, 0.42, 0); c.add(cab); const ch = mesh('cyl', 0x1f2937, 0.07, 0.16, 0.07); ch.position.set(0.12, 0.48, 0); c.add(ch); const lamp = mesh('sph', 0xfff1a8, 0.07, 0.07, 0.07, 2); lamp.position.set(0.3, 0.22, 0); c.add(lamp); }
+        else { const rim = mesh('box', 0xf5c542, 0.56, 0.04, 0.3); rim.position.y = 0.36; c.add(rim); }
+        g.add(c); this.train.cars.push(c); }
+      this.placeTrain(); const ta = this.intActs.find((q) => q.kind === 'train'); if (ta) ta.label = '🚂 Start, stop or ride the train'; }
+    if (p.int === 'understation' && info.tram) { const T = info.tram; this.tram = { ...T, u: 0, sp: 0.22, cars: [] };
+      for (let i = 0; i < 3; i++) { const c = new THREE.Group(); const col = i ? [0xdc2626, 0x16a34a][i % 2] : 0x14532d; const b = mesh('box', col, 2.0, 1.45, 2.7); b.position.y = 0.82; c.add(b);
+        const roof = mesh('box', 0x14532d, 2.1, 0.1, 2.8); roof.position.y = 1.58; c.add(roof);
+        for (const s of [-1, 1]) { const win = mesh('box', 0x7dd3fc, 0.06, 0.55, 2.2, 0.4); win.position.set(s * 1.12, 1.15, 0); c.add(win); }
+        for (const f of [-1, 1]) for (const s of [-1, 1]) { const wh = mesh('cyl', 0x111827, 0.22, 0.14, 0.22); wh.rotation.z = Math.PI / 2; wh.position.set(s * 0.9, 0.22, f * 0.85); c.add(wh); }
+        if (!i) { const lamp = mesh('sph', 0xfff1a8, 0.12, 0.12, 0.12, 2); lamp.position.set(0, 1.05, 1.4); c.add(lamp); }
+        g.add(c); this.tram.cars.push(c); } this.placeTram(); }
     if (p.id === 'events' && this.event && this.event.id === 'briefing') this.briefingInside(info);
     if (this.zone === 'int' && p.id === 'records' && this.fileSpot) setTimeout(() => this.toastMsg('🗄️ Ask Reggie’s desk for your Believer File, or go hunting for the glowing drawer!'), 2500); },
-  actsLeave() { if (this.dyn) { E.scene.remove(this.dyn); this.dyn = null; } this.fileSpot = null; this.chute = null; this.toys = null; this.train = null; this.carry(''); this.apples = 0; },
+  actsLeave() { if (this.dyn) { E.scene.remove(this.dyn); this.dyn = null; } this.fileSpot = null; this.chute = null; this.toys = null; this.train = null; this.trainRide = false; this.tram = null; this.carry(''); this.apples = 0; },
   actsUpdate(dt) { const T = this.T;
     if (this.fileSpot) { const f = this.fileSpot; f.spark.position.y = 4.6 + Math.sin(T * 3) * 0.25; f.spark.scale.setScalar(0.14 + Math.sin(T * 7) * 0.04); }
     if (this.chute) for (const l of this.chute.fly) { l.t += dt; l.m.position.y = 1.2 + l.t * 3.2; l.m.rotation.y += dt * 6; if (l.m.position.y > this.chute.H) { l.m.visible = false; } }
     if (this.toys && this.line) { const L = this.line, a = L.x1 - L.x0 - L.gap; for (const t of this.toys) { t.u = (t.u + dt * 0.045) % 1; let x = L.x0 + t.u * a; if (x > INT[0] - L.gap / 2) x += L.gap; t.m.position.set(x, L.y, L.z); t.m.rotation.y = t.u * 9; } }
-    if (this.train) { const tr = this.train; tr.ph += dt * tr.sp; tr.cars.forEach((c, i) => { const a = tr.ph - i * 0.19; c.position.set(tr.cx + Math.cos(a) * tr.a, tr.y, tr.cz + Math.sin(a) * tr.b); c.rotation.y = -Math.atan2(Math.cos(a) * tr.b, -Math.sin(a) * tr.a); }); if (tr.boost > 0) { tr.boost -= dt; if (tr.boost <= 0) tr.sp = 0.35; } }
+    if (this.train) { const tr = this.train; if (tr.on) tr.ph += dt * tr.sp; this.placeTrain(); if (tr.boost > 0) { tr.boost -= dt; if (tr.boost <= 0) tr.sp = 0.45; } }
+    if (this.tram) { this.tram.u += dt * this.tram.sp; this.placeTram(); }
     // skaters glide around the pond all day
     for (const n of this.skaters || []) { const k = n.skate; if (this.chat && this.chat.npc === n) { n.speed = 0; continue; } k.ph += dt * k.sp; n.x = -30 + Math.cos(k.ph) * k.a; n.z = 30 + Math.sin(k.ph) * k.b; n.yaw = Math.atan2(-Math.sin(k.ph) * k.a, Math.cos(k.ph) * k.b); n.speed = 1.2; }
     // player skating: gates in order around the pond
@@ -66,9 +81,19 @@ export const Acts = {
       this.app.busy = true; timing(['🔨 BUILD THE TOY', '🎨 PAINT THE TOY', '🎁 WRAP THE TOY'][n], ['Hammer the parts together', 'Paint inside the lines', 'Fold the paper just right'][n], 2, () => { sfx('win'); this.done(); this.lineStep = (n + 1) % 3; if (n === 2) { S.flags.np2toys = (S.flags.np2toys || 0) + 1; persist(); this.badge('np2line'); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 40); this.toastMsg(`🎁 A finished toy rolls off to the Wrapping Department! Toys made: ${S.flags.np2toys}`); } else this.toastMsg(['✅ Built! Now go to Station 2: PAINT.', '✅ Painted! Now Station 3: WRAP.'][n]); }, () => this.done()); return true; }
     if (k === 'basket') { this.apples = 9 - this.fed.size; if (!this.apples) { this.toastMsg('🦌 Everyone is full! Thank you!'); return true; } sfx('pop'); this.carry(`🍎 × ${this.apples} · walk up to a reindeer`); this.toastMsg('🍎 Apples! Walk up to each reindeer and give them one.'); return true; }
     if (k === 'down') { this.basement(true); return true; }
-    if (k === 'train') { const tr = this.train; if (tr) { tr.sp = 1.3; tr.boost = 8; } sfx('honk'); this.toastMsg('🚂 Toot toot! Santa’s train races around the mountain.'); if (!S.flags.np2train) { S.flags.np2train = 1; persist(); this.badge('np2train'); } return true; }
+    if (k === 'train') { this.trainPanel(); return true; }
     if (k === 'gifts') { this.giftGame(); return true; }
     if (k === 'sew') { this.app.busy = true; timing('🧵 SEW SANTA’S BUTTONS', 'One gold button at a time', 4, () => { sfx('win'); this.done(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 40); this.badge('np2sew'); this.toastMsg('🧵 Four shiny buttons! Mrs. Claus will be so pleased.'); }, () => this.done()); return true; }
+    if (k === 'bulletin') { this.bulletinPanel(); return true; }
+    if (k === 'art') { this.artGame(); return true; }
+    if (k === 'float') { this.app.busy = true; timing('🎈 DECORATE THE FLOAT', 'Stick the gold star on the parade float', 3, () => { sfx('win'); this.done(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 40); this.badge('np2float'); this.toastMsg('🎈 The Thanksgiving Day Elf Parade float is sparkling!'); }, () => this.done()); return true; }
+    if (k === 'parade') { this.paradeGame(); return true; }
+    if (k === 'halloween' || k === 'games' || k === 'xmas') { this.partyGame(k); return true; }
+    if (k === 'trackdesk') { this.trackDesk(); return true; }
+    if (k === 'rtcmenu') { this.rtcPanel(); return true; }
+    if (k === 'underdown') { this.underLink('understation'); return true; }
+    if (k === 'underup') { this.underLink('workshop'); return true; }
+    if (k === 'tramride') { this.tramPanel(); return true; }
     return false; },
   feedDeer(n) { if (!this.apples || n.kind !== 'deer') return false; if (this.fed.has(n)) { this.bub.say(n, '*already munching* 🍎'); return true; } this.fed.add(n); this.apples--; sfx('pop'); this.bub.say(n, pick(['*munch munch* 🍎', '*happy snort*', '*crunch!* Thank you!', '*nuzzles your hand*'])); this.fx.confetti(n.x, n.y + 1.8, n.z, 12);
     const total = this.intNpcs.filter((q) => q.kind === 'deer').length; this.carry(this.apples ? `🍎 × ${this.apples} · ${this.fed.size}/${total} fed` : ''); if (this.fed.size >= total) { sfx('win'); this.badge('np2apples'); this.toastMsg('🦌 The whole team is fed! Ruby says thank you!'); this.carry(''); } return true; },
@@ -83,4 +108,54 @@ export const Acts = {
         c.querySelector('#gX').onclick = () => { sfx('click'); this.done(); };
         c.querySelectorAll('[data-o]').forEach((b) => b.onclick = () => { if (b.dataset.o === em) { sfx('pop'); i++; if (i >= rounds.length) { sfx('win'); this.done(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 40); this.badge('np2gifts'); this.toastMsg('🎁 Every tag is right! Santa will be proud.'); } else draw('✅ Tagged and wrapped!'); } else { sfx('bump'); draw('❌ Hmm, that doesn’t match the wish.'); } }); }); };
     draw(); },
+
+  placeTrain() { const tr = this.train; if (!tr) return; tr.cars.forEach((c, i) => { const a = tr.ph - i * 0.2; c.position.set(tr.cx + Math.cos(a) * tr.a, tr.y, tr.cz + Math.sin(a) * tr.b); c.rotation.y = -Math.atan2(Math.cos(a) * tr.b, -Math.sin(a) * tr.a); }); },
+  trainPanel() { const tr = this.train; if (!tr) return; if (this.trainRide) { this.trainRide = false; this.toastMsg('🚂 You hop off the little train.'); return; }
+    this.app.busy = true; panel(`<h2>🚂 SANTA’S TRAIN</h2><p class="sub">It already runs around the mountain on its loop. You can stop it, start it, speed it up, or take a tiny ride along the track.</p>
+      <button class="go" id="tT">${tr.on ? '⏹ Stop the train' : '▶ Start the train'}</button>
+      <button class="mbtn2" id="tF">💨 Make it race</button>
+      <button class="mbtn2" id="tR">🎥 Ride along (tiny view)</button>
+      <button class="mbtn2" id="tX">✖ Close</button>`, (c) => {
+        c.querySelector('#tT').onclick = () => { tr.on = !tr.on; if (tr.on) { sfx('honk'); this.toastMsg('🚂 Toot toot! The train is running.'); } else { sfx('click'); this.toastMsg('🚂 The train eases to a stop.'); } this.done(); };
+        c.querySelector('#tF').onclick = () => { tr.on = true; tr.sp = 1.4; tr.boost = 8; sfx('honk'); this.toastMsg('🚂 Toot toot! Santa’s train races around the mountain.'); if (!S.flags.np2train) { S.flags.np2train = 1; persist(); this.badge('np2train'); } this.done(); };
+        c.querySelector('#tR').onclick = () => { tr.on = true; this.trainRide = true; sfx('honk'); this.toastMsg('🚂 Riding along! Tap the train button again to hop off.'); if (!S.flags.np2train) { S.flags.np2train = 1; persist(); this.badge('np2train'); } this.done(); };
+        c.querySelector('#tX').onclick = () => { sfx('click'); this.done(); }; }); },
+  bulletinPanel() { this.app.busy = true; const B = eventBlurb(); const on = B.on.map((s) => `<p style="margin:6px 0;font-weight:700">${esc(s)}</p>`).join('');
+    panel(`<h2>📅 NORTH POLE EVENTS</h2><p class="sub">From the santaupdate.com calendar · today in America/Los_Angeles</p>
+      <div style="text-align:left;max-height:56vh;overflow:auto">
+        ${B.live ? `<p style="margin:8px 0;font-weight:800;color:#facc15">🔴 ${esc(B.live)}</p>` : ''}
+        ${B.next ? `<p style="margin:8px 0;font-weight:800">📣 ${esc(B.next)}</p>` : ''}
+        <p style="margin:10px 0 4px"><b>Open now</b></p>${on || '<p>Nothing else is open right now.</p>'}
+        ${B.past ? `<p style="margin:10px 0 4px"><b>Already happened</b></p><p style="font-weight:700">${esc(B.past)}</p>` : ''}
+        <p style="margin:10px 0 4px"><b>🎅 Santa</b></p><p style="font-weight:700">${esc(SANTA_AWAY ? 'Visiting Chile — back Thanksgiving ' + nice(THANKS) : 'At the North Pole.')}</p>
+      </div><button class="go" id="bOk">OK</button>`, (c) => { c.querySelector('#bOk').onclick = () => { sfx('click'); if (!S.flags.np2bulletin) { S.flags.np2bulletin = 1; persist(); this.badge('np2bulletin'); } this.done(); }; }); },
+  artGame() { this.app.busy = true; const pics = [['🎄', 'The big tree in Kringle Park'], ['🦌', 'Rudolph and the team'], ['🏠', 'The Claus family home'], ['📮', 'A letter flying to the Post Office'], ['🐻‍❄️', 'Polar Bear Mountain']];
+    panel(`<h2>🎨 ART CONTEST</h2><p class="sub">Theme: “Making Christmas Merry”. Pick a picture to hang on the Events Center wall. Open through Dec 20.</p>
+      <div>${pics.map((q, i) => `<button class="mbtn2" data-i="${i}" style="display:block;width:94%;margin:6px auto;font-size:20px">${q[0]}  ${q[1]}</button>`).join('')}</div>
+      <button class="mbtn2" id="aX">✖ Maybe later</button>`, (c) => {
+        c.querySelectorAll('[data-i]').forEach((b) => b.onclick = () => { const pic = pics[+b.dataset.i]; sfx('win'); this.done(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 40); this.badge('np2art'); this.toastMsg('🎨 You hung “' + pic[1] + '” on the wall. Santa will see the contest pictures when he gets home!'); });
+        c.querySelector('#aX').onclick = () => { sfx('click'); this.done(); }; }); },
+  paradeGame() { this.app.busy = true; let n = 0, lives = 3; const draw = () => panel(`<h2>🎈 THE ELF PARADE</h2><p class="sub">March in step! Next: <b>${n % 2 ? 'RIGHT' : 'LEFT'}</b> · ${'❤️'.repeat(lives)} · ${n}/12</p><div>${[0, 1].sort(() => R() - 0.5).map((k) => `<button class="mbtn2" data-k="${k}" style="min-width:120px;padding:16px;background:${k ? '#3b82f6' : '#ef4444'};color:#fff">${k ? 'RIGHT 🦶' : '🦶 LEFT'}</button>`).join('')}</div><button class="mbtn2" id="pX">✖ Stop</button>`, (c) => {
+      c.querySelector('#pX').onclick = () => { sfx('click'); this.done(); };
+      c.querySelectorAll('[data-k]').forEach((b) => b.onclick = () => { if (+b.dataset.k === n % 2) { n++; sfx('pop'); if (n >= 12) { sfx('win'); this.badge('np2parade'); this.done(); this.toastMsg('🎈 Perfect march! The crowd waves as you go by!'); return; } draw(); } else { lives--; sfx('bump'); if (lives <= 0) { this.done(); this.toastMsg('🎈 Oops, out of step! Try again.'); return; } draw(); } }); }); draw(); },
+  partyGame(k) { const G = { halloween: ['🥧 THE FOOD FIGHT', 'Toss the creme pies 🥧 · no cookies 🍪 (Mrs. Claus’s rule!)', '🥧', '🍪', '🥧 Splat-tastic! Everyone helps clean up.'], games: ['🦌 REINDEER GAMES', 'Cheer the right reindeer 🦌 · skip the decoys 🧸', '🦌', '🧸', '🦌 What a race! The Mighty Mick takes a bow.'], xmas: ['🎄 CHRISTMAS DAY PARTY', 'Hand presents 🎁 to waving elves 🙋 · skip empty chairs 🪑', '🎁', '🪑', '🎄 Merry Christmas! Cocoa is hot and every elf has a present.'] }[k];
+    this.app.busy = true; let round = 0; const draw = () => { const cells = [...Array(9)].map(() => (R() < 0.38 ? G[2] : G[3])); if (!cells.includes(G[2])) cells[(R() * 9) | 0] = G[2]; let left = cells.filter((x) => x === G[2]).length;
+      panel(`<h2>${G[0]}</h2><p class="sub">${G[1]} · Round ${round + 1}/3</p><div style="display:grid;grid-template-columns:repeat(3,72px);gap:8px;justify-content:center">${cells.map((x, i) => `<button data-i="${i}" style="font-size:38px;height:72px;border-radius:16px;border:0;background:#fff3">${x}</button>`).join('')}</div>`, (c) => { c.querySelectorAll('[data-i]').forEach((b) => b.onclick = () => { const x = cells[+b.dataset.i]; if (b.disabled) return; b.disabled = true; b.style.opacity = 0.3; if (x === G[2]) { sfx('pop'); left--; if (!left) { round++; if (round >= 3) { sfx('win'); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 40); this.badge('np2party'); this.done(); this.toastMsg(G[4]); } else draw(); } } else sfx('bump'); }); }, 'mgP'); }; draw(); },
+  trackDesk() { const c = (this.place && this.place.center) || chileCenter(); this.app.busy = true;
+    const loc = SANTA_AWAY ? ('Santa is visiting <b>Chile</b> in Sector 4. He comes home on Thanksgiving (' + nice(THANKS) + ').') : (ONLINE ? 'Santa is in the air! Log every sighting as it comes in.' : 'The desk is in test mode until Christmas Eve. You can still practise a report.');
+    const q = SANTA_AWAY ? [['Where is Santa right now?', ['Chile', 'The North Pole', 'Kiribati'], 0], ['Which sector watches South America (and Chile)?', ['Sector 4 · Belen, Costa Rica', 'Sector 1 · Kiribati', 'Sector 5 · Mexico'], 0], ['When does Santa come home?', ['Thanksgiving', 'Halloween', 'Labor Day'], 0]] : [['When do the centers go fully online?', ['Christmas Eve and Christmas Day', 'Thanksgiving only', 'All year'], 0], ['Who is the Elf Supervisor in ' + c.place + '?', [c.boss, 'Elf Bernard', 'Elf Winslow'], 0], ['Where do tracker reports go next?', ['North Pole Flight Command', 'The bakery', 'The skating pond'], 0]];
+    let i = 0; const draw = (msg) => { const [Q, A, right] = q[i]; const order = A.map((txt, k) => [txt, k]).sort(() => R() - 0.5);
+      panel(`<h2>📡 TRACKING DESK</h2><p class="sub">Sector ${c.sector} · ${c.place}, ${c.country}</p><p style="font-weight:700">${loc}</p><p style="margin:10px 0;font-weight:800">${esc(Q)}</p><p style="min-height:18px;font-weight:800">${msg || ''}</p>${order.map(([txt, k]) => `<button class="mbtn2" data-k="${k}" style="display:block;width:94%;margin:6px auto">${esc(txt)}</button>`).join('')}<button class="mbtn2" id="tX">✖ Stop</button>`, (el) => {
+        el.querySelector('#tX').onclick = () => { sfx('click'); this.done(); };
+        el.querySelectorAll('[data-k]').forEach((b) => b.onclick = () => { if (+b.dataset.k === right) { sfx('pop'); i++; if (i >= q.length) { sfx('win'); this.done(); this.fx.confetti(this.me.x, this.me.y + 1.5, this.me.z, 30); this.badge('np2track'); this.toastMsg('📡 Report filed! Flight Command has the update.'); } else draw('✅ Logged!'); } else { sfx('bump'); draw('❌ Check the screen and try again.'); } }); }); };
+    draw(); },
+
+  placeTram() { const tr = this.tram; if (!tr) return; const n = tr.cars.length, carLen = 2.95, consist = n * carLen, travel = Math.max(0.4, (tr.z1 - tr.z0) - consist - 1.0); const u = tr.u % 2, t = u < 1 ? u : 2 - u, mid = tr.z0 + consist / 2 + 0.6 + t * travel;
+    tr.cars.forEach((c, i) => { c.position.set(tr.x, tr.y, mid + (i - (n - 1) / 2) * carLen); c.rotation.y = u < 1 ? 0 : Math.PI; }); },
+  tramPanel() { this.app.busy = true; const stops = [['understation', '🚂 Workshop Underground Station'], ['workshop', '🧸 Santa’s Workshop (upstairs)'], ['yard', '🚪 Workshop Yard (outside)'], ['logistics', '📦 Operations & Logistics'], ['express', '🚂 Polar Express Station']];
+    const here = this.place && this.place.id;
+    const list = stops.filter((s) => s[0] !== here);
+    panel(`<h2>🚂 ELF TRAM</h2><p class="sub">The underground line only runs around the North Pole. Where to?</p>${list.map(([id, lab]) => `<button class="mbtn2" data-s="${id}" style="display:block;width:94%;margin:6px auto">${lab}</button>`).join('')}<button class="mbtn2" id="tX">✖ Stay here</button>`, (c) => {
+      c.querySelectorAll('[data-s]').forEach((b) => b.onclick = () => { sfx('honk'); closePanel(); this.app.busy = false; this.underLink(b.dataset.s); });
+      c.querySelector('#tX').onclick = () => { sfx('click'); this.done(); }; }); },
 };
