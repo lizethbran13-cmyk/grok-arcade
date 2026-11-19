@@ -23,6 +23,7 @@ import { panel, closePanel } from './panel.js';
 import { act as opsAct } from './opsacts.js';
 import { Acts } from './acts2.js';
 import { Meet } from './meet.js';
+import { Express } from './express.js';
 const PI = Math.PI, $ = (id) => document.getElementById(id);
 const ENV = Object.assign({}, TENV, { fogD: 0.0026, bloomT: 1.5, bloomS: 0.3, exposure: 0.92 });
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -79,7 +80,7 @@ export class Game2 {
     this.pl = [0, 1, 2].map(() => { const l = new THREE.PointLight(0xffd8a0, 0, 20, 1.6); l.castShadow = false; E.scene.add(l); return l; });
     // falling snow
     { const N = this.phone ? 380 : 700, pa = new Float32Array(N * 3); for (let i = 0; i < N * 3; i++) pa[i] = (R() - 0.5) * 50; const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pa, 3)); this.snow = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffffff, size: 0.14, transparent: true, opacity: 0.85, depthWrite: false })); this.snow.frustumCulled = false; E.scene.add(this.snow); }
-    this.npcs = []; this.intNpcs = []; this.acts = []; this.buildFolk(); this.buildClaus(); this.buildPets(); this.buildDeer(); this.buildBuses(); this.buildConveyor(); this._EV = EVENTS; this._mkSanta = () => (this._santaIn = makeSanta()); this.actsInit(); this.meetInit();
+    this.npcs = []; this.intNpcs = []; this.acts = []; this.buildFolk(); this.buildClaus(); this.buildPets(); this.buildDeer(); this.buildBuses(); this.buildConveyor(); this._EV = EVENTS; this._mkSanta = () => (this._santaIn = makeSanta()); this.actsInit(); this.meetInit(); this.expressInit();
     this.acts.push({ x: -16, z: 10, r: 3, label: '📰 Read the North Pole News', kind: 'news', zone: 'out' });
     for (let i = 0; i < STOPS.length; i++) { const s = STOPS[i]; this.acts.push({ x: s[2], z: s[3], r: 4.5, label: '🚌 Ride the Sleigh Bus', kind: 'bus', zone: s[0] === 'mountain' ? 'mtn' : s[0] === 'port' ? 'port' : 'out' }); }
     w.uploader = null; this._upRT.dispose(); this.updateCam(0); }
@@ -110,7 +111,7 @@ export class Game2 {
   buildBuses() { const proto = makeSleighBus(); this.buses = []; for (const s of STOPS) { const b = proto.clone(); const zone = s[0] === 'mountain' ? 'mtn' : s[0] === 'port' ? 'port' : 'out'; const yaw = s[4] + PI / 2; b.position.set(s[2] + Math.sin(s[4] + PI / 2) * 4, 0, s[3] + Math.cos(s[4] + PI / 2) * 4); b.rotation.y = yaw; E.scene.add(b); this.buses.push({ m: b, zone }); } }
   buildConveyor() { const g = new THREE.BoxGeometry(0.8, 0.6, 0.8).translate(0, 0.3, 0); const m = new THREE.MeshStandardMaterial({ roughness: 0.6 }); const N = 10; this.belt = new THREE.InstancedMesh(g, m, N); const c = new THREE.Color(); for (let i = 0; i < N; i++) this.belt.setColorAt(i, c.set([0xdc2626, 0x16a34a, 0x2563eb, 0xf5c542, 0xdb2777][i % 5])); this.belt.castShadow = true; E.scene.add(this.belt); this._bm = new THREE.Matrix4(); }
   // ---------------------------------------------------------------- zones: village / far zones / interiors
-  showZone(z) { const w = this.world; const regs = new Set(['out', 'mtn', 'port', 'int', 'rtc', ...Object.keys(w.regionMeshes || {})]); for (const r of regs) w.setRegionVisible(r, r === z); for (const n of this.npcs) n.root.visible = n.zone === z && !n.hidden; for (const b of this.buses) b.m.visible = b.zone === z; this.belt.visible = z === 'out'; this.snow.visible = z !== 'int' && !(z === 'rtc' && this.rtcLook && this.rtcLook !== 'gable'); this.actsZone(z); }
+  showZone(z) { const w = this.world; const regs = new Set(['out', 'mtn', 'port', 'int', 'rtc', ...Object.keys(w.regionMeshes || {})]); for (const r of regs) w.setRegionVisible(r, r === z); for (const n of this.npcs) n.root.visible = n.zone === z && !n.hidden; for (const b of this.buses) b.m.visible = b.zone === z; if (this.pe && this.pe.root) this.pe.root.visible = z === 'out'; this.belt.visible = z === 'out'; this.snow.visible = z !== 'int' && !(z === 'rtc' && this.rtcLook && this.rtcLook !== 'gable'); this.actsZone(z); }
   fade(fn) { const f = $('fade'); f.classList.add('on'); this.app.busy = true; setTimeout(() => { try { fn(); } catch (e) { console.error(e); } this.cam.snap = true; this.updateCam(0); setTimeout(() => { f.classList.remove('on'); this.app.busy = false; clearEdges(); }, 120); }, 380); }
   loadFar(z, rtcId) { if (z === 'rtc') { if (this.outZone === 'rtc' && this.rtcId === rtcId) return; } else if (this.outZone === z) return;
     const w = this.world; if (this.outZone !== 'out') { this.clearRtc(); w.disposeRegion(this.outZone); }
@@ -147,7 +148,7 @@ export class Game2 {
       if (where === 'understation') { const shop = this.place && this.place.id === 'workshop'; if (this.zone === 'int') this.clearInt(); this.loadFar('out'); const U = UNDER; if (shop) U.parent = PLACES.find((q) => q.id === 'workshop'); else { U.parent = null; this.prev = { zone: 'out', x: -88, z: -122, y: 0, yaw: Math.PI / 2 }; } this.buildInt(U, shop ? 'fromshop' : null); return; }
       if (where === 'workshop') { const shop = PLACES.find((q) => q.id === 'workshop'); if (this.zone === 'int') this.clearInt(); this.loadFar('out'); this.buildInt(shop, 'under'); return; }
       if (this.zone === 'int') this.leaveInt(true); this.loadFar('out'); this.zone = 'out'; this.showZone('out');
-      const dest = { yard: [-88, -122, Math.PI / 2], logistics: [-36, 122, 0], express: [18, 122, 0] }[where] || [-88, -122, Math.PI / 2];
+      const dest = { yard: [-88, -122, Math.PI / 2], logistics: [-36, 122, 0], express: [18, 123.4, Math.PI] }[where] || [-88, -122, Math.PI / 2];
       this.me.place([dest[0], 0.15, dest[1]], dest[2]); this.cam.yaw = dest[2]; this.doorCd = 1.2;
       this.toastMsg({ yard: '🚪 Back in the Workshop Yard.', logistics: '📦 Operations & Logistics. The underground platform is inside.', express: '🚂 Polar Express Station. Ask Ticketta for the tram.', workshop: '🧸 Santa’s Workshop.' }[where] || '🚂 All aboard!');
     };
@@ -192,7 +193,7 @@ export class Game2 {
     for (const n of list) { if (n.hidden || n.zone !== this.zone || !n.root.visible) continue; const d = Math.hypot(me.x - n.x, me.z - n.z) - n.r; if (d < 1.9 && d < bd && Math.abs(me.y - n.y) < 2) { bd = d; best = { kind: 'talk', npc: n, label: '💬 ' + n.name.replace(/\s*\(.*\)$/, '') }; } }
     const acts = this.zone === 'int' ? this.intActs || [] : this.acts; for (const a of acts) { if (a.zone !== this.zone) continue; const d = Math.hypot(me.x - a.x, me.z - a.z); if (d < a.r && d - 0.5 < bd) { bd = d - 0.5; best = a; } }
     this.act = best; this.hud.setAct(this.chat ? null : best); }
-  doAct(a) { if (a.kind === 'talk') return this.talk(a.npc); if (this.doAct2(a)) return; if (a.kind === 'news') return this.news(); if (a.kind === 'bus') return this.busPanel(); if (a.kind === 'ops') { this.app.busy = true; if (!opsAct(a.id, this, () => this.done())) this.done(); return; } if (a.kind === 'file') return this.filePanel(); return this.mini(a); }
+  doAct(a) { if (a.kind === 'talk') return this.talk(a.npc); if (this.peAct && this.peAct(a)) return; if (this.doAct2(a)) return; if (a.kind === 'news') return this.news(); if (a.kind === 'bus') return this.busPanel(); if (a.kind === 'ops') { this.app.busy = true; if (!opsAct(a.id, this, () => this.done())) this.done(); return; } if (a.kind === 'file') return this.filePanel(); return this.mini(a); }
   done() { closePanel(); this.app.busy = false; clearEdges(); }
   talk(n) { if (this.feedDeer(n)) return; if (this.meetTalk(n)) return; const lines = n.kind === 'elf' && !n.int ? [`Hi! I’m ${n.name}.`, ...n.lines, this.event ? `Right now: ${this.event.name.replace(/^\S+\s/, '')}.` : ''].filter(Boolean) : n.lines; n.yaw = Math.atan2(this.me.x - n.x, this.me.z - n.z); this.chat = { npc: n, lines, i: 0 }; this.showLine(); sfx('click');
     if (n.kind === 'santa' && !S.flags.np2santa) { S.flags.np2santa = 1; persist(); this.badge('np2santa'); this.fx.confetti(n.x, n.y + 2.4, n.z, 40); } if (n.kind === 'elf' && !n.int) n.lines = [pick(CHAT), pick(CHAT)]; }
@@ -228,13 +229,14 @@ export class Game2 {
   // ---------------------------------------------------------------- frame
   update(dt) { this.T += dt; const me = this.me, w = this.world; this.doorCd -= dt;
     if (this.chat) { if (edge('act') || edge('jump')) this.nextLine(); const n = this.chat && this.chat.npc; if (n && Math.hypot(me.x - n.x, me.z - n.z) > 6) { this.chat = null; $('dlg').classList.remove('on'); } }
+    if (this.peRide && (edge('act') || edge('jump'))) { this.peAlight(); }
     if (this.trainRide && (edge('act') || edge('jump'))) { this.trainRide = false; this.toastMsg('🚂 You hop off the little train.'); }
-    const free = !this.app.busy && !this.chat && !this.trainRide; const mv = free ? readMove() : { x: 0, y: 0 };
+    const free = !this.app.busy && !this.chat && !this.trainRide && !this.peRide; const mv = free ? readMove() : { x: 0, y: 0 };
     const inp = free ? { mx: mv.x, my: mv.y, jumpP: edge('jump'), jumpH: held('jump'), spinP: edge('spin'), blastP: false, hookP: false } : { mx: 0, my: 0 };
     me.update(dt, inp, this); this.pushOut(); me.updateBlob(w);
     // doors
     if (free && this.doorCd <= 0) { for (const z of w.zonesAt(me.x, me.y + 0.3, me.z)) { if (z.type === 'door' && z.place && !z.place.noEnter && this.zone !== 'int') { this.enter(z.place); break; } if (z.type === 'exit' && this.zone === 'int') { this.exitInt(); break; } } }
-    this.updateNPCs(dt); this.actsUpdate(dt); this.meetUpdate(dt); this.anim(dt); this.updateAct(); if (free && edge('act') && this.act) this.doAct(this.act);
+    this.updateNPCs(dt); this.actsUpdate(dt); this.meetUpdate(dt); if (this.expressUpdate) this.expressUpdate(dt); this.anim(dt); this.updateAct(); if (free && edge('act') && this.act) this.doAct(this.act);
     if (this.zone !== 'int') this.hud.region(areaName(me.x, me.z)); this.updateHud(dt);
     this.updateCam(dt); this.render(dt); }
   idle(dt) { this.T += dt; this.updateNPCs(dt); this.actsUpdate(dt); this.meetUpdate(dt); this.anim(dt); this.render(dt); }
@@ -246,6 +248,13 @@ export class Game2 {
     if (this.snow.visible) { const p = this.snow.geometry.attributes.position, a = p.array; for (let i = 0; i < a.length; i += 3) { a[i + 1] -= dt * (1.2 + (i % 7) * 0.1); a[i] += Math.sin(this.T + i) * dt * 0.25; if (a[i + 1] < -6) a[i + 1] += 26; } p.needsUpdate = true; this.snow.position.set(this.me.x, this.me.y + 6, this.me.z); }
     for (const bs of this.buses) if (bs.m.visible) bs.m.position.y = Math.sin(this.T * 2 + bs.m.position.x) * 0.08 + 0.1; }
   updateCam(dt) { const c = this.cam, me = this.me, cam = E.camera;
+    if (this.peRide && this.pe) { if (IN.camDX || IN.camDY) { c.yaw -= IN.camDX * 0.0085; c.pitch = Math.max(-0.2, Math.min(0.9, c.pitch + IN.camDY * 0.005)); IN.camDX = IN.camDY = 0; }
+      const pe = this.pe, yaw = c.yaw, pitch = c.pitch, back = 14;
+      // follow from behind and south of the rails, so the train, station and village are all in view
+      const bx = pe.x - Math.sin(yaw) * back, bz = pe.z - Math.cos(yaw) * back + 7.2;
+      cam.position.set(bx, 3.8 + pitch * 1.6, bz);
+      cam.lookAt(pe.x + Math.sin(pe.yaw) * 6, 1.6, pe.z);
+      c.x = cam.position.x; c.y = cam.position.y; c.z = cam.position.z; return; }
     if (this.trainRide && this.train) { const tr = this.train, a = tr.ph, x = tr.cx + Math.cos(a) * tr.a, z = tr.cz + Math.sin(a) * tr.b, yaw = -Math.atan2(Math.cos(a) * tr.b, -Math.sin(a) * tr.a);
       cam.position.set(x - Math.sin(yaw) * 1.2, tr.y + 0.55, z - Math.cos(yaw) * 1.2); cam.lookAt(x + Math.sin(yaw) * 0.7, tr.y + 0.12, z + Math.cos(yaw) * 0.7); c.x = cam.position.x; c.y = cam.position.y; c.z = cam.position.z; c.yaw = yaw; return; }
     if (IN.camDX || IN.camDY) { c.yaw -= IN.camDX * 0.0085; c.pitch = Math.max(-0.05, Math.min(1.1, c.pitch + IN.camDY * 0.005)); IN.camDX = IN.camDY = 0; }
@@ -258,4 +267,4 @@ export class Game2 {
   // stubs the shared Player calls into
   onSpin() {} fireBlast() {} hookTarget() { return null; } onFaint() {} tryDescend() { return false; }
 }
-Object.assign(Game2.prototype, Acts, Meet);
+Object.assign(Game2.prototype, Acts, Meet, Express);

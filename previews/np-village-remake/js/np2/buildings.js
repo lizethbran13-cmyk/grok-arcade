@@ -107,10 +107,42 @@ export const STYLES = {
     K.doorL(w, T, 0, D / 2, 3.2, 3.6, 0x7f1d1d, { frame: 0xf5efe0 }); winRow(T, o, 1.6, 6, D / 2 + 0.05, { arch: true, frame: 0xf5efe0, h: 1.8 }); sideWins(T, o, 1.6, 3, { frame: 0xf5efe0 });
     signOn(w, T, o, 4.6, 10); },
   // train station: long canopy on iron posts over a platform, small ticket hall with clock tower
-  station(w, T, o) { w_ = w; const { W, D, H } = o; T.box('m', 0xb8c2cc, 0, 0, 0, W + 8, 0.4, D + 6); K.walls(w, T, W * 0.5, H, D, o.col || 0x14532d, 'board'); K.gable(T, o.roof || 0x7f1d1d, H, W * 0.5, 2.6, D);
-    T.box('m', o.col || 0x14532d, W * 0.25 - 1.5, 0, D / 2 - 1.5, 3, H + 4, 3); T.add('m', G.cone(4), o.roof || 0x7f1d1d, W * 0.25 - 1.5, H + 4, D / 2 - 1.5, 0, PI / 4, 0, 2.4, 2.4, 2.4); T.add('m', G.cyl(16), 0xfffbeb, W * 0.25 - 1.5, H + 2.6, D / 2 + 0.02, PI / 2, 0, 0, 1, 0.1, 1);
-    for (let i = 0; i < 7; i++) { const lx = -W / 2 - 3 + i * (W + 6) / 6; T.add('x', G.cyl(8), 0x1f2937, lx, 0.4, -D / 2 - 2.5, 0, 0, 0, 0.12, 3.8, 0.12); } T.box('m', o.roof || 0x7f1d1d, 0, 4.2, -D / 2 - 2.0, W + 7, 0.25, 3.6); T.box('m', SNOW, 0, 4.45, -D / 2 - 2.0, W + 7, 0.12, 3.6);
-    K.doorL(w, T, 0, D / 2, 1.8, 2.6, 0x7f1d1d); winRow(T, { ...o, W: W * 0.5 }, 1.5, 2, D / 2 + 0.05, { frame: 0xfef3c7 }); signOn(w, T, o, H + 0.9, 9); },
+  station(w, T, o) { w_ = w; const { W, D, H } = o; const col = o.col || 0x14532d, roof = o.roof || 0x7f1d1d;
+    // plinth and full hall
+    T.box('m', 0xb8c2cc, 0, 0, 0, W + 10, 0.45, D + 8);
+    K.walls(w, T, W, H, D, col, 'board');
+    K.gable(T, roof, H, W, 3.6, D);
+    T.box('m', SNOW, 0, H + 2.2, 0, W * 0.55, 0.3, D + 0.8);
+    // corner turrets
+    for (const s of [-1, 1]) { T.box('m', col, s * (W / 2 - 1.4), 0, D / 2 - 1.2, 3.2, H + 3.2, 3.2); T.add('m', G.cone(4), roof, s * (W / 2 - 1.4), H + 3.2, D / 2 - 1.2, 0, PI / 4, 0, 2.6, 2.8, 2.6); T.add('m', G.cone(4), SNOW, s * (W / 2 - 1.4), H + 4.4, D / 2 - 1.2, 0, PI / 4, 0, 1.5, 1.5, 1.5); }
+    // central clock tower on the village facade
+    T.box('m', 0x57534e, 0, 0, D / 2 - 1.4, 5.2, H + 6.5, 5.2);
+    T.box('m', 0xf5efe0, 0, H + 3.6, D / 2 - 1.4, 5.6, 0.35, 5.6);
+    T.add('m', G.cone(4), roof, 0, H + 6.5, D / 2 - 1.4, 0, PI / 4, 0, 4.2, 4.4, 4.2);
+    T.add('m', G.cone(4), SNOW, 0, H + 8.2, D / 2 - 1.4, 0, PI / 4, 0, 2.2, 2.2, 2.2);
+    // clock faces (village side and platform side)
+    for (const s of [1, -1]) { T.add('m', G.cyl(16), 0xfffbeb, 0, H + 4.4, D / 2 - 1.4 + s * 2.65, PI / 2, 0, 0, 1.15, 0.1, 1.15); T.box('m', 0x111111, 0, H + 4.4, D / 2 - 1.4 + s * 2.72, 0.08, 0.7, 0.04); T.box('m', 0x111111, 0.25, H + 4.4, D / 2 - 1.4 + s * 2.72, 0.5, 0.08, 0.04); }
+    // grand arched windows along the facade, two storeys
+    winRow(T, o, 1.7, 7, D / 2 + 0.05, { arch: true, frame: 0xfef3c7, h: 1.8, w: 1.15 });
+    winRow(T, o, 5.0, 7, D / 2 + 0.05, { arch: true, frame: 0xfef3c7, h: 1.4, w: 1.05 });
+    sideWins(T, o, 1.7, 3, { arch: true, frame: 0xfef3c7, h: 1.6 });
+    // big entrance
+    K.doorL(w, T, 0, D / 2, 2.6, 3.4, 0x7f1d1d, { frame: 0xf5efe0 });
+    T.add('m', G.arch(10), 0xf5efe0, 0, 2.2, D / 2 + 0.2, 0, 0, 0, 3.6, 3.2, 0.16);
+    // steps
+    for (let i = 0; i < 3; i++) T.box('m', 0xd6d3d1, 0, i * 0.12, D / 2 + 0.7 + i * 0.28, 5.5 - i * 0.4, 0.12, 0.4);
+    // platform canopy (back / south, toward the tracks) — posts only, so you can walk under it
+    for (let i = 0; i < 9; i++) { const lx = -W / 2 + 1.5 + i * (W - 3) / 8; T.add('x', G.cyl(8), 0x1f2937, lx, 0.45, -D / 2 - 3.2, 0, 0, 0, 0.14, 4.6, 0.14); w.solidR(...T.P(lx, 0, -D / 2 - 3.2), 0.3, 4.6, 0.3, T.ry); }
+    T.box('m', roof, 0, 5.0, -D / 2 - 3.0, W + 2, 0.28, 6.4);
+    T.box('m', SNOW, 0, 5.28, -D / 2 - 3.0, W + 2, 0.12, 6.4);
+    T.box('l', 0xfde68a, 0, 4.7, -D / 2 - 3.0, W, 0.06, 5.8, 0.35);
+    // banner hangs in front of the clock tower (tower front is D/2+1.2) so the name stays readable
+    { const zf = D / 2 + 1.9; T.box('m', 0x1f2937, -2.4, 8.6, D / 2 + 1.45, 0.12, 0.16, 1.0); T.box('m', 0x1f2937, 2.4, 8.6, D / 2 + 1.45, 0.12, 0.16, 1.0);
+      T.box('m', 0x7f1d1d, 0, 8.6, zf, 12.2, 2.15, 0.18); T.box('m', 0xf5efe0, 0, 8.6, zf + 0.05, 12.5, 2.35, 0.06);
+      K.sign(w, T, 'POLAR EXPRESS STATION', 0, 8.6, zf + 0.16, 11.6, 1.7, '#7f1d1d', '#fff7e0'); }
+
+    { const T2 = w.tf(...(function () { const p = T.P(0, 0, -D / 2 - 0.2); return [p[0], 0, p[2]]; })(), T.ry + PI); K.sign(w, T2, 'TO THE TRAINS', 0, 3.2, 0.2, 8, 0.6, '#14532d', '#fef3c7'); }
+  },
   // modern-ish office with glass band and flat roof (admin/IT, elf resources)
   office(w, T, o) { w_ = w; const { W, D, H } = o; K.walls(w, T, W, H, D, o.col || 0x475569, 'plain'); T.box('m', o.trim || 0xe2e8f0, 0, 0, 0, W + 0.2, 0.5, D + 0.2); T.box('m', o.trim || 0xe2e8f0, 0, H, 0, W + 0.4, 0.4, D + 0.4); T.box('m', SNOW, 0, H + 0.4, 0, W + 0.2, 0.18, D + 0.2);
     T.box('l', 0xc7e8ff, 0, H * 0.45, D / 2 + 0.03, W * 0.9, H * 0.3, 0.06, 0, 0.12); for (let i = 0; i <= 8; i++) T.box('m', o.trim || 0xe2e8f0, -W * 0.45 + i * W * 0.9 / 8, H * 0.45, D / 2 + 0.08, 0.1, H * 0.3, 0.06);

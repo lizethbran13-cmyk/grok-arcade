@@ -234,9 +234,52 @@ const RECIPES = {
   repair(w, p, o) { const r = room(w, 15, 12, 6, { wall: 0xdbeafe, floor: 'stone', fc: 0x6b7280, band: 0x1e3a8a, curtain: 0x1e3a8a }); o.r = r; K.sledge(w, IX, IZ - 1, 0.3, 0x7f1d1d, 1.4); for (let i = 0; i < 4; i++) K.crate(w, IX - 1.6 + i * 1.1, IZ - 1, 0.5, 0, 0);
     box(w, 'm', 0x5b3a21, IX, 0.8, r.z0 + 0.3, 10, 2, 0.08); for (let i = 0; i < 12; i++) box(w, 'x', 0x94a3b8, IX - 4.5 + i * 0.8, 1.2 + (i % 3) * 0.4, r.z0 + 0.4, 0.08, 0.5, 0.05); table(w, r.x1 - 1.5, IZ + 2, 1.6, 3, 0x57534e); board(w, IX, 3.4, r.z0 + 0.35, 0, 'RUNNERS · BELLS · SEAT BELTS', 4.6, 0.5, '#1e3a8a', '#dbeafe');
     o.acts.push({ x: IX + 2.5, z: IZ + 1.5, r: 2.2, label: '🔧 Help fix the runners', kind: 'fix' }); },
-  station(w, p, o) { const r = room(w, 14, 9, 5.5, { wall: 0xf0fdf4, floor: 'tile', fc: 0xf5f5f4, fc2: 0x14532d, band: 0x14532d, curtain: 0x7f1d1d }); o.r = r; counter(w, IX - 3, r.z0 + 1.2, 3.4, 0, 0x8b5a2b, 0x14532d); box(w, 'x', 0x111827, IX + 2.5, 2.2, r.z0 + 0.25, 4.4, 1.4, 0.1);
-    for (let i = 0; i < 3; i++) K.sign(w, w.tf(IX + 2.5, 0, r.z0 + 0.32, 0), ['POLAR EXPRESS · 7:00', 'WORKSHOP SHUTTLE · EVERY 10', 'CHARTER SLEIGHS · ASK'][i], 0, 3.2 - i * 0.42, 0, 4.0, 0.36, '#111827', '#fbbf24', { border: false }); for (let i = 0; i < 3; i++) K.bench(w, IX - 4 + i * 4, IZ + 1.4, PI, 0x14532d);
-    o.npcs.push({ who: 'elf', x: IX - 3, z: r.z0 + 2, yaw: PI, name: 'Conductor Elf Ticketta', lines: ['No trains come up from the outside world, only flying sleighs. This line just runs around the North Pole!', 'The underground tram from here goes to the Workshop station and Operations & Logistics.'], v: 4 }); o.acts.push({ x: IX + 2.5, z: IZ + 1.2, r: 2.0, label: '🚂 Ride the underground tram', kind: 'tramride' }); },
+  station(w, p, o) { const r = room(w, 38, 24, 10, { wall: 0xf7efe4, floor: 'marble', fc: 0xf5f5f4, fc2: 0xd6d3d1, band: 0x7f1d1d, curtain: 0x7f1d1d, ceilC: 0xf5efe0, doorW: 3.2, doorFrame: 0x3b2414 }); o.r = r; o.noDress = false;
+    // beams + a tall sense of the hall
+    for (let i = 0; i < 5; i++) { const z = r.z0 + 3 + i * 4.4; box(w, 'm', 0x5b3a21, IX, 8.6, z, 36, 0.3, 0.35); box(w, 'm', 0x5b3a21, IX - 12, 6.5, z, 0.3, 3.2, 0.3); box(w, 'm', 0x5b3a21, IX + 12, 6.5, z, 0.3, 3.2, 0.3); }
+    // big clock on the far (platform) wall, so you see it as you come in
+    box(w, 'm', 0x3b2414, IX, 5.6, r.z0 + 0.25, 3.6, 3.6, 0.2); w.add('m', G.cyl(20), 0xfffbeb, IX, 7.0, r.z0 + 0.4, E, 0, 0, 1.45, 0.1, 1.45);
+    box(w, 'm', 0x111111, IX, 7.0, r.z0 + 0.48, 0.08, 1.0, 0.04); box(w, 'm', 0x111111, IX + 0.4, 7.0, r.z0 + 0.48, 0.7, 0.08, 0.04);
+    board(w, IX, 8.7, r.z0 + 0.3, 0, 'POLAR EXPRESS STATION', 10, 0.7, '#7f1d1d', '#fff7e0');
+    // departure boards under the clock
+    box(w, 'x', 0x111827, IX, 3.5, r.z0 + 0.28, 12, 2.2, 0.12);
+    for (let i = 0; i < 3; i++) K.sign(w, w.tf(IX, 0, r.z0 + 0.36, 0), ['1  WORKSHOP SIDE      ·  ON THE SOUTH LINE', '2  POLAR EXPRESS STA. ·  THIS STOP', '3  ELF VILLAGE        ·  NORTH OF PLATFORM'][i], 0, 4.3 - i * 0.55, 0, 11.2, 0.46, '#111827', '#fbbf24', { border: false });
+    // doors out to the platforms (visual + act; the real train is outside)
+    box(w, 'm', 0x3b2414, IX - 8, 0, r.z0 + 0.2, 2.4, 3.0, 0.18); box(w, 'l', 0xcfeaff, IX - 8, 0.15, r.z0 + 0.28, 1.8, 2.6, 0.04, 0, 0.3);
+    box(w, 'm', 0x3b2414, IX + 8, 0, r.z0 + 0.2, 2.4, 3.0, 0.18); box(w, 'l', 0xcfeaff, IX + 8, 0.15, r.z0 + 0.28, 1.8, 2.6, 0.04, 0, 0.3);
+    board(w, IX, 2.15, r.z0 + 0.4, 0, '🚂 TO THE PLATFORMS', 5.5, 0.4, '#14532d', '#fef3c7');
+    o.acts.push({ x: IX, z: r.z0 + 2.0, r: 3.2, label: '🚂 Walk out to the platforms', kind: 'peout' });
+    // ticket counter (left), Ticketta behind it
+    counter(w, IX - 12.5, r.z0 + 3.6, 8.5, 0, 0xf5efe0, 0x14532d);
+    box(w, 'm', 0x14532d, IX - 12.5, 1.14, r.z0 + 3.6, 8.7, 1.3, 0.12);
+    box(w, 'l', 0xcfeaff, IX - 12.5, 1.4, r.z0 + 3.72, 7.2, 0.9, 0.04, 0, 0.25);
+    board(w, IX - 12.5, 2.7, r.z0 + 4.15, 0, 'TICKETS  ·  POLAR EXPRESS', 6.4, 0.45, '#7f1d1d', '#fff7e0');
+    o.acts.push({ x: IX - 12.5, z: r.z0 + 5.2, r: 2.6, label: '🎫 Buy a Polar Express ticket', kind: 'peticket' });
+    o.npcs.push({ who: 'elf', x: IX - 12.5, z: r.z0 + 2.5, yaw: 0, name: 'Conductor Elf Ticketta', lines: ['All aboard! The Polar Express runs the south line around the North Pole: Workshop side, this station, and Elf Village — then back again.', 'Tickets are free for village folk. I’ll send you out when you’re ready, or you can walk to Platform 1 yourself.', 'No trains come up from the outside world, only flying sleighs. This line just runs around the North Pole.', 'The underground tram still leaves from the side hall, down to the Workshop station and Operations & Logistics.'], v: 2 });
+    // waiting area: benches in two rows, a rug, a tree
+    rug(w, IX, IZ + 1.2, 10, 10, 0x7f1d1d, 0xfef3c7);
+    for (let row = 0; row < 3; row++) for (const s of [-1, 1]) { K.bench(w, IX + s * 2.4, IZ - 1.6 + row * 2.2, s < 0 ? E : -E, 0x14532d); }
+    tree(w, r.x1 - 4.2, r.z1 - 4.0, 1.0);
+    // cocoa stand + gift shop (right)
+    stall(w, IX + 13.2, IZ - 2.2, -E, 0x7f1d1d, 0xf5c542, [0x7c4a1e, 0xf5c542, 0x16a34a, 0xdc2626, 0xfef3c7]);
+    board(w, IX + 13.2, 2.7, IZ - 0.6, -E, '🎁 STATION GIFTS', 3.4, 0.36, '#7f1d1d', '#fff7e0');
+    counter(w, IX + 13.2, IZ + 3.4, 4.2, -E, 0xf5efe0, 0x7c2d12);
+    box(w, 'm', 0x7c2d12, IX + 13.2, 1.14, IZ + 3.4, 0.12, 1.2, 3.6);
+    for (let i = 0; i < 4; i++) w.add('m', G.cyl(10), 0xfef3c7, IX + 12.5, 1.2, IZ + 2.4 + i * 0.55, 0, 0, 0, 0.12, 0.18, 0.12);
+    board(w, IX + 13.2, 2.55, IZ + 5.2, -E, '☕ HOT COCOA', 3.2, 0.36, '#7c2d12', '#fff7e0');
+    o.npcs.push({ who: 'elf', x: IX + 12.0, z: IZ + 3.4, yaw: -E, name: 'Elf Mocha (Cocoa Stand)', lines: ['Hot cocoa for the ride? It’s the Polar Express way.', 'I also wrap little station souvenirs. Take a look at the gift stall!'], v: 5 });
+    // side hall: underground tram
+    board(w, r.x0 + 1.2, 3.2, IZ + 8.5, E, 'UNDERGROUND TRAM  ·  WORKSHOP / LOGISTICS', 5.6, 0.36, '#1f2937', '#facc15');
+    o.acts.push({ x: r.x0 + 2.4, z: IZ + 8.5, r: 2.0, label: '🚂 Ride the underground tram', kind: 'tramride' });
+    // luggage, posters, lamps
+    for (let i = 0; i < 5; i++) K.crate(w, r.x0 + 2.2 + (i % 3) * 0.9, r.z0 + 7 + Math.floor(i / 3) * 1.0, 0.7, i, 0);
+    for (const [x, lab] of [[IX - 16, 'MIND THE GAP'], [IX + 16, 'HOT COCOA ON BOARD']]) board(w, x, 4.6, r.z0 + 0.22, 0, lab, 3.6, 0.36, '#111827', '#facc15');
+    for (const x of [IX - 9, IX + 9, IX - 16, IX + 16]) lantern(w, x, 5.8, IZ, 0xffe3a3);
+    // staff + waiting passengers
+    o.npcs.push({ who: 'elf', x: IX + 6, z: r.z0 + 3.2, yaw: PI, name: 'Station Master Elf Porter', lines: ['Welcome to Polar Express Station! The hall, the clock, the cocoa, and a real train on Platform 1.', 'We only run around the North Pole. No trains come in from the outside world.'], v: 3 });
+    o.npcs.push({ who: 'elf', x: IX - 3.2, z: IZ - 0.4, yaw: E, name: 'Elf Commuter Nan', lines: ['I’m waiting for the train to Elf Village. It won’t be long — listen for the whistle!'], v: 6 });
+    o.npcs.push({ who: 'elf', x: IX + 3.4, z: IZ + 2.0, yaw: -E, name: 'Elf Traveler Pip', lines: ['I just came from the Workshop side. The ride along the south line is lovely in the snow.'], v: 7 });
+    o.lights = [[IX, 8.2, IZ, 0xffe2b8, 28, 30], [IX - 11, 6.5, IZ - 2, 0xffd8a0, 18, 22], [IX + 11, 6.5, IZ + 3, 0xffe6c8, 18, 22]]; },
   chapel(w, p, o) { const r = room(w, 10, 16, 7, { wall: 0xfafaf9, floor: 'wood', fc: 0x8b6a4a, band: 0x7f1d1d, curtain: 0xfafaf9 }); o.r = r; for (let i = 0; i < 6; i++) { pew(w, IX - 2.4, r.z0 + 4 + i * 1.6, 3.4); pew(w, IX + 2.4, r.z0 + 4 + i * 1.6, 3.4); } box(w, 'f', 0xb91c1c, IX, 0.01, IZ, 1.4, 0.02, 16);
     box(w, 'm', 0xf5efe0, IX, 0, r.z0 + 1.5, 3, 1.0, 1.2); for (let i = 0; i < 5; i++) { w.add('m', G.cyl(8), 0xfef3c7, IX - 1 + i * 0.5, 1.0, r.z0 + 1.5, 0, 0, 0, 0.06, 0.35, 0.06); w.add('l', G.sph(6), 0xffb347, IX - 1 + i * 0.5, 1.42, r.z0 + 1.5, 0, 0, 0, 0.05, 0.08, 0.05, 1.2); } solid(w, IX, r.z0 + 1.5, 3, 1.2, 1);
     w.add('l', G.arch(12), 0x60a5fa, IX, 2.5, r.z0 + 0.2, 0, 0, 0, 2.4, 3.6, 0.06, 0.6); tree(w, IX - 3.5, r.z0 + 1.6, 1); tree(w, IX + 3.5, r.z0 + 1.6, 1); o.acts.push({ x: IX, z: IZ + 3, r: 2, label: '🔔 Ring the chapel bell', kind: 'bell' }); },

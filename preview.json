@@ -994,7 +994,7 @@
       "url": "previews/np-village-remake/",
       "playable": true,
       "built": "2026-11-19",
-      "notes": "Preview only (not live). More Sleigh Bus / teleport destinations including the five Regional Tracking Centers; date-aware Events Center (art contest + Thanksgiving Elf Parade); Santa visiting Chile until Thanksgiving with Mrs. Claus briefing and Sector 4 tracking; enterable Workshop underground station with platforms, tram, staff, and tram links; basement train start/stop/ride."
+      "notes": "Preview only (not live). Grand Polar Express Station (clock tower, on-demand hall with Ticketta, waiting area, cocoa/gifts, departure boards, platforms). Rideable Polar Express on the south line — locomotive, tender and three coaches, out-and-back stops at Workshop Side, the station and Elf Village. Board from the ticket counter or platform; hop off at stops. Also: more Sleigh Bus teleports including Regional Tracking Centers; date-aware Events Center; Santa visiting Chile until Thanksgiving; enterable Workshop underground station."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

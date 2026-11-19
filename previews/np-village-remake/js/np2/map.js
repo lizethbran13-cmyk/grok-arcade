@@ -11,6 +11,7 @@ import * as K from './kit2.js';
 import { building } from './buildings.js';
 import * as OD from '../opsdata.js?v=np11';
 import { RTC, RTC_AREA, CENTERS } from './cal.js';
+import { dressRailway, PE_Z } from './express.js';
 const PI = Math.PI, E = PI / 2, W_ = -PI / 2, N = PI, S = 0; // ry: front faces +x (E), -x (W_), -z (N), +z (S)
 export const MTN = [3000, 0], PORT = [-3000, 0], INT = [6000, 6000];
 const ROW = Object.fromEntries(OD.ROW.map((r) => [r[0], r]));
@@ -40,7 +41,7 @@ export const PLACES = [
   P('events', '🎪 North Pole Events Center', -100, 2, E, 26, 18, 8, 'log', { feat: ['tentcone','marquee','bunting'], col: 0x7c4a1e, roof: 0x14532d, shutter: 0xb91c1c, win: 5, int: 'events', sign: 'NORTH POLE EVENTS CENTER' }),
   P('lodge', '🏔️ Arctic Lodge', -96, 64, E, 18, 13, 7, 'log', { feat: ['balcony','chimneys2'], col: 0x5b3a21, roof: 0x1e3a8a, shutter: 0x1e3a8a, int: 'lodge', sign: 'ARCTIC LODGE' }),
   // ---- south: station + logistics + snow removal ----
-  P('station', '🚂 Polar Express Station', 18, 112, N, 24, 9, 5.5, 'station', { col: 0x14532d, roof: 0x7f1d1d, int: 'station', sign: 'POLAR EXPRESS STATION' }),
+  P('station', '🚂 Polar Express Station', 18, 110, N, 42, 16, 11, 'station', { col: 0x14532d, roof: 0x7f1d1d, int: 'station', sign: 'POLAR EXPRESS STATION', signBg: '#7f1d1d', signFg: '#fff7e0' }),
   P('logistics', '📦 Operations & Logistics', -36, 112, N, 20, 14, 7, 'stone', { feat: ['gantry'], col: 0x78716c, roof: 0x854d0e, int: 'logistics', ops: 'logistics', sign: 'OPERATIONS & LOGISTICS' }),
   P('snowplow', '🚜 Snow Removal Department', 78, 110, N, 18, 13, 6, 'barn', { feat: ['plow'], col: 0xea580c, col2: 0x9a3412, roof: 0x1f2937, int: 'snowplow', ops: 'snowplow', sign: 'SNOW REMOVAL' }),
   // ---- north: Santa's Workshop + Wrapping Department (joined by conveyors) ----
@@ -77,12 +78,12 @@ export const AREAS = [
 ];
 export function areaName(x, z) { for (const a of AREAS) if (x >= a.x0 && x <= a.x1 && z >= a.z0 && z <= a.z1) return a.name; return '❄️ North Pole Village'; }
 // Sleigh Bus stops [id, name, x, z, yaw]
-export const STOPS = [['village', '🚌 Village Square (Main Street)', 8, 96, PI], ['workshop', '🧸 Workshop Yard', -16, -98, 0], ['ranch', '🦌 Kringle Ranch', 40, -150, PI],
+export const STOPS = [['village', '🚌 Village Square (Main Street)', -22, 88, PI], ['workshop', '🧸 Workshop Yard', -16, -98, 0], ['ranch', '🦌 Kringle Ranch', 40, -150, PI],
   ['claus', '🏠 The Claus Home', -104, -74, -E], ['chapel', '⛪ Chapel Hill', 104, -12, -E], ['mountain', '🐻‍❄️ Polar Bear Mountain (Hall of Records)', MTN[0], MTN[1] + 60, PI], ['port', '🛷 Sleigh Port (Flight Command)', PORT[0], PORT[1] + 30, PI]];
 // Extra teleport destinations (Sleigh Bus menu). Regional Tracking Centers use the streamed RTC far slot.
 export const DESTINATIONS = STOPS.concat([
   ['events', '🎪 North Pole Events Center', -88, 6, E], ['post', '📮 North Pole Post Office', 40, -18, PI],
-  ['station', '🚂 Polar Express Station', 18, 122, 0], ['park', '🌳 Kringle Park (big tree)', -2, 16, 0],
+  ['station', '🚂 Polar Express Station', 18, 123.4, PI], ['park', '🌳 Kringle Park (big tree)', -2, 16, 0],
   ['lodge', '🏔️ Arctic Lodge', -84, 64, E], ['elfvil', '🍄 Elf Village', 96, -80, PI],
   ['university', '🎓 Southern North Pole University', -22, -54, PI], ['sleighbarn', '🛷 Sleigh Barn', -10, -170, PI],
   ['understation', '🚂 Workshop Underground Station', -88, -122, E],
@@ -179,11 +180,12 @@ export function buildVillage(w) { K.seed(11); w.region = 'out';
   { const T = w.tf(176, 0, -60, -E); K.sign(w, T, 'NORTH POLE RIVER', 0, 1.6, 0.05, 4, 0.5, '#0c4a6e', '#e0f2fe'); }
   // ---- railway along the south (Polar Express) ----
   w.add('m', G.box(), 0xb8a48a, 0, 0, 126, 0, 0, 0, 480, 0.12, 4); for (let x = -238; x <= 238; x += 1.6) w.add('m', G.box(), 0x5b3a21, x, 0.1, 126, 0, 0, 0, 0.35, 0.1, 3.2); w.add('x', G.box(), 0x64748b, 0, 0.2, 125.25, 0, 0, 0, 480, 0.14, 0.12); w.add('x', G.box(), 0x64748b, 0, 0.2, 126.75, 0, 0, 0, 480, 0.14, 0.12);
+  dressRailway(w);
   // sleigh bus depot shelter at the village stop
-  { const T = w.tf(8, 0, 100, PI); T.box('m', 0x7f1d1d, 0, 0, -1.6, 6, 2.8, 0.2); for (const s of [-1, 1]) T.box('m', 0x7f1d1d, s * 3, 0, 0, 0.2, 2.8, 3.2); T.box('m', 0x7f1d1d, 0, 2.8, 0, 6.6, 0.25, 3.6); T.box('m', 0xf4f8ff, 0, 3.05, 0, 6.6, 0.12, 3.6); K.bench(w, ...[T.P(0, 0, -1)[0], T.P(0, 0, -1)[2]], PI);
+  { const T = w.tf(-22, 0, 88, PI); T.box('m', 0x7f1d1d, 0, 0, -1.6, 6, 2.8, 0.2); for (const s of [-1, 1]) T.box('m', 0x7f1d1d, s * 3, 0, 0, 0.2, 2.8, 3.2); T.box('m', 0x7f1d1d, 0, 2.8, 0, 6.6, 0.25, 3.6); T.box('m', 0xf4f8ff, 0, 3.05, 0, 6.6, 0.12, 3.6); K.bench(w, ...[T.P(0, 0, -1)[0], T.P(0, 0, -1)[2]], PI);
     K.sign(w, T, 'SLEIGH BUS STOP', 0, 3.85, 0.0, 4.4, 0.6, '#c8102e', '#ffffff'); T.box('m', 0x3b2414, 0, 2.95, 0, 0.12, 0.6, 0.12); }
   // ---- trees: thick pine forest outside the village, small groves inside (never on a path or building) ----
-  const blocked = (x, z) => PLACES.some((p) => Math.abs(x - p.x) < (Math.max(p.W, p.D) / 2 + 6) && Math.abs(z - p.z) < (Math.max(p.W, p.D) / 2 + 6)) || (x > 20 && x < 70 && z > -45 && z < 100) || (x > -60 && x < 5 && z > -5 && z < 64) || (x > -65 && x < 12 && z > -80 && z < -12) || (x > -20 && x < 130 && z > 96 && z < 132) || (x > 120 && x < 200 && z > -50 && z < 6) || (x > -45 && x < 10 && z < -185) || (x > 70 && x < 180 && z < -105 && z > -235) || (x > -112 && x < 12 && z > -80 && z < -60) || (x > -6 && x < 2) || (x > 30 && x < 50 && z < -96) || (x > -100 && x < 2 && z > -8 && z < 12) || Math.abs(z - 126) < 6 || (x > 140 && x < 215 && z > -240 && z < 240 && distRiver(x, z, RIV) < 14) || (x > -40 && x < 30 && z > -110 && z < -94) || (x > -110 && x < -60 && z > -190 && z < -160);
+  const blocked = (x, z) => PLACES.some((p) => Math.abs(x - p.x) < (Math.max(p.W, p.D) / 2 + 6) && Math.abs(z - p.z) < (Math.max(p.W, p.D) / 2 + 6)) || (x > 20 && x < 70 && z > -45 && z < 100) || (x > -60 && x < 5 && z > -5 && z < 64) || (x > -65 && x < 12 && z > -80 && z < -12) || (x > -20 && x < 130 && z > 96 && z < 132) || (x > 120 && x < 200 && z > -50 && z < 6) || (x > -45 && x < 10 && z < -185) || (x > 70 && x < 180 && z < -105 && z > -235) || (x > -112 && x < 12 && z > -80 && z < -60) || (x > -6 && x < 2) || (x > 30 && x < 50 && z < -96) || (x > -100 && x < 2 && z > -8 && z < 12) || Math.abs(z - 126) < 10 || Math.abs(z - 131) < 8 || (z > 96 && z < 140 && x > -100 && x < 145) || (x > 140 && x < 215 && z > -240 && z < 240 && distRiver(x, z, RIV) < 14) || (x > -40 && x < 30 && z > -110 && z < -94) || (x > -110 && x < -60 && z > -190 && z < -160);
   let n = 0; for (let i = 0; i < 2600 && n < 420; i++) { const x = (K.R() - 0.5) * 480, z = (K.R() - 0.5) * 480; const edge = Math.max(Math.abs(x), Math.abs(z)) > 175; if (!edge && K.R() < 0.75) continue; if (blocked(x, z)) continue; K.pine(w, x, z, 0.9 + K.R() * 0.8); if (!edge) w.solid(x - 0.4, 0, z - 0.4, x + 0.4, 4, z + 0.4); n++; }
   // ---- backdrop: the Frosty Range all around (big low-poly peaks with snow caps) + aurora ----
   for (let i = 0; i < 28; i++) { const a = i / 28 * PI * 2, r = 330 + (i % 3) * 60, x = Math.cos(a) * r, z = Math.sin(a) * r, h = 70 + (i * 37 % 60), rr = 60 + (i * 13 % 30); w.add('m', G.cone(7), 0x7d8da3, x, -2, z, 0, i, 0, rr, h, rr); w.add('m', G.cone(7), 0xf8fafc, x, h * 0.55 - 2, z, 0, i + 0.1, 0, rr * 0.47, h * 0.46, rr * 0.47); }
