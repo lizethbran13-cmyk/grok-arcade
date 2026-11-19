@@ -1,7 +1,18 @@
 {
   "about": "Ratita Preview Center data (see PREVIEW.md). Builders edit this file: 'items' feed the posters + the Scheduled Additions board, 'previews' feed the Time Jumper. Live GitHub issue labels override 'stage' when the arcade is online, except that an item marked 'shipped' here stays shipped (issues are sometimes left open after release). Keep items newest first.",
-  "updated": "2026-11-09",
+  "updated": "2026-11-19",
   "items": [
+    {
+      "key": "np-village-remake",
+      "game": "northpole",
+      "name": "North Pole Village Remake",
+      "size": "Remake",
+      "what": "David's North Pole Village remake: no more phone crashes, the real santaupdate.com map (Main Street Kringle shops, skating pond, Kringle Ranch, Santa's home), the Hall of Records as a cave vault on Polar Bear Mountain reached by sleigh bus, solid elves who chat and hold meetings, a full-size Santa and Mrs. Claus on daily schedules, and a different inside for every building. Playable now in the Time Jumper!",
+      "stage": "building",
+      "when": "Time Jumper Preview",
+      "preview": true,
+      "previewUrl": "previews/np-village-remake/"
+    },
     {
       "game": "arcade",
       "name": "Candy's Snow Day (live)",
@@ -975,6 +986,15 @@
       "playable": true,
       "built": "2026-11-02",
       "notes": "Holiday special, releases Nov 15 after David's OK. Polish pass: all 4 routes played by real input, party spacing, see-through visitation glass, camera, kid-fair guards, Pi-rat new look"
+    },
+    {
+      "id": "np-village-remake",
+      "game": "northpole",
+      "name": "North Pole Village Remake",
+      "url": "previews/np-village-remake/",
+      "playable": true,
+      "built": "2026-11-19",
+      "notes": "Phase 0+1 first playable: phone crash fixes, santaupdate.com map, Hall of Records cave on Polar Bear Mountain (sleigh bus), solid NPCs, Santa & Mrs. Claus schedules, elf events, unique interiors"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
