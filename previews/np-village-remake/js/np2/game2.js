@@ -19,6 +19,8 @@ import { buildVillage, buildMountain, buildPort, PLACES, MTN_PLACES, PORT_PLACES
 import { buildInterior } from './interiors2.js';
 import { panel, closePanel } from './panel.js';
 import { act as opsAct } from './opsacts.js';
+import { Acts } from './acts2.js';
+import { Meet } from './meet.js';
 const PI = Math.PI, $ = (id) => document.getElementById(id);
 const ENV = Object.assign({}, TENV, { fogD: 0.0026, bloomT: 1.5, bloomS: 0.3, exposure: 0.92 });
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -45,7 +47,7 @@ const EV_LEN = 80;
 // Santa + Mrs. Claus daily rounds (each stop: walk there, wave at the door, go inside for a while)
 const SANTA_DAY = [['workshop', 'inspecting toys in Santa’s Workshop'], ['reindeerbarn', 'visiting the team in the Reindeer Barn'], ['post', 'reading letters at the Post Office'], ['street', 'saying hello along Main Street', [40, 30]], ['tree', 'checking the lights on the big tree in Kringle Park', [-2, 12]], ['santahouse', 'home in the Great Room with Mrs. Claus']];
 const MRS_DAY = [['greenhouse', 'picking vegetables in her greenhouse'], ['santahouse', 'baking in the kitchen at home'], ['bakery', 'bringing recipes to the Gingerbread Bakery'], ['santahouse', 'by the fire in the Great Room']];
-const INSIDE_SPOT = { santahouse: { santa: [-3.8, -2.2, 0.6], mrs: [-7.2, 1, 1.57] }, workshop: { santa: [0, -1, PI * 0] }, post: { santa: [2, 1.5, PI] }, reindeerbarn: { santa: [0, 2, PI] }, greenhouse: { mrs: [0, -3, PI] }, bakery: { mrs: [-1, 3, PI] } };
+const INSIDE_SPOT = { events: { santa: [0, -6.4, 0] }, santahouse: { santa: [-3.8, -2.2, 0.6], mrs: [-7.2, 1, 1.57] }, workshop: { santa: [0, -1, PI * 0] }, post: { santa: [2, 1.5, PI] }, reindeerbarn: { santa: [0, 2, PI] }, greenhouse: { mrs: [0, -3, PI] }, bakery: { mrs: [-1, 3, PI] } };
 const SANTA_LINES = ['Ho ho ho! Welcome to the North Pole!', 'Every letter goes to the Post Office first. I read them, and then they go up to the Hall of Records.', 'The Hall of Records is a cave on Polar Bear Mountain. Take the Sleigh Bus from the Village Square!', 'Have you met my reindeer? They all share the big barn at Kringle Ranch.', 'Mrs. Claus’s gingerbread is the best in the world. Don’t tell the bakery I said so!'];
 const MRS_LINES = ['Oh, hello dear! Would you like a cookie?', 'I grow flowers and vegetables in my greenhouse all year round.', 'Santa never stops working. I make sure he eats!', 'The big Christmas party is in the Claus Barn. Everyone is invited!'];
 // ------------------------------------------------------------------ small HUD (area, goal/news line, toasts, act button, Santa finder)
@@ -75,7 +77,7 @@ export class Game2 {
     this.pl = [0, 1, 2].map(() => { const l = new THREE.PointLight(0xffd8a0, 0, 20, 1.6); l.castShadow = false; E.scene.add(l); return l; });
     // falling snow
     { const N = this.phone ? 380 : 700, pa = new Float32Array(N * 3); for (let i = 0; i < N * 3; i++) pa[i] = (R() - 0.5) * 50; const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pa, 3)); this.snow = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffffff, size: 0.14, transparent: true, opacity: 0.85, depthWrite: false })); this.snow.frustumCulled = false; E.scene.add(this.snow); }
-    this.npcs = []; this.intNpcs = []; this.acts = []; this.buildFolk(); this.buildClaus(); this.buildPets(); this.buildDeer(); this.buildBuses(); this.buildConveyor();
+    this.npcs = []; this.intNpcs = []; this.acts = []; this.buildFolk(); this.buildClaus(); this.buildPets(); this.buildDeer(); this.buildBuses(); this.buildConveyor(); this._EV = EVENTS; this._mkSanta = () => (this._santaIn = makeSanta()); this.actsInit(); this.meetInit();
     this.acts.push({ x: -16, z: 10, r: 3, label: '📰 Read the North Pole News', kind: 'news', zone: 'out' });
     for (let i = 0; i < STOPS.length; i++) { const s = STOPS[i]; this.acts.push({ x: s[2], z: s[3], r: 4.5, label: '🚌 Ride the Sleigh Bus', kind: 'bus', zone: s[0] === 'mountain' ? 'mtn' : s[0] === 'port' ? 'port' : 'out' }); }
     w.uploader = null; this._upRT.dispose(); this.updateCam(0); }
@@ -106,23 +108,26 @@ export class Game2 {
   buildBuses() { const proto = makeSleighBus(); this.buses = []; for (const s of STOPS) { const b = proto.clone(); const zone = s[0] === 'mountain' ? 'mtn' : s[0] === 'port' ? 'port' : 'out'; const yaw = s[4] + PI / 2; b.position.set(s[2] + Math.sin(s[4] + PI / 2) * 4, 0, s[3] + Math.cos(s[4] + PI / 2) * 4); b.rotation.y = yaw; E.scene.add(b); this.buses.push({ m: b, zone }); } }
   buildConveyor() { const g = new THREE.BoxGeometry(0.8, 0.6, 0.8).translate(0, 0.3, 0); const m = new THREE.MeshStandardMaterial({ roughness: 0.6 }); const N = 10; this.belt = new THREE.InstancedMesh(g, m, N); const c = new THREE.Color(); for (let i = 0; i < N; i++) this.belt.setColorAt(i, c.set([0xdc2626, 0x16a34a, 0x2563eb, 0xf5c542, 0xdb2777][i % 5])); this.belt.castShadow = true; E.scene.add(this.belt); this._bm = new THREE.Matrix4(); }
   // ---------------------------------------------------------------- zones: village / far zones / interiors
-  showZone(z) { const w = this.world; for (const r of ['out', 'mtn', 'port', 'int']) w.setRegionVisible(r, r === z); for (const n of this.npcs) n.root.visible = n.zone === z && !n.hidden; for (const b of this.buses) b.m.visible = b.zone === z; this.belt.visible = z === 'out'; this.snow.visible = z !== 'int'; }
+  showZone(z) { const w = this.world; for (const r of ['out', 'mtn', 'port', 'int']) w.setRegionVisible(r, r === z); for (const n of this.npcs) n.root.visible = n.zone === z && !n.hidden; for (const b of this.buses) b.m.visible = b.zone === z; this.belt.visible = z === 'out'; this.snow.visible = z !== 'int'; this.actsZone(z); }
   fade(fn) { const f = $('fade'); f.classList.add('on'); this.app.busy = true; setTimeout(() => { try { fn(); } catch (e) { console.error(e); } this.cam.snap = true; this.updateCam(0); setTimeout(() => { f.classList.remove('on'); this.app.busy = false; clearEdges(); }, 120); }, 380); }
   loadFar(z) { if (this.outZone === z) return; const w = this.world; if (this.outZone !== 'out') w.disposeRegion(this.outZone); if (z === 'mtn') { buildMountain(w); } else if (z === 'port') { buildPort(w); } w.region = 'out'; if (z !== 'out') { w.finalize(z); this.freeSignCanvases(z); } this.outZone = z; }
   travel(i) { const s = STOPS[i]; const z = s[0] === 'mountain' ? 'mtn' : s[0] === 'port' ? 'port' : 'out'; sfx('honk');
     this.fade(() => { if (this.zone === 'int') this.leaveInt(true); this.loadFar(z); this.zone = z; this.showZone(z); const yaw = s[4]; this.me.place([s[2] + Math.sin(yaw) * 2.5, 0.1, s[3] + Math.cos(yaw) * 2.5], yaw); this.cam.yaw = yaw; this.doorCd = 1;
       if (z === 'mtn' && !S.flags.np2mtn) { S.flags.np2mtn = 1; persist(); setTimeout(() => this.toastMsg('🐻‍❄️ Polar Bear Mountain! Follow the road up to the Hall of Records cave.'), 700); } }); }
   teleportTo(x, z, yaw = 0, zone = 'out') { this.fade(() => { if (this.zone === 'int') this.leaveInt(true); this.loadFar(zone); this.zone = zone; this.showZone(zone); const c = this.nav.nearestFree(x, z); const px = zone === 'out' && c ? this.nav.x0 + (c[0] + 0.5) * 2 : x, pz = zone === 'out' && c ? this.nav.z0 + (c[1] + 0.5) * 2 : z; this.me.place([px, 0.2, pz], yaw); this.cam.yaw = yaw; this.doorCd = 1.2; }); }
-  enter(p) { if (this.app.busy || this.zone === 'int') return; sfx('door'); this.fade(() => { const w = this.world; this.prev = { zone: this.zone, x: p.door.ex, z: p.door.ez, y: p.door.y || 0, yaw: p.door.yaw }; const info = this.info = buildInterior(w, p); w.finalize('int'); w.region = 'out'; this.freeSignCanvases('int');
-      this.place = p; this.zone = 'int'; this.showZone('int'); this.spawnInt(info, p); this.me.place([info.spawn[0], 0.05, info.spawn[1]], PI); this.cam.yaw = PI; this.cam.pitch = 0.5; this.ceilY = info.r.H - 0.4; this.doorCd = 0.8; this.hud.region(p.name);
+  enter(p) { if (this.app.busy || this.zone === 'int') return; sfx('door'); this.fade(() => { this.prev = { zone: this.zone, x: p.door.ex, z: p.door.ez, y: p.door.y || 0, yaw: p.door.yaw }; this.buildInt(p); }); }
+  buildInt(p, at) { const w = this.world; const info = this.info = buildInterior(w, p); w.finalize('int'); w.region = 'out'; this.freeSignCanvases('int');
+      this.place = p; this.zone = 'int'; this.showZone('int'); this.spawnInt(info, p); this.actsEnter(info, p); let sp = info.spawn; if (at === 'stairs') { const a = info.acts.find((q) => q.kind === 'down'); if (a) sp = [a.x - 2.2, a.z + 0.6]; } this.me.place([sp[0], 0.05, sp[1]], PI); this.cam.yaw = PI; this.cam.pitch = 0.5; this.ceilY = info.r.H - 0.4; this.doorCd = 0.8; this.hud.region(p.name);
       // interior lighting
       const L = info.lights || [[INT[0], info.r.H - 1, INT[1], 0xffe2b8, 14, Math.max(info.r.W, info.r.D) * 1.2]]; this.pl.forEach((l, i) => { const q = L[i]; if (q) { l.position.set(q[0], q[1], q[2]); l.color.set(q[3]); l.intensity = q[4] * (this.phone ? 0.9 : 1); l.distance = q[5]; } else l.intensity = 0; });
       if (info.dark) { E.sun.intensity = 0.15; E.hemi.intensity = 0.28; } else { E.sun.intensity = 1.6; E.hemi.intensity = 0.9; }
       if (info.fog) { this._fog = [E.scene.fog.color.getHex(), E.scene.fog.density]; E.scene.fog.color.set(info.fog[0]); E.scene.fog.density = info.fog[1]; }
-      if (p.id === 'records' && !S.flags.np2rec) { S.flags.np2rec = 1; persist(); this.badge('np2rec'); setTimeout(() => this.toastMsg('🗄️ The Hall of Records! Ask Reggie about the cave, then look for your own Believer File.'), 600); } }); }
-  leaveInt(silent) { const w = this.world; for (const n of this.intNpcs) { E.scene.remove(n.root); if (n.dispose) n.dispose(); } this.intNpcs = []; this.bub.clear(); w.disposeRegion('int'); this.pl.forEach((l) => l.intensity = 0); E.sun.intensity = ENV.sunI; E.hemi.intensity = ENV.hemiI; if (this._fog) { E.scene.fog.color.set(this._fog[0]); E.scene.fog.density = this._fog[1]; this._fog = null; }
+      if (p.id === 'records' && !S.flags.np2rec) { S.flags.np2rec = 1; persist(); this.badge('np2rec'); setTimeout(() => this.toastMsg('🗄️ The Hall of Records! Ask Reggie about the cave, then look for your own Believer File.'), 600); } }
+  clearInt() { const w = this.world; for (const n of this.intNpcs) { E.scene.remove(n.root); if (n.dispose) n.dispose(); } this.intNpcs = []; this.bub.clear(); this.actsLeave(); w.disposeRegion('int'); this.pl.forEach((l) => l.intensity = 0); if (this._fog) { E.scene.fog.color.set(this._fog[0]); E.scene.fog.density = this._fog[1]; this._fog = null; } }
+  basement(down) { if (this.app.busy) return; sfx('door'); const home = PLACES.find((q) => q.id === 'santahouse'); const B = this._base || (this._base = { id: 'clausbase', int: 'clausbase', name: '🏠 Claus Home · Basement', parent: home, door: home.door, noEnter: true }); this.fade(() => { this.clearInt(); this.buildInt(down ? B : home, down ? null : 'stairs'); }); }
+  leaveInt(silent) { this.clearInt(); E.sun.intensity = ENV.sunI; E.hemi.intensity = ENV.hemiI;
     const pv = this.prev; this.zone = pv.zone; this.showZone(this.zone); this.info = null; this.place = null; if (!silent) { this.me.place([pv.x, pv.y + 0.1, pv.z], pv.yaw); this.cam.yaw = pv.yaw; this.cam.pitch = 0.36; } this.doorCd = 1.2; }
-  exitInt() { if (this.app.busy) return; sfx('door'); this.fade(() => this.leaveInt(false)); }
+  exitInt() { if (this.app.busy) return; if (this.place && this.place.parent) return this.basement(false); sfx('door'); this.fade(() => this.leaveInt(false)); }
   spawnInt(info, p) { this.intPool = this.intPool || []; let k = 0; const elf = () => { let r = this.intPool[k]; if (!r) { r = this.intPool[k] = makeFolk('christmas', k % 8); } k++; return r; };
     for (const d of info.npcs) { let rig, kind = 'elf', h = 1.45, r = 0.42; if (d.who === 'elf') { rig = elf(); rig.root.scale.setScalar(1); } else if (d.who === 'dog') { rig = this._jingles || (this._jingles = makePup(d.breed || 'sheepdog', { seed: 3 })); rig.root.scale.setScalar(d.s || 0.6); kind = 'dog'; h = 0.7; r = 0.4; } else continue;
       this.addNpc({ int: true, zone: 'int', kind, rig, x: d.x, z: d.z, yaw: d.yaw || 0, home: [d.x, d.z], walk: d.walk, wi: 0, r, h, name: d.name, lines: d.lines, sp: 1.3, still: !d.walk }); }
@@ -163,9 +168,9 @@ export class Game2 {
     for (const n of list) { if (n.hidden || n.zone !== this.zone || !n.root.visible) continue; const d = Math.hypot(me.x - n.x, me.z - n.z) - n.r; if (d < 1.9 && d < bd && Math.abs(me.y - n.y) < 2) { bd = d; best = { kind: 'talk', npc: n, label: '💬 ' + n.name.replace(/\s*\(.*\)$/, '') }; } }
     const acts = this.zone === 'int' ? this.intActs || [] : this.acts; for (const a of acts) { if (a.zone !== this.zone) continue; const d = Math.hypot(me.x - a.x, me.z - a.z); if (d < a.r && d - 0.5 < bd) { bd = d - 0.5; best = a; } }
     this.act = best; this.hud.setAct(this.chat ? null : best); }
-  doAct(a) { if (a.kind === 'talk') return this.talk(a.npc); if (a.kind === 'news') return this.news(); if (a.kind === 'bus') return this.busPanel(); if (a.kind === 'ops') { this.app.busy = true; if (!opsAct(a.id, this, () => this.done())) this.done(); return; } if (a.kind === 'file') return this.filePanel(); return this.mini(a); }
+  doAct(a) { if (a.kind === 'talk') return this.talk(a.npc); if (this.doAct2(a)) return; if (a.kind === 'news') return this.news(); if (a.kind === 'bus') return this.busPanel(); if (a.kind === 'ops') { this.app.busy = true; if (!opsAct(a.id, this, () => this.done())) this.done(); return; } if (a.kind === 'file') return this.filePanel(); return this.mini(a); }
   done() { closePanel(); this.app.busy = false; clearEdges(); }
-  talk(n) { const lines = n.kind === 'elf' && !n.int ? [`Hi! I’m ${n.name}.`, ...n.lines, this.event ? `Right now: ${this.event.name.replace(/^\S+\s/, '')}.` : ''].filter(Boolean) : n.lines; n.yaw = Math.atan2(this.me.x - n.x, this.me.z - n.z); this.chat = { npc: n, lines, i: 0 }; this.showLine(); sfx('click');
+  talk(n) { if (this.feedDeer(n)) return; if (this.meetTalk(n)) return; const lines = n.kind === 'elf' && !n.int ? [`Hi! I’m ${n.name}.`, ...n.lines, this.event ? `Right now: ${this.event.name.replace(/^\S+\s/, '')}.` : ''].filter(Boolean) : n.lines; n.yaw = Math.atan2(this.me.x - n.x, this.me.z - n.z); this.chat = { npc: n, lines, i: 0 }; this.showLine(); sfx('click');
     if (n.kind === 'santa' && !S.flags.np2santa) { S.flags.np2santa = 1; persist(); this.badge('np2santa'); this.fx.confetti(n.x, n.y + 2.4, n.z, 40); } if (n.kind === 'elf' && !n.int) n.lines = [pick(CHAT), pick(CHAT)]; }
   showLine() { const c = this.chat, d = $('dlg'); d.innerHTML = `<b>${esc(c.npc.name)}</b><p>${esc(c.lines[c.i])}</p><small>TAP ▶</small>`; d.classList.add('on'); if (!d._wired) { d._wired = true; d.addEventListener('click', () => this.nextLine()); } }
   nextLine() { const c = this.chat; if (!c) return; c.i++; if (c.i >= c.lines.length) { this.chat = null; $('dlg').classList.remove('on'); clearEdges(); return; } this.showLine(); }
@@ -197,13 +202,13 @@ export class Game2 {
     me.update(dt, inp, this); this.pushOut(); me.updateBlob(w);
     // doors
     if (free && this.doorCd <= 0) { for (const z of w.zonesAt(me.x, me.y + 0.3, me.z)) { if (z.type === 'door' && z.place && !z.place.noEnter && this.zone !== 'int') { this.enter(z.place); break; } if (z.type === 'exit' && this.zone === 'int') { this.exitInt(); break; } } }
-    this.updateNPCs(dt); this.anim(dt); this.updateAct(); if (free && edge('act') && this.act) this.doAct(this.act);
+    this.updateNPCs(dt); this.actsUpdate(dt); this.meetUpdate(dt); this.anim(dt); this.updateAct(); if (free && edge('act') && this.act) this.doAct(this.act);
     if (this.zone !== 'int') this.hud.region(areaName(me.x, me.z)); this.updateHud(dt);
     this.updateCam(dt); this.render(dt); }
-  idle(dt) { this.T += dt; this.updateNPCs(dt); this.anim(dt); this.render(dt); }
+  idle(dt) { this.T += dt; this.updateNPCs(dt); this.actsUpdate(dt); this.meetUpdate(dt); this.anim(dt); this.render(dt); }
   updateHud(dt) { this._ht = (this._ht || 0) - dt; if (this._ht > 0) return; this._ht = 0.25; const s = this.santa, me = this.me; let t;
     if (this.zone === 'int' && this.intNpcs.some((n) => n.kind === 'santa')) t = '🎅 Santa is right here!'; else if (this.zone !== 'out') t = '🎅 Santa is in the village'; else if (s.inside) t = '🎅 Santa: inside ' + PLACES.find((p) => p.id === s.inside).name.replace(/^\S+\s/, ''); else { const dx = s.x - me.x, dz = s.z - me.z, d = Math.hypot(dx, dz); let a = Math.atan2(dx, dz) - this.cam.yaw; while (a > PI) a -= PI * 2; while (a < -PI) a += PI * 2; const ar = ['⬆️', '↖️', '⬅️', '↙️', '⬇️', '↘️', '➡️', '↗️'][((Math.round(a / (PI / 4)) % 8) + 8) % 8]; t = `🎅 Santa ${ar} ${Math.round(d)} m`; }
-    this.hud.santa(t); this.hud.goal(`📣 ${esc(this.event ? this.event.name : '')}<br>🎅 ${esc(s.doing || '')}`); }
+    this.hud.santa(t); this.hud.goal(`${this.clockStr()} · 📣 ${esc(this.event ? this.event.name : '')}<br>🎅 ${esc(s.doing || '')}`); }
   anim(dt) { const b = this.belt; if (b && b.visible) { const N = b.count; for (let i = 0; i < N; i++) { const t = ((this.T * 0.12 + i / N) % 1); this._bm.makeTranslation(-26 + t * 31, 5.26, -112); b.setMatrixAt(i, this._bm); } b.instanceMatrix.needsUpdate = true; }
     if (this.snow.visible) { const p = this.snow.geometry.attributes.position, a = p.array; for (let i = 0; i < a.length; i += 3) { a[i + 1] -= dt * (1.2 + (i % 7) * 0.1); a[i] += Math.sin(this.T + i) * dt * 0.25; if (a[i + 1] < -6) a[i + 1] += 26; } p.needsUpdate = true; this.snow.position.set(this.me.x, this.me.y + 6, this.me.z); }
     for (const bs of this.buses) if (bs.m.visible) bs.m.position.y = Math.sin(this.T * 2 + bs.m.position.x) * 0.08 + 0.1; }
@@ -217,3 +222,4 @@ export class Game2 {
   // stubs the shared Player calls into
   onSpin() {} fireBlast() {} hookTarget() { return null; } onFaint() {} tryDescend() { return false; }
 }
+Object.assign(Game2.prototype, Acts, Meet);

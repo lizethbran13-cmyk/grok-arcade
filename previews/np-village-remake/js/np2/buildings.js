@@ -1,11 +1,13 @@
 // One builder per architecture. Every building in the village picks its own style + palette + details, so no two look alike.
 import { G } from './vworld.js';
 import * as K from './kit2.js';
+import { addFeats } from './feats.js';
 const PI = Math.PI;
 const SNOW = 0xf4f8ff;
 // o: { x, z, ry, W, D, H, col, roof, trim, sign, signBg, signFg, style, door, win, shutter }
 export function building(w, o) { const T = w.tf(o.x, 0, o.z, o.ry || 0); const f = STYLES[o.style] || STYLES.timber; const W = o.W, D = o.D;
   f(w, T, o); // walls + roof + details
+  if (o.feat) addFeats(w, T, o); // unique skyline add-ons
   // collider for the shell (plus a little porch step zone)
   w.solidR(o.x, 0, o.z, W, o.H + 2, D, o.ry || 0);
   const dp = T.P(o.doorX || 0, 0, D / 2 + 0.9), ex = T.P(o.doorX || 0, 0, D / 2 + 3.2);

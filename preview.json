@@ -994,7 +994,7 @@
       "url": "previews/np-village-remake/",
       "playable": true,
       "built": "2026-11-19",
-      "notes": "Phase 0+1 first playable: phone crash fixes, santaupdate.com map, Hall of Records cave on Polar Bear Mountain (sleigh bus), solid NPCs, Santa & Mrs. Claus schedules, elf events, unique interiors"
+      "notes": "Phase 2-4 in progress: unique skylines, building activities, Claus basement, pond skating, morning briefing, shift change, Mrs. Claus cookie run"
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",

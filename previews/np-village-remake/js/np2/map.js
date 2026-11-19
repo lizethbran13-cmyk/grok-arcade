@@ -16,47 +16,47 @@ const P = (id, name, x, z, ry, W, D, H, style, o = {}) => Object.assign({ id, na
 // every enterable place: interior type + (optional) the department activity + elf from the santaupdate.com department list
 export const PLACES = [
   // ---- Main Street (west side faces east, east side faces west) ----
-  P('inn', '🛏️ Candy Cane Inn', 22, 76, E, 16, 12, 6.5, 'log', { col: 0xa0522d, roof: 0x7f1d1d, shutter: 0xdc2626, int: 'inn', sign: 'CANDY CANE INN' }),
-  P('bakery', '🍪 Gingerbread Bakery', 22, 56, E, 12, 11, 6, 'ginger', { col: 0xb5651d, roof: 0xfde68a, int: 'bakery', sign: 'GINGERBREAD BAKERY' }),
-  P('candyco', '🍭 Kringle Candy Cane Company', 22, 35, E, 15, 12, 6, 'timber', { col: 0xfff1f2, trim: 0xb91c1c, roof: 0xb91c1c, awning: [0xdc2626, 0xffffff], int: 'candy', ops: 'candyco', sign: 'KRINGLE CANDY CANE CO.' }),
-  P('stocking', '🧦 Kringle Stocking Shop', 22, 15, E, 13, 11, 5.5, 'timber', { col: 0xecfccb, trim: 0x14532d, roof: 0x166534, awning: [0x16a34a, 0xfef3c7], int: 'stocking', ops: 'stocking' }),
-  P('security', '🛡️ North Pole Security', 22, -5, E, 13, 11, 5.5, 'stone', { col: 0x6b7280, roof: 0x1f2937, tower: true, int: 'security', ops: 'security' }),
-  P('repair', '🔧 Sleigh Repair Shop', 58, 76, W_, 15, 12, 5.5, 'barn', { col: 0x1e3a8a, col2: 0x172554, roof: 0x374151, int: 'repair', sign: 'SLEIGH REPAIR SHOP' }),
-  P('market', '🧺 Kringle Market', 58, 56, W_, 16, 12, 5.5, 'timber', { col: 0xfef3c7, trim: 0x78350f, roof: 0x1e40af, awning: [0x2563eb, 0xffffff], int: 'market', sign: 'KRINGLE MARKET' }),
-  P('emporium', '🌿 Kringle Mistletoe Emporium', 58, 35, W_, 15, 12, 6, 'ginger', { col: 0x2f6b3a, roof: 0xf8fafc, int: 'emporium', ops: 'emporium', sign: 'KRINGLE MISTLETOE EMPORIUM' }),
-  P('bank', '🏦 Kringle Bank', 58, 15, W_, 14, 12, 6.5, 'brick', { col: 0x8b6f47, trim: 0xf5efe0, pediment: true, int: 'bank', ops: 'bank', win: 3 }),
-  P('radio', '📻 Kringle Radio · North Pole Radio News', 58, -5, W_, 13, 11, 6, 'office', { col: 0x6d28d9, trim: 0xede9fe, dish: true, int: 'radio', ops: 'radio', sign: 'KRINGLE RADIO' }),
+  P('inn', '🛏️ Candy Cane Inn', 22, 76, E, 16, 12, 6.5, 'log', { feat: ['dormers','chimneys2'], col: 0xa0522d, roof: 0x7f1d1d, shutter: 0xdc2626, int: 'inn', sign: 'CANDY CANE INN' }),
+  P('bakery', '🍪 Gingerbread Bakery', 22, 56, E, 12, 11, 6, 'ginger', { feat: ['bigchimney'], col: 0xb5651d, roof: 0xfde68a, int: 'bakery', sign: 'GINGERBREAD BAKERY' }),
+  P('candyco', '🍭 Kringle Candy Cane Company', 22, 35, E, 15, 12, 6, 'timber', { feat: ['candytower'], col: 0xfff1f2, trim: 0xb91c1c, roof: 0xb91c1c, awning: [0xdc2626, 0xffffff], int: 'candy', ops: 'candyco', sign: 'KRINGLE CANDY CANE CO.' }),
+  P('stocking', '🧦 Kringle Stocking Shop', 22, 15, E, 13, 11, 5.5, 'timber', { feat: ['giantstocking','turret'], col: 0xecfccb, trim: 0x14532d, roof: 0x166534, awning: [0x16a34a, 0xfef3c7], int: 'stocking', ops: 'stocking' }),
+  P('security', '🛡️ North Pole Security', 22, -5, E, 13, 11, 5.5, 'stone', { feat: ['beacon'], col: 0x6b7280, roof: 0x1f2937, tower: true, int: 'security', ops: 'security' }),
+  P('repair', '🔧 Sleigh Repair Shop', 58, 76, W_, 15, 12, 5.5, 'barn', { feat: ['wrench','leanto'], col: 0x1e3a8a, col2: 0x172554, roof: 0x374151, int: 'repair', sign: 'SLEIGH REPAIR SHOP' }),
+  P('market', '🧺 Kringle Market', 58, 56, W_, 16, 12, 5.5, 'timber', { feat: ['stalls'], col: 0xfef3c7, trim: 0x78350f, roof: 0x1e40af, awning: [0x2563eb, 0xffffff], int: 'market', sign: 'KRINGLE MARKET' }),
+  P('emporium', '🌿 Kringle Mistletoe Emporium', 58, 35, W_, 15, 12, 6, 'ginger', { feat: ['onion','mistletoe'], col: 0x2f6b3a, roof: 0xf8fafc, int: 'emporium', ops: 'emporium', sign: 'KRINGLE MISTLETOE EMPORIUM' }),
+  P('bank', '🏦 Kringle Bank', 58, 15, W_, 14, 12, 6.5, 'brick', { feat: ['minidome'], col: 0x8b6f47, trim: 0xf5efe0, pediment: true, int: 'bank', ops: 'bank', win: 3 }),
+  P('radio', '📻 Kringle Radio · North Pole Radio News', 58, -5, W_, 13, 11, 6, 'office', { feat: ['antenna'], col: 0x6d28d9, trim: 0xede9fe, dish: true, int: 'radio', ops: 'radio', sign: 'KRINGLE RADIO' }),
   // ---- the hub at the top of Main Street ----
-  P('post', '📮 North Pole Post Office', 40, -32, S, 22, 14, 7.5, 'brick', { col: 0xb91c1c, trim: 0xfff7ed, clock: true, int: 'post', win: 5, sign: 'NORTH POLE POST OFFICE' }),
+  P('post', '📮 North Pole Post Office', 40, -32, S, 22, 14, 7.5, 'brick', { feat: ['chute'], col: 0xb91c1c, trim: 0xfff7ed, clock: true, int: 'post', win: 5, sign: 'NORTH POLE POST OFFICE' }),
   // ---- Kringle Commons (department square north of the park) ----
-  P('university', '🎓 Southern North Pole University', -22, -66, S, 22, 12, 7, 'brick', { col: 0x1e3a8a, trim: 0xf1f5f9, pediment: true, int: 'university', ops: 'university', sign: 'SOUTHERN NORTH POLE UNIVERSITY' }),
-  P('statedept', '🌐 North Pole State Department', -48, -46, E, 14, 12, 6, 'stone', { col: 0x94a3b8, roof: 0x0e7490, flags: [0x0e7490, 0xdc2626], int: 'statedept', ops: 'statedept' }),
-  P('elfres', '🧑‍🔧 Department of Elf Resources', -48, -24, E, 14, 11, 5.5, 'office', { col: 0xc2410c, trim: 0xffedd5, int: 'elfres', ops: 'elfres', sign: 'ELF RESOURCES' }),
-  P('admin', '💻 Administrative Support', 12, -52, W_, 14, 12, 6, 'office', { col: 0x334155, trim: 0xcbd5e1, dish: true, int: 'admin', ops: 'admin', sign: 'ADMINISTRATIVE SUPPORT' }),
-  P('listdept', '📜 List Department', 12, -32, W_, 14, 11, 6, 'timber', { col: 0xfffbeb, trim: 0x9f1239, roof: 0x9f1239, awning: [0x9f1239, 0xfffbeb], int: 'list', ops: 'listdept', sign: 'LIST DEPARTMENT' }),
+  P('university', '🎓 Southern North Pole University', -22, -66, S, 22, 12, 7, 'brick', { feat: ['belltower'], col: 0x1e3a8a, trim: 0xf1f5f9, pediment: true, int: 'university', ops: 'university', sign: 'SOUTHERN NORTH POLE UNIVERSITY' }),
+  P('statedept', '🌐 North Pole State Department', -48, -46, E, 14, 12, 6, 'stone', { feat: ['globe'], col: 0x94a3b8, roof: 0x0e7490, flags: [0x0e7490, 0xdc2626], int: 'statedept', ops: 'statedept' }),
+  P('elfres', '🧑‍🔧 Department of Elf Resources', -48, -24, E, 14, 11, 5.5, 'office', { feat: ['wing'], col: 0xc2410c, trim: 0xffedd5, int: 'elfres', ops: 'elfres', sign: 'ELF RESOURCES' }),
+  P('admin', '💻 Administrative Support', 12, -52, W_, 14, 12, 6, 'office', { feat: ['solar'], col: 0x334155, trim: 0xcbd5e1, int: 'admin', ops: 'admin', sign: 'ADMINISTRATIVE SUPPORT' }),
+  P('listdept', '📜 List Department', 12, -32, W_, 14, 11, 6, 'timber', { feat: ['scroll'], col: 0xfffbeb, trim: 0x9f1239, roof: 0x9f1239, awning: [0x9f1239, 0xfffbeb], int: 'list', ops: 'listdept', sign: 'LIST DEPARTMENT' }),
   // ---- west: Events Center + Arctic Lodge ----
-  P('events', '🎪 North Pole Events Center', -100, 2, E, 26, 18, 8, 'log', { col: 0x7c4a1e, roof: 0x14532d, shutter: 0xb91c1c, win: 5, int: 'events', sign: 'NORTH POLE EVENTS CENTER' }),
-  P('lodge', '🏔️ Arctic Lodge', -96, 64, E, 18, 13, 7, 'log', { col: 0x5b3a21, roof: 0x1e3a8a, shutter: 0x1e3a8a, int: 'lodge', sign: 'ARCTIC LODGE' }),
+  P('events', '🎪 North Pole Events Center', -100, 2, E, 26, 18, 8, 'log', { feat: ['tentcone','marquee','bunting'], col: 0x7c4a1e, roof: 0x14532d, shutter: 0xb91c1c, win: 5, int: 'events', sign: 'NORTH POLE EVENTS CENTER' }),
+  P('lodge', '🏔️ Arctic Lodge', -96, 64, E, 18, 13, 7, 'log', { feat: ['balcony','chimneys2'], col: 0x5b3a21, roof: 0x1e3a8a, shutter: 0x1e3a8a, int: 'lodge', sign: 'ARCTIC LODGE' }),
   // ---- south: station + logistics + snow removal ----
   P('station', '🚂 Polar Express Station', 18, 112, N, 24, 9, 5.5, 'station', { col: 0x14532d, roof: 0x7f1d1d, int: 'station', sign: 'POLAR EXPRESS STATION' }),
-  P('logistics', '📦 Operations & Logistics', -36, 112, N, 20, 14, 7, 'stone', { col: 0x78716c, roof: 0x854d0e, int: 'logistics', ops: 'logistics', sign: 'OPERATIONS & LOGISTICS' }),
-  P('snowplow', '🚜 Snow Removal Department', 78, 110, N, 18, 13, 6, 'barn', { col: 0xea580c, col2: 0x9a3412, roof: 0x1f2937, int: 'snowplow', ops: 'snowplow', sign: 'SNOW REMOVAL' }),
+  P('logistics', '📦 Operations & Logistics', -36, 112, N, 20, 14, 7, 'stone', { feat: ['gantry'], col: 0x78716c, roof: 0x854d0e, int: 'logistics', ops: 'logistics', sign: 'OPERATIONS & LOGISTICS' }),
+  P('snowplow', '🚜 Snow Removal Department', 78, 110, N, 18, 13, 6, 'barn', { feat: ['plow'], col: 0xea580c, col2: 0x9a3412, roof: 0x1f2937, int: 'snowplow', ops: 'snowplow', sign: 'SNOW REMOVAL' }),
   // ---- north: Santa's Workshop + Wrapping Department (joined by conveyors) ----
   P('workshop', '🧸 Santa’s Workshop', -46, -116, S, 26, 20, 9, 'dome', { col: 0x9a3412, roof: 0x1e3a8a, int: 'workshop', sign: 'SANTA’S WORKSHOP' }),
-  P('wrap', '🎁 Wrapping Department', 14, -116, S, 18, 16, 7, 'brick', { col: 0xbe123c, trim: 0xfff1f2, int: 'wrap', ops: 'wrap', sign: 'WRAPPING DEPARTMENT' }),
-  P('reindeerbarn', '🦌 Reindeer Barn · Flight Prep', 62, -120, S, 22, 16, 7, 'barn', { col: 0x7c2d12, roof: 0x3f3f46, cupola: true, int: 'barn', sign: 'REINDEER BARN' }),
+  P('wrap', '🎁 Wrapping Department', 14, -116, S, 18, 16, 7, 'brick', { feat: ['bow'], col: 0xbe123c, trim: 0xfff1f2, int: 'wrap', ops: 'wrap', sign: 'WRAPPING DEPARTMENT' }),
+  P('reindeerbarn', '🦌 Reindeer Barn · Flight Prep', 62, -120, S, 22, 16, 7, 'barn', { feat: ['weathervane','hayloft'], col: 0x7c2d12, roof: 0x3f3f46, cupola: true, int: 'barn', sign: 'REINDEER BARN' }),
   // ---- Kringle Ranch (meadow north of the village) ----
-  P('babybarn', '🍼 Baby Reindeer Barn', 118, -170, W_, 14, 12, 5, 'barn', { col: 0xb45309, col2: 0x78350f, roof: 0x57534e, int: 'babybarn', ops: 'babybarn', sign: 'BABY BARN' }),
-  P('sleighbarn', '🛷 Sleigh Barn', -10, -182, S, 28, 18, 9, 'barn', { col: 0x7f1d1d, col2: 0x450a0a, roof: 0x1f2937, cupola: true, int: 'sleighbarn', sign: 'SLEIGH BARN' }),
-  P('dairy', '🥛 North Pole Dairy', -66, -176, S, 16, 12, 6, 'barn', { col: 0x0369a1, col2: 0x0c4a6e, roof: 0xe2e8f0, int: 'dairy', ops: 'dairy', sign: 'NORTH POLE DAIRY' }),
-  P('reindeerops', '🦌 Reindeer Operations', 64, -168, S, 13, 10, 5.5, 'log', { col: 0x6b21a8, roof: 0x3b0764, shutter: 0xfacc15, porch: false, int: 'reindeerops', ops: 'reindeerops', sign: 'REINDEER OPERATIONS', win: 2 }),
+  P('babybarn', '🍼 Baby Reindeer Barn', 118, -170, W_, 14, 12, 5, 'barn', { feat: ['smallsilo','leanto'], col: 0xb45309, col2: 0x78350f, roof: 0x57534e, int: 'babybarn', ops: 'babybarn', sign: 'BABY BARN' }),
+  P('sleighbarn', '🛷 Sleigh Barn', -10, -182, S, 28, 18, 9, 'barn', { feat: ['twincupola','runway'], col: 0x7f1d1d, col2: 0x450a0a, roof: 0x1f2937, int: 'sleighbarn', sign: 'SLEIGH BARN' }),
+  P('dairy', '🥛 North Pole Dairy', -66, -176, S, 16, 12, 6, 'barn', { feat: ['silo','milkcan'], col: 0x0369a1, col2: 0x0c4a6e, roof: 0xe2e8f0, int: 'dairy', ops: 'dairy', sign: 'NORTH POLE DAIRY' }),
+  P('reindeerops', '🦌 Reindeer Operations', 64, -168, S, 13, 10, 5.5, 'log', { feat: ['controltower'], col: 0x6b21a8, roof: 0x3b0764, shutter: 0xfacc15, porch: false, int: 'reindeerops', ops: 'reindeerops', sign: 'REINDEER OPERATIONS', win: 2 }),
   // ---- the Claus family home (just outside the village, in the pines) ----
   P('santahouse', '🏠 The Claus Family Home', -128, -88, E, 16, 16, 6, 'aframe', { col: 0x8b5a2b, roof: 0x6b3f1f, int: 'claus', ops: 'santahouse', sign: 'THE CLAUS HOME' }),
   P('greenhouse', '🪴 Mrs. Claus’s Greenhouse', -128, -64, E, 9, 12, 3.5, 'glass', { int: 'greenhouse', sign: 'MRS. CLAUS’S GREENHOUSE' }),
-  P('clausbarn', '🎉 Claus Barn (Party Barn)', -150, -118, E, 18, 14, 6, 'barn', { col: 0xb91c1c, roof: 0x3f3f46, cupola: true, int: 'partybarn', sign: 'CLAUS BARN' }),
+  P('clausbarn', '🎉 Claus Barn (Party Barn)', -150, -118, E, 18, 14, 6, 'barn', { feat: ['bunting','balloons'], col: 0xb91c1c, roof: 0x3f3f46, cupola: true, int: 'partybarn', sign: 'CLAUS BARN' }),
   // ---- east: chapel on the hill + Elf Village ----
   P('chapel', '⛪ North Pole Chapel', 152, -22, W_, 10, 16, 6, 'chapel', { int: 'chapel', sign: 'NORTH POLE CHAPEL', y: 4 }),
-  P('community', '🎉 Elf Community Department', 96, -74, S, 14, 11, 5.5, 'log', { col: 0xdb2777, roof: 0x831843, shutter: 0xfbcfe8, int: 'community', ops: 'community', sign: 'ELF COMMUNITY DEPT.' }),
+  P('community', '🎉 Elf Community Department', 96, -74, S, 14, 11, 5.5, 'log', { feat: ['clockspire','flagpole'], col: 0xdb2777, roof: 0x831843, shutter: 0xfbcfe8, int: 'community', ops: 'community', sign: 'ELF COMMUNITY DEPT.' }),
 ];
 // far zones
 export const MTN_PLACES = [P('records', '🗄️ North Pole Hall of Records', MTN[0], MTN[1] - 58, S, 12, 4, 8, 'cave', { int: 'records', ops: 'records', sign: 'NORTH POLE HALL OF RECORDS' })];

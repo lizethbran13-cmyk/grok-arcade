@@ -1,0 +1,47 @@
+// Scheduled meetings (mixed into Game2): the morning briefing in the Events Center (Santa speaks), the midday Workshop
+// shift change (Elf Bernard speaks), and Mrs. Claus's cookie run around the village. Also the village clock.
+import * as THREE from 'three';
+import { E } from '../engine.js?v=np11';
+import { sfx } from '../audio.js?v=np11';
+import { S, persist } from '../save.js?v=np11';
+import { makeFolk } from '../folk.js?v=np11';
+import { PLACES, INT } from './map.js';
+const PI = Math.PI, R = Math.random, pick = (a) => a[(R() * a.length) | 0];
+const BRIEF = ['Good morning, everyone! Ho ho ho!', 'First: the Post Office set another record. Thank you, Penny!', 'The Workshop is ahead of schedule. Wonderful work.', 'Snow Removal says more snow tonight, so plows ready.', 'Reggie’s curators found more drawers in the cave. Still no end!', 'Remember: hard hats in the Workshop. Elf Bernard is watching.', 'And Mrs. Claus is baking cookies for every department today!', 'That’s all. Have a jolly day, everybody!'];
+const SHIFT = ['Night crew, great work! Clock out and get some cocoa.', 'Day crew: hard hats ON, badges ON.', 'Wood shop, you’re on trains today. Glass shop, ornaments.', 'Conveyor three is fixed. No more flying teddy bears.', 'Safety first, toys second, cocoa third!', 'Okay, day crew, to your stations. Let’s make some toys!'];
+const COOKIE_ROUTE = [[-40, -92, 'Santa’s Workshop crew'], [40, -20, 'the Post Office'], [-80, 2, 'the Events Center'], [40, 44, 'Main Street'], [-4, 14, 'Kringle Park']];
+const COOKIE_LINES = ['Oh hello, dear! Would you like a cookie? 🍪', 'Gingerbread, fresh from my oven. Careful, it’s still warm!', 'I bring a plate to every department. Elves work better with cookies!'];
+export const Meet = {
+  meetInit() { const EV = this._EV; const ev = PLACES.find((p) => p.id === 'events');
+    EV.splice(0, 0, { id: 'briefing', name: '📋 Morning briefing in the Events Center (Santa speaks)', at: [ev.door.ex + 1.5, ev.door.ez], r: 3.2, n: 12, say: ['Briefing time! Hurry inside!', 'Santa’s doing the briefing today!', 'Save me a seat!', 'Don’t be late for the briefing!'], meet: 'briefing' });
+    EV.splice(4, 0, { id: 'shift', name: '🔔 Workshop shift change (Elf Bernard speaks)', at: [-40, -94], r: 5.2, n: 12, say: SHIFT, meet: 'shift' });
+    const b = makeFolk('christmas', 2); b.root.scale.setScalar(1.08); this.bernard = this.addNpc({ kind: 'elf', rig: b, x: -40, z: -94, yaw: 0, r: 0.45, h: 1.55, name: 'Elf Bernard (Workshop Safety Chief)', lines: ['Hard hat ON, badge ON. No exceptions!', 'Shift change is at midday. Night crew out, day crew in, and I give the safety talk.', 'The underground train brings the day crew in when the weather is bad. So, usually.'], still: true });
+    // Mrs. Claus gets a cookie run in her day, and a plate of cookies in her hands for it
+    const m = this.mrs; m.day.splice(2, 0, ['cookies', 'delivering fresh cookies around the village']); m.baseLines = m.lines;
+    const plate = new THREE.Group(); const pm = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.4 }), cm = new THREE.MeshStandardMaterial({ color: 0xc2803c, roughness: 0.8 }); const pg = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.24, 0.04, 16), pm); plate.add(pg); const cg = new THREE.CylinderGeometry(0.08, 0.08, 0.04, 10); for (let i = 0; i < 6; i++) { const c = new THREE.Mesh(cg, cm); c.position.set(Math.cos(i) * 0.14, 0.04 + (i % 2) * 0.03, Math.sin(i) * 0.14); plate.add(c); } plate.position.set(0, 1.0, 0.42); plate.visible = false; m.rig.root.add(plate); m.plate = plate;
+    this._meetPool = []; },
+  clockStr() { const L = this._EV.length * 80, t = ((this.T % L) + L) % L / L, mins = 7 * 60 + Math.floor(t * 12 * 60), h = Math.floor(mins / 60), mm = mins % 60; return `🕗 ${((h + 11) % 12) + 1}:${String(mm).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`; },
+  meetUpdate(dt) { const ev = this.event;
+    if (ev !== this._lastEv) { const prev = this._lastEv; this._lastEv = ev;
+      // whoever went into the last meeting comes back out
+      for (const e of this.elves) if (e._inMeet) { e._inMeet = false; e.hidden = false; const d = PLACES.find((p) => p.id === 'events').door; e.x = d.ex + (R() - 0.5) * 3; e.z = d.ez + (R() - 0.5) * 3; e.wait = R() * 3; e.path = null; }
+      if (ev && ev.meet === 'briefing') { const s = this.santa, d = PLACES.find((p) => p.id === 'events').door; if (Math.hypot(s.x - d.ex, s.z - d.ez) > 60 || s.inside) { s.x = d.ex + 14; s.z = d.ez + 4; } s.inside = null; s.hidden = false; s.target = [d.ex, d.ez]; s.placeId = 'events'; s.arrived = false; s.legT = 85; s.doing = 'leading the morning briefing in the Events Center'; this.walkTo(s, d.ex, d.ez); if (!s.path) { s.x = d.ex; s.z = d.ez; }
+        if (this.T > 5) this.toastMsg('📋 The morning briefing is starting in the Events Center. Go inside and listen to Santa!'); }
+      if (ev && ev.meet === 'shift') { this.evSpeaker = this.bernard; this.bernard.yaw = 0; if (this.T > 5) this.toastMsg('🔔 Shift change at Santa’s Workshop! Elf Bernard is giving the safety talk.'); this._shiftI = 0; } }
+    if (ev && ev.meet === 'briefing' && this.zone !== 'int') for (const e of this.elves) if (e.evSlot != null && !e.path && !e._inMeet && Math.hypot(e.x - ev.at[0], e.z - ev.at[1]) < ev.r + 1.6) { e._inMeet = true; e.hidden = true; e.root.visible = false; }
+    if (ev && ev.meet === 'briefing' && this.zone === 'int') for (const e of this.elves) if (e.evSlot != null && !e._inMeet) { e._inMeet = true; e.hidden = true; e.path = null; e.wait = 999; e.x = ev.at[0]; e.z = ev.at[1]; }
+    if (ev && ev.meet === 'shift' && this.zone === 'out') { this._shT = (this._shT || 0) - dt; if (this._shT <= 0 && Math.hypot(this.me.x - this.bernard.x, this.me.z - this.bernard.z) < 35) { this._shT = 4; this.bub.say(this.bernard, SHIFT[(this._shiftI = ((this._shiftI || 0) + 1)) % SHIFT.length], 3.8); } }
+    // inside the Events Center during the briefing: Santa on stage, elves in the rows
+    if (this.zone === 'int' && this.place && this.place.id === 'events' && ev && ev.meet === 'briefing') { if (!this._briefDone) { this._briefDone = true; this.briefingInside(this.info); } this._brT = (this._brT || 0) - dt; if (this._brT <= 0) { this._brT = 4.2; const s = this.intNpcs.find((n) => n.kind === 'santa'); if (s) this.bub.say(s, BRIEF[(this._brI = ((this._brI || 0) + 1)) % BRIEF.length], 4); const e = this.intNpcs.filter((n) => n.meetElf); if (e.length && R() < 0.5) this.bub.say(pick(e), pick(['👏👏👏', 'Yes, Santa!', 'Hooray!', '*takes notes*', 'Ho ho ho!']), 2.2); } }
+    else this._briefDone = false;
+    // Mrs. Claus's cookie run
+    const m = this.mrs, L = m.day[m.leg];
+    if (L && L[0] === 'cookies') { if (!m.cookies) { m.cookies = true; m.ri = 0; m.cw = 0; m.legT = 999; m.inside = null; m.hidden = false; m.placeId = null; m.plate.visible = true; m.lines = COOKIE_LINES; this.walkTo(m, COOKIE_ROUTE[0][0], COOKIE_ROUTE[0][1]); m.arrived = !m.path; m.doing = 'delivering fresh cookies to ' + COOKIE_ROUTE[0][2]; }
+      if (m.arrived) { m.cw += dt; if (m.cw > 0.05 && !m.said) { m.said = true; if (Math.hypot(this.me.x - m.x, this.me.z - m.z) < 40) this.bub.say(m, pick(['🍪 Fresh cookies, everyone!', 'Who wants gingerbread?', 'One each… oh, all right, two!']), 3.5); for (const e of this.elves) if (!e.hidden && Math.hypot(e.x - m.x, e.z - m.z) < 9) { e.path = null; e.wait = 8; e.yaw = Math.atan2(m.x - e.x, m.z - e.z); if (R() < 0.5) setTimeout(() => this.bub.say(e, pick(['Thank you, Mrs. Claus! 🍪', 'Yum!', 'My favourite!', 'Still warm!']), 2.5), 900 + R() * 1500); } }
+        if (m.cw > 8) { m.ri++; m.cw = 0; m.said = false; if (m.ri >= COOKIE_ROUTE.length) { m.cookies = false; m.plate.visible = false; m.lines = m.baseLines; m.legT = 0; } else { const st = COOKIE_ROUTE[m.ri]; m.doing = 'delivering fresh cookies to ' + st[2]; this.walkTo(m, st[0], st[1]); m.arrived = !m.path; } } } }
+    else if (m.cookies) { m.cookies = false; m.plate.visible = false; m.lines = m.baseLines; } },
+  meetTalk(n) { if (n === this.mrs && n.cookies && !this._gotCookie) { this._gotCookie = true; setTimeout(() => { this._gotCookie = false; }, 20000); sfx('win'); this.toastMsg('🍪 Mrs. Claus gave you a warm gingerbread cookie!'); this.badge('np2cookie'); } return false; },
+  briefingInside(info) { if (!info || !info.r) return; this._briefDone = true; const r = info.r; let k = 0; const pool = this._meetPool;
+    for (let rr = 0; rr < 3; rr++) for (let c = 1; c < 9; c += (rr === 2 ? 2 : 1)) { const rig = pool[k] || (pool[k] = makeFolk('christmas', (k * 5 + rr) % 8)); k++; this.addNpc({ int: true, zone: 'int', kind: 'elf', rig, x: INT[0] - 6.75 + c * 1.5, z: INT[1] - 0.5 + rr * 1.6 - 0.6, yaw: PI, r: 0.4, h: 1.45, name: 'Elf ' + ['Pip', 'Holly', 'Tinsel', 'Clove', 'Frost', 'Noel', 'Ivy', 'Taffy', 'Wren', 'Scout', 'Plum', 'Biscuit'][k % 12], lines: ['Shh! Santa is talking!', 'Best part of the morning.'], still: true, meetElf: true }); }
+    if (!this.intNpcs.some((n) => n.kind === 'santa')) { const rig = this._santaIn || (this._santaIn = null); const s = this.santa; const sr = rig || this._mkSanta(); this.addNpc({ int: true, zone: 'int', kind: 'santa', rig: sr, x: INT[0], z: r.z0 + 2.6, yaw: 0, r: s.r, h: s.h, name: s.name, lines: ['Ho ho ho! Glad you could join the briefing!', 'Every department matters, from the Post Office to Snow Removal.'], still: true }); s.inside = 'events'; s.hidden = true; s.arrived = true; s.arrT = 99; } },
+};
