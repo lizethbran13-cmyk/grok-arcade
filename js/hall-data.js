@@ -2439,17 +2439,32 @@ GA.HALL_DATA = {
     "repo": "grok-north-pole",
     "history": [
       {
+        "date": "Nov 20",
+        "ver": "2.0",
+        "title": "Village Remake",
+        "text": "The live village is now the remake, built on the real santaupdate.com map: Main Street Kringle shops, the skating pond, Kringle Ranch and Santa's home, the Hall of Records cave on Polar Bear Mountain (reached by Sleigh Bus), a Polar Express loop around the village (Station, Elf Village, Workshop Side, Events Center), the Sleigh Bus, 5 Regional Tracking Centers, the Events Center, and a full-size Santa and Mrs. Claus on daily schedules (Santa is visiting Chile until Thanksgiving). Visitors Torty, Candy, Luna, Pi-rat and Snowie are still in town. Live saves (grokNorthPole.v1) carry over."
+      },
+      {
         "date": "Oct 12",
         "ver": "1.0",
         "title": "Opening day",
-        "text": "A snowy cartoon 3D Christmas village in the Turbo look: visit Santa at Town Hall, ride the North Pole Express, explore Santa's Toy Workshop, the Santa Update Newsroom, North Pole Flight Command and the Post Office, then walk down Operations Row (the giant Wrapping Department plus 20 departments, each with its own activity). 80 named elves from santaupdate.com work in their real departments, the List Department checks Wish Lists twice, and visitors Torty, Candy, Luna, Pi-rat and Snowie are in town. Co-op for 3."
+        "text": "The original village: visit Santa at Town Hall, ride the North Pole Express, explore Santa's Toy Workshop, the Santa Update Newsroom, North Pole Flight Command and the Post Office, then walk down Operations Row (the giant Wrapping Department plus 20 departments, each with its own activity). 80 named elves from santaupdate.com work in their real departments, the List Department checks Wish Lists twice, and visitors Torty, Candy, Luna, Pi-rat and Snowie are in town. Co-op for 3. Playable in Old Versions as Classic."
       }
     ],
-    "versions": [],
+    "versions": [
+      {
+        "label": "classic",
+        "ver": "1.0",
+        "title": "Classic village (Town Hall & Operations Row)",
+        "commit": "ebd26b2",
+        "url": "https://lizethbran13-cmyk.github.io/grok-arcade/archive/northpole-classic/",
+        "thumb": "assets/hall/northpole/8.webp"
+      }
+    ],
     "pics": [
       {
         "src": "assets/hall/northpole/1.webp",
-        "cap": "Operations Row from above: the giant Wrapping Department (with its roof bow) and the North Pole departments",
+        "cap": "Classic village: Operations Row from above, with the giant Wrapping Department (and its roof bow)",
         "w": 390,
         "h": 844
       },
@@ -2485,20 +2500,20 @@ GA.HALL_DATA = {
       },
       {
         "src": "assets/hall/northpole/7.webp",
-        "cap": "The Wrapping Department on Operations Row, bow and all",
+        "cap": "Classic village: the Wrapping Department on Operations Row, bow and all",
         "w": 390,
         "h": 844
       },
       {
         "src": "assets/hall/northpole/8.webp",
-        "cap": "Santa Claus welcomes you at Town Hall",
+        "cap": "Classic village: Santa Claus welcomes you at Town Hall",
         "w": 390,
         "h": 844
       }
     ],
     "cover": "assets/hall/northpole/cover.webp",
     "quip": "An elf from the Wrapping Department visited the exhibit and tied a bow on every picture frame. We have asked her to stop. She has not stopped.",
-    "noOld": "Grok North Pole Village just opened. Its Time Jumper beta is in the Save Vault (Final Beta). Please don't shake the snow globes."
+    "noOld": "The classic Town Hall & Operations Row village is in Old Versions, and the Remake’s Time Jumper beta is in the Save Vault (Final Beta). Please don’t shake the snow globes."
   },
   "torty": {
     "repo": "grok-torty-town",

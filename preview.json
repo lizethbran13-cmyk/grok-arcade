@@ -5,13 +5,14 @@
     {
       "key": "np-village-remake",
       "game": "northpole",
-      "name": "North Pole Village Remake",
+      "name": "North Pole Village Remake (live)",
       "size": "Remake",
-      "what": "David's North Pole Village remake: no more phone crashes, the real santaupdate.com map (Main Street Kringle shops, skating pond, Kringle Ranch, Santa's home), the Hall of Records as a cave vault on Polar Bear Mountain reached by sleigh bus, solid elves who chat and hold meetings, a full-size Santa and Mrs. Claus on daily schedules, and a different inside for every building. Playable now in the Time Jumper!",
-      "stage": "building",
-      "when": "Time Jumper Preview",
-      "preview": true,
-      "previewUrl": "previews/np-village-remake/"
+      "what": "SHIPPED! The live Grok North Pole Village is now David's remake on the real santaupdate.com map (Main Street Kringle shops, skating pond, Kringle Ranch, Santa's home), with the Hall of Records cave on Polar Bear Mountain, a Polar Express loop (Station, Elf Village, Workshop, Events Center), the Sleigh Bus, 5 Regional Tracking Centers, the Events Center, and a full-size Santa and Mrs. Claus. Existing live saves keep working (grokNorthPole.v1). Its Time Jumper beta lives on in the Save Vault, and the classic Town Hall & Operations Row village is playable at archive/northpole-classic/.",
+      "stage": "shipped",
+      "when": "Live Now",
+      "liveUrl": "https://lizethbran13-cmyk.github.io/grok-north-pole/",
+      "betaArchiveUrl": "archive/np-village-remake-beta/",
+      "shippedAt": "2026-11-20T21:54:48Z"
     },
     {
       "game": "arcade",
@@ -155,9 +156,9 @@
     {
       "issue": 64,
       "game": "arcade",
-      "name": "Carrie’s Gift Booth (live)",
+      "name": "Carrie\u2019s Gift Booth (live)",
       "size": "New Booth",
-      "what": "Gary’s daughter Carrie opens her pastel-pink & gold Gift Booth in the southwest corner of the Main Floor (Menu > Carrie’s Gift Booth)! Features the Ratita × Tortuga Gift-O-Matic 3000 capsule tower, Daily Gift Capsules with a 7-Day Streak Ladder, 6 Milestone Gift Boxes synced with Bob’s Account Desk, 11 Gift Collector Badges, and interactive Pet Crew Gift Helpers (Luna, Pi-rat, Snowie, Candy & Torty). Live now in Grok Arcade! Its Time Jumper beta lives on in the Save Vault.",
+      "what": "Gary\u2019s daughter Carrie opens her pastel-pink & gold Gift Booth in the southwest corner of the Main Floor (Menu > Carrie\u2019s Gift Booth)! Features the Ratita \u00d7 Tortuga Gift-O-Matic 3000 capsule tower, Daily Gift Capsules with a 7-Day Streak Ladder, 6 Milestone Gift Boxes synced with Bob\u2019s Account Desk, 11 Gift Collector Badges, and interactive Pet Crew Gift Helpers (Luna, Pi-rat, Snowie, Candy & Torty). Live now in Grok Arcade! Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Oct 28",
       "key": "carrie_gift_booth",
@@ -168,7 +169,7 @@
       "game": "pickleballpark",
       "name": "Pickleball Park: Drive Dillers Expansion (live)",
       "size": "Expansion",
-      "what": "Walk-in Drive Dillers Indoor Pickleball Center on the east avenue of Grok Pickleball Park! 3 climate-controlled indoor courts, Director Snowie’s 3-round Indoor Tournament for the Golden Dill Cup, and Courts Manager Lola & Candy’s Indoor & Silent Serve Foam Ball rule (bring an outdoor 40-hole ball indoors and Candy barks & steals it while Lola kicks you out!). 75 tickets at the DLC Machine. Live now in Grok Pickleball Park! Its Time Jumper beta lives on in the Save Vault.",
+      "what": "Walk-in Drive Dillers Indoor Pickleball Center on the east avenue of Grok Pickleball Park! 3 climate-controlled indoor courts, Director Snowie\u2019s 3-round Indoor Tournament for the Golden Dill Cup, and Courts Manager Lola & Candy\u2019s Indoor & Silent Serve Foam Ball rule (bring an outdoor 40-hole ball indoors and Candy barks & steals it while Lola kicks you out!). 75 tickets at the DLC Machine. Live now in Grok Pickleball Park! Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Oct 28",
       "key": "grokDLC.pickleballpark.drive_dillers_expansion",
@@ -179,7 +180,7 @@
       "game": "voxels",
       "name": "Grok Voxels: Respawn & Joystick Reset Button (live)",
       "size": "QoL Patch",
-      "what": "Adds an always-accessible ↻ RESPAWN button under the minimap next to the 1ST/3RD camera toggle (plus K key shortcut) that resets any stuck digital joystick/touch/key state and respawns you at your latest checkpoint without losing a life. Playable now in the Time Jumper!",
+      "what": "Adds an always-accessible \u21bb RESPAWN button under the minimap next to the 1ST/3RD camera toggle (plus K key shortcut) that resets any stuck digital joystick/touch/key state and respawns you at your latest checkpoint without losing a life. Playable now in the Time Jumper!",
       "stage": "shipped",
       "when": "Oct 28",
       "shippedAt": "2026-10-28T21:44:46.372Z"
@@ -189,7 +190,7 @@
       "game": "brawl",
       "name": "Grok Brawl: Controls & Jump Button QoL (live)",
       "size": "QoL Patch",
-      "what": "Moves and enlarges the ▲ JUMP button into the primary bottom-right thumb position (matching Brawler Tale), reorganizes PUNCH/KICK/DASH/BLOCK/SPECIAL/SUPER into a clean non-overlapping thumb arc, and fixes joystick up-tilt locking out the JUMP button so ground, double, and triple jumps always register while moving. Playable now in the Time Jumper!",
+      "what": "Moves and enlarges the \u25b2 JUMP button into the primary bottom-right thumb position (matching Brawler Tale), reorganizes PUNCH/KICK/DASH/BLOCK/SPECIAL/SUPER into a clean non-overlapping thumb arc, and fixes joystick up-tilt locking out the JUMP button so ground, double, and triple jumps always register while moving. Playable now in the Time Jumper!",
       "stage": "shipped",
       "when": "Oct 28",
       "shippedAt": "2026-10-28T21:44:46.372Z"
@@ -197,9 +198,9 @@
     {
       "issue": 77,
       "game": "grocery",
-      "name": "Grocery Tycoon: Grok Van & Torty’s Tow Touch Fix (live)",
+      "name": "Grocery Tycoon: Grok Van & Torty\u2019s Tow Touch Fix (live)",
       "size": "Bug Fix",
-      "what": "Raises the driving HUD (#dr52, #dSide, #sd52) above the full-screen #touchZone overlay so mobile taps on Torty’s Tow, Hop Out, Honk, and pedals are never swallowed by the left thumb-stick, releases any held stick on breakdown, and displays a centered Breakdown recovery card with a Torty’s Tow button. Playable now in the Time Jumper!",
+      "what": "Raises the driving HUD (#dr52, #dSide, #sd52) above the full-screen #touchZone overlay so mobile taps on Torty\u2019s Tow, Hop Out, Honk, and pedals are never swallowed by the left thumb-stick, releases any held stick on breakdown, and displays a centered Breakdown recovery card with a Torty\u2019s Tow button. Playable now in the Time Jumper!",
       "stage": "shipped",
       "when": "Oct 28",
       "shippedAt": "2026-10-28T21:44:46.372Z"
@@ -207,7 +208,7 @@
     {
       "issue": 76,
       "game": "blocksrb",
-      "name": "Grok Blocks: Re-Blocked — Jeep Spawn Fix (live)",
+      "name": "Grok Blocks: Re-Blocked \u2014 Jeep Spawn Fix (live)",
       "size": "Bug Fix",
       "what": "Moves the Base Camp jeep/truck spawn to a clear plaza road spot (4.5, 3.5) away from the southeast bench & lamp post, adds snapTruckClear() so the Jeep never spawns overlapping solid props in Ranger or Poacher mode, and allows turning while throttled at low speed. Playable now in the Time Jumper!",
       "stage": "shipped",
@@ -219,7 +220,7 @@
       "game": "arcade",
       "name": "Retro Central (1995) (live)",
       "size": "New World",
-      "what": "Retro Central (1995) is live in Grok Arcade! Walk the neon 1995 mall, buy 6 consoles (1983–1995) at Gary's Console Stand with your real tickets, set them up in your walk-in Retro Home around a big CRT TV, and play 7 games: Super Torty 64, Speed Rat 1991, Speed Rat 2: Spin Dash, 8-Bit Plumber Bros. '85, Chrono Cheese, Shell Fighter '95 and Cyber-Maze '95. All 5 pets show up in 90s outfits. Find it in Mimi's Time Lab: walk through the purple ⏳ door next to Mimi's desk on the Arcade Floor (or ask Mimi's Navigator) and step into the swirling Retro Central portal. Its Time Jumper beta lives on in the Save Vault.",
+      "what": "Retro Central (1995) is live in Grok Arcade! Walk the neon 1995 mall, buy 6 consoles (1983\u20131995) at Gary's Console Stand with your real tickets, set them up in your walk-in Retro Home around a big CRT TV, and play 7 games: Super Torty 64, Speed Rat 1991, Speed Rat 2: Spin Dash, 8-Bit Plumber Bros. '85, Chrono Cheese, Shell Fighter '95 and Cyber-Maze '95. All 5 pets show up in 90s outfits. Find it in Mimi's Time Lab: walk through the purple \u23f3 door next to Mimi's desk on the Arcade Floor (or ask Mimi's Navigator) and step into the swirling Retro Central portal. Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Oct 28",
       "shippedAt": "2026-10-28T22:31:39Z"
@@ -241,7 +242,7 @@
       "game": "eatsville",
       "name": "Eatsville Tycoon: Online Order Mode DLC (live)",
       "size": "Expansion",
-      "what": "Online Order Dispatch counter & Curbside Pickup shelf inside your restaurant with all 5 family pets (Luna, Pi-rat, Snowie, Candy & Torty)! Take Tortuga Eats / Ratita Rush app orders: prep, seal in a thermal hot bag, hand over curbside or dispatch same-day delivery on your restaurant-matched scooter or thermal cruiser. Hot food earns big tips 🤑, cold food costs rating, refunds and gear wear, and Candy & Torty's free Emergency Reboot means you're never stuck. Live now in Grok Eatsville Tycoon! Its Time Jumper beta lives on in the Save Vault.",
+      "what": "Online Order Dispatch counter & Curbside Pickup shelf inside your restaurant with all 5 family pets (Luna, Pi-rat, Snowie, Candy & Torty)! Take Tortuga Eats / Ratita Rush app orders: prep, seal in a thermal hot bag, hand over curbside or dispatch same-day delivery on your restaurant-matched scooter or thermal cruiser. Hot food earns big tips \ud83e\udd11, cold food costs rating, refunds and gear wear, and Candy & Torty's free Emergency Reboot means you're never stuck. Live now in Grok Eatsville Tycoon! Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Live Now",
       "liveUrl": "https://lizethbran13-cmyk.github.io/grok-eatsville/",
@@ -253,7 +254,7 @@
       "game": "pickleballpark",
       "name": "Pickleball Park DLC: Super Smash Expansion (live)",
       "size": "Expansion",
-      "what": "Walk-in Super Smash Arena on the west avenue of Grok Pickleball Park! 3 themed Smash Courts (🌋 Lava Island, 🚀 Moon Base, 🍭 Candy Stadium), 6 OG Super Smashers (Rocket Rita, Frosty Fran, Bolt Bo, Big Bertha, Dill Dan, Curvy Kiki) with 2-pt Smash & 3-pt Super Smash winners, 4 Specialty Power Paddles + Silent Serve Super Foam Ball, 3-Round Super Smash Cup, all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty), and Paddle Grit wear with Torty’s Free Emergency Rebuild (never stuck!). 75 tickets at the DLC Machine. Live now in Grok Pickleball Park! Its Time Jumper beta lives on in the Save Vault.",
+      "what": "Walk-in Super Smash Arena on the west avenue of Grok Pickleball Park! 3 themed Smash Courts (\ud83c\udf0b Lava Island, \ud83d\ude80 Moon Base, \ud83c\udf6d Candy Stadium), 6 OG Super Smashers (Rocket Rita, Frosty Fran, Bolt Bo, Big Bertha, Dill Dan, Curvy Kiki) with 2-pt Smash & 3-pt Super Smash winners, 4 Specialty Power Paddles + Silent Serve Super Foam Ball, 3-Round Super Smash Cup, all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty), and Paddle Grit wear with Torty\u2019s Free Emergency Rebuild (never stuck!). 75 tickets at the DLC Machine. Live now in Grok Pickleball Park! Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Live Now",
       "key": "grokDLC.pickleballpark.super_smash_expansion",
@@ -277,7 +278,7 @@
       "game": "party",
       "name": "Grok Land Party: Fiesta Expansion DLC Fixes (live)",
       "size": "Bug Fix",
-      "what": "Massive Fiesta World Overhaul! Added the grand 5th town Gran Pueblo Viejo (🏛️) with a Cathedral Clocktower, cobblestone avenues & fountain, 14 interactive carved-stone merchant shops across all 5 towns (28 items & buffs), 32 bustling 3D villagers & shopkeepers, all 5 family pets in 3D (Luna, Pi-rat, Snowie, Candy & Torty), patrolling Chili Cart & Beach Crab hazards with Stamina/coin consequences, and Candy & Torty's Free Emergency Bailout (0 🪙, never stuck!). Live now in Grok Land Party! Its Time Jumper beta lives on in the Save Vault.",
+      "what": "Massive Fiesta World Overhaul! Added the grand 5th town Gran Pueblo Viejo (\ud83c\udfdb\ufe0f) with a Cathedral Clocktower, cobblestone avenues & fountain, 14 interactive carved-stone merchant shops across all 5 towns (28 items & buffs), 32 bustling 3D villagers & shopkeepers, all 5 family pets in 3D (Luna, Pi-rat, Snowie, Candy & Torty), patrolling Chili Cart & Beach Crab hazards with Stamina/coin consequences, and Candy & Torty's Free Emergency Bailout (0 \ud83e\ude99, never stuck!). Live now in Grok Land Party! Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Live Now",
       "liveUrl": "https://lizethbran13-cmyk.github.io/grok-land-party/",
@@ -301,7 +302,7 @@
       "game": "heist",
       "name": "Grok Heist Crew Remastered (live)",
       "size": "Remaster",
-      "what": "SHIPPED! Live on the Grok Heist Crew Remastered cabinet in the Adventure wing: Tortuga Remaster Works upgrade on the Shadow-Light Engine with volumetric light shafts, Stealth Shadow Pools (-58% detection), dedicated Jumper button (🦘 JUMP / Space) & Sprint, ⚡ Shadow EMP gadget, Kevlar Weave suit armor, 6th Shadow Vault heist, Suit Integrity + Bail/Repair consequences, and all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty). Its Time Jumper beta lives on in the Save Vault.",
+      "what": "SHIPPED! Live on the Grok Heist Crew Remastered cabinet in the Adventure wing: Tortuga Remaster Works upgrade on the Shadow-Light Engine with volumetric light shafts, Stealth Shadow Pools (-58% detection), dedicated Jumper button (\ud83e\udd98 JUMP / Space) & Sprint, \u26a1 Shadow EMP gadget, Kevlar Weave suit armor, 6th Shadow Vault heist, Suit Integrity + Bail/Repair consequences, and all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty). Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Live Now",
       "built": "2026-10-28",
@@ -336,7 +337,7 @@
       "game": "arcade",
       "name": "Grok Arcade: Online Play Update",
       "size": "Feature",
-      "what": "Online Play HQ at the Multiplayer Antenna: 40 of 41 Main Games online (all except Grok Surfers per Lizeth’s rule, with a “Lizeth Says Otherwise” override toggle!), Auto-Online Policy for all future games unless marked “No Need”, Arcade-Wide Room Browser & 1-Click Pet Crew Party Codes, all 5 pets (Luna, Pi-rat, Snowie, Candy, Torty) in 3D & Relay Crew, real disconnect/foul consequences, and Candy & Torty’s Free Emergency Signal Rebuild (never stuck!). Playable now in the Time Jumper!",
+      "what": "Online Play HQ at the Multiplayer Antenna: 40 of 41 Main Games online (all except Grok Surfers per Lizeth\u2019s rule, with a \u201cLizeth Says Otherwise\u201d override toggle!), Auto-Online Policy for all future games unless marked \u201cNo Need\u201d, Arcade-Wide Room Browser & 1-Click Pet Crew Party Codes, all 5 pets (Luna, Pi-rat, Snowie, Candy, Torty) in 3D & Relay Crew, real disconnect/foul consequences, and Candy & Torty\u2019s Free Emergency Signal Rebuild (never stuck!). Playable now in the Time Jumper!",
       "stage": "building",
       "when": "Time Jumper Preview",
       "preview": true,
@@ -349,7 +350,7 @@
       "size": "Sequel",
       "what": "The sequel to Great Rodentia: plan and pull off a breakout from National Ratita Prison.",
       "stage": "building",
-      "when": "Holiday special · releases Nov 15"
+      "when": "Holiday special \u00b7 releases Nov 15"
     },
     {
       "key": "candy-ruffsources-rescue",
@@ -376,7 +377,7 @@
     {
       "issue": 72,
       "game": "rodentia",
-      "name": "Grok Great Rodentia — Part 4 (live)",
+      "name": "Grok Great Rodentia \u2014 Part 4 (live)",
       "size": "New Game",
       "what": "Grok Great Rodentia is live in Grok Arcade! Year 000 1 shadow-light mystery across 4 districts of the USM crimson capital and 8 walk-in buildings: play Brie in Good Mode to clear the framed sisters, or Evil Twin Mode as Evil Luna, Evil Pi-rat or Evil Snowie. 12 conspiracy clues, Golden Gouda Wedges, 4 endings. Free Luna, Pi-rat, Snowie and Torty from National Ratita Prison and Candy from the seized RuffSources HQ. Find its cabinet in the Game Gallery (LIFE SIMS, south wall). Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
@@ -386,7 +387,7 @@
     {
       "issue": 71,
       "game": "rodentia",
-      "name": "Grok Great Rodentia — Part 3 (live)",
+      "name": "Grok Great Rodentia \u2014 Part 3 (live)",
       "size": "New Game",
       "what": "Grok Great Rodentia is live in Grok Arcade! Year 000 1 shadow-light mystery across 4 districts of the USM crimson capital and 8 walk-in buildings: play Brie in Good Mode to clear the framed sisters, or Evil Twin Mode as Evil Luna, Evil Pi-rat or Evil Snowie. 12 conspiracy clues, Golden Gouda Wedges, 4 endings. Free Luna, Pi-rat, Snowie and Torty from National Ratita Prison and Candy from the seized RuffSources HQ. Find its cabinet in the Game Gallery (LIFE SIMS, south wall). Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
@@ -396,7 +397,7 @@
     {
       "issue": 70,
       "game": "rodentia",
-      "name": "Grok Great Rodentia — Part 2 (live)",
+      "name": "Grok Great Rodentia \u2014 Part 2 (live)",
       "size": "New Game",
       "what": "Grok Great Rodentia is live in Grok Arcade! Year 000 1 shadow-light mystery across 4 districts of the USM crimson capital and 8 walk-in buildings: play Brie in Good Mode to clear the framed sisters, or Evil Twin Mode as Evil Luna, Evil Pi-rat or Evil Snowie. 12 conspiracy clues, Golden Gouda Wedges, 4 endings. Free Luna, Pi-rat, Snowie and Torty from National Ratita Prison and Candy from the seized RuffSources HQ. Find its cabinet in the Game Gallery (LIFE SIMS, south wall). Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
@@ -429,7 +430,7 @@
       "game": "ratitahq",
       "name": "Ratita HQ DLC: Tortuga Tech Expansion (live)",
       "size": "Expansion",
-      "what": "SHIPPED! Live in Grok Ratita Industries HQ (and at Gary’s DLC Machine for 80 tickets): Martina “Torty” opens the Tortuga Tech Inc. Wing off the East Atrium with 4 sub-rooms (Bioluminescence Lab, Shell-Armor Forge, Hydro-Propulsion Bay & Torty’s Corner Office), 6 NPCs, 4 Tortuga gadgets, the Reef Obstacle Course, and The Missing Blueprints quest! Its Time Jumper beta lives on in the Save Vault.",
+      "what": "SHIPPED! Live in Grok Ratita Industries HQ (and at Gary\u2019s DLC Machine for 80 tickets): Martina \u201cTorty\u201d opens the Tortuga Tech Inc. Wing off the East Atrium with 4 sub-rooms (Bioluminescence Lab, Shell-Armor Forge, Hydro-Propulsion Bay & Torty\u2019s Corner Office), 6 NPCs, 4 Tortuga gadgets, the Reef Obstacle Course, and The Missing Blueprints quest! Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Oct 28",
       "built": "2026-10-28",
@@ -441,7 +442,7 @@
       "game": "grid2",
       "name": "Grok Grid 2 (live)",
       "size": "Sequel",
-      "what": "SHIPPED! New cabinet in the Racing wing: high-speed sequel to Grok Grid with 14 circuits (including Tortuga Superspeedway, Indy Brickyard GP & Tokyo Neon Drift), 8 cars, F1/IndyCar/NASCAR/Drift series, Luna’s Garage Tuning, 3-tier Drift Boost Chains, Candy Pit Tow, and all 5 family pets. Its Time Jumper beta lives on in the Save Vault.",
+      "what": "SHIPPED! New cabinet in the Racing wing: high-speed sequel to Grok Grid with 14 circuits (including Tortuga Superspeedway, Indy Brickyard GP & Tokyo Neon Drift), 8 cars, F1/IndyCar/NASCAR/Drift series, Luna\u2019s Garage Tuning, 3-tier Drift Boost Chains, Candy Pit Tow, and all 5 family pets. Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Oct 28",
       "built": "2026-10-28",
@@ -506,7 +507,7 @@
       "game": "arcade",
       "name": "Tortuga Remaster Works (live)",
       "size": "New Area",
-      "what": "David's idea: a new walk-in area for remasters, sequels and quality-of-life fixes, run by Martina “Torty” and Tortuga Tech Inc. File Remaster, Sequel, Quality of Life or Other tickets at the big Remaster Machine (electronics by Ratita Industries), watch the Remaster Board, see shipped remasters like Grok Blocks: Re-Blocked on the shelf, and visit the workbenches, the Shell-Tough crash-test rig, Tortuga Tech robots, Luna, Pi-rat, Snowie and Candy. Live now! Get there through the green Express Pod in the Grand Gallery.",
+      "what": "David's idea: a new walk-in area for remasters, sequels and quality-of-life fixes, run by Martina \u201cTorty\u201d and Tortuga Tech Inc. File Remaster, Sequel, Quality of Life or Other tickets at the big Remaster Machine (electronics by Ratita Industries), watch the Remaster Board, see shipped remasters like Grok Blocks: Re-Blocked on the shelf, and visit the workbenches, the Shell-Tough crash-test rig, Tortuga Tech robots, Luna, Pi-rat, Snowie and Candy. Live now! Get there through the green Express Pod in the Grand Gallery.",
       "stage": "shipped",
       "when": "Shipped Oct 22",
       "shippedAt": "2026-10-22T07:25:00Z"
@@ -587,7 +588,7 @@
       "game": "grocery",
       "name": "Same-Day Rush: Drive the Grok Van (live)",
       "size": "Free Patch",
-      "what": "Grok Grocery Tycoon: a big 🚐 Drive Same-Day button and a how-to-drive card from Pi-rat, so anyone can take the Grok Van out. The catch: a tight ⏱️ delivery timer. Late orders get the customer a refund and cost you a star (and a bit of store rating). The van is faster, but crashes hurt it more and take 10 seconds off the clock. Plus 🚐/🚚 Test Ride at the Ship Center: drive the van or the truck anytime, no orders, no timer. Torty's Tow and Hop out always work, so you are never stuck. Live now in Grok Grocery Tycoon! Its Time Jumper beta lives on in the Save Vault.",
+      "what": "Grok Grocery Tycoon: a big \ud83d\ude90 Drive Same-Day button and a how-to-drive card from Pi-rat, so anyone can take the Grok Van out. The catch: a tight \u23f1\ufe0f delivery timer. Late orders get the customer a refund and cost you a star (and a bit of store rating). The van is faster, but crashes hurt it more and take 10 seconds off the clock. Plus \ud83d\ude90/\ud83d\ude9a Test Ride at the Ship Center: drive the van or the truck anytime, no orders, no timer. Torty's Tow and Hop out always work, so you are never stuck. Live now in Grok Grocery Tycoon! Its Time Jumper beta lives on in the Save Vault.",
       "stage": "shipped",
       "when": "Oct 21",
       "key": "grocery_sameday_catch",
@@ -774,7 +775,7 @@
       "game": "fc",
       "name": "Fiesta Kits (live)",
       "size": "Mini Pack",
-      "what": "Grok FC: 4 festive teams with real 3D sombreros, party hats and flower crowns, the rainbow Piñata Ball and 3D fireworks + confetti on fiesta goals.",
+      "what": "Grok FC: 4 festive teams with real 3D sombreros, party hats and flower crowns, the rainbow Pi\u00f1ata Ball and 3D fireworks + confetti on fiesta goals.",
       "stage": "shipped",
       "when": "Oct 12",
       "shippedAt": "2026-10-12T16:30:00Z"
@@ -986,19 +987,21 @@
       "playable": true,
       "built": "2026-11-02",
       "notes": "Holiday special, releases Nov 15 after David's OK. Polish pass: all 4 routes played by real input, party spacing, see-through visitation glass, camera, kid-fair guards, Pi-rat new look"
-    },
-    {
-      "id": "np-village-remake",
-      "game": "northpole",
-      "name": "North Pole Village Remake",
-      "url": "previews/np-village-remake/",
-      "playable": true,
-      "built": "2026-11-20",
-      "notes": "Preview only (not live). Publish-ready polish: Sleigh Bus Village/Workshop/Tracking tabs with no scrolling; denser tracking-center rooms (Sector 4 Belen, Costa Rica); station hall information kiosk; open plaza in front of Polar Express Station; Polar Express loops the village (Station, Elf Village, Workshop Side, Events Center). Santa visiting Chile until Thanksgiving. Enterable Workshop underground station."
     }
   ],
   "previewsHelp": "Playable work-in-progress snapshots for the Time Jumper. Only add one when it REALLY works. Make it with: node tools/make-preview.js <source-dir> <id> (see PREVIEW.md). Fields: id, game, issue, name, url (previews/<id>/ on this site), playable:true, built (date), notes.",
   "archive": [
+    {
+      "id": "np-village-remake",
+      "game": "northpole",
+      "name": "North Pole Village Remake",
+      "label": "Final Beta (Time Jumper)",
+      "url": "archive/np-village-remake-beta/",
+      "built": "2026-11-20",
+      "archived": "2026-11-20",
+      "notes": "Last Time Jumper preview of the North Pole Village Remake before it shipped live. Sleigh Bus Village/Workshop/Tracking tabs; denser tracking-center rooms (Sector 4 Belen, Costa Rica); station hall information kiosk; open plaza in front of Polar Express Station; Polar Express loops the village (Station, Elf Village, Workshop Side, Events Center). Santa visiting Chile until Thanksgiving. Enterable Workshop underground station.",
+      "playable": true
+    },
     {
       "id": "candy-snow-day",
       "game": "arcade",
@@ -1221,7 +1224,7 @@
       "url": "archive/pickleball-super-smash-beta/",
       "built": "2026-10-28",
       "archived": "2026-10-28",
-      "notes": "Walk-in Super Smash Arena on the west avenue! 3 themed Smash Courts (🌋 Lava Island, 🚀 Moon Base, 🍭 Candy Stadium), 6 Super Smashers (Rocket Rita, Frosty Fran, Bolt Bo, Big Bertha, Dill Dan, Curvy Kiki) with 2-pt Smash & 3-pt Super Smash winners, 4 Specialty Power Paddles + Silent Serve Super Foam Ball, 3-Round Super Smash Cup, all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty), and Paddle Grit wear with Torty's Free Emergency Rebuild (never stuck!).",
+      "notes": "Walk-in Super Smash Arena on the west avenue! 3 themed Smash Courts (\ud83c\udf0b Lava Island, \ud83d\ude80 Moon Base, \ud83c\udf6d Candy Stadium), 6 Super Smashers (Rocket Rita, Frosty Fran, Bolt Bo, Big Bertha, Dill Dan, Curvy Kiki) with 2-pt Smash & 3-pt Super Smash winners, 4 Specialty Power Paddles + Silent Serve Super Foam Ball, 3-Round Super Smash Cup, all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty), and Paddle Grit wear with Torty's Free Emergency Rebuild (never stuck!).",
       "playable": true
     },
     {
@@ -1233,7 +1236,7 @@
       "url": "archive/online-play-update-beta/",
       "built": "2026-10-28",
       "archived": "2026-10-28",
-      "notes": "Online Play HQ at the Multiplayer Antenna — 40 of 41 Main Games online (all except Grok Surfers per Lizeth's rule, with a 'Lizeth Says Otherwise' override toggle!), Auto-Online Policy for all future games unless marked 'No Need', Arcade-Wide Room Browser & 1-Click Pet Crew Party Codes, all 5 pets (Luna, Pi-rat, Snowie, Candy, Torty) in 3D & Relay Crew, real disconnect/foul consequences, and Candy & Torty's Free Emergency Signal Rebuild (never stuck!).",
+      "notes": "Online Play HQ at the Multiplayer Antenna \u2014 40 of 41 Main Games online (all except Grok Surfers per Lizeth's rule, with a 'Lizeth Says Otherwise' override toggle!), Auto-Online Policy for all future games unless marked 'No Need', Arcade-Wide Room Browser & 1-Click Pet Crew Party Codes, all 5 pets (Luna, Pi-rat, Snowie, Candy, Torty) in 3D & Relay Crew, real disconnect/foul consequences, and Candy & Torty's Free Emergency Signal Rebuild (never stuck!).",
       "playable": true
     },
     {
@@ -1245,7 +1248,7 @@
       "url": "archive/heist-crew-remastered-beta/",
       "built": "2026-10-28",
       "archived": "2026-10-28",
-      "notes": "Shadow-Light Engine remaster with volumetric light shafts, stealth shadow pools, dedicated Jumper button (🦘 JUMP / Space) & Sprint, Shadow EMP gadget, 6th Shadow Vault heist, Suit Integrity + Bail/Repair consequences, and cameos of all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty).",
+      "notes": "Shadow-Light Engine remaster with volumetric light shafts, stealth shadow pools, dedicated Jumper button (\ud83e\udd98 JUMP / Space) & Sprint, Shadow EMP gadget, 6th Shadow Vault heist, Suit Integrity + Bail/Repair consequences, and cameos of all 5 family pets (Luna, Pi-rat, Snowie, Candy, Torty).",
       "playable": true
     },
     {
@@ -1336,43 +1339,43 @@
       "id": "retro-central-1995",
       "game": "arcade",
       "issue": 88,
-      "name": "Retro Central (1995) — Time Jumper World",
+      "name": "Retro Central (1995) \u2014 Time Jumper World",
       "label": "Final Beta (Time Jumper)",
       "url": "archive/retro-central-1995-beta/",
       "built": "2026-10-28",
       "archived": "2026-10-28",
-      "notes": "Walk-in 1995 Retro Central Mall & Arcade Hall + Walk-in 1995 Retro Home Living Room! Buy 6 copycat & made-up consoles from 1983–1995 at Gary's 1995 Console Emporium and play them on your 32-inch CRT Tube TV or mall kiosks: Super Torty 64, Speed Rat 1991 & Speed Rat 2: Spin Dash, 8-Bit Plumber Bros. '85 & Super Dash Rat, NEW Chrono Cheese (16-bit SRES time-travel RPG with Luna, Pi-rat, Snowie, Candy & Torty cameos), Polygonal Shell Fighter '95, and Wireframe Cyber-Maze '95! Plus all 5 pets in 1995 outfits.",
+      "notes": "Walk-in 1995 Retro Central Mall & Arcade Hall + Walk-in 1995 Retro Home Living Room! Buy 6 copycat & made-up consoles from 1983\u20131995 at Gary's 1995 Console Emporium and play them on your 32-inch CRT Tube TV or mall kiosks: Super Torty 64, Speed Rat 1991 & Speed Rat 2: Spin Dash, 8-Bit Plumber Bros. '85 & Super Dash Rat, NEW Chrono Cheese (16-bit SRES time-travel RPG with Luna, Pi-rat, Snowie, Candy & Torty cameos), Polygonal Shell Fighter '95, and Wireframe Cyber-Maze '95! Plus all 5 pets in 1995 outfits.",
       "playable": true
     },
     {
       "id": "voxels-respawn",
       "game": "voxels",
       "issue": 81,
-      "name": "Grok Voxels — Respawn & Joystick Unstick Button",
+      "name": "Grok Voxels \u2014 Respawn & Joystick Unstick Button",
       "label": "Final Beta (Time Jumper)",
       "url": "archive/voxels-respawn-beta/",
       "built": "2026-10-28",
       "archived": "2026-10-28",
-      "notes": "Adds an always-accessible ↻ RESPAWN button under the minimap next to the 1ST/3RD camera toggle (plus K key shortcut) that resets any stuck digital joystick/touch/key state and respawns the player at the latest checkpoint without losing a life; also hardens window pointerup/pointercancel/touchend/blur cleanup on #joy-zone.",
+      "notes": "Adds an always-accessible \u21bb RESPAWN button under the minimap next to the 1ST/3RD camera toggle (plus K key shortcut) that resets any stuck digital joystick/touch/key state and respawns the player at the latest checkpoint without losing a life; also hardens window pointerup/pointercancel/touchend/blur cleanup on #joy-zone.",
       "playable": true
     },
     {
       "id": "brawl-controls",
       "game": "brawl",
       "issue": 79,
-      "name": "Grok Brawl — Controls & Jump Button QoL",
+      "name": "Grok Brawl \u2014 Controls & Jump Button QoL",
       "label": "Final Beta (Time Jumper)",
       "url": "archive/brawl-controls-beta/",
       "built": "2026-10-28",
       "archived": "2026-10-28",
-      "notes": "Moves and enlarges the ▲ JUMP button (86px) into the primary bottom-right thumb position matching Brawler Tale, reorganizes PUNCH/KICK/DASH/BLOCK/SPECIAL/SUPER into a clean non-overlapping thumb arc, and fixes joystick up-tilt locking out the JUMP button so ground jumps, double jumps, and triple jumps always register while moving.",
+      "notes": "Moves and enlarges the \u25b2 JUMP button (86px) into the primary bottom-right thumb position matching Brawler Tale, reorganizes PUNCH/KICK/DASH/BLOCK/SPECIAL/SUPER into a clean non-overlapping thumb arc, and fixes joystick up-tilt locking out the JUMP button so ground jumps, double jumps, and triple jumps always register while moving.",
       "playable": true
     },
     {
       "id": "grocery-van-fix",
       "game": "grocery",
       "issue": 77,
-      "name": "Grok Grocery Tycoon — Grok Van & Torty's Tow Touch Fix",
+      "name": "Grok Grocery Tycoon \u2014 Grok Van & Torty's Tow Touch Fix",
       "label": "Final Beta (Time Jumper)",
       "url": "archive/grocery-van-fix-beta/",
       "built": "2026-10-28",
@@ -1384,7 +1387,7 @@
       "id": "blocksrb-jeep-fix",
       "game": "blocksrb",
       "issue": 76,
-      "name": "Grok Blocks: Re-Blocked — Jeep Spawn Fix",
+      "name": "Grok Blocks: Re-Blocked \u2014 Jeep Spawn Fix",
       "label": "Final Beta (Time Jumper)",
       "url": "archive/blocksrb-jeep-fix-beta/",
       "built": "2026-10-28",
@@ -1413,7 +1416,7 @@
       "url": "archive/gift-booth-beta/",
       "built": "2026-10-28",
       "archived": "2026-10-28",
-      "notes": "Gary's daughter Carrie + Ratita × Tortuga Gift-O-Matic 3000 + Luna, Pi-rat, Snowie, Candy & Torty",
+      "notes": "Gary's daughter Carrie + Ratita \u00d7 Tortuga Gift-O-Matic 3000 + Luna, Pi-rat, Snowie, Candy & Torty",
       "playable": true
     },
     {
@@ -1449,7 +1452,7 @@
       "url": "archive/grocery-holiday-mini-pack-beta/",
       "built": "2026-10-22",
       "archived": "2026-10-22",
-      "notes": "WIP Mini Pack (25 tickets when it ships). Open the Journal (📒) and tap 🦃 Holiday: pick Harvest or Winter Holidays decorations for every store you run, and one of 7 uniforms for your staff (and you, in Career). Main St already has a Thanksgiving Aisle (turkeys, pies, cranberry sauce, stuffing, gravy, sweet potatoes) with harvest endcaps and plush Luna, Pi-rat, Snowie, Candy and Torty; build more from any sales-floor slot.",
+      "notes": "WIP Mini Pack (25 tickets when it ships). Open the Journal (\ud83d\udcd2) and tap \ud83e\udd83 Holiday: pick Harvest or Winter Holidays decorations for every store you run, and one of 7 uniforms for your staff (and you, in Career). Main St already has a Thanksgiving Aisle (turkeys, pies, cranberry sauce, stuffing, gravy, sweet potatoes) with harvest endcaps and plush Luna, Pi-rat, Snowie, Candy and Torty; build more from any sales-floor slot.",
       "playable": true
     },
     {
@@ -1563,7 +1566,7 @@
       "url": "archive/grocery-sameday-catch-beta/",
       "built": "2026-10-21",
       "archived": "2026-10-21",
-      "notes": "Big 🚐 Drive Same-Day button (top right) + Pi-rat's how-to-drive card. The catch: a tight timer (75s + 30s per order, crash = -10s); late = customer refund + lose a star + store rating dip. Van is faster but takes 1.6x crash damage. 🚐/🚚 Test Ride at the Ship Center dock and the van bay: free roam, no orders, no timer (repairs still apply). Smarter driving camera that never clips into trees, bushes or signs. Torty's Tow + Hop out always work. Preview uses its own sandbox save.",
+      "notes": "Big \ud83d\ude90 Drive Same-Day button (top right) + Pi-rat's how-to-drive card. The catch: a tight timer (75s + 30s per order, crash = -10s); late = customer refund + lose a star + store rating dip. Van is faster but takes 1.6x crash damage. \ud83d\ude90/\ud83d\ude9a Test Ride at the Ship Center dock and the van bay: free roam, no orders, no timer (repairs still apply). Smarter driving camera that never clips into trees, bushes or signs. Torty's Tow + Hop out always work. Preview uses its own sandbox save.",
       "playable": true
     },
     {
