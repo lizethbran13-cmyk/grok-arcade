@@ -153,3 +153,19 @@ h3{margin:12px 2px 6px;font-size:13px;letter-spacing:2px;opacity:.85;font-weight
 @keyframes f2up{from{transform:translateY(4px)}to{transform:translateY(-4px)}}
 .elevBtns{display:grid;gap:10px;margin:10px 0}.elevBtns button{display:flex;align-items:center;gap:12px;font-size:24px;padding:12px 16px;text-align:left}.elevBtns button small{font-size:14px;font-weight:700;opacity:.9}.elevBtns button.cur{opacity:.55}
 body.riding #touch{opacity:0;pointer-events:none}
+
+.panel.busP{width:min(96vw,460px);padding:12px 12px 10px;max-height:88vh;overflow:hidden}
+.busP .sub{margin:2px 0 6px}
+.busP .busTabs{display:flex;gap:6px;margin:4px 0 8px}
+.busP .busTabs button{flex:1;padding:8px 4px;font-size:13px;font-weight:800;border-radius:14px;border:2px solid rgba(255,255,255,.7);background:rgba(255,255,255,.12);color:#fff;cursor:pointer}
+.busP .busTabs button.on{background:#fff;color:#7c2478}
+.busP .busGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 8px}
+.busP .busGrid .mbtn2{margin:0;padding:8px 6px;font-size:13px;letter-spacing:0;width:100%;line-height:1.25}
+.busP .busGrid .mbtn2 small{font-size:10px;font-weight:700;letter-spacing:0;opacity:.95}
+.busP #bX{margin:4px 0 0;padding:10px}
+@media (max-height:500px){
+  .panel.busP{padding:8px 8px 6px}
+  .busP .busTabs button{padding:6px 2px;font-size:12px}
+  .busP .busGrid{grid-template-columns:1fr 1fr 1fr;gap:4px}
+  .busP .busGrid .mbtn2{padding:6px 4px;font-size:12px}
+}

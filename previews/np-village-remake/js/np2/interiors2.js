@@ -243,7 +243,7 @@ const RECIPES = {
     board(w, IX, 8.7, r.z0 + 0.3, 0, 'POLAR EXPRESS STATION', 10, 0.7, '#7f1d1d', '#fff7e0');
     // departure boards under the clock
     box(w, 'x', 0x111827, IX, 3.5, r.z0 + 0.28, 12, 2.2, 0.12);
-    for (let i = 0; i < 3; i++) K.sign(w, w.tf(IX, 0, r.z0 + 0.36, 0), ['1  WORKSHOP SIDE      ·  ON THE SOUTH LINE', '2  POLAR EXPRESS STA. ·  THIS STOP', '3  ELF VILLAGE        ·  NORTH OF PLATFORM'][i], 0, 4.3 - i * 0.55, 0, 11.2, 0.46, '#111827', '#fbbf24', { border: false });
+    for (let i = 0; i < 4; i++) K.sign(w, w.tf(IX, 0, r.z0 + 0.36, 0), ['1  POLAR EXPRESS STA. ·  THIS STOP', '2  ELF VILLAGE        ·  NEXT ON THE LOOP', '3  WORKSHOP SIDE      ·  BY SANTA’S WORKSHOP', '4  EVENTS CENTER      ·  WEST LOOP'][i], 0, 4.45 - i * 0.42, 0, 11.2, 0.38, '#111827', '#fbbf24', { border: false });
     // doors out to the platforms (visual + act; the real train is outside)
     box(w, 'm', 0x3b2414, IX - 8, 0, r.z0 + 0.2, 2.4, 3.0, 0.18); box(w, 'l', 0xcfeaff, IX - 8, 0.15, r.z0 + 0.28, 1.8, 2.6, 0.04, 0, 0.3);
     box(w, 'm', 0x3b2414, IX + 8, 0, r.z0 + 0.2, 2.4, 3.0, 0.18); box(w, 'l', 0xcfeaff, IX + 8, 0.15, r.z0 + 0.28, 1.8, 2.6, 0.04, 0, 0.3);
@@ -255,11 +255,15 @@ const RECIPES = {
     box(w, 'l', 0xcfeaff, IX - 12.5, 1.4, r.z0 + 3.72, 7.2, 0.9, 0.04, 0, 0.25);
     board(w, IX - 12.5, 2.7, r.z0 + 4.15, 0, 'TICKETS  ·  POLAR EXPRESS', 6.4, 0.45, '#7f1d1d', '#fff7e0');
     o.acts.push({ x: IX - 12.5, z: r.z0 + 5.2, r: 2.6, label: '🎫 Buy a Polar Express ticket', kind: 'peticket' });
-    o.npcs.push({ who: 'elf', x: IX - 12.5, z: r.z0 + 2.5, yaw: 0, name: 'Conductor Elf Ticketta', lines: ['All aboard! The Polar Express runs the south line around the North Pole: Workshop side, this station, and Elf Village — then back again.', 'Tickets are free for village folk. I’ll send you out when you’re ready, or you can walk to Platform 1 yourself.', 'No trains come up from the outside world, only flying sleighs. This line just runs around the North Pole.', 'The underground tram still leaves from the side hall, down to the Workshop station and Operations & Logistics.'], v: 2 });
-    // waiting area: benches in two rows, a rug, a tree
-    rug(w, IX, IZ + 1.2, 10, 10, 0x7f1d1d, 0xfef3c7);
-    for (let row = 0; row < 3; row++) for (const s of [-1, 1]) { K.bench(w, IX + s * 2.4, IZ - 1.6 + row * 2.2, s < 0 ? E : -E, 0x14532d); }
+    o.npcs.push({ who: 'elf', x: IX - 12.5, z: r.z0 + 2.5, yaw: 0, name: 'Conductor Elf Ticketta', lines: ['All aboard! The Polar Express runs a loop around the North Pole: this station, Elf Village, Workshop Side, and the Events Center — then back here.', 'Tickets are free for village folk. I’ll send you out when you’re ready, or you can walk to Platform 1 yourself.', 'No trains come up from the outside world, only flying sleighs. This line just runs around the North Pole.', 'The underground tram still leaves from the side hall, down to the Workshop station and Operations & Logistics.'], v: 2 });
+    // waiting area: benches in two rows, a rug
+    rug(w, IX, IZ + 0.2, 10, 8.4, 0x7f1d1d, 0xfef3c7);
+    for (let row = 0; row < 3; row++) for (const s of [-1, 1]) { K.bench(w, IX + s * 2.6, IZ - 2.2 + row * 2.0, s < 0 ? E : -E, 0x14532d); }
     tree(w, r.x1 - 4.2, r.z1 - 4.0, 1.0);
+    // center info kiosk (walk around either side — keeps the aisle to the platforms clear)
+    { const kx = IX, kz = IZ + 6.3; box(w, 'm', 0x7f1d1d, kx, 0, kz, 3.0, 1.05, 2.0); box(w, 'g', 0xf5efe0, kx, 1.05, kz, 3.15, 0.08, 2.15); box(w, 'm', 0x14532d, kx, 1.13, kz, 2.4, 1.15, 0.12); board(w, kx, 2.55, kz + 1.05, 0, 'ℹ️  INFORMATION', 2.6, 0.36, '#14532d', '#fff7e0'); board(w, kx, 2.55, kz - 1.05, PI, 'LOOP MAP  ·  4 STOPS', 2.6, 0.32, '#7f1d1d', '#fff7e0'); plant(w, kx - 1.7, kz + 1.3, 0.7); plant(w, kx + 1.7, kz + 1.3, 0.7); solid(w, kx, kz, 3.0, 2.0, 1.2);
+      o.npcs.push({ who: 'elf', x: kx, z: kz - 0.35, yaw: 0, name: 'Elf Guide Merry', lines: ['Need a platform? Straight ahead under the clock. The Polar Express loops the village: Station, Elf Village, Workshop Side, Events Center.', 'Tickets are at the counter with Ticketta, to your left. Cocoa and souvenirs are on the right.'], v: 3 });
+      o.npcs.push({ who: 'elf', x: kx - 2.5, z: kz + 1.5, yaw: E, name: 'Elf Traveler Moss', lines: ['I’m meeting my cousin off the Workshop train. The kiosk map is handy!'], v: 8 }); }
     // cocoa stand + gift shop (right)
     stall(w, IX + 13.2, IZ - 2.2, -E, 0x7f1d1d, 0xf5c542, [0x7c4a1e, 0xf5c542, 0x16a34a, 0xdc2626, 0xfef3c7]);
     board(w, IX + 13.2, 2.7, IZ - 0.6, -E, '🎁 STATION GIFTS', 3.4, 0.36, '#7f1d1d', '#fff7e0');
@@ -278,7 +282,7 @@ const RECIPES = {
     // staff + waiting passengers
     o.npcs.push({ who: 'elf', x: IX + 6, z: r.z0 + 3.2, yaw: PI, name: 'Station Master Elf Porter', lines: ['Welcome to Polar Express Station! The hall, the clock, the cocoa, and a real train on Platform 1.', 'We only run around the North Pole. No trains come in from the outside world.'], v: 3 });
     o.npcs.push({ who: 'elf', x: IX - 3.2, z: IZ - 0.4, yaw: E, name: 'Elf Commuter Nan', lines: ['I’m waiting for the train to Elf Village. It won’t be long — listen for the whistle!'], v: 6 });
-    o.npcs.push({ who: 'elf', x: IX + 3.4, z: IZ + 2.0, yaw: -E, name: 'Elf Traveler Pip', lines: ['I just came from the Workshop side. The ride along the south line is lovely in the snow.'], v: 7 });
+    o.npcs.push({ who: 'elf', x: IX + 3.4, z: IZ + 2.0, yaw: -E, name: 'Elf Traveler Pip', lines: ['I just came from the Workshop side. The loop around the village is lovely in the snow.'], v: 7 });
     o.lights = [[IX, 8.2, IZ, 0xffe2b8, 28, 30], [IX - 11, 6.5, IZ - 2, 0xffd8a0, 18, 22], [IX + 11, 6.5, IZ + 3, 0xffe6c8, 18, 22]]; },
   chapel(w, p, o) { const r = room(w, 10, 16, 7, { wall: 0xfafaf9, floor: 'wood', fc: 0x8b6a4a, band: 0x7f1d1d, curtain: 0xfafaf9 }); o.r = r; for (let i = 0; i < 6; i++) { pew(w, IX - 2.4, r.z0 + 4 + i * 1.6, 3.4); pew(w, IX + 2.4, r.z0 + 4 + i * 1.6, 3.4); } box(w, 'f', 0xb91c1c, IX, 0.01, IZ, 1.4, 0.02, 16);
     box(w, 'm', 0xf5efe0, IX, 0, r.z0 + 1.5, 3, 1.0, 1.2); for (let i = 0; i < 5; i++) { w.add('m', G.cyl(8), 0xfef3c7, IX - 1 + i * 0.5, 1.0, r.z0 + 1.5, 0, 0, 0, 0.06, 0.35, 0.06); w.add('l', G.sph(6), 0xffb347, IX - 1 + i * 0.5, 1.42, r.z0 + 1.5, 0, 0, 0, 0.05, 0.08, 0.05, 1.2); } solid(w, IX, r.z0 + 1.5, 3, 1.2, 1);
@@ -315,14 +319,46 @@ const RECIPES = {
       board(w, cx, 3.4, r.z0 + 0.2, 0, 'MRS. CLAUS’S SEWING ROOM', 3.4, 0.42, '#7f1d1d', '#fff7e0'); o.acts.push({ x: cx - 1.5, z: cz + 2.0, r: 1.8, label: '🧵 Sew the buttons on Santa’s coat', kind: 'sew' });
       o.npcs.push({ who: 'elf', x: cx + 0.6, z: cz - 0.6, yaw: PI, name: 'Elf Thimble', lines: ['Mrs. Claus sews every one of Santa’s suits right here.', 'Four gold buttons, nice and straight. Want to try?'], v: 6 }); }
     o.lights = [[IX - 9.2, 3.6, r.z0 + 4, 0xffd9a0, 12, 12], [IX, 3.6, r.z0 + 4, 0xffe2b8, 12, 12], [IX + 9.2, 3.6, r.z0 + 4, 0xffd9a0, 12, 12]]; },
-  rtc(w, p, o) { const c = p.center || CENTERS[0]; const r = room(w, 20, 14, 7, { wall: 0x0c1a2e, floor: 'carpet', fc: 0x0f172a, band: c.col, curtain: c.col, ceilC: 0x0b1220 }); o.r = r; o.dark = true; o.center = c;
-    { const T = w.tf(IX, 0, r.z0 + 0.3, 0); T.box('l', c.col, 0, 1.2, 0, 14, 4.6, 0.1, 0, 0.4); for (let i = 0; i < 28; i++) T.add('l', G.sph(6), 0x86efac, -6 + (i * 41 % 120) / 10, 1.6 + (i * 19 % 30) / 10, 0.12, 0, 0, 0, 0.1, 0.1, 0.1, 1); K.sign(w, T, `SECTOR ${c.sector}  ·  ${c.place.toUpperCase()}  ·  ${c.country.toUpperCase()}`, 0, 6.2, 0.1, 12, 0.65, '#' + c.col.toString(16).padStart(6, '0'), '#fff7e0'); }
-    board(w, IX, 3.0, r.z0 + 0.42, 0, SANTA_AWAY ? ('🎅 SANTA NOW: CHILE' + (c.sector === 4 ? '  ·  THIS SECTOR' : '  ·  VIA SECTOR 4')) : (ONLINE ? '🟢 FULLY ONLINE · SANTA IN FLIGHT' : `🟡 PREPARING  ·  ${EVE_DAYS} DAYS TO CHRISTMAS EVE`), 12.6, 0.6, '#7f1d1d', '#fef3c7');
-    for (let i = 0; i < 4; i++) desk(w, IX - 6 + i * 4, IZ + 0.4, PI);
-    o.acts.push({ x: IX, z: IZ + 1.6, r: 2.2, label: SANTA_AWAY && c.sector === 4 ? '📡 Track Santa in Chile' : (ONLINE ? '📡 Log a Santa sighting' : '📡 Help set up the tracking desk'), kind: 'trackdesk' });
-    o.npcs.push({ who: 'elf', x: IX + 5, z: r.z0 + 3.2, yaw: PI, name: `${c.boss} (Elf Supervisor, Sector ${c.sector})`, lines: [`Hi, I’m ${c.boss}, Elf Supervisor of the Regional Tracking Center for Sector ${c.sector} in ${c.place}, ${c.country}.`, `We serve ${c.serves}.`, SANTA_AWAY ? (c.sector === 4 ? 'Santa is in Chile right now — that’s our sector! He comes home on Thanksgiving.' : `Santa is visiting Chile until Thanksgiving. Sector 4 is watching him; we stay ready.`) : (ONLINE ? 'We’re fully online! Every tracker report in this sector comes through this room.' : `We’re preparing. The center goes fully online on Christmas Eve and Christmas Day. ${EVE_DAYS} days to go!`), c.facts[0], c.facts[1] || c.facts[0]], v: 2 });
-    o.npcs.push({ who: 'elf', x: IX - 5, z: IZ + 1.6, yaw: 0, name: `Tracker Elf (${c.place})`, lines: [SANTA_AWAY && c.sector === 4 ? 'Report coming in from Chile! Santa is still on his visit. All quiet, all merry.' : (ONLINE ? 'Report coming in! Santa spotted over my sector!' : 'Testing, testing… link to Flight Command: GOOD.'), c.facts[c.facts.length - 1]], v: 4 });
-    o.lights = [[IX, 5, IZ, 0x7dd3fc, 22, 24]]; },
+  rtc(w, p, o) { const c = p.center || CENTERS[0]; const r = room(w, 22, 16, 7.2, { wall: 0x0c1a2e, floor: 'carpet', fc: 0x0f172a, band: c.col, curtain: c.col, ceilC: 0x0b1220 }); o.r = r; o.dark = true; o.center = c;
+    // big lit map wall
+    { const T = w.tf(IX, 0, r.z0 + 0.3, 0); T.box('l', c.col, 0, 1.2, 0, 16, 5.0, 0.1, 0, 0.45); for (let i = 0; i < 40; i++) T.add('l', G.sph(6), 0x86efac, -7 + (i * 37 % 140) / 10, 1.5 + (i * 19 % 42) / 10, 0.12, 0, 0, 0, 0.1, 0.1, 0.1, 1); K.sign(w, T, `SECTOR ${c.sector}  ·  ${c.place.toUpperCase()}  ·  ${c.country.toUpperCase()}`, 0, 6.4, 0.1, 14, 0.65, '#' + c.col.toString(16).padStart(6, '0'), '#fff7e0'); }
+    board(w, IX, 3.15, r.z0 + 0.44, 0, SANTA_AWAY ? ('🎅 SANTA NOW: CHILE' + (c.sector === 4 ? '  ·  THIS SECTOR' : '  ·  VIA SECTOR 4')) : (ONLINE ? '🟢 FULLY ONLINE · SANTA IN FLIGHT' : `🟡 PREPARING  ·  ${EVE_DAYS} DAYS TO CHRISTMAS EVE`), 14, 0.55, '#7f1d1d', '#fef3c7');
+    // two rows of tracking consoles
+    for (let i = 0; i < 5; i++) { desk(w, IX - 8 + i * 4.0, IZ - 1.6, PI); box(w, 'l', 0x7dd3fc, IX - 8 + i * 4.0, 1.15, IZ - 2.15, 0.7, 0.45, 0.05, 0, 0.4); }
+    for (let i = 0; i < 4; i++) { desk(w, IX - 6 + i * 4.0, IZ + 2.6, 0); box(w, 'l', 0x86efac, IX - 6 + i * 4.0, 1.15, IZ + 3.15, 0.7, 0.45, 0.05, 0, 0.4); }
+    // side cabinets, coffee, wall screens
+    for (const s of [-1, 1]) { box(w, 'm', 0x1e293b, IX + s * 9.6, 0, IZ - 4.2, 1.4, 2.2, 2.4); box(w, 'l', c.col, IX + s * 9.6, 1.3, IZ - 4.2, 1.1, 0.7, 0.06, 0, 0.35); }
+    box(w, 'm', 0x44403c, IX - 9.4, 0, IZ + 5.4, 1.3, 1.1, 1.1); box(w, 'm', 0xf5efe0, IX - 9.4, 1.1, IZ + 5.4, 1.15, 0.06, 0.9);
+    for (let i = 0; i < 3; i++) w.add('m', G.cyl(8), 0xfef3c7, IX - 9.7 + i * 0.28, 1.2, IZ + 5.4, 0, 0, 0, 0.1, 0.16, 0.1);
+    board(w, IX + 9.6, 3.4, IZ + 1.0, -E, 'FLIGHT COMMAND LINK', 3.2, 0.32, '#0c4a6e', '#e0f2fe');
+    board(w, IX - 9.6, 3.4, IZ + 1.0, E, (c.boss.split(' ').slice(-1)[0] + ' · ON DUTY').toUpperCase(), 3.2, 0.32, '#' + c.col.toString(16).padStart(6, '0'), '#fff7e0');
+    // local flavour so each center feels like its place
+    if (c.look === 'beach' || c.sector === 4) { // Belen, Costa Rica
+      plant(w, r.x0 + 1.6, r.z0 + 2.2, 1.1); plant(w, r.x1 - 1.6, r.z0 + 2.2, 1.0); plant(w, r.x0 + 1.8, r.z1 - 2.4, 0.85);
+      for (let i = 0; i < 5; i++) box(w, 'f', [0x002b7f, 0xffffff, 0xce1126, 0xffffff, 0x002b7f][i], IX + 8.2, 3.6, IZ + 5.2, 0.04, 0.16, 1.6);
+      board(w, IX, 5.55, r.z0 + 0.5, 0, '☕  COFFEE’S ON  ·  BELEN, COSTA RICA', 8.4, 0.4, '#14532d', '#fef9c3');
+      box(w, 'm', 0x7c2d12, IX + 9.2, 0, IZ + 5.5, 1.2, 1.05, 1.4); for (let i = 0; i < 4; i++) w.add('m', G.cyl(8), 0xfef3c7, IX + 8.9, 1.12, IZ + 5.1 + i * 0.25, 0, 0, 0, 0.1, 0.16, 0.1);
+    } else if (c.look === 'island') { // Kiribati
+      plant(w, r.x0 + 1.5, r.z0 + 2.0, 1.15); plant(w, r.x1 - 1.5, r.z0 + 2.0, 1.15); plant(w, r.x0 + 1.7, r.z1 - 2.2, 0.9);
+      board(w, IX, 5.55, r.z0 + 0.5, 0, '🌺  WARM SEAS  ·  KIRIBATI, SECTOR 1', 8.6, 0.4, '#0e7490', '#fde68a');
+    } else if (c.look === 'tower') { // Taipei
+      box(w, 'x', 0xcbd5e1, IX + 9.3, 0, IZ + 5.4, 0.7, 3.4, 0.7); box(w, 'l', 0x4f46e5, IX + 9.3, 3.4, IZ + 5.4, 0.5, 0.2, 0.5, 0, 0.6);
+      board(w, IX, 5.55, r.z0 + 0.5, 0, '🏙️  TAIPEI SKYLINE  ·  SECTOR 2', 8.2, 0.4, '#312e81', '#e0e7ff');
+    } else if (c.look === 'gable') { // Sint-Niklaas
+      box(w, 'm', 0x7f1d1d, IX + 9.3, 0, IZ + 5.3, 1.3, 1.2, 1.2); box(w, 'f', 0xfef3c7, IX + 9.3, 1.2, IZ + 5.3, 0.9, 0.2, 0.5);
+      board(w, IX, 5.55, r.z0 + 0.5, 0, '❄️  SINT-NIKLAAS  ·  SNOWY & MERRY', 8.6, 0.4, '#7f1d1d', '#fef3c7');
+    } else { // Barra de Navidad fiesta
+      for (let i = 0; i < 7; i++) box(w, 'f', [0xdc2626, 0xfacc15, 0x16a34a, 0x2563eb][i % 4], IX - 7 + i * 2.3, 6.2, IZ, 0.08, 0.7, 0.04);
+      board(w, IX, 5.55, r.z0 + 0.5, 0, '🎉  BARRA DE NAVIDAD  ·  FELIZ NAVIDAD', 9.0, 0.4, '#9a3412', '#fde68a');
+      plant(w, r.x0 + 1.6, r.z1 - 2.4, 0.9); plant(w, r.x1 - 1.6, r.z1 - 2.4, 0.9);
+    }
+    o.acts.push({ x: IX, z: IZ + 0.4, r: 2.4, label: SANTA_AWAY && c.sector === 4 ? '📡 Track Santa in Chile' : (ONLINE ? '📡 Log a Santa sighting' : '📡 Help set up the tracking desk'), kind: 'trackdesk' });
+    o.npcs.push({ who: 'elf', x: IX + 6.2, z: r.z0 + 3.0, yaw: PI, name: `${c.boss} (Elf Supervisor, Sector ${c.sector})`, lines: [`Hi, I’m ${c.boss}, Elf Supervisor of the Regional Tracking Center for Sector ${c.sector} in ${c.place}, ${c.country}.`, `We serve ${c.serves}.`, SANTA_AWAY ? (c.sector === 4 ? 'Santa is in Chile right now — that’s our sector! He comes home on Thanksgiving.' : `Santa is visiting Chile until Thanksgiving. Sector 4 is watching him; we stay ready.`) : (ONLINE ? 'We’re fully online! Every tracker report in this sector comes through this room.' : `We’re preparing. The center goes fully online on Christmas Eve and Christmas Day. ${EVE_DAYS} days to go!`), c.facts[0], c.facts[1] || c.facts[0]], v: 2 });
+    o.npcs.push({ who: 'elf', x: IX - 8, z: IZ - 1.0, yaw: 0, name: `Tracker Elf Wren (${c.place})`, lines: [SANTA_AWAY && c.sector === 4 ? 'Report coming in from Chile! Santa is still on his visit. All quiet, all merry.' : (ONLINE ? 'Report coming in! Santa spotted over my sector!' : 'Testing, testing… link to Flight Command: GOOD.'), c.facts[c.facts.length - 1]], v: 4 });
+    o.npcs.push({ who: 'elf', x: IX - 2, z: IZ + 3.2, yaw: PI, name: `Tracker Elf Nib (${c.place})`, lines: ['Console two is calibrated. Glow looks healthy.', 'I keep a mug on the side cabinet. Long night, good company.'], v: 5, walk: [[IX - 2, IZ + 3.2], [IX + 4, IZ + 3.2], [IX + 4, IZ - 1.2]] });
+    o.npcs.push({ who: 'elf', x: IX + 6, z: IZ + 2.6, yaw: PI, name: `Apprentice Elf Pico (${c.place})`, lines: ['I’m learning the night desk. Don’t touch that green switch — I just labelled it.', `Sector ${c.sector} covers a lot of sky. ${c.place} is a good place to watch it from.`], v: 6 });
+    o.lights = [[IX, 5.2, IZ, 0x7dd3fc, 24, 26], [IX - 7, 4.6, IZ + 2, c.col, 16, 18], [IX + 7, 4.6, IZ - 2, 0x86efac, 16, 18]]; },
+
   understation(w, p, o) { const r = room(w, 32, 16, 5.6, { wall: 0x3f3f46, floor: 'tile', fc: 0x44403c, fc2: 0x292524, band: 0x14532d, curtain: 0x14532d, ceilC: 0x1c1917, windows: false, doorFrame: 0x111827 }); o.r = r; o.dark = true; o.noDress = true;
     // central track pit + rails, platforms on both sides
     box(w, 'm', 0x1c1917, IX, -0.35, IZ, 4.2, 0.4, r.D - 0.4); box(w, 'x', 0x94a3b8, IX - 0.7, 0.02, IZ, 0.12, 0.06, r.D - 0.6); box(w, 'x', 0x94a3b8, IX + 0.7, 0.02, IZ, 0.12, 0.06, r.D - 0.6);

@@ -164,10 +164,10 @@ export class Game2 {
   // ---------------------------------------------------------------- townsfolk brains
   elfThink(n) { const ev = this.event; if (ev && n.evSlot != null) { const a = n.evSlot / ev.n * PI * 2; return [ev.at[0] + Math.cos(a) * ev.r, ev.at[1] + Math.sin(a) * ev.r, true]; } const p = pick(this.pois); return [p[0] + (R() - 0.5) * 4, p[1] + (R() - 0.5) * 4, false]; }
   walkTo(n, x, z) { const p = this.nav.path(n.x, n.z, x, z); n.path = p && p.length > 1 ? p : null; n.pi = 1; }
-  stepPath(n, dt) { if (!n.path) { n.speed = 0; return true; } const t = n.path[n.pi]; const dx = t[0] - n.x, dz = t[1] - n.z, d = Math.hypot(dx, dz); const sp = n.sp * (n.kind === 'elf' && this.event && n.evSlot != null ? 1.4 : 1);
+  stepPath(n, dt) { if (!n.path) { n.speed = 0; return true; } const t = n.path[n.pi]; const dx = t[0] - n.x, dz = t[1] - n.z, d = Math.hypot(dx, dz); const sp = n.sp * (n.kind === 'elf' && this.event && n.evSlot != null ? 2.15 : 1);
     if (d < 0.25) { n.pi++; if (n.pi >= n.path.length) { n.path = null; n.speed = 0; return true; } return false; } const k = Math.min(d, sp * dt); n.x += dx / d * k; n.z += dz / d * k; n.speed = sp; let dy = Math.atan2(dx, dz) - n.yaw; while (dy > PI) dy -= PI * 2; while (dy < -PI) dy += PI * 2; n.yaw += dy * Math.min(1, dt * 8); return false; }
   updateEvent() { const i = ((Math.floor(this.T / EV_LEN) % EVENTS.length) + EVENTS.length) % EVENTS.length; if (this.evI === i) return; this.evI = i; this.event = EVENTS[i]; for (const e of this.elves) { e.evSlot = null; } const ev = this.event; const ps = this.elves.slice().sort((a, b) => Math.hypot(a.x - ev.at[0], a.z - ev.at[1]) - Math.hypot(b.x - ev.at[0], b.z - ev.at[1])).slice(0, ev.n);
-    ps.forEach((e, k) => { e.evSlot = k; e.wait = 0; e.path = null; }); this.evSpeaker = ps[0]; if (this.T > 5 && this.zone === 'out') this.toastMsg('📣 Now: ' + ev.name); }
+    ps.forEach((e, k) => { e.evSlot = k; e.wait = 0; e.path = null; const ev = this.event, d = Math.hypot(e.x - ev.at[0], e.z - ev.at[1]); if (d > 36) { const a = k / ev.n * PI * 2, rr = ev.r + 10 + (k % 3) * 3; e.x = ev.at[0] + Math.cos(a) * rr; e.z = ev.at[1] + Math.sin(a) * rr; } }); this.evSpeaker = ps[0]; if (this.T > 5 && this.zone === 'out') this.toastMsg('📣 Now: ' + ev.name); }
   clausThink(c, dt) { if (c.away) { c.hidden = true; c.root.visible = false; c.inside = null; c.path = null; c.speed = 0; return; } if (c.leg < 0 || c.legT <= 0) { c.leg = (c.leg + 1) % c.day.length; const L = c.day[c.leg]; const pl = PLACES.find((p) => p.id === L[0]); c.target = L[2] || (pl ? [pl.door.ex, pl.door.ez] : [c.x, c.z]); c.placeId = pl ? pl.id : null; c.inside = null; c.hidden = false; c.root.visible = this.zone === 'out'; c.legT = 70 + R() * 20; c.arrived = false; c.doing = L[1]; this.walkTo(c, c.target[0], c.target[1]); if (!c.path) { c.x = c.target[0]; c.z = c.target[1]; } }
     if (!c.arrived) { if (this.stepPath(c, dt)) { c.arrived = true; c.arrT = 0; } } else { c.arrT += dt; c.legT -= dt; if (c.placeId && c.arrT > 9 && !c.inside) { c.inside = c.placeId; c.hidden = true; c.root.visible = false; } } }
   updateNPCs(dt) { const me = this.me, out = this.zone === 'out'; this.updateEvent();
@@ -204,10 +204,28 @@ export class Game2 {
       <p style="margin:10px 0 4px"><b>📅 Happening around town</b></p>${up.map((e, k) => `<p style="margin:2px 0;font-weight:700">${k ? 'Next' : '🔴 Now'}: ${e.name}</p>`).join('')}
       <p style="margin:10px 0 4px"><b>🎪 Events Center</b></p><p style="font-weight:700">${esc(bannerText())}</p>${B.next ? `<p style="font-weight:700">${esc(B.next)}</p>` : ''}
       <p style="margin:10px 0 4px"><b>🎅 Santa today</b>: ${esc(s.doing || (SANTA_AWAY ? 'visiting Chile — back Thanksgiving' : ''))}</p><p style="margin:2px 0"><b>🍪 Mrs. Claus</b>: ${esc(m.doing || '')}</p></div><button class="go" id="nOk">OK</button>`, (c) => { c.querySelector('#nOk').onclick = () => { sfx('click'); this.done(); }; }); }
-  busPanel() { this.app.busy = true; const groups = [['❄️ Around the village', (d) => destZone(d) === 'out'], ['🏔️ Far North Pole', (d) => d[0] === 'mountain' || d[0] === 'port'], ['📡 Regional Tracking Centers', (d) => destZone(d) === 'rtc']];
-    const btns = groups.map(([title, pred]) => { const list = DESTINATIONS.filter(pred); return list.length ? `<p style="margin:10px 0 4px;font-weight:800;text-align:left">${title}</p>` + list.map((s) => `<button class="mbtn2" data-id="${s[0]}" style="display:block;width:94%;margin:4px auto;padding:8px 10px">${s[1]}</button>`).join('') : ''; }).join('');
-    panel(`<h2>🚌 SLEIGH BUS</h2><p class="sub">Hop on! Where to?</p><div style="max-height:64vh;overflow:auto">${btns}</div><button class="mbtn2" id="bX">✖ Stay here</button>`, (c) => {
-      c.querySelectorAll('[data-id]').forEach((b) => b.onclick = () => { sfx('click'); closePanel(); this.app.busy = false; this.travelDest(DESTINATIONS.find((d) => d[0] === b.dataset.id)); }); c.querySelector('#bX').onclick = () => { sfx('click'); this.done(); }; }); }
+  busPanel() { this.app.busy = true;
+    const TABS = [
+      ['village', '❄️ Village', ['village', 'park', 'station', 'post', 'events', 'lodge', 'university', 'elfvil', 'chapel']],
+      ['workshop', '🧸 Workshop', ['workshop', 'understation', 'ranch', 'sleighbarn', 'claus', 'mountain', 'port']],
+      ['track', '📡 Tracking', DESTINATIONS.filter((d) => destZone(d) === 'rtc').map((d) => d[0])],
+    ];
+    const short = (d) => {
+      if (destZone(d) === 'rtc') { const m = /Sector\s+(\d+)\s*·\s*([^(]+)/.exec(d[1]); return m ? `📡 ${m[1]}  ${m[2].trim()}` : d[1]; }
+      return d[1].replace(/^[^A-Za-z🍄🚂🧸🦌🏠⛪🐻🛷🎪📮🌳🏔️🎓🎁]+/, '').replace(/\s*\([^)]*\)/g, '');
+    };
+    const startTab = this.zone === 'rtc' ? 'track' : (this.zone === 'mtn' || this.zone === 'port') ? 'workshop' : 'village';
+    const draw = (tab) => {
+      const ids = (TABS.find((t) => t[0] === tab) || TABS[0])[2];
+      const tabs = TABS.map(([id, lab]) => `<button data-tab="${id}" class="${id === tab ? 'on' : ''}">${lab}</button>`).join('');
+      const grid = ids.map((id) => { const d = DESTINATIONS.find((q) => q[0] === id); if (!d) return ''; const chile = SANTA_AWAY && id === 'k4'; return `<button class="mbtn2" data-id="${id}">${short(d)}${chile ? '<br><small>🎅 Santa is here</small>' : ''}</button>`; }).join('');
+      panel(`<h2>🚌 SLEIGH BUS</h2><p class="sub">Hop on! Where to?</p><div class="busTabs">${tabs}</div><div class="busGrid">${grid}</div><button class="mbtn2" id="bX">✖ Stay here</button>`, (c) => {
+        c.querySelectorAll('[data-tab]').forEach((b) => b.onclick = () => { sfx('click'); draw(b.dataset.tab); });
+        c.querySelectorAll('[data-id]').forEach((b) => b.onclick = () => { sfx('click'); closePanel(); this.app.busy = false; this.travelDest(DESTINATIONS.find((d) => d[0] === b.dataset.id)); });
+        c.querySelector('#bX').onclick = () => { sfx('click'); this.done(); };
+      }, 'busP');
+    };
+    draw(startTab); }
   rtcPanel() { this.busPanel(); }
   findPanel() { this.app.busy = true; const s = this.santa, m = this.mrs; const where = (c) => c.away ? 'Chile' : c.inside ? `inside ${PLACES.find((p) => p.id === c.inside).name}` : areaName(c.x, c.z);
     const evDoor = PLACES.find((q) => q.id === 'events');
@@ -249,14 +267,14 @@ export class Game2 {
     for (const bs of this.buses) if (bs.m.visible) bs.m.position.y = Math.sin(this.T * 2 + bs.m.position.x) * 0.08 + 0.1; }
   updateCam(dt) { const c = this.cam, me = this.me, cam = E.camera;
     if (this.peRide && this.pe) { if (IN.camDX || IN.camDY) { c.yaw -= IN.camDX * 0.0085; c.pitch = Math.max(-0.2, Math.min(0.9, c.pitch + IN.camDY * 0.005)); IN.camDX = IN.camDY = 0; }
-      const pe = this.pe, yaw = c.yaw, pitch = c.pitch, back = 14;
-      // follow from behind and south of the rails, so the train, station and village are all in view
-      const bx = pe.x - Math.sin(yaw) * back, bz = pe.z - Math.cos(yaw) * back + 7.2;
+      const pe = this.pe, yaw = c.yaw, pitch = c.pitch, back = 14, side = 7.2;
+      // behind the consist and outside the loop, so the train and the village stay in view
+      const bx = pe.x - Math.sin(yaw) * back - Math.cos(yaw) * side, bz = pe.z - Math.cos(yaw) * back + Math.sin(yaw) * side;
       cam.position.set(bx, 3.8 + pitch * 1.6, bz);
       cam.lookAt(pe.x + Math.sin(pe.yaw) * 6, 1.6, pe.z);
       c.x = cam.position.x; c.y = cam.position.y; c.z = cam.position.z; return; }
     if (this.trainRide && this.train) { const tr = this.train, a = tr.ph, x = tr.cx + Math.cos(a) * tr.a, z = tr.cz + Math.sin(a) * tr.b, yaw = -Math.atan2(Math.cos(a) * tr.b, -Math.sin(a) * tr.a);
-      cam.position.set(x - Math.sin(yaw) * 1.2, tr.y + 0.55, z - Math.cos(yaw) * 1.2); cam.lookAt(x + Math.sin(yaw) * 0.7, tr.y + 0.12, z + Math.cos(yaw) * 0.7); c.x = cam.position.x; c.y = cam.position.y; c.z = cam.position.z; c.yaw = yaw; return; }
+      cam.position.set(x - Math.sin(yaw) * 2.15, tr.y + 1.25, z - Math.cos(yaw) * 2.15); cam.lookAt(x + Math.sin(yaw) * 0.6, tr.y + 0.15, z + Math.cos(yaw) * 0.6); c.x = cam.position.x; c.y = cam.position.y; c.z = cam.position.z; c.yaw = yaw; return; }
     if (IN.camDX || IN.camDY) { c.yaw -= IN.camDX * 0.0085; c.pitch = Math.max(-0.05, Math.min(1.1, c.pitch + IN.camDY * 0.005)); IN.camDX = IN.camDY = 0; }
     const manual = performance.now() - IN.lastCam < 1500; if (!manual && me.speed > 1) { let d = me.yaw - c.yaw; while (d > PI) d -= PI * 2; while (d < -PI) d += PI * 2; if (Math.abs(d) < 2.2) c.yaw += d * Math.min(1, dt * 0.9 * (me.speed / 7)); }
     const indoor = this.zone === 'int'; let want = this.chat ? 5.2 : indoor ? 6.2 : 10.5; const tx = me.x, ty = me.y + 1.45, tz = me.z;

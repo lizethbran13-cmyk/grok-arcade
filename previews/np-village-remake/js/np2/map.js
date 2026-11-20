@@ -11,7 +11,7 @@ import * as K from './kit2.js';
 import { building } from './buildings.js';
 import * as OD from '../opsdata.js?v=np11';
 import { RTC, RTC_AREA, CENTERS } from './cal.js';
-import { dressRailway, PE_Z } from './express.js';
+import { dressRailway, PE_Z, PE_LOOP } from './express.js';
 const PI = Math.PI, E = PI / 2, W_ = -PI / 2, N = PI, S = 0; // ry: front faces +x (E), -x (W_), -z (N), +z (S)
 export const MTN = [3000, 0], PORT = [-3000, 0], INT = [6000, 6000];
 const ROW = Object.fromEntries(OD.ROW.map((r) => [r[0], r]));
@@ -19,7 +19,7 @@ const P = (id, name, x, z, ry, W, D, H, style, o = {}) => Object.assign({ id, na
 // every enterable place: interior type + (optional) the department activity + elf from the santaupdate.com department list
 export const PLACES = [
   // ---- Main Street (west side faces east, east side faces west) ----
-  P('inn', '🛏️ Candy Cane Inn', 22, 76, E, 16, 12, 6.5, 'log', { feat: ['dormers','chimneys2'], col: 0xa0522d, roof: 0x7f1d1d, shutter: 0xdc2626, int: 'inn', sign: 'CANDY CANE INN' }),
+  P('inn', '🛏️ Candy Cane Inn', -8, 72, E, 14, 12, 6.5, 'log', { feat: ['dormers','chimneys2'], col: 0xa0522d, roof: 0x7f1d1d, shutter: 0xdc2626, int: 'inn', sign: 'CANDY CANE INN' }),
   P('bakery', '🍪 Gingerbread Bakery', 22, 56, E, 12, 11, 6, 'ginger', { feat: ['bigchimney'], col: 0xb5651d, roof: 0xfde68a, int: 'bakery', sign: 'GINGERBREAD BAKERY' }),
   P('candyco', '🍭 Kringle Candy Cane Company', 22, 35, E, 15, 12, 6, 'timber', { feat: ['candytower'], col: 0xfff1f2, trim: 0xb91c1c, roof: 0xb91c1c, awning: [0xdc2626, 0xffffff], int: 'candy', ops: 'candyco', sign: 'KRINGLE CANDY CANE CO.' }),
   P('stocking', '🧦 Kringle Stocking Shop', 22, 15, E, 13, 11, 5.5, 'timber', { feat: ['giantstocking','turret'], col: 0xecfccb, trim: 0x14532d, roof: 0x166534, awning: [0x16a34a, 0xfef3c7], int: 'stocking', ops: 'stocking' }),
@@ -104,6 +104,12 @@ export function buildVillage(w) { K.seed(11); w.region = 'out';
   path(29, -22, 33, 96, 0xe7ecf2); path(47, -22, 51, 96, 0xe7ecf2); // sidewalks
   path(-100, 0, 30, 8); path(-6, -100, 2, 0); path(-80, -100, 90, -94); path(2, -26, 33, -20); path(36, -150, 44, -96); path(-104, -76, -6, -70); path(60, -16, 112, -8); path(-30, 96, 100, 104); path(4, 100, 12, 112);
   path(-100, 8, -92, 64); path(90, -94, 98, -60); path(-70, -176, 120, -168); path(-14, -168, -6, -150); path(62, -96, 70, -150);
+  // Station plaza: open paved square in front of the hall (Inn moved west so the square is clear)
+  w.addFn('m', G.box(), (c, x, y, z) => { const k = (Math.floor(x * 0.7) + Math.floor(z * 0.7)) % 2 ? 0.94 : 0.88; c.setRGB(0.78 * k, 0.80 * k, 0.84 * k); }, 18, 0, 91, 0, 0, 0, 44, 0.04, 20);
+  path(-2, 80, 48, 84, 0xe7ecf2); path(16, 84, 20, 102, 0xe7ecf2);
+  { const T = w.tf(8, 0, 90, 0); T.add('m', G.cyl(12), 0x94a3b8, 0, 0, 0, 0, 0, 0, 1.5, 0.45, 1.5); T.add('m', G.cyl(12), 0x64748b, 0, 0.45, 0, 0, 0, 0, 1.15, 0.2, 1.15); K.wreath(w, T, 0, 1.15, 0, 0.85); T.box('m', 0xf8fafc, 0, 0.7, 0, 0.15, 0.7, 0.15); }
+  K.bench(w, 0, 90, E); K.bench(w, 16, 90, -E); K.lamp(w, 0, 84); K.lamp(w, 36, 84); K.lamp(w, 0, 98); K.lamp(w, 36, 98);
+  { const T = w.tf(32, 0, 90, -E); K.sign(w, T, 'POLAR EXPRESS PLAZA', 0, 2.2, 0.05, 4.8, 0.5, '#14532d', '#fef3c7'); T.box('m', 0x3b2414, 0, 0, 0, 0.14, 2.0, 0.14); }
   // Main Street decor: lamps both sides, bulbs strung across, candy canes, benches, presents
   for (const z of [-15, 5, 25, 45, 66, 86]) { K.lamp(w, 31, z); K.lamp(w, 49, z); K.lights(w, [31, 3.4, z], [49, 3.4, z], 16, 0.7); } // lamps sit between the shop doors, never in front of one
   for (const z of [0, 24, 46, 66]) { K.bench(w, 30.2, z + 4, E); K.bench(w, 49.8, z - 2, W_); }
@@ -185,7 +191,7 @@ export function buildVillage(w) { K.seed(11); w.region = 'out';
   { const T = w.tf(-22, 0, 88, PI); T.box('m', 0x7f1d1d, 0, 0, -1.6, 6, 2.8, 0.2); for (const s of [-1, 1]) T.box('m', 0x7f1d1d, s * 3, 0, 0, 0.2, 2.8, 3.2); T.box('m', 0x7f1d1d, 0, 2.8, 0, 6.6, 0.25, 3.6); T.box('m', 0xf4f8ff, 0, 3.05, 0, 6.6, 0.12, 3.6); K.bench(w, ...[T.P(0, 0, -1)[0], T.P(0, 0, -1)[2]], PI);
     K.sign(w, T, 'SLEIGH BUS STOP', 0, 3.85, 0.0, 4.4, 0.6, '#c8102e', '#ffffff'); T.box('m', 0x3b2414, 0, 2.95, 0, 0.12, 0.6, 0.12); }
   // ---- trees: thick pine forest outside the village, small groves inside (never on a path or building) ----
-  const blocked = (x, z) => PLACES.some((p) => Math.abs(x - p.x) < (Math.max(p.W, p.D) / 2 + 6) && Math.abs(z - p.z) < (Math.max(p.W, p.D) / 2 + 6)) || (x > 20 && x < 70 && z > -45 && z < 100) || (x > -60 && x < 5 && z > -5 && z < 64) || (x > -65 && x < 12 && z > -80 && z < -12) || (x > -20 && x < 130 && z > 96 && z < 132) || (x > 120 && x < 200 && z > -50 && z < 6) || (x > -45 && x < 10 && z < -185) || (x > 70 && x < 180 && z < -105 && z > -235) || (x > -112 && x < 12 && z > -80 && z < -60) || (x > -6 && x < 2) || (x > 30 && x < 50 && z < -96) || (x > -100 && x < 2 && z > -8 && z < 12) || Math.abs(z - 126) < 10 || Math.abs(z - 131) < 8 || (z > 96 && z < 140 && x > -100 && x < 145) || (x > 140 && x < 215 && z > -240 && z < 240 && distRiver(x, z, RIV) < 14) || (x > -40 && x < 30 && z > -110 && z < -94) || (x > -110 && x < -60 && z > -190 && z < -160);
+  const blocked = (x, z) => PLACES.some((p) => Math.abs(x - p.x) < (Math.max(p.W, p.D) / 2 + 6) && Math.abs(z - p.z) < (Math.max(p.W, p.D) / 2 + 6)) || (x > 20 && x < 70 && z > -45 && z < 100) || (x > -60 && x < 5 && z > -5 && z < 64) || (x > -65 && x < 12 && z > -80 && z < -12) || (x > -20 && x < 130 && z > 96 && z < 132) || (x > 120 && x < 200 && z > -50 && z < 6) || (x > -45 && x < 10 && z < -185) || (x > 70 && x < 180 && z < -105 && z > -235) || (x > -112 && x < 12 && z > -80 && z < -60) || (x > -6 && x < 2) || (x > 30 && x < 50 && z < -96) || (x > -100 && x < 2 && z > -8 && z < 12) || Math.abs(z - 126) < 10 || Math.abs(z - 131) < 8 || (z > 96 && z < 140 && x > -100 && x < 145) || (Math.abs(x - PE_LOOP.xe) < 10 && z < PE_LOOP.zs + 8 && z > PE_LOOP.zn - 8) || (Math.abs(z - PE_LOOP.zn) < 10 && x < PE_LOOP.xe + 8 && x > PE_LOOP.xw - 8) || (Math.abs(x - PE_LOOP.xw) < 10 && z < PE_LOOP.zs + 8 && z > PE_LOOP.zn - 8) || (x > -4 && x < 42 && z > 80 && z < 104) || (x > 140 && x < 215 && z > -240 && z < 240 && distRiver(x, z, RIV) < 14) || (x > -40 && x < 30 && z > -110 && z < -94) || (x > -110 && x < -60 && z > -190 && z < -160);
   let n = 0; for (let i = 0; i < 2600 && n < 420; i++) { const x = (K.R() - 0.5) * 480, z = (K.R() - 0.5) * 480; const edge = Math.max(Math.abs(x), Math.abs(z)) > 175; if (!edge && K.R() < 0.75) continue; if (blocked(x, z)) continue; K.pine(w, x, z, 0.9 + K.R() * 0.8); if (!edge) w.solid(x - 0.4, 0, z - 0.4, x + 0.4, 4, z + 0.4); n++; }
   // ---- backdrop: the Frosty Range all around (big low-poly peaks with snow caps) + aurora ----
   for (let i = 0; i < 28; i++) { const a = i / 28 * PI * 2, r = 330 + (i % 3) * 60, x = Math.cos(a) * r, z = Math.sin(a) * r, h = 70 + (i * 37 % 60), rr = 60 + (i * 13 % 30); w.add('m', G.cone(7), 0x7d8da3, x, -2, z, 0, i, 0, rr, h, rr); w.add('m', G.cone(7), 0xf8fafc, x, h * 0.55 - 2, z, 0, i + 0.1, 0, rr * 0.47, h * 0.46, rr * 0.47); }
